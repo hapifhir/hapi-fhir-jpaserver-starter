@@ -7,7 +7,7 @@
 <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
-    <title> - Clinical Document Architecture v2.1.0-draft2-mb</title>
+    <title> - Clinical Document Architecture v2.0.0-sd-202312-matchbox-patch</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="author" content="http://hl7.org/fhir"/>
@@ -67,7 +67,7 @@
         <div id="ig-status">
           <p><span style="font-size:12pt;font-weight:bold">Clinical Document Architecture</span>
             <br/>
-            <span style="display:inline-block;">2.1.0-draft2-mb - active
+            <span style="display:inline-block;">2.0.0-sd-202312-matchbox-patch - ballot
 
 
             </span>
@@ -93,10 +93,19 @@
             <div class="nav-collapse collapse navbar-inverse-collapse">
               <ul xmlns="http://www.w3.org/1999/xhtml" class="nav navbar-nav">
   <li><a href="index.html">IG Home</a></li>
-  <li><a href="toc.html">Table of Contents</a></li>
+  <li class="dropdown">
+    <a data-toggle="dropdown" href="#">Information<b class="caret"></b></a>
+    <ul class="dropdown-menu">
+      <li><a href="overview.html">CDA Overview</a></li>
+      <li><a href="implementation.html">Implementation Notes</a></li>
+      <li><a href="cda-rmim.html">Graphical Map of CDA</a></li>
+      <li><a href="dt-uml.html">Graphical Map of Datatypes</a></li>
+      <li><a href="narrative.html">Narrative Block</a></li>
+    </ul>
+  </li>
   <li><a href="artifacts.html">Artifact Index</a></li>
   <li><a href="downloads.html">Downloads</a></li>
-</ul>      
+</ul>
             </div>  <!-- /.nav-collapse -->
           </div>  <!-- /.container -->
         </nav>  <!-- /.navbar -->
@@ -121,7 +130,7 @@
           <div class="inner-wrapper">
 
 <div style="counter-reset: section 6" class="col-12">
-  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture - Local Development build (v2.1.0-draft2-mb). See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
+  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture - Local Development build (v2.0.0-sd-202312-matchbox-patch) built by the FHIR (HL7® FHIR® Standard) Build Tools. See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
   
 
 
@@ -167,13 +176,19 @@
   
 
 
+  
+    <li>
+      <a href="StructureDefinition-AuthoringDevice.profile.json.html">JSON</a>
+    </li>
+  
+
 
 
 </ul>
 
 
   <a name="root"> </a>
-  <h2 id="root">Logical Model: CDAR2.AuthoringDevice - Examples</h2>
+  <h2 id="root">Logical Model: AuthoringDevice - Examples</h2>
 
   <table class="colsi">
     <tr>
@@ -182,7 +197,7 @@
         
           Active
           
-            as of 2023-10-04
+            as of 2024-03-12
           
         
       </td>
@@ -252,7 +267,7 @@
 
       <div class="inner-wrapper">
         <p>
-          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structdoc">Health Level 7</a>.  Package hl7.cda.uv.core#2.1.0-draft2-mb based on <a style="color: var(--footer-hyperlink-text-color)" href="http://hl7.org/fhir/R5/">FHIR 5.0.0</a>. Generated <span title="Wed, Oct 4, 2023 23:00+0200">2023-10-04</span>
+          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structure">Health Level 7</a>.  Package hl7.cda.uv.core#2.0.0-sd-202312-matchbox-patch based on <a style="color: var(--footer-hyperlink-text-color)" href="http://hl7.org/fhir/R5/">FHIR 5.0.0</a>. Generated <span title="Tue, Mar 12, 2024 18:28+0100">2024-03-12</span>
           <br/>
           <span style="color: var(--footer-highlight-text-color)">
                       Links: <a style="color: var(--footer-hyperlink-text-color)" href="toc.html">Table of Contents</a> |

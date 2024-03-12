@@ -22,25 +22,28 @@
        ] )
      ]
   ] [
-     fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"^^xsd:anyURI ] ;
+     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ] ;
      fhir:value [ fhir:v "urn:hl7-org:v3"^^xsd:anyURI ]
   ] [
-     fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/structuredefinition-xml-no-order"^^xsd:anyURI ] ;
-     fhir:value [ fhir:v "true"^^xsd:boolean ]
+     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-name"^^xsd:anyURI ] ;
+     fhir:value [ fhir:v "name" ]
+  ] [
+     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/logical-container"^^xsd:anyURI ] ;
+     fhir:value [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"^^xsd:anyURI ]
   ] ) ; # 
   fhir:url [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/PN"^^xsd:anyURI] ; # 
-  fhir:version [ fhir:v "2.1.0-draft2-mb"] ; # 
+  fhir:version [ fhir:v "2.0.0-sd-202312-matchbox-patch"] ; # 
   fhir:name [ fhir:v "PN"] ; # 
   fhir:title [ fhir:v "PN: PersonName (V3 Data Type)"] ; # 
   fhir:status [ fhir:v "active"] ; # 
   fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
-  fhir:date [ fhir:v "2023-10-04T23:00:58+02:00"^^xsd:dateTime] ; # 
+  fhir:date [ fhir:v "2024-03-12T18:28:21+01:00"^^xsd:dateTime] ; # 
   fhir:publisher [ fhir:v "Health Level 7"] ; # 
   fhir:contact ( [
      fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
      fhir:telecom ( [
        fhir:system [ fhir:v "url" ] ;
-       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structdoc" ]
+       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structure" ]
      ] [
        fhir:system [ fhir:v "email" ] ;
        fhir:value [ fhir:v "structdog@lists.HL7.org" ]
@@ -75,19 +78,10 @@
          fhir:max [ fhir:v "*" ]
        ] ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
-         fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
-         fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
-         ]
-       ] [
          fhir:key [ fhir:v "pn-no-ls" ] ;
          fhir:severity [ fhir:v "error" ] ;
          fhir:human [ fhir:v "No PN name part may have a qualifier of LS." ] ;
-         fhir:expression [ fhir:v "(delimiter | family | given | prefix | suffix).where(qualifier = 'LS').empty()" ]
+         fhir:expression [ fhir:v "(item.delimiter | item.family | item.given | item.prefix | item.suffix).where(qualifier.where($this = 'LS').exists()).empty()" ]
        ] ) ;
        fhir:isModifier [ fhir:v "false"^^xsd:boolean ] ;
        fhir:mapping ( [
@@ -117,8 +111,8 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -144,17 +138,45 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-EntityNameUse"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-EntityNameUse>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAEntityNameUse"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAEntityNameUse>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "PN.delimiter" ] ;
-       fhir:path [ fhir:v "PN.delimiter" ] ;
+       fhir:id [ fhir:v "PN.item" ] ;
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-choice-group"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "true"^^xsd:boolean ]
+       ] ) ;
+       fhir:path [ fhir:v "PN.item" ] ;
+       fhir:definition [ fhir:v "A series of items that constitute the name." ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "EN.item" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/fhir/StructureDefinition/Base"^^xsd:anyURI ]
+       ] ) ;
+       fhir:constraint ( [
+         fhir:key [ fhir:v "EN-1" ] ;
+         fhir:severity [ fhir:v "error" ] ;
+         fhir:human [ fhir:v "Can only have only one of the possible item elements in each choice" ] ;
+         fhir:expression [ fhir:v "(delimiter | family | given | prefix | suffix | xmlText).count() = 1" ] ;
+         fhir:source [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/EN"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/EN>
+         ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "PN.item.delimiter" ] ;
+       fhir:path [ fhir:v "PN.item.delimiter" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "*" ] ;
        fhir:base [
-         fhir:path [ fhir:v "EN.delimiter" ] ;
+         fhir:path [ fhir:v "EN.item.delimiter" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
          fhir:max [ fhir:v "*" ]
        ] ;
@@ -162,12 +184,12 @@
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ENXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "PN.family" ] ;
-       fhir:path [ fhir:v "PN.family" ] ;
+       fhir:id [ fhir:v "PN.item.family" ] ;
+       fhir:path [ fhir:v "PN.item.family" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "*" ] ;
        fhir:base [
-         fhir:path [ fhir:v "EN.family" ] ;
+         fhir:path [ fhir:v "EN.item.family" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
          fhir:max [ fhir:v "*" ]
        ] ;
@@ -175,12 +197,12 @@
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ENXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "PN.given" ] ;
-       fhir:path [ fhir:v "PN.given" ] ;
+       fhir:id [ fhir:v "PN.item.given" ] ;
+       fhir:path [ fhir:v "PN.item.given" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "*" ] ;
        fhir:base [
-         fhir:path [ fhir:v "EN.given" ] ;
+         fhir:path [ fhir:v "EN.item.given" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
          fhir:max [ fhir:v "*" ]
        ] ;
@@ -188,12 +210,12 @@
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ENXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "PN.prefix" ] ;
-       fhir:path [ fhir:v "PN.prefix" ] ;
+       fhir:id [ fhir:v "PN.item.prefix" ] ;
+       fhir:path [ fhir:v "PN.item.prefix" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "*" ] ;
        fhir:base [
-         fhir:path [ fhir:v "EN.prefix" ] ;
+         fhir:path [ fhir:v "EN.item.prefix" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
          fhir:max [ fhir:v "*" ]
        ] ;
@@ -201,13 +223,12 @@
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ENXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "PN.suffix" ] ;
-       fhir:path [ fhir:v "PN.suffix" ] ;
-       fhir:definition [ fhir:v "Element EN.family" ] ;
+       fhir:id [ fhir:v "PN.item.suffix" ] ;
+       fhir:path [ fhir:v "PN.item.suffix" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "*" ] ;
        fhir:base [
-         fhir:path [ fhir:v "EN.suffix" ] ;
+         fhir:path [ fhir:v "EN.item.suffix" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
          fhir:max [ fhir:v "*" ]
        ] ;
@@ -215,15 +236,15 @@
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ENXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "PN.xmlText" ] ;
-       fhir:path [ fhir:v "PN.xmlText" ] ;
+       fhir:id [ fhir:v "PN.item.xmlText" ] ;
+       fhir:path [ fhir:v "PN.item.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "EN.xmlText" ] ;
+         fhir:path [ fhir:v "EN.item.xmlText" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
          fhir:max [ fhir:v "1" ]
        ] ;
@@ -256,14 +277,17 @@
        fhir:id [ fhir:v "PN" ] ;
        fhir:path [ fhir:v "PN" ] ;
        fhir:definition [ fhir:v "A name for a person. A sequence of name parts, such as given name or family name, prefix, suffix, etc. Examples for person name values are \"Jim Bob Walton, Jr.\", \"Adam Everyman\", etc. A person name may be as simple as a character string or may consist of several person name parts, such as, \"Jim\", \"Bob\", \"Walton\", and \"Jr.\". PN differs from EN because the qualifier type cannot include LS (Legal Status)." ] ;
-       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
        fhir:constraint ( [
          fhir:key [ fhir:v "pn-no-ls" ] ;
          fhir:severity [ fhir:v "error" ] ;
          fhir:human [ fhir:v "No PN name part may have a qualifier of LS." ] ;
-         fhir:expression [ fhir:v "(delimiter | family | given | prefix | suffix).where(qualifier = 'LS').empty()" ]
+         fhir:expression [ fhir:v "(item.delimiter | item.family | item.given | item.prefix | item.suffix).where(qualifier.where($this = 'LS').exists()).empty()" ]
        ] )
+     ] [
+       fhir:id [ fhir:v "PN.item" ] ;
+       fhir:path [ fhir:v "PN.item" ] ;
+       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "*" ]
      ] )
   ] . # 
 

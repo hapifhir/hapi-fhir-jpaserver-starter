@@ -1,0 +1,69 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "CDAEntityNameUse",
+  "text" : {
+    "status" : "extensions",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include these codes as defined in <a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html\"><code>http://terminology.hl7.org/CodeSystem/v3-EntityNameUse</code></a><table class=\"none\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-C\">C</a></td><td style=\"color: #cccccc\">License</td><td>As recorded on a license, record, certificate, etc. (only if different from legal name)</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-L\">L</a></td><td style=\"color: #cccccc\">Legal</td><td>Known as/conventional/the one you use</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-I\">I</a></td><td style=\"color: #cccccc\">Indigenous/Tribal</td><td>e.g. Chief Red Cloud</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-P\">P</a></td><td style=\"color: #cccccc\">pseudonym</td><td>A self asserted name that the person is using or has used.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-A\">A</a></td><td style=\"color: #cccccc\">Artist/Stage</td><td>Includes writer's pseudonym, stage name, etc</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-R\">R</a></td><td style=\"color: #cccccc\">Religious</td><td>e.g. Sister Mary Francis, Brother John</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-SRCH\">SRCH</a></td><td style=\"color: #cccccc\">search</td><td>A name intended for use in searching or matching.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-PHON\">PHON</a></td><td style=\"color: #cccccc\">phonetic</td><td>A name spelled phonetically.<br/><br/>There are a variety of phonetic spelling algorithms. This code value does not distinguish between these.*Discussion:*</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-SNDX\">SNDX</a></td><td style=\"color: #cccccc\">Soundex</td><td>A name spelled according to the SoundEx algorithm.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-ABC\">ABC</a></td><td style=\"color: #cccccc\">Alphabetic</td><td>Alphabetic transcription of name (Japanese: romaji)</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-SYL\">SYL</a></td><td style=\"color: #cccccc\">Syllabic</td><td>Syllabic transcription of name (e.g., Japanese kana, Korean hangul)</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-IDE\">IDE</a></td><td style=\"color: #cccccc\">Ideographic</td><td>Ideographic representation of name (e.g., Japanese kanji, Chinese characters)</td></tr></table></li></ul></div>"
+  },
+  "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityNameUse",
+  "version" : "2.0.0-sd-202312-matchbox-patch",
+  "name" : "CDAEntityNameUse",
+  "title" : "CDAEntityNameUse",
+  "status" : "draft",
+  "experimental" : false,
+  "date" : "2024-03-12T18:28:21+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "name" : "HL7 International - Structured Documents",
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    },
+    {
+      "system" : "email",
+      "value" : "structdog@lists.HL7.org"
+    }]
+  }],
+  "description" : "A set of codes advising a system or user which name in a set of names to select for a given purpose - limited to values allowed in original CDA definition",
+  "compose" : {
+    "include" : [{
+      "system" : "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse",
+      "concept" : [{
+        "code" : "C"
+      },
+      {
+        "code" : "L"
+      },
+      {
+        "code" : "I"
+      },
+      {
+        "code" : "P"
+      },
+      {
+        "code" : "A"
+      },
+      {
+        "code" : "R"
+      },
+      {
+        "code" : "SRCH"
+      },
+      {
+        "code" : "PHON"
+      },
+      {
+        "code" : "SNDX"
+      },
+      {
+        "code" : "ABC"
+      },
+      {
+        "code" : "SYL"
+      },
+      {
+        "code" : "IDE"
+      }]
+    }]
+  }
+}

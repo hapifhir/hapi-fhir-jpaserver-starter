@@ -1,0 +1,39 @@
+{
+  "resourceType" : "CodeSystem",
+  "id" : "BinaryDataEncoding",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>This case-sensitive code system <code>http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding</code> defines the following codes:</p><table class=\"codes\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td></tr><tr><td style=\"white-space:nowrap\">B64<a name=\"BinaryDataEncoding-B64\"> </a></td><td>Base64-encoded text</td></tr><tr><td style=\"white-space:nowrap\">TXT<a name=\"BinaryDataEncoding-TXT\"> </a></td><td>Plain text</td></tr></table></div>"
+  },
+  "url" : "http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding",
+  "version" : "2.0.0-sd-202312-matchbox-patch",
+  "name" : "BinaryDataEncoding",
+  "title" : "Binary Data Encoding Code System",
+  "status" : "draft",
+  "experimental" : false,
+  "date" : "2024-03-12T18:28:21+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "name" : "HL7 International - Structured Documents",
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    },
+    {
+      "system" : "email",
+      "value" : "structdog@lists.HL7.org"
+    }]
+  }],
+  "description" : "Identifies the representation of binary data in a text field",
+  "caseSensitive" : true,
+  "content" : "complete",
+  "count" : 2,
+  "concept" : [{
+    "code" : "B64",
+    "display" : "Base64-encoded text"
+  },
+  {
+    "code" : "TXT",
+    "display" : "Plain text"
+  }]
+}

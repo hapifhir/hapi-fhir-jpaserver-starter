@@ -1,0 +1,17 @@
+{
+  "resourceType" : "CodeSystem",
+  "id" : "610faa6d-d917-4e07-a068-484061ef4901-3",
+  "url" : "http://hl7.org/fhir/comparison/CodeSystem/610faa6d-d917-4e07-a068-484061ef4901-3",
+  "name" : "IntersectionBinaryDataEncodingAndBinaryDataEncoding",
+  "title" : "Intersection of Binary Data Encoding Code System And Binary Data Encoding Code System",
+  "status" : "draft",
+  "date" : "2024-03-12T18:28:31+01:00",
+  "concept" : [{
+    "code" : "B64",
+    "display" : "Base64-encoded text"
+  },
+  {
+    "code" : "TXT",
+    "display" : "Plain text"
+  }]
+}

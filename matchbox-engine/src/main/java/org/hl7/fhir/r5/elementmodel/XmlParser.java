@@ -265,6 +265,11 @@ public class XmlParser extends ParserBase {
           // MATCHBOX
           return "lab:";
         }
+     if (ns.equals("urn:hl7-at:v3")) {
+          // MATCHBOX
+          return "hl7at:";
+        }
+
         return "?:";
       }
 
@@ -406,7 +411,7 @@ public class XmlParser extends ParserBase {
 
 					// matchbox-engine: if we are parsing from CDA we need to collapse non string types https://www.w3.org/TR/xmlschema-2/#rf-whiteSpace
 					// If the attribute type is not CDATA, then the XML processor must further process the normalized attribute value by discarding any leading and trailing space (#x20) characters
-					if ("urn:hl7-org:v3".equals(node.getNamespaceURI()) || "urn:hl7-org:sdtc".equals(node.getNamespaceURI()) || "urn:ihe:pharm".equals(node.getNamespaceURI()) || "urn:oid:1.3.6.1.4.1.19376.1.3.2".equals(node.getNamespaceURI())) {
+					if ("urn:hl7-org:v3".equals(node.getNamespaceURI()) || "urn:hl7-org:sdtc".equals(node.getNamespaceURI()) || "urn:ihe:pharm".equals(node.getNamespaceURI()) || "urn:oid:1.3.6.1.4.1.19376.1.3.2".equals(node.getNamespaceURI())|| "urn:hl7-at:v3".equals(node.getNamespaceURI())) {
 						av = av.trim();
 					}
 

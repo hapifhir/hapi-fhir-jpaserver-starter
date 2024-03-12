@@ -3,7 +3,7 @@
 <StructureDefinition xmlns="http://hl7.org/fhir">
   <id value="PharmPackagedMedicine"/>
   <text>
-    <status value="extensions"/><div xmlns="http://www.w3.org/1999/xhtml"><table border="0" cellpadding="0" cellspacing="0" style="border: 0px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top;"><tr style="border: 1px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top"><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="The logical name of the element">Name</a></th><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Information about the use of the element">Flags</a></th><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Minimum and Maximum # of times the the element can appear in the instance">Card.</a></th><th style="width: 100px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Reference to the type of the element">Type</a></th><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Additional information about the element">Description &amp; Constraints</a><span style="float: right"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Legend for this format"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3goXBCwdPqAP0wAAAldJREFUOMuNk0tIlFEYhp9z/vE2jHkhxXA0zJCMitrUQlq4lnSltEqCFhFG2MJFhIvIFpkEWaTQqjaWZRkp0g26URZkTpbaaOJkDqk10szoODP//7XIMUe0elcfnPd9zsfLOYplGrpRwZaqTtw3K7PtGem7Q6FoidbGgqHVy/HRb669R+56zx7eRV1L31JGxYbBtjKK93cxeqfyQHbehkZbUkK20goELEuIzEd+dHS+qz/Y8PTSif0FnGkbiwcAjHaU1+QWOptFiyCLp/LnKptpqIuXHx6rbR26kJcBX3yLgBfnd7CxwJmflpP2wUg0HIAoUUpZBmKzELGWcN8nAr6Gpu7tLU/CkwAaoKTWRSQyt89Q8w6J+oVQkKnBoblH7V0PPvUOvDYXfopE/SJmALsxnVm6LbkotrUtNowMeIrVrBcBpaMmdS0j9df7abpSuy7HWehwJdt1lhVwi/J58U5beXGAF6c3UXLycw1wdFklArBn87xdh0ZsZtArghBdAA3+OEDVubG4UEzP6x1FOWneHh2VDAHBAt80IbdXDcesNoCvs3E5AFyNSU5nbrDPZpcUEQQTFZiEVx+51fxMhhyJEAgvlriadIJZZksRuwBYMOPBbO3hePVVqgEJhFeUuFLhIPkRP6BQLIBrmMenujm/3g4zc398awIe90Zb5A1vREALqneMcYgP/xVQWlG+Ncu5vgwwlaUNx+3799rfe96u9K0JSDXcOzOTJg4B6IgmXfsygc7/Bvg9g9E58/cDVmGIBOP/zT8Bz1zqWqpbXIsd0O9hajXfL6u4BaOS6SeWAAAAAElFTkSuQmCC" alt="doco" style="background-color: inherit"/></a></span></th></tr><tr style="border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white"><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck1.png)" class="hierarchy"><img src="tbl_spacer.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="icon_element.gif" alt="." style="background-color: white; background-color: inherit" title="Element" class="hierarchy"/> <a href="StructureDefinition-PharmPackagedMedicine-definitions.html#PharmPackagedMedicine">PharmPackagedMedicine</a><a name="PharmPackagedMedicine"> </a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy">1..1</td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="http://hl7.org/fhir/R5/types.html#Base">Base</a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><span style="font-weight:bold">XML Namespace: </span>urn:ihe:pharm<br/><span style="opacity: 0.5">Base for all types and resources</span><br/><span style="font-weight:bold">Instances of this logical model are not marked to be the target of a Reference</span></td></tr>
+    <status value="extensions"/><div xmlns="http://www.w3.org/1999/xhtml"><table border="0" cellpadding="0" cellspacing="0" style="border: 0px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top;"><tr style="border: 1px #F0F0F0 solid; font-size: 11px; font-family: verdana; vertical-align: top"><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="The logical name of the element">Name</a></th><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Information about the use of the element">Flags</a></th><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Minimum and Maximum # of times the the element can appear in the instance">Card.</a></th><th style="width: 100px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Reference to the type of the element">Type</a></th><th style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Additional information about the element">Description &amp; Constraints</a><span style="float: right"><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Legend for this format"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3goXBCwdPqAP0wAAAldJREFUOMuNk0tIlFEYhp9z/vE2jHkhxXA0zJCMitrUQlq4lnSltEqCFhFG2MJFhIvIFpkEWaTQqjaWZRkp0g26URZkTpbaaOJkDqk10szoODP//7XIMUe0elcfnPd9zsfLOYplGrpRwZaqTtw3K7PtGem7Q6FoidbGgqHVy/HRb669R+56zx7eRV1L31JGxYbBtjKK93cxeqfyQHbehkZbUkK20goELEuIzEd+dHS+qz/Y8PTSif0FnGkbiwcAjHaU1+QWOptFiyCLp/LnKptpqIuXHx6rbR26kJcBX3yLgBfnd7CxwJmflpP2wUg0HIAoUUpZBmKzELGWcN8nAr6Gpu7tLU/CkwAaoKTWRSQyt89Q8w6J+oVQkKnBoblH7V0PPvUOvDYXfopE/SJmALsxnVm6LbkotrUtNowMeIrVrBcBpaMmdS0j9df7abpSuy7HWehwJdt1lhVwi/J58U5beXGAF6c3UXLycw1wdFklArBn87xdh0ZsZtArghBdAA3+OEDVubG4UEzP6x1FOWneHh2VDAHBAt80IbdXDcesNoCvs3E5AFyNSU5nbrDPZpcUEQQTFZiEVx+51fxMhhyJEAgvlriadIJZZksRuwBYMOPBbO3hePVVqgEJhFeUuFLhIPkRP6BQLIBrmMenujm/3g4zc398awIe90Zb5A1vREALqneMcYgP/xVQWlG+Ncu5vgwwlaUNx+3799rfe96u9K0JSDXcOzOTJg4B6IgmXfsygc7/Bvg9g9E58/cDVmGIBOP/zT8Bz1zqWqpbXIsd0O9hajXfL6u4BaOS6SeWAAAAAElFTkSuQmCC" alt="doco" style="background-color: inherit"/></a></span></th></tr><tr style="border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white"><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck1.png)" class="hierarchy"><img src="tbl_spacer.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="icon_element.gif" alt="." style="background-color: white; background-color: inherit" title="Element" class="hierarchy"/> <a href="StructureDefinition-PharmPackagedMedicine-definitions.html#PharmPackagedMedicine">PharmPackagedMedicine</a><a name="PharmPackagedMedicine"> </a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy">1..1</td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="http://hl7.org/fhir/R5/types.html#Base">Base</a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><span style="font-weight:bold">XML Namespace: </span>urn:ihe:pharm<br/><span style="opacity: 0.5">Base for all types and resources</span><br/><span style="font-weight:bold">Instances of this logical model are not marked to be the target of a Reference</span><br/><span style="font-weight:bold" title="The root class that contains instances of this class">Logical Container: </span><a href="StructureDefinition-ClinicalDocument.html">ClinicalDocument (CDA Class)</a></td></tr>
 <tr style="border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7"><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)" class="hierarchy"><img src="tbl_spacer.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="tbl_vjoin.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="icon_primitive.png" alt="." style="background-color: #F7F7F7; background-color: inherit" title="Primitive Data Type" class="hierarchy"/> <a href="StructureDefinition-PharmPackagedMedicine-definitions.html#PharmPackagedMedicine.classCode">@classCode</a><a name="PharmPackagedMedicine.classCode"> </a></td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><span style="padding-left: 3px; padding-right: 3px; color: white; background-color: red" title="This element must be supported">S</span></td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy">1..1</td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="http://hl7.org/fhir/R5/datatypes.html#code">code</a></td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><span style="font-weight:bold">Fixed Value: </span><span style="color: darkgreen">CONT</span></td></tr>
 <tr style="border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white"><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)" class="hierarchy"><img src="tbl_spacer.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="tbl_vjoin.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="icon_primitive.png" alt="." style="background-color: white; background-color: inherit" title="Primitive Data Type" class="hierarchy"/> <a href="StructureDefinition-PharmPackagedMedicine-definitions.html#PharmPackagedMedicine.determinerCode">@determinerCode</a><a name="PharmPackagedMedicine.determinerCode"> </a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><span style="padding-left: 3px; padding-right: 3px; color: white; background-color: red" title="This element must be supported">S</span></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy">1..1</td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="http://hl7.org/fhir/R5/datatypes.html#code">code</a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><span style="font-weight:bold">Fixed Value: </span><span style="color: darkgreen">INSTANCE</span></td></tr>
 <tr style="border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: #F7F7F7"><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck10.png)" class="hierarchy"><img src="tbl_spacer.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="tbl_vjoin.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="icon_resource.png" alt="." style="background-color: #F7F7F7; background-color: inherit" title="Resource" class="hierarchy"/> <a href="StructureDefinition-PharmPackagedMedicine-definitions.html#PharmPackagedMedicine.code">code</a><a name="PharmPackagedMedicine.code"> </a></td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy">0..1</td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="StructureDefinition-CE.html">CE</a></td><td style="vertical-align: top; text-align : left; background-color: #F7F7F7; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><span style="font-weight:bold">XML Namespace: </span>urn:ihe:pharm</td></tr>
@@ -14,22 +14,25 @@
 <tr style="border: 0px #F0F0F0 solid; padding:0px; vertical-align: top; background-color: white"><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px; white-space: nowrap; background-image: url(tbl_bck00.png)" class="hierarchy"><img src="tbl_spacer.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="tbl_vjoin_end.png" alt="." style="background-color: inherit" class="hierarchy"/><img src="icon_resource.png" alt="." style="background-color: white; background-color: inherit" title="Resource" class="hierarchy"/> <a href="StructureDefinition-PharmPackagedMedicine-definitions.html#PharmPackagedMedicine.asSuperContent">asSuperContent</a><a name="PharmPackagedMedicine.asSuperContent"> </a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"/><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy">0..1</td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><a href="StructureDefinition-PharmSuperContent.html">PharmSuperContent</a></td><td style="vertical-align: top; text-align : left; background-color: white; border: 0px #F0F0F0 solid; padding:0px 4px 0px 4px" class="hierarchy"><span style="font-weight:bold">XML Namespace: </span>urn:ihe:pharm</td></tr>
 <tr><td colspan="5" class="hierarchy"><br/><a href="https://build.fhir.org/ig/FHIR/ig-guidance/readingIgs.html#table-views" title="Legend for this format"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3goXBCwdPqAP0wAAAldJREFUOMuNk0tIlFEYhp9z/vE2jHkhxXA0zJCMitrUQlq4lnSltEqCFhFG2MJFhIvIFpkEWaTQqjaWZRkp0g26URZkTpbaaOJkDqk10szoODP//7XIMUe0elcfnPd9zsfLOYplGrpRwZaqTtw3K7PtGem7Q6FoidbGgqHVy/HRb669R+56zx7eRV1L31JGxYbBtjKK93cxeqfyQHbehkZbUkK20goELEuIzEd+dHS+qz/Y8PTSif0FnGkbiwcAjHaU1+QWOptFiyCLp/LnKptpqIuXHx6rbR26kJcBX3yLgBfnd7CxwJmflpP2wUg0HIAoUUpZBmKzELGWcN8nAr6Gpu7tLU/CkwAaoKTWRSQyt89Q8w6J+oVQkKnBoblH7V0PPvUOvDYXfopE/SJmALsxnVm6LbkotrUtNowMeIrVrBcBpaMmdS0j9df7abpSuy7HWehwJdt1lhVwi/J58U5beXGAF6c3UXLycw1wdFklArBn87xdh0ZsZtArghBdAA3+OEDVubG4UEzP6x1FOWneHh2VDAHBAt80IbdXDcesNoCvs3E5AFyNSU5nbrDPZpcUEQQTFZiEVx+51fxMhhyJEAgvlriadIJZZksRuwBYMOPBbO3hePVVqgEJhFeUuFLhIPkRP6BQLIBrmMenujm/3g4zc398awIe90Zb5A1vREALqneMcYgP/xVQWlG+Ncu5vgwwlaUNx+3799rfe96u9K0JSDXcOzOTJg4B6IgmXfsygc7/Bvg9g9E58/cDVmGIBOP/zT8Bz1zqWqpbXIsd0O9hajXfL6u4BaOS6SeWAAAAAElFTkSuQmCC" alt="doco" style="background-color: inherit"/> Documentation for this format</a></td></tr></table></div>
   </text>
-  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
     <valueUri value="urn:ihe:pharm"/>
   </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-container">
+    <valueUri value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
+  </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/PharmPackagedMedicine"/>
-  <version value="2.1.0-draft2-mb"/>
+  <version value="2.0.0-sd-202312-matchbox-patch"/>
   <name value="CDAR2.PharmPackagedMedicine"/>
   <title value="PharmPackagedMedicine (CDA Pharm Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-10-04T23:00:58+02:00"/>
+  <date value="2024-03-12T18:28:21+01:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/structdoc"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
     </telecom>
     <telecom>
       <system value="email"/>
@@ -59,13 +62,6 @@
         <min value="0"/>
         <max value="*"/>
       </base>
-      <constraint>
-        <key value="ele-1"/>
-        <severity value="error"/>
-        <human value="All FHIR elements must have a @value or children"/>
-        <expression value="hasValue() or (children().count() &gt; id.count())"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
-      </constraint>
       <isModifier value="false"/>
       <mapping>
         <identity value="rim"/>
@@ -107,7 +103,7 @@
       <mustSupport value="true"/>
     </element>
     <element id="PharmPackagedMedicine.code">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:ihe:pharm"/>
       </extension>
       <path value="PharmPackagedMedicine.code"/>
@@ -123,7 +119,7 @@
       </type>
     </element>
     <element id="PharmPackagedMedicine.name">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:ihe:pharm"/>
       </extension>
       <path value="PharmPackagedMedicine.name"/>
@@ -139,7 +135,7 @@
       </type>
     </element>
     <element id="PharmPackagedMedicine.formCode">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:ihe:pharm"/>
       </extension>
       <path value="PharmPackagedMedicine.formCode"/>
@@ -155,7 +151,7 @@
       </type>
     </element>
     <element id="PharmPackagedMedicine.lotNumberText">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:ihe:pharm"/>
       </extension>
       <path value="PharmPackagedMedicine.lotNumberText"/>
@@ -171,7 +167,7 @@
       </type>
     </element>
     <element id="PharmPackagedMedicine.capacityQuantity">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:ihe:pharm"/>
       </extension>
       <path value="PharmPackagedMedicine.capacityQuantity"/>
@@ -187,7 +183,7 @@
       </type>
     </element>
     <element id="PharmPackagedMedicine.asSuperContent">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:ihe:pharm"/>
       </extension>
       <path value="PharmPackagedMedicine.asSuperContent"/>
@@ -234,7 +230,7 @@
       <mustSupport value="true"/>
     </element>
     <element id="PharmPackagedMedicine.code">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:ihe:pharm"/>
       </extension>
       <path value="PharmPackagedMedicine.code"/>
@@ -245,7 +241,7 @@
       </type>
     </element>
     <element id="PharmPackagedMedicine.name">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:ihe:pharm"/>
       </extension>
       <path value="PharmPackagedMedicine.name"/>
@@ -256,7 +252,7 @@
       </type>
     </element>
     <element id="PharmPackagedMedicine.formCode">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:ihe:pharm"/>
       </extension>
       <path value="PharmPackagedMedicine.formCode"/>
@@ -267,7 +263,7 @@
       </type>
     </element>
     <element id="PharmPackagedMedicine.lotNumberText">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:ihe:pharm"/>
       </extension>
       <path value="PharmPackagedMedicine.lotNumberText"/>
@@ -278,7 +274,7 @@
       </type>
     </element>
     <element id="PharmPackagedMedicine.capacityQuantity">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:ihe:pharm"/>
       </extension>
       <path value="PharmPackagedMedicine.capacityQuantity"/>
@@ -289,7 +285,7 @@
       </type>
     </element>
     <element id="PharmPackagedMedicine.asSuperContent">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:ihe:pharm"/>
       </extension>
       <path value="PharmPackagedMedicine.asSuperContent"/>

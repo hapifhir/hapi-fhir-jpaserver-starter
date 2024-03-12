@@ -1,8 +1,472 @@
 {
   "resourceType" : "Bundle",
-  "id" : "5ba45727-0c49-436e-995d-2c702245cb16",
+  "id" : "756034cb-3085-4fa2-a193-affa718807c1",
   "meta" : {
-    "lastUpdated" : "2023-10-04T23:00:58.680+02:00"
+    "lastUpdated" : "2024-03-12T18:28:21.559+01:00"
   },
-  "type" : "collection"
+  "type" : "collection",
+  "entry" : [{
+    "fullUrl" : "http://hl7.org/cda/stds/core/ValueSet/BinaryDataEncoding",
+    "resource" : {
+      "resourceType" : "ValueSet",
+      "text" : {
+        "status" : "generated",
+        "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p style=\"border: black 1px dotted; background-color: #EEEEEE; padding: 8px; margin-bottom: 8px\">Expansion based on <a href=\"CodeSystem-BinaryDataEncoding.html\">codesystem Binary Data Encoding Code System v2.0.0-sd-202312-matchbox-patch (CodeSystem)</a></p><p>This value set contains 2 concepts.</p><table class=\"codes\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>System</b></td><td><b>Display</b></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---hl7.org-cda-stds-core-CodeSystem-BinaryDataEncoding-B64\"> </a>\u00a0\u00a0<a href=\"CodeSystem-BinaryDataEncoding.html#BinaryDataEncoding-B64\">B64</a></td><td>http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding</td><td>Base64-encoded text</td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---hl7.org-cda-stds-core-CodeSystem-BinaryDataEncoding-TXT\"> </a>\u00a0\u00a0<a href=\"CodeSystem-BinaryDataEncoding.html#BinaryDataEncoding-TXT\">TXT</a></td><td>http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding</td><td>Plain text</td></tr></table></div>"
+      },
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/BinaryDataEncoding",
+      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "name" : "BinaryDataEncoding",
+      "title" : "Binary Data Encoding Value Set",
+      "status" : "draft",
+      "experimental" : false,
+      "date" : "2024-03-12T18:28:21+01:00",
+      "expansion" : {
+        "identifier" : "urn:uuid:6608c90f-a615-436c-b291-41fb4e0e95af",
+        "timestamp" : "2024-03-12T18:28:59+01:00",
+        "total" : 2,
+        "offset" : 0,
+        "parameter" : [{
+          "name" : "count",
+          "valueInteger" : 1000
+        },
+        {
+          "name" : "offset",
+          "valueInteger" : 0
+        },
+        {
+          "name" : "excludeNested",
+          "valueBoolean" : false
+        },
+        {
+          "name" : "used-codesystem",
+          "valueUri" : "http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding|2.0.0-sd-202312-matchbox-patch"
+        }],
+        "contains" : [{
+          "system" : "http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding",
+          "code" : "B64",
+          "display" : "Base64-encoded text"
+        },
+        {
+          "system" : "http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding",
+          "code" : "TXT",
+          "display" : "Plain text"
+        }]
+      }
+    }
+  },
+  {
+    "fullUrl" : "http://hl7.org/cda/stds/core/ValueSet/CDACompressionAlgorithm",
+    "resource" : {
+      "resourceType" : "ValueSet",
+      "text" : {
+        "status" : "generated",
+        "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p style=\"border: black 1px dotted; background-color: #EEEEEE; padding: 8px; margin-bottom: 8px\">Expansion based on <a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-CompressionAlgorithm.html\">codesystem CompressionAlgorithm v2.1.1 (CodeSystem)</a></p><p>This value set contains 4 concepts.</p><table class=\"codes\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>System</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-CompressionAlgorithm-DF\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-CompressionAlgorithm.html#v3-CompressionAlgorithm-DF\">DF</a></td><td>http://terminology.hl7.org/CodeSystem/v3-CompressionAlgorithm</td><td>deflate</td><td><div><p>The deflate compressed data format as specified in RFC 1951 [http://www.ietf.org/rfc/rfc1951.txt].</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-CompressionAlgorithm-GZ\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-CompressionAlgorithm.html#v3-CompressionAlgorithm-GZ\">GZ</a></td><td>http://terminology.hl7.org/CodeSystem/v3-CompressionAlgorithm</td><td>gzip</td><td><div><p>A compressed data format that is compatible with the widely used GZIP utility as specified in RFC 1952 [http://www.ietf.org/rfc/rfc1952.txt] (uses the deflate algorithm).</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-CompressionAlgorithm-ZL\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-CompressionAlgorithm.html#v3-CompressionAlgorithm-ZL\">ZL</a></td><td>http://terminology.hl7.org/CodeSystem/v3-CompressionAlgorithm</td><td>zlib</td><td><div><p>A compressed data format that also uses the deflate algorithm. Specified as RFC 1950 [http://www.ietf.org/rfc/rfc1952.txt]</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-CompressionAlgorithm-Z\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-CompressionAlgorithm.html#v3-CompressionAlgorithm-Z\">Z</a></td><td>http://terminology.hl7.org/CodeSystem/v3-CompressionAlgorithm</td><td>compress</td><td><div><p>Original UNIX compress algorithm and file format using the LZC algorithm (a variant of LZW). Patent encumbered and less efficient than deflate.</p>\n</div></td></tr></table></div>"
+      },
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDACompressionAlgorithm",
+      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "name" : "CDACompressionAlgorithm",
+      "title" : "CompressionAlgorithm",
+      "status" : "draft",
+      "experimental" : false,
+      "date" : "2024-03-12T18:28:21+01:00",
+      "expansion" : {
+        "identifier" : "urn:uuid:d85413e7-f707-405d-980a-3965ba835432",
+        "timestamp" : "2024-03-12T18:28:59+01:00",
+        "total" : 4,
+        "offset" : 0,
+        "parameter" : [{
+          "name" : "count",
+          "valueInteger" : 1000
+        },
+        {
+          "name" : "offset",
+          "valueInteger" : 0
+        },
+        {
+          "name" : "excludeNested",
+          "valueBoolean" : false
+        },
+        {
+          "name" : "used-codesystem",
+          "valueUri" : "http://terminology.hl7.org/CodeSystem/v3-CompressionAlgorithm|2.1.1"
+        }],
+        "contains" : [{
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-CompressionAlgorithm",
+          "code" : "DF",
+          "display" : "deflate"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-CompressionAlgorithm",
+          "code" : "GZ",
+          "display" : "gzip"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-CompressionAlgorithm",
+          "code" : "ZL",
+          "display" : "zlib"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-CompressionAlgorithm",
+          "code" : "Z",
+          "display" : "compress"
+        }]
+      }
+    }
+  },
+  {
+    "fullUrl" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityNameUse",
+    "resource" : {
+      "resourceType" : "ValueSet",
+      "text" : {
+        "status" : "generated",
+        "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p style=\"border: black 1px dotted; background-color: #EEEEEE; padding: 8px; margin-bottom: 8px\">Expansion based on <a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html\">codesystem EntityNameUse v2.1.0 (CodeSystem)</a></p><p>This value set contains 12 concepts.</p><table class=\"codes\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>System</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-EntityNameUse-C\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-C\">C</a></td><td>http://terminology.hl7.org/CodeSystem/v3-EntityNameUse</td><td>License</td><td><div><p>As recorded on a license, record, certificate, etc. (only if different from legal name)</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-EntityNameUse-L\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-L\">L</a></td><td>http://terminology.hl7.org/CodeSystem/v3-EntityNameUse</td><td>Legal</td><td><div><p>Known as/conventional/the one you use</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-EntityNameUse-I\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-I\">I</a></td><td>http://terminology.hl7.org/CodeSystem/v3-EntityNameUse</td><td>Indigenous/Tribal</td><td><div><p>e.g. Chief Red Cloud</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-EntityNameUse-P\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-P\">P</a></td><td>http://terminology.hl7.org/CodeSystem/v3-EntityNameUse</td><td>pseudonym</td><td><div><p>A self asserted name that the person is using or has used.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-EntityNameUse-A\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-A\">A</a></td><td>http://terminology.hl7.org/CodeSystem/v3-EntityNameUse</td><td>Artist/Stage</td><td><div><p>Includes writer's pseudonym, stage name, etc</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-EntityNameUse-R\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-R\">R</a></td><td>http://terminology.hl7.org/CodeSystem/v3-EntityNameUse</td><td>Religious</td><td><div><p>e.g. Sister Mary Francis, Brother John</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-EntityNameUse-SRCH\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-SRCH\">SRCH</a></td><td>http://terminology.hl7.org/CodeSystem/v3-EntityNameUse</td><td>search</td><td><div><p>A name intended for use in searching or matching.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-EntityNameUse-PHON\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-PHON\">PHON</a></td><td>http://terminology.hl7.org/CodeSystem/v3-EntityNameUse</td><td>phonetic</td><td><div><p>A name spelled phonetically.</p>\n<p>There are a variety of phonetic spelling algorithms. This code value does not distinguish between these.<em>Discussion:</em></p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-EntityNameUse-SNDX\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-SNDX\">SNDX</a></td><td>http://terminology.hl7.org/CodeSystem/v3-EntityNameUse</td><td>Soundex</td><td><div><p>A name spelled according to the SoundEx algorithm.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-EntityNameUse-ABC\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-ABC\">ABC</a></td><td>http://terminology.hl7.org/CodeSystem/v3-EntityNameUse</td><td>Alphabetic</td><td><div><p>Alphabetic transcription of name (Japanese: romaji)</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-EntityNameUse-SYL\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-SYL\">SYL</a></td><td>http://terminology.hl7.org/CodeSystem/v3-EntityNameUse</td><td>Syllabic</td><td><div><p>Syllabic transcription of name (e.g., Japanese kana, Korean hangul)</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-EntityNameUse-IDE\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-IDE\">IDE</a></td><td>http://terminology.hl7.org/CodeSystem/v3-EntityNameUse</td><td>Ideographic</td><td><div><p>Ideographic representation of name (e.g., Japanese kanji, Chinese characters)</p>\n</div></td></tr></table></div>"
+      },
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityNameUse",
+      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "name" : "CDAEntityNameUse",
+      "title" : "CDAEntityNameUse",
+      "status" : "draft",
+      "experimental" : false,
+      "date" : "2024-03-12T18:28:21+01:00",
+      "expansion" : {
+        "identifier" : "urn:uuid:3f7bd100-6ba7-4e45-8783-64b7ed112370",
+        "timestamp" : "2024-03-12T18:28:59+01:00",
+        "total" : 12,
+        "offset" : 0,
+        "parameter" : [{
+          "name" : "count",
+          "valueInteger" : 1000
+        },
+        {
+          "name" : "offset",
+          "valueInteger" : 0
+        },
+        {
+          "name" : "excludeNested",
+          "valueBoolean" : false
+        },
+        {
+          "name" : "used-codesystem",
+          "valueUri" : "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse|2.1.0"
+        }],
+        "contains" : [{
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse",
+          "code" : "C",
+          "display" : "License"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse",
+          "code" : "L",
+          "display" : "Legal"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse",
+          "code" : "I",
+          "display" : "Indigenous/Tribal"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse",
+          "code" : "P",
+          "display" : "pseudonym"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse",
+          "code" : "A",
+          "display" : "Artist/Stage"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse",
+          "code" : "R",
+          "display" : "Religious"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse",
+          "code" : "SRCH",
+          "display" : "search"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse",
+          "code" : "PHON",
+          "display" : "phonetic"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse",
+          "code" : "SNDX",
+          "display" : "Soundex"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse",
+          "code" : "ABC",
+          "display" : "Alphabetic"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse",
+          "code" : "SYL",
+          "display" : "Syllabic"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse",
+          "code" : "IDE",
+          "display" : "Ideographic"
+        }]
+      }
+    }
+  },
+  {
+    "fullUrl" : "http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse",
+    "resource" : {
+      "resourceType" : "ValueSet",
+      "text" : {
+        "status" : "generated",
+        "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><div style=\"border: black 1px dotted; background-color: #EEEEEE; padding: 8px; margin-bottom: 8px\"><p>Expansion based on: </p><ul><li><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html\">codesystem AddressUse v2.1.0 (CodeSystem)</a></li><li><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html\">codesystem EntityNameUse v2.1.0 (CodeSystem)</a></li></ul></div><p>This value set contains 13 concepts.</p><table class=\"codes\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>System</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-AddressUse-H\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-H\">H</a></td><td>http://terminology.hl7.org/CodeSystem/v3-AddressUse</td><td>home address</td><td><div><p><strong>Description:</strong> A communication address at a home, attempted contacts for business purposes might intrude privacy and chances are one will contact family or other household members instead of the person one wishes to call. Typically used with urgent cases, or if no other contacts are available.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-AddressUse-HP\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-HP\">HP</a></td><td>http://terminology.hl7.org/CodeSystem/v3-AddressUse</td><td>primary home</td><td><div><p><strong>Description:</strong> The primary home, to reach a person after business hours.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-AddressUse-HV\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-HV\">HV</a></td><td>http://terminology.hl7.org/CodeSystem/v3-AddressUse</td><td>vacation home</td><td><div><p><strong>Description:</strong> A vacation home, to reach a person while on vacation.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-AddressUse-WP\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-WP\">WP</a></td><td>http://terminology.hl7.org/CodeSystem/v3-AddressUse</td><td>work place</td><td><div><p><strong>Description:</strong> An office address. First choice for business related contacts during business hours.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-AddressUse-DIR\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-DIR\">DIR</a></td><td>http://terminology.hl7.org/CodeSystem/v3-AddressUse</td><td>direct</td><td><div><p><strong>Description:</strong> Indicates a work place address or telecommunication address that reaches the individual or organization directly without intermediaries. For phones, often referred to as a 'private line'.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-AddressUse-PUB\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-PUB\">PUB</a></td><td>http://terminology.hl7.org/CodeSystem/v3-AddressUse</td><td>public</td><td><div><p><strong>Description:</strong> Indicates a work place address or telecommunication address that is a 'standard' address which may reach a reception service, mail-room, or other intermediary prior to the target entity.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-AddressUse-BAD\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-BAD\">BAD</a></td><td>http://terminology.hl7.org/CodeSystem/v3-AddressUse</td><td>bad address</td><td><div><p><strong>Description:</strong> A flag indicating that the address is bad, in fact, useless.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-AddressUse-TMP\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-TMP\">TMP</a></td><td>http://terminology.hl7.org/CodeSystem/v3-AddressUse</td><td>temporary address</td><td><div><p><strong>Description:</strong> A temporary address, may be good for visit or mailing. Note that an address history can provide more detailed information.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-AddressUse-PHYS\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-PHYS\">PHYS</a></td><td>http://terminology.hl7.org/CodeSystem/v3-AddressUse</td><td>physical visit address</td><td><div><p><strong>Description:</strong> Used primarily to visit an address.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-AddressUse-PST\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-PST\">PST</a></td><td>http://terminology.hl7.org/CodeSystem/v3-AddressUse</td><td>postal address</td><td><div><p><strong>Description:</strong> Used to send mail.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-EntityNameUse-ABC\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-ABC\">ABC</a></td><td>http://terminology.hl7.org/CodeSystem/v3-EntityNameUse</td><td>Alphabetic</td><td><div><p>Alphabetic transcription of name (Japanese: romaji)</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-EntityNameUse-IDE\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-IDE\">IDE</a></td><td>http://terminology.hl7.org/CodeSystem/v3-EntityNameUse</td><td>Ideographic</td><td><div><p>Ideographic representation of name (e.g., Japanese kanji, Chinese characters)</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-EntityNameUse-SYL\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-SYL\">SYL</a></td><td>http://terminology.hl7.org/CodeSystem/v3-EntityNameUse</td><td>Syllabic</td><td><div><p>Syllabic transcription of name (e.g., Japanese kana, Korean hangul)</p>\n</div></td></tr></table></div>"
+      },
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse",
+      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "name" : "CDAPostalAddressUse",
+      "title" : "CDAPostalAddressUse",
+      "status" : "draft",
+      "experimental" : false,
+      "date" : "2024-03-12T18:28:21+01:00",
+      "expansion" : {
+        "identifier" : "urn:uuid:2d365cb4-a181-4cea-b81f-1bb766a5af6a",
+        "timestamp" : "2024-03-12T18:28:59+01:00",
+        "total" : 13,
+        "offset" : 0,
+        "parameter" : [{
+          "name" : "count",
+          "valueInteger" : 1000
+        },
+        {
+          "name" : "offset",
+          "valueInteger" : 0
+        },
+        {
+          "name" : "excludeNested",
+          "valueBoolean" : false
+        },
+        {
+          "name" : "used-codesystem",
+          "valueUri" : "http://terminology.hl7.org/CodeSystem/v3-AddressUse|2.1.0"
+        },
+        {
+          "name" : "used-codesystem",
+          "valueUri" : "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse|2.1.0"
+        }],
+        "contains" : [{
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-AddressUse",
+          "code" : "H",
+          "display" : "home address"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-AddressUse",
+          "code" : "HP",
+          "display" : "primary home"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-AddressUse",
+          "code" : "HV",
+          "display" : "vacation home"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-AddressUse",
+          "code" : "WP",
+          "display" : "work place"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-AddressUse",
+          "code" : "DIR",
+          "display" : "direct"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-AddressUse",
+          "code" : "PUB",
+          "display" : "public"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-AddressUse",
+          "code" : "BAD",
+          "display" : "bad address"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-AddressUse",
+          "code" : "TMP",
+          "display" : "temporary address"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-AddressUse",
+          "code" : "PHYS",
+          "display" : "physical visit address"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-AddressUse",
+          "code" : "PST",
+          "display" : "postal address"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse",
+          "code" : "ABC",
+          "display" : "Alphabetic"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse",
+          "code" : "IDE",
+          "display" : "Ideographic"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse",
+          "code" : "SYL",
+          "display" : "Syllabic"
+        }]
+      }
+    }
+  },
+  {
+    "fullUrl" : "http://hl7.org/cda/stds/core/ValueSet/CDASignatureCode",
+    "resource" : {
+      "resourceType" : "ValueSet",
+      "text" : {
+        "status" : "generated",
+        "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p style=\"border: black 1px dotted; background-color: #EEEEEE; padding: 8px; margin-bottom: 8px\">Expansion based on <a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationSignature.html\">codesystem ParticipationSignature v2.1.0 (CodeSystem)</a></p><p>This value set contains 2 concepts.</p><table class=\"codes\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>System</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-ParticipationSignature-S\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationSignature.html#v3-ParticipationSignature-S\">S</a></td><td>http://terminology.hl7.org/CodeSystem/v3-ParticipationSignature</td><td>signed</td><td><div><p>Signature has been affixed, either written on file, or electronic (incl. digital) signature in Participation.signatureText.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-ParticipationSignature-X\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationSignature.html#v3-ParticipationSignature-X\">X</a></td><td>http://terminology.hl7.org/CodeSystem/v3-ParticipationSignature</td><td>required</td><td><div><p>A signature for the service is required of this actor.</p>\n</div></td></tr></table></div>"
+      },
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDASignatureCode",
+      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "name" : "CDASignatureCode",
+      "title" : "CDASignatureCode",
+      "status" : "draft",
+      "experimental" : false,
+      "date" : "2024-03-12T18:28:21+01:00",
+      "expansion" : {
+        "identifier" : "urn:uuid:e6e3b44c-a5fd-4274-8a82-8223cbee47a0",
+        "timestamp" : "2024-03-12T18:28:59+01:00",
+        "total" : 2,
+        "offset" : 0,
+        "parameter" : [{
+          "name" : "count",
+          "valueInteger" : 1000
+        },
+        {
+          "name" : "offset",
+          "valueInteger" : 0
+        },
+        {
+          "name" : "excludeNested",
+          "valueBoolean" : false
+        },
+        {
+          "name" : "used-codesystem",
+          "valueUri" : "http://terminology.hl7.org/CodeSystem/v3-ParticipationSignature|2.1.0"
+        }],
+        "contains" : [{
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-ParticipationSignature",
+          "code" : "S",
+          "display" : "signed"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-ParticipationSignature",
+          "code" : "X",
+          "display" : "required"
+        }]
+      }
+    }
+  },
+  {
+    "fullUrl" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor",
+    "resource" : {
+      "resourceType" : "ValueSet",
+      "text" : {
+        "status" : "generated",
+        "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p style=\"border: black 1px dotted; background-color: #EEEEEE; padding: 8px; margin-bottom: 8px\">Expansion based on <a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html\">codesystem NullFlavor v2.1.0 (CodeSystem)</a></p><p>This value set contains 12 concepts.</p><table class=\"codes\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>System</b></td><td><b>Display</b></td><td><b>Inactive</b></td><td><b>Definition</b></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-NullFlavor-NP\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-NP\">NP</a></td><td>http://terminology.hl7.org/CodeSystem/v3-NullFlavor</td><td>not present</td><td>inactive</td><td><div><p>Value is not present in a message. This is only defined in messages, never in application data! All values not present in the message must be replaced by the applicable default, or no-information (NI) as the default of all defaults.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-NullFlavor-NI\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-NI\">NI</a></td><td>http://terminology.hl7.org/CodeSystem/v3-NullFlavor</td><td>NoInformation</td><td/><td><div><p>**Description:**The value is exceptional (missing, omitted, incomplete, improper). No information as to the reason for being an exceptional value is provided. This is the most general exceptional value. It is also the default exceptional value.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-NullFlavor-MSK\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-MSK\">MSK</a></td><td>http://terminology.hl7.org/CodeSystem/v3-NullFlavor</td><td>masked</td><td/><td><div><p>There is information on this item available but it has not been provided by the sender due to security, privacy or other reasons. There may be an alternate mechanism for gaining access to this information.</p>\n<p>Note: using this null flavor does provide information that may be a breach of confidentiality, even though no detail data is provided. Its primary purpose is for those circumstances where it is necessary to inform the receiver that the information does exist without providing any detail.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-NullFlavor-NA\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-NA\">NA</a></td><td>http://terminology.hl7.org/CodeSystem/v3-NullFlavor</td><td>not applicable</td><td/><td><div><p>Known to have no proper value (e.g., last menstrual period for a male).</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-NullFlavor-OTH\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-OTH\">OTH</a></td><td>http://terminology.hl7.org/CodeSystem/v3-NullFlavor</td><td>other</td><td/><td><div><p>**Description:**The actual value is not a member of the set of permitted data values in the constrained value domain of a variable. (e.g., concept not provided by required code system).</p>\n<p><strong>Usage Notes</strong>: This flavor and its specializations are most commonly used with the CD datatype and its flavors. However, it may apply to *any* datatype where the constraints of the type are tighter than can be conveyed. For example, a PQ that is for a true measured amount whose units are not supported in UCUM, a need to convey a REAL when the type has been constrained to INT, etc.</p>\n<p>With coded datatypes, this null flavor may only be used if the vocabulary binding has a coding strength of CNE. By definition, all local codes and original text are part of the value set if the coding strength is CWE.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-NullFlavor-NINF\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-NINF\">NINF</a></td><td>http://terminology.hl7.org/CodeSystem/v3-NullFlavor</td><td>negative infinity</td><td/><td><div><p>Negative infinity of numbers.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-NullFlavor-PINF\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-PINF\">PINF</a></td><td>http://terminology.hl7.org/CodeSystem/v3-NullFlavor</td><td>positive infinity</td><td/><td><div><p>Positive infinity of numbers.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-NullFlavor-UNK\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-UNK\">UNK</a></td><td>http://terminology.hl7.org/CodeSystem/v3-NullFlavor</td><td>unknown</td><td/><td><div><p>**Description:**A proper value is applicable, but not known.</p>\n<p><strong>Usage Notes</strong>: This means the actual value is not known. If the only thing that is unknown is how to properly express the value in the necessary constraints (value set, datatype, etc.), then the OTH or UNC flavor should be used. No properties should be included for a datatype with this property unless:</p>\n<ol>\n<li>Those properties themselves directly translate to a semantic of &quot;unknown&quot;. (E.g. a local code sent as a translation that conveys 'unknown')</li>\n<li>Those properties further qualify the nature of what is unknown. (E.g. specifying a use code of &quot;H&quot; and a URL prefix of &quot;tel:&quot; to convey that it is the home phone number that is unknown.)</li>\n</ol>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-NullFlavor-NASK\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-NASK\">NASK</a></td><td>http://terminology.hl7.org/CodeSystem/v3-NullFlavor</td><td>not asked</td><td/><td><div><p>This information has not been sought (e.g., patient was not asked)</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-NullFlavor-TRC\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-TRC\">TRC</a></td><td>http://terminology.hl7.org/CodeSystem/v3-NullFlavor</td><td>trace</td><td/><td><div><p>The content is greater than zero, but too small to be quantified.</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-NullFlavor-ASKU\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-ASKU\">ASKU</a></td><td>http://terminology.hl7.org/CodeSystem/v3-NullFlavor</td><td>asked but unknown</td><td/><td><div><p>Information was sought but not found (e.g., patient was asked but didn't know)</p>\n</div></td></tr><tr><td style=\"white-space:nowrap\"><a name=\"http---terminology.hl7.org-CodeSystem-v3-NullFlavor-NAV\"> </a>\u00a0\u00a0<a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-NAV\">NAV</a></td><td>http://terminology.hl7.org/CodeSystem/v3-NullFlavor</td><td>temporarily unavailable</td><td/><td><div><p>Information is not available at this time but it is expected that it will be available later.</p>\n</div></td></tr></table></div>"
+      },
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor",
+      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "name" : "CDANullFlavor",
+      "title" : "CDANullFlavor",
+      "status" : "draft",
+      "experimental" : false,
+      "date" : "2024-03-12T18:28:21+01:00",
+      "expansion" : {
+        "identifier" : "urn:uuid:99964c7b-8538-4b54-8ba8-dcde7baf87d4",
+        "timestamp" : "2024-03-12T18:28:59+01:00",
+        "total" : 12,
+        "offset" : 0,
+        "parameter" : [{
+          "name" : "count",
+          "valueInteger" : 1000
+        },
+        {
+          "name" : "offset",
+          "valueInteger" : 0
+        },
+        {
+          "name" : "excludeNested",
+          "valueBoolean" : false
+        },
+        {
+          "name" : "used-codesystem",
+          "valueUri" : "http://terminology.hl7.org/CodeSystem/v3-NullFlavor|2.1.0"
+        }],
+        "contains" : [{
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+          "inactive" : true,
+          "code" : "NP",
+          "display" : "not present"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+          "code" : "NI",
+          "display" : "NoInformation"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+          "code" : "MSK",
+          "display" : "masked"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+          "code" : "NA",
+          "display" : "not applicable"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+          "code" : "OTH",
+          "display" : "other"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+          "code" : "NINF",
+          "display" : "negative infinity"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+          "code" : "PINF",
+          "display" : "positive infinity"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+          "code" : "UNK",
+          "display" : "unknown"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+          "code" : "NASK",
+          "display" : "not asked"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+          "code" : "TRC",
+          "display" : "trace"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+          "code" : "ASKU",
+          "display" : "asked but unknown"
+        },
+        {
+          "system" : "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
+          "code" : "NAV",
+          "display" : "temporarily unavailable"
+        }]
+      }
+    }
+  }]
 }

@@ -8,6 +8,7 @@ hapi:
       fhir_r5_core:
         name: hl7.fhir.r5.core
         version: 5.0.0
+        url: classpath:/hl7.fhir.r5.core.tgz
 matchbox:
   fhir:
     context:

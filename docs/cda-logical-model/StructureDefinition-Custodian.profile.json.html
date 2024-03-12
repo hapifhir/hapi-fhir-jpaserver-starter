@@ -11,7 +11,7 @@
 <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
-    <title>Custodian (CDA Class) - JSON Representation - Clinical Document Architecture v2.1.0-draft2-mb</title>
+    <title>Custodian (CDA Class) - JSON Representation - Clinical Document Architecture v2.0.0-sd-202312-matchbox-patch</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="author" content="http://hl7.org/fhir"/>
@@ -49,8 +49,8 @@
 
 	  <script src="assets/js/prism.js"></script>
 
-    <style type="text/css">h2{--heading-prefix:"3.17"}
-    h3,h4,h5,h6{--heading-prefix:"3.17"}</style>
+    <style type="text/css">h2{--heading-prefix:"4.17"}
+    h3,h4,h5,h6{--heading-prefix:"4.17"}</style>
     <div id="segment-header" class="segment">  <!-- segment-header -->
       <div class="container">  <!-- container -->
         <!-- Placeholder for child template header declarations -->
@@ -71,7 +71,7 @@
         <div id="ig-status">
           <p><span style="font-size:12pt;font-weight:bold">Clinical Document Architecture</span>
             <br/>
-            <span style="display:inline-block;">2.1.0-draft2-mb - active
+            <span style="display:inline-block;">2.0.0-sd-202312-matchbox-patch - ballot
 
 
             </span>
@@ -97,10 +97,19 @@
             <div class="nav-collapse collapse navbar-inverse-collapse">
               <ul xmlns="http://www.w3.org/1999/xhtml" class="nav navbar-nav">
   <li><a href="index.html">IG Home</a></li>
-  <li><a href="toc.html">Table of Contents</a></li>
+  <li class="dropdown">
+    <a data-toggle="dropdown" href="#">Information<b class="caret"></b></a>
+    <ul class="dropdown-menu">
+      <li><a href="overview.html">CDA Overview</a></li>
+      <li><a href="implementation.html">Implementation Notes</a></li>
+      <li><a href="cda-rmim.html">Graphical Map of CDA</a></li>
+      <li><a href="dt-uml.html">Graphical Map of Datatypes</a></li>
+      <li><a href="narrative.html">Narrative Block</a></li>
+    </ul>
+  </li>
   <li><a href="artifacts.html">Artifact Index</a></li>
   <li><a href="downloads.html">Downloads</a></li>
-</ul>      
+</ul>
             </div>  <!-- /.nav-collapse -->
           </div>  <!-- /.container -->
         </nav>  <!-- /.navbar -->
@@ -125,7 +134,7 @@
           <div class="inner-wrapper">
 
 <div style="counter-reset: section 8" class="col-12">
-  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture - Local Development build (v2.1.0-draft2-mb). See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
+  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture - Local Development build (v2.0.0-sd-202312-matchbox-patch) built by the FHIR (HL7® FHIR® Standard) Build Tools. See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
   
 
 
@@ -171,13 +180,19 @@
   
 
 
+  
+    <li class="active">
+      <a href="#">JSON</a>
+    </li>
+  
+
 
 
 </ul>
 
 
 <a name="root"> </a>
-<h2 id="root">Logical Model: CDAR2.Custodian - JSON Profile</h2>
+<h2 id="root">Logical Model: Custodian - JSON Profile</h2>
 
   <table class="colsi">
     <tr>
@@ -186,7 +201,7 @@
         
           Active
           
-            as of 2023-10-04
+            as of 2024-03-12
           
         
       </td>
@@ -204,7 +219,7 @@
 
 
 
-  <pre class="json" style="white-space: pre; overflow: hidden"><code class="language-json">
+  <pre class="json" style="white-space: pre; text-wrap: nowrap;"><code class="language-json" style="white-space: pre; text-wrap: nowrap;">
 {
   "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition">resourceType</a>" : "StructureDefinition",
   "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.id">id</a>" : "Custodian",
@@ -225,21 +240,29 @@
       }
     },
     {
-      "<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+      "<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
       "<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueUri</a>" : "urn:hl7-org:v3"
     },
     {
-      "<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
-      "<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueUri</a>" : "custodian"
+      "<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/tools/StructureDefinition/xml-name",
+      "<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueString</a>" : "custodian"
+    },
+    {
+      "<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/tools/StructureDefinition/logical-container",
+      "<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueUri</a>" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
+    },
+    {
+      "<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.url">url</a>" : "http://hl7.org/fhir/tools/StructureDefinition/type-profile-style",
+      "<a href="http://hl7.org/fhir/R5/extensibility.html#Extension#Extension.value[x]">valueUri</a>" : "cda"
     }
   ],
   "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.url">url</a>" : "http://hl7.org/cda/stds/core/StructureDefinition/Custodian",
-  "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.version">version</a>" : "2.1.0-draft2-mb",
-  "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.name">name</a>" : "CDAR2.Custodian",
+  "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.version">version</a>" : "2.0.0-sd-202312-matchbox-patch",
+  "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.name">name</a>" : "Custodian",
   "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.title">title</a>" : "Custodian (CDA Class)",
   "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.status">status</a>" : "active",
   "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.experimental">experimental</a>" : false,
-  "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.date">date</a>" : "2023-10-04T23:00:58+02:00",
+  "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.date">date</a>" : "2024-03-12T18:28:21+01:00",
   "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.publisher">publisher</a>" : "Health Level 7",
   "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.contact">contact</a>" : [
     {
@@ -247,7 +270,7 @@
       "<a href="http://hl7.org/fhir/R5/metadatatypes.html#ContactDetail#ContactDetail.telecom">telecom</a>" : [
         {
           "<a href="http://hl7.org/fhir/R5/datatypes.html#ContactPoint#ContactPoint.system">system</a>" : "url",
-          "<a href="http://hl7.org/fhir/R5/datatypes.html#ContactPoint#ContactPoint.value">value</a>" : "http://www.hl7.org/Special/committees/structdoc"
+          "<a href="http://hl7.org/fhir/R5/datatypes.html#ContactPoint#ContactPoint.value">value</a>" : "http://www.hl7.org/Special/committees/structure"
         },
         {
           "<a href="http://hl7.org/fhir/R5/datatypes.html#ContactPoint#ContactPoint.system">system</a>" : "email",
@@ -268,7 +291,7 @@
   "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.kind">kind</a>" : "logical",
   "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.abstract">abstract</a>" : false,
   "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.type">type</a>" : "http://hl7.org/cda/stds/core/StructureDefinition/Custodian",
-  "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.baseDefinition">baseDefinition</a>" : "http://hl7.org/fhir/StructureDefinition/Base",
+  "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.baseDefinition">baseDefinition</a>" : "http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot",
   "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.derivation">derivation</a>" : "specialization",
   "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot">snapshot</a>" : {
     "<a href="http://hl7.org/fhir/R5/structuredefinition.html#StructureDefinition.snapshot.element">element</a>" : [
@@ -276,7 +299,7 @@
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian",
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Custodian",
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.short">short</a>" : "Base for all types and resources",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "Base definition for all types defined in FHIR type system.",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type.",
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
@@ -284,15 +307,6 @@
           "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
           "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "*"
         },
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint">constraint</a>" : [
-          {
-            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.key">key</a>" : "ele-1",
-            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.severity">severity</a>" : "error",
-            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.human">human</a>" : "All FHIR elements must have a @value or children",
-            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.expression">expression</a>" : "hasValue() or (children().count() &gt; id.count())",
-            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.constraint.source">source</a>" : "http://hl7.org/fhir/StructureDefinition/Element"
-          }
-        ],
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.isModifier">isModifier</a>" : false,
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.mapping">mapping</a>" : [
           {
@@ -312,7 +326,7 @@
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Custodian.nullFlavor",
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ANY.nullFlavor",
           "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
           "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
         },
@@ -320,14 +334,192 @@
           {
             "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code",
             "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>" : [
-              "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"
+              <a href="StructureDefinition-cs-simple.html" style="color: Maroon">&#x1F517;</a> "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"
             ]
           }
         ],
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
           "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
-          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
         }
+      },
+      {
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian.realmCode",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Custodian.realmCode",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "InfrastructureRoot.realmCode",
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "*"
+        },
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+          {
+            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
+          }
+        ]
+      },
+      {
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian.typeId",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Custodian.typeId",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "InfrastructureRoot.typeId",
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        },
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+          {
+            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+          }
+        ]
+      },
+      {
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian.typeId.nullFlavor",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Custodian.typeId.nullFlavor",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+          "xmlAttr"
+        ],
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Exceptional Value Detail",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "ANY.nullFlavor",
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        },
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+          {
+            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code",
+            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>" : [
+              <a href="StructureDefinition-cs-simple.html" style="color: Maroon">&#x1F517;</a> "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"
+            ]
+          }
+        ],
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
+        }
+      },
+      {
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian.typeId.assigningAuthorityName",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Custodian.typeId.assigningAuthorityName",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+          "xmlAttr"
+        ],
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Assigning Authority Name",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "A human readable name or mnemonic for the assigning authority. The Assigning Authority Name has no computational value. The purpose of a Assigning Authority Name is to assist an unaided human interpreter of an II value to interpret the authority. Note: no automated processing must depend on the assigning authority name to be present in any form.",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "II.assigningAuthorityName",
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        },
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+          {
+            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string",
+            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>" : [
+              <a href="StructureDefinition-st-simple.html" style="color: Maroon">&#x1F517;</a> "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"
+            ]
+          }
+        ]
+      },
+      {
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian.typeId.displayable",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Custodian.typeId.displayable",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+          "xmlAttr"
+        ],
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Displayable",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "Specifies if the identifier is intended for human display and data entry (displayable = true) as opposed to pure machine interoperation (displayable = false).",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "II.displayable",
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        },
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+          {
+            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "boolean",
+            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>" : [
+              <a href="StructureDefinition-bl-simple.html" style="color: Maroon">&#x1F517;</a> "http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"
+            ]
+          }
+        ]
+      },
+      {
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian.typeId.root",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Custodian.typeId.root",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+          "xmlAttr"
+        ],
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Root",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "Identifies the type as an HL7 Registered model",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "II.root",
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        },
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+          {
+            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string",
+            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>" : [
+              <a href="StructureDefinition-oid.html" style="color: Maroon">&#x1F517;</a> "http://hl7.org/cda/stds/core/StructureDefinition/oid"<a href="StructureDefinition-uuid.html" style="color: Maroon">&#x1F517;</a> ,
+              "http://hl7.org/cda/stds/core/StructureDefinition/uuid"<a href="StructureDefinition-ruid.html" style="color: Maroon">&#x1F517;</a> ,
+              "http://hl7.org/cda/stds/core/StructureDefinition/ruid"
+            ]
+          }
+        ],
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedString</a>" : "2.16.840.1.113883.1.3"
+      },
+      {
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian.typeId.extension",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Custodian.typeId.extension",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
+          "xmlAttr"
+        ],
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Extension",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "A character string as a unique identifier within the scope of the identifier root.",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 1,
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "II.extension",
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
+        },
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+          {
+            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "string",
+            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>" : [
+              <a href="StructureDefinition-st-simple.html" style="color: Maroon">&#x1F517;</a> "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"
+            ]
+          }
+        ]
+      },
+      {
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian.templateId",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Custodian.templateId",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "InfrastructureRoot.templateId",
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
+          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "*"
+        },
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
+          {
+            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+          }
+        ]
       },
       {
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian.typeCode",
@@ -346,66 +538,15 @@
           {
             "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code",
             "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>" : [
-              "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"
+              <a href="StructureDefinition-cs-simple.html" style="color: Maroon">&#x1F517;</a> "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"
             ]
           }
         ],
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a>" : "ENT",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a>" : "CST",
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
           "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
           "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-ParticipationType"
         }
-      },
-      {
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian.realmCode",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Custodian.realmCode",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Custodian.realmCode",
-          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "*"
-        },
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
-          {
-            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
-          }
-        ]
-      },
-      {
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian.typeId",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Custodian.typeId",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Custodian.typeId",
-          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "1"
-        },
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
-          {
-            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
-          }
-        ]
-      },
-      {
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian.templateId",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Custodian.templateId",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base">base</a>" : {
-          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.path">path</a>" : "Custodian.templateId",
-          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.min">min</a>" : 0,
-          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.base.max">max</a>" : "*"
-        },
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
-          {
-            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
-          }
-        ]
       },
       {
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian.assignedCustodian",
@@ -434,29 +575,6 @@
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1"
       },
       {
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian.nullFlavor",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Custodian.nullFlavor",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
-          "xmlAttr"
-        ],
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.label">label</a>" : "Exceptional Value Detail",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
-          {
-            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code",
-            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>" : [
-              "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"
-            ]
-          }
-        ],
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
-          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
-          "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
-        }
-      },
-      {
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian.typeCode",
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Custodian.typeCode",
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.representation">representation</a>" : [
@@ -468,51 +586,15 @@
           {
             "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "code",
             "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.profile">profile</a>" : [
-              "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"
+              <a href="StructureDefinition-cs-simple.html" style="color: Maroon">&#x1F517;</a> "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"
             ]
           }
         ],
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a>" : "ENT",
+        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.fixed[x]">fixedCode</a>" : "CST",
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding">binding</a>" : {
           "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.strength">strength</a>" : "required",
           "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.binding.valueSet">valueSet</a>" : "http://terminology.hl7.org/ValueSet/v3-ParticipationType"
         }
-      },
-      {
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian.realmCode",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Custodian.realmCode",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
-          {
-            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
-          }
-        ]
-      },
-      {
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian.typeId",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Custodian.typeId",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "1",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
-          {
-            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
-          }
-        ]
-      },
-      {
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian.templateId",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.path">path</a>" : "Custodian.templateId",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.definition">definition</a>" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.min">min</a>" : 0,
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.max">max</a>" : "*",
-        "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type">type</a>" : [
-          {
-            "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.type.code">code</a>" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
-          }
-        ]
       },
       {
         "<a href="http://hl7.org/fhir/R5/elementdefinition.html#ElementDefinition#ElementDefinition.id">id</a>" : "Custodian.assignedCustodian",
@@ -581,7 +663,7 @@
 
       <div class="inner-wrapper">
         <p>
-          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structdoc">Health Level 7</a>.  Package hl7.cda.uv.core#2.1.0-draft2-mb based on <a style="color: var(--footer-hyperlink-text-color)" href="http://hl7.org/fhir/R5/">FHIR 5.0.0</a>. Generated <span title="Wed, Oct 4, 2023 23:00+0200">2023-10-04</span>
+          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structure">Health Level 7</a>.  Package hl7.cda.uv.core#2.0.0-sd-202312-matchbox-patch based on <a style="color: var(--footer-hyperlink-text-color)" href="http://hl7.org/fhir/R5/">FHIR 5.0.0</a>. Generated <span title="Tue, Mar 12, 2024 18:28+0100">2024-03-12</span>
           <br/>
           <span style="color: var(--footer-highlight-text-color)">
                       Links: <a style="color: var(--footer-hyperlink-text-color)" href="toc.html">Table of Contents</a> |

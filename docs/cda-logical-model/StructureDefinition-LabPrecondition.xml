@@ -7,25 +7,28 @@
       <p>The precondition class, derived from the ActRelationship class, is used along with the LabPrecondition class to express a condition that must hold true before some over activity occurs.</p>
     </div>
   </text>
-  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
     <valueUri value="urn:oid:1.3.6.1.4.1.19376.1.3.2"/>
   </extension>
-  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
     <valueString value="LabPrecondition"/>
   </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-container">
+    <valueUri value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
+  </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/LabPrecondition"/>
-  <version value="2.1.0-draft2-mb"/>
+  <version value="2.0.0-sd-202312-matchbox-patch"/>
   <name value="CDAR2.LabPrecondition"/>
   <title value="LabPrecondition (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-10-04T23:00:58+02:00"/>
+  <date value="2024-03-12T18:28:21+01:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/structdoc"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
     </telecom>
     <telecom>
       <system value="email"/>
@@ -56,13 +59,6 @@
         <min value="0"/>
         <max value="*"/>
       </base>
-      <constraint>
-        <key value="ele-1"/>
-        <severity value="error"/>
-        <human value="All FHIR elements must have a @value or children"/>
-        <expression value="hasValue() or (children().count() &gt; id.count())"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
-      </constraint>
       <isModifier value="false"/>
       <mapping>
         <identity value="rim"/>
@@ -150,7 +146,7 @@
       </type>
     </element>
     <element id="LabPrecondition.criterion">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:oid:1.3.6.1.4.1.19376.1.3.2"/>
       </extension>
       <path value="LabPrecondition.criterion"/>
@@ -228,7 +224,7 @@
       </type>
     </element>
     <element id="LabPrecondition.criterion">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:oid:1.3.6.1.4.1.19376.1.3.2"/>
       </extension>
       <path value="LabPrecondition.criterion"/>

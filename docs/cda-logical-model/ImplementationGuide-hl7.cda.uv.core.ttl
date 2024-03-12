@@ -13,18 +13,18 @@
      fhir:div "<div xmlns=\"http://www.w3.org/1999/xhtml\"><h2>ClinicalDocumentArchitecture</h2><p>The official URL for this implementation guide is: </p><pre>http://hl7.org/cda/stds/core/ImplementationGuide/hl7.cda.uv.core</pre></div>"
   ] ; # 
   fhir:url [ fhir:v "http://hl7.org/cda/stds/core/ImplementationGuide/hl7.cda.uv.core"^^xsd:anyURI] ; # 
-  fhir:version [ fhir:v "2.1.0-draft2-mb"] ; # 
+  fhir:version [ fhir:v "2.0.0-sd-202312-matchbox-patch"] ; # 
   fhir:name [ fhir:v "ClinicalDocumentArchitecture"] ; # 
   fhir:title [ fhir:v "Clinical Document Architecture"] ; # 
   fhir:status [ fhir:v "active"] ; # 
   fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
-  fhir:date [ fhir:v "2023-10-04T23:00:58+02:00"^^xsd:dateTime] ; # 
+  fhir:date [ fhir:v "2024-03-12T18:28:21+01:00"^^xsd:dateTime] ; # 
   fhir:publisher [ fhir:v "Health Level 7"] ; # 
   fhir:contact ( [
      fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
      fhir:telecom ( [
        fhir:system [ fhir:v "url" ] ;
-       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structdoc" ]
+       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structure" ]
      ] [
        fhir:system [ fhir:v "email" ] ;
        fhir:value [ fhir:v "structdog@lists.HL7.org" ]
@@ -57,7 +57,7 @@
   fhir:definition [
      fhir:extension ( [
        fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/ig-internal-dependency"^^xsd:anyURI ] ;
-       fhir:value [ fhir:v "hl7.fhir.uv.tools#current" ]
+       fhir:value [ fhir:v "hl7.fhir.uv.tools#0.1.0" ]
      ] ) ;
      fhir:grouping ( [
        fhir:id [ fhir:v "classes" ] ;
@@ -115,14 +115,14 @@
      ] [
        fhir:extension ( [
          fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/resource-information"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "StructureDefinition:logical:abstract" ]
+         fhir:value [ fhir:v "StructureDefinition:logical" ]
        ] ) ;
        fhir:reference [
          fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/AlternateIdentification> ;
          fhir:reference [ fhir:v "StructureDefinition/AlternateIdentification" ]
        ] ;
        fhir:name [ fhir:v "AlternateIdentification (CDA Class)" ] ;
-       fhir:description [ fhir:v "Alternate Identifier for a role" ] ;
+       fhir:description [ fhir:v "The alternateIdentification extension provides additional information about an identifier found in the linked role. The extensions augment the id information in the linked role.  The id in the alternateIdentification extension SHALL match an id in the linked role. The alternateIdentification provides additional information about a particular identifier, such as its type. As an extension it needs to be safe for implementers to ignore this additional information." ] ;
        fhir:groupingId [ fhir:v "classes" ]
      ] [
        fhir:extension ( [
@@ -305,7 +305,8 @@
          fhir:reference [ fhir:v "Binary/clinicaldocument-example" ]
        ] ;
        fhir:name [ fhir:v "Example CDA document" ] ;
-       fhir:description [ fhir:v "Example CDA document" ] ;
+       fhir:description [ fhir:v "Example CDA document from original CDA release" ] ;
+       fhir:isExample [ fhir:v "true"^^xsd:boolean ] ;
        fhir:profile ( [
          fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"^^xsd:anyURI ;
          fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument>
@@ -577,7 +578,7 @@
      ] [
        fhir:extension ( [
          fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/resource-information"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "StructureDefinition:logical:abstract" ]
+         fhir:value [ fhir:v "StructureDefinition:logical" ]
        ] ) ;
        fhir:reference [
          fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/Entry> ;
@@ -589,7 +590,7 @@
      ] [
        fhir:extension ( [
          fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/resource-information"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "StructureDefinition:logical:abstract" ]
+         fhir:value [ fhir:v "StructureDefinition:logical" ]
        ] ) ;
        fhir:reference [
          fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/EntryRelationship> ;
@@ -685,14 +686,14 @@
      ] [
        fhir:extension ( [
          fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/resource-information"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "StructureDefinition:logical:abstract" ]
+         fhir:value [ fhir:v "StructureDefinition:logical" ]
        ] ) ;
        fhir:reference [
          fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/IdentifiedBy> ;
          fhir:reference [ fhir:v "StructureDefinition/IdentifiedBy" ]
        ] ;
        fhir:name [ fhir:v "IdentifiedBy (CDA Class)" ] ;
-       fhir:description [ fhir:v "Link to an additional Identifier for a role" ] ;
+       fhir:description [ fhir:v "The alternateIdentification extension provides additional information about an identifier found in the linked role. The extensions augment the id information in the linked role.  The id in the alternateIdentification extension SHALL match an id in the linked role. The alternateIdentification provides additional information about a particular identifier, such as its type. As an extension it needs to be safe for implementers to ignore this additional information." ] ;
        fhir:groupingId [ fhir:v "classes" ]
      ] [
        fhir:extension ( [
@@ -760,6 +761,18 @@
          fhir:value [ fhir:v "StructureDefinition:logical" ]
        ] ) ;
        fhir:reference [
+         fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/InFulfillmentOf1> ;
+         fhir:reference [ fhir:v "StructureDefinition/InFulfillmentOf1" ]
+       ] ;
+       fhir:name [ fhir:v "InFulfillmentOf1 (CDA Class)" ] ;
+       fhir:description [ fhir:v "This is an actRelationship called inFulfillmentOf1 that represents the Fulfills General Relationship Operator in QDM 4.1.x in QDM-Base QRDA Category 1, R3." ] ;
+       fhir:groupingId [ fhir:v "classes" ]
+     ] [
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/resource-information"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "StructureDefinition:logical" ]
+       ] ) ;
+       fhir:reference [
          fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/INT> ;
          fhir:reference [ fhir:v "StructureDefinition/INT" ]
        ] ;
@@ -769,7 +782,7 @@
      ] [
        fhir:extension ( [
          fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/resource-information"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "StructureDefinition:logical:abstract" ]
+         fhir:value [ fhir:v "StructureDefinition:logical" ]
        ] ) ;
        fhir:reference [
          fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/INT-POS> ;
@@ -1078,7 +1091,7 @@
      ] [
        fhir:extension ( [
          fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/resource-information"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "StructureDefinition:logical:abstract" ]
+         fhir:value [ fhir:v "StructureDefinition:logical" ]
        ] ) ;
        fhir:reference [
          fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/OrganizerComponent> ;
@@ -1324,6 +1337,30 @@
        ] ;
        fhir:name [ fhir:v "Precondition (CDA Class)" ] ;
        fhir:description [ fhir:v "The precondition class, derived from the ActRelationship class, is used along with the Precondition class to express a condition that must hold true before some over activity occurs." ] ;
+       fhir:groupingId [ fhir:v "classes" ]
+     ] [
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/resource-information"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "StructureDefinition:logical" ]
+       ] ) ;
+       fhir:reference [
+         fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/Precondition2> ;
+         fhir:reference [ fhir:v "StructureDefinition/Precondition2" ]
+       ] ;
+       fhir:name [ fhir:v "Precondition2 (CDA Class)" ] ;
+       fhir:description [ fhir:v "The sdtc:precondition2 extension allows a more flexible set of skip conditions on a set of criteria. Without this extension the skip condition is restricted to all criteria true. The extension allows a choice of the following logical operation extensions sdtc:allTrue, sdtc:allFalse, sdtc:atLeastOneTrue, sdtc:atLeastOneFalse, sdtc:onlyOneFalse, and sdtc:onlyOneTrue to be placed upon the encapsulated criteria or a criterion. The logical operation extensions nest a [0 .. *] sdtc:precondition2 extension allowing for a complex specification of nested skip conditions if needed." ] ;
+       fhir:groupingId [ fhir:v "classes" ]
+     ] [
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/resource-information"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "StructureDefinition:logical" ]
+       ] ) ;
+       fhir:reference [
+         fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase> ;
+         fhir:reference [ fhir:v "StructureDefinition/PreconditionBase" ]
+       ] ;
+       fhir:name [ fhir:v "PreconditionBase (CDA Class)" ] ;
+       fhir:description [ fhir:v "An abstract class containing the common fields used by sdtc:allTrue, sdtc:allFalse, sdtc:atLeastOneTrue, sdtc:atLeastOneFalse, sdtc:onlyOneTrue, and sdtc:onlyOneFalse." ] ;
        fhir:groupingId [ fhir:v "classes" ]
      ] [
        fhir:extension ( [
@@ -1817,6 +1854,83 @@
        fhir:name [ fhir:v "xs:ID" ] ;
        fhir:description [ fhir:v "ID represents the ID attribute type from [XML 1.0 (Second Edition)]. The \"value space\" of ID is the set of all strings that \"match\" the NCName production in [Namespaces in XML]. The \"lexical space\" of ID is the set of all strings that \"match\" the NCName production in [Namespaces in XML]." ] ;
        fhir:groupingId [ fhir:v "datatypes-xml" ]
+     ] [
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/resource-information"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "CodeSystem" ]
+       ] ) ;
+       fhir:reference [
+         fhir:link <http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding> ;
+         fhir:reference [ fhir:v "CodeSystem/BinaryDataEncoding" ]
+       ] ;
+       fhir:name [ fhir:v "Binary Data Encoding Code System" ] ;
+       fhir:description [ fhir:v "Identifies the representation of binary data in a text field" ]
+     ] [
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/resource-information"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "ValueSet" ]
+       ] ) ;
+       fhir:reference [
+         fhir:link <http://hl7.org/cda/stds/core/ValueSet/BinaryDataEncoding> ;
+         fhir:reference [ fhir:v "ValueSet/BinaryDataEncoding" ]
+       ] ;
+       fhir:name [ fhir:v "Binary Data Encoding Value Set" ] ;
+       fhir:description [ fhir:v "Identifies the representation of binary data in a text field" ]
+     ] [
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/resource-information"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "ValueSet" ]
+       ] ) ;
+       fhir:reference [
+         fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDACompressionAlgorithm> ;
+         fhir:reference [ fhir:v "ValueSet/CDACompressionAlgorithm" ]
+       ] ;
+       fhir:name [ fhir:v "CompressionAlgorithm" ] ;
+       fhir:description [ fhir:v "Type of compression algorithm used - limited to 4 concepts from original CDA definition" ]
+     ] [
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/resource-information"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "ValueSet" ]
+       ] ) ;
+       fhir:reference [
+         fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAEntityNameUse> ;
+         fhir:reference [ fhir:v "ValueSet/CDAEntityNameUse" ]
+       ] ;
+       fhir:name [ fhir:v "CDAEntityNameUse" ] ;
+       fhir:description [ fhir:v "A set of codes advising a system or user which name in a set of names to select for a given purpose - limited to values allowed in original CDA definition" ]
+     ] [
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/resource-information"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "ValueSet" ]
+       ] ) ;
+       fhir:reference [
+         fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse> ;
+         fhir:reference [ fhir:v "ValueSet/CDAPostalAddressUse" ]
+       ] ;
+       fhir:name [ fhir:v "CDAPostalAddressUse" ] ;
+       fhir:description [ fhir:v "A set of codes advising a system or user which address in a set of like addresses to select for a given purpose - limited to values allowed in original CDA definition" ]
+     ] [
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/resource-information"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "ValueSet" ]
+       ] ) ;
+       fhir:reference [
+         fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDASignatureCode> ;
+         fhir:reference [ fhir:v "ValueSet/CDASignatureCode" ]
+       ] ;
+       fhir:name [ fhir:v "CDASignatureCode" ] ;
+       fhir:description [ fhir:v "A set of codes specifying whether and how the participant has attested his participation through a signature - limited to values allowed in original CDA definition.\n\n**Note:** CDA Release One represented either an intended (`X`) or actual (`S`) authenticator. CDA Release Two only represents an actual authenticator, so has deprecated the value of `X`." ]
+     ] [
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/resource-information"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "ValueSet" ]
+       ] ) ;
+       fhir:reference [
+         fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor> ;
+         fhir:reference [ fhir:v "ValueSet/CDANullFlavor" ]
+       ] ;
+       fhir:name [ fhir:v "CDANullFlavor" ] ;
+       fhir:description [ fhir:v "CDA NullFlavors - limited to values allowed in original CDA definition" ]
      ] ) ;
      fhir:page [
        fhir:source [ fhir:v "index.html"^^xsd:anyURI ] ;
@@ -1824,6 +1938,32 @@
        fhir:title [ fhir:v "IG Home Page" ] ;
        fhir:generation [ fhir:v "markdown" ] ;
        fhir:page ( [
+         fhir:source [ fhir:v "overview.html"^^xsd:anyURI ] ;
+         fhir:name [ fhir:v "overview.html"^^xsd:anyURI ] ;
+         fhir:title [ fhir:v "Overview" ] ;
+         fhir:generation [ fhir:v "markdown" ] ;
+         fhir:page ( [
+           fhir:source [ fhir:v "implementation.html"^^xsd:anyURI ] ;
+           fhir:name [ fhir:v "implementation.html"^^xsd:anyURI ] ;
+           fhir:title [ fhir:v "Implementation Notes" ] ;
+           fhir:generation [ fhir:v "markdown" ]
+         ] [
+           fhir:source [ fhir:v "cda-rmim.html"^^xsd:anyURI ] ;
+           fhir:name [ fhir:v "cda-rmim.html"^^xsd:anyURI ] ;
+           fhir:title [ fhir:v "Graphical Map of CDA" ] ;
+           fhir:generation [ fhir:v "html" ]
+         ] [
+           fhir:source [ fhir:v "dt-uml.html"^^xsd:anyURI ] ;
+           fhir:name [ fhir:v "dt-uml.html"^^xsd:anyURI ] ;
+           fhir:title [ fhir:v "Graphical Map of Datatypes" ] ;
+           fhir:generation [ fhir:v "html" ]
+         ] [
+           fhir:source [ fhir:v "narrative.html"^^xsd:anyURI ] ;
+           fhir:name [ fhir:v "narrative.html"^^xsd:anyURI ] ;
+           fhir:title [ fhir:v "Narrative Block" ] ;
+           fhir:generation [ fhir:v "markdown" ]
+         ] )
+       ] [
          fhir:source [ fhir:v "downloads.html"^^xsd:anyURI ] ;
          fhir:name [ fhir:v "downloads.html"^^xsd:anyURI ] ;
          fhir:title [ fhir:v "Downloads" ] ;
@@ -1842,6 +1982,42 @@
          fhir:code [ fhir:v "apply-version" ]
        ] ;
        fhir:value [ fhir:v "true" ]
+     ] [
+       fhir:code [
+         fhir:system [ fhir:v "http://hl7.org/fhir/tools/CodeSystem/ig-parameters"^^xsd:anyURI ] ;
+         fhir:code [ fhir:v "excludejson" ]
+       ] ;
+       fhir:value [ fhir:v "false" ]
+     ] [
+       fhir:code [
+         fhir:system [ fhir:v "http://hl7.org/fhir/tools/CodeSystem/ig-parameters"^^xsd:anyURI ] ;
+         fhir:code [ fhir:v "logging" ]
+       ] ;
+       fhir:value [ fhir:v "init" ]
+     ] [
+       fhir:code [
+         fhir:system [ fhir:v "http://hl7.org/fhir/tools/CodeSystem/ig-parameters"^^xsd:anyURI ] ;
+         fhir:code [ fhir:v "logging" ]
+       ] ;
+       fhir:value [ fhir:v "progress" ]
+     ] [
+       fhir:code [
+         fhir:system [ fhir:v "http://hl7.org/fhir/tools/CodeSystem/ig-parameters"^^xsd:anyURI ] ;
+         fhir:code [ fhir:v "logging" ]
+       ] ;
+       fhir:value [ fhir:v "generate" ]
+     ] [
+       fhir:code [
+         fhir:system [ fhir:v "http://hl7.org/fhir/tools/CodeSystem/ig-parameters"^^xsd:anyURI ] ;
+         fhir:code [ fhir:v "jira-code" ]
+       ] ;
+       fhir:value [ fhir:v "cda-sd" ]
+     ] [
+       fhir:code [
+         fhir:system [ fhir:v "http://hl7.org/fhir/tools/CodeSystem/ig-parameters"^^xsd:anyURI ] ;
+         fhir:code [ fhir:v "releaselabel" ]
+       ] ;
+       fhir:value [ fhir:v "ballot" ]
      ] [
        fhir:code [
          fhir:system [ fhir:v "http://hl7.org/fhir/tools/CodeSystem/ig-parameters"^^xsd:anyURI ] ;
@@ -2062,12 +2238,6 @@
        fhir:code [
          fhir:system [ fhir:v "http://hl7.org/fhir/tools/CodeSystem/ig-parameters"^^xsd:anyURI ] ;
          fhir:code [ fhir:v "tabbed-snapshots" ]
-       ] ;
-       fhir:value [ fhir:v "true" ]
-     ] [
-       fhir:code [
-         fhir:system [ fhir:v "http://hl7.org/fhir/tools/CodeSystem/ig-parameters"^^xsd:anyURI ] ;
-         fhir:code [ fhir:v "excludejson" ]
        ] ;
        fhir:value [ fhir:v "true" ]
      ] [

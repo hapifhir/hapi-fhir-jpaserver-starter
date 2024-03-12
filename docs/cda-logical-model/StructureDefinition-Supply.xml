@@ -16,25 +16,31 @@
       </extension>
     </valueBoolean>
   </extension>
-  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
     <valueUri value="urn:hl7-org:v3"/>
   </extension>
-  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
-    <valueUri value="supply"/>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
+    <valueString value="supply"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-container">
+    <valueUri value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/type-profile-style">
+    <valueUri value="cda"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/Supply"/>
-  <version value="2.1.0-draft2-mb"/>
-  <name value="CDAR2Supply"/>
+  <version value="2.0.0-sd-202312-matchbox-patch"/>
+  <name value="Supply"/>
   <title value="Supply (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-10-04T23:00:58+02:00"/>
+  <date value="2024-03-12T18:28:21+01:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/structdoc"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
     </telecom>
     <telecom>
       <system value="email"/>
@@ -51,13 +57,13 @@
   <kind value="logical"/>
   <abstract value="false"/>
   <type value="http://hl7.org/cda/stds/core/StructureDefinition/Supply"/>
-  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Base"/>
+  <baseDefinition value="http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"/>
   <derivation value="specialization"/>
   <snapshot>
     <element id="Supply">
       <path value="Supply"/>
       <short value="Base for all types and resources"/>
-      <definition value="Base definition for all types defined in FHIR type system."/>
+      <definition value="Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type."/>
       <min value="1"/>
       <max value="1"/>
       <base>
@@ -65,18 +71,166 @@
         <min value="0"/>
         <max value="*"/>
       </base>
-      <constraint>
-        <key value="ele-1"/>
-        <severity value="error"/>
-        <human value="All FHIR elements must have a @value or children"/>
-        <expression value="hasValue() or (children().count() &gt; id.count())"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
-      </constraint>
       <isModifier value="false"/>
       <mapping>
         <identity value="rim"/>
         <map value="n/a"/>
       </mapping>
+    </element>
+    <element id="Supply.nullFlavor">
+      <path value="Supply.nullFlavor"/>
+      <representation value="xmlAttr"/>
+      <label value="Exceptional Value Detail"/>
+      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ANY.nullFlavor"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"/>
+      </binding>
+    </element>
+    <element id="Supply.realmCode">
+      <path value="Supply.realmCode"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="InfrastructureRoot.realmCode"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
+      </type>
+    </element>
+    <element id="Supply.typeId">
+      <path value="Supply.typeId"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="InfrastructureRoot.typeId"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="Supply.typeId.nullFlavor">
+      <path value="Supply.typeId.nullFlavor"/>
+      <representation value="xmlAttr"/>
+      <label value="Exceptional Value Detail"/>
+      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ANY.nullFlavor"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"/>
+      </binding>
+    </element>
+    <element id="Supply.typeId.assigningAuthorityName">
+      <path value="Supply.typeId.assigningAuthorityName"/>
+      <representation value="xmlAttr"/>
+      <label value="Assigning Authority Name"/>
+      <definition value="A human readable name or mnemonic for the assigning authority. The Assigning Authority Name has no computational value. The purpose of a Assigning Authority Name is to assist an unaided human interpreter of an II value to interpret the authority. Note: no automated processing must depend on the assigning authority name to be present in any form."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="II.assigningAuthorityName"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
+      </type>
+    </element>
+    <element id="Supply.typeId.displayable">
+      <path value="Supply.typeId.displayable"/>
+      <representation value="xmlAttr"/>
+      <label value="Displayable"/>
+      <definition value="Specifies if the identifier is intended for human display and data entry (displayable = true) as opposed to pure machine interoperation (displayable = false)."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="II.displayable"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="boolean"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"/>
+      </type>
+    </element>
+    <element id="Supply.typeId.root">
+      <path value="Supply.typeId.root"/>
+      <representation value="xmlAttr"/>
+      <label value="Root"/>
+      <definition value="Identifies the type as an HL7 Registered model"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="II.root"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/oid"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/uuid"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/ruid"/>
+      </type>
+      <fixedString value="2.16.840.1.113883.1.3"/>
+    </element>
+    <element id="Supply.typeId.extension">
+      <path value="Supply.typeId.extension"/>
+      <representation value="xmlAttr"/>
+      <label value="Extension"/>
+      <definition value="A character string as a unique identifier within the scope of the identifier root."/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="II.extension"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
+      </type>
+    </element>
+    <element id="Supply.templateId">
+      <path value="Supply.templateId"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="InfrastructureRoot.templateId"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
+      </type>
     </element>
     <element id="Supply.classCode">
       <path value="Supply.classCode"/>
@@ -113,46 +267,10 @@
         <code value="code"/>
         <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-    </element>
-    <element id="Supply.realmCode">
-      <path value="Supply.realmCode"/>
-      <min value="0"/>
-      <max value="*"/>
-      <base>
-        <path value="Supply.realmCode"/>
-        <min value="0"/>
-        <max value="*"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
-      </type>
-    </element>
-    <element id="Supply.typeId">
-      <path value="Supply.typeId"/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="Supply.typeId"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
-      </type>
-    </element>
-    <element id="Supply.templateId">
-      <path value="Supply.templateId"/>
-      <definition value="When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question"/>
-      <min value="0"/>
-      <max value="*"/>
-      <base>
-        <path value="Supply.templateId"/>
-        <min value="0"/>
-        <max value="*"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
-      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-xDocumentSubstanceMood|2.0.0"/>
+      </binding>
     </element>
     <element id="Supply.id">
       <path value="Supply.id"/>
@@ -180,7 +298,7 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CD"/>
       </type>
       <binding>
-        <strength value="extensible"/>
+        <strength value="example"/>
         <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActCode"/>
       </binding>
     </element>
@@ -256,7 +374,7 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
       <binding>
-        <strength value="extensible"/>
+        <strength value="example"/>
         <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActPriority"/>
       </binding>
     </element>
@@ -324,13 +442,6 @@
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"/>
       </type>
-      <constraint>
-        <key value="ele-1"/>
-        <severity value="error"/>
-        <human value="All FHIR elements must have a @value or children"/>
-        <expression value="hasValue() or (children().count() &gt; id.count())"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
-      </constraint>
     </element>
     <element id="Supply.product.nullFlavor">
       <path value="Supply.product.nullFlavor"/>
@@ -350,7 +461,7 @@
       </type>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-NullFlavor"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"/>
       </binding>
     </element>
     <element id="Supply.product.realmCode">
@@ -379,6 +490,98 @@
       </base>
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="Supply.product.typeId.nullFlavor">
+      <path value="Supply.product.typeId.nullFlavor"/>
+      <representation value="xmlAttr"/>
+      <label value="Exceptional Value Detail"/>
+      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ANY.nullFlavor"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"/>
+      </binding>
+    </element>
+    <element id="Supply.product.typeId.assigningAuthorityName">
+      <path value="Supply.product.typeId.assigningAuthorityName"/>
+      <representation value="xmlAttr"/>
+      <label value="Assigning Authority Name"/>
+      <definition value="A human readable name or mnemonic for the assigning authority. The Assigning Authority Name has no computational value. The purpose of a Assigning Authority Name is to assist an unaided human interpreter of an II value to interpret the authority. Note: no automated processing must depend on the assigning authority name to be present in any form."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="II.assigningAuthorityName"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
+      </type>
+    </element>
+    <element id="Supply.product.typeId.displayable">
+      <path value="Supply.product.typeId.displayable"/>
+      <representation value="xmlAttr"/>
+      <label value="Displayable"/>
+      <definition value="Specifies if the identifier is intended for human display and data entry (displayable = true) as opposed to pure machine interoperation (displayable = false)."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="II.displayable"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="boolean"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"/>
+      </type>
+    </element>
+    <element id="Supply.product.typeId.root">
+      <path value="Supply.product.typeId.root"/>
+      <representation value="xmlAttr"/>
+      <label value="Root"/>
+      <definition value="Identifies the type as an HL7 Registered model"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="II.root"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/oid"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/uuid"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/ruid"/>
+      </type>
+      <fixedString value="2.16.840.1.113883.1.3"/>
+    </element>
+    <element id="Supply.product.typeId.extension">
+      <path value="Supply.product.typeId.extension"/>
+      <representation value="xmlAttr"/>
+      <label value="Extension"/>
+      <definition value="A character string as a unique identifier within the scope of the identifier root."/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="II.extension"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
       </type>
     </element>
     <element id="Supply.product.templateId">
@@ -545,6 +748,25 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/Precondition"/>
       </type>
     </element>
+    <element id="Supply.sdtcInFulfillmentOf1">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
+        <valueString value="inFulfillmentOf1"/>
+      </extension>
+      <path value="Supply.sdtcInFulfillmentOf1"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Supply.sdtcInFulfillmentOf1"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/InFulfillmentOf1"/>
+      </type>
+    </element>
   </snapshot>
   <differential>
     <element id="Supply">
@@ -577,31 +799,10 @@
         <code value="code"/>
         <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
       </type>
-    </element>
-    <element id="Supply.realmCode">
-      <path value="Supply.realmCode"/>
-      <min value="0"/>
-      <max value="*"/>
-      <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
-      </type>
-    </element>
-    <element id="Supply.typeId">
-      <path value="Supply.typeId"/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
-      </type>
-    </element>
-    <element id="Supply.templateId">
-      <path value="Supply.templateId"/>
-      <definition value="When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question"/>
-      <min value="0"/>
-      <max value="*"/>
-      <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
-      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-xDocumentSubstanceMood|2.0.0"/>
+      </binding>
     </element>
     <element id="Supply.id">
       <path value="Supply.id"/>
@@ -619,7 +820,7 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CD"/>
       </type>
       <binding>
-        <strength value="extensible"/>
+        <strength value="example"/>
         <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActCode"/>
       </binding>
     </element>
@@ -675,7 +876,7 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
       <binding>
-        <strength value="extensible"/>
+        <strength value="example"/>
         <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActPriority"/>
       </binding>
     </element>
@@ -812,6 +1013,20 @@
       <max value="*"/>
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/Precondition"/>
+      </type>
+    </element>
+    <element id="Supply.sdtcInFulfillmentOf1">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
+        <valueString value="inFulfillmentOf1"/>
+      </extension>
+      <path value="Supply.sdtcInFulfillmentOf1"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/InFulfillmentOf1"/>
       </type>
     </element>
   </differential>

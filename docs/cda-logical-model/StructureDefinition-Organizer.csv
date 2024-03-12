@@ -1,21 +1,34 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
 "Organizer","Organizer","","","",1,1,"","","","null {[]} {[]}
-","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-","n/a"
-"Organizer.classCode","Organizer.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClass","",,,,"Organizer.classCode",1,1,"",""
-"Organizer.moodCode","Organizer.moodCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActMood","",,,,"Organizer.moodCode",1,1,"",""
+","Base for all types and resources","Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"Organizer.nullFlavor","Organizer.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "Organizer.realmCode","Organizer.realmCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Organizer.realmCode",0,*,"",""
+","","When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.realmCode",0,*,"",""
 "Organizer.typeId","Organizer.typeId","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Organizer.typeId",0,1,"",""
+","","When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.typeId",0,1,"",""
+"Organizer.typeId.nullFlavor","Organizer.typeId.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"Organizer.typeId.assigningAuthorityName","Organizer.typeId.assigningAuthorityName","","","Assigning Authority Name",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+","","A human readable name or mnemonic for the assigning authority. The Assigning Authority Name has no computational value. The purpose of a Assigning Authority Name is to assist an unaided human interpreter of an II value to interpret the authority. Note: no automated processing must depend on the assigning authority name to be present in any form.","","","","","","","","","",,,,,"",,,,"II.assigningAuthorityName",0,1,"",""
+"Organizer.typeId.displayable","Organizer.typeId.displayable","","","Displayable",0,1,"","","","boolean {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/bl-simple]]} {[]}
+","","Specifies if the identifier is intended for human display and data entry (displayable = true) as opposed to pure machine interoperation (displayable = false).","","","","","","","","","",,,,,"",,,,"II.displayable",0,1,"",""
+"Organizer.typeId.root","Organizer.typeId.root","","","Root",1,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/oid], CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/uuid], CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/ruid]]} {[]}
+","","Identifies the type as an HL7 Registered model","","","","","<valueString xmlns=""http://hl7.org/fhir"" value=""2.16.840.1.113883.1.3""/>","","","","",,,,,"",,,,"II.root",0,1,"",""
+"Organizer.typeId.extension","Organizer.typeId.extension","","","Extension",1,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+","","A character string as a unique identifier within the scope of the identifier root.","","","","","","","","","",,,,,"",,,,"II.extension",0,1,"",""
 "Organizer.templateId","Organizer.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
-","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"Organizer.templateId",0,*,"",""
+","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
+"Organizer.classCode","Organizer.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-xActClassDocumentEntryOrganizer|2.0.0","",,,,"Organizer.classCode",1,1,"",""
+"Organizer.moodCode","Organizer.moodCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActMood|2.0.0","",,,,"Organizer.moodCode",1,1,"",""
 "Organizer.id","Organizer.id","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Organizer.id",0,*,"",""
 "Organizer.code","Organizer.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}
-","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-ActCode","",,,,"Organizer.code",0,1,"",""
+","","","","","","","","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-ActCode","",,,,"Organizer.code",0,1,"",""
+"Organizer.sdtcText","Organizer.sdtcText","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ED {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Organizer.sdtcText",0,1,"",""
 "Organizer.statusCode","Organizer.statusCode","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
 ","","","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActStatus","",,,,"Organizer.statusCode",1,1,"",""
 "Organizer.effectiveTime","Organizer.effectiveTime","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS {[]} {[]}
@@ -36,5 +49,7 @@
 ","","","","","","","","","","","",,,,,"",,,,"Organizer.reference",0,*,"",""
 "Organizer.precondition","Organizer.precondition","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Precondition {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Organizer.precondition",0,*,"",""
+"Organizer.sdtcPrecondition2","Organizer.sdtcPrecondition2","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Precondition2 {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Organizer.sdtcPrecondition2",0,*,"",""
 "Organizer.component","Organizer.component","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/OrganizerComponent {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Organizer.component",0,*,"",""

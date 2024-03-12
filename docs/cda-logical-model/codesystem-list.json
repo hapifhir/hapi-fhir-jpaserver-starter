@@ -1,0 +1,12 @@
+{
+  "codeSystems" : [
+    {
+      "url" : "http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding",
+      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "status" : "draft",
+      "name" : "BinaryDataEncoding",
+      "title" : "Binary Data Encoding Code System",
+      "description" : "Identifies the representation of binary data in a text field"
+    }
+  ]
+}

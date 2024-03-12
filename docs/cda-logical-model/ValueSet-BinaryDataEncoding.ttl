@@ -1,0 +1,41 @@
+@prefix fhir: <http://hl7.org/fhir/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# - resource -------------------------------------------------------------------
+
+<http://hl7.org/cda/stds/core/ValueSet/BinaryDataEncoding> a fhir:ValueSet ;
+  fhir:nodeRole fhir:treeRoot ;
+  fhir:id [ fhir:v "BinaryDataEncoding"] ; # 
+  fhir:text [
+     fhir:status [ fhir:v "generated" ] ;
+     fhir:div "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include all codes defined in <a href=\"CodeSystem-BinaryDataEncoding.html\"><code>http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding</code></a></li></ul></div>"
+  ] ; # 
+  fhir:url [ fhir:v "http://hl7.org/cda/stds/core/ValueSet/BinaryDataEncoding"^^xsd:anyURI] ; # 
+  fhir:version [ fhir:v "2.0.0-sd-202312-matchbox-patch"] ; # 
+  fhir:name [ fhir:v "BinaryDataEncoding"] ; # 
+  fhir:title [ fhir:v "Binary Data Encoding Value Set"] ; # 
+  fhir:status [ fhir:v "draft"] ; # 
+  fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
+  fhir:date [ fhir:v "2024-03-12T18:28:21+01:00"^^xsd:dateTime] ; # 
+  fhir:publisher [ fhir:v "Health Level 7"] ; # 
+  fhir:contact ( [
+     fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
+     fhir:telecom ( [
+       fhir:system [ fhir:v "url" ] ;
+       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structure" ]
+     ] [
+       fhir:system [ fhir:v "email" ] ;
+       fhir:value [ fhir:v "structdog@lists.HL7.org" ]
+     ] )
+  ] ) ; # 
+  fhir:description [ fhir:v "Identifies the representation of binary data in a text field"] ; # 
+  fhir:compose [
+     fhir:include ( [
+       fhir:system [ fhir:v "http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding"^^xsd:anyURI ]
+     ] )
+  ] . # 
+
+# -------------------------------------------------------------------------------------
+

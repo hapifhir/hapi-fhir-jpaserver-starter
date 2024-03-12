@@ -6,26 +6,30 @@
     "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Primitive type 'probability'</p>\n    </div>"
   },
   "extension" : [{
-    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
     "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-container",
+    "valueUri" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
   },
   {
     "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics",
     "valueCode" : "has-range"
   }],
   "url" : "http://hl7.org/cda/stds/core/StructureDefinition/probability",
-  "version" : "2.1.0-draft2-mb",
+  "version" : "2.0.0-sd-202312-matchbox-patch",
   "name" : "probability",
   "title" : "probability: Probability",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-10-04T23:00:58+02:00",
+  "date" : "2024-03-12T18:28:21+01:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/structdoc"
+      "value" : "http://www.hl7.org/Special/committees/structure"
     },
     {
       "system" : "email",

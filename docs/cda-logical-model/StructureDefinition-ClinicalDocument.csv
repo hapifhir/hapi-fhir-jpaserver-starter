@@ -1,35 +1,48 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
 "ClinicalDocument","ClinicalDocument","","","",1,1,"","","","null {[]} {[]}
-","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-","n/a"
+","Base for all types and resources","Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"ClinicalDocument.nullFlavor","ClinicalDocument.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "ClinicalDocument.classCode","ClinicalDocument.classCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DOCCLIN""/>","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-ActClass","",,,,"ClinicalDocument.classCode",0,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DOCCLIN""/>","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-ActClass","",,,,"ClinicalDocument.classCode",0,1,"",""
 "ClinicalDocument.moodCode","ClinicalDocument.moodCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActMood","",,,,"ClinicalDocument.moodCode",0,1,"",""
 "ClinicalDocument.realmCode","ClinicalDocument.realmCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question","","","","","","","","","",,,,,"",,,,"ClinicalDocument.realmCode",0,*,"",""
-"ClinicalDocument.typeId","ClinicalDocument.typeId","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
-","","When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.","","","","","","","","","",,,,,"",,,,"ClinicalDocument.typeId",1,1,"",""
-"ClinicalDocument.typeId.root","ClinicalDocument.typeId.root","","","",1,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
-","","","","","","","<valueString xmlns=""http://hl7.org/fhir"" value=""2.16.840.1.113883.1.3""/>","","","","",,,,,"",,,,"ClinicalDocument.typeId.root",1,1,"",""
-"ClinicalDocument.typeId.extension","ClinicalDocument.typeId.extension","","","",1,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"ClinicalDocument.typeId.extension",1,1,"",""
+"ClinicalDocument.typeId","ClinicalDocument.typeId","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
+","","ClinicalDocument.typeId is a technology-neutral explicit reference to this CDA, Release Two specification, and must be valued as follows: ClinicalDocument.typeId.root = ""2.16.840.1.113883.1.3"" (which is the OID for HL7 Registered models); ClinicalDocument.typeId.extension = ""POCD_HD000040"" (which is the unique identifier for the CDA, Release Two Hierarchical Description).","","","","","","","","","",,,,,"",,,,"ClinicalDocument.typeId",0,1,"",""
+"ClinicalDocument.typeId.nullFlavor","ClinicalDocument.typeId.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"ClinicalDocument.typeId.assigningAuthorityName","ClinicalDocument.typeId.assigningAuthorityName","","","Assigning Authority Name",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+","","A human readable name or mnemonic for the assigning authority. The Assigning Authority Name has no computational value. The purpose of a Assigning Authority Name is to assist an unaided human interpreter of an II value to interpret the authority. Note: no automated processing must depend on the assigning authority name to be present in any form.","","","","","","","","","",,,,,"",,,,"II.assigningAuthorityName",0,1,"",""
+"ClinicalDocument.typeId.displayable","ClinicalDocument.typeId.displayable","","","Displayable",0,1,"","","","boolean {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/bl-simple]]} {[]}
+","","Specifies if the identifier is intended for human display and data entry (displayable = true) as opposed to pure machine interoperation (displayable = false).","","","","","","","","","",,,,,"",,,,"II.displayable",0,1,"",""
+"ClinicalDocument.typeId.root","ClinicalDocument.typeId.root","","","Root",1,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/oid], CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/uuid], CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/ruid]]} {[]}
+","","Identifies the type as an HL7 Registered model","","","","","<valueString xmlns=""http://hl7.org/fhir"" value=""2.16.840.1.113883.1.3""/>","","","","",,,,,"",,,,"II.root",0,1,"",""
+"ClinicalDocument.typeId.extension","ClinicalDocument.typeId.extension","","","Extension",1,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+","","A character string as a unique identifier within the scope of the identifier root.","","","","","<valueString xmlns=""http://hl7.org/fhir"" value=""POCD_HD000040""/>","","","","",,,,,"",,,,"II.extension",0,1,"",""
 "ClinicalDocument.templateId","ClinicalDocument.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"ClinicalDocument.templateId",0,*,"",""
 "ClinicalDocument.id","ClinicalDocument.id","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ClinicalDocument.id",1,1,"",""
 "ClinicalDocument.code","ClinicalDocument.code","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
-","","","","","","","","","","","",,"extensible","","http://hl7.org/fhir/ValueSet/doc-typecodes","",,,,"ClinicalDocument.code",1,1,"",""
+","","","","","","","","","","","",,"example","","http://hl7.org/fhir/ValueSet/doc-typecodes","",,,,"ClinicalDocument.code",1,1,"",""
 "ClinicalDocument.title","ClinicalDocument.title","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ST {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ClinicalDocument.title",0,1,"",""
-"ClinicalDocument.statusCode","ClinicalDocument.statusCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"ClinicalDocument.statusCode",0,1,"",""
+"ClinicalDocument.sdtcStatusCode","ClinicalDocument.sdtcStatusCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
+","","The statusCode extension attribute allows the implementer to identify a ClinicalDocument that is in other than the completed state. It was created to support the Structured Form Definition IG to identify that the document itself is an unfinished product currently being completed for a patient.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActStatus","",,,,"ClinicalDocument.sdtcStatusCode",0,1,"",""
+"ClinicalDocument.terminologyDate","ClinicalDocument.terminologyDate","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/TS {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"ClinicalDocument.terminologyDate",0,1,"",""
+"ClinicalDocument.formatCode","ClinicalDocument.formatCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"ClinicalDocument.formatCode",0,1,"",""
+"ClinicalDocument.practiceSettingCode","ClinicalDocument.practiceSettingCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"ClinicalDocument.practiceSettingCode",0,1,"",""
 "ClinicalDocument.effectiveTime","ClinicalDocument.effectiveTime","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/TS {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ClinicalDocument.effectiveTime",1,1,"",""
 "ClinicalDocument.confidentialityCode","ClinicalDocument.confidentialityCode","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ClinicalDocument.confidentialityCode",1,1,"",""
 "ClinicalDocument.languageCode","ClinicalDocument.languageCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
-","","","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-HumanLanguage","",,,,"ClinicalDocument.languageCode",0,1,"",""
+","","","","","","","","","","","",,"required","","http://hl7.org/fhir/ValueSet/all-languages","",,,,"ClinicalDocument.languageCode",0,1,"",""
 "ClinicalDocument.setId","ClinicalDocument.setId","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ClinicalDocument.setId",0,1,"",""
 "ClinicalDocument.versionNumber","ClinicalDocument.versionNumber","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/INT {[]} {[]}
@@ -48,8 +61,8 @@
 ","","","","","","","","","","","",,,,,"",,,,"ClinicalDocument.custodian",1,1,"",""
 "ClinicalDocument.informationRecipient","ClinicalDocument.informationRecipient","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/InformationRecipient {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ClinicalDocument.informationRecipient",0,*,"",""
-"ClinicalDocument.legalAuthenticator","ClinicalDocument.legalAuthenticator","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/LegalAuthenticator {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"ClinicalDocument.legalAuthenticator",0,1,"",""
+"ClinicalDocument.legalAuthenticator","ClinicalDocument.legalAuthenticator","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/LegalAuthenticator {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"ClinicalDocument.legalAuthenticator",0,*,"",""
 "ClinicalDocument.authenticator","ClinicalDocument.authenticator","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Authenticator {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ClinicalDocument.authenticator",0,*,"",""
 "ClinicalDocument.participant","ClinicalDocument.participant","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Participant1 {[]} {[]}

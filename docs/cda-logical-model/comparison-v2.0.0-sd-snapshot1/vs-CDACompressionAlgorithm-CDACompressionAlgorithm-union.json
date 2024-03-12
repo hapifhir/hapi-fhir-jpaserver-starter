@@ -1,0 +1,25 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "610faa6d-d917-4e07-a068-484061ef4901-56",
+  "url" : "http://hl7.org/fhir/comparison/ValueSet/610faa6d-d917-4e07-a068-484061ef4901-56",
+  "name" : "UnionCDACompressionAlgorithmAndCDACompressionAlgorithm",
+  "title" : "Union of CompressionAlgorithm And CompressionAlgorithm",
+  "status" : "draft",
+  "date" : "2024-03-12T18:28:32+01:00",
+  "compose" : {
+    "include" : [{
+      "concept" : [{
+        "code" : "DF"
+      },
+      {
+        "code" : "GZ"
+      },
+      {
+        "code" : "ZL"
+      },
+      {
+        "code" : "Z"
+      }]
+    }]
+  }
+}

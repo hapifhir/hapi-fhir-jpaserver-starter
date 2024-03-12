@@ -6,18 +6,18 @@
     <status value="extensions"/><div xmlns="http://www.w3.org/1999/xhtml"><h2>ClinicalDocumentArchitecture</h2><p>The official URL for this implementation guide is: </p><pre>http://hl7.org/cda/stds/core/ImplementationGuide/hl7.cda.uv.core</pre></div>
   </text>
   <url value="http://hl7.org/cda/stds/core/ImplementationGuide/hl7.cda.uv.core"/>
-  <version value="2.1.0-draft2-mb"/>
+  <version value="2.0.0-sd-202312-matchbox-patch"/>
   <name value="ClinicalDocumentArchitecture"/>
   <title value="Clinical Document Architecture"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-10-04T23:00:58+02:00"/>
+  <date value="2024-03-12T18:28:21+01:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/structdoc"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
     </telecom>
     <telecom>
       <system value="email"/>
@@ -42,7 +42,7 @@
   </dependsOn>
   <definition>
     <extension url="http://hl7.org/fhir/tools/StructureDefinition/ig-internal-dependency">
-      <valueCode value="hl7.fhir.uv.tools#current"/>
+      <valueCode value="hl7.fhir.uv.tools#0.1.0"/>
     </extension>
     <grouping id="classes">
       <name value="CDA Classes"/>
@@ -95,13 +95,13 @@
     </resource>
     <resource>
       <extension url="http://hl7.org/fhir/tools/StructureDefinition/resource-information">
-        <valueString value="StructureDefinition:logical:abstract"/>
+        <valueString value="StructureDefinition:logical"/>
       </extension>
       <reference>
         <reference value="StructureDefinition/AlternateIdentification"/>
       </reference>
       <name value="AlternateIdentification (CDA Class)"/>
-      <description value="Alternate Identifier for a role"/>
+      <description value="The alternateIdentification extension provides additional information about an identifier found in the linked role. The extensions augment the id information in the linked role.  The id in the alternateIdentification extension SHALL match an id in the linked role. The alternateIdentification provides additional information about a particular identifier, such as its type. As an extension it needs to be safe for implementers to ignore this additional information."/>
       <groupingId value="classes"/>
     </resource>
     <resource>
@@ -269,7 +269,8 @@
         <reference value="Binary/clinicaldocument-example"/>
       </reference>
       <name value="Example CDA document"/>
-      <description value="Example CDA document"/>
+      <description value="Example CDA document from original CDA release"/>
+      <isExample value="true"/>
       <profile value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
     </resource>
     <resource>
@@ -516,7 +517,7 @@
     </resource>
     <resource>
       <extension url="http://hl7.org/fhir/tools/StructureDefinition/resource-information">
-        <valueString value="StructureDefinition:logical:abstract"/>
+        <valueString value="StructureDefinition:logical"/>
       </extension>
       <reference>
         <reference value="StructureDefinition/Entry"/>
@@ -527,7 +528,7 @@
     </resource>
     <resource>
       <extension url="http://hl7.org/fhir/tools/StructureDefinition/resource-information">
-        <valueString value="StructureDefinition:logical:abstract"/>
+        <valueString value="StructureDefinition:logical"/>
       </extension>
       <reference>
         <reference value="StructureDefinition/EntryRelationship"/>
@@ -615,13 +616,13 @@
     </resource>
     <resource>
       <extension url="http://hl7.org/fhir/tools/StructureDefinition/resource-information">
-        <valueString value="StructureDefinition:logical:abstract"/>
+        <valueString value="StructureDefinition:logical"/>
       </extension>
       <reference>
         <reference value="StructureDefinition/IdentifiedBy"/>
       </reference>
       <name value="IdentifiedBy (CDA Class)"/>
-      <description value="Link to an additional Identifier for a role"/>
+      <description value="The alternateIdentification extension provides additional information about an identifier found in the linked role. The extensions augment the id information in the linked role.  The id in the alternateIdentification extension SHALL match an id in the linked role. The alternateIdentification provides additional information about a particular identifier, such as its type. As an extension it needs to be safe for implementers to ignore this additional information."/>
       <groupingId value="classes"/>
     </resource>
     <resource>
@@ -684,6 +685,17 @@
         <valueString value="StructureDefinition:logical"/>
       </extension>
       <reference>
+        <reference value="StructureDefinition/InFulfillmentOf1"/>
+      </reference>
+      <name value="InFulfillmentOf1 (CDA Class)"/>
+      <description value="This is an actRelationship called inFulfillmentOf1 that represents the Fulfills General Relationship Operator in QDM 4.1.x in QDM-Base QRDA Category 1, R3."/>
+      <groupingId value="classes"/>
+    </resource>
+    <resource>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/resource-information">
+        <valueString value="StructureDefinition:logical"/>
+      </extension>
+      <reference>
         <reference value="StructureDefinition/INT"/>
       </reference>
       <name value="INT: IntegerNumber (V3 Data Type)"/>
@@ -692,7 +704,7 @@
     </resource>
     <resource>
       <extension url="http://hl7.org/fhir/tools/StructureDefinition/resource-information">
-        <valueString value="StructureDefinition:logical:abstract"/>
+        <valueString value="StructureDefinition:logical"/>
       </extension>
       <reference>
         <reference value="StructureDefinition/INT-POS"/>
@@ -975,7 +987,7 @@
     </resource>
     <resource>
       <extension url="http://hl7.org/fhir/tools/StructureDefinition/resource-information">
-        <valueString value="StructureDefinition:logical:abstract"/>
+        <valueString value="StructureDefinition:logical"/>
       </extension>
       <reference>
         <reference value="StructureDefinition/OrganizerComponent"/>
@@ -1199,6 +1211,28 @@
       </reference>
       <name value="Precondition (CDA Class)"/>
       <description value="The precondition class, derived from the ActRelationship class, is used along with the Precondition class to express a condition that must hold true before some over activity occurs."/>
+      <groupingId value="classes"/>
+    </resource>
+    <resource>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/resource-information">
+        <valueString value="StructureDefinition:logical"/>
+      </extension>
+      <reference>
+        <reference value="StructureDefinition/Precondition2"/>
+      </reference>
+      <name value="Precondition2 (CDA Class)"/>
+      <description value="The sdtc:precondition2 extension allows a more flexible set of skip conditions on a set of criteria. Without this extension the skip condition is restricted to all criteria true. The extension allows a choice of the following logical operation extensions sdtc:allTrue, sdtc:allFalse, sdtc:atLeastOneTrue, sdtc:atLeastOneFalse, sdtc:onlyOneFalse, and sdtc:onlyOneTrue to be placed upon the encapsulated criteria or a criterion. The logical operation extensions nest a [0 .. *] sdtc:precondition2 extension allowing for a complex specification of nested skip conditions if needed."/>
+      <groupingId value="classes"/>
+    </resource>
+    <resource>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/resource-information">
+        <valueString value="StructureDefinition:logical"/>
+      </extension>
+      <reference>
+        <reference value="StructureDefinition/PreconditionBase"/>
+      </reference>
+      <name value="PreconditionBase (CDA Class)"/>
+      <description value="An abstract class containing the common fields used by sdtc:allTrue, sdtc:allFalse, sdtc:atLeastOneTrue, sdtc:atLeastOneFalse, sdtc:onlyOneTrue, and sdtc:onlyOneFalse."/>
       <groupingId value="classes"/>
     </resource>
     <resource>
@@ -1652,11 +1686,111 @@
       <description value="ID represents the ID attribute type from [XML 1.0 (Second Edition)]. The &quot;value space&quot; of ID is the set of all strings that &quot;match&quot; the NCName production in [Namespaces in XML]. The &quot;lexical space&quot; of ID is the set of all strings that &quot;match&quot; the NCName production in [Namespaces in XML]."/>
       <groupingId value="datatypes-xml"/>
     </resource>
+    <resource>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/resource-information">
+        <valueString value="CodeSystem"/>
+      </extension>
+      <reference>
+        <reference value="CodeSystem/BinaryDataEncoding"/>
+      </reference>
+      <name value="Binary Data Encoding Code System"/>
+      <description value="Identifies the representation of binary data in a text field"/>
+    </resource>
+    <resource>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/resource-information">
+        <valueString value="ValueSet"/>
+      </extension>
+      <reference>
+        <reference value="ValueSet/BinaryDataEncoding"/>
+      </reference>
+      <name value="Binary Data Encoding Value Set"/>
+      <description value="Identifies the representation of binary data in a text field"/>
+    </resource>
+    <resource>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/resource-information">
+        <valueString value="ValueSet"/>
+      </extension>
+      <reference>
+        <reference value="ValueSet/CDACompressionAlgorithm"/>
+      </reference>
+      <name value="CompressionAlgorithm"/>
+      <description value="Type of compression algorithm used - limited to 4 concepts from original CDA definition"/>
+    </resource>
+    <resource>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/resource-information">
+        <valueString value="ValueSet"/>
+      </extension>
+      <reference>
+        <reference value="ValueSet/CDAEntityNameUse"/>
+      </reference>
+      <name value="CDAEntityNameUse"/>
+      <description value="A set of codes advising a system or user which name in a set of names to select for a given purpose - limited to values allowed in original CDA definition"/>
+    </resource>
+    <resource>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/resource-information">
+        <valueString value="ValueSet"/>
+      </extension>
+      <reference>
+        <reference value="ValueSet/CDAPostalAddressUse"/>
+      </reference>
+      <name value="CDAPostalAddressUse"/>
+      <description value="A set of codes advising a system or user which address in a set of like addresses to select for a given purpose - limited to values allowed in original CDA definition"/>
+    </resource>
+    <resource>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/resource-information">
+        <valueString value="ValueSet"/>
+      </extension>
+      <reference>
+        <reference value="ValueSet/CDASignatureCode"/>
+      </reference>
+      <name value="CDASignatureCode"/>
+      <description value="A set of codes specifying whether and how the participant has attested his participation through a signature - limited to values allowed in original CDA definition.&#xA;&#xA;**Note:** CDA Release One represented either an intended (`X`) or actual (`S`) authenticator. CDA Release Two only represents an actual authenticator, so has deprecated the value of `X`."/>
+    </resource>
+    <resource>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/resource-information">
+        <valueString value="ValueSet"/>
+      </extension>
+      <reference>
+        <reference value="ValueSet/CDANullFlavor"/>
+      </reference>
+      <name value="CDANullFlavor"/>
+      <description value="CDA NullFlavors - limited to values allowed in original CDA definition"/>
+    </resource>
     <page>
       <sourceUrl value="index.html"/>
       <name value="index.html"/>
       <title value="IG Home Page"/>
       <generation value="markdown"/>
+      <page>
+        <sourceUrl value="overview.html"/>
+        <name value="overview.html"/>
+        <title value="Overview"/>
+        <generation value="markdown"/>
+        <page>
+          <sourceUrl value="implementation.html"/>
+          <name value="implementation.html"/>
+          <title value="Implementation Notes"/>
+          <generation value="markdown"/>
+        </page>
+        <page>
+          <sourceUrl value="cda-rmim.html"/>
+          <name value="cda-rmim.html"/>
+          <title value="Graphical Map of CDA"/>
+          <generation value="html"/>
+        </page>
+        <page>
+          <sourceUrl value="dt-uml.html"/>
+          <name value="dt-uml.html"/>
+          <title value="Graphical Map of Datatypes"/>
+          <generation value="html"/>
+        </page>
+        <page>
+          <sourceUrl value="narrative.html"/>
+          <name value="narrative.html"/>
+          <title value="Narrative Block"/>
+          <generation value="markdown"/>
+        </page>
+      </page>
       <page>
         <sourceUrl value="downloads.html"/>
         <name value="downloads.html"/>
@@ -1677,6 +1811,48 @@
         <code value="apply-version"/>
       </code>
       <value value="true"/>
+    </parameter>
+    <parameter>
+      <code>
+        <system value="http://hl7.org/fhir/tools/CodeSystem/ig-parameters"/>
+        <code value="excludejson"/>
+      </code>
+      <value value="false"/>
+    </parameter>
+    <parameter>
+      <code>
+        <system value="http://hl7.org/fhir/tools/CodeSystem/ig-parameters"/>
+        <code value="logging"/>
+      </code>
+      <value value="init"/>
+    </parameter>
+    <parameter>
+      <code>
+        <system value="http://hl7.org/fhir/tools/CodeSystem/ig-parameters"/>
+        <code value="logging"/>
+      </code>
+      <value value="progress"/>
+    </parameter>
+    <parameter>
+      <code>
+        <system value="http://hl7.org/fhir/tools/CodeSystem/ig-parameters"/>
+        <code value="logging"/>
+      </code>
+      <value value="generate"/>
+    </parameter>
+    <parameter>
+      <code>
+        <system value="http://hl7.org/fhir/tools/CodeSystem/ig-parameters"/>
+        <code value="jira-code"/>
+      </code>
+      <value value="cda-sd"/>
+    </parameter>
+    <parameter>
+      <code>
+        <system value="http://hl7.org/fhir/tools/CodeSystem/ig-parameters"/>
+        <code value="releaselabel"/>
+      </code>
+      <value value="ballot"/>
     </parameter>
     <parameter>
       <code>
@@ -1934,13 +2110,6 @@
       <code>
         <system value="http://hl7.org/fhir/tools/CodeSystem/ig-parameters"/>
         <code value="tabbed-snapshots"/>
-      </code>
-      <value value="true"/>
-    </parameter>
-    <parameter>
-      <code>
-        <system value="http://hl7.org/fhir/tools/CodeSystem/ig-parameters"/>
-        <code value="excludejson"/>
       </code>
       <value value="true"/>
     </parameter>

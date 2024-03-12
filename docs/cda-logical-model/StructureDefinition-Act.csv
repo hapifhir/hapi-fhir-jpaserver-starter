@@ -1,25 +1,34 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
 "Act","Act","","","",1,1,"","","","null {[]} {[]}
-","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-","n/a"
+","Base for all types and resources","Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
 "Act.nullFlavor","Act.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"Act.nullFlavor",0,1,"",""
-"Act.classCode","Act.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","Element Act.classCode","","","","","","","","","",,,,,"",,,,"Act.classCode",1,1,"",""
-"Act.moodCode","Act.moodCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Act.moodCode",1,1,"",""
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "Act.realmCode","Act.realmCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Act.realmCode",0,*,"",""
+","","When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.realmCode",0,*,"",""
 "Act.typeId","Act.typeId","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Act.typeId",0,1,"",""
+","","When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.typeId",0,1,"",""
+"Act.typeId.nullFlavor","Act.typeId.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"Act.typeId.assigningAuthorityName","Act.typeId.assigningAuthorityName","","","Assigning Authority Name",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+","","A human readable name or mnemonic for the assigning authority. The Assigning Authority Name has no computational value. The purpose of a Assigning Authority Name is to assist an unaided human interpreter of an II value to interpret the authority. Note: no automated processing must depend on the assigning authority name to be present in any form.","","","","","","","","","",,,,,"",,,,"II.assigningAuthorityName",0,1,"",""
+"Act.typeId.displayable","Act.typeId.displayable","","","Displayable",0,1,"","","","boolean {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/bl-simple]]} {[]}
+","","Specifies if the identifier is intended for human display and data entry (displayable = true) as opposed to pure machine interoperation (displayable = false).","","","","","","","","","",,,,,"",,,,"II.displayable",0,1,"",""
+"Act.typeId.root","Act.typeId.root","","","Root",1,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/oid], CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/uuid], CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/ruid]]} {[]}
+","","Identifies the type as an HL7 Registered model","","","","","<valueString xmlns=""http://hl7.org/fhir"" value=""2.16.840.1.113883.1.3""/>","","","","",,,,,"",,,,"II.root",0,1,"",""
+"Act.typeId.extension","Act.typeId.extension","","","Extension",1,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+","","A character string as a unique identifier within the scope of the identifier root.","","","","","","","","","",,,,,"",,,,"II.extension",0,1,"",""
 "Act.templateId","Act.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
-","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"Act.templateId",0,*,"",""
+","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
+"Act.classCode","Act.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-xActClassDocumentEntryAct|2.0.0","",,,,"Act.classCode",1,1,"",""
+"Act.moodCode","Act.moodCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-xDocumentActMood|2.0.0","",,,,"Act.moodCode",1,1,"",""
+"Act.negationInd","Act.negationInd","","","",0,1,"","","","boolean {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/bl-simple]]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Act.negationInd",0,1,"",""
 "Act.id","Act.id","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Act.id",0,*,"",""
 "Act.code","Act.code","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}
-","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-ActCode","",,,,"Act.code",1,1,"",""
-"Act.negationInd","Act.negationInd","","","",0,1,"","","","boolean {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/bl-simple]]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"Act.negationInd",0,1,"",""
+","","","","","","","","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-ActCode","",,,,"Act.code",1,1,"",""
 "Act.text","Act.text","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ED {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Act.text",0,1,"",""
 "Act.statusCode","Act.statusCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
@@ -27,9 +36,9 @@
 "Act.effectiveTime","Act.effectiveTime","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Act.effectiveTime",0,1,"",""
 "Act.priorityCode","Act.priorityCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
-","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-ActPriority","",,,,"Act.priorityCode",0,1,"",""
+","","","","","","","","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-ActPriority","",,,,"Act.priorityCode",0,1,"",""
 "Act.languageCode","Act.languageCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
-","","","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-HumanLanguage","",,,,"Act.languageCode",0,1,"",""
+","","","","","","","","","","","",,"required","","http://hl7.org/fhir/ValueSet/all-languages","",,,,"Act.languageCode",0,1,"",""
 "Act.subject","Act.subject","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Subject {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Act.subject",0,1,"",""
 "Act.specimen","Act.specimen","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Specimen {[]} {[]}
@@ -48,3 +57,7 @@
 ","","","","","","","","","","","",,,,,"",,,,"Act.reference",0,*,"",""
 "Act.precondition","Act.precondition","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Precondition {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Act.precondition",0,*,"",""
+"Act.sdtcPrecondition2","Act.sdtcPrecondition2","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Precondition2 {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Act.sdtcPrecondition2",0,*,"",""
+"Act.sdtcInFulfillmentOf1","Act.sdtcInFulfillmentOf1","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/InFulfillmentOf1 {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"Act.sdtcInFulfillmentOf1",0,*,"",""

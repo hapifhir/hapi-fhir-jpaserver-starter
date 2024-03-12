@@ -13,25 +13,28 @@
      fhir:div "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Primitive type 'ruid'</p>\n    </div>"
   ] ; # 
   fhir:extension ( [
-     fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"^^xsd:anyURI ] ;
+     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ] ;
      fhir:value [ fhir:v "urn:hl7-org:v3"^^xsd:anyURI ]
+  ] [
+     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/logical-container"^^xsd:anyURI ] ;
+     fhir:value [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"^^xsd:anyURI ]
   ] [
      fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics"^^xsd:anyURI ] ;
      fhir:value [ fhir:v "can-bind" ]
   ] ) ; # 
   fhir:url [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ruid"^^xsd:anyURI] ; # 
-  fhir:version [ fhir:v "2.1.0-draft2-mb"] ; # 
+  fhir:version [ fhir:v "2.0.0-sd-202312-matchbox-patch"] ; # 
   fhir:name [ fhir:v "ruid"] ; # 
   fhir:title [ fhir:v "ruid: HL7 Reserved Identifier Scheme"] ; # 
   fhir:status [ fhir:v "active"] ; # 
   fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
-  fhir:date [ fhir:v "2023-10-04T23:00:58+02:00"^^xsd:dateTime] ; # 
+  fhir:date [ fhir:v "2024-03-12T18:28:21+01:00"^^xsd:dateTime] ; # 
   fhir:publisher [ fhir:v "Health Level 7"] ; # 
   fhir:contact ( [
      fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
      fhir:telecom ( [
        fhir:system [ fhir:v "url" ] ;
-       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structdoc" ]
+       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structure" ]
      ] [
        fhir:system [ fhir:v "email" ] ;
        fhir:value [ fhir:v "structdog@lists.HL7.org" ]
@@ -74,7 +77,7 @@
          fhir:key [ fhir:v "ruid-pattern" ] ;
          fhir:severity [ fhir:v "error" ] ;
          fhir:human [ fhir:v "An identifier that starts with a letter and contains any combination of letters, numbers, and hyphen." ] ;
-         fhir:expression [ fhir:v "matches('^[A-Za-z][A-Za-z0-9\\\\-]*$')" ]
+         fhir:expression [ fhir:v "matches('^[A-Za-z][A-Za-z0-9\\\\-]*$') and matches('^[0-9A-Za-z]{8}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{12}$').not()" ]
        ] ) ;
        fhir:isModifier [ fhir:v "false"^^xsd:boolean ] ;
        fhir:isSummary [ fhir:v "false"^^xsd:boolean ]
@@ -106,7 +109,7 @@
        fhir:short [ fhir:v "Extension" ] ;
        fhir:definition [ fhir:v "An Extension" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "0" ] ;
        fhir:base [
          fhir:path [ fhir:v "Element.extension" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -172,7 +175,7 @@
          fhir:key [ fhir:v "ruid-pattern" ] ;
          fhir:severity [ fhir:v "error" ] ;
          fhir:human [ fhir:v "An identifier that starts with a letter and contains any combination of letters, numbers, and hyphen." ] ;
-         fhir:expression [ fhir:v "matches('^[A-Za-z][A-Za-z0-9\\\\-]*$')" ]
+         fhir:expression [ fhir:v "matches('^[A-Za-z][A-Za-z0-9\\\\-]*$') and matches('^[0-9A-Za-z]{8}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{12}$').not()" ]
        ] )
      ] [
        fhir:id [ fhir:v "string.id" ] ;
@@ -181,7 +184,7 @@
      ] [
        fhir:id [ fhir:v "string.extension" ] ;
        fhir:path [ fhir:v "string.extension" ] ;
-       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ]
+       fhir:max [ fhir:v "0" ]
      ] )
   ] . # 
 

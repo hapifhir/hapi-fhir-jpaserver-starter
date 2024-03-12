@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<CodeSystem xmlns="http://hl7.org/fhir">
+  <id value="BinaryDataEncoding"/>
+  <text>
+    <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml"><p>This case-sensitive code system <code>http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding</code> defines the following codes:</p><table class="codes"><tr><td style="white-space:nowrap"><b>Code</b></td><td><b>Display</b></td></tr><tr><td style="white-space:nowrap">B64<a name="BinaryDataEncoding-B64"> </a></td><td>Base64-encoded text</td></tr><tr><td style="white-space:nowrap">TXT<a name="BinaryDataEncoding-TXT"> </a></td><td>Plain text</td></tr></table></div>
+  </text>
+  <url value="http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding"/>
+  <version value="2.0.0-sd-202312-matchbox-patch"/>
+  <name value="BinaryDataEncoding"/>
+  <title value="Binary Data Encoding Code System"/>
+  <status value="draft"/>
+  <experimental value="false"/>
+  <date value="2024-03-12T18:28:21+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <name value="HL7 International - Structured Documents"/>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+    <telecom>
+      <system value="email"/>
+      <value value="structdog@lists.HL7.org"/>
+    </telecom>
+  </contact>
+  <description value="Identifies the representation of binary data in a text field"/>
+  <caseSensitive value="true"/>
+  <content value="complete"/>
+  <count value="2"/>
+  <concept>
+    <code value="B64"/>
+    <display value="Base64-encoded text"/>
+  </concept>
+  <concept>
+    <code value="TXT"/>
+    <display value="Plain text"/>
+  </concept>
+</CodeSystem>

@@ -15,25 +15,31 @@
       </extension>
     </valueBoolean>
   </extension>
-  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
     <valueUri value="urn:hl7-org:v3"/>
   </extension>
-  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
-    <valueUri value="subject"/>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
+    <valueString value="subject"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-container">
+    <valueUri value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/type-profile-style">
+    <valueUri value="cda"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/Subject"/>
-  <version value="2.1.0-draft2-mb"/>
-  <name value="CDAR2.Subject"/>
+  <version value="2.0.0-sd-202312-matchbox-patch"/>
+  <name value="Subject"/>
   <title value="Subject (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-10-04T23:00:58+02:00"/>
+  <date value="2024-03-12T18:28:21+01:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/structdoc"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
     </telecom>
     <telecom>
       <system value="email"/>
@@ -64,13 +70,6 @@
         <min value="0"/>
         <max value="*"/>
       </base>
-      <constraint>
-        <key value="ele-1"/>
-        <severity value="error"/>
-        <human value="All FHIR elements must have a @value or children"/>
-        <expression value="hasValue() or (children().count() &gt; id.count())"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
-      </constraint>
       <isModifier value="false"/>
       <mapping>
         <identity value="rim"/>
@@ -95,7 +94,7 @@
       </type>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-NullFlavor"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"/>
       </binding>
     </element>
     <element id="Subject.realmCode">
@@ -126,6 +125,98 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
+    <element id="Subject.typeId.nullFlavor">
+      <path value="Subject.typeId.nullFlavor"/>
+      <representation value="xmlAttr"/>
+      <label value="Exceptional Value Detail"/>
+      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ANY.nullFlavor"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"/>
+      </binding>
+    </element>
+    <element id="Subject.typeId.assigningAuthorityName">
+      <path value="Subject.typeId.assigningAuthorityName"/>
+      <representation value="xmlAttr"/>
+      <label value="Assigning Authority Name"/>
+      <definition value="A human readable name or mnemonic for the assigning authority. The Assigning Authority Name has no computational value. The purpose of a Assigning Authority Name is to assist an unaided human interpreter of an II value to interpret the authority. Note: no automated processing must depend on the assigning authority name to be present in any form."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="II.assigningAuthorityName"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
+      </type>
+    </element>
+    <element id="Subject.typeId.displayable">
+      <path value="Subject.typeId.displayable"/>
+      <representation value="xmlAttr"/>
+      <label value="Displayable"/>
+      <definition value="Specifies if the identifier is intended for human display and data entry (displayable = true) as opposed to pure machine interoperation (displayable = false)."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="II.displayable"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="boolean"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"/>
+      </type>
+    </element>
+    <element id="Subject.typeId.root">
+      <path value="Subject.typeId.root"/>
+      <representation value="xmlAttr"/>
+      <label value="Root"/>
+      <definition value="Identifies the type as an HL7 Registered model"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="II.root"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/oid"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/uuid"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/ruid"/>
+      </type>
+      <fixedString value="2.16.840.1.113883.1.3"/>
+    </element>
+    <element id="Subject.typeId.extension">
+      <path value="Subject.typeId.extension"/>
+      <representation value="xmlAttr"/>
+      <label value="Extension"/>
+      <definition value="A character string as a unique identifier within the scope of the identifier root."/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="II.extension"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
+      </type>
+    </element>
     <element id="Subject.templateId">
       <path value="Subject.templateId"/>
       <definition value="When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question"/>
@@ -143,7 +234,6 @@
     <element id="Subject.typeCode">
       <path value="Subject.typeCode"/>
       <representation value="xmlAttr"/>
-      <definition value="Element Act.typeCode"/>
       <min value="0"/>
       <max value="1"/>
       <base>
@@ -164,7 +254,6 @@
     <element id="Subject.contextControlCode">
       <path value="Subject.contextControlCode"/>
       <representation value="xmlAttr"/>
-      <definition value="Element Act.contextControlCode"/>
       <min value="0"/>
       <max value="1"/>
       <base>
@@ -195,7 +284,7 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
       <binding>
-        <strength value="extensible"/>
+        <strength value="example"/>
         <valueSet value="http://terminology.hl7.org/ValueSet/v3-TargetAwareness"/>
       </binding>
     </element>
@@ -217,7 +306,6 @@
     <element id="Subject.typeCode">
       <path value="Subject.typeCode"/>
       <representation value="xmlAttr"/>
-      <definition value="Element Act.typeCode"/>
       <min value="0"/>
       <max value="1"/>
       <type>
@@ -233,7 +321,6 @@
     <element id="Subject.contextControlCode">
       <path value="Subject.contextControlCode"/>
       <representation value="xmlAttr"/>
-      <definition value="Element Act.contextControlCode"/>
       <min value="0"/>
       <max value="1"/>
       <type>
@@ -254,7 +341,7 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
       <binding>
-        <strength value="extensible"/>
+        <strength value="example"/>
         <valueSet value="http://terminology.hl7.org/ValueSet/v3-TargetAwareness"/>
       </binding>
     </element>

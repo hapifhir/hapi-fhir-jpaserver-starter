@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ValueSet xmlns="http://hl7.org/fhir">
+  <id value="CDACompressionAlgorithm"/>
+  <text>
+    <status value="extensions"/><div xmlns="http://www.w3.org/1999/xhtml"><ul><li>Include these codes as defined in <a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-CompressionAlgorithm.html"><code>http://terminology.hl7.org/CodeSystem/v3-CompressionAlgorithm</code></a><table class="none"><tr><td style="white-space:nowrap"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-CompressionAlgorithm.html#v3-CompressionAlgorithm-DF">DF</a></td><td style="color: #cccccc">deflate</td><td>The deflate compressed data format as specified in RFC 1951 \[http://www.ietf.org/rfc/rfc1951.txt\].</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-CompressionAlgorithm.html#v3-CompressionAlgorithm-GZ">GZ</a></td><td style="color: #cccccc">gzip</td><td>A compressed data format that is compatible with the widely used GZIP utility as specified in RFC 1952 \[http://www.ietf.org/rfc/rfc1952.txt\] (uses the deflate algorithm).</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-CompressionAlgorithm.html#v3-CompressionAlgorithm-ZL">ZL</a></td><td style="color: #cccccc">zlib</td><td>A compressed data format that also uses the deflate algorithm. Specified as RFC 1950 \[http://www.ietf.org/rfc/rfc1952.txt\]</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-CompressionAlgorithm.html#v3-CompressionAlgorithm-Z">Z</a></td><td style="color: #cccccc">compress</td><td>Original UNIX compress algorithm and file format using the LZC algorithm (a variant of LZW). Patent encumbered and less efficient than deflate.</td></tr></table></li></ul></div>
+  </text>
+  <url value="http://hl7.org/cda/stds/core/ValueSet/CDACompressionAlgorithm"/>
+  <version value="2.0.0-sd-202312-matchbox-patch"/>
+  <name value="CDACompressionAlgorithm"/>
+  <title value="CompressionAlgorithm"/>
+  <status value="draft"/>
+  <experimental value="false"/>
+  <date value="2024-03-12T18:28:21+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <name value="HL7 International - Structured Documents"/>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+    <telecom>
+      <system value="email"/>
+      <value value="structdog@lists.HL7.org"/>
+    </telecom>
+  </contact>
+  <description value="Type of compression algorithm used - limited to 4 concepts from original CDA definition"/>
+  <compose>
+    <include>
+      <system value="http://terminology.hl7.org/CodeSystem/v3-CompressionAlgorithm"/>
+      <concept>
+        <code value="DF"/>
+      </concept>
+      <concept>
+        <code value="GZ"/>
+      </concept>
+      <concept>
+        <code value="ZL"/>
+      </concept>
+      <concept>
+        <code value="Z"/>
+      </concept>
+    </include>
+  </compose>
+</ValueSet>

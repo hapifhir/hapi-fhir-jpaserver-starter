@@ -3,7 +3,7 @@
   "id" : "AlternateIdentification",
   "text" : {
     "status" : "generated",
-    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Alternate Identifier for a role</p>\n      <p>The id field SHALL match an id in the linked role.</p>\n    </div>"
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>The alternateIdentification extension provides additional information about an identifier found in the linked role. The extensions augment the id information in the linked role.  The id in the alternateIdentification extension SHALL match an id in the linked role. The alternateIdentification provides additional information about a particular identifier, such as its type. As an extension it needs to be safe for implementers to ignore this additional information.</p>\n    </div>"
   },
   "extension" : [{
     "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
@@ -15,29 +15,33 @@
     }
   },
   {
-    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
-    "valueUri" : "alternateIdentification"
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-name",
+    "valueString" : "alternateIdentification"
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-container",
+    "valueUri" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
   }],
   "url" : "http://hl7.org/cda/stds/core/StructureDefinition/AlternateIdentification",
-  "version" : "2.1.0-draft2-mb",
+  "version" : "2.0.0-sd-202312-matchbox-patch",
   "name" : "AlternateIdentification",
   "title" : "AlternateIdentification (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-10-04T23:00:58+02:00",
+  "date" : "2024-03-12T18:28:21+01:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/structdoc"
+      "value" : "http://www.hl7.org/Special/committees/structure"
     },
     {
       "system" : "email",
       "value" : "structdog@lists.HL7.org"
     }]
   }],
-  "description" : "Alternate Identifier for a role",
+  "description" : "The alternateIdentification extension provides additional information about an identifier found in the linked role. The extensions augment the id information in the linked role.  The id in the alternateIdentification extension SHALL match an id in the linked role. The alternateIdentification provides additional information about a particular identifier, such as its type. As an extension it needs to be safe for implementers to ignore this additional information.",
   "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
@@ -45,7 +49,7 @@
     "name" : "RIM Mapping"
   }],
   "kind" : "logical",
-  "abstract" : true,
+  "abstract" : false,
   "type" : "http://hl7.org/cda/stds/core/StructureDefinition/AlternateIdentification",
   "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
   "derivation" : "specialization",
@@ -62,13 +66,6 @@
         "min" : 0,
         "max" : "*"
       },
-      "constraint" : [{
-        "key" : "ele-1",
-        "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
-      }],
       "isModifier" : false,
       "mapping" : [{
         "identity" : "rim",
@@ -78,12 +75,11 @@
     {
       "id" : "AlternateIdentification.classCode",
       "extension" : [{
-        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
         "valueUri" : "urn:hl7-org:v3"
       }],
       "path" : "AlternateIdentification.classCode",
       "representation" : ["xmlAttr"],
-      "definition" : "Element AlternateIdentification.classCode",
       "min" : 1,
       "max" : "1",
       "base" : {
@@ -104,11 +100,10 @@
     {
       "id" : "AlternateIdentification.id",
       "extension" : [{
-        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
         "valueUri" : "urn:hl7-org:v3"
       }],
       "path" : "AlternateIdentification.id",
-      "definition" : "Element AlternateIdentification.id",
       "min" : 1,
       "max" : "1",
       "base" : {
@@ -123,7 +118,7 @@
     {
       "id" : "AlternateIdentification.code",
       "extension" : [{
-        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
         "valueUri" : "urn:hl7-org:v3"
       }],
       "path" : "AlternateIdentification.code",
@@ -141,7 +136,7 @@
     {
       "id" : "AlternateIdentification.statusCode",
       "extension" : [{
-        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
         "valueUri" : "urn:hl7-org:v3"
       }],
       "path" : "AlternateIdentification.statusCode",
@@ -163,7 +158,7 @@
     {
       "id" : "AlternateIdentification.effectiveTime",
       "extension" : [{
-        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
         "valueUri" : "urn:hl7-org:v3"
       }],
       "path" : "AlternateIdentification.effectiveTime",
@@ -189,12 +184,11 @@
     {
       "id" : "AlternateIdentification.classCode",
       "extension" : [{
-        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
         "valueUri" : "urn:hl7-org:v3"
       }],
       "path" : "AlternateIdentification.classCode",
       "representation" : ["xmlAttr"],
-      "definition" : "Element AlternateIdentification.classCode",
       "min" : 1,
       "max" : "1",
       "type" : [{
@@ -210,11 +204,10 @@
     {
       "id" : "AlternateIdentification.id",
       "extension" : [{
-        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
         "valueUri" : "urn:hl7-org:v3"
       }],
       "path" : "AlternateIdentification.id",
-      "definition" : "Element AlternateIdentification.id",
       "min" : 1,
       "max" : "1",
       "type" : [{
@@ -224,7 +217,7 @@
     {
       "id" : "AlternateIdentification.code",
       "extension" : [{
-        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
         "valueUri" : "urn:hl7-org:v3"
       }],
       "path" : "AlternateIdentification.code",
@@ -237,7 +230,7 @@
     {
       "id" : "AlternateIdentification.statusCode",
       "extension" : [{
-        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
         "valueUri" : "urn:hl7-org:v3"
       }],
       "path" : "AlternateIdentification.statusCode",
@@ -254,7 +247,7 @@
     {
       "id" : "AlternateIdentification.effectiveTime",
       "extension" : [{
-        "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
         "valueUri" : "urn:hl7-org:v3"
       }],
       "path" : "AlternateIdentification.effectiveTime",

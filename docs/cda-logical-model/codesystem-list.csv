@@ -1,0 +1,2 @@
+URL,Version,Status,OIDs,Name,Title,Descriptino,Used
+http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding,2.0.0-sd-202312-matchbox-patch,draft,,BinaryDataEncoding,Binary Data Encoding Code System,"Identifies the representation of binary data in a text field",

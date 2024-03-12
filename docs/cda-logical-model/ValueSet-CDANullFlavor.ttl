@@ -1,0 +1,66 @@
+@prefix fhir: <http://hl7.org/fhir/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# - resource -------------------------------------------------------------------
+
+<http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor> a fhir:ValueSet ;
+  fhir:nodeRole fhir:treeRoot ;
+  fhir:id [ fhir:v "CDANullFlavor"] ; # 
+  fhir:text [
+     fhir:status [ fhir:v "extensions" ] ;
+     fhir:div "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include these codes as defined in <a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html\"><code>http://terminology.hl7.org/CodeSystem/v3-NullFlavor</code></a><table class=\"none\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-NP\">NP</a></td><td style=\"color: #cccccc\">not present</td><td>Value is not present in a message. This is only defined in messages, never in application data! All values not present in the message must be replaced by the applicable default, or no-information (NI) as the default of all defaults.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-NI\">NI</a></td><td style=\"color: #cccccc\">NoInformation</td><td>**Description:**The value is exceptional (missing, omitted, incomplete, improper). No information as to the reason for being an exceptional value is provided. This is the most general exceptional value. It is also the default exceptional value.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-MSK\">MSK</a></td><td style=\"color: #cccccc\">masked</td><td>There is information on this item available but it has not been provided by the sender due to security, privacy or other reasons. There may be an alternate mechanism for gaining access to this information.<br/><br/>Note: using this null flavor does provide information that may be a breach of confidentiality, even though no detail data is provided. Its primary purpose is for those circumstances where it is necessary to inform the receiver that the information does exist without providing any detail.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-NA\">NA</a></td><td style=\"color: #cccccc\">not applicable</td><td>Known to have no proper value (e.g., last menstrual period for a male).</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-OTH\">OTH</a></td><td style=\"color: #cccccc\">other</td><td>**Description:**The actual value is not a member of the set of permitted data values in the constrained value domain of a variable. (e.g., concept not provided by required code system).<br/><br/>**Usage Notes**: This flavor and its specializations are most commonly used with the CD datatype and its flavors. However, it may apply to \\*any\\* datatype where the constraints of the type are tighter than can be conveyed. For example, a PQ that is for a true measured amount whose units are not supported in UCUM, a need to convey a REAL when the type has been constrained to INT, etc.<br/><br/>With coded datatypes, this null flavor may only be used if the vocabulary binding has a coding strength of CNE. By definition, all local codes and original text are part of the value set if the coding strength is CWE.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-NINF\">NINF</a></td><td style=\"color: #cccccc\">negative infinity</td><td>Negative infinity of numbers.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-PINF\">PINF</a></td><td style=\"color: #cccccc\">positive infinity</td><td>Positive infinity of numbers.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-UNK\">UNK</a></td><td style=\"color: #cccccc\">unknown</td><td>**Description:**A proper value is applicable, but not known.<br/><br/>**Usage Notes**: This means the actual value is not known. If the only thing that is unknown is how to properly express the value in the necessary constraints (value set, datatype, etc.), then the OTH or UNC flavor should be used. No properties should be included for a datatype with this property unless:<br/><br/>1.  Those properties themselves directly translate to a semantic of &quot;unknown&quot;. (E.g. a local code sent as a translation that conveys 'unknown')<br/>2.  Those properties further qualify the nature of what is unknown. (E.g. specifying a use code of &quot;H&quot; and a URL prefix of &quot;tel:&quot; to convey that it is the home phone number that is unknown.)</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-NASK\">NASK</a></td><td style=\"color: #cccccc\">not asked</td><td>This information has not been sought (e.g., patient was not asked)</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-TRC\">TRC</a></td><td style=\"color: #cccccc\">trace</td><td>The content is greater than zero, but too small to be quantified.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-ASKU\">ASKU</a></td><td style=\"color: #cccccc\">asked but unknown</td><td>Information was sought but not found (e.g., patient was asked but didn't know)</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-NullFlavor.html#v3-NullFlavor-NAV\">NAV</a></td><td style=\"color: #cccccc\">temporarily unavailable</td><td>Information is not available at this time but it is expected that it will be available later.</td></tr></table></li></ul></div>"
+  ] ; # 
+  fhir:url [ fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI] ; # 
+  fhir:version [ fhir:v "2.0.0-sd-202312-matchbox-patch"] ; # 
+  fhir:name [ fhir:v "CDANullFlavor"] ; # 
+  fhir:title [ fhir:v "CDANullFlavor"] ; # 
+  fhir:status [ fhir:v "draft"] ; # 
+  fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
+  fhir:date [ fhir:v "2024-03-12T18:28:21+01:00"^^xsd:dateTime] ; # 
+  fhir:publisher [ fhir:v "Health Level 7"] ; # 
+  fhir:contact ( [
+     fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
+     fhir:telecom ( [
+       fhir:system [ fhir:v "url" ] ;
+       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structure" ]
+     ] [
+       fhir:system [ fhir:v "email" ] ;
+       fhir:value [ fhir:v "structdog@lists.HL7.org" ]
+     ] )
+  ] ) ; # 
+  fhir:description [ fhir:v "CDA NullFlavors - limited to values allowed in original CDA definition"] ; # 
+  fhir:compose [
+     fhir:include ( [
+       fhir:system [ fhir:v "http://terminology.hl7.org/CodeSystem/v3-NullFlavor"^^xsd:anyURI ] ;
+       fhir:concept ( [
+         fhir:code [ fhir:v "NP" ]
+       ] [
+         fhir:code [ fhir:v "NI" ]
+       ] [
+         fhir:code [ fhir:v "MSK" ]
+       ] [
+         fhir:code [ fhir:v "NA" ]
+       ] [
+         fhir:code [ fhir:v "OTH" ]
+       ] [
+         fhir:code [ fhir:v "NINF" ]
+       ] [
+         fhir:code [ fhir:v "PINF" ]
+       ] [
+         fhir:code [ fhir:v "UNK" ]
+       ] [
+         fhir:code [ fhir:v "NASK" ]
+       ] [
+         fhir:code [ fhir:v "TRC" ]
+       ] [
+         fhir:code [ fhir:v "ASKU" ]
+       ] [
+         fhir:code [ fhir:v "NAV" ]
+       ] )
+     ] )
+  ] . # 
+
+# -------------------------------------------------------------------------------------
+

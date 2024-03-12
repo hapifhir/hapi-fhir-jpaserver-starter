@@ -15,26 +15,34 @@
     }
   },
   {
-    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
     "valueUri" : "urn:hl7-org:v3"
   },
   {
-    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name",
-    "valueUri" : "structuredBody"
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-name",
+    "valueString" : "structuredBody"
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-container",
+    "valueUri" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/type-profile-style",
+    "valueUri" : "cda"
   }],
   "url" : "http://hl7.org/cda/stds/core/StructureDefinition/StructuredBody",
-  "version" : "2.1.0-draft2-mb",
-  "name" : "CDAR2.StructuredBody",
+  "version" : "2.0.0-sd-202312-matchbox-patch",
+  "name" : "StructuredBody",
   "title" : "StructuredBody (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-10-04T23:00:58+02:00",
+  "date" : "2024-03-12T18:28:21+01:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/structdoc"
+      "value" : "http://www.hl7.org/Special/committees/structure"
     },
     {
       "system" : "email",
@@ -66,13 +74,6 @@
         "min" : 0,
         "max" : "*"
       },
-      "constraint" : [{
-        "key" : "ele-1",
-        "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
-      }],
       "isModifier" : false,
       "mapping" : [{
         "identity" : "rim",
@@ -98,7 +99,7 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
@@ -129,6 +130,103 @@
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "StructuredBody.typeId.nullFlavor",
+      "path" : "StructuredBody.typeId.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ANY.nullFlavor",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
+      }
+    },
+    {
+      "id" : "StructuredBody.typeId.assigningAuthorityName",
+      "path" : "StructuredBody.typeId.assigningAuthorityName",
+      "representation" : ["xmlAttr"],
+      "label" : "Assigning Authority Name",
+      "definition" : "A human readable name or mnemonic for the assigning authority. The Assigning Authority Name has no computational value. The purpose of a Assigning Authority Name is to assist an unaided human interpreter of an II value to interpret the authority. Note: no automated processing must depend on the assigning authority name to be present in any form.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "II.assigningAuthorityName",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+      }]
+    },
+    {
+      "id" : "StructuredBody.typeId.displayable",
+      "path" : "StructuredBody.typeId.displayable",
+      "representation" : ["xmlAttr"],
+      "label" : "Displayable",
+      "definition" : "Specifies if the identifier is intended for human display and data entry (displayable = true) as opposed to pure machine interoperation (displayable = false).",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "II.displayable",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "boolean",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"]
+      }]
+    },
+    {
+      "id" : "StructuredBody.typeId.root",
+      "path" : "StructuredBody.typeId.root",
+      "representation" : ["xmlAttr"],
+      "label" : "Root",
+      "definition" : "Identifies the type as an HL7 Registered model",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "II.root",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/oid",
+        "http://hl7.org/cda/stds/core/StructureDefinition/uuid",
+        "http://hl7.org/cda/stds/core/StructureDefinition/ruid"]
+      }],
+      "fixedString" : "2.16.840.1.113883.1.3"
+    },
+    {
+      "id" : "StructuredBody.typeId.extension",
+      "path" : "StructuredBody.typeId.extension",
+      "representation" : ["xmlAttr"],
+      "label" : "Extension",
+      "definition" : "A character string as a unique identifier within the scope of the identifier root.",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "II.extension",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
       }]
     },
     {
@@ -217,7 +315,7 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-HumanLanguage"
+        "valueSet" : "http://hl7.org/fhir/ValueSet/all-languages"
       }
     },
     {
@@ -232,13 +330,6 @@
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"
-      }],
-      "constraint" : [{
-        "key" : "ele-1",
-        "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
       }]
     },
     {
@@ -260,7 +351,7 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
@@ -291,6 +382,103 @@
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "StructuredBody.component.typeId.nullFlavor",
+      "path" : "StructuredBody.component.typeId.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ANY.nullFlavor",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
+      }
+    },
+    {
+      "id" : "StructuredBody.component.typeId.assigningAuthorityName",
+      "path" : "StructuredBody.component.typeId.assigningAuthorityName",
+      "representation" : ["xmlAttr"],
+      "label" : "Assigning Authority Name",
+      "definition" : "A human readable name or mnemonic for the assigning authority. The Assigning Authority Name has no computational value. The purpose of a Assigning Authority Name is to assist an unaided human interpreter of an II value to interpret the authority. Note: no automated processing must depend on the assigning authority name to be present in any form.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "II.assigningAuthorityName",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+      }]
+    },
+    {
+      "id" : "StructuredBody.component.typeId.displayable",
+      "path" : "StructuredBody.component.typeId.displayable",
+      "representation" : ["xmlAttr"],
+      "label" : "Displayable",
+      "definition" : "Specifies if the identifier is intended for human display and data entry (displayable = true) as opposed to pure machine interoperation (displayable = false).",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "II.displayable",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "boolean",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"]
+      }]
+    },
+    {
+      "id" : "StructuredBody.component.typeId.root",
+      "path" : "StructuredBody.component.typeId.root",
+      "representation" : ["xmlAttr"],
+      "label" : "Root",
+      "definition" : "Identifies the type as an HL7 Registered model",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "II.root",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/oid",
+        "http://hl7.org/cda/stds/core/StructureDefinition/uuid",
+        "http://hl7.org/cda/stds/core/StructureDefinition/ruid"]
+      }],
+      "fixedString" : "2.16.840.1.113883.1.3"
+    },
+    {
+      "id" : "StructuredBody.component.typeId.extension",
+      "path" : "StructuredBody.component.typeId.extension",
+      "representation" : ["xmlAttr"],
+      "label" : "Extension",
+      "definition" : "A character string as a unique identifier within the scope of the identifier root.",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "II.extension",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
       }]
     },
     {
@@ -409,7 +597,7 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-HumanLanguage"
+        "valueSet" : "http://hl7.org/fhir/ValueSet/all-languages"
       }
     },
     {

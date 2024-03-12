@@ -1,0 +1,75 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "CDAPostalAddressUse",
+  "text" : {
+    "status" : "extensions",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>This value set includes codes based on the following rules:</p><ul><li>Include these codes as defined in <a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html\"><code>http://terminology.hl7.org/CodeSystem/v3-AddressUse</code></a><table class=\"none\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-H\">H</a></td><td style=\"color: #cccccc\">home address</td><td>**Description:** A communication address at a home, attempted contacts for business purposes might intrude privacy and chances are one will contact family or other household members instead of the person one wishes to call. Typically used with urgent cases, or if no other contacts are available.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-HP\">HP</a></td><td style=\"color: #cccccc\">primary home</td><td>**Description:** The primary home, to reach a person after business hours.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-HV\">HV</a></td><td style=\"color: #cccccc\">vacation home</td><td>**Description:** A vacation home, to reach a person while on vacation.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-WP\">WP</a></td><td style=\"color: #cccccc\">work place</td><td>**Description:** An office address. First choice for business related contacts during business hours.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-DIR\">DIR</a></td><td style=\"color: #cccccc\">direct</td><td>**Description:** Indicates a work place address or telecommunication address that reaches the individual or organization directly without intermediaries. For phones, often referred to as a 'private line'.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-PUB\">PUB</a></td><td style=\"color: #cccccc\">public</td><td>**Description:** Indicates a work place address or telecommunication address that is a 'standard' address which may reach a reception service, mail-room, or other intermediary prior to the target entity.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-BAD\">BAD</a></td><td style=\"color: #cccccc\">bad address</td><td>**Description:** A flag indicating that the address is bad, in fact, useless.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-TMP\">TMP</a></td><td style=\"color: #cccccc\">temporary address</td><td>**Description:** A temporary address, may be good for visit or mailing. Note that an address history can provide more detailed information.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-PHYS\">PHYS</a></td><td style=\"color: #cccccc\">physical visit address</td><td>**Description:** Used primarily to visit an address.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-AddressUse.html#v3-AddressUse-PST\">PST</a></td><td style=\"color: #cccccc\">postal address</td><td>**Description:** Used to send mail.</td></tr></table></li><li>Include these codes as defined in <a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html\"><code>http://terminology.hl7.org/CodeSystem/v3-EntityNameUse</code></a><table class=\"none\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-ABC\">ABC</a></td><td style=\"color: #cccccc\">Alphabetic</td><td>Alphabetic transcription of name (Japanese: romaji)</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-IDE\">IDE</a></td><td style=\"color: #cccccc\">Ideographic</td><td>Ideographic representation of name (e.g., Japanese kanji, Chinese characters)</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNameUse.html#v3-EntityNameUse-SYL\">SYL</a></td><td style=\"color: #cccccc\">Syllabic</td><td>Syllabic transcription of name (e.g., Japanese kana, Korean hangul)</td></tr></table></li></ul></div>"
+  },
+  "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse",
+  "version" : "2.0.0-sd-202312-matchbox-patch",
+  "name" : "CDAPostalAddressUse",
+  "title" : "CDAPostalAddressUse",
+  "status" : "draft",
+  "experimental" : false,
+  "date" : "2024-03-12T18:28:21+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "name" : "HL7 International - Structured Documents",
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    },
+    {
+      "system" : "email",
+      "value" : "structdog@lists.HL7.org"
+    }]
+  }],
+  "description" : "A set of codes advising a system or user which address in a set of like addresses to select for a given purpose - limited to values allowed in original CDA definition",
+  "compose" : {
+    "include" : [{
+      "system" : "http://terminology.hl7.org/CodeSystem/v3-AddressUse",
+      "concept" : [{
+        "code" : "H"
+      },
+      {
+        "code" : "HP"
+      },
+      {
+        "code" : "HV"
+      },
+      {
+        "code" : "WP"
+      },
+      {
+        "code" : "DIR"
+      },
+      {
+        "code" : "PUB"
+      },
+      {
+        "code" : "BAD"
+      },
+      {
+        "code" : "TMP"
+      },
+      {
+        "code" : "PHYS"
+      },
+      {
+        "code" : "PST"
+      }]
+    },
+    {
+      "system" : "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse",
+      "concept" : [{
+        "code" : "ABC"
+      },
+      {
+        "code" : "IDE"
+      },
+      {
+        "code" : "SYL"
+      }]
+    }]
+  }
+}

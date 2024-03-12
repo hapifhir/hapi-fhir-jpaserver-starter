@@ -1,1024 +1,1094 @@
 [
   {
+    "id" : "BinaryDataEncoding",
+    "type" : "CodeSystem",
+    "url" : "http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "BinaryDataEncoding"
+  },
+  {
     "id" : "hl7.cda.uv.core",
     "type" : "ImplementationGuide",
     "url" : "http://hl7.org/cda/stds/core/ImplementationGuide/hl7.cda.uv.core",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "ClinicalDocumentArchitecture"
   },
   {
     "id" : "AD",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/AD",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "AD"
   },
   {
     "id" : "ADXP",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "ADXP"
   },
   {
     "id" : "ANY",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ANY",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "ANY"
   },
   {
     "id" : "Act",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Act",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Act"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Act"
   },
   {
     "id" : "AlternateIdentification",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/AlternateIdentification",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "AlternateIdentification"
   },
   {
     "id" : "AssignedAuthor",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/AssignedAuthor",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.AssignedAuthor"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "AssignedAuthor"
   },
   {
     "id" : "AssignedCustodian",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/AssignedCustodian",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.AssignedCustodian"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "AssignedCustodian"
   },
   {
     "id" : "AssignedEntity",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/AssignedEntity",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.AssignedEntity"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "AssignedEntity"
   },
   {
     "id" : "AssociatedEntity",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/AssociatedEntity",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.AssociatedEntity"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "AssociatedEntity"
   },
   {
     "id" : "Authenticator",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Authenticator",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Authenticator"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Authenticator"
   },
   {
     "id" : "Author",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Author",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Author"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Author"
   },
   {
     "id" : "AuthoringDevice",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/AuthoringDevice",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.AuthoringDevice"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "AuthoringDevice"
   },
   {
     "id" : "Authorization",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Authorization",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Authorization"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Authorization"
   },
   {
     "id" : "BL",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/BL",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "BL"
   },
   {
     "id" : "Birthplace",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Birthplace",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Birthplace"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Birthplace"
   },
   {
     "id" : "CD",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/CD",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "CD"
   },
   {
     "id" : "CE",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/CE",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "CE"
   },
   {
     "id" : "CO",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/CO",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "CO"
   },
   {
     "id" : "CR",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/CR",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "CR"
   },
   {
     "id" : "CS",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/CS",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "CS"
   },
   {
     "id" : "CV",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/CV",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "CV"
   },
   {
     "id" : "ClinicalDocument",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.ClinicalDocument"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "ClinicalDocument"
   },
   {
     "id" : "Component",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Component",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Component"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Component"
   },
   {
     "id" : "ComponentOf",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ComponentOf",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.ComponentOf"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "ComponentOf"
   },
   {
     "id" : "Consent",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Consent",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Consent"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Consent"
   },
   {
     "id" : "Criterion",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Criterion",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Criterion"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Criterion"
   },
   {
     "id" : "Custodian",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Custodian",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Custodian"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Custodian"
   },
   {
     "id" : "CustodianOrganization",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/CustodianOrganization",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.CustodianOrganization"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "CustodianOrganization"
   },
   {
     "id" : "DataEnterer",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/DataEnterer",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.DataEnterer"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "DataEnterer"
   },
   {
     "id" : "Device",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Device",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Device"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Device"
   },
   {
     "id" : "DocumentationOf",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/DocumentationOf",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.DocumentationOf"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "DocumentationOf"
   },
   {
     "id" : "ED",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ED",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "ED"
   },
   {
     "id" : "EIVL-TS",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/EIVL-TS",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "EIVL_TS"
   },
   {
     "id" : "EN",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/EN",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "EN"
   },
   {
     "id" : "ENXP",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ENXP",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "ENXP"
   },
   {
     "id" : "EncompassingEncounter",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/EncompassingEncounter",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.EncompassingEncounter"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "EncompassingEncounter"
   },
   {
     "id" : "Encounter",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Encounter",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Encounter"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Encounter"
   },
   {
     "id" : "EncounterParticipant",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/EncounterParticipant",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.EncounterParticipant"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "EncounterParticipant"
   },
   {
     "id" : "Entity",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Entity",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Entity"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Entity"
   },
   {
     "id" : "Entry",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Entry",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "Entry"
   },
   {
     "id" : "EntryRelationship",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/EntryRelationship",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "EntryRelationship"
   },
   {
     "id" : "ExternalAct",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ExternalAct",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.ExternalAct"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "ExternalAct"
   },
   {
     "id" : "ExternalDocument",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ExternalDocument",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.ExternalDocument"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "ExternalDocument"
   },
   {
     "id" : "ExternalObservation",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ExternalObservation",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.ExternalObservation"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "ExternalObservation"
   },
   {
     "id" : "ExternalProcedure",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ExternalProcedure",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.ExternalProcedure"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "ExternalProcedure"
   },
   {
     "id" : "Guardian",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Guardian",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Guardian"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Guardian"
   },
   {
     "id" : "HealthCareFacility",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/HealthCareFacility",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.HealthCareFacility"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "HealthCareFacility"
   },
   {
     "id" : "II",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/II",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "II"
   },
   {
     "id" : "INT",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/INT",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "INT"
   },
   {
     "id" : "INT-POS",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/INT-POS",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "INT_POS"
   },
   {
     "id" : "IVL-INT",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/IVL-INT",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "IVL_INT"
   },
   {
     "id" : "IVL-PQ",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/IVL-PQ",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "IVL_PQ"
   },
   {
     "id" : "IVL-TS",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "IVL_TS"
   },
   {
     "id" : "IVXB-INT",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/IVXB-INT",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "IVXB_INT"
   },
   {
     "id" : "IVXB-PQ",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/IVXB-PQ",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "IVXB_PQ"
   },
   {
     "id" : "IVXB-TS",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/IVXB-TS",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "IVXB_TS"
   },
   {
     "id" : "IdentifiedBy",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/IdentifiedBy",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "IdentifiedBy"
   },
   {
     "id" : "InFulfillmentOf",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/InFulfillmentOf",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.InFulfillmentOf"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "InFulfillmentOf"
+  },
+  {
+    "id" : "InFulfillmentOf1",
+    "type" : "StructureDefinition",
+    "url" : "http://hl7.org/cda/stds/core/StructureDefinition/InFulfillmentOf1",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "InFulfillmentOf1"
   },
   {
     "id" : "Informant",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Informant",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Informant"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Informant"
   },
   {
     "id" : "InformationRecipient",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/InformationRecipient",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.InformationRecipient"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "InformationRecipient"
   },
   {
     "id" : "InfrastructureRoot",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "InfrastructureRoot"
   },
   {
     "id" : "IntendedRecipient",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/IntendedRecipient",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.IntendedRecipient"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "IntendedRecipient"
   },
   {
     "id" : "LabCriterion",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/LabCriterion",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "CDAR2.LabCriterion"
   },
   {
     "id" : "LabPrecondition",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/LabPrecondition",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "CDAR2.LabPrecondition"
   },
   {
     "id" : "LabeledDrug",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/LabeledDrug",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.LabeledDrug"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "LabeledDrug"
   },
   {
     "id" : "LanguageCommunication",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/LanguageCommunication",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.LanguageCommunication"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "LanguageCommunication"
   },
   {
     "id" : "LegalAuthenticator",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/LegalAuthenticator",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.LegalAuthenticator"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "LegalAuthenticator"
   },
   {
     "id" : "MO",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/MO",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "MO"
   },
   {
     "id" : "MaintainedEntity",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/MaintainedEntity",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.MaintainedEntity"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "MaintainedEntity"
   },
   {
     "id" : "ManufacturedProduct",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ManufacturedProduct",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.ManufacturedProduct"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "ManufacturedProduct"
   },
   {
     "id" : "Material",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Material",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Material"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Material"
   },
   {
     "id" : "NonXMLBody",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/NonXMLBody",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.NonXMLBody"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "NonXMLBody"
   },
   {
     "id" : "ON",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ON",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "ON"
   },
   {
     "id" : "Observation",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Observation",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Observation"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Observation"
   },
   {
     "id" : "ObservationMedia",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ObservationMedia",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.ObservationMedia"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "ObservationMedia"
   },
   {
     "id" : "ObservationRange",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ObservationRange",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.ObservationRange"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "ObservationRange"
   },
   {
     "id" : "Order",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Order",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Order"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Order"
   },
   {
     "id" : "Organization",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Organization",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Organization"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Organization"
   },
   {
     "id" : "OrganizationPartOf",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/OrganizationPartOf",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.OrganizationPartOf"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "OrganizationPartOf"
   },
   {
     "id" : "Organizer",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Organizer",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Organizer"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Organizer"
   },
   {
     "id" : "OrganizerComponent",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/OrganizerComponent",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "OrganizerComponent"
   },
   {
     "id" : "PIVL-TS",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/PIVL-TS",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "PIVL_TS"
   },
   {
     "id" : "PN",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/PN",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "PN"
   },
   {
     "id" : "PQ",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/PQ",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "PQ"
   },
   {
     "id" : "PQR",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/PQR",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "PQR"
   },
   {
     "id" : "ParentDocument",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ParentDocument",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.ParentDocument"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "ParentDocument"
   },
   {
     "id" : "Participant1",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Participant1",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Participant1"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Participant1"
   },
   {
     "id" : "Participant2",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Participant2",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Participant2"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Participant2"
   },
   {
     "id" : "ParticipantRole",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ParticipantRole",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.ParticipantRole"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "ParticipantRole"
   },
   {
     "id" : "Patient",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Patient",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Patient"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Patient"
   },
   {
     "id" : "PatientRole",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/PatientRole",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.PatientRole"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "PatientRole"
   },
   {
     "id" : "Performer1",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Performer1",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Performer1"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Performer1"
   },
   {
     "id" : "Performer2",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Performer2",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Performer2"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Performer2"
   },
   {
     "id" : "Person",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Person",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Person"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Person"
   },
   {
     "id" : "PharmContent",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/PharmContent",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "CDAR2.PharmContent"
   },
   {
     "id" : "PharmIngredient",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/PharmIngredient",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "CDAR2.PharmIngredient"
   },
   {
     "id" : "PharmMedicineClass",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/PharmMedicineClass",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "CDAR2.PharmMedicineClass"
   },
   {
     "id" : "PharmPackagedMedicine",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/PharmPackagedMedicine",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "CDAR2.PharmPackagedMedicine"
   },
   {
     "id" : "PharmSpecializedKind",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/PharmSpecializedKind",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "CDAR2.PharmSpecializedKind"
   },
   {
     "id" : "PharmSubstance",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/PharmSubstance",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "CDAR2.PharmSubstance"
   },
   {
     "id" : "PharmSuperContent",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/PharmSuperContent",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "CDAR2.PharmSuperContent"
   },
   {
     "id" : "Place",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Place",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Place"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Place"
   },
   {
     "id" : "PlayingEntity",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/PlayingEntity",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.PlayingEntity"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "PlayingEntity"
   },
   {
     "id" : "Precondition",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Precondition",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Precondition"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Precondition"
+  },
+  {
+    "id" : "Precondition2",
+    "type" : "StructureDefinition",
+    "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Precondition2",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Precondition2"
+  },
+  {
+    "id" : "PreconditionBase",
+    "type" : "StructureDefinition",
+    "url" : "http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "PreconditionBase"
   },
   {
     "id" : "Procedure",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Procedure",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Procedure"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Procedure"
   },
   {
     "id" : "QTY",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/QTY",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "QTY"
   },
   {
     "id" : "REAL",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/REAL",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "REAL"
   },
   {
     "id" : "RTO-PQ-PQ",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/RTO-PQ-PQ",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "RTO_PQ_PQ"
   },
   {
     "id" : "RecordTarget",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/RecordTarget",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.RecordTarget"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "RecordTarget"
   },
   {
     "id" : "Reference",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Reference",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Reference"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Reference"
   },
   {
     "id" : "RegionOfInterest",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/RegionOfInterest",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.RegionOfInterest"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "RegionOfInterest"
   },
   {
     "id" : "RelatedDocument",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/RelatedDocument",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.RelatedDocument"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "RelatedDocument"
   },
   {
     "id" : "RelatedEntity",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/RelatedEntity",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.RelatedEntity"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "RelatedEntity"
   },
   {
     "id" : "RelatedSubject",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/RelatedSubject",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.RelatedSubject"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "RelatedSubject"
   },
   {
     "id" : "SC",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/SC",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "SC"
   },
   {
     "id" : "ST",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ST",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "ST"
   },
   {
     "id" : "SXCM-TS",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/SXCM-TS",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "SXCM_TS"
   },
   {
     "id" : "SXPR-TS",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "SXPR_TS"
   },
   {
     "id" : "Section",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Section",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Section"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Section"
   },
   {
     "id" : "ServiceEvent",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ServiceEvent",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.ServiceEvent"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "ServiceEvent"
   },
   {
     "id" : "Specimen",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Specimen",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Specimen"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Specimen"
   },
   {
     "id" : "SpecimenRole",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/SpecimenRole",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.SpecimenRole"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "SpecimenRole"
   },
   {
     "id" : "StructuredBody",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/StructuredBody",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.StructuredBody"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "StructuredBody"
   },
   {
     "id" : "Subject",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Subject",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.Subject"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Subject"
   },
   {
     "id" : "SubjectPerson",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/SubjectPerson",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.SubjectPerson"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "SubjectPerson"
   },
   {
     "id" : "SubstanceAdministration",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/SubstanceAdministration",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2.SubstanceAdministration"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "SubstanceAdministration"
   },
   {
     "id" : "Supply",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Supply",
-    "version" : "2.1.0-draft2-mb",
-    "name" : "CDAR2Supply"
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "Supply"
   },
   {
     "id" : "TEL",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/TEL",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "TEL"
   },
   {
     "id" : "TN",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/TN",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "TN"
   },
   {
     "id" : "TS",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/TS",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "TS"
   },
   {
     "id" : "bin",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/bin",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "bin"
   },
   {
     "id" : "bl-simple",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/bl-simple",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "bl"
   },
   {
     "id" : "bn",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/bn",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "bn"
   },
   {
     "id" : "cs-simple",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "cs"
   },
   {
     "id" : "int-simple",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/int-simple",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "int"
   },
   {
     "id" : "oid",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/oid",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "oid"
   },
   {
     "id" : "probability",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/probability",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "probability"
   },
   {
     "id" : "real-simple",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/real-simple",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "real"
   },
   {
     "id" : "ruid",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ruid",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "ruid"
   },
   {
     "id" : "st-simple",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/st-simple",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "st"
   },
   {
     "id" : "ts-simple",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ts-simple",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "ts"
   },
   {
     "id" : "uid",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/uid",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "uid"
   },
   {
     "id" : "url",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/url",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "url"
   },
   {
     "id" : "uuid",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/uuid",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "uuid"
   },
   {
     "id" : "xs-ID",
     "type" : "StructureDefinition",
     "url" : "http://hl7.org/cda/stds/core/StructureDefinition/xs-ID",
-    "version" : "2.1.0-draft2-mb",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
     "name" : "xs:ID"
+  },
+  {
+    "id" : "BinaryDataEncoding",
+    "type" : "ValueSet",
+    "url" : "http://hl7.org/cda/stds/core/ValueSet/BinaryDataEncoding",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "BinaryDataEncoding"
+  },
+  {
+    "id" : "CDACompressionAlgorithm",
+    "type" : "ValueSet",
+    "url" : "http://hl7.org/cda/stds/core/ValueSet/CDACompressionAlgorithm",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "CDACompressionAlgorithm"
+  },
+  {
+    "id" : "CDAEntityNameUse",
+    "type" : "ValueSet",
+    "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityNameUse",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "CDAEntityNameUse"
+  },
+  {
+    "id" : "CDANullFlavor",
+    "type" : "ValueSet",
+    "url" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "CDANullFlavor"
+  },
+  {
+    "id" : "CDAPostalAddressUse",
+    "type" : "ValueSet",
+    "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "CDAPostalAddressUse"
+  },
+  {
+    "id" : "CDASignatureCode",
+    "type" : "ValueSet",
+    "url" : "http://hl7.org/cda/stds/core/ValueSet/CDASignatureCode",
+    "version" : "2.0.0-sd-202312-matchbox-patch",
+    "name" : "CDASignatureCode"
   }
 ]

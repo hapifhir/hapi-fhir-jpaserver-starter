@@ -1,0 +1,590 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "Precondition2",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>The sdtc:precondition2 extension allows a more flexible set of skip conditions on a set of criteria. Without this extension the skip condition is restricted to all criteria true. The extension allows a choice of the following logical operation extensions sdtc:allTrue, sdtc:allFalse, sdtc:atLeastOneTrue, sdtc:atLeastOneFalse, sdtc:onlyOneFalse, and sdtc:onlyOneTrue to be placed upon the encapsulated criteria or a criterion. The logical operation extensions nest a [0 .. *] sdtc:precondition2 extension allowing for a complex specification of nested skip conditions if needed.</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+    "valueUri" : "urn:hl7-org:sdtc"
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-name",
+    "valueString" : "precondition"
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-container",
+    "valueUri" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/type-profile-style",
+    "valueUri" : "cda"
+  }],
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Precondition2",
+  "version" : "2.0.0-sd-202312-matchbox-patch",
+  "name" : "Precondition2",
+  "title" : "Precondition2 (CDA Class)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2024-03-12T18:28:21+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "name" : "HL7 International - Structured Documents",
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    },
+    {
+      "system" : "email",
+      "value" : "structdog@lists.HL7.org"
+    }]
+  }],
+  "description" : "The sdtc:precondition2 extension allows a more flexible set of skip conditions on a set of criteria. Without this extension the skip condition is restricted to all criteria true. The extension allows a choice of the following logical operation extensions sdtc:allTrue, sdtc:allFalse, sdtc:atLeastOneTrue, sdtc:atLeastOneFalse, sdtc:onlyOneFalse, and sdtc:onlyOneTrue to be placed upon the encapsulated criteria or a criterion. The logical operation extensions nest a [0 .. *] sdtc:precondition2 extension allowing for a complex specification of nested skip conditions if needed.",
+  "fhirVersion" : "5.0.0",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/Precondition2",
+  "baseDefinition" : "http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "element" : [{
+      "id" : "Precondition2",
+      "path" : "Precondition2",
+      "short" : "Base for all types and resources",
+      "definition" : "Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type.",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "constraint" : [{
+        "key" : "precondition2-only-one",
+        "severity" : "error",
+        "human" : "SHALL have only one of allTrue, allFalse, atLeastOneTrue, atLeastOneFalse, onlyOneTrue, onlyOneFalse, or criterion",
+        "expression" : "(allTrue | allFalse | atLeastOneTrue | atLeastOneFalse | onlyOneTrue | onlyOneFalse | criterion).count() = 1"
+      }],
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "Precondition2.nullFlavor",
+      "path" : "Precondition2.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ANY.nullFlavor",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
+      }
+    },
+    {
+      "id" : "Precondition2.realmCode",
+      "path" : "Precondition2.realmCode",
+      "definition" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "InfrastructureRoot.realmCode",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
+      }]
+    },
+    {
+      "id" : "Precondition2.typeId",
+      "path" : "Precondition2.typeId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "InfrastructureRoot.typeId",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "Precondition2.typeId.nullFlavor",
+      "path" : "Precondition2.typeId.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ANY.nullFlavor",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
+      }
+    },
+    {
+      "id" : "Precondition2.typeId.assigningAuthorityName",
+      "path" : "Precondition2.typeId.assigningAuthorityName",
+      "representation" : ["xmlAttr"],
+      "label" : "Assigning Authority Name",
+      "definition" : "A human readable name or mnemonic for the assigning authority. The Assigning Authority Name has no computational value. The purpose of a Assigning Authority Name is to assist an unaided human interpreter of an II value to interpret the authority. Note: no automated processing must depend on the assigning authority name to be present in any form.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "II.assigningAuthorityName",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+      }]
+    },
+    {
+      "id" : "Precondition2.typeId.displayable",
+      "path" : "Precondition2.typeId.displayable",
+      "representation" : ["xmlAttr"],
+      "label" : "Displayable",
+      "definition" : "Specifies if the identifier is intended for human display and data entry (displayable = true) as opposed to pure machine interoperation (displayable = false).",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "II.displayable",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "boolean",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"]
+      }]
+    },
+    {
+      "id" : "Precondition2.typeId.root",
+      "path" : "Precondition2.typeId.root",
+      "representation" : ["xmlAttr"],
+      "label" : "Root",
+      "definition" : "Identifies the type as an HL7 Registered model",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "II.root",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/oid",
+        "http://hl7.org/cda/stds/core/StructureDefinition/uuid",
+        "http://hl7.org/cda/stds/core/StructureDefinition/ruid"]
+      }],
+      "fixedString" : "2.16.840.1.113883.1.3"
+    },
+    {
+      "id" : "Precondition2.typeId.extension",
+      "path" : "Precondition2.typeId.extension",
+      "representation" : ["xmlAttr"],
+      "label" : "Extension",
+      "definition" : "A character string as a unique identifier within the scope of the identifier root.",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "II.extension",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+      }]
+    },
+    {
+      "id" : "Precondition2.templateId",
+      "path" : "Precondition2.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "InfrastructureRoot.templateId",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "Precondition2.typeCode",
+      "path" : "Precondition2.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Precondition2.typeCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "fixedCode" : "PRCN",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActRelationshipType"
+      }
+    },
+    {
+      "id" : "Precondition2.negationInd",
+      "path" : "Precondition2.negationInd",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Precondition2.negationInd",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "boolean",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"]
+      }]
+    },
+    {
+      "id" : "Precondition2.conjunctionCode",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      }],
+      "path" : "Precondition2.conjunctionCode",
+      "definition" : "A code specifying the logical conjunction of the criteria among all the condition-links of Acts (e.g., and, or, exclusive-or).\nAll AND criteria must be true.\nIf OR and AND criteria occur together, one criterion out of the OR-group must be true and all AND criteria must be true also.\nIf XOR criteria occur together with OR and AND criteria, exactly one of the XOR criteria must be true, and at least one of the OR criteria and all AND criteria must be true.\nIn other words, the sets of AND, OR, and XOR criteria are in turn combined by a logical AND operator (all AND criteria and at least one OR criterion and exactly one XOR criterion).",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Precondition2.conjunctionCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-RelationshipConjunction|2.0.0"
+      }
+    },
+    {
+      "id" : "Precondition2.allTrue",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      }],
+      "path" : "Precondition2.allTrue",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Precondition2.allTrue",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"
+      }]
+    },
+    {
+      "id" : "Precondition2.allFalse",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      }],
+      "path" : "Precondition2.allFalse",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Precondition2.allFalse",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"
+      }]
+    },
+    {
+      "id" : "Precondition2.atLeastOneTrue",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      }],
+      "path" : "Precondition2.atLeastOneTrue",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Precondition2.atLeastOneTrue",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"
+      }]
+    },
+    {
+      "id" : "Precondition2.atLeastOneFalse",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      }],
+      "path" : "Precondition2.atLeastOneFalse",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Precondition2.atLeastOneFalse",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"
+      }]
+    },
+    {
+      "id" : "Precondition2.onlyOneTrue",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      }],
+      "path" : "Precondition2.onlyOneTrue",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Precondition2.onlyOneTrue",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"
+      }]
+    },
+    {
+      "id" : "Precondition2.onlyOneFalse",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      }],
+      "path" : "Precondition2.onlyOneFalse",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Precondition2.onlyOneFalse",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"
+      }]
+    },
+    {
+      "id" : "Precondition2.criterion",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      }],
+      "path" : "Precondition2.criterion",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "Precondition2.criterion",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Criterion"
+      }]
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "Precondition2",
+      "path" : "Precondition2",
+      "min" : 1,
+      "max" : "1",
+      "constraint" : [{
+        "key" : "precondition2-only-one",
+        "severity" : "error",
+        "human" : "SHALL have only one of allTrue, allFalse, atLeastOneTrue, atLeastOneFalse, onlyOneTrue, onlyOneFalse, or criterion",
+        "expression" : "(allTrue | allFalse | atLeastOneTrue | atLeastOneFalse | onlyOneTrue | onlyOneFalse | criterion).count() = 1"
+      }]
+    },
+    {
+      "id" : "Precondition2.typeCode",
+      "path" : "Precondition2.typeCode",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "fixedCode" : "PRCN",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActRelationshipType"
+      }
+    },
+    {
+      "id" : "Precondition2.negationInd",
+      "path" : "Precondition2.negationInd",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "boolean",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"]
+      }]
+    },
+    {
+      "id" : "Precondition2.conjunctionCode",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      }],
+      "path" : "Precondition2.conjunctionCode",
+      "definition" : "A code specifying the logical conjunction of the criteria among all the condition-links of Acts (e.g., and, or, exclusive-or).\nAll AND criteria must be true.\nIf OR and AND criteria occur together, one criterion out of the OR-group must be true and all AND criteria must be true also.\nIf XOR criteria occur together with OR and AND criteria, exactly one of the XOR criteria must be true, and at least one of the OR criteria and all AND criteria must be true.\nIn other words, the sets of AND, OR, and XOR criteria are in turn combined by a logical AND operator (all AND criteria and at least one OR criterion and exactly one XOR criterion).",
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-RelationshipConjunction|2.0.0"
+      }
+    },
+    {
+      "id" : "Precondition2.allTrue",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      }],
+      "path" : "Precondition2.allTrue",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"
+      }]
+    },
+    {
+      "id" : "Precondition2.allFalse",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      }],
+      "path" : "Precondition2.allFalse",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"
+      }]
+    },
+    {
+      "id" : "Precondition2.atLeastOneTrue",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      }],
+      "path" : "Precondition2.atLeastOneTrue",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"
+      }]
+    },
+    {
+      "id" : "Precondition2.atLeastOneFalse",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      }],
+      "path" : "Precondition2.atLeastOneFalse",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"
+      }]
+    },
+    {
+      "id" : "Precondition2.onlyOneTrue",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      }],
+      "path" : "Precondition2.onlyOneTrue",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"
+      }]
+    },
+    {
+      "id" : "Precondition2.onlyOneFalse",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      }],
+      "path" : "Precondition2.onlyOneFalse",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"
+      }]
+    },
+    {
+      "id" : "Precondition2.criterion",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      }],
+      "path" : "Precondition2.criterion",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Criterion"
+      }]
+    }]
+  }
+}

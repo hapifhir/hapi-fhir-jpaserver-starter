@@ -1,0 +1,49 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "610faa6d-d917-4e07-a068-484061ef4901-60",
+  "url" : "http://hl7.org/fhir/comparison/ValueSet/610faa6d-d917-4e07-a068-484061ef4901-60",
+  "name" : "IntersectionCDAEntityNameUseAndCDAEntityNameUse",
+  "title" : "Intersection of CDAEntityNameUse And CDAEntityNameUse",
+  "status" : "draft",
+  "date" : "2024-03-12T18:28:32+01:00",
+  "compose" : {
+    "include" : [{
+      "concept" : [{
+        "code" : "C"
+      },
+      {
+        "code" : "L"
+      },
+      {
+        "code" : "I"
+      },
+      {
+        "code" : "P"
+      },
+      {
+        "code" : "A"
+      },
+      {
+        "code" : "R"
+      },
+      {
+        "code" : "SRCH"
+      },
+      {
+        "code" : "PHON"
+      },
+      {
+        "code" : "SNDX"
+      },
+      {
+        "code" : "ABC"
+      },
+      {
+        "code" : "SYL"
+      },
+      {
+        "code" : "IDE"
+      }]
+    }]
+  }
+}

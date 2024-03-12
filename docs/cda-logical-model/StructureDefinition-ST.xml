@@ -14,22 +14,25 @@
       </extension>
     </valueBoolean>
   </extension>
-  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
     <valueUri value="urn:hl7-org:v3"/>
   </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-container">
+    <valueUri value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
+  </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/ST"/>
-  <version value="2.1.0-draft2-mb"/>
+  <version value="2.0.0-sd-202312-matchbox-patch"/>
   <name value="ST"/>
   <title value="ST: CharacterString (V3 Data Type)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-10-04T23:00:58+02:00"/>
+  <date value="2024-03-12T18:28:21+01:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/structdoc"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
     </telecom>
     <telecom>
       <system value="email"/>
@@ -61,11 +64,10 @@
         <max value="*"/>
       </base>
       <constraint>
-        <key value="ele-1"/>
+        <key value="text-null"/>
         <severity value="error"/>
-        <human value="All FHIR elements must have a @value or children"/>
-        <expression value="hasValue() or (children().count() &gt; id.count())"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+        <human value="xmlText and nullFlavor are mutually exclusive (one must be present)"/>
+        <expression value="(xmlText | nullFlavor).count() = 1"/>
       </constraint>
       <isModifier value="false"/>
       <mapping>
@@ -91,7 +93,7 @@
       </type>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-NullFlavor"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"/>
       </binding>
     </element>
     <element id="ST.representation">
@@ -170,6 +172,12 @@
       <definition value="The character string data type stands for text data, primarily intended for machine processing (e.g., sorting, querying, indexing, etc.) Used for names, symbols, and formal expressions."/>
       <min value="1"/>
       <max value="*"/>
+      <constraint>
+        <key value="text-null"/>
+        <severity value="error"/>
+        <human value="xmlText and nullFlavor are mutually exclusive (one must be present)"/>
+        <expression value="(xmlText | nullFlavor).count() = 1"/>
+      </constraint>
     </element>
     <element id="ST.representation">
       <path value="ST.representation"/>

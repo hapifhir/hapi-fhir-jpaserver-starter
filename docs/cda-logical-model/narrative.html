@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+    <title>Narrative Block - Clinical Document Architecture v2.0.0-sd-202312-matchbox-patch</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="author" content="http://hl7.org/fhir"/>
+
+    <link href="fhir.css" rel="stylesheet"/>
+
+    <!-- Bootstrap core CSS -->
+    <link href="assets/css/bootstrap-fhir.css" rel="stylesheet"/>
+
+    <!-- Project extras -->
+    <link href="assets/css/project.css" rel="stylesheet"/>
+    <link href="assets/css/pygments-manni.css" rel="stylesheet"/>
+    <link href="assets/css/jquery-ui.css" rel="stylesheet"/>
+  	<link href="assets/css/prism.css" rel="stylesheet" />
+    <!-- Placeholder for child template CSS declarations -->
+    <link href="assets/css/hl7.css" rel="stylesheet"/>
+    <link href="assets/css/cda.css" rel="stylesheet"/>
+
+    <script type="text/javascript" src="fhir-table-scripts.js"> </script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="assets/js/html5shiv.js"></script>
+    <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Favicons -->
+    <link rel="fhir-logo" sizes="144x144" href="assets/ico/icon-fhir-144.png"/>
+    <link rel="fhir-logo" sizes="114x114" href="assets/ico/icon-fhir-114.png"/>
+    <link rel="fhir-logo" sizes="72x72" href="assets/ico/icon-fhir-72.png"/>
+    <link rel="fhir-logo" href="assets/ico/icon-fhir-57.png"/>
+    <link rel="shortcut icon" href="assets/ico/favicon.png"/>
+  </head>
+  <body onload="document.body.style.opacity='1'">
+
+	  <script src="assets/js/prism.js"></script>
+
+    <style type="text/css">h2{--heading-prefix:"2.4"}
+    h3,h4,h5,h6{--heading-prefix:"2.4"}</style>
+    <div id="segment-header" class="segment">  <!-- segment-header -->
+      <div class="container">  <!-- container -->
+        <!-- Placeholder for child template header declarations -->
+
+        <div id="hl7-nav">
+          <a id="hl7-logo" no-external="true" href="http://hl7.org">
+            <img height="50" alt="Visit the HL7 website" src="assets/images/hl7-logo-header.png"/>
+          </a>
+        </div>
+        <div id="family-nav">
+          <a id="family-logo" no-external="true" href="http://hl7.org/cda"><img height="50" alt="Visit the CDA website" src="assets/images/cda_both_trans.jpg"/> </a>
+        </div>
+        <div id="hl7-search">
+          <a id="hl7-search-lnk" no-external="true" href="http://hl7.org/fhir/search.cfm"><img alt="Search FHIR" src="assets/images/search.png"/></a>
+        </div>
+
+
+        <div id="ig-status">
+          <p><span style="font-size:12pt;font-weight:bold">Clinical Document Architecture</span>
+            <br/>
+            <span style="display:inline-block;">2.0.0-sd-202312-matchbox-patch - ballot
+
+
+            </span>
+          </p>
+        </div>
+      </div> <!-- /container -->
+    </div>  <!-- /segment-header -->
+
+    <div id="segment-navbar" class="segment">  <!-- segment-navbar -->
+      <div id="stripe"> </div>
+      <div class="container">  <!-- container -->
+        <!-- HEADER CONTENT -->
+
+        <nav class="navbar navbar-inverse">
+          <!--status-bar-->
+          <div class="container">
+            <button data-target=".navbar-inverse-collapse" class="navbar-toggle" data-toggle="collapse" type="button">
+              <span class="icon-bar"> </span>
+              <span class="icon-bar"> </span>
+              <span class="icon-bar"> </span>
+            </button>
+            <a class="navbar-brand hidden" href="http://hl7.org/fhir/R5/index.html">FHIR</a>
+            <div class="nav-collapse collapse navbar-inverse-collapse">
+              <ul xmlns="http://www.w3.org/1999/xhtml" class="nav navbar-nav">
+  <li><a href="index.html">IG Home</a></li>
+  <li class="dropdown">
+    <a data-toggle="dropdown" href="#">Information<b class="caret"></b></a>
+    <ul class="dropdown-menu">
+      <li><a href="overview.html">CDA Overview</a></li>
+      <li><a href="implementation.html">Implementation Notes</a></li>
+      <li><a href="cda-rmim.html">Graphical Map of CDA</a></li>
+      <li><a href="dt-uml.html">Graphical Map of Datatypes</a></li>
+      <li><a href="narrative.html">Narrative Block</a></li>
+    </ul>
+  </li>
+  <li><a href="artifacts.html">Artifact Index</a></li>
+  <li><a href="downloads.html">Downloads</a></li>
+</ul>
+            </div>  <!-- /.nav-collapse -->
+          </div>  <!-- /.container -->
+        </nav>  <!-- /.navbar -->
+      <!-- /HEADER CONTENT -->
+      </div>  <!-- /container -->
+    </div>  <!-- /segment-navbar -->
+    <!--status-bar-->
+
+    <div id="segment-breadcrumb" class="segment">  <!-- segment-breadcrumb -->
+      <div class="container">  <!-- container -->
+        <ul class="breadcrumb">
+          <li><a href='toc.html'><b>Table of Contents</b></a></li><li><a href='overview.html'><b>Overview</b></a></li><li><b>Narrative Block</b></li>
+
+        </ul>
+      </div>  <!-- /container -->
+    </div>  <!-- /segment-breadcrumb -->
+
+    <a name="top"> </a>
+    <div id="segment-content" class="segment">  <!-- segment-content -->
+      <div class="container">  <!-- container -->
+        <div class="row">
+          <div class="inner-wrapper">
+
+<style type="text/css">
+h2:before{color:silver;counter-increment:section;content:var(--heading-prefix) " ";}
+h3:before{color:silver;counter-increment:sub-section;content:var(--heading-prefix) "." counter(sub-section) " ";}
+h4:before{color:silver;counter-increment:composite;content:var(--heading-prefix) "." counter(sub-section) "." counter(composite) " ";}
+h5:before{color:silver;counter-increment:detail;content:var(--heading-prefix) "." counter(sub-section) "." counter(composite) "." counter(detail) " ";}
+h6:before{color:silver;counter-increment:more-detail;content:var(--heading-prefix) "." counter(sub-section) "." counter(composite) "." counter(detail) "." counter(more-detail)" ";}
+</style>
+<div class="col-12">
+  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture - Local Development build (v2.0.0-sd-202312-matchbox-patch) built by the FHIR (HL7® FHIR® Standard) Build Tools. See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
+  <h2>Narrative Block</h2>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+    <p><!-- white space is critical inside of capture --></p>
+<div class="markdown-toc">
+<ul id="markdown-toc">
+  <li><a href="#content" id="markdown-toc-content">&lt;content&gt;</a></li>
+  <li><a href="#linkhtml" id="markdown-toc-linkhtml">&lt;linkHtml&gt;</a></li>
+  <li><a href="#sub-and-sup" id="markdown-toc-sub-and-sup">&lt;sub&gt; and &lt;sup&gt;</a></li>
+  <li><a href="#br" id="markdown-toc-br">&lt;br&gt;</a></li>
+  <li><a href="#footnote-and-footnoteref" id="markdown-toc-footnote-and-footnoteref">&lt;footnote&gt; and &lt;footnoteRef&gt;</a></li>
+  <li><a href="#rendermultimedia" id="markdown-toc-rendermultimedia">&lt;renderMultiMedia&gt;</a></li>
+  <li><a href="#paragraph" id="markdown-toc-paragraph">&lt;paragraph&gt;</a></li>
+  <li><a href="#list" id="markdown-toc-list">&lt;list&gt;</a></li>
+  <li><a href="#table" id="markdown-toc-table">&lt;table&gt;</a></li>
+  <li><a href="#caption" id="markdown-toc-caption">&lt;caption&gt;</a></li>
+  <li><a href="#stylecode-attribute" id="markdown-toc-stylecode-attribute">styleCode attribute</a></li>
+  <li><a href="#referencing-in-and-out-of-the-narrative-block" id="markdown-toc-referencing-in-and-out-of-the-narrative-block">Referencing in and out of the narrative block</a></li>
+</ul>
+
+</div>
+
+<p>The Section.text field is used to store narrative to be rendered, as described above in <a href="overview.html#cda-conformance">CDA Conformance</a>, and is therefore referred to as the CDA Narrative Block.</p>
+
+<p><a href="NarrativeBlock.xsd">The CDA Narrative Block schema can be found here.</a></p>
+
+<p>The content model of the CDA Narrative Block schema is specially hand crafted to meet the requirements outlined above (see <a href="overview.html#human-readability-and-rendering-cda-documents">Human Readability and Rendering CDA Documents</a>). The schema is registered as a MIME type (text/x-hl7-text+xml), which is the fixed media type for Section.text. Components of the schema are described in the sections that follow.</p>
+
+<h3 id="content">&lt;content&gt;</h3>
+
+<p>The CDA <code class="language-plaintext highlighter-rouge">&lt;content&gt;</code> element is used to wrap a string of text so that it can be explicitly referenced, or so that it can suggest rendering characteristics. The <code class="language-plaintext highlighter-rouge">&lt;content&gt;</code> element can nest recursively, which enables wrapping a string of plain text down to as small a chunk as desired.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">&lt;content&gt;</code> element contains an optional identifier, that can serve as the target of a reference. All values of attributes of type XML ID must be unique within the document (per the <a href="http://www.w3.org/TR/2004/REC-xml-20040204/#id">W3C XML specification</a>). The originalText component of a RIM attribute present in any CDA entry can make explicit reference to the identifier, thereby indicating the original text associated with the attribute in the CDA entry.</p>
+
+<p>Example 5</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;section&gt;</span>
+   <span class="nt">&lt;code</span> <span class="na">code=</span><span class="s">"10153-2"</span> 
+    <span class="na">codeSystem=</span><span class="s">"2.16.840.1.113883.6.1"</span> 
+    <span class="na">codeSystemName=</span><span class="s">"LOINC"</span><span class="nt">/&gt;</span>
+   <span class="nt">&lt;title&gt;</span>Past Medical History<span class="nt">&lt;/title&gt;</span>
+   <span class="nt">&lt;text&gt;</span>
+    There is a history of <span class="nt">&lt;content</span> <span class="na">ID=</span><span class="s">"a1"</span><span class="nt">&gt;</span>Asthma<span class="nt">&lt;/content&gt;</span>
+   <span class="nt">&lt;/text&gt;</span>
+   <span class="nt">&lt;entry&gt;</span>
+      <span class="nt">&lt;observation</span> <span class="na">classCode=</span><span class="s">"OBS"</span> <span class="na">moodCode=</span><span class="s">"EVN"</span><span class="nt">&gt;</span>
+         <span class="nt">&lt;code</span> <span class="na">code=</span><span class="s">"195967001"</span> 
+          <span class="na">codeSystem=</span><span class="s">"2.16.840.1.113883.6.96"</span> 
+          <span class="na">codeSystemName=</span><span class="s">"SNOMED CT"</span> 
+          <span class="na">displayName=</span><span class="s">"Asthma"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;originalText&gt;</span>
+               <span class="nt">&lt;reference</span> <span class="na">value=</span><span class="s">"#a1"</span><span class="nt">/&gt;</span>
+            <span class="nt">&lt;/originalText&gt;</span>
+         <span class="nt">&lt;/code&gt;</span>
+         <span class="nt">&lt;statusCode</span> <span class="na">code=</span><span class="s">"completed"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;/observation&gt;</span>
+   <span class="nt">&lt;/entry&gt;</span>
+<span class="nt">&lt;/section&gt;</span>
+</code></pre></div></div>
+
+<p>There is no requirement that CDA entries must reference into the CDA Narrative Block. The referencing mechanism can be used where it is important to represent the original text component of a coded CDA entry.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">&lt;content&gt;</code> element contains an optional “revised” attribute that can be valued with “insert” or “delete”, which can be used to indicate narrative changes from the last version of a CDA document. The attribute is limited to a single generation, in that it only reflects the changes from the preceding version of a document. If applied, it needs to be used in conjunction with standard CDA revision tracking. Changes to a CDA document that has been released for patient care still require a formal versioning and revision, and the revised document can optionally carry the “revised” attribute to show the delta in the narrative. Receivers are required to interpret the “revised” attribute when rendering by visually distinguishing or suppressing deleted narrative.</p>
+
+<h3 id="linkhtml">&lt;linkHtml&gt;</h3>
+
+<p>The CDA <code class="language-plaintext highlighter-rouge">&lt;linkHtml&gt;</code> is a generic referencing mechanism, similar, but not identical, to the HTML anchor tag. It can be used to reference identifiers that are either internal or external to the document.</p>
+
+<p>Multimedia that is integral to a document, and part of the attestable content of the document requires the use of the <a href="StructureDefinition-ObservationMedia.html">ObservationMedia</a> CDA entry, which is referenced by the <code class="language-plaintext highlighter-rouge">&lt;renderMultiMedia&gt;</code> element (see <a href="#rendermultimedia">&lt;renderMultiMedia&gt;</a>). Multimedia that is simply referenced by the document and not an integral part of the document can use <code class="language-plaintext highlighter-rouge">&lt;linkHtml&gt;</code>.</p>
+
+<p>The source of a link uses the linkHtml.href attribute. The target of an internal reference is an identifier of type XML ID, which can exist on other elements in the same or a different narrative block, or XML ID attributes that have been added to the <a href="StructureDefinition-Section.html">&lt;section&gt;</a>, <a href="StructureDefinition-ObservationMedia.html">&lt;observationMedia&gt;</a>, or <a href="#rendermultimedia">&lt;renderMultiMedia&gt;</a> elements of the CDA Schema. The linkHtml.name attribute is deprecated, because attributes of type XML ID provide an alternative and more consistent target for referencing. Following the conventions of HTML, an internal link is prefaced with the pound sign, as shown in the following example.</p>
+
+<p>Example 6</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;section</span> <span class="na">ID=</span><span class="s">"SECT001"</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;code</span> <span class="na">code=</span><span class="s">"10164-2"</span> <span class="na">codeSystem=</span><span class="s">"2.16.840.1.113883.6.1"</span> 
+    <span class="na">codeSystemName=</span><span class="s">"LOINC"</span><span class="nt">/&gt;</span>
+   <span class="nt">&lt;title&gt;</span>History of Present Illness<span class="nt">&lt;/title&gt;</span>
+   <span class="nt">&lt;text&gt;</span>Mr. Smith is a 57 year old male presenting with 
+    chest pain. He sustained a myocardial infarction 3 years 
+    ago, ...
+   <span class="nt">&lt;/text&gt;</span>
+<span class="nt">&lt;/section&gt;</span>
+
+ ...
+
+<span class="nt">&lt;section</span> <span class="na">ID=</span><span class="s">"SECT003"</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;code</span> <span class="na">code=</span><span class="s">"10153-2"</span> <span class="na">codeSystem=</span><span class="s">"2.16.840.1.113883.6.1"</span> 
+    <span class="na">codeSystemName=</span><span class="s">"LOINC"</span><span class="nt">/&gt;</span>
+   <span class="nt">&lt;title&gt;</span>Past Medical History<span class="nt">&lt;/title&gt;</span>
+   <span class="nt">&lt;text&gt;</span>History of coronary artery disease, as noted
+    <span class="nt">&lt;linkHtml</span> <span class="na">href=</span><span class="s">"#SECT001"</span><span class="nt">&gt;</span>above<span class="nt">&lt;/linkHtml&gt;</span>.<span class="nt">&lt;/text&gt;</span>
+<span class="nt">&lt;/section&gt;</span>
+</code></pre></div></div>
+
+<p>CDA links do not convey shareable meaning. Shareable semantics are only achieved by the inclusion of CDA entries and their associated formalized relationships. There is no requirement that a receiver render an internal or external link, or the target of an external link.</p>
+
+<h3 id="sub-and-sup">&lt;sub&gt; and &lt;sup&gt;</h3>
+
+<p>The CDA <code class="language-plaintext highlighter-rouge">&lt;sub&gt;</code> and <code class="language-plaintext highlighter-rouge">&lt;sup&gt;</code> elements are used to indicate subscripts and superscripts, respectively.</p>
+
+<p>Receivers are required to interpret these elements when rendering by visually distinguishing subscripted and superscripted characters.</p>
+
+<h3 id="br">&lt;br&gt;</h3>
+
+<p>The CDA <code class="language-plaintext highlighter-rouge">&lt;br/&gt;</code> element is used to indicate a hard line break. It differs from the CDA <code class="language-plaintext highlighter-rouge">&lt;paragraph&gt;</code> element in that the <br /> element has no content. Receivers are required to interpret this element when rendering so as to represent a line break.</p>
+
+<h3 id="footnote-and-footnoteref">&lt;footnote&gt; and &lt;footnoteRef&gt;</h3>
+
+<p>The CDA <code class="language-plaintext highlighter-rouge">&lt;footnote&gt;</code> element is used to indicate a footnote. The element contains the footnote, inline with the flow of text to which it is applied.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">&lt;footnoteRef&gt;</code> element can reference an existing footnote in the same or different CDA Narrative Block of the same document. It can be used when the same footnote is being used multiple times. The value of the footnoteRef.IDREF must be an footnote.ID value in the same document.</p>
+
+<p>Receivers are required to interpret these elements when rendering by visually distinguishing footnoted text. The exact rendition is at the discretion of the recipient, and might include a mark at the location of the footnote with a hyperlink to the footnoted text, a simple demarcation (such as “This is the text [this is the footnote] that is being footnoted”), etc.</p>
+
+<h3 id="rendermultimedia">&lt;renderMultiMedia&gt;</h3>
+
+<p>The CDA <code class="language-plaintext highlighter-rouge">&lt;renderMultiMedia&gt;</code> element references external multimedia that is integral to a document, and part of the attestable content of the document, and serves to show where the referenced multimedia is to be rendered.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">&lt;renderMultiMedia&gt;</code> element has an optional <code class="language-plaintext highlighter-rouge">&lt;caption&gt;</code>, and contains a required referencedObject attribute (of type XML IDREFS), the values of which must equal the XML ID value(s) of <a href="StructureDefinition-ObservationMedia.html">ObservationMedia</a> or <a href="StructureDefinition-RegionOfInterest.html">RegionOfInterest</a> CDA entries within the same document.</p>
+
+<p>Example 7</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;section&gt;</span>
+   <span class="nt">&lt;code</span> <span class="na">code=</span><span class="s">"8709-8"</span> <span class="na">codeSystem=</span><span class="s">"2.16.840.1.113883.6.1"</span> 
+    <span class="na">codeSystemName=</span><span class="s">"LOINC"</span><span class="nt">/&gt;</span>
+   <span class="nt">&lt;title&gt;</span>Skin exam<span class="nt">&lt;/title&gt;</span>
+   <span class="nt">&lt;text&gt;</span>Erythematous rash, palmar surface, left index 
+    finger.<span class="nt">&lt;renderMultiMedia</span> <span class="na">referencedObject=</span><span class="s">"MM1"</span><span class="nt">/&gt;</span>
+   <span class="nt">&lt;/text&gt;</span>
+   <span class="nt">&lt;entry&gt;</span>
+      <span class="nt">&lt;observationMedia</span> <span class="na">classCode=</span><span class="s">"OBS"</span> <span class="na">moodCode=</span><span class="s">"EVN"</span> <span class="na">ID=</span><span class="s">"MM1"</span><span class="nt">&gt;</span>
+         <span class="nt">&lt;id</span> <span class="na">root=</span><span class="s">"2.16.840.1.113883.19.2.1"</span><span class="nt">/&gt;</span>
+         <span class="nt">&lt;value</span> <span class="na">xsi:type=</span><span class="s">"ED"</span> <span class="na">mediaType=</span><span class="s">"image/jpeg"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;reference</span> <span class="na">value=</span><span class="s">"left\-hand\-image.jpeg"</span><span class="nt">/&gt;</span>
+         <span class="nt">&lt;/value&gt;</span>
+      <span class="nt">&lt;/observationMedia&gt;</span>
+   <span class="nt">&lt;/entry&gt;</span>
+<span class="nt">&lt;/section&gt;</span>
+</code></pre></div></div>
+
+<p>Multimedia that is simply referenced by the document and not an integral part of the document must use <code class="language-plaintext highlighter-rouge">&lt;linkHtml&gt;</code>.</p>
+
+<p>The expected behavior is that the referenced multimedia should be rendered or referenced at the point of reference. Where a caption is present, it must also be rendered. <code class="language-plaintext highlighter-rouge">&lt;renderMultiMedia&gt;</code> can either reference a single <a href="StructureDefinition-ObservationMedia.html">ObservationMedia</a>, or one or more <a href="StructureDefinition-RegionOfInterest.html">RegionOfInterest</a>. If <code class="language-plaintext highlighter-rouge">&lt;renderMultiMedia&gt;</code> references a single ObservationMedia, that ObservationMedia should be rendered or referenced at the point of reference. If <code class="language-plaintext highlighter-rouge">&lt;renderMultiMedia&gt;</code> references one or more RegionOfInterest, all RegionOfInterests should be rendered or referenced at the point of reference, atop the multimedia they are regions of. If <code class="language-plaintext highlighter-rouge">&lt;renderMultiMedia&gt;</code> references more than one RegionOfInterest, each RegionOfInterest must be a region on the same multimedia.</p>
+
+<h3 id="paragraph">&lt;paragraph&gt;</h3>
+
+<p>A CDA <code class="language-plaintext highlighter-rouge">&lt;paragraph&gt;</code> is similar to the HTML paragraph, which allows blocks of narrative to be broken up into logically consistent structures. A CDA <code class="language-plaintext highlighter-rouge">&lt;paragraph&gt;</code> element contains an optional caption, which if present must come first before any other character data.</p>
+
+<h3 id="list">&lt;list&gt;</h3>
+
+<p>A CDA <code class="language-plaintext highlighter-rouge">&lt;list&gt;</code> is similar to the HTML list. A CDA <code class="language-plaintext highlighter-rouge">&lt;list&gt;</code> has an optional caption, and contains one or more <code class="language-plaintext highlighter-rouge">&lt;item&gt;</code> elements. A CDA <code class="language-plaintext highlighter-rouge">&lt;item&gt;</code> element contains an optional caption, which if present must come first before any other character data. The required listType attribute specifies whether the <code class="language-plaintext highlighter-rouge">&lt;list&gt;</code> is ordered or unordered (with unordered being the default). Unordered lists are typically rendered with bullets, whereas ordered lists are typically rendered with numbers, although this is not a requirement.</p>
+
+<h3 id="table">&lt;table&gt;</h3>
+
+<p>The CDA <code class="language-plaintext highlighter-rouge">&lt;table&gt;</code> is similar to the HTML table. The table markup is for presentation purposes only and, unlike a database table, does not possess meaningful field names.</p>
+
+<p>CDA modifies the strict XHTML table model by removing formatting tags and by setting the content model of cells to be similar to the contents of other elements in the CDA Narrative Block.</p>
+
+<p>The table.border, table.cellspacing, and table.cellpadding attributes are deprecated, because the styleCode attribute (see <a href="#stylecode-attribute">styleCode attribute</a> provides a more consistent way for senders to suggest rendering characteristics.</p>
+
+<h3 id="caption">&lt;caption&gt;</h3>
+
+<p>The CDA <code class="language-plaintext highlighter-rouge">&lt;caption&gt;</code> is a label for a paragraph, list, list item, table, or table cell. It can also be used within the <code class="language-plaintext highlighter-rouge">&lt;renderMultiMedia&gt;</code> element to indicate a label for referenced ObservationMedia and RegionOfInterest entries. A <code class="language-plaintext highlighter-rouge">&lt;caption&gt;</code> contains plain text and may contain links and footnotes.</p>
+
+<h3 id="stylecode-attribute">styleCode attribute</h3>
+
+<p>The styleCode attribute is used within the CDA Narrative Block to give the instance author the ability to suggest rendering characteristics of the nested character data. Receivers are not required to render documents using the style hints provided and can present stylized text in accordance with their local style conventions.</p>
+
+<p>The value set is drawn from the HL7 styleType vocabulary domain, and has a CWE coding strength.</p>
+
+<p>Table 89: Value set for styleCode (CWE)</p>
+
+<table><tr><th>Code</th><th>Definition</th></tr>
+<tr><th colspan="2">Font style (Defines font rendering characteristics.)</th></tr>
+<tr><td>Bold</td><td>Render with a bold font.</td></tr>
+<tr><td>Underline</td><td>Render with an underlines font.</td></tr>
+<tr><td>Italics</td><td>Render italicized.</td></tr>
+<tr><td>Emphasis</td><td>Render with some type of emphasis.</td></tr>
+<tr><th colspan="2">Table rule style (Defines table cell rendering characteristics.)</th></tr>
+<tr><td>Lrule</td><td>Render cell with left-sided rule.</td></tr>
+<tr><td>Rrule</td><td>Render cell with right-sided rule.</td></tr>
+<tr><td>Toprule</td><td>Render cell with rule on top.</td></tr>
+<tr><td>Botrule</td><td>Render cell with rule on bottom.</td></tr>
+<tr><th colspan="2">Ordered list style (Defines rendering characteristics for ordered lists.)</th></tr>
+<tr><td>Arabic</td><td>List is ordered using Arabic numerals: 1, 2, 3.</td></tr>
+<tr><td>LittleRoman</td><td>List is ordered using little Roman numerals: i, ii, iii.</td></tr>
+<tr><td>BigRoman</td><td>List is ordered using big Roman numerals: I, II, III.</td></tr>
+<tr><td>LittleAlpha</td><td>List is ordered using little alpha characters: a, b, c.</td></tr>
+<tr><td>BigAlpha</td><td>List is ordered using big alpha characters: A, B, C.</td></tr>
+<tr><th colspan="2">Unordered list style (Defines rendering characteristics for unordered lists.)</th></tr>
+<tr><td>Disc</td><td>List bullets are simple solid discs.</td></tr>
+<tr><td>Circle</td><td>List bullets are hollow discs.</td></tr>
+<tr><td>Square</td><td>List bullets are solid squares.</td></tr>
+</table>
+
+<p>Local extensions to the styleType vocabulary domain must follow the following convention: <code class="language-plaintext highlighter-rouge">\[x\]\[A-Za-z\]\[A-Za-z0-9\]\*</code> (first character is “x”, second character is an upper or lower case A-Z, remaining characters are any combination of upper and lower case letters or numbers).</p>
+
+<p>The styleCode attribute can contain multiple values, separated by white space. Where an element containing a styleCode attribute is nested within another element containing a styleCode attribute, the style effects are additive, as in the following example:</p>
+
+<p>Example 8</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;section&gt;</span>
+   <span class="nt">&lt;text&gt;&lt;content</span> <span class="na">styleCode=</span><span class="s">"Bold"</span><span class="nt">&gt;</span>This is rendered bold, 
+    <span class="nt">&lt;content</span> <span class="na">styleCode=</span><span class="s">"Italics"</span><span class="nt">&gt;</span>this is rendered bold and 
+    italicized,<span class="nt">&lt;/content&gt;</span> this is rendered bold. <span class="nt">&lt;/content&gt;</span>
+    <span class="nt">&lt;content</span> <span class="na">styleCode=</span><span class="s">"Bold Italics"</span><span class="nt">&gt;</span>This is also rendered 
+    bold and italicized.<span class="nt">&lt;/content&gt;</span>
+   <span class="nt">&lt;/text&gt;</span>
+<span class="nt">&lt;/section&gt;</span>
+</code></pre></div></div>
+<h3 id="referencing-in-and-out-of-the-narrative-block">Referencing in and out of the narrative block</h3>
+
+<p>To summarize the mechanisms for referencing in and out of the CDA Narrative Block:</p>
+
+<ul>
+  <li>CDA entries can point in to the <code class="language-plaintext highlighter-rouge">&lt;content&gt;</code> element of the CDA Narrative Block (see <a href="#content">&lt;content&gt;</a>).</li>
+  <li>The <code class="language-plaintext highlighter-rouge">&lt;linkHtml&gt;</code> element of the CDA Narrative Block can reference targets that are either internal or external to the document (see <a href="#linkhtml">&lt;linkHtml&gt;</a>).</li>
+  <li>The <code class="language-plaintext highlighter-rouge">&lt;footnoteRef&gt;</code> element of the CDA Narrative Block can reference a <code class="language-plaintext highlighter-rouge">&lt;footnote&gt;</code> element in the same or different CDA Narrative Block of the same document (see <a href="#footnote-and-footnoteref">&lt;footnote&gt; and &lt;footnoteRef&gt;</a>).</li>
+  <li>The <code class="language-plaintext highlighter-rouge">&lt;renderMultiMedia&gt;</code> element of the CDA Narrative Block can point out to CDA ObservationMedia and RegionOfInterest entries of the same document (see <a href="#rendermultimedia">&lt;renderMultiMedia&gt;</a>).</li>
+</ul>
+
+
+
+</div>
+        </div>  <!-- /inner-wrapper -->
+      </div>  <!-- /row -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-content -->
+
+  <script type="text/javascript" src="assets/js/jquery.js"> </script>     <!-- note keep space here, otherwise it will be transformed to empty tag -> fails -->
+  <script type="text/javascript" src="assets/js/jquery-ui.min.js"> </script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      if(window.location.hash != "") {
+          $('a[href="' + window.location.hash + '"]').click()
+      }
+    });
+  </script>
+  <a name="bottom"> </a>
+  <div id="segment-footer" igtool="footer" class="segment">  <!-- segment-footer -->
+    <div class="container">  <!-- container -->
+
+      <div class="inner-wrapper">
+        <p>
+          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structure">Health Level 7</a>.  Package hl7.cda.uv.core#2.0.0-sd-202312-matchbox-patch based on <a style="color: var(--footer-hyperlink-text-color)" href="http://hl7.org/fhir/R5/">FHIR 5.0.0</a>. Generated <span title="Tue, Mar 12, 2024 18:28+0100">2024-03-12</span>
+          <br/>
+          <span style="color: var(--footer-highlight-text-color)">
+                      Links: <a style="color: var(--footer-hyperlink-text-color)" href="toc.html">Table of Contents</a> |
+                 <a style="color: var(--footer-hyperlink-text-color)" href="qa.html">QA Report</a>
+                 
+                
+                 | <a style="color: #81BEF7" target="_blank" href="http://hl7.org/cda/stds/core/history.html">Version History <img alt="external" style="vertical-align: baseline" src="external.png"/></a></a> |
+                 <a style="color: #81BEF7" rel="license" href="http://hl7.org/fhir/R5/license.html"><img style="border-style: none;" alt="CC0" src="cc0.png"/></a> |
+                 <!--<a style="color: #81BEF7" href="todo.html">Search</a> | --> 
+                 <a style="color: #81BEF7" target="_blank" href="https://jira.hl7.org/projects/CDA/issues">Propose a change <img alt="external" style="vertical-align: baseline" src="external.png"/></a>
+
+          </span>
+        </p>
+      </div>  <!-- /inner-wrapper -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-footer -->
+  
+  <div id="segment-post-footer" class="segment hidden">  <!-- segment-post-footer -->
+    <div class="container">  <!-- container -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-post-footer -->
+  
+  <!-- JS and analytics only. -->
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script type="text/javascript" src="assets/js/bootstrap.min.js"> </script>
+  <script type="text/javascript" src="assets/js/respond.min.js"> </script>
+  <script type="text/javascript" src="assets/js/anchor.min.js"> </script>
+  <script type="text/javascript" src="assets/js/clipboard.min.js"> </script>
+  <script type="text/javascript" src="assets/js/clipboard-btn.js"> </script>
+  <script>anchors.options.visible = 'hover'
+anchors.add()</script>
+  
+<!-- feedback form - Google forms -->
+<!-- v0.1, 2021-01-09 -->
+
+
+
+<!-- / feedback form  -->
+
+  <!-- Analytics Below
+  ================================================== -->
+  </body>
+</html>
+

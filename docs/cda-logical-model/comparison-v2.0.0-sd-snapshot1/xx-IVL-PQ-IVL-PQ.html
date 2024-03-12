@@ -1,0 +1,11 @@
+<html><body><pre>org.hl7.fhir.exceptions.DefinitionException: StructureDefinition is not for an profile - can't be compared (left: IVL_PQ)
+	at org.hl7.fhir.r5.comparison.StructureDefinitionComparer.check(StructureDefinitionComparer.java:189)
+	at org.hl7.fhir.r5.comparison.StructureDefinitionComparer.compare(StructureDefinitionComparer.java:125)
+	at org.hl7.fhir.r5.comparison.ComparisonSession.compare(ComparisonSession.java:100)
+	at org.hl7.fhir.igtools.publisher.comparators.PreviousVersionComparator.finishChecks(PreviousVersionComparator.java:257)
+	at org.hl7.fhir.igtools.publisher.Publisher.checkConformanceResources(Publisher.java:5545)
+	at org.hl7.fhir.igtools.publisher.Publisher.loadConformance(Publisher.java:5361)
+	at org.hl7.fhir.igtools.publisher.Publisher.createIg(Publisher.java:1139)
+	at org.hl7.fhir.igtools.publisher.Publisher.execute(Publisher.java:984)
+	at org.hl7.fhir.igtools.publisher.Publisher.main(Publisher.java:12163)
+</pre></body></html>

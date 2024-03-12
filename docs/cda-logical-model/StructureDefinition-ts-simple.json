@@ -6,26 +6,30 @@
     "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Primitive type 'ts'</p>\n    </div>"
   },
   "extension" : [{
-    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
     "valueUri" : "urn:hl7-org:v3"
   },
   {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-container",
+    "valueUri" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
+  },
+  {
     "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics",
-    "valueCode" : "can-bind"
+    "valueCode" : "has-range"
   }],
   "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ts-simple",
-  "version" : "2.1.0-draft2-mb",
+  "version" : "2.0.0-sd-202312-matchbox-patch",
   "name" : "ts",
   "title" : "ts: Point in Time",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-10-04T23:00:58+02:00",
+  "date" : "2024-03-12T18:28:21+01:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/structdoc"
+      "value" : "http://www.hl7.org/Special/committees/structure"
     },
     {
       "system" : "email",
@@ -36,20 +40,20 @@
   "fhirVersion" : "5.0.0",
   "kind" : "primitive-type",
   "abstract" : false,
-  "type" : "string",
-  "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/string",
+  "type" : "dateTime",
+  "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/dateTime",
   "derivation" : "constraint",
   "snapshot" : {
     "element" : [{
-      "id" : "string",
-      "path" : "string",
-      "short" : "Primitive Type string",
-      "definition" : "A sequence of Unicode characters",
-      "comment" : "Note that FHIR strings SHALL NOT exceed 1,048,576 (1024*1024) characters in size",
+      "id" : "dateTime",
+      "path" : "dateTime",
+      "short" : "Primitive Type dateTime",
+      "definition" : "A date, date-time or partial date (e.g. just year or year + month).  If hours and minutes are specified, a UTC offset SHALL be populated. The format is a union of the schema types gYear, gYearMonth, date and dateTime. Seconds must be provided due to schema type constraints but may be zero-filled and may be ignored.                 Dates SHALL be valid dates.",
+      "comment" : "UTC offset is allowed for dates and partial dates",
       "min" : 0,
       "max" : "*",
       "base" : {
-        "path" : "string",
+        "path" : "dateTime",
         "min" : 0,
         "max" : "*"
       },
@@ -59,19 +63,13 @@
         "human" : "All FHIR elements must have a @value or children",
         "expression" : "hasValue() or (children().count() > id.count())",
         "source" : "http://hl7.org/fhir/StructureDefinition/Element"
-      },
-      {
-        "key" : "ts-pattern",
-        "severity" : "error",
-        "human" : "A timestamp may be any portion from YYYY to YYYYMMDDhhmmss. If precise to the second, may include fractional seconds, and an offset of +/-HHMM",
-        "expression" : "matches('^[0-9]{1,8}|([0-9]{9,14}|[0-9]{14,14}\\\\.[0-9]+)([+-][0-9]{1,4})?$')"
       }],
       "isModifier" : false,
       "isSummary" : false
     },
     {
-      "id" : "string.id",
-      "path" : "string.id",
+      "id" : "dateTime.id",
+      "path" : "dateTime.id",
       "representation" : ["xmlAttr"],
       "short" : "xml:id (or equivalent in JSON)",
       "definition" : "unique id for the element within a resource (for internal references)",
@@ -93,8 +91,8 @@
       "isSummary" : false
     },
     {
-      "id" : "string.extension",
-      "path" : "string.extension",
+      "id" : "dateTime.extension",
+      "path" : "dateTime.extension",
       "short" : "Extension",
       "definition" : "An Extension",
       "min" : 0,
@@ -125,54 +123,55 @@
       "isSummary" : false
     },
     {
-      "id" : "string.value",
-      "path" : "string.value",
+      "id" : "dateTime.value",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/elementdefinition-date-format",
+        "valueString" : "YYYYMMDDHHMMSS.UUUU[+|-ZZzz]"
+      }],
+      "path" : "dateTime.value",
       "representation" : ["xmlAttr"],
-      "short" : "Primitive value for string",
+      "short" : "Primitive value for dateTime",
       "definition" : "The actual value",
       "min" : 0,
       "max" : "1",
       "base" : {
-        "path" : "string.value",
+        "path" : "dateTime.value",
         "min" : 0,
         "max" : "1"
       },
       "type" : [{
         "extension" : [{
           "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type",
-          "valueUrl" : "string"
+          "valueUrl" : "dateTime"
         },
         {
           "url" : "http://hl7.org/fhir/StructureDefinition/regex",
-          "valueString" : "^[\\s\\S]+$"
+          "valueString" : "([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\.[0-9]{1,9})?)?)?(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)?)?)?"
         }],
-        "code" : "http://hl7.org/fhirpath/System.String"
+        "code" : "http://hl7.org/fhirpath/System.DateTime"
       }],
-      "maxLength" : 1048576,
       "isModifier" : false,
       "isSummary" : false
     }]
   },
   "differential" : {
     "element" : [{
-      "id" : "string",
-      "path" : "string",
-      "constraint" : [{
-        "key" : "ts-pattern",
-        "severity" : "error",
-        "human" : "A timestamp may be any portion from YYYY to YYYYMMDDhhmmss. If precise to the second, may include fractional seconds, and an offset of +/-HHMM",
-        "expression" : "matches('^[0-9]{1,8}|([0-9]{9,14}|[0-9]{14,14}\\\\.[0-9]+)([+-][0-9]{1,4})?$')"
-      }]
-    },
-    {
-      "id" : "string.id",
-      "path" : "string.id",
+      "id" : "dateTime.id",
+      "path" : "dateTime.id",
       "max" : "0"
     },
     {
-      "id" : "string.extension",
-      "path" : "string.extension",
+      "id" : "dateTime.extension",
+      "path" : "dateTime.extension",
       "max" : "0"
+    },
+    {
+      "id" : "dateTime.value",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/elementdefinition-date-format",
+        "valueString" : "YYYYMMDDHHMMSS.UUUU[+|-ZZzz]"
+      }],
+      "path" : "dateTime.value"
     }]
   }
 }

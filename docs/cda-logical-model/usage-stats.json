@@ -1,21 +1,11 @@
 {
   "package": "hl7.cda.uv.core",
-  "version": "2.1.0-draft2-mb",
+  "version": "2.0.0-sd-202312-matchbox-patch",
   "fhirVersion": "5.0.0",
   "extensions": [],
   "profiles": {},
   "usage": {
     "http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype": [
-      "StructureDefinition.differential.element",
-      "StructureDefinition.snapshot.element"
-    ],
-    "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace": [
-      "StructureDefinition",
-      "StructureDefinition.differential.element",
-      "StructureDefinition.snapshot.element"
-    ],
-    "http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name": [
-      "StructureDefinition",
       "StructureDefinition.differential.element",
       "StructureDefinition.snapshot.element"
     ],
@@ -31,13 +21,14 @@
     "http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics": [
       "StructureDefinition"
     ],
-    "http://hl7.org/fhir/StructureDefinition/structuredefinition-xml-no-order": [
-      "StructureDefinition"
-    ],
     "http://hl7.org/fhir/tools/StructureDefinition/elementdefinition-binding-style": [
       "StructureDefinition"
     ],
     "http://hl7.org/fhir/tools/StructureDefinition/elementdefinition-date-format": [
+      "StructureDefinition.differential.element",
+      "StructureDefinition.snapshot.element"
+    ],
+    "http://hl7.org/fhir/tools/StructureDefinition/elementdefinition-date-rules": [
       "StructureDefinition.differential.element",
       "StructureDefinition.snapshot.element"
     ],
@@ -47,11 +38,31 @@
     "http://hl7.org/fhir/tools/StructureDefinition/implementationguide-dependency-comment": [
       "ImplementationGuide.dependsOn"
     ],
+    "http://hl7.org/fhir/tools/StructureDefinition/logical-container": [
+      "StructureDefinition"
+    ],
     "http://hl7.org/fhir/tools/StructureDefinition/logical-target": [
       "StructureDefinition"
     ],
     "http://hl7.org/fhir/tools/StructureDefinition/resource-information": [
       "ImplementationGuide.definition.resource"
+    ],
+    "http://hl7.org/fhir/tools/StructureDefinition/type-profile-style": [
+      "StructureDefinition"
+    ],
+    "http://hl7.org/fhir/tools/StructureDefinition/xml-choice-group": [
+      "StructureDefinition.differential.element",
+      "StructureDefinition.snapshot.element"
+    ],
+    "http://hl7.org/fhir/tools/StructureDefinition/xml-name": [
+      "StructureDefinition",
+      "StructureDefinition.differential.element",
+      "StructureDefinition.snapshot.element"
+    ],
+    "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace": [
+      "StructureDefinition",
+      "StructureDefinition.differential.element",
+      "StructureDefinition.snapshot.element"
     ]
   }
 }

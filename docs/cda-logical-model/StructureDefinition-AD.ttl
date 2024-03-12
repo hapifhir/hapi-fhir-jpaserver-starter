@@ -22,25 +22,25 @@
        ] )
      ]
   ] [
-     fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"^^xsd:anyURI ] ;
+     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ] ;
      fhir:value [ fhir:v "urn:hl7-org:v3"^^xsd:anyURI ]
   ] [
-     fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/structuredefinition-xml-no-order"^^xsd:anyURI ] ;
-     fhir:value [ fhir:v "true"^^xsd:boolean ]
+     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/logical-container"^^xsd:anyURI ] ;
+     fhir:value [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"^^xsd:anyURI ]
   ] ) ; # 
   fhir:url [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/AD"^^xsd:anyURI] ; # 
-  fhir:version [ fhir:v "2.1.0-draft2-mb"] ; # 
+  fhir:version [ fhir:v "2.0.0-sd-202312-matchbox-patch"] ; # 
   fhir:name [ fhir:v "AD"] ; # 
   fhir:title [ fhir:v "AD: PostalAddress (V3 Data Type)"] ; # 
   fhir:status [ fhir:v "active"] ; # 
   fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
-  fhir:date [ fhir:v "2023-10-04T23:00:58+02:00"^^xsd:dateTime] ; # 
+  fhir:date [ fhir:v "2024-03-12T18:28:21+01:00"^^xsd:dateTime] ; # 
   fhir:publisher [ fhir:v "Health Level 7"] ; # 
   fhir:contact ( [
      fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
      fhir:telecom ( [
        fhir:system [ fhir:v "url" ] ;
-       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structdoc" ]
+       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structure" ]
      ] [
        fhir:system [ fhir:v "email" ] ;
        fhir:value [ fhir:v "structdog@lists.HL7.org" ]
@@ -74,16 +74,6 @@
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
          fhir:max [ fhir:v "*" ]
        ] ;
-       fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
-         fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
-         fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
-         ]
-       ] ) ;
        fhir:isModifier [ fhir:v "false"^^xsd:boolean ] ;
        fhir:mapping ( [
          fhir:identity [ fhir:v "rim" ] ;
@@ -112,8 +102,8 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -155,34 +145,65 @@
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
            fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
-       ] )
+       ] ) ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse>
+         ]
+       ]
      ] [
-       fhir:id [ fhir:v "AD.delimiter" ] ;
-       fhir:path [ fhir:v "AD.delimiter" ] ;
-       fhir:definition [ fhir:v "Delimiters are printed without framing white space. If no value component is provided, the delimiter appears as a line break." ] ;
+       fhir:id [ fhir:v "AD.item" ] ;
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-choice-group"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "true"^^xsd:boolean ]
+       ] ) ;
+       fhir:path [ fhir:v "AD.item" ] ;
+       fhir:definition [ fhir:v "A series of items that constitute the address." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "*" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.delimiter" ] ;
+         fhir:path [ fhir:v "AD.item" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
          fhir:max [ fhir:v "*" ]
+       ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/fhir/StructureDefinition/Base"^^xsd:anyURI ]
+       ] ) ;
+       fhir:constraint ( [
+         fhir:key [ fhir:v "AD-1" ] ;
+         fhir:severity [ fhir:v "error" ] ;
+         fhir:human [ fhir:v "Can only have only one of the possible item elements in each choice" ] ;
+         fhir:expression [ fhir:v "(delimiter | country | state | county | city | postalCode | streetAddressLine | houseNumber | houseNumberNumeric | direction | streetName | streetNameBase | streetNameType | additionalLocator | unitID | unitType | careOf | censusTract | deliveryAddressLine | deliveryInstallationType | deliveryInstallationArea | deliveryInstallationQualifier | deliveryMode | deliveryModeIdentifier | buildingNumberSuffix | postBox | precinct | xmlText).count() = 1" ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "AD.item.delimiter" ] ;
+       fhir:path [ fhir:v "AD.item.delimiter" ] ;
+       fhir:definition [ fhir:v "Delimiters are printed without framing white space. If no value component is provided, the delimiter appears as a line break." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
+       fhir:base [
+         fhir:path [ fhir:v "AD.item.delimiter" ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.delimiter.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.delimiter.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.delimiter.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.delimiter.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -203,13 +224,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.delimiter.representation" ] ;
-       fhir:path [ fhir:v "AD.delimiter.representation" ] ;
+       fhir:id [ fhir:v "AD.item.delimiter.representation" ] ;
+       fhir:path [ fhir:v "AD.item.delimiter.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -228,8 +249,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.delimiter.mediaType" ] ;
-       fhir:path [ fhir:v "AD.delimiter.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.delimiter.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.delimiter.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -249,8 +270,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.delimiter.language" ] ;
-       fhir:path [ fhir:v "AD.delimiter.language" ] ;
+       fhir:id [ fhir:v "AD.item.delimiter.language" ] ;
+       fhir:path [ fhir:v "AD.item.delimiter.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -269,8 +290,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.delimiter.xmlText" ] ;
-       fhir:path [ fhir:v "AD.delimiter.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.delimiter.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.delimiter.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -289,8 +310,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.delimiter.partType" ] ;
-       fhir:path [ fhir:v "AD.delimiter.partType" ] ;
+       fhir:id [ fhir:v "AD.item.delimiter.partType" ] ;
+       fhir:path [ fhir:v "AD.item.delimiter.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -309,32 +330,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "DEL" ]
      ] [
-       fhir:id [ fhir:v "AD.country" ] ;
-       fhir:path [ fhir:v "AD.country" ] ;
+       fhir:id [ fhir:v "AD.item.country" ] ;
+       fhir:path [ fhir:v "AD.item.country" ] ;
        fhir:definition [ fhir:v "Country" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.country" ] ;
+         fhir:path [ fhir:v "AD.item.country" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.country.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.country.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.country.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.country.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -355,13 +376,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.country.representation" ] ;
-       fhir:path [ fhir:v "AD.country.representation" ] ;
+       fhir:id [ fhir:v "AD.item.country.representation" ] ;
+       fhir:path [ fhir:v "AD.item.country.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -380,8 +401,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.country.mediaType" ] ;
-       fhir:path [ fhir:v "AD.country.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.country.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.country.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -401,8 +422,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.country.language" ] ;
-       fhir:path [ fhir:v "AD.country.language" ] ;
+       fhir:id [ fhir:v "AD.item.country.language" ] ;
+       fhir:path [ fhir:v "AD.item.country.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -421,8 +442,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.country.xmlText" ] ;
-       fhir:path [ fhir:v "AD.country.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.country.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.country.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -441,8 +462,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.country.partType" ] ;
-       fhir:path [ fhir:v "AD.country.partType" ] ;
+       fhir:id [ fhir:v "AD.item.country.partType" ] ;
+       fhir:path [ fhir:v "AD.item.country.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -461,32 +482,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "CNT" ]
      ] [
-       fhir:id [ fhir:v "AD.state" ] ;
-       fhir:path [ fhir:v "AD.state" ] ;
+       fhir:id [ fhir:v "AD.item.state" ] ;
+       fhir:path [ fhir:v "AD.item.state" ] ;
        fhir:definition [ fhir:v "A sub-unit of a country with limited sovereignty in a federally organized country." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.state" ] ;
+         fhir:path [ fhir:v "AD.item.state" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.state.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.state.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.state.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.state.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -507,13 +528,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.state.representation" ] ;
-       fhir:path [ fhir:v "AD.state.representation" ] ;
+       fhir:id [ fhir:v "AD.item.state.representation" ] ;
+       fhir:path [ fhir:v "AD.item.state.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -532,8 +553,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.state.mediaType" ] ;
-       fhir:path [ fhir:v "AD.state.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.state.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.state.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -553,8 +574,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.state.language" ] ;
-       fhir:path [ fhir:v "AD.state.language" ] ;
+       fhir:id [ fhir:v "AD.item.state.language" ] ;
+       fhir:path [ fhir:v "AD.item.state.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -573,8 +594,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.state.xmlText" ] ;
-       fhir:path [ fhir:v "AD.state.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.state.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.state.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -593,8 +614,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.state.partType" ] ;
-       fhir:path [ fhir:v "AD.state.partType" ] ;
+       fhir:id [ fhir:v "AD.item.state.partType" ] ;
+       fhir:path [ fhir:v "AD.item.state.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -613,32 +634,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "STA" ]
      ] [
-       fhir:id [ fhir:v "AD.county" ] ;
-       fhir:path [ fhir:v "AD.county" ] ;
+       fhir:id [ fhir:v "AD.item.county" ] ;
+       fhir:path [ fhir:v "AD.item.county" ] ;
        fhir:definition [ fhir:v "A sub-unit of a state or province. (49 of the United States of America use the term \"county;\" Louisiana uses the term \"parish\".)" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.county" ] ;
+         fhir:path [ fhir:v "AD.item.county" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.county.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.county.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.county.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.county.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -659,13 +680,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.county.representation" ] ;
-       fhir:path [ fhir:v "AD.county.representation" ] ;
+       fhir:id [ fhir:v "AD.item.county.representation" ] ;
+       fhir:path [ fhir:v "AD.item.county.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -684,8 +705,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.county.mediaType" ] ;
-       fhir:path [ fhir:v "AD.county.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.county.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.county.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -705,8 +726,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.county.language" ] ;
-       fhir:path [ fhir:v "AD.county.language" ] ;
+       fhir:id [ fhir:v "AD.item.county.language" ] ;
+       fhir:path [ fhir:v "AD.item.county.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -725,8 +746,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.county.xmlText" ] ;
-       fhir:path [ fhir:v "AD.county.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.county.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.county.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -745,8 +766,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.county.partType" ] ;
-       fhir:path [ fhir:v "AD.county.partType" ] ;
+       fhir:id [ fhir:v "AD.item.county.partType" ] ;
+       fhir:path [ fhir:v "AD.item.county.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -765,32 +786,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "CPA" ]
      ] [
-       fhir:id [ fhir:v "AD.city" ] ;
-       fhir:path [ fhir:v "AD.city" ] ;
+       fhir:id [ fhir:v "AD.item.city" ] ;
+       fhir:path [ fhir:v "AD.item.city" ] ;
        fhir:definition [ fhir:v "The name of the city, town, village, or other community or delivery center" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.city" ] ;
+         fhir:path [ fhir:v "AD.item.city" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.city.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.city.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.city.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.city.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -811,13 +832,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.city.representation" ] ;
-       fhir:path [ fhir:v "AD.city.representation" ] ;
+       fhir:id [ fhir:v "AD.item.city.representation" ] ;
+       fhir:path [ fhir:v "AD.item.city.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -836,8 +857,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.city.mediaType" ] ;
-       fhir:path [ fhir:v "AD.city.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.city.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.city.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -857,8 +878,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.city.language" ] ;
-       fhir:path [ fhir:v "AD.city.language" ] ;
+       fhir:id [ fhir:v "AD.item.city.language" ] ;
+       fhir:path [ fhir:v "AD.item.city.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -877,8 +898,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.city.xmlText" ] ;
-       fhir:path [ fhir:v "AD.city.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.city.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.city.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -897,8 +918,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.city.partType" ] ;
-       fhir:path [ fhir:v "AD.city.partType" ] ;
+       fhir:id [ fhir:v "AD.item.city.partType" ] ;
+       fhir:path [ fhir:v "AD.item.city.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -917,32 +938,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "CTY" ]
      ] [
-       fhir:id [ fhir:v "AD.postalCode" ] ;
-       fhir:path [ fhir:v "AD.postalCode" ] ;
+       fhir:id [ fhir:v "AD.item.postalCode" ] ;
+       fhir:path [ fhir:v "AD.item.postalCode" ] ;
        fhir:definition [ fhir:v "A postal code designating a region defined by the postal service." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.postalCode" ] ;
+         fhir:path [ fhir:v "AD.item.postalCode" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.postalCode.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.postalCode.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.postalCode.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.postalCode.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -963,13 +984,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.postalCode.representation" ] ;
-       fhir:path [ fhir:v "AD.postalCode.representation" ] ;
+       fhir:id [ fhir:v "AD.item.postalCode.representation" ] ;
+       fhir:path [ fhir:v "AD.item.postalCode.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -988,8 +1009,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.postalCode.mediaType" ] ;
-       fhir:path [ fhir:v "AD.postalCode.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.postalCode.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.postalCode.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -1009,8 +1030,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.postalCode.language" ] ;
-       fhir:path [ fhir:v "AD.postalCode.language" ] ;
+       fhir:id [ fhir:v "AD.item.postalCode.language" ] ;
+       fhir:path [ fhir:v "AD.item.postalCode.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -1029,8 +1050,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.postalCode.xmlText" ] ;
-       fhir:path [ fhir:v "AD.postalCode.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.postalCode.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.postalCode.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -1049,8 +1070,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.postalCode.partType" ] ;
-       fhir:path [ fhir:v "AD.postalCode.partType" ] ;
+       fhir:id [ fhir:v "AD.item.postalCode.partType" ] ;
+       fhir:path [ fhir:v "AD.item.postalCode.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -1069,32 +1090,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "ZIP" ]
      ] [
-       fhir:id [ fhir:v "AD.streetAddressLine" ] ;
-       fhir:path [ fhir:v "AD.streetAddressLine" ] ;
+       fhir:id [ fhir:v "AD.item.streetAddressLine" ] ;
+       fhir:path [ fhir:v "AD.item.streetAddressLine" ] ;
        fhir:definition [ fhir:v "Street address line" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.streetAddressLine" ] ;
+         fhir:path [ fhir:v "AD.item.streetAddressLine" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.streetAddressLine.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.streetAddressLine.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.streetAddressLine.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.streetAddressLine.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -1115,13 +1136,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.streetAddressLine.representation" ] ;
-       fhir:path [ fhir:v "AD.streetAddressLine.representation" ] ;
+       fhir:id [ fhir:v "AD.item.streetAddressLine.representation" ] ;
+       fhir:path [ fhir:v "AD.item.streetAddressLine.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -1140,8 +1161,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.streetAddressLine.mediaType" ] ;
-       fhir:path [ fhir:v "AD.streetAddressLine.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.streetAddressLine.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.streetAddressLine.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -1161,8 +1182,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.streetAddressLine.language" ] ;
-       fhir:path [ fhir:v "AD.streetAddressLine.language" ] ;
+       fhir:id [ fhir:v "AD.item.streetAddressLine.language" ] ;
+       fhir:path [ fhir:v "AD.item.streetAddressLine.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -1181,8 +1202,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.streetAddressLine.xmlText" ] ;
-       fhir:path [ fhir:v "AD.streetAddressLine.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.streetAddressLine.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.streetAddressLine.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -1201,8 +1222,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.streetAddressLine.partType" ] ;
-       fhir:path [ fhir:v "AD.streetAddressLine.partType" ] ;
+       fhir:id [ fhir:v "AD.item.streetAddressLine.partType" ] ;
+       fhir:path [ fhir:v "AD.item.streetAddressLine.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -1221,32 +1242,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "SAL" ]
      ] [
-       fhir:id [ fhir:v "AD.houseNumber" ] ;
-       fhir:path [ fhir:v "AD.houseNumber" ] ;
+       fhir:id [ fhir:v "AD.item.houseNumber" ] ;
+       fhir:path [ fhir:v "AD.item.houseNumber" ] ;
        fhir:definition [ fhir:v "The number of a building, house or lot alongside the street. Also known as \"primary street number\". This does not number the street but rather the building." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.houseNumber" ] ;
+         fhir:path [ fhir:v "AD.item.houseNumber" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.houseNumber.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.houseNumber.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.houseNumber.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.houseNumber.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -1267,13 +1288,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.houseNumber.representation" ] ;
-       fhir:path [ fhir:v "AD.houseNumber.representation" ] ;
+       fhir:id [ fhir:v "AD.item.houseNumber.representation" ] ;
+       fhir:path [ fhir:v "AD.item.houseNumber.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -1292,8 +1313,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.houseNumber.mediaType" ] ;
-       fhir:path [ fhir:v "AD.houseNumber.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.houseNumber.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.houseNumber.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -1313,8 +1334,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.houseNumber.language" ] ;
-       fhir:path [ fhir:v "AD.houseNumber.language" ] ;
+       fhir:id [ fhir:v "AD.item.houseNumber.language" ] ;
+       fhir:path [ fhir:v "AD.item.houseNumber.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -1333,8 +1354,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.houseNumber.xmlText" ] ;
-       fhir:path [ fhir:v "AD.houseNumber.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.houseNumber.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.houseNumber.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -1353,8 +1374,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.houseNumber.partType" ] ;
-       fhir:path [ fhir:v "AD.houseNumber.partType" ] ;
+       fhir:id [ fhir:v "AD.item.houseNumber.partType" ] ;
+       fhir:path [ fhir:v "AD.item.houseNumber.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -1373,32 +1394,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "BNR" ]
      ] [
-       fhir:id [ fhir:v "AD.houseNumberNumeric" ] ;
-       fhir:path [ fhir:v "AD.houseNumberNumeric" ] ;
+       fhir:id [ fhir:v "AD.item.houseNumberNumeric" ] ;
+       fhir:path [ fhir:v "AD.item.houseNumberNumeric" ] ;
        fhir:definition [ fhir:v "The numeric portion of a building number" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.houseNumberNumeric" ] ;
+         fhir:path [ fhir:v "AD.item.houseNumberNumeric" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.houseNumberNumeric.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.houseNumberNumeric.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.houseNumberNumeric.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.houseNumberNumeric.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -1419,13 +1440,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.houseNumberNumeric.representation" ] ;
-       fhir:path [ fhir:v "AD.houseNumberNumeric.representation" ] ;
+       fhir:id [ fhir:v "AD.item.houseNumberNumeric.representation" ] ;
+       fhir:path [ fhir:v "AD.item.houseNumberNumeric.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -1444,8 +1465,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.houseNumberNumeric.mediaType" ] ;
-       fhir:path [ fhir:v "AD.houseNumberNumeric.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.houseNumberNumeric.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.houseNumberNumeric.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -1465,8 +1486,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.houseNumberNumeric.language" ] ;
-       fhir:path [ fhir:v "AD.houseNumberNumeric.language" ] ;
+       fhir:id [ fhir:v "AD.item.houseNumberNumeric.language" ] ;
+       fhir:path [ fhir:v "AD.item.houseNumberNumeric.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -1485,8 +1506,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.houseNumberNumeric.xmlText" ] ;
-       fhir:path [ fhir:v "AD.houseNumberNumeric.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.houseNumberNumeric.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.houseNumberNumeric.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -1505,8 +1526,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.houseNumberNumeric.partType" ] ;
-       fhir:path [ fhir:v "AD.houseNumberNumeric.partType" ] ;
+       fhir:id [ fhir:v "AD.item.houseNumberNumeric.partType" ] ;
+       fhir:path [ fhir:v "AD.item.houseNumberNumeric.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -1525,32 +1546,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "BNN" ]
      ] [
-       fhir:id [ fhir:v "AD.direction" ] ;
-       fhir:path [ fhir:v "AD.direction" ] ;
+       fhir:id [ fhir:v "AD.item.direction" ] ;
+       fhir:path [ fhir:v "AD.item.direction" ] ;
        fhir:definition [ fhir:v "Direction (e.g., N, S, W, E)" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.direction" ] ;
+         fhir:path [ fhir:v "AD.item.direction" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.direction.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.direction.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.direction.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.direction.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -1571,13 +1592,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.direction.representation" ] ;
-       fhir:path [ fhir:v "AD.direction.representation" ] ;
+       fhir:id [ fhir:v "AD.item.direction.representation" ] ;
+       fhir:path [ fhir:v "AD.item.direction.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -1596,8 +1617,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.direction.mediaType" ] ;
-       fhir:path [ fhir:v "AD.direction.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.direction.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.direction.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -1617,8 +1638,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.direction.language" ] ;
-       fhir:path [ fhir:v "AD.direction.language" ] ;
+       fhir:id [ fhir:v "AD.item.direction.language" ] ;
+       fhir:path [ fhir:v "AD.item.direction.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -1637,8 +1658,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.direction.xmlText" ] ;
-       fhir:path [ fhir:v "AD.direction.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.direction.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.direction.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -1657,8 +1678,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.direction.partType" ] ;
-       fhir:path [ fhir:v "AD.direction.partType" ] ;
+       fhir:id [ fhir:v "AD.item.direction.partType" ] ;
+       fhir:path [ fhir:v "AD.item.direction.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -1677,32 +1698,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "DIR" ]
      ] [
-       fhir:id [ fhir:v "AD.streetName" ] ;
-       fhir:path [ fhir:v "AD.streetName" ] ;
+       fhir:id [ fhir:v "AD.item.streetName" ] ;
+       fhir:path [ fhir:v "AD.item.streetName" ] ;
        fhir:definition [ fhir:v "Name of a roadway or artery recognized by a municipality (including street type and direction)" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.streetName" ] ;
+         fhir:path [ fhir:v "AD.item.streetName" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.streetName.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.streetName.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.streetName.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.streetName.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -1723,13 +1744,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.streetName.representation" ] ;
-       fhir:path [ fhir:v "AD.streetName.representation" ] ;
+       fhir:id [ fhir:v "AD.item.streetName.representation" ] ;
+       fhir:path [ fhir:v "AD.item.streetName.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -1748,8 +1769,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.streetName.mediaType" ] ;
-       fhir:path [ fhir:v "AD.streetName.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.streetName.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.streetName.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -1769,8 +1790,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.streetName.language" ] ;
-       fhir:path [ fhir:v "AD.streetName.language" ] ;
+       fhir:id [ fhir:v "AD.item.streetName.language" ] ;
+       fhir:path [ fhir:v "AD.item.streetName.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -1789,8 +1810,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.streetName.xmlText" ] ;
-       fhir:path [ fhir:v "AD.streetName.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.streetName.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.streetName.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -1809,8 +1830,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.streetName.partType" ] ;
-       fhir:path [ fhir:v "AD.streetName.partType" ] ;
+       fhir:id [ fhir:v "AD.item.streetName.partType" ] ;
+       fhir:path [ fhir:v "AD.item.streetName.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -1829,32 +1850,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "STR" ]
      ] [
-       fhir:id [ fhir:v "AD.streetNameBase" ] ;
-       fhir:path [ fhir:v "AD.streetNameBase" ] ;
+       fhir:id [ fhir:v "AD.item.streetNameBase" ] ;
+       fhir:path [ fhir:v "AD.item.streetNameBase" ] ;
        fhir:definition [ fhir:v "The base name of a roadway or artery recognized by a municipality (excluding street type and direction)" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.streetNameBase" ] ;
+         fhir:path [ fhir:v "AD.item.streetNameBase" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.streetNameBase.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.streetNameBase.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.streetNameBase.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.streetNameBase.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -1875,13 +1896,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.streetNameBase.representation" ] ;
-       fhir:path [ fhir:v "AD.streetNameBase.representation" ] ;
+       fhir:id [ fhir:v "AD.item.streetNameBase.representation" ] ;
+       fhir:path [ fhir:v "AD.item.streetNameBase.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -1900,8 +1921,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.streetNameBase.mediaType" ] ;
-       fhir:path [ fhir:v "AD.streetNameBase.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.streetNameBase.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.streetNameBase.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -1921,8 +1942,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.streetNameBase.language" ] ;
-       fhir:path [ fhir:v "AD.streetNameBase.language" ] ;
+       fhir:id [ fhir:v "AD.item.streetNameBase.language" ] ;
+       fhir:path [ fhir:v "AD.item.streetNameBase.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -1941,8 +1962,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.streetNameBase.xmlText" ] ;
-       fhir:path [ fhir:v "AD.streetNameBase.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.streetNameBase.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.streetNameBase.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -1961,8 +1982,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.streetNameBase.partType" ] ;
-       fhir:path [ fhir:v "AD.streetNameBase.partType" ] ;
+       fhir:id [ fhir:v "AD.item.streetNameBase.partType" ] ;
+       fhir:path [ fhir:v "AD.item.streetNameBase.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -1981,32 +2002,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "STB" ]
      ] [
-       fhir:id [ fhir:v "AD.streetNameType" ] ;
-       fhir:path [ fhir:v "AD.streetNameType" ] ;
+       fhir:id [ fhir:v "AD.item.streetNameType" ] ;
+       fhir:path [ fhir:v "AD.item.streetNameType" ] ;
        fhir:definition [ fhir:v "The designation given to the street. (e.g. Street, Avenue, Crescent, etc.)" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.streetNameType" ] ;
+         fhir:path [ fhir:v "AD.item.streetNameType" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.streetNameType.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.streetNameType.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.streetNameType.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.streetNameType.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -2027,13 +2048,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.streetNameType.representation" ] ;
-       fhir:path [ fhir:v "AD.streetNameType.representation" ] ;
+       fhir:id [ fhir:v "AD.item.streetNameType.representation" ] ;
+       fhir:path [ fhir:v "AD.item.streetNameType.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -2052,8 +2073,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.streetNameType.mediaType" ] ;
-       fhir:path [ fhir:v "AD.streetNameType.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.streetNameType.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.streetNameType.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -2073,8 +2094,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.streetNameType.language" ] ;
-       fhir:path [ fhir:v "AD.streetNameType.language" ] ;
+       fhir:id [ fhir:v "AD.item.streetNameType.language" ] ;
+       fhir:path [ fhir:v "AD.item.streetNameType.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -2093,8 +2114,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.streetNameType.xmlText" ] ;
-       fhir:path [ fhir:v "AD.streetNameType.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.streetNameType.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.streetNameType.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -2113,8 +2134,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.streetNameType.partType" ] ;
-       fhir:path [ fhir:v "AD.streetNameType.partType" ] ;
+       fhir:id [ fhir:v "AD.item.streetNameType.partType" ] ;
+       fhir:path [ fhir:v "AD.item.streetNameType.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -2133,32 +2154,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "STTYP" ]
      ] [
-       fhir:id [ fhir:v "AD.additionalLocator" ] ;
-       fhir:path [ fhir:v "AD.additionalLocator" ] ;
+       fhir:id [ fhir:v "AD.item.additionalLocator" ] ;
+       fhir:path [ fhir:v "AD.item.additionalLocator" ] ;
        fhir:definition [ fhir:v "This can be a unit designator, such as apartment number, suite number, or floor. There may be several unit designators in an address (e.g., \"3rd floor, Appt. 342\"). This can also be a designator pointing away from the location, rather than specifying a smaller location within some larger one (e.g., Dutch \"t.o.\" means \"opposite to\" for house boats located across the street facing houses)." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.additionalLocator" ] ;
+         fhir:path [ fhir:v "AD.item.additionalLocator" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.additionalLocator.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.additionalLocator.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.additionalLocator.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.additionalLocator.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -2179,13 +2200,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.additionalLocator.representation" ] ;
-       fhir:path [ fhir:v "AD.additionalLocator.representation" ] ;
+       fhir:id [ fhir:v "AD.item.additionalLocator.representation" ] ;
+       fhir:path [ fhir:v "AD.item.additionalLocator.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -2204,8 +2225,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.additionalLocator.mediaType" ] ;
-       fhir:path [ fhir:v "AD.additionalLocator.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.additionalLocator.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.additionalLocator.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -2225,8 +2246,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.additionalLocator.language" ] ;
-       fhir:path [ fhir:v "AD.additionalLocator.language" ] ;
+       fhir:id [ fhir:v "AD.item.additionalLocator.language" ] ;
+       fhir:path [ fhir:v "AD.item.additionalLocator.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -2245,8 +2266,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.additionalLocator.xmlText" ] ;
-       fhir:path [ fhir:v "AD.additionalLocator.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.additionalLocator.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.additionalLocator.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -2265,8 +2286,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.additionalLocator.partType" ] ;
-       fhir:path [ fhir:v "AD.additionalLocator.partType" ] ;
+       fhir:id [ fhir:v "AD.item.additionalLocator.partType" ] ;
+       fhir:path [ fhir:v "AD.item.additionalLocator.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -2285,32 +2306,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "ADL" ]
      ] [
-       fhir:id [ fhir:v "AD.unitID" ] ;
-       fhir:path [ fhir:v "AD.unitID" ] ;
+       fhir:id [ fhir:v "AD.item.unitID" ] ;
+       fhir:path [ fhir:v "AD.item.unitID" ] ;
        fhir:definition [ fhir:v "The number or name of a specific unit contained within a building or complex, as assigned by that building or complex." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.unitID" ] ;
+         fhir:path [ fhir:v "AD.item.unitID" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.unitID.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.unitID.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.unitID.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.unitID.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -2331,13 +2352,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.unitID.representation" ] ;
-       fhir:path [ fhir:v "AD.unitID.representation" ] ;
+       fhir:id [ fhir:v "AD.item.unitID.representation" ] ;
+       fhir:path [ fhir:v "AD.item.unitID.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -2356,8 +2377,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.unitID.mediaType" ] ;
-       fhir:path [ fhir:v "AD.unitID.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.unitID.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.unitID.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -2377,8 +2398,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.unitID.language" ] ;
-       fhir:path [ fhir:v "AD.unitID.language" ] ;
+       fhir:id [ fhir:v "AD.item.unitID.language" ] ;
+       fhir:path [ fhir:v "AD.item.unitID.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -2397,8 +2418,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.unitID.xmlText" ] ;
-       fhir:path [ fhir:v "AD.unitID.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.unitID.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.unitID.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -2417,8 +2438,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.unitID.partType" ] ;
-       fhir:path [ fhir:v "AD.unitID.partType" ] ;
+       fhir:id [ fhir:v "AD.item.unitID.partType" ] ;
+       fhir:path [ fhir:v "AD.item.unitID.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -2437,32 +2458,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "UNID" ]
      ] [
-       fhir:id [ fhir:v "AD.unitType" ] ;
-       fhir:path [ fhir:v "AD.unitType" ] ;
+       fhir:id [ fhir:v "AD.item.unitType" ] ;
+       fhir:path [ fhir:v "AD.item.unitType" ] ;
        fhir:definition [ fhir:v "Indicates the type of specific unit contained within a building or complex. E.g. Appartment, Floor" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.unitType" ] ;
+         fhir:path [ fhir:v "AD.item.unitType" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.unitType.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.unitType.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.unitType.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.unitType.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -2483,13 +2504,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.unitType.representation" ] ;
-       fhir:path [ fhir:v "AD.unitType.representation" ] ;
+       fhir:id [ fhir:v "AD.item.unitType.representation" ] ;
+       fhir:path [ fhir:v "AD.item.unitType.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -2508,8 +2529,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.unitType.mediaType" ] ;
-       fhir:path [ fhir:v "AD.unitType.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.unitType.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.unitType.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -2529,8 +2550,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.unitType.language" ] ;
-       fhir:path [ fhir:v "AD.unitType.language" ] ;
+       fhir:id [ fhir:v "AD.item.unitType.language" ] ;
+       fhir:path [ fhir:v "AD.item.unitType.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -2549,8 +2570,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.unitType.xmlText" ] ;
-       fhir:path [ fhir:v "AD.unitType.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.unitType.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.unitType.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -2569,8 +2590,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.unitType.partType" ] ;
-       fhir:path [ fhir:v "AD.unitType.partType" ] ;
+       fhir:id [ fhir:v "AD.item.unitType.partType" ] ;
+       fhir:path [ fhir:v "AD.item.unitType.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -2589,32 +2610,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "UNIT" ]
      ] [
-       fhir:id [ fhir:v "AD.careOf" ] ;
-       fhir:path [ fhir:v "AD.careOf" ] ;
+       fhir:id [ fhir:v "AD.item.careOf" ] ;
+       fhir:path [ fhir:v "AD.item.careOf" ] ;
        fhir:definition [ fhir:v "The name of the party who will take receipt at the specified address, and will take on responsibility for ensuring delivery to the target recipient" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.careOf" ] ;
+         fhir:path [ fhir:v "AD.item.careOf" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.careOf.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.careOf.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.careOf.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.careOf.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -2635,13 +2656,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.careOf.representation" ] ;
-       fhir:path [ fhir:v "AD.careOf.representation" ] ;
+       fhir:id [ fhir:v "AD.item.careOf.representation" ] ;
+       fhir:path [ fhir:v "AD.item.careOf.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -2660,8 +2681,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.careOf.mediaType" ] ;
-       fhir:path [ fhir:v "AD.careOf.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.careOf.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.careOf.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -2681,8 +2702,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.careOf.language" ] ;
-       fhir:path [ fhir:v "AD.careOf.language" ] ;
+       fhir:id [ fhir:v "AD.item.careOf.language" ] ;
+       fhir:path [ fhir:v "AD.item.careOf.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -2701,8 +2722,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.careOf.xmlText" ] ;
-       fhir:path [ fhir:v "AD.careOf.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.careOf.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.careOf.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -2721,8 +2742,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.careOf.partType" ] ;
-       fhir:path [ fhir:v "AD.careOf.partType" ] ;
+       fhir:id [ fhir:v "AD.item.careOf.partType" ] ;
+       fhir:path [ fhir:v "AD.item.careOf.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -2741,32 +2762,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "CAR" ]
      ] [
-       fhir:id [ fhir:v "AD.censusTract" ] ;
-       fhir:path [ fhir:v "AD.censusTract" ] ;
+       fhir:id [ fhir:v "AD.item.censusTract" ] ;
+       fhir:path [ fhir:v "AD.item.censusTract" ] ;
        fhir:definition [ fhir:v "A geographic sub-unit delineated for demographic purposes." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.censusTract" ] ;
+         fhir:path [ fhir:v "AD.item.censusTract" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.censusTract.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.censusTract.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.censusTract.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.censusTract.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -2787,13 +2808,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.censusTract.representation" ] ;
-       fhir:path [ fhir:v "AD.censusTract.representation" ] ;
+       fhir:id [ fhir:v "AD.item.censusTract.representation" ] ;
+       fhir:path [ fhir:v "AD.item.censusTract.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -2812,8 +2833,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.censusTract.mediaType" ] ;
-       fhir:path [ fhir:v "AD.censusTract.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.censusTract.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.censusTract.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -2833,8 +2854,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.censusTract.language" ] ;
-       fhir:path [ fhir:v "AD.censusTract.language" ] ;
+       fhir:id [ fhir:v "AD.item.censusTract.language" ] ;
+       fhir:path [ fhir:v "AD.item.censusTract.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -2853,8 +2874,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.censusTract.xmlText" ] ;
-       fhir:path [ fhir:v "AD.censusTract.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.censusTract.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.censusTract.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -2873,8 +2894,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.censusTract.partType" ] ;
-       fhir:path [ fhir:v "AD.censusTract.partType" ] ;
+       fhir:id [ fhir:v "AD.item.censusTract.partType" ] ;
+       fhir:path [ fhir:v "AD.item.censusTract.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -2893,32 +2914,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "CEN" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryAddressLine" ] ;
-       fhir:path [ fhir:v "AD.deliveryAddressLine" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryAddressLine" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryAddressLine" ] ;
        fhir:definition [ fhir:v "A delivery address line is frequently used instead of breaking out delivery mode, delivery installation, etc. An address generally has only a delivery address line or a street address line, but not both." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.deliveryAddressLine" ] ;
+         fhir:path [ fhir:v "AD.item.deliveryAddressLine" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryAddressLine.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.deliveryAddressLine.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryAddressLine.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryAddressLine.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -2939,13 +2960,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryAddressLine.representation" ] ;
-       fhir:path [ fhir:v "AD.deliveryAddressLine.representation" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryAddressLine.representation" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryAddressLine.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -2964,8 +2985,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryAddressLine.mediaType" ] ;
-       fhir:path [ fhir:v "AD.deliveryAddressLine.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryAddressLine.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryAddressLine.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -2985,8 +3006,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryAddressLine.language" ] ;
-       fhir:path [ fhir:v "AD.deliveryAddressLine.language" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryAddressLine.language" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryAddressLine.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -3005,8 +3026,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryAddressLine.xmlText" ] ;
-       fhir:path [ fhir:v "AD.deliveryAddressLine.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryAddressLine.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryAddressLine.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -3025,8 +3046,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryAddressLine.partType" ] ;
-       fhir:path [ fhir:v "AD.deliveryAddressLine.partType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryAddressLine.partType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryAddressLine.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -3045,32 +3066,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "DAL" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationType" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationType" ] ;
        fhir:definition [ fhir:v "Indicates the type of delivery installation (the facility to which the mail will be delivered prior to final shipping via the delivery mode.) Example: post office, letter carrier depot, community mail center, station, etc." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.deliveryInstallationType" ] ;
+         fhir:path [ fhir:v "AD.item.deliveryInstallationType" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationType.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationType.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationType.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationType.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -3091,13 +3112,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationType.representation" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationType.representation" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationType.representation" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationType.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -3116,8 +3137,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationType.mediaType" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationType.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationType.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationType.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -3137,8 +3158,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationType.language" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationType.language" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationType.language" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationType.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -3157,8 +3178,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationType.xmlText" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationType.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationType.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationType.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -3177,8 +3198,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationType.partType" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationType.partType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationType.partType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationType.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -3197,32 +3218,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "DINST" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationArea" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationArea" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationArea" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationArea" ] ;
        fhir:definition [ fhir:v "The location of the delivery installation, usually a town or city, and is only required if the area is different from the municipality. Area to which mail delivery service is provided from any postal facility or service such as an individual letter carrier, rural route, or postal route." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.deliveryInstallationArea" ] ;
+         fhir:path [ fhir:v "AD.item.deliveryInstallationArea" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationArea.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationArea.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationArea.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationArea.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -3243,13 +3264,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationArea.representation" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationArea.representation" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationArea.representation" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationArea.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -3268,8 +3289,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationArea.mediaType" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationArea.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationArea.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationArea.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -3289,8 +3310,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationArea.language" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationArea.language" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationArea.language" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationArea.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -3309,8 +3330,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationArea.xmlText" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationArea.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationArea.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationArea.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -3329,8 +3350,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationArea.partType" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationArea.partType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationArea.partType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationArea.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -3349,32 +3370,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "DINSTA" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationQualifier" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationQualifier" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationQualifier" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationQualifier" ] ;
        fhir:definition [ fhir:v "A number, letter or name identifying a delivery installation. E.g., for Station A, the delivery installation qualifier would be 'A'." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.deliveryInstallationQualifier" ] ;
+         fhir:path [ fhir:v "AD.item.deliveryInstallationQualifier" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationQualifier.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationQualifier.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationQualifier.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationQualifier.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -3395,13 +3416,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationQualifier.representation" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationQualifier.representation" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationQualifier.representation" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationQualifier.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -3420,8 +3441,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationQualifier.mediaType" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationQualifier.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationQualifier.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationQualifier.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -3441,8 +3462,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationQualifier.language" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationQualifier.language" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationQualifier.language" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationQualifier.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -3461,8 +3482,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationQualifier.xmlText" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationQualifier.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationQualifier.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationQualifier.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -3481,8 +3502,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationQualifier.partType" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationQualifier.partType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationQualifier.partType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationQualifier.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -3501,32 +3522,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "DINSTQ" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryMode" ] ;
-       fhir:path [ fhir:v "AD.deliveryMode" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryMode" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryMode" ] ;
        fhir:definition [ fhir:v "Indicates the type of service offered, method of delivery. For example: post office box, rural route, general delivery, etc." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.deliveryMode" ] ;
+         fhir:path [ fhir:v "AD.item.deliveryMode" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryMode.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.deliveryMode.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryMode.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryMode.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -3547,13 +3568,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryMode.representation" ] ;
-       fhir:path [ fhir:v "AD.deliveryMode.representation" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryMode.representation" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryMode.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -3572,8 +3593,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryMode.mediaType" ] ;
-       fhir:path [ fhir:v "AD.deliveryMode.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryMode.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryMode.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -3593,8 +3614,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryMode.language" ] ;
-       fhir:path [ fhir:v "AD.deliveryMode.language" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryMode.language" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryMode.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -3613,8 +3634,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryMode.xmlText" ] ;
-       fhir:path [ fhir:v "AD.deliveryMode.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryMode.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryMode.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -3633,8 +3654,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryMode.partType" ] ;
-       fhir:path [ fhir:v "AD.deliveryMode.partType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryMode.partType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryMode.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -3653,32 +3674,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "DMOD" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryModeIdentifier" ] ;
-       fhir:path [ fhir:v "AD.deliveryModeIdentifier" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryModeIdentifier" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryModeIdentifier" ] ;
        fhir:definition [ fhir:v "Represents the routing information such as a letter carrier route number. It is the identifying number of the designator (the box number or rural route number)." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.deliveryModeIdentifier" ] ;
+         fhir:path [ fhir:v "AD.item.deliveryModeIdentifier" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryModeIdentifier.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.deliveryModeIdentifier.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryModeIdentifier.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryModeIdentifier.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -3699,13 +3720,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryModeIdentifier.representation" ] ;
-       fhir:path [ fhir:v "AD.deliveryModeIdentifier.representation" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryModeIdentifier.representation" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryModeIdentifier.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -3724,8 +3745,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryModeIdentifier.mediaType" ] ;
-       fhir:path [ fhir:v "AD.deliveryModeIdentifier.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryModeIdentifier.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryModeIdentifier.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -3745,8 +3766,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryModeIdentifier.language" ] ;
-       fhir:path [ fhir:v "AD.deliveryModeIdentifier.language" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryModeIdentifier.language" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryModeIdentifier.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -3765,8 +3786,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryModeIdentifier.xmlText" ] ;
-       fhir:path [ fhir:v "AD.deliveryModeIdentifier.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryModeIdentifier.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryModeIdentifier.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -3785,8 +3806,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryModeIdentifier.partType" ] ;
-       fhir:path [ fhir:v "AD.deliveryModeIdentifier.partType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryModeIdentifier.partType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryModeIdentifier.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -3805,32 +3826,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "DMODID" ]
      ] [
-       fhir:id [ fhir:v "AD.buildingNumberSuffix" ] ;
-       fhir:path [ fhir:v "AD.buildingNumberSuffix" ] ;
+       fhir:id [ fhir:v "AD.item.buildingNumberSuffix" ] ;
+       fhir:path [ fhir:v "AD.item.buildingNumberSuffix" ] ;
        fhir:definition [ fhir:v "Any alphabetic character, fraction or other text that may appear after the numeric portion of a building number" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.buildingNumberSuffix" ] ;
+         fhir:path [ fhir:v "AD.item.buildingNumberSuffix" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.buildingNumberSuffix.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.buildingNumberSuffix.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.buildingNumberSuffix.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.buildingNumberSuffix.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -3851,13 +3872,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.buildingNumberSuffix.representation" ] ;
-       fhir:path [ fhir:v "AD.buildingNumberSuffix.representation" ] ;
+       fhir:id [ fhir:v "AD.item.buildingNumberSuffix.representation" ] ;
+       fhir:path [ fhir:v "AD.item.buildingNumberSuffix.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -3876,8 +3897,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.buildingNumberSuffix.mediaType" ] ;
-       fhir:path [ fhir:v "AD.buildingNumberSuffix.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.buildingNumberSuffix.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.buildingNumberSuffix.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -3897,8 +3918,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.buildingNumberSuffix.language" ] ;
-       fhir:path [ fhir:v "AD.buildingNumberSuffix.language" ] ;
+       fhir:id [ fhir:v "AD.item.buildingNumberSuffix.language" ] ;
+       fhir:path [ fhir:v "AD.item.buildingNumberSuffix.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -3917,8 +3938,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.buildingNumberSuffix.xmlText" ] ;
-       fhir:path [ fhir:v "AD.buildingNumberSuffix.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.buildingNumberSuffix.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.buildingNumberSuffix.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -3937,8 +3958,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.buildingNumberSuffix.partType" ] ;
-       fhir:path [ fhir:v "AD.buildingNumberSuffix.partType" ] ;
+       fhir:id [ fhir:v "AD.item.buildingNumberSuffix.partType" ] ;
+       fhir:path [ fhir:v "AD.item.buildingNumberSuffix.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -3957,32 +3978,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "BNS" ]
      ] [
-       fhir:id [ fhir:v "AD.postBox" ] ;
-       fhir:path [ fhir:v "AD.postBox" ] ;
+       fhir:id [ fhir:v "AD.item.postBox" ] ;
+       fhir:path [ fhir:v "AD.item.postBox" ] ;
        fhir:definition [ fhir:v "A numbered box located in a post station." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.postBox" ] ;
+         fhir:path [ fhir:v "AD.item.postBox" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.postBox.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.postBox.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.postBox.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.postBox.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -4003,13 +4024,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.postBox.representation" ] ;
-       fhir:path [ fhir:v "AD.postBox.representation" ] ;
+       fhir:id [ fhir:v "AD.item.postBox.representation" ] ;
+       fhir:path [ fhir:v "AD.item.postBox.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -4028,8 +4049,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.postBox.mediaType" ] ;
-       fhir:path [ fhir:v "AD.postBox.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.postBox.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.postBox.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -4049,8 +4070,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.postBox.language" ] ;
-       fhir:path [ fhir:v "AD.postBox.language" ] ;
+       fhir:id [ fhir:v "AD.item.postBox.language" ] ;
+       fhir:path [ fhir:v "AD.item.postBox.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -4069,8 +4090,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.postBox.xmlText" ] ;
-       fhir:path [ fhir:v "AD.postBox.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.postBox.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.postBox.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -4089,8 +4110,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.postBox.partType" ] ;
-       fhir:path [ fhir:v "AD.postBox.partType" ] ;
+       fhir:id [ fhir:v "AD.item.postBox.partType" ] ;
+       fhir:path [ fhir:v "AD.item.postBox.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -4109,32 +4130,32 @@
        ] ) ;
        fhir:fixed [ fhir:v "POB" ]
      ] [
-       fhir:id [ fhir:v "AD.precinct" ] ;
-       fhir:path [ fhir:v "AD.precinct" ] ;
+       fhir:id [ fhir:v "AD.item.precinct" ] ;
+       fhir:path [ fhir:v "AD.item.precinct" ] ;
        fhir:definition [ fhir:v "A subsection of a municipality" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.precinct" ] ;
+         fhir:path [ fhir:v "AD.item.precinct" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-         fhir:max [ fhir:v "*" ]
+         fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] ) ;
        fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
+         fhir:key [ fhir:v "text-null" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
+         fhir:human [ fhir:v "xmlText and nullFlavor are mutually exclusive (one must be present)" ] ;
+         fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.precinct.nullFlavor" ] ;
-       fhir:path [ fhir:v "AD.precinct.nullFlavor" ] ;
+       fhir:id [ fhir:v "AD.item.precinct.nullFlavor" ] ;
+       fhir:path [ fhir:v "AD.item.precinct.nullFlavor" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Exceptional Value Detail" ] ;
        fhir:definition [ fhir:v "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing." ] ;
@@ -4155,13 +4176,13 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-NullFlavor"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-NullFlavor>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
-       fhir:id [ fhir:v "AD.precinct.representation" ] ;
-       fhir:path [ fhir:v "AD.precinct.representation" ] ;
+       fhir:id [ fhir:v "AD.item.precinct.representation" ] ;
+       fhir:path [ fhir:v "AD.item.precinct.representation" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the representation of the binary data that is the content of the binary data value" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -4180,8 +4201,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "TXT" ]
      ] [
-       fhir:id [ fhir:v "AD.precinct.mediaType" ] ;
-       fhir:path [ fhir:v "AD.precinct.mediaType" ] ;
+       fhir:id [ fhir:v "AD.item.precinct.mediaType" ] ;
+       fhir:path [ fhir:v "AD.item.precinct.mediaType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Media Type" ] ;
        fhir:definition [ fhir:v "Identifies the type of the encapsulated data and identifies a method to interpret or render the data." ] ;
@@ -4201,8 +4222,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "text/plain" ]
      ] [
-       fhir:id [ fhir:v "AD.precinct.language" ] ;
-       fhir:path [ fhir:v "AD.precinct.language" ] ;
+       fhir:id [ fhir:v "AD.item.precinct.language" ] ;
+       fhir:path [ fhir:v "AD.item.precinct.language" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:label [ fhir:v "Language" ] ;
        fhir:definition [ fhir:v "For character based information the language property specifies the human language of the text." ] ;
@@ -4221,8 +4242,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.precinct.xmlText" ] ;
-       fhir:path [ fhir:v "AD.precinct.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.precinct.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.precinct.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
@@ -4241,8 +4262,8 @@
          ] )
        ] )
      ] [
-       fhir:id [ fhir:v "AD.precinct.partType" ] ;
-       fhir:path [ fhir:v "AD.precinct.partType" ] ;
+       fhir:id [ fhir:v "AD.item.precinct.partType" ] ;
+       fhir:path [ fhir:v "AD.item.precinct.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -4261,15 +4282,15 @@
        ] ) ;
        fhir:fixed [ fhir:v "PRE" ]
      ] [
-       fhir:id [ fhir:v "AD.xmlText" ] ;
-       fhir:path [ fhir:v "AD.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:base [
-         fhir:path [ fhir:v "AD.xmlText" ] ;
+         fhir:path [ fhir:v "AD.item.xmlText" ] ;
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
          fhir:max [ fhir:v "1" ]
        ] ;
@@ -4352,21 +4373,46 @@
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
            fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
-       ] )
+       ] ) ;
+       fhir:binding [
+         fhir:strength [ fhir:v "required" ] ;
+         fhir:valueSet [
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse>
+         ]
+       ]
      ] [
-       fhir:id [ fhir:v "AD.delimiter" ] ;
-       fhir:path [ fhir:v "AD.delimiter" ] ;
-       fhir:definition [ fhir:v "Delimiters are printed without framing white space. If no value component is provided, the delimiter appears as a line break." ] ;
+       fhir:id [ fhir:v "AD.item" ] ;
+       fhir:extension ( [
+         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-choice-group"^^xsd:anyURI ] ;
+         fhir:value [ fhir:v "true"^^xsd:boolean ]
+       ] ) ;
+       fhir:path [ fhir:v "AD.item" ] ;
+       fhir:definition [ fhir:v "A series of items that constitute the address." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "*" ] ;
+       fhir:type ( [
+         fhir:code [ fhir:v "http://hl7.org/fhir/StructureDefinition/Base"^^xsd:anyURI ]
+       ] ) ;
+       fhir:constraint ( [
+         fhir:key [ fhir:v "AD-1" ] ;
+         fhir:severity [ fhir:v "error" ] ;
+         fhir:human [ fhir:v "Can only have only one of the possible item elements in each choice" ] ;
+         fhir:expression [ fhir:v "(delimiter | country | state | county | city | postalCode | streetAddressLine | houseNumber | houseNumberNumeric | direction | streetName | streetNameBase | streetNameType | additionalLocator | unitID | unitType | careOf | censusTract | deliveryAddressLine | deliveryInstallationType | deliveryInstallationArea | deliveryInstallationQualifier | deliveryMode | deliveryModeIdentifier | buildingNumberSuffix | postBox | precinct | xmlText).count() = 1" ]
+       ] )
+     ] [
+       fhir:id [ fhir:v "AD.item.delimiter" ] ;
+       fhir:path [ fhir:v "AD.item.delimiter" ] ;
+       fhir:definition [ fhir:v "Delimiters are printed without framing white space. If no value component is provided, the delimiter appears as a line break." ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.delimiter.partType" ] ;
-       fhir:path [ fhir:v "AD.delimiter.partType" ] ;
+       fhir:id [ fhir:v "AD.item.delimiter.partType" ] ;
+       fhir:path [ fhir:v "AD.item.delimiter.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4378,19 +4424,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "DEL" ]
      ] [
-       fhir:id [ fhir:v "AD.country" ] ;
-       fhir:path [ fhir:v "AD.country" ] ;
+       fhir:id [ fhir:v "AD.item.country" ] ;
+       fhir:path [ fhir:v "AD.item.country" ] ;
        fhir:definition [ fhir:v "Country" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.country.partType" ] ;
-       fhir:path [ fhir:v "AD.country.partType" ] ;
+       fhir:id [ fhir:v "AD.item.country.partType" ] ;
+       fhir:path [ fhir:v "AD.item.country.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4402,19 +4447,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "CNT" ]
      ] [
-       fhir:id [ fhir:v "AD.state" ] ;
-       fhir:path [ fhir:v "AD.state" ] ;
+       fhir:id [ fhir:v "AD.item.state" ] ;
+       fhir:path [ fhir:v "AD.item.state" ] ;
        fhir:definition [ fhir:v "A sub-unit of a country with limited sovereignty in a federally organized country." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.state.partType" ] ;
-       fhir:path [ fhir:v "AD.state.partType" ] ;
+       fhir:id [ fhir:v "AD.item.state.partType" ] ;
+       fhir:path [ fhir:v "AD.item.state.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4426,19 +4470,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "STA" ]
      ] [
-       fhir:id [ fhir:v "AD.county" ] ;
-       fhir:path [ fhir:v "AD.county" ] ;
+       fhir:id [ fhir:v "AD.item.county" ] ;
+       fhir:path [ fhir:v "AD.item.county" ] ;
        fhir:definition [ fhir:v "A sub-unit of a state or province. (49 of the United States of America use the term \"county;\" Louisiana uses the term \"parish\".)" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.county.partType" ] ;
-       fhir:path [ fhir:v "AD.county.partType" ] ;
+       fhir:id [ fhir:v "AD.item.county.partType" ] ;
+       fhir:path [ fhir:v "AD.item.county.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4450,19 +4493,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "CPA" ]
      ] [
-       fhir:id [ fhir:v "AD.city" ] ;
-       fhir:path [ fhir:v "AD.city" ] ;
+       fhir:id [ fhir:v "AD.item.city" ] ;
+       fhir:path [ fhir:v "AD.item.city" ] ;
        fhir:definition [ fhir:v "The name of the city, town, village, or other community or delivery center" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.city.partType" ] ;
-       fhir:path [ fhir:v "AD.city.partType" ] ;
+       fhir:id [ fhir:v "AD.item.city.partType" ] ;
+       fhir:path [ fhir:v "AD.item.city.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4474,19 +4516,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "CTY" ]
      ] [
-       fhir:id [ fhir:v "AD.postalCode" ] ;
-       fhir:path [ fhir:v "AD.postalCode" ] ;
+       fhir:id [ fhir:v "AD.item.postalCode" ] ;
+       fhir:path [ fhir:v "AD.item.postalCode" ] ;
        fhir:definition [ fhir:v "A postal code designating a region defined by the postal service." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.postalCode.partType" ] ;
-       fhir:path [ fhir:v "AD.postalCode.partType" ] ;
+       fhir:id [ fhir:v "AD.item.postalCode.partType" ] ;
+       fhir:path [ fhir:v "AD.item.postalCode.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4498,19 +4539,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "ZIP" ]
      ] [
-       fhir:id [ fhir:v "AD.streetAddressLine" ] ;
-       fhir:path [ fhir:v "AD.streetAddressLine" ] ;
+       fhir:id [ fhir:v "AD.item.streetAddressLine" ] ;
+       fhir:path [ fhir:v "AD.item.streetAddressLine" ] ;
        fhir:definition [ fhir:v "Street address line" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.streetAddressLine.partType" ] ;
-       fhir:path [ fhir:v "AD.streetAddressLine.partType" ] ;
+       fhir:id [ fhir:v "AD.item.streetAddressLine.partType" ] ;
+       fhir:path [ fhir:v "AD.item.streetAddressLine.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4522,19 +4562,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "SAL" ]
      ] [
-       fhir:id [ fhir:v "AD.houseNumber" ] ;
-       fhir:path [ fhir:v "AD.houseNumber" ] ;
+       fhir:id [ fhir:v "AD.item.houseNumber" ] ;
+       fhir:path [ fhir:v "AD.item.houseNumber" ] ;
        fhir:definition [ fhir:v "The number of a building, house or lot alongside the street. Also known as \"primary street number\". This does not number the street but rather the building." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.houseNumber.partType" ] ;
-       fhir:path [ fhir:v "AD.houseNumber.partType" ] ;
+       fhir:id [ fhir:v "AD.item.houseNumber.partType" ] ;
+       fhir:path [ fhir:v "AD.item.houseNumber.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4546,19 +4585,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "BNR" ]
      ] [
-       fhir:id [ fhir:v "AD.houseNumberNumeric" ] ;
-       fhir:path [ fhir:v "AD.houseNumberNumeric" ] ;
+       fhir:id [ fhir:v "AD.item.houseNumberNumeric" ] ;
+       fhir:path [ fhir:v "AD.item.houseNumberNumeric" ] ;
        fhir:definition [ fhir:v "The numeric portion of a building number" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.houseNumberNumeric.partType" ] ;
-       fhir:path [ fhir:v "AD.houseNumberNumeric.partType" ] ;
+       fhir:id [ fhir:v "AD.item.houseNumberNumeric.partType" ] ;
+       fhir:path [ fhir:v "AD.item.houseNumberNumeric.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4570,19 +4608,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "BNN" ]
      ] [
-       fhir:id [ fhir:v "AD.direction" ] ;
-       fhir:path [ fhir:v "AD.direction" ] ;
+       fhir:id [ fhir:v "AD.item.direction" ] ;
+       fhir:path [ fhir:v "AD.item.direction" ] ;
        fhir:definition [ fhir:v "Direction (e.g., N, S, W, E)" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.direction.partType" ] ;
-       fhir:path [ fhir:v "AD.direction.partType" ] ;
+       fhir:id [ fhir:v "AD.item.direction.partType" ] ;
+       fhir:path [ fhir:v "AD.item.direction.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4594,19 +4631,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "DIR" ]
      ] [
-       fhir:id [ fhir:v "AD.streetName" ] ;
-       fhir:path [ fhir:v "AD.streetName" ] ;
+       fhir:id [ fhir:v "AD.item.streetName" ] ;
+       fhir:path [ fhir:v "AD.item.streetName" ] ;
        fhir:definition [ fhir:v "Name of a roadway or artery recognized by a municipality (including street type and direction)" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.streetName.partType" ] ;
-       fhir:path [ fhir:v "AD.streetName.partType" ] ;
+       fhir:id [ fhir:v "AD.item.streetName.partType" ] ;
+       fhir:path [ fhir:v "AD.item.streetName.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4618,19 +4654,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "STR" ]
      ] [
-       fhir:id [ fhir:v "AD.streetNameBase" ] ;
-       fhir:path [ fhir:v "AD.streetNameBase" ] ;
+       fhir:id [ fhir:v "AD.item.streetNameBase" ] ;
+       fhir:path [ fhir:v "AD.item.streetNameBase" ] ;
        fhir:definition [ fhir:v "The base name of a roadway or artery recognized by a municipality (excluding street type and direction)" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.streetNameBase.partType" ] ;
-       fhir:path [ fhir:v "AD.streetNameBase.partType" ] ;
+       fhir:id [ fhir:v "AD.item.streetNameBase.partType" ] ;
+       fhir:path [ fhir:v "AD.item.streetNameBase.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4642,19 +4677,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "STB" ]
      ] [
-       fhir:id [ fhir:v "AD.streetNameType" ] ;
-       fhir:path [ fhir:v "AD.streetNameType" ] ;
+       fhir:id [ fhir:v "AD.item.streetNameType" ] ;
+       fhir:path [ fhir:v "AD.item.streetNameType" ] ;
        fhir:definition [ fhir:v "The designation given to the street. (e.g. Street, Avenue, Crescent, etc.)" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.streetNameType.partType" ] ;
-       fhir:path [ fhir:v "AD.streetNameType.partType" ] ;
+       fhir:id [ fhir:v "AD.item.streetNameType.partType" ] ;
+       fhir:path [ fhir:v "AD.item.streetNameType.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4666,19 +4700,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "STTYP" ]
      ] [
-       fhir:id [ fhir:v "AD.additionalLocator" ] ;
-       fhir:path [ fhir:v "AD.additionalLocator" ] ;
+       fhir:id [ fhir:v "AD.item.additionalLocator" ] ;
+       fhir:path [ fhir:v "AD.item.additionalLocator" ] ;
        fhir:definition [ fhir:v "This can be a unit designator, such as apartment number, suite number, or floor. There may be several unit designators in an address (e.g., \"3rd floor, Appt. 342\"). This can also be a designator pointing away from the location, rather than specifying a smaller location within some larger one (e.g., Dutch \"t.o.\" means \"opposite to\" for house boats located across the street facing houses)." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.additionalLocator.partType" ] ;
-       fhir:path [ fhir:v "AD.additionalLocator.partType" ] ;
+       fhir:id [ fhir:v "AD.item.additionalLocator.partType" ] ;
+       fhir:path [ fhir:v "AD.item.additionalLocator.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4690,19 +4723,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "ADL" ]
      ] [
-       fhir:id [ fhir:v "AD.unitID" ] ;
-       fhir:path [ fhir:v "AD.unitID" ] ;
+       fhir:id [ fhir:v "AD.item.unitID" ] ;
+       fhir:path [ fhir:v "AD.item.unitID" ] ;
        fhir:definition [ fhir:v "The number or name of a specific unit contained within a building or complex, as assigned by that building or complex." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.unitID.partType" ] ;
-       fhir:path [ fhir:v "AD.unitID.partType" ] ;
+       fhir:id [ fhir:v "AD.item.unitID.partType" ] ;
+       fhir:path [ fhir:v "AD.item.unitID.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4714,19 +4746,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "UNID" ]
      ] [
-       fhir:id [ fhir:v "AD.unitType" ] ;
-       fhir:path [ fhir:v "AD.unitType" ] ;
+       fhir:id [ fhir:v "AD.item.unitType" ] ;
+       fhir:path [ fhir:v "AD.item.unitType" ] ;
        fhir:definition [ fhir:v "Indicates the type of specific unit contained within a building or complex. E.g. Appartment, Floor" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.unitType.partType" ] ;
-       fhir:path [ fhir:v "AD.unitType.partType" ] ;
+       fhir:id [ fhir:v "AD.item.unitType.partType" ] ;
+       fhir:path [ fhir:v "AD.item.unitType.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4738,19 +4769,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "UNIT" ]
      ] [
-       fhir:id [ fhir:v "AD.careOf" ] ;
-       fhir:path [ fhir:v "AD.careOf" ] ;
+       fhir:id [ fhir:v "AD.item.careOf" ] ;
+       fhir:path [ fhir:v "AD.item.careOf" ] ;
        fhir:definition [ fhir:v "The name of the party who will take receipt at the specified address, and will take on responsibility for ensuring delivery to the target recipient" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.careOf.partType" ] ;
-       fhir:path [ fhir:v "AD.careOf.partType" ] ;
+       fhir:id [ fhir:v "AD.item.careOf.partType" ] ;
+       fhir:path [ fhir:v "AD.item.careOf.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4762,19 +4792,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "CAR" ]
      ] [
-       fhir:id [ fhir:v "AD.censusTract" ] ;
-       fhir:path [ fhir:v "AD.censusTract" ] ;
+       fhir:id [ fhir:v "AD.item.censusTract" ] ;
+       fhir:path [ fhir:v "AD.item.censusTract" ] ;
        fhir:definition [ fhir:v "A geographic sub-unit delineated for demographic purposes." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.censusTract.partType" ] ;
-       fhir:path [ fhir:v "AD.censusTract.partType" ] ;
+       fhir:id [ fhir:v "AD.item.censusTract.partType" ] ;
+       fhir:path [ fhir:v "AD.item.censusTract.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4786,19 +4815,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "CEN" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryAddressLine" ] ;
-       fhir:path [ fhir:v "AD.deliveryAddressLine" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryAddressLine" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryAddressLine" ] ;
        fhir:definition [ fhir:v "A delivery address line is frequently used instead of breaking out delivery mode, delivery installation, etc. An address generally has only a delivery address line or a street address line, but not both." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryAddressLine.partType" ] ;
-       fhir:path [ fhir:v "AD.deliveryAddressLine.partType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryAddressLine.partType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryAddressLine.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4810,19 +4838,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "DAL" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationType" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationType" ] ;
        fhir:definition [ fhir:v "Indicates the type of delivery installation (the facility to which the mail will be delivered prior to final shipping via the delivery mode.) Example: post office, letter carrier depot, community mail center, station, etc." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationType.partType" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationType.partType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationType.partType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationType.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4834,19 +4861,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "DINST" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationArea" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationArea" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationArea" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationArea" ] ;
        fhir:definition [ fhir:v "The location of the delivery installation, usually a town or city, and is only required if the area is different from the municipality. Area to which mail delivery service is provided from any postal facility or service such as an individual letter carrier, rural route, or postal route." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationArea.partType" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationArea.partType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationArea.partType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationArea.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4858,19 +4884,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "DINSTA" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationQualifier" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationQualifier" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationQualifier" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationQualifier" ] ;
        fhir:definition [ fhir:v "A number, letter or name identifying a delivery installation. E.g., for Station A, the delivery installation qualifier would be 'A'." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryInstallationQualifier.partType" ] ;
-       fhir:path [ fhir:v "AD.deliveryInstallationQualifier.partType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryInstallationQualifier.partType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryInstallationQualifier.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4882,19 +4907,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "DINSTQ" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryMode" ] ;
-       fhir:path [ fhir:v "AD.deliveryMode" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryMode" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryMode" ] ;
        fhir:definition [ fhir:v "Indicates the type of service offered, method of delivery. For example: post office box, rural route, general delivery, etc." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryMode.partType" ] ;
-       fhir:path [ fhir:v "AD.deliveryMode.partType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryMode.partType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryMode.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4906,19 +4930,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "DMOD" ]
      ] [
-       fhir:id [ fhir:v "AD.deliveryModeIdentifier" ] ;
-       fhir:path [ fhir:v "AD.deliveryModeIdentifier" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryModeIdentifier" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryModeIdentifier" ] ;
        fhir:definition [ fhir:v "Represents the routing information such as a letter carrier route number. It is the identifying number of the designator (the box number or rural route number)." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.deliveryModeIdentifier.partType" ] ;
-       fhir:path [ fhir:v "AD.deliveryModeIdentifier.partType" ] ;
+       fhir:id [ fhir:v "AD.item.deliveryModeIdentifier.partType" ] ;
+       fhir:path [ fhir:v "AD.item.deliveryModeIdentifier.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4930,19 +4953,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "DMODID" ]
      ] [
-       fhir:id [ fhir:v "AD.buildingNumberSuffix" ] ;
-       fhir:path [ fhir:v "AD.buildingNumberSuffix" ] ;
+       fhir:id [ fhir:v "AD.item.buildingNumberSuffix" ] ;
+       fhir:path [ fhir:v "AD.item.buildingNumberSuffix" ] ;
        fhir:definition [ fhir:v "Any alphabetic character, fraction or other text that may appear after the numeric portion of a building number" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.buildingNumberSuffix.partType" ] ;
-       fhir:path [ fhir:v "AD.buildingNumberSuffix.partType" ] ;
+       fhir:id [ fhir:v "AD.item.buildingNumberSuffix.partType" ] ;
+       fhir:path [ fhir:v "AD.item.buildingNumberSuffix.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4954,19 +4976,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "BNS" ]
      ] [
-       fhir:id [ fhir:v "AD.postBox" ] ;
-       fhir:path [ fhir:v "AD.postBox" ] ;
+       fhir:id [ fhir:v "AD.item.postBox" ] ;
+       fhir:path [ fhir:v "AD.item.postBox" ] ;
        fhir:definition [ fhir:v "A numbered box located in a post station." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.postBox.partType" ] ;
-       fhir:path [ fhir:v "AD.postBox.partType" ] ;
+       fhir:id [ fhir:v "AD.item.postBox.partType" ] ;
+       fhir:path [ fhir:v "AD.item.postBox.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -4978,19 +4999,18 @@
        ] ) ;
        fhir:fixed [ fhir:v "POB" ]
      ] [
-       fhir:id [ fhir:v "AD.precinct" ] ;
-       fhir:path [ fhir:v "AD.precinct" ] ;
+       fhir:id [ fhir:v "AD.item.precinct" ] ;
+       fhir:path [ fhir:v "AD.item.precinct" ] ;
        fhir:definition [ fhir:v "A subsection of a municipality" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
-       fhir:max [ fhir:v "*" ] ;
+       fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
        ] )
      ] [
-       fhir:id [ fhir:v "AD.precinct.partType" ] ;
-       fhir:path [ fhir:v "AD.precinct.partType" ] ;
+       fhir:id [ fhir:v "AD.item.precinct.partType" ] ;
+       fhir:path [ fhir:v "AD.item.precinct.partType" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:definition [ fhir:v "Specifies the type of the address part" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
@@ -5002,8 +5022,8 @@
        ] ) ;
        fhir:fixed [ fhir:v "PRE" ]
      ] [
-       fhir:id [ fhir:v "AD.xmlText" ] ;
-       fhir:path [ fhir:v "AD.xmlText" ] ;
+       fhir:id [ fhir:v "AD.item.xmlText" ] ;
+       fhir:path [ fhir:v "AD.item.xmlText" ] ;
        fhir:representation ( [ fhir:v "xmlText" ] ) ;
        fhir:short [ fhir:v "Allows for mixed text content" ] ;
        fhir:comment [ fhir:v "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance." ] ;

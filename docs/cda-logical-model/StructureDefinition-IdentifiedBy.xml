@@ -4,8 +4,7 @@
   <id value="IdentifiedBy"/>
   <text>
     <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml">
-      <p>Link to an additional Identifier for a role.</p>
-      <p>The id in the alternateIdentification field SHALL match an id in the linked role.</p>
+      <p>The alternateIdentification extension provides additional information about an identifier found in the linked role. The extensions augment the id information in the linked role.  The id in the alternateIdentification extension SHALL match an id in the linked role. The alternateIdentification provides additional information about a particular identifier, such as its type. As an extension it needs to be safe for implementers to ignore this additional information.</p>
     </div>
   </text>
   <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-target">
@@ -15,32 +14,35 @@
       </extension>
     </valueBoolean>
   </extension>
-  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
     <valueUri value="urn:hl7-org:sdtc"/>
   </extension>
-  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
-    <valueUri value="identifiedBy"/>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
+    <valueString value="identifiedBy"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-container">
+    <valueUri value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/IdentifiedBy"/>
-  <version value="2.1.0-draft2-mb"/>
+  <version value="2.0.0-sd-202312-matchbox-patch"/>
   <name value="IdentifiedBy"/>
   <title value="IdentifiedBy (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-10-04T23:00:58+02:00"/>
+  <date value="2024-03-12T18:28:21+01:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/structdoc"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
     </telecom>
     <telecom>
       <system value="email"/>
       <value value="structdog@lists.HL7.org"/>
     </telecom>
   </contact>
-  <description value="Link to an additional Identifier for a role"/>
+  <description value="The alternateIdentification extension provides additional information about an identifier found in the linked role. The extensions augment the id information in the linked role.  The id in the alternateIdentification extension SHALL match an id in the linked role. The alternateIdentification provides additional information about a particular identifier, such as its type. As an extension it needs to be safe for implementers to ignore this additional information."/>
   <fhirVersion value="5.0.0"/>
   <mapping>
     <identity value="rim"/>
@@ -48,7 +50,7 @@
     <name value="RIM Mapping"/>
   </mapping>
   <kind value="logical"/>
-  <abstract value="true"/>
+  <abstract value="false"/>
   <type value="http://hl7.org/cda/stds/core/StructureDefinition/IdentifiedBy"/>
   <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Base"/>
   <derivation value="specialization"/>
@@ -64,13 +66,6 @@
         <min value="0"/>
         <max value="*"/>
       </base>
-      <constraint>
-        <key value="ele-1"/>
-        <severity value="error"/>
-        <human value="All FHIR elements must have a @value or children"/>
-        <expression value="hasValue() or (children().count() &gt; id.count())"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
-      </constraint>
       <isModifier value="false"/>
       <mapping>
         <identity value="rim"/>
@@ -78,12 +73,11 @@
       </mapping>
     </element>
     <element id="IdentifiedBy.typeCode">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:hl7-org:v3"/>
       </extension>
       <path value="IdentifiedBy.typeCode"/>
       <representation value="xmlAttr"/>
-      <definition value="Element IdentifiedBy.typeCode"/>
       <min value="1"/>
       <max value="1"/>
       <base>
@@ -101,14 +95,13 @@
       </binding>
     </element>
     <element id="IdentifiedBy.sdtcAlternateIdentification">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:hl7-org:sdtc"/>
       </extension>
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
         <valueString value="alternateIdentification"/>
       </extension>
       <path value="IdentifiedBy.sdtcAlternateIdentification"/>
-      <definition value="Element IdentifiedBy.sdtcAlternateIdentification"/>
       <min value="1"/>
       <max value="1"/>
       <base>
@@ -128,12 +121,11 @@
       <max value="*"/>
     </element>
     <element id="IdentifiedBy.typeCode">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:hl7-org:v3"/>
       </extension>
       <path value="IdentifiedBy.typeCode"/>
       <representation value="xmlAttr"/>
-      <definition value="Element IdentifiedBy.typeCode"/>
       <min value="1"/>
       <max value="1"/>
       <type>
@@ -146,14 +138,13 @@
       </binding>
     </element>
     <element id="IdentifiedBy.sdtcAlternateIdentification">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:hl7-org:sdtc"/>
       </extension>
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
         <valueString value="alternateIdentification"/>
       </extension>
       <path value="IdentifiedBy.sdtcAlternateIdentification"/>
-      <definition value="Element IdentifiedBy.sdtcAlternateIdentification"/>
       <min value="1"/>
       <max value="1"/>
       <type>

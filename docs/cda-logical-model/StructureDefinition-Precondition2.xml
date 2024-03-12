@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <id value="Precondition2"/>
+  <text>
+    <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml">
+      <p>The sdtc:precondition2 extension allows a more flexible set of skip conditions on a set of criteria. Without this extension the skip condition is restricted to all criteria true. The extension allows a choice of the following logical operation extensions sdtc:allTrue, sdtc:allFalse, sdtc:atLeastOneTrue, sdtc:atLeastOneFalse, sdtc:onlyOneFalse, and sdtc:onlyOneTrue to be placed upon the encapsulated criteria or a criterion. The logical operation extensions nest a [0 .. *] sdtc:precondition2 extension allowing for a complex specification of nested skip conditions if needed.</p>
+    </div>
+  </text>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-target">
+    <valueBoolean>
+      <extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason">
+        <valueCode value="not-applicable"/>
+      </extension>
+    </valueBoolean>
+  </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+    <valueUri value="urn:hl7-org:sdtc"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
+    <valueString value="precondition"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-container">
+    <valueUri value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/type-profile-style">
+    <valueUri value="cda"/>
+  </extension>
+  <url value="http://hl7.org/cda/stds/core/StructureDefinition/Precondition2"/>
+  <version value="2.0.0-sd-202312-matchbox-patch"/>
+  <name value="Precondition2"/>
+  <title value="Precondition2 (CDA Class)"/>
+  <status value="active"/>
+  <experimental value="false"/>
+  <date value="2024-03-12T18:28:21+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <name value="HL7 International - Structured Documents"/>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+    <telecom>
+      <system value="email"/>
+      <value value="structdog@lists.HL7.org"/>
+    </telecom>
+  </contact>
+  <description value="The sdtc:precondition2 extension allows a more flexible set of skip conditions on a set of criteria. Without this extension the skip condition is restricted to all criteria true. The extension allows a choice of the following logical operation extensions sdtc:allTrue, sdtc:allFalse, sdtc:atLeastOneTrue, sdtc:atLeastOneFalse, sdtc:onlyOneFalse, and sdtc:onlyOneTrue to be placed upon the encapsulated criteria or a criterion. The logical operation extensions nest a [0 .. *] sdtc:precondition2 extension allowing for a complex specification of nested skip conditions if needed."/>
+  <fhirVersion value="5.0.0"/>
+  <mapping>
+    <identity value="rim"/>
+    <uri value="http://hl7.org/v3"/>
+    <name value="RIM Mapping"/>
+  </mapping>
+  <kind value="logical"/>
+  <abstract value="false"/>
+  <type value="http://hl7.org/cda/stds/core/StructureDefinition/Precondition2"/>
+  <baseDefinition value="http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"/>
+  <derivation value="specialization"/>
+  <snapshot>
+    <element id="Precondition2">
+      <path value="Precondition2"/>
+      <short value="Base for all types and resources"/>
+      <definition value="Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type."/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Base"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <constraint>
+        <key value="precondition2-only-one"/>
+        <severity value="error"/>
+        <human value="SHALL have only one of allTrue, allFalse, atLeastOneTrue, atLeastOneFalse, onlyOneTrue, onlyOneFalse, or criterion"/>
+        <expression value="(allTrue | allFalse | atLeastOneTrue | atLeastOneFalse | onlyOneTrue | onlyOneFalse | criterion).count() = 1"/>
+      </constraint>
+      <isModifier value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="Precondition2.nullFlavor">
+      <path value="Precondition2.nullFlavor"/>
+      <representation value="xmlAttr"/>
+      <label value="Exceptional Value Detail"/>
+      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ANY.nullFlavor"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"/>
+      </binding>
+    </element>
+    <element id="Precondition2.realmCode">
+      <path value="Precondition2.realmCode"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="InfrastructureRoot.realmCode"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
+      </type>
+    </element>
+    <element id="Precondition2.typeId">
+      <path value="Precondition2.typeId"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="InfrastructureRoot.typeId"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="Precondition2.typeId.nullFlavor">
+      <path value="Precondition2.typeId.nullFlavor"/>
+      <representation value="xmlAttr"/>
+      <label value="Exceptional Value Detail"/>
+      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ANY.nullFlavor"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"/>
+      </binding>
+    </element>
+    <element id="Precondition2.typeId.assigningAuthorityName">
+      <path value="Precondition2.typeId.assigningAuthorityName"/>
+      <representation value="xmlAttr"/>
+      <label value="Assigning Authority Name"/>
+      <definition value="A human readable name or mnemonic for the assigning authority. The Assigning Authority Name has no computational value. The purpose of a Assigning Authority Name is to assist an unaided human interpreter of an II value to interpret the authority. Note: no automated processing must depend on the assigning authority name to be present in any form."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="II.assigningAuthorityName"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
+      </type>
+    </element>
+    <element id="Precondition2.typeId.displayable">
+      <path value="Precondition2.typeId.displayable"/>
+      <representation value="xmlAttr"/>
+      <label value="Displayable"/>
+      <definition value="Specifies if the identifier is intended for human display and data entry (displayable = true) as opposed to pure machine interoperation (displayable = false)."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="II.displayable"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="boolean"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"/>
+      </type>
+    </element>
+    <element id="Precondition2.typeId.root">
+      <path value="Precondition2.typeId.root"/>
+      <representation value="xmlAttr"/>
+      <label value="Root"/>
+      <definition value="Identifies the type as an HL7 Registered model"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="II.root"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/oid"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/uuid"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/ruid"/>
+      </type>
+      <fixedString value="2.16.840.1.113883.1.3"/>
+    </element>
+    <element id="Precondition2.typeId.extension">
+      <path value="Precondition2.typeId.extension"/>
+      <representation value="xmlAttr"/>
+      <label value="Extension"/>
+      <definition value="A character string as a unique identifier within the scope of the identifier root."/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="II.extension"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
+      </type>
+    </element>
+    <element id="Precondition2.templateId">
+      <path value="Precondition2.templateId"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="InfrastructureRoot.templateId"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="Precondition2.typeCode">
+      <path value="Precondition2.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Precondition2.typeCode"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
+      <fixedCode value="PRCN"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActRelationshipType"/>
+      </binding>
+    </element>
+    <element id="Precondition2.negationInd">
+      <path value="Precondition2.negationInd"/>
+      <representation value="xmlAttr"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Precondition2.negationInd"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="boolean"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"/>
+      </type>
+    </element>
+    <element id="Precondition2.conjunctionCode">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <path value="Precondition2.conjunctionCode"/>
+      <definition value="A code specifying the logical conjunction of the criteria among all the condition-links of Acts (e.g., and, or, exclusive-or).&#xA;All AND criteria must be true.&#xA;If OR and AND criteria occur together, one criterion out of the OR-group must be true and all AND criteria must be true also.&#xA;If XOR criteria occur together with OR and AND criteria, exactly one of the XOR criteria must be true, and at least one of the OR criteria and all AND criteria must be true.&#xA;In other words, the sets of AND, OR, and XOR criteria are in turn combined by a logical AND operator (all AND criteria and at least one OR criterion and exactly one XOR criterion)."/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="Precondition2.conjunctionCode"/>
+        <min value="1"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-RelationshipConjunction|2.0.0"/>
+      </binding>
+    </element>
+    <element id="Precondition2.allTrue">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <path value="Precondition2.allTrue"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Precondition2.allTrue"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"/>
+      </type>
+    </element>
+    <element id="Precondition2.allFalse">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <path value="Precondition2.allFalse"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Precondition2.allFalse"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"/>
+      </type>
+    </element>
+    <element id="Precondition2.atLeastOneTrue">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <path value="Precondition2.atLeastOneTrue"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Precondition2.atLeastOneTrue"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"/>
+      </type>
+    </element>
+    <element id="Precondition2.atLeastOneFalse">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <path value="Precondition2.atLeastOneFalse"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Precondition2.atLeastOneFalse"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"/>
+      </type>
+    </element>
+    <element id="Precondition2.onlyOneTrue">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <path value="Precondition2.onlyOneTrue"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Precondition2.onlyOneTrue"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"/>
+      </type>
+    </element>
+    <element id="Precondition2.onlyOneFalse">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <path value="Precondition2.onlyOneFalse"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Precondition2.onlyOneFalse"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"/>
+      </type>
+    </element>
+    <element id="Precondition2.criterion">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <path value="Precondition2.criterion"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="Precondition2.criterion"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Criterion"/>
+      </type>
+    </element>
+  </snapshot>
+  <differential>
+    <element id="Precondition2">
+      <path value="Precondition2"/>
+      <min value="1"/>
+      <max value="1"/>
+      <constraint>
+        <key value="precondition2-only-one"/>
+        <severity value="error"/>
+        <human value="SHALL have only one of allTrue, allFalse, atLeastOneTrue, atLeastOneFalse, onlyOneTrue, onlyOneFalse, or criterion"/>
+        <expression value="(allTrue | allFalse | atLeastOneTrue | atLeastOneFalse | onlyOneTrue | onlyOneFalse | criterion).count() = 1"/>
+      </constraint>
+    </element>
+    <element id="Precondition2.typeCode">
+      <path value="Precondition2.typeCode"/>
+      <representation value="xmlAttr"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
+      <fixedCode value="PRCN"/>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActRelationshipType"/>
+      </binding>
+    </element>
+    <element id="Precondition2.negationInd">
+      <path value="Precondition2.negationInd"/>
+      <representation value="xmlAttr"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="boolean"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"/>
+      </type>
+    </element>
+    <element id="Precondition2.conjunctionCode">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <path value="Precondition2.conjunctionCode"/>
+      <definition value="A code specifying the logical conjunction of the criteria among all the condition-links of Acts (e.g., and, or, exclusive-or).&#xA;All AND criteria must be true.&#xA;If OR and AND criteria occur together, one criterion out of the OR-group must be true and all AND criteria must be true also.&#xA;If XOR criteria occur together with OR and AND criteria, exactly one of the XOR criteria must be true, and at least one of the OR criteria and all AND criteria must be true.&#xA;In other words, the sets of AND, OR, and XOR criteria are in turn combined by a logical AND operator (all AND criteria and at least one OR criterion and exactly one XOR criterion)."/>
+      <min value="1"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-RelationshipConjunction|2.0.0"/>
+      </binding>
+    </element>
+    <element id="Precondition2.allTrue">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <path value="Precondition2.allTrue"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"/>
+      </type>
+    </element>
+    <element id="Precondition2.allFalse">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <path value="Precondition2.allFalse"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"/>
+      </type>
+    </element>
+    <element id="Precondition2.atLeastOneTrue">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <path value="Precondition2.atLeastOneTrue"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"/>
+      </type>
+    </element>
+    <element id="Precondition2.atLeastOneFalse">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <path value="Precondition2.atLeastOneFalse"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"/>
+      </type>
+    </element>
+    <element id="Precondition2.onlyOneTrue">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <path value="Precondition2.onlyOneTrue"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"/>
+      </type>
+    </element>
+    <element id="Precondition2.onlyOneFalse">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <path value="Precondition2.onlyOneFalse"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase"/>
+      </type>
+    </element>
+    <element id="Precondition2.criterion">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <path value="Precondition2.criterion"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/Criterion"/>
+      </type>
+    </element>
+  </differential>
+</StructureDefinition>

@@ -1,5 +1,5 @@
 <!-- <?xml version="1.0" encoding="UTF-8"?> -->
-<ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:mif="urn:hl7-org:v3/mif" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:lab="urn:oid:1.3.6.1.4.1.19376.1.3.2" xmlns:sdtc="urn:hl7-org:sdtc">
+<ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:mif="urn:hl7-org:v3/mif" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:lab="urn:oid:1.3.6.1.4.1.19376.1.3.2" xmlns:sdtc="urn:hl7-org:sdtc" xmlns:hl7at="urn:hl7-at:v3">
 	<realmCode code="IT"/>
 	<typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
 	<templateId root="2.16.840.1.113883.2.9.10.1.1" extension="1.3" assigningAuthorityName="HL7 Italia"/>
@@ -7,6 +7,12 @@
 	<code 	code="11502-2"	codeSystem="2.16.840.1.113883.6.1"  codeSystemName="LOINC" displayName="Referto di laboratorio"/> 
 	<title> REFERTO DI LABORATORIO</title>
 	<sdtc:statusCode code="active"/>
+    <hl7at:terminologyDate value="20210601"/>
+    <!-- formatCode (siehe Allgemeiner Implementierungsleitfaden) -->
+    <hl7at:formatCode code="code" codeSystem="1.2.40.0.34.5.37" displayName="HL7 Austria Labor- und Mikrobiologiebefund"/>
+    <!-- Fachliche Zuordnung des Dokuments (siehe Allgemeiner Implementierungsleitfaden) -->
+    <hl7at:practiceSettingCode code="F028" displayName="Labordiagnostik" codeSystem="1.2.40.0.34.5.12" codeSystemName="ELGA_PracticeSetting"/>
+
 	<effectiveTime value="20220330112426+0100"/>
 	<confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" codeSystemName="HL7 Confidentiality" displayName="Normal"/>
 	<languageCode code="it-IT"/>

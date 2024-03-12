@@ -15,22 +15,26 @@
     }
   },
   {
-    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
     "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-container",
+    "valueUri" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
   }],
   "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ED",
-  "version" : "2.1.0-draft2-mb",
+  "version" : "2.0.0-sd-202312-matchbox-patch",
   "name" : "ED",
   "title" : "ED: EncapsulatedData (V3 Data Type)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-10-04T23:00:58+02:00",
+  "date" : "2024-03-12T18:28:21+01:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/structdoc"
+      "value" : "http://www.hl7.org/Special/committees/structure"
     },
     {
       "system" : "email",
@@ -63,13 +67,6 @@
         "max" : "*"
       },
       "constraint" : [{
-        "key" : "ele-1",
-        "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
-      },
-      {
         "key" : "ed-base64",
         "severity" : "error",
         "human" : "If @representation='B64', then xmlText SHALL be a base64binary string.",
@@ -100,26 +97,8 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
-    },
-    {
-      "id" : "ED.charset",
-      "path" : "ED.charset",
-      "representation" : ["xmlAttr"],
-      "label" : "Charset",
-      "definition" : "For character-based encoding types, this property specifies the character set and character encoding used. The charset shall be identified by an Internet Assigned Numbers Authority (IANA) Charset Registration [] in accordance with RFC 2978 [].",
-      "min" : 0,
-      "max" : "1",
-      "base" : {
-        "path" : "ED.charset",
-        "min" : 0,
-        "max" : "1"
-      },
-      "type" : [{
-        "code" : "code",
-        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
-      }]
     },
     {
       "id" : "ED.compression",
@@ -140,7 +119,7 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-CompressionAlgorithm"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDACompressionAlgorithm"
       }
     },
     {
@@ -180,7 +159,7 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-IntegrityCheckAlgorithm"
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-IntegrityCheckAlgorithm|2.0.0"
       }
     },
     {
@@ -217,7 +196,11 @@
       "type" : [{
         "code" : "code",
         "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
-      }]
+      }],
+      "binding" : {
+        "strength" : "example",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-MediaType"
+      }
     },
     {
       "id" : "ED.representation",
@@ -233,7 +216,11 @@
       "type" : [{
         "code" : "code",
         "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
-      }]
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/BinaryDataEncoding"
+      }
     },
     {
       "id" : "ED.xmlText",
@@ -302,19 +289,6 @@
       }]
     },
     {
-      "id" : "ED.charset",
-      "path" : "ED.charset",
-      "representation" : ["xmlAttr"],
-      "label" : "Charset",
-      "definition" : "For character-based encoding types, this property specifies the character set and character encoding used. The charset shall be identified by an Internet Assigned Numbers Authority (IANA) Charset Registration [] in accordance with RFC 2978 [].",
-      "min" : 0,
-      "max" : "1",
-      "type" : [{
-        "code" : "code",
-        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
-      }]
-    },
-    {
       "id" : "ED.compression",
       "path" : "ED.compression",
       "representation" : ["xmlAttr"],
@@ -328,7 +302,7 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-CompressionAlgorithm"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDACompressionAlgorithm"
       }
     },
     {
@@ -358,7 +332,7 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-IntegrityCheckAlgorithm"
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-IntegrityCheckAlgorithm|2.0.0"
       }
     },
     {
@@ -385,7 +359,11 @@
       "type" : [{
         "code" : "code",
         "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
-      }]
+      }],
+      "binding" : {
+        "strength" : "example",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-MediaType"
+      }
     },
     {
       "id" : "ED.representation",
@@ -396,7 +374,11 @@
       "type" : [{
         "code" : "code",
         "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
-      }]
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/BinaryDataEncoding"
+      }
     },
     {
       "id" : "ED.xmlText",

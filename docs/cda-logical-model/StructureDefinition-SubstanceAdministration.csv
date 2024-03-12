@@ -1,21 +1,32 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
 "SubstanceAdministration","SubstanceAdministration","","","",1,1,"","","","null {[]} {[]}
-","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-","n/a"
-"SubstanceAdministration.classCode","SubstanceAdministration.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SBADM""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SBADM""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClass","",,,,"SubstanceAdministration.classCode",1,1,"",""
-"SubstanceAdministration.moodCode","SubstanceAdministration.moodCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.moodCode",1,1,"",""
+","Base for all types and resources","Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
+"SubstanceAdministration.nullFlavor","SubstanceAdministration.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "SubstanceAdministration.realmCode","SubstanceAdministration.realmCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.realmCode",0,*,"",""
+","","When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.realmCode",0,*,"",""
 "SubstanceAdministration.typeId","SubstanceAdministration.typeId","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.typeId",0,1,"",""
+","","When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.typeId",0,1,"",""
+"SubstanceAdministration.typeId.nullFlavor","SubstanceAdministration.typeId.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"SubstanceAdministration.typeId.assigningAuthorityName","SubstanceAdministration.typeId.assigningAuthorityName","","","Assigning Authority Name",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+","","A human readable name or mnemonic for the assigning authority. The Assigning Authority Name has no computational value. The purpose of a Assigning Authority Name is to assist an unaided human interpreter of an II value to interpret the authority. Note: no automated processing must depend on the assigning authority name to be present in any form.","","","","","","","","","",,,,,"",,,,"II.assigningAuthorityName",0,1,"",""
+"SubstanceAdministration.typeId.displayable","SubstanceAdministration.typeId.displayable","","","Displayable",0,1,"","","","boolean {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/bl-simple]]} {[]}
+","","Specifies if the identifier is intended for human display and data entry (displayable = true) as opposed to pure machine interoperation (displayable = false).","","","","","","","","","",,,,,"",,,,"II.displayable",0,1,"",""
+"SubstanceAdministration.typeId.root","SubstanceAdministration.typeId.root","","","Root",1,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/oid], CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/uuid], CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/ruid]]} {[]}
+","","Identifies the type as an HL7 Registered model","","","","","<valueString xmlns=""http://hl7.org/fhir"" value=""2.16.840.1.113883.1.3""/>","","","","",,,,,"",,,,"II.root",0,1,"",""
+"SubstanceAdministration.typeId.extension","SubstanceAdministration.typeId.extension","","","Extension",1,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+","","A character string as a unique identifier within the scope of the identifier root.","","","","","","","","","",,,,,"",,,,"II.extension",0,1,"",""
 "SubstanceAdministration.templateId","SubstanceAdministration.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
-","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.templateId",0,*,"",""
+","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
+"SubstanceAdministration.classCode","SubstanceAdministration.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SBADM""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClass|2.0.0","",,,,"SubstanceAdministration.classCode",1,1,"",""
+"SubstanceAdministration.moodCode","SubstanceAdministration.moodCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-xDocumentSubstanceMood|2.0.0","",,,,"SubstanceAdministration.moodCode",1,1,"",""
 "SubstanceAdministration.id","SubstanceAdministration.id","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.id",0,*,"",""
 "SubstanceAdministration.code","SubstanceAdministration.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}
-","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-ActSubstanceAdministrationCode","",,,,"SubstanceAdministration.code",0,1,"",""
+","","","","","","","","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-ActSubstanceAdministrationCode","",,,,"SubstanceAdministration.code",0,1,"",""
 "SubstanceAdministration.negationInd","SubstanceAdministration.negationInd","","","",0,1,"","","","boolean {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/bl-simple]]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.negationInd",0,1,"",""
 "SubstanceAdministration.text","SubstanceAdministration.text","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ED {[]} {[]}
@@ -25,13 +36,13 @@
 "SubstanceAdministration.effectiveTime","SubstanceAdministration.effectiveTime","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/SXCM-TS {[]} {[]}
 http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/EIVL-TS {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/PIVL-TS {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS {[]} {[]}","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.effectiveTime",0,*,"",""
 "SubstanceAdministration.priorityCode","SubstanceAdministration.priorityCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
-","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-ActPriority","",,,,"SubstanceAdministration.priorityCode",0,1,"",""
+","","","","","","","","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-ActPriority","",,,,"SubstanceAdministration.priorityCode",0,1,"",""
 "SubstanceAdministration.repeatNumber","SubstanceAdministration.repeatNumber","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IVL-INT {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.repeatNumber",0,1,"",""
 "SubstanceAdministration.routeCode","SubstanceAdministration.routeCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
-","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-RouteOfAdministration","",,,,"SubstanceAdministration.routeCode",0,1,"",""
+","","","","","","","","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-RouteOfAdministration","",,,,"SubstanceAdministration.routeCode",0,1,"",""
 "SubstanceAdministration.approachSiteCode","SubstanceAdministration.approachSiteCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}
-","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-ActSite","",,,,"SubstanceAdministration.approachSiteCode",0,*,"",""
+","","","","","","","","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-ActSite","",,,,"SubstanceAdministration.approachSiteCode",0,*,"",""
 "SubstanceAdministration.doseQuantity","SubstanceAdministration.doseQuantity","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IVL-PQ {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.doseQuantity",0,1,"",""
 "SubstanceAdministration.rateQuantity","SubstanceAdministration.rateQuantity","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IVL-PQ {[]} {[]}
@@ -39,11 +50,29 @@ http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS {[]} {[]}http://hl7.org/
 "SubstanceAdministration.maxDoseQuantity","SubstanceAdministration.maxDoseQuantity","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/RTO-PQ-PQ {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.maxDoseQuantity",0,1,"",""
 "SubstanceAdministration.administrationUnitCode","SubstanceAdministration.administrationUnitCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
-","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-AdministrableDrugForm","",,,,"SubstanceAdministration.administrationUnitCode",0,1,"",""
+","","","","","","","","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-AdministrableDrugForm","",,,,"SubstanceAdministration.administrationUnitCode",0,1,"",""
 "SubstanceAdministration.consumable","SubstanceAdministration.consumable","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot {[]} {[]}
 ","","The consumable participation is used to bring in the LabeledDrug or Material entity that describes the administered substance. The LabeledDrug class, which is an Entity class playing the Role of Manufactured Product, identifies the drug that is consumed in the substance administration. The medication is identified by means of the LabeledDrug.code or the LabeledDrug.name. The Material entity is used to identify non-drug administered substances such as vaccines and blood products.","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.consumable",1,1,"",""
+"SubstanceAdministration.consumable.nullFlavor","SubstanceAdministration.consumable.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"SubstanceAdministration.consumable.realmCode","SubstanceAdministration.consumable.realmCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.realmCode",0,*,"",""
+"SubstanceAdministration.consumable.typeId","SubstanceAdministration.consumable.typeId","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.typeId",0,1,"",""
+"SubstanceAdministration.consumable.typeId.nullFlavor","SubstanceAdministration.consumable.typeId.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"SubstanceAdministration.consumable.typeId.assigningAuthorityName","SubstanceAdministration.consumable.typeId.assigningAuthorityName","","","Assigning Authority Name",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+","","A human readable name or mnemonic for the assigning authority. The Assigning Authority Name has no computational value. The purpose of a Assigning Authority Name is to assist an unaided human interpreter of an II value to interpret the authority. Note: no automated processing must depend on the assigning authority name to be present in any form.","","","","","","","","","",,,,,"",,,,"II.assigningAuthorityName",0,1,"",""
+"SubstanceAdministration.consumable.typeId.displayable","SubstanceAdministration.consumable.typeId.displayable","","","Displayable",0,1,"","","","boolean {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/bl-simple]]} {[]}
+","","Specifies if the identifier is intended for human display and data entry (displayable = true) as opposed to pure machine interoperation (displayable = false).","","","","","","","","","",,,,,"",,,,"II.displayable",0,1,"",""
+"SubstanceAdministration.consumable.typeId.root","SubstanceAdministration.consumable.typeId.root","","","Root",1,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/oid], CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/uuid], CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/ruid]]} {[]}
+","","Identifies the type as an HL7 Registered model","","","","","<valueString xmlns=""http://hl7.org/fhir"" value=""2.16.840.1.113883.1.3""/>","","","","",,,,,"",,,,"II.root",0,1,"",""
+"SubstanceAdministration.consumable.typeId.extension","SubstanceAdministration.consumable.typeId.extension","","","Extension",1,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+","","A character string as a unique identifier within the scope of the identifier root.","","","","","","","","","",,,,,"",,,,"II.extension",0,1,"",""
+"SubstanceAdministration.consumable.templateId","SubstanceAdministration.consumable.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
 "SubstanceAdministration.consumable.typeCode","SubstanceAdministration.consumable.typeCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CSM""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationTargetDirect","",,,,"SubstanceAdministration.consumable.typeCode",0,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CSM""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationType","",,,,"SubstanceAdministration.consumable.typeCode",0,1,"",""
 "SubstanceAdministration.consumable.manufacturedProduct","SubstanceAdministration.consumable.manufacturedProduct","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ManufacturedProduct {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.consumable.manufacturedProduct",1,1,"",""
 "SubstanceAdministration.subject","SubstanceAdministration.subject","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Subject {[]} {[]}
@@ -64,3 +93,5 @@ http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS {[]} {[]}http://hl7.org/
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.reference",0,*,"",""
 "SubstanceAdministration.precondition","SubstanceAdministration.precondition","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Precondition {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.precondition",0,*,"",""
+"SubstanceAdministration.sdtcInFulfillmentOf1","SubstanceAdministration.sdtcInFulfillmentOf1","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/InFulfillmentOf1 {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.sdtcInFulfillmentOf1",0,*,"",""

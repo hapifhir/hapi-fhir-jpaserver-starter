@@ -15,26 +15,26 @@
     }
   },
   {
-    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
     "valueUri" : "urn:hl7-org:v3"
   },
   {
-    "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-xml-no-order",
-    "valueBoolean" : true
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-container",
+    "valueUri" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
   }],
   "url" : "http://hl7.org/cda/stds/core/StructureDefinition/AD",
-  "version" : "2.1.0-draft2-mb",
+  "version" : "2.0.0-sd-202312-matchbox-patch",
   "name" : "AD",
   "title" : "AD: PostalAddress (V3 Data Type)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-10-04T23:00:58+02:00",
+  "date" : "2024-03-12T18:28:21+01:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/structdoc"
+      "value" : "http://www.hl7.org/Special/committees/structure"
     },
     {
       "system" : "email",
@@ -66,13 +66,6 @@
         "min" : 0,
         "max" : "*"
       },
-      "constraint" : [{
-        "key" : "ele-1",
-        "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
-      }],
       "isModifier" : false,
       "mapping" : [{
         "identity" : "rim",
@@ -98,7 +91,7 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
@@ -135,33 +128,62 @@
       "type" : [{
         "code" : "code",
         "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
-      }]
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse"
+      }
     },
     {
-      "id" : "AD.delimiter",
-      "path" : "AD.delimiter",
-      "definition" : "Delimiters are printed without framing white space. If no value component is provided, the delimiter appears as a line break.",
+      "id" : "AD.item",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-choice-group",
+        "valueBoolean" : true
+      }],
+      "path" : "AD.item",
+      "definition" : "A series of items that constitute the address.",
       "min" : 0,
       "max" : "*",
       "base" : {
-        "path" : "AD.delimiter",
+        "path" : "AD.item",
         "min" : 0,
         "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/fhir/StructureDefinition/Base"
+      }],
+      "constraint" : [{
+        "key" : "AD-1",
+        "severity" : "error",
+        "human" : "Can only have only one of the possible item elements in each choice",
+        "expression" : "(delimiter | country | state | county | city | postalCode | streetAddressLine | houseNumber | houseNumberNumeric | direction | streetName | streetNameBase | streetNameType | additionalLocator | unitID | unitType | careOf | censusTract | deliveryAddressLine | deliveryInstallationType | deliveryInstallationArea | deliveryInstallationQualifier | deliveryMode | deliveryModeIdentifier | buildingNumberSuffix | postBox | precinct | xmlText).count() = 1"
+      }]
+    },
+    {
+      "id" : "AD.item.delimiter",
+      "path" : "AD.item.delimiter",
+      "definition" : "Delimiters are printed without framing white space. If no value component is provided, the delimiter appears as a line break.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "AD.item.delimiter",
+        "min" : 0,
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.delimiter.nullFlavor",
-      "path" : "AD.delimiter.nullFlavor",
+      "id" : "AD.item.delimiter.nullFlavor",
+      "path" : "AD.item.delimiter.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -178,12 +200,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.delimiter.representation",
-      "path" : "AD.delimiter.representation",
+      "id" : "AD.item.delimiter.representation",
+      "path" : "AD.item.delimiter.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -200,8 +222,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.delimiter.mediaType",
-      "path" : "AD.delimiter.mediaType",
+      "id" : "AD.item.delimiter.mediaType",
+      "path" : "AD.item.delimiter.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -219,8 +241,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.delimiter.language",
-      "path" : "AD.delimiter.language",
+      "id" : "AD.item.delimiter.language",
+      "path" : "AD.item.delimiter.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -237,8 +259,8 @@
       }]
     },
     {
-      "id" : "AD.delimiter.xmlText",
-      "path" : "AD.delimiter.xmlText",
+      "id" : "AD.item.delimiter.xmlText",
+      "path" : "AD.item.delimiter.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -255,8 +277,8 @@
       }]
     },
     {
-      "id" : "AD.delimiter.partType",
-      "path" : "AD.delimiter.partType",
+      "id" : "AD.item.delimiter.partType",
+      "path" : "AD.item.delimiter.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -273,30 +295,30 @@
       "fixedCode" : "DEL"
     },
     {
-      "id" : "AD.country",
-      "path" : "AD.country",
+      "id" : "AD.item.country",
+      "path" : "AD.item.country",
       "definition" : "Country",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.country",
+        "path" : "AD.item.country",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.country.nullFlavor",
-      "path" : "AD.country.nullFlavor",
+      "id" : "AD.item.country.nullFlavor",
+      "path" : "AD.item.country.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -313,12 +335,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.country.representation",
-      "path" : "AD.country.representation",
+      "id" : "AD.item.country.representation",
+      "path" : "AD.item.country.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -335,8 +357,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.country.mediaType",
-      "path" : "AD.country.mediaType",
+      "id" : "AD.item.country.mediaType",
+      "path" : "AD.item.country.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -354,8 +376,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.country.language",
-      "path" : "AD.country.language",
+      "id" : "AD.item.country.language",
+      "path" : "AD.item.country.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -372,8 +394,8 @@
       }]
     },
     {
-      "id" : "AD.country.xmlText",
-      "path" : "AD.country.xmlText",
+      "id" : "AD.item.country.xmlText",
+      "path" : "AD.item.country.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -390,8 +412,8 @@
       }]
     },
     {
-      "id" : "AD.country.partType",
-      "path" : "AD.country.partType",
+      "id" : "AD.item.country.partType",
+      "path" : "AD.item.country.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -408,30 +430,30 @@
       "fixedCode" : "CNT"
     },
     {
-      "id" : "AD.state",
-      "path" : "AD.state",
+      "id" : "AD.item.state",
+      "path" : "AD.item.state",
       "definition" : "A sub-unit of a country with limited sovereignty in a federally organized country.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.state",
+        "path" : "AD.item.state",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.state.nullFlavor",
-      "path" : "AD.state.nullFlavor",
+      "id" : "AD.item.state.nullFlavor",
+      "path" : "AD.item.state.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -448,12 +470,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.state.representation",
-      "path" : "AD.state.representation",
+      "id" : "AD.item.state.representation",
+      "path" : "AD.item.state.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -470,8 +492,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.state.mediaType",
-      "path" : "AD.state.mediaType",
+      "id" : "AD.item.state.mediaType",
+      "path" : "AD.item.state.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -489,8 +511,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.state.language",
-      "path" : "AD.state.language",
+      "id" : "AD.item.state.language",
+      "path" : "AD.item.state.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -507,8 +529,8 @@
       }]
     },
     {
-      "id" : "AD.state.xmlText",
-      "path" : "AD.state.xmlText",
+      "id" : "AD.item.state.xmlText",
+      "path" : "AD.item.state.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -525,8 +547,8 @@
       }]
     },
     {
-      "id" : "AD.state.partType",
-      "path" : "AD.state.partType",
+      "id" : "AD.item.state.partType",
+      "path" : "AD.item.state.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -543,30 +565,30 @@
       "fixedCode" : "STA"
     },
     {
-      "id" : "AD.county",
-      "path" : "AD.county",
+      "id" : "AD.item.county",
+      "path" : "AD.item.county",
       "definition" : "A sub-unit of a state or province. (49 of the United States of America use the term \"county;\" Louisiana uses the term \"parish\".)",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.county",
+        "path" : "AD.item.county",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.county.nullFlavor",
-      "path" : "AD.county.nullFlavor",
+      "id" : "AD.item.county.nullFlavor",
+      "path" : "AD.item.county.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -583,12 +605,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.county.representation",
-      "path" : "AD.county.representation",
+      "id" : "AD.item.county.representation",
+      "path" : "AD.item.county.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -605,8 +627,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.county.mediaType",
-      "path" : "AD.county.mediaType",
+      "id" : "AD.item.county.mediaType",
+      "path" : "AD.item.county.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -624,8 +646,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.county.language",
-      "path" : "AD.county.language",
+      "id" : "AD.item.county.language",
+      "path" : "AD.item.county.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -642,8 +664,8 @@
       }]
     },
     {
-      "id" : "AD.county.xmlText",
-      "path" : "AD.county.xmlText",
+      "id" : "AD.item.county.xmlText",
+      "path" : "AD.item.county.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -660,8 +682,8 @@
       }]
     },
     {
-      "id" : "AD.county.partType",
-      "path" : "AD.county.partType",
+      "id" : "AD.item.county.partType",
+      "path" : "AD.item.county.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -678,30 +700,30 @@
       "fixedCode" : "CPA"
     },
     {
-      "id" : "AD.city",
-      "path" : "AD.city",
+      "id" : "AD.item.city",
+      "path" : "AD.item.city",
       "definition" : "The name of the city, town, village, or other community or delivery center",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.city",
+        "path" : "AD.item.city",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.city.nullFlavor",
-      "path" : "AD.city.nullFlavor",
+      "id" : "AD.item.city.nullFlavor",
+      "path" : "AD.item.city.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -718,12 +740,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.city.representation",
-      "path" : "AD.city.representation",
+      "id" : "AD.item.city.representation",
+      "path" : "AD.item.city.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -740,8 +762,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.city.mediaType",
-      "path" : "AD.city.mediaType",
+      "id" : "AD.item.city.mediaType",
+      "path" : "AD.item.city.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -759,8 +781,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.city.language",
-      "path" : "AD.city.language",
+      "id" : "AD.item.city.language",
+      "path" : "AD.item.city.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -777,8 +799,8 @@
       }]
     },
     {
-      "id" : "AD.city.xmlText",
-      "path" : "AD.city.xmlText",
+      "id" : "AD.item.city.xmlText",
+      "path" : "AD.item.city.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -795,8 +817,8 @@
       }]
     },
     {
-      "id" : "AD.city.partType",
-      "path" : "AD.city.partType",
+      "id" : "AD.item.city.partType",
+      "path" : "AD.item.city.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -813,30 +835,30 @@
       "fixedCode" : "CTY"
     },
     {
-      "id" : "AD.postalCode",
-      "path" : "AD.postalCode",
+      "id" : "AD.item.postalCode",
+      "path" : "AD.item.postalCode",
       "definition" : "A postal code designating a region defined by the postal service.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.postalCode",
+        "path" : "AD.item.postalCode",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.postalCode.nullFlavor",
-      "path" : "AD.postalCode.nullFlavor",
+      "id" : "AD.item.postalCode.nullFlavor",
+      "path" : "AD.item.postalCode.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -853,12 +875,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.postalCode.representation",
-      "path" : "AD.postalCode.representation",
+      "id" : "AD.item.postalCode.representation",
+      "path" : "AD.item.postalCode.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -875,8 +897,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.postalCode.mediaType",
-      "path" : "AD.postalCode.mediaType",
+      "id" : "AD.item.postalCode.mediaType",
+      "path" : "AD.item.postalCode.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -894,8 +916,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.postalCode.language",
-      "path" : "AD.postalCode.language",
+      "id" : "AD.item.postalCode.language",
+      "path" : "AD.item.postalCode.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -912,8 +934,8 @@
       }]
     },
     {
-      "id" : "AD.postalCode.xmlText",
-      "path" : "AD.postalCode.xmlText",
+      "id" : "AD.item.postalCode.xmlText",
+      "path" : "AD.item.postalCode.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -930,8 +952,8 @@
       }]
     },
     {
-      "id" : "AD.postalCode.partType",
-      "path" : "AD.postalCode.partType",
+      "id" : "AD.item.postalCode.partType",
+      "path" : "AD.item.postalCode.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -948,30 +970,30 @@
       "fixedCode" : "ZIP"
     },
     {
-      "id" : "AD.streetAddressLine",
-      "path" : "AD.streetAddressLine",
+      "id" : "AD.item.streetAddressLine",
+      "path" : "AD.item.streetAddressLine",
       "definition" : "Street address line",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.streetAddressLine",
+        "path" : "AD.item.streetAddressLine",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.streetAddressLine.nullFlavor",
-      "path" : "AD.streetAddressLine.nullFlavor",
+      "id" : "AD.item.streetAddressLine.nullFlavor",
+      "path" : "AD.item.streetAddressLine.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -988,12 +1010,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.streetAddressLine.representation",
-      "path" : "AD.streetAddressLine.representation",
+      "id" : "AD.item.streetAddressLine.representation",
+      "path" : "AD.item.streetAddressLine.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -1010,8 +1032,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.streetAddressLine.mediaType",
-      "path" : "AD.streetAddressLine.mediaType",
+      "id" : "AD.item.streetAddressLine.mediaType",
+      "path" : "AD.item.streetAddressLine.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -1029,8 +1051,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.streetAddressLine.language",
-      "path" : "AD.streetAddressLine.language",
+      "id" : "AD.item.streetAddressLine.language",
+      "path" : "AD.item.streetAddressLine.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -1047,8 +1069,8 @@
       }]
     },
     {
-      "id" : "AD.streetAddressLine.xmlText",
-      "path" : "AD.streetAddressLine.xmlText",
+      "id" : "AD.item.streetAddressLine.xmlText",
+      "path" : "AD.item.streetAddressLine.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -1065,8 +1087,8 @@
       }]
     },
     {
-      "id" : "AD.streetAddressLine.partType",
-      "path" : "AD.streetAddressLine.partType",
+      "id" : "AD.item.streetAddressLine.partType",
+      "path" : "AD.item.streetAddressLine.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -1083,30 +1105,30 @@
       "fixedCode" : "SAL"
     },
     {
-      "id" : "AD.houseNumber",
-      "path" : "AD.houseNumber",
+      "id" : "AD.item.houseNumber",
+      "path" : "AD.item.houseNumber",
       "definition" : "The number of a building, house or lot alongside the street. Also known as \"primary street number\". This does not number the street but rather the building.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.houseNumber",
+        "path" : "AD.item.houseNumber",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.houseNumber.nullFlavor",
-      "path" : "AD.houseNumber.nullFlavor",
+      "id" : "AD.item.houseNumber.nullFlavor",
+      "path" : "AD.item.houseNumber.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -1123,12 +1145,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.houseNumber.representation",
-      "path" : "AD.houseNumber.representation",
+      "id" : "AD.item.houseNumber.representation",
+      "path" : "AD.item.houseNumber.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -1145,8 +1167,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.houseNumber.mediaType",
-      "path" : "AD.houseNumber.mediaType",
+      "id" : "AD.item.houseNumber.mediaType",
+      "path" : "AD.item.houseNumber.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -1164,8 +1186,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.houseNumber.language",
-      "path" : "AD.houseNumber.language",
+      "id" : "AD.item.houseNumber.language",
+      "path" : "AD.item.houseNumber.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -1182,8 +1204,8 @@
       }]
     },
     {
-      "id" : "AD.houseNumber.xmlText",
-      "path" : "AD.houseNumber.xmlText",
+      "id" : "AD.item.houseNumber.xmlText",
+      "path" : "AD.item.houseNumber.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -1200,8 +1222,8 @@
       }]
     },
     {
-      "id" : "AD.houseNumber.partType",
-      "path" : "AD.houseNumber.partType",
+      "id" : "AD.item.houseNumber.partType",
+      "path" : "AD.item.houseNumber.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -1218,30 +1240,30 @@
       "fixedCode" : "BNR"
     },
     {
-      "id" : "AD.houseNumberNumeric",
-      "path" : "AD.houseNumberNumeric",
+      "id" : "AD.item.houseNumberNumeric",
+      "path" : "AD.item.houseNumberNumeric",
       "definition" : "The numeric portion of a building number",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.houseNumberNumeric",
+        "path" : "AD.item.houseNumberNumeric",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.houseNumberNumeric.nullFlavor",
-      "path" : "AD.houseNumberNumeric.nullFlavor",
+      "id" : "AD.item.houseNumberNumeric.nullFlavor",
+      "path" : "AD.item.houseNumberNumeric.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -1258,12 +1280,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.houseNumberNumeric.representation",
-      "path" : "AD.houseNumberNumeric.representation",
+      "id" : "AD.item.houseNumberNumeric.representation",
+      "path" : "AD.item.houseNumberNumeric.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -1280,8 +1302,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.houseNumberNumeric.mediaType",
-      "path" : "AD.houseNumberNumeric.mediaType",
+      "id" : "AD.item.houseNumberNumeric.mediaType",
+      "path" : "AD.item.houseNumberNumeric.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -1299,8 +1321,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.houseNumberNumeric.language",
-      "path" : "AD.houseNumberNumeric.language",
+      "id" : "AD.item.houseNumberNumeric.language",
+      "path" : "AD.item.houseNumberNumeric.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -1317,8 +1339,8 @@
       }]
     },
     {
-      "id" : "AD.houseNumberNumeric.xmlText",
-      "path" : "AD.houseNumberNumeric.xmlText",
+      "id" : "AD.item.houseNumberNumeric.xmlText",
+      "path" : "AD.item.houseNumberNumeric.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -1335,8 +1357,8 @@
       }]
     },
     {
-      "id" : "AD.houseNumberNumeric.partType",
-      "path" : "AD.houseNumberNumeric.partType",
+      "id" : "AD.item.houseNumberNumeric.partType",
+      "path" : "AD.item.houseNumberNumeric.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -1353,30 +1375,30 @@
       "fixedCode" : "BNN"
     },
     {
-      "id" : "AD.direction",
-      "path" : "AD.direction",
+      "id" : "AD.item.direction",
+      "path" : "AD.item.direction",
       "definition" : "Direction (e.g., N, S, W, E)",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.direction",
+        "path" : "AD.item.direction",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.direction.nullFlavor",
-      "path" : "AD.direction.nullFlavor",
+      "id" : "AD.item.direction.nullFlavor",
+      "path" : "AD.item.direction.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -1393,12 +1415,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.direction.representation",
-      "path" : "AD.direction.representation",
+      "id" : "AD.item.direction.representation",
+      "path" : "AD.item.direction.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -1415,8 +1437,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.direction.mediaType",
-      "path" : "AD.direction.mediaType",
+      "id" : "AD.item.direction.mediaType",
+      "path" : "AD.item.direction.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -1434,8 +1456,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.direction.language",
-      "path" : "AD.direction.language",
+      "id" : "AD.item.direction.language",
+      "path" : "AD.item.direction.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -1452,8 +1474,8 @@
       }]
     },
     {
-      "id" : "AD.direction.xmlText",
-      "path" : "AD.direction.xmlText",
+      "id" : "AD.item.direction.xmlText",
+      "path" : "AD.item.direction.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -1470,8 +1492,8 @@
       }]
     },
     {
-      "id" : "AD.direction.partType",
-      "path" : "AD.direction.partType",
+      "id" : "AD.item.direction.partType",
+      "path" : "AD.item.direction.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -1488,30 +1510,30 @@
       "fixedCode" : "DIR"
     },
     {
-      "id" : "AD.streetName",
-      "path" : "AD.streetName",
+      "id" : "AD.item.streetName",
+      "path" : "AD.item.streetName",
       "definition" : "Name of a roadway or artery recognized by a municipality (including street type and direction)",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.streetName",
+        "path" : "AD.item.streetName",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.streetName.nullFlavor",
-      "path" : "AD.streetName.nullFlavor",
+      "id" : "AD.item.streetName.nullFlavor",
+      "path" : "AD.item.streetName.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -1528,12 +1550,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.streetName.representation",
-      "path" : "AD.streetName.representation",
+      "id" : "AD.item.streetName.representation",
+      "path" : "AD.item.streetName.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -1550,8 +1572,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.streetName.mediaType",
-      "path" : "AD.streetName.mediaType",
+      "id" : "AD.item.streetName.mediaType",
+      "path" : "AD.item.streetName.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -1569,8 +1591,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.streetName.language",
-      "path" : "AD.streetName.language",
+      "id" : "AD.item.streetName.language",
+      "path" : "AD.item.streetName.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -1587,8 +1609,8 @@
       }]
     },
     {
-      "id" : "AD.streetName.xmlText",
-      "path" : "AD.streetName.xmlText",
+      "id" : "AD.item.streetName.xmlText",
+      "path" : "AD.item.streetName.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -1605,8 +1627,8 @@
       }]
     },
     {
-      "id" : "AD.streetName.partType",
-      "path" : "AD.streetName.partType",
+      "id" : "AD.item.streetName.partType",
+      "path" : "AD.item.streetName.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -1623,30 +1645,30 @@
       "fixedCode" : "STR"
     },
     {
-      "id" : "AD.streetNameBase",
-      "path" : "AD.streetNameBase",
+      "id" : "AD.item.streetNameBase",
+      "path" : "AD.item.streetNameBase",
       "definition" : "The base name of a roadway or artery recognized by a municipality (excluding street type and direction)",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.streetNameBase",
+        "path" : "AD.item.streetNameBase",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.streetNameBase.nullFlavor",
-      "path" : "AD.streetNameBase.nullFlavor",
+      "id" : "AD.item.streetNameBase.nullFlavor",
+      "path" : "AD.item.streetNameBase.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -1663,12 +1685,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.streetNameBase.representation",
-      "path" : "AD.streetNameBase.representation",
+      "id" : "AD.item.streetNameBase.representation",
+      "path" : "AD.item.streetNameBase.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -1685,8 +1707,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.streetNameBase.mediaType",
-      "path" : "AD.streetNameBase.mediaType",
+      "id" : "AD.item.streetNameBase.mediaType",
+      "path" : "AD.item.streetNameBase.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -1704,8 +1726,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.streetNameBase.language",
-      "path" : "AD.streetNameBase.language",
+      "id" : "AD.item.streetNameBase.language",
+      "path" : "AD.item.streetNameBase.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -1722,8 +1744,8 @@
       }]
     },
     {
-      "id" : "AD.streetNameBase.xmlText",
-      "path" : "AD.streetNameBase.xmlText",
+      "id" : "AD.item.streetNameBase.xmlText",
+      "path" : "AD.item.streetNameBase.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -1740,8 +1762,8 @@
       }]
     },
     {
-      "id" : "AD.streetNameBase.partType",
-      "path" : "AD.streetNameBase.partType",
+      "id" : "AD.item.streetNameBase.partType",
+      "path" : "AD.item.streetNameBase.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -1758,30 +1780,30 @@
       "fixedCode" : "STB"
     },
     {
-      "id" : "AD.streetNameType",
-      "path" : "AD.streetNameType",
+      "id" : "AD.item.streetNameType",
+      "path" : "AD.item.streetNameType",
       "definition" : "The designation given to the street. (e.g. Street, Avenue, Crescent, etc.)",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.streetNameType",
+        "path" : "AD.item.streetNameType",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.streetNameType.nullFlavor",
-      "path" : "AD.streetNameType.nullFlavor",
+      "id" : "AD.item.streetNameType.nullFlavor",
+      "path" : "AD.item.streetNameType.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -1798,12 +1820,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.streetNameType.representation",
-      "path" : "AD.streetNameType.representation",
+      "id" : "AD.item.streetNameType.representation",
+      "path" : "AD.item.streetNameType.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -1820,8 +1842,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.streetNameType.mediaType",
-      "path" : "AD.streetNameType.mediaType",
+      "id" : "AD.item.streetNameType.mediaType",
+      "path" : "AD.item.streetNameType.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -1839,8 +1861,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.streetNameType.language",
-      "path" : "AD.streetNameType.language",
+      "id" : "AD.item.streetNameType.language",
+      "path" : "AD.item.streetNameType.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -1857,8 +1879,8 @@
       }]
     },
     {
-      "id" : "AD.streetNameType.xmlText",
-      "path" : "AD.streetNameType.xmlText",
+      "id" : "AD.item.streetNameType.xmlText",
+      "path" : "AD.item.streetNameType.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -1875,8 +1897,8 @@
       }]
     },
     {
-      "id" : "AD.streetNameType.partType",
-      "path" : "AD.streetNameType.partType",
+      "id" : "AD.item.streetNameType.partType",
+      "path" : "AD.item.streetNameType.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -1893,30 +1915,30 @@
       "fixedCode" : "STTYP"
     },
     {
-      "id" : "AD.additionalLocator",
-      "path" : "AD.additionalLocator",
+      "id" : "AD.item.additionalLocator",
+      "path" : "AD.item.additionalLocator",
       "definition" : "This can be a unit designator, such as apartment number, suite number, or floor. There may be several unit designators in an address (e.g., \"3rd floor, Appt. 342\"). This can also be a designator pointing away from the location, rather than specifying a smaller location within some larger one (e.g., Dutch \"t.o.\" means \"opposite to\" for house boats located across the street facing houses).",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.additionalLocator",
+        "path" : "AD.item.additionalLocator",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.additionalLocator.nullFlavor",
-      "path" : "AD.additionalLocator.nullFlavor",
+      "id" : "AD.item.additionalLocator.nullFlavor",
+      "path" : "AD.item.additionalLocator.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -1933,12 +1955,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.additionalLocator.representation",
-      "path" : "AD.additionalLocator.representation",
+      "id" : "AD.item.additionalLocator.representation",
+      "path" : "AD.item.additionalLocator.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -1955,8 +1977,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.additionalLocator.mediaType",
-      "path" : "AD.additionalLocator.mediaType",
+      "id" : "AD.item.additionalLocator.mediaType",
+      "path" : "AD.item.additionalLocator.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -1974,8 +1996,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.additionalLocator.language",
-      "path" : "AD.additionalLocator.language",
+      "id" : "AD.item.additionalLocator.language",
+      "path" : "AD.item.additionalLocator.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -1992,8 +2014,8 @@
       }]
     },
     {
-      "id" : "AD.additionalLocator.xmlText",
-      "path" : "AD.additionalLocator.xmlText",
+      "id" : "AD.item.additionalLocator.xmlText",
+      "path" : "AD.item.additionalLocator.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -2010,8 +2032,8 @@
       }]
     },
     {
-      "id" : "AD.additionalLocator.partType",
-      "path" : "AD.additionalLocator.partType",
+      "id" : "AD.item.additionalLocator.partType",
+      "path" : "AD.item.additionalLocator.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -2028,30 +2050,30 @@
       "fixedCode" : "ADL"
     },
     {
-      "id" : "AD.unitID",
-      "path" : "AD.unitID",
+      "id" : "AD.item.unitID",
+      "path" : "AD.item.unitID",
       "definition" : "The number or name of a specific unit contained within a building or complex, as assigned by that building or complex.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.unitID",
+        "path" : "AD.item.unitID",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.unitID.nullFlavor",
-      "path" : "AD.unitID.nullFlavor",
+      "id" : "AD.item.unitID.nullFlavor",
+      "path" : "AD.item.unitID.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -2068,12 +2090,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.unitID.representation",
-      "path" : "AD.unitID.representation",
+      "id" : "AD.item.unitID.representation",
+      "path" : "AD.item.unitID.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -2090,8 +2112,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.unitID.mediaType",
-      "path" : "AD.unitID.mediaType",
+      "id" : "AD.item.unitID.mediaType",
+      "path" : "AD.item.unitID.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -2109,8 +2131,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.unitID.language",
-      "path" : "AD.unitID.language",
+      "id" : "AD.item.unitID.language",
+      "path" : "AD.item.unitID.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -2127,8 +2149,8 @@
       }]
     },
     {
-      "id" : "AD.unitID.xmlText",
-      "path" : "AD.unitID.xmlText",
+      "id" : "AD.item.unitID.xmlText",
+      "path" : "AD.item.unitID.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -2145,8 +2167,8 @@
       }]
     },
     {
-      "id" : "AD.unitID.partType",
-      "path" : "AD.unitID.partType",
+      "id" : "AD.item.unitID.partType",
+      "path" : "AD.item.unitID.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -2163,30 +2185,30 @@
       "fixedCode" : "UNID"
     },
     {
-      "id" : "AD.unitType",
-      "path" : "AD.unitType",
+      "id" : "AD.item.unitType",
+      "path" : "AD.item.unitType",
       "definition" : "Indicates the type of specific unit contained within a building or complex. E.g. Appartment, Floor",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.unitType",
+        "path" : "AD.item.unitType",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.unitType.nullFlavor",
-      "path" : "AD.unitType.nullFlavor",
+      "id" : "AD.item.unitType.nullFlavor",
+      "path" : "AD.item.unitType.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -2203,12 +2225,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.unitType.representation",
-      "path" : "AD.unitType.representation",
+      "id" : "AD.item.unitType.representation",
+      "path" : "AD.item.unitType.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -2225,8 +2247,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.unitType.mediaType",
-      "path" : "AD.unitType.mediaType",
+      "id" : "AD.item.unitType.mediaType",
+      "path" : "AD.item.unitType.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -2244,8 +2266,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.unitType.language",
-      "path" : "AD.unitType.language",
+      "id" : "AD.item.unitType.language",
+      "path" : "AD.item.unitType.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -2262,8 +2284,8 @@
       }]
     },
     {
-      "id" : "AD.unitType.xmlText",
-      "path" : "AD.unitType.xmlText",
+      "id" : "AD.item.unitType.xmlText",
+      "path" : "AD.item.unitType.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -2280,8 +2302,8 @@
       }]
     },
     {
-      "id" : "AD.unitType.partType",
-      "path" : "AD.unitType.partType",
+      "id" : "AD.item.unitType.partType",
+      "path" : "AD.item.unitType.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -2298,30 +2320,30 @@
       "fixedCode" : "UNIT"
     },
     {
-      "id" : "AD.careOf",
-      "path" : "AD.careOf",
+      "id" : "AD.item.careOf",
+      "path" : "AD.item.careOf",
       "definition" : "The name of the party who will take receipt at the specified address, and will take on responsibility for ensuring delivery to the target recipient",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.careOf",
+        "path" : "AD.item.careOf",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.careOf.nullFlavor",
-      "path" : "AD.careOf.nullFlavor",
+      "id" : "AD.item.careOf.nullFlavor",
+      "path" : "AD.item.careOf.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -2338,12 +2360,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.careOf.representation",
-      "path" : "AD.careOf.representation",
+      "id" : "AD.item.careOf.representation",
+      "path" : "AD.item.careOf.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -2360,8 +2382,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.careOf.mediaType",
-      "path" : "AD.careOf.mediaType",
+      "id" : "AD.item.careOf.mediaType",
+      "path" : "AD.item.careOf.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -2379,8 +2401,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.careOf.language",
-      "path" : "AD.careOf.language",
+      "id" : "AD.item.careOf.language",
+      "path" : "AD.item.careOf.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -2397,8 +2419,8 @@
       }]
     },
     {
-      "id" : "AD.careOf.xmlText",
-      "path" : "AD.careOf.xmlText",
+      "id" : "AD.item.careOf.xmlText",
+      "path" : "AD.item.careOf.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -2415,8 +2437,8 @@
       }]
     },
     {
-      "id" : "AD.careOf.partType",
-      "path" : "AD.careOf.partType",
+      "id" : "AD.item.careOf.partType",
+      "path" : "AD.item.careOf.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -2433,30 +2455,30 @@
       "fixedCode" : "CAR"
     },
     {
-      "id" : "AD.censusTract",
-      "path" : "AD.censusTract",
+      "id" : "AD.item.censusTract",
+      "path" : "AD.item.censusTract",
       "definition" : "A geographic sub-unit delineated for demographic purposes.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.censusTract",
+        "path" : "AD.item.censusTract",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.censusTract.nullFlavor",
-      "path" : "AD.censusTract.nullFlavor",
+      "id" : "AD.item.censusTract.nullFlavor",
+      "path" : "AD.item.censusTract.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -2473,12 +2495,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.censusTract.representation",
-      "path" : "AD.censusTract.representation",
+      "id" : "AD.item.censusTract.representation",
+      "path" : "AD.item.censusTract.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -2495,8 +2517,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.censusTract.mediaType",
-      "path" : "AD.censusTract.mediaType",
+      "id" : "AD.item.censusTract.mediaType",
+      "path" : "AD.item.censusTract.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -2514,8 +2536,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.censusTract.language",
-      "path" : "AD.censusTract.language",
+      "id" : "AD.item.censusTract.language",
+      "path" : "AD.item.censusTract.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -2532,8 +2554,8 @@
       }]
     },
     {
-      "id" : "AD.censusTract.xmlText",
-      "path" : "AD.censusTract.xmlText",
+      "id" : "AD.item.censusTract.xmlText",
+      "path" : "AD.item.censusTract.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -2550,8 +2572,8 @@
       }]
     },
     {
-      "id" : "AD.censusTract.partType",
-      "path" : "AD.censusTract.partType",
+      "id" : "AD.item.censusTract.partType",
+      "path" : "AD.item.censusTract.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -2568,30 +2590,30 @@
       "fixedCode" : "CEN"
     },
     {
-      "id" : "AD.deliveryAddressLine",
-      "path" : "AD.deliveryAddressLine",
+      "id" : "AD.item.deliveryAddressLine",
+      "path" : "AD.item.deliveryAddressLine",
       "definition" : "A delivery address line is frequently used instead of breaking out delivery mode, delivery installation, etc. An address generally has only a delivery address line or a street address line, but not both.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.deliveryAddressLine",
+        "path" : "AD.item.deliveryAddressLine",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.deliveryAddressLine.nullFlavor",
-      "path" : "AD.deliveryAddressLine.nullFlavor",
+      "id" : "AD.item.deliveryAddressLine.nullFlavor",
+      "path" : "AD.item.deliveryAddressLine.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -2608,12 +2630,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.deliveryAddressLine.representation",
-      "path" : "AD.deliveryAddressLine.representation",
+      "id" : "AD.item.deliveryAddressLine.representation",
+      "path" : "AD.item.deliveryAddressLine.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -2630,8 +2652,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.deliveryAddressLine.mediaType",
-      "path" : "AD.deliveryAddressLine.mediaType",
+      "id" : "AD.item.deliveryAddressLine.mediaType",
+      "path" : "AD.item.deliveryAddressLine.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -2649,8 +2671,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.deliveryAddressLine.language",
-      "path" : "AD.deliveryAddressLine.language",
+      "id" : "AD.item.deliveryAddressLine.language",
+      "path" : "AD.item.deliveryAddressLine.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -2667,8 +2689,8 @@
       }]
     },
     {
-      "id" : "AD.deliveryAddressLine.xmlText",
-      "path" : "AD.deliveryAddressLine.xmlText",
+      "id" : "AD.item.deliveryAddressLine.xmlText",
+      "path" : "AD.item.deliveryAddressLine.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -2685,8 +2707,8 @@
       }]
     },
     {
-      "id" : "AD.deliveryAddressLine.partType",
-      "path" : "AD.deliveryAddressLine.partType",
+      "id" : "AD.item.deliveryAddressLine.partType",
+      "path" : "AD.item.deliveryAddressLine.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -2703,30 +2725,30 @@
       "fixedCode" : "DAL"
     },
     {
-      "id" : "AD.deliveryInstallationType",
-      "path" : "AD.deliveryInstallationType",
+      "id" : "AD.item.deliveryInstallationType",
+      "path" : "AD.item.deliveryInstallationType",
       "definition" : "Indicates the type of delivery installation (the facility to which the mail will be delivered prior to final shipping via the delivery mode.) Example: post office, letter carrier depot, community mail center, station, etc.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.deliveryInstallationType",
+        "path" : "AD.item.deliveryInstallationType",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.deliveryInstallationType.nullFlavor",
-      "path" : "AD.deliveryInstallationType.nullFlavor",
+      "id" : "AD.item.deliveryInstallationType.nullFlavor",
+      "path" : "AD.item.deliveryInstallationType.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -2743,12 +2765,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.deliveryInstallationType.representation",
-      "path" : "AD.deliveryInstallationType.representation",
+      "id" : "AD.item.deliveryInstallationType.representation",
+      "path" : "AD.item.deliveryInstallationType.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -2765,8 +2787,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.deliveryInstallationType.mediaType",
-      "path" : "AD.deliveryInstallationType.mediaType",
+      "id" : "AD.item.deliveryInstallationType.mediaType",
+      "path" : "AD.item.deliveryInstallationType.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -2784,8 +2806,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.deliveryInstallationType.language",
-      "path" : "AD.deliveryInstallationType.language",
+      "id" : "AD.item.deliveryInstallationType.language",
+      "path" : "AD.item.deliveryInstallationType.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -2802,8 +2824,8 @@
       }]
     },
     {
-      "id" : "AD.deliveryInstallationType.xmlText",
-      "path" : "AD.deliveryInstallationType.xmlText",
+      "id" : "AD.item.deliveryInstallationType.xmlText",
+      "path" : "AD.item.deliveryInstallationType.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -2820,8 +2842,8 @@
       }]
     },
     {
-      "id" : "AD.deliveryInstallationType.partType",
-      "path" : "AD.deliveryInstallationType.partType",
+      "id" : "AD.item.deliveryInstallationType.partType",
+      "path" : "AD.item.deliveryInstallationType.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -2838,30 +2860,30 @@
       "fixedCode" : "DINST"
     },
     {
-      "id" : "AD.deliveryInstallationArea",
-      "path" : "AD.deliveryInstallationArea",
+      "id" : "AD.item.deliveryInstallationArea",
+      "path" : "AD.item.deliveryInstallationArea",
       "definition" : "The location of the delivery installation, usually a town or city, and is only required if the area is different from the municipality. Area to which mail delivery service is provided from any postal facility or service such as an individual letter carrier, rural route, or postal route.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.deliveryInstallationArea",
+        "path" : "AD.item.deliveryInstallationArea",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.deliveryInstallationArea.nullFlavor",
-      "path" : "AD.deliveryInstallationArea.nullFlavor",
+      "id" : "AD.item.deliveryInstallationArea.nullFlavor",
+      "path" : "AD.item.deliveryInstallationArea.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -2878,12 +2900,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.deliveryInstallationArea.representation",
-      "path" : "AD.deliveryInstallationArea.representation",
+      "id" : "AD.item.deliveryInstallationArea.representation",
+      "path" : "AD.item.deliveryInstallationArea.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -2900,8 +2922,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.deliveryInstallationArea.mediaType",
-      "path" : "AD.deliveryInstallationArea.mediaType",
+      "id" : "AD.item.deliveryInstallationArea.mediaType",
+      "path" : "AD.item.deliveryInstallationArea.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -2919,8 +2941,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.deliveryInstallationArea.language",
-      "path" : "AD.deliveryInstallationArea.language",
+      "id" : "AD.item.deliveryInstallationArea.language",
+      "path" : "AD.item.deliveryInstallationArea.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -2937,8 +2959,8 @@
       }]
     },
     {
-      "id" : "AD.deliveryInstallationArea.xmlText",
-      "path" : "AD.deliveryInstallationArea.xmlText",
+      "id" : "AD.item.deliveryInstallationArea.xmlText",
+      "path" : "AD.item.deliveryInstallationArea.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -2955,8 +2977,8 @@
       }]
     },
     {
-      "id" : "AD.deliveryInstallationArea.partType",
-      "path" : "AD.deliveryInstallationArea.partType",
+      "id" : "AD.item.deliveryInstallationArea.partType",
+      "path" : "AD.item.deliveryInstallationArea.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -2973,30 +2995,30 @@
       "fixedCode" : "DINSTA"
     },
     {
-      "id" : "AD.deliveryInstallationQualifier",
-      "path" : "AD.deliveryInstallationQualifier",
+      "id" : "AD.item.deliveryInstallationQualifier",
+      "path" : "AD.item.deliveryInstallationQualifier",
       "definition" : "A number, letter or name identifying a delivery installation. E.g., for Station A, the delivery installation qualifier would be 'A'.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.deliveryInstallationQualifier",
+        "path" : "AD.item.deliveryInstallationQualifier",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.deliveryInstallationQualifier.nullFlavor",
-      "path" : "AD.deliveryInstallationQualifier.nullFlavor",
+      "id" : "AD.item.deliveryInstallationQualifier.nullFlavor",
+      "path" : "AD.item.deliveryInstallationQualifier.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -3013,12 +3035,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.deliveryInstallationQualifier.representation",
-      "path" : "AD.deliveryInstallationQualifier.representation",
+      "id" : "AD.item.deliveryInstallationQualifier.representation",
+      "path" : "AD.item.deliveryInstallationQualifier.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -3035,8 +3057,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.deliveryInstallationQualifier.mediaType",
-      "path" : "AD.deliveryInstallationQualifier.mediaType",
+      "id" : "AD.item.deliveryInstallationQualifier.mediaType",
+      "path" : "AD.item.deliveryInstallationQualifier.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -3054,8 +3076,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.deliveryInstallationQualifier.language",
-      "path" : "AD.deliveryInstallationQualifier.language",
+      "id" : "AD.item.deliveryInstallationQualifier.language",
+      "path" : "AD.item.deliveryInstallationQualifier.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -3072,8 +3094,8 @@
       }]
     },
     {
-      "id" : "AD.deliveryInstallationQualifier.xmlText",
-      "path" : "AD.deliveryInstallationQualifier.xmlText",
+      "id" : "AD.item.deliveryInstallationQualifier.xmlText",
+      "path" : "AD.item.deliveryInstallationQualifier.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -3090,8 +3112,8 @@
       }]
     },
     {
-      "id" : "AD.deliveryInstallationQualifier.partType",
-      "path" : "AD.deliveryInstallationQualifier.partType",
+      "id" : "AD.item.deliveryInstallationQualifier.partType",
+      "path" : "AD.item.deliveryInstallationQualifier.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -3108,30 +3130,30 @@
       "fixedCode" : "DINSTQ"
     },
     {
-      "id" : "AD.deliveryMode",
-      "path" : "AD.deliveryMode",
+      "id" : "AD.item.deliveryMode",
+      "path" : "AD.item.deliveryMode",
       "definition" : "Indicates the type of service offered, method of delivery. For example: post office box, rural route, general delivery, etc.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.deliveryMode",
+        "path" : "AD.item.deliveryMode",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.deliveryMode.nullFlavor",
-      "path" : "AD.deliveryMode.nullFlavor",
+      "id" : "AD.item.deliveryMode.nullFlavor",
+      "path" : "AD.item.deliveryMode.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -3148,12 +3170,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.deliveryMode.representation",
-      "path" : "AD.deliveryMode.representation",
+      "id" : "AD.item.deliveryMode.representation",
+      "path" : "AD.item.deliveryMode.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -3170,8 +3192,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.deliveryMode.mediaType",
-      "path" : "AD.deliveryMode.mediaType",
+      "id" : "AD.item.deliveryMode.mediaType",
+      "path" : "AD.item.deliveryMode.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -3189,8 +3211,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.deliveryMode.language",
-      "path" : "AD.deliveryMode.language",
+      "id" : "AD.item.deliveryMode.language",
+      "path" : "AD.item.deliveryMode.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -3207,8 +3229,8 @@
       }]
     },
     {
-      "id" : "AD.deliveryMode.xmlText",
-      "path" : "AD.deliveryMode.xmlText",
+      "id" : "AD.item.deliveryMode.xmlText",
+      "path" : "AD.item.deliveryMode.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -3225,8 +3247,8 @@
       }]
     },
     {
-      "id" : "AD.deliveryMode.partType",
-      "path" : "AD.deliveryMode.partType",
+      "id" : "AD.item.deliveryMode.partType",
+      "path" : "AD.item.deliveryMode.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -3243,30 +3265,30 @@
       "fixedCode" : "DMOD"
     },
     {
-      "id" : "AD.deliveryModeIdentifier",
-      "path" : "AD.deliveryModeIdentifier",
+      "id" : "AD.item.deliveryModeIdentifier",
+      "path" : "AD.item.deliveryModeIdentifier",
       "definition" : "Represents the routing information such as a letter carrier route number. It is the identifying number of the designator (the box number or rural route number).",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.deliveryModeIdentifier",
+        "path" : "AD.item.deliveryModeIdentifier",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.deliveryModeIdentifier.nullFlavor",
-      "path" : "AD.deliveryModeIdentifier.nullFlavor",
+      "id" : "AD.item.deliveryModeIdentifier.nullFlavor",
+      "path" : "AD.item.deliveryModeIdentifier.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -3283,12 +3305,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.deliveryModeIdentifier.representation",
-      "path" : "AD.deliveryModeIdentifier.representation",
+      "id" : "AD.item.deliveryModeIdentifier.representation",
+      "path" : "AD.item.deliveryModeIdentifier.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -3305,8 +3327,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.deliveryModeIdentifier.mediaType",
-      "path" : "AD.deliveryModeIdentifier.mediaType",
+      "id" : "AD.item.deliveryModeIdentifier.mediaType",
+      "path" : "AD.item.deliveryModeIdentifier.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -3324,8 +3346,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.deliveryModeIdentifier.language",
-      "path" : "AD.deliveryModeIdentifier.language",
+      "id" : "AD.item.deliveryModeIdentifier.language",
+      "path" : "AD.item.deliveryModeIdentifier.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -3342,8 +3364,8 @@
       }]
     },
     {
-      "id" : "AD.deliveryModeIdentifier.xmlText",
-      "path" : "AD.deliveryModeIdentifier.xmlText",
+      "id" : "AD.item.deliveryModeIdentifier.xmlText",
+      "path" : "AD.item.deliveryModeIdentifier.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -3360,8 +3382,8 @@
       }]
     },
     {
-      "id" : "AD.deliveryModeIdentifier.partType",
-      "path" : "AD.deliveryModeIdentifier.partType",
+      "id" : "AD.item.deliveryModeIdentifier.partType",
+      "path" : "AD.item.deliveryModeIdentifier.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -3378,30 +3400,30 @@
       "fixedCode" : "DMODID"
     },
     {
-      "id" : "AD.buildingNumberSuffix",
-      "path" : "AD.buildingNumberSuffix",
+      "id" : "AD.item.buildingNumberSuffix",
+      "path" : "AD.item.buildingNumberSuffix",
       "definition" : "Any alphabetic character, fraction or other text that may appear after the numeric portion of a building number",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.buildingNumberSuffix",
+        "path" : "AD.item.buildingNumberSuffix",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.buildingNumberSuffix.nullFlavor",
-      "path" : "AD.buildingNumberSuffix.nullFlavor",
+      "id" : "AD.item.buildingNumberSuffix.nullFlavor",
+      "path" : "AD.item.buildingNumberSuffix.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -3418,12 +3440,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.buildingNumberSuffix.representation",
-      "path" : "AD.buildingNumberSuffix.representation",
+      "id" : "AD.item.buildingNumberSuffix.representation",
+      "path" : "AD.item.buildingNumberSuffix.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -3440,8 +3462,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.buildingNumberSuffix.mediaType",
-      "path" : "AD.buildingNumberSuffix.mediaType",
+      "id" : "AD.item.buildingNumberSuffix.mediaType",
+      "path" : "AD.item.buildingNumberSuffix.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -3459,8 +3481,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.buildingNumberSuffix.language",
-      "path" : "AD.buildingNumberSuffix.language",
+      "id" : "AD.item.buildingNumberSuffix.language",
+      "path" : "AD.item.buildingNumberSuffix.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -3477,8 +3499,8 @@
       }]
     },
     {
-      "id" : "AD.buildingNumberSuffix.xmlText",
-      "path" : "AD.buildingNumberSuffix.xmlText",
+      "id" : "AD.item.buildingNumberSuffix.xmlText",
+      "path" : "AD.item.buildingNumberSuffix.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -3495,8 +3517,8 @@
       }]
     },
     {
-      "id" : "AD.buildingNumberSuffix.partType",
-      "path" : "AD.buildingNumberSuffix.partType",
+      "id" : "AD.item.buildingNumberSuffix.partType",
+      "path" : "AD.item.buildingNumberSuffix.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -3513,30 +3535,30 @@
       "fixedCode" : "BNS"
     },
     {
-      "id" : "AD.postBox",
-      "path" : "AD.postBox",
+      "id" : "AD.item.postBox",
+      "path" : "AD.item.postBox",
       "definition" : "A numbered box located in a post station.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.postBox",
+        "path" : "AD.item.postBox",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.postBox.nullFlavor",
-      "path" : "AD.postBox.nullFlavor",
+      "id" : "AD.item.postBox.nullFlavor",
+      "path" : "AD.item.postBox.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -3553,12 +3575,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.postBox.representation",
-      "path" : "AD.postBox.representation",
+      "id" : "AD.item.postBox.representation",
+      "path" : "AD.item.postBox.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -3575,8 +3597,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.postBox.mediaType",
-      "path" : "AD.postBox.mediaType",
+      "id" : "AD.item.postBox.mediaType",
+      "path" : "AD.item.postBox.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -3594,8 +3616,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.postBox.language",
-      "path" : "AD.postBox.language",
+      "id" : "AD.item.postBox.language",
+      "path" : "AD.item.postBox.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -3612,8 +3634,8 @@
       }]
     },
     {
-      "id" : "AD.postBox.xmlText",
-      "path" : "AD.postBox.xmlText",
+      "id" : "AD.item.postBox.xmlText",
+      "path" : "AD.item.postBox.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -3630,8 +3652,8 @@
       }]
     },
     {
-      "id" : "AD.postBox.partType",
-      "path" : "AD.postBox.partType",
+      "id" : "AD.item.postBox.partType",
+      "path" : "AD.item.postBox.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -3648,30 +3670,30 @@
       "fixedCode" : "POB"
     },
     {
-      "id" : "AD.precinct",
-      "path" : "AD.precinct",
+      "id" : "AD.item.precinct",
+      "path" : "AD.item.precinct",
       "definition" : "A subsection of a municipality",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "base" : {
-        "path" : "AD.precinct",
+        "path" : "AD.item.precinct",
         "min" : 0,
-        "max" : "*"
+        "max" : "1"
       },
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }],
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "text-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
       }]
     },
     {
-      "id" : "AD.precinct.nullFlavor",
-      "path" : "AD.precinct.nullFlavor",
+      "id" : "AD.item.precinct.nullFlavor",
+      "path" : "AD.item.precinct.nullFlavor",
       "representation" : ["xmlAttr"],
       "label" : "Exceptional Value Detail",
       "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
@@ -3688,12 +3710,12 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
-      "id" : "AD.precinct.representation",
-      "path" : "AD.precinct.representation",
+      "id" : "AD.item.precinct.representation",
+      "path" : "AD.item.precinct.representation",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
       "min" : 0,
@@ -3710,8 +3732,8 @@
       "fixedCode" : "TXT"
     },
     {
-      "id" : "AD.precinct.mediaType",
-      "path" : "AD.precinct.mediaType",
+      "id" : "AD.item.precinct.mediaType",
+      "path" : "AD.item.precinct.mediaType",
       "representation" : ["xmlAttr"],
       "label" : "Media Type",
       "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
@@ -3729,8 +3751,8 @@
       "fixedCode" : "text/plain"
     },
     {
-      "id" : "AD.precinct.language",
-      "path" : "AD.precinct.language",
+      "id" : "AD.item.precinct.language",
+      "path" : "AD.item.precinct.language",
       "representation" : ["xmlAttr"],
       "label" : "Language",
       "definition" : "For character based information the language property specifies the human language of the text.",
@@ -3747,8 +3769,8 @@
       }]
     },
     {
-      "id" : "AD.precinct.xmlText",
-      "path" : "AD.precinct.xmlText",
+      "id" : "AD.item.precinct.xmlText",
+      "path" : "AD.item.precinct.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
@@ -3765,8 +3787,8 @@
       }]
     },
     {
-      "id" : "AD.precinct.partType",
-      "path" : "AD.precinct.partType",
+      "id" : "AD.item.precinct.partType",
+      "path" : "AD.item.precinct.partType",
       "representation" : ["xmlAttr"],
       "definition" : "Specifies the type of the address part",
       "min" : 0,
@@ -3783,15 +3805,15 @@
       "fixedCode" : "PRE"
     },
     {
-      "id" : "AD.xmlText",
-      "path" : "AD.xmlText",
+      "id" : "AD.item.xmlText",
+      "path" : "AD.item.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
       "min" : 0,
       "max" : "1",
       "base" : {
-        "path" : "AD.xmlText",
+        "path" : "AD.item.xmlText",
         "min" : 0,
         "max" : "1"
       },
@@ -3868,23 +3890,46 @@
       "type" : [{
         "code" : "code",
         "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse"
+      }
+    },
+    {
+      "id" : "AD.item",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-choice-group",
+        "valueBoolean" : true
+      }],
+      "path" : "AD.item",
+      "definition" : "A series of items that constitute the address.",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/StructureDefinition/Base"
+      }],
+      "constraint" : [{
+        "key" : "AD-1",
+        "severity" : "error",
+        "human" : "Can only have only one of the possible item elements in each choice",
+        "expression" : "(delimiter | country | state | county | city | postalCode | streetAddressLine | houseNumber | houseNumberNumeric | direction | streetName | streetNameBase | streetNameType | additionalLocator | unitID | unitType | careOf | censusTract | deliveryAddressLine | deliveryInstallationType | deliveryInstallationArea | deliveryInstallationQualifier | deliveryMode | deliveryModeIdentifier | buildingNumberSuffix | postBox | precinct | xmlText).count() = 1"
       }]
     },
     {
-      "id" : "AD.delimiter",
-      "path" : "AD.delimiter",
+      "id" : "AD.item.delimiter",
+      "path" : "AD.item.delimiter",
       "definition" : "Delimiters are printed without framing white space. If no value component is provided, the delimiter appears as a line break.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.delimiter.partType",
-      "path" : "AD.delimiter.partType",
+      "id" : "AD.item.delimiter.partType",
+      "path" : "AD.item.delimiter.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -3894,20 +3939,19 @@
       "fixedCode" : "DEL"
     },
     {
-      "id" : "AD.country",
-      "path" : "AD.country",
+      "id" : "AD.item.country",
+      "path" : "AD.item.country",
       "definition" : "Country",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.country.partType",
-      "path" : "AD.country.partType",
+      "id" : "AD.item.country.partType",
+      "path" : "AD.item.country.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -3917,20 +3961,19 @@
       "fixedCode" : "CNT"
     },
     {
-      "id" : "AD.state",
-      "path" : "AD.state",
+      "id" : "AD.item.state",
+      "path" : "AD.item.state",
       "definition" : "A sub-unit of a country with limited sovereignty in a federally organized country.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.state.partType",
-      "path" : "AD.state.partType",
+      "id" : "AD.item.state.partType",
+      "path" : "AD.item.state.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -3940,20 +3983,19 @@
       "fixedCode" : "STA"
     },
     {
-      "id" : "AD.county",
-      "path" : "AD.county",
+      "id" : "AD.item.county",
+      "path" : "AD.item.county",
       "definition" : "A sub-unit of a state or province. (49 of the United States of America use the term \"county;\" Louisiana uses the term \"parish\".)",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.county.partType",
-      "path" : "AD.county.partType",
+      "id" : "AD.item.county.partType",
+      "path" : "AD.item.county.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -3963,20 +4005,19 @@
       "fixedCode" : "CPA"
     },
     {
-      "id" : "AD.city",
-      "path" : "AD.city",
+      "id" : "AD.item.city",
+      "path" : "AD.item.city",
       "definition" : "The name of the city, town, village, or other community or delivery center",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.city.partType",
-      "path" : "AD.city.partType",
+      "id" : "AD.item.city.partType",
+      "path" : "AD.item.city.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -3986,20 +4027,19 @@
       "fixedCode" : "CTY"
     },
     {
-      "id" : "AD.postalCode",
-      "path" : "AD.postalCode",
+      "id" : "AD.item.postalCode",
+      "path" : "AD.item.postalCode",
       "definition" : "A postal code designating a region defined by the postal service.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.postalCode.partType",
-      "path" : "AD.postalCode.partType",
+      "id" : "AD.item.postalCode.partType",
+      "path" : "AD.item.postalCode.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4009,20 +4049,19 @@
       "fixedCode" : "ZIP"
     },
     {
-      "id" : "AD.streetAddressLine",
-      "path" : "AD.streetAddressLine",
+      "id" : "AD.item.streetAddressLine",
+      "path" : "AD.item.streetAddressLine",
       "definition" : "Street address line",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.streetAddressLine.partType",
-      "path" : "AD.streetAddressLine.partType",
+      "id" : "AD.item.streetAddressLine.partType",
+      "path" : "AD.item.streetAddressLine.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4032,20 +4071,19 @@
       "fixedCode" : "SAL"
     },
     {
-      "id" : "AD.houseNumber",
-      "path" : "AD.houseNumber",
+      "id" : "AD.item.houseNumber",
+      "path" : "AD.item.houseNumber",
       "definition" : "The number of a building, house or lot alongside the street. Also known as \"primary street number\". This does not number the street but rather the building.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.houseNumber.partType",
-      "path" : "AD.houseNumber.partType",
+      "id" : "AD.item.houseNumber.partType",
+      "path" : "AD.item.houseNumber.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4055,20 +4093,19 @@
       "fixedCode" : "BNR"
     },
     {
-      "id" : "AD.houseNumberNumeric",
-      "path" : "AD.houseNumberNumeric",
+      "id" : "AD.item.houseNumberNumeric",
+      "path" : "AD.item.houseNumberNumeric",
       "definition" : "The numeric portion of a building number",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.houseNumberNumeric.partType",
-      "path" : "AD.houseNumberNumeric.partType",
+      "id" : "AD.item.houseNumberNumeric.partType",
+      "path" : "AD.item.houseNumberNumeric.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4078,20 +4115,19 @@
       "fixedCode" : "BNN"
     },
     {
-      "id" : "AD.direction",
-      "path" : "AD.direction",
+      "id" : "AD.item.direction",
+      "path" : "AD.item.direction",
       "definition" : "Direction (e.g., N, S, W, E)",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.direction.partType",
-      "path" : "AD.direction.partType",
+      "id" : "AD.item.direction.partType",
+      "path" : "AD.item.direction.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4101,20 +4137,19 @@
       "fixedCode" : "DIR"
     },
     {
-      "id" : "AD.streetName",
-      "path" : "AD.streetName",
+      "id" : "AD.item.streetName",
+      "path" : "AD.item.streetName",
       "definition" : "Name of a roadway or artery recognized by a municipality (including street type and direction)",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.streetName.partType",
-      "path" : "AD.streetName.partType",
+      "id" : "AD.item.streetName.partType",
+      "path" : "AD.item.streetName.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4124,20 +4159,19 @@
       "fixedCode" : "STR"
     },
     {
-      "id" : "AD.streetNameBase",
-      "path" : "AD.streetNameBase",
+      "id" : "AD.item.streetNameBase",
+      "path" : "AD.item.streetNameBase",
       "definition" : "The base name of a roadway or artery recognized by a municipality (excluding street type and direction)",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.streetNameBase.partType",
-      "path" : "AD.streetNameBase.partType",
+      "id" : "AD.item.streetNameBase.partType",
+      "path" : "AD.item.streetNameBase.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4147,20 +4181,19 @@
       "fixedCode" : "STB"
     },
     {
-      "id" : "AD.streetNameType",
-      "path" : "AD.streetNameType",
+      "id" : "AD.item.streetNameType",
+      "path" : "AD.item.streetNameType",
       "definition" : "The designation given to the street. (e.g. Street, Avenue, Crescent, etc.)",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.streetNameType.partType",
-      "path" : "AD.streetNameType.partType",
+      "id" : "AD.item.streetNameType.partType",
+      "path" : "AD.item.streetNameType.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4170,20 +4203,19 @@
       "fixedCode" : "STTYP"
     },
     {
-      "id" : "AD.additionalLocator",
-      "path" : "AD.additionalLocator",
+      "id" : "AD.item.additionalLocator",
+      "path" : "AD.item.additionalLocator",
       "definition" : "This can be a unit designator, such as apartment number, suite number, or floor. There may be several unit designators in an address (e.g., \"3rd floor, Appt. 342\"). This can also be a designator pointing away from the location, rather than specifying a smaller location within some larger one (e.g., Dutch \"t.o.\" means \"opposite to\" for house boats located across the street facing houses).",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.additionalLocator.partType",
-      "path" : "AD.additionalLocator.partType",
+      "id" : "AD.item.additionalLocator.partType",
+      "path" : "AD.item.additionalLocator.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4193,20 +4225,19 @@
       "fixedCode" : "ADL"
     },
     {
-      "id" : "AD.unitID",
-      "path" : "AD.unitID",
+      "id" : "AD.item.unitID",
+      "path" : "AD.item.unitID",
       "definition" : "The number or name of a specific unit contained within a building or complex, as assigned by that building or complex.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.unitID.partType",
-      "path" : "AD.unitID.partType",
+      "id" : "AD.item.unitID.partType",
+      "path" : "AD.item.unitID.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4216,20 +4247,19 @@
       "fixedCode" : "UNID"
     },
     {
-      "id" : "AD.unitType",
-      "path" : "AD.unitType",
+      "id" : "AD.item.unitType",
+      "path" : "AD.item.unitType",
       "definition" : "Indicates the type of specific unit contained within a building or complex. E.g. Appartment, Floor",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.unitType.partType",
-      "path" : "AD.unitType.partType",
+      "id" : "AD.item.unitType.partType",
+      "path" : "AD.item.unitType.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4239,20 +4269,19 @@
       "fixedCode" : "UNIT"
     },
     {
-      "id" : "AD.careOf",
-      "path" : "AD.careOf",
+      "id" : "AD.item.careOf",
+      "path" : "AD.item.careOf",
       "definition" : "The name of the party who will take receipt at the specified address, and will take on responsibility for ensuring delivery to the target recipient",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.careOf.partType",
-      "path" : "AD.careOf.partType",
+      "id" : "AD.item.careOf.partType",
+      "path" : "AD.item.careOf.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4262,20 +4291,19 @@
       "fixedCode" : "CAR"
     },
     {
-      "id" : "AD.censusTract",
-      "path" : "AD.censusTract",
+      "id" : "AD.item.censusTract",
+      "path" : "AD.item.censusTract",
       "definition" : "A geographic sub-unit delineated for demographic purposes.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.censusTract.partType",
-      "path" : "AD.censusTract.partType",
+      "id" : "AD.item.censusTract.partType",
+      "path" : "AD.item.censusTract.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4285,20 +4313,19 @@
       "fixedCode" : "CEN"
     },
     {
-      "id" : "AD.deliveryAddressLine",
-      "path" : "AD.deliveryAddressLine",
+      "id" : "AD.item.deliveryAddressLine",
+      "path" : "AD.item.deliveryAddressLine",
       "definition" : "A delivery address line is frequently used instead of breaking out delivery mode, delivery installation, etc. An address generally has only a delivery address line or a street address line, but not both.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.deliveryAddressLine.partType",
-      "path" : "AD.deliveryAddressLine.partType",
+      "id" : "AD.item.deliveryAddressLine.partType",
+      "path" : "AD.item.deliveryAddressLine.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4308,20 +4335,19 @@
       "fixedCode" : "DAL"
     },
     {
-      "id" : "AD.deliveryInstallationType",
-      "path" : "AD.deliveryInstallationType",
+      "id" : "AD.item.deliveryInstallationType",
+      "path" : "AD.item.deliveryInstallationType",
       "definition" : "Indicates the type of delivery installation (the facility to which the mail will be delivered prior to final shipping via the delivery mode.) Example: post office, letter carrier depot, community mail center, station, etc.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.deliveryInstallationType.partType",
-      "path" : "AD.deliveryInstallationType.partType",
+      "id" : "AD.item.deliveryInstallationType.partType",
+      "path" : "AD.item.deliveryInstallationType.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4331,20 +4357,19 @@
       "fixedCode" : "DINST"
     },
     {
-      "id" : "AD.deliveryInstallationArea",
-      "path" : "AD.deliveryInstallationArea",
+      "id" : "AD.item.deliveryInstallationArea",
+      "path" : "AD.item.deliveryInstallationArea",
       "definition" : "The location of the delivery installation, usually a town or city, and is only required if the area is different from the municipality. Area to which mail delivery service is provided from any postal facility or service such as an individual letter carrier, rural route, or postal route.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.deliveryInstallationArea.partType",
-      "path" : "AD.deliveryInstallationArea.partType",
+      "id" : "AD.item.deliveryInstallationArea.partType",
+      "path" : "AD.item.deliveryInstallationArea.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4354,20 +4379,19 @@
       "fixedCode" : "DINSTA"
     },
     {
-      "id" : "AD.deliveryInstallationQualifier",
-      "path" : "AD.deliveryInstallationQualifier",
+      "id" : "AD.item.deliveryInstallationQualifier",
+      "path" : "AD.item.deliveryInstallationQualifier",
       "definition" : "A number, letter or name identifying a delivery installation. E.g., for Station A, the delivery installation qualifier would be 'A'.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.deliveryInstallationQualifier.partType",
-      "path" : "AD.deliveryInstallationQualifier.partType",
+      "id" : "AD.item.deliveryInstallationQualifier.partType",
+      "path" : "AD.item.deliveryInstallationQualifier.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4377,20 +4401,19 @@
       "fixedCode" : "DINSTQ"
     },
     {
-      "id" : "AD.deliveryMode",
-      "path" : "AD.deliveryMode",
+      "id" : "AD.item.deliveryMode",
+      "path" : "AD.item.deliveryMode",
       "definition" : "Indicates the type of service offered, method of delivery. For example: post office box, rural route, general delivery, etc.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.deliveryMode.partType",
-      "path" : "AD.deliveryMode.partType",
+      "id" : "AD.item.deliveryMode.partType",
+      "path" : "AD.item.deliveryMode.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4400,20 +4423,19 @@
       "fixedCode" : "DMOD"
     },
     {
-      "id" : "AD.deliveryModeIdentifier",
-      "path" : "AD.deliveryModeIdentifier",
+      "id" : "AD.item.deliveryModeIdentifier",
+      "path" : "AD.item.deliveryModeIdentifier",
       "definition" : "Represents the routing information such as a letter carrier route number. It is the identifying number of the designator (the box number or rural route number).",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.deliveryModeIdentifier.partType",
-      "path" : "AD.deliveryModeIdentifier.partType",
+      "id" : "AD.item.deliveryModeIdentifier.partType",
+      "path" : "AD.item.deliveryModeIdentifier.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4423,20 +4445,19 @@
       "fixedCode" : "DMODID"
     },
     {
-      "id" : "AD.buildingNumberSuffix",
-      "path" : "AD.buildingNumberSuffix",
+      "id" : "AD.item.buildingNumberSuffix",
+      "path" : "AD.item.buildingNumberSuffix",
       "definition" : "Any alphabetic character, fraction or other text that may appear after the numeric portion of a building number",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.buildingNumberSuffix.partType",
-      "path" : "AD.buildingNumberSuffix.partType",
+      "id" : "AD.item.buildingNumberSuffix.partType",
+      "path" : "AD.item.buildingNumberSuffix.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4446,20 +4467,19 @@
       "fixedCode" : "BNS"
     },
     {
-      "id" : "AD.postBox",
-      "path" : "AD.postBox",
+      "id" : "AD.item.postBox",
+      "path" : "AD.item.postBox",
       "definition" : "A numbered box located in a post station.",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.postBox.partType",
-      "path" : "AD.postBox.partType",
+      "id" : "AD.item.postBox.partType",
+      "path" : "AD.item.postBox.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4469,20 +4489,19 @@
       "fixedCode" : "POB"
     },
     {
-      "id" : "AD.precinct",
-      "path" : "AD.precinct",
+      "id" : "AD.item.precinct",
+      "path" : "AD.item.precinct",
       "definition" : "A subsection of a municipality",
       "min" : 0,
-      "max" : "*",
+      "max" : "1",
       "type" : [{
         "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"
       }]
     },
     {
-      "id" : "AD.precinct.partType",
-      "path" : "AD.precinct.partType",
+      "id" : "AD.item.precinct.partType",
+      "path" : "AD.item.precinct.partType",
       "representation" : ["xmlAttr"],
-      "definition" : "Specifies the type of the address part",
       "min" : 0,
       "max" : "1",
       "type" : [{
@@ -4492,8 +4511,8 @@
       "fixedCode" : "PRE"
     },
     {
-      "id" : "AD.xmlText",
-      "path" : "AD.xmlText",
+      "id" : "AD.item.xmlText",
+      "path" : "AD.item.xmlText",
       "representation" : ["xmlText"],
       "short" : "Allows for mixed text content",
       "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",

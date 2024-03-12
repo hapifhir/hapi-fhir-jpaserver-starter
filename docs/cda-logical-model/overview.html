@@ -1,0 +1,680 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+    <title>Overview - Clinical Document Architecture v2.0.0-sd-202312-matchbox-patch</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="author" content="http://hl7.org/fhir"/>
+
+    <link href="fhir.css" rel="stylesheet"/>
+
+    <!-- Bootstrap core CSS -->
+    <link href="assets/css/bootstrap-fhir.css" rel="stylesheet"/>
+
+    <!-- Project extras -->
+    <link href="assets/css/project.css" rel="stylesheet"/>
+    <link href="assets/css/pygments-manni.css" rel="stylesheet"/>
+    <link href="assets/css/jquery-ui.css" rel="stylesheet"/>
+  	<link href="assets/css/prism.css" rel="stylesheet" />
+    <!-- Placeholder for child template CSS declarations -->
+    <link href="assets/css/hl7.css" rel="stylesheet"/>
+    <link href="assets/css/cda.css" rel="stylesheet"/>
+
+    <script type="text/javascript" src="fhir-table-scripts.js"> </script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="assets/js/html5shiv.js"></script>
+    <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Favicons -->
+    <link rel="fhir-logo" sizes="144x144" href="assets/ico/icon-fhir-144.png"/>
+    <link rel="fhir-logo" sizes="114x114" href="assets/ico/icon-fhir-114.png"/>
+    <link rel="fhir-logo" sizes="72x72" href="assets/ico/icon-fhir-72.png"/>
+    <link rel="fhir-logo" href="assets/ico/icon-fhir-57.png"/>
+    <link rel="shortcut icon" href="assets/ico/favicon.png"/>
+  </head>
+  <body onload="document.body.style.opacity='1'">
+
+	  <script src="assets/js/prism.js"></script>
+
+    <style type="text/css">h2{--heading-prefix:"2"}
+    h3,h4,h5,h6{--heading-prefix:"2.0"}</style>
+    <div id="segment-header" class="segment">  <!-- segment-header -->
+      <div class="container">  <!-- container -->
+        <!-- Placeholder for child template header declarations -->
+
+        <div id="hl7-nav">
+          <a id="hl7-logo" no-external="true" href="http://hl7.org">
+            <img height="50" alt="Visit the HL7 website" src="assets/images/hl7-logo-header.png"/>
+          </a>
+        </div>
+        <div id="family-nav">
+          <a id="family-logo" no-external="true" href="http://hl7.org/cda"><img height="50" alt="Visit the CDA website" src="assets/images/cda_both_trans.jpg"/> </a>
+        </div>
+        <div id="hl7-search">
+          <a id="hl7-search-lnk" no-external="true" href="http://hl7.org/fhir/search.cfm"><img alt="Search FHIR" src="assets/images/search.png"/></a>
+        </div>
+
+
+        <div id="ig-status">
+          <p><span style="font-size:12pt;font-weight:bold">Clinical Document Architecture</span>
+            <br/>
+            <span style="display:inline-block;">2.0.0-sd-202312-matchbox-patch - ballot
+
+
+            </span>
+          </p>
+        </div>
+      </div> <!-- /container -->
+    </div>  <!-- /segment-header -->
+
+    <div id="segment-navbar" class="segment">  <!-- segment-navbar -->
+      <div id="stripe"> </div>
+      <div class="container">  <!-- container -->
+        <!-- HEADER CONTENT -->
+
+        <nav class="navbar navbar-inverse">
+          <!--status-bar-->
+          <div class="container">
+            <button data-target=".navbar-inverse-collapse" class="navbar-toggle" data-toggle="collapse" type="button">
+              <span class="icon-bar"> </span>
+              <span class="icon-bar"> </span>
+              <span class="icon-bar"> </span>
+            </button>
+            <a class="navbar-brand hidden" href="http://hl7.org/fhir/R5/index.html">FHIR</a>
+            <div class="nav-collapse collapse navbar-inverse-collapse">
+              <ul xmlns="http://www.w3.org/1999/xhtml" class="nav navbar-nav">
+  <li><a href="index.html">IG Home</a></li>
+  <li class="dropdown">
+    <a data-toggle="dropdown" href="#">Information<b class="caret"></b></a>
+    <ul class="dropdown-menu">
+      <li><a href="overview.html">CDA Overview</a></li>
+      <li><a href="implementation.html">Implementation Notes</a></li>
+      <li><a href="cda-rmim.html">Graphical Map of CDA</a></li>
+      <li><a href="dt-uml.html">Graphical Map of Datatypes</a></li>
+      <li><a href="narrative.html">Narrative Block</a></li>
+    </ul>
+  </li>
+  <li><a href="artifacts.html">Artifact Index</a></li>
+  <li><a href="downloads.html">Downloads</a></li>
+</ul>
+            </div>  <!-- /.nav-collapse -->
+          </div>  <!-- /.container -->
+        </nav>  <!-- /.navbar -->
+      <!-- /HEADER CONTENT -->
+      </div>  <!-- /container -->
+    </div>  <!-- /segment-navbar -->
+    <!--status-bar-->
+
+    <div id="segment-breadcrumb" class="segment">  <!-- segment-breadcrumb -->
+      <div class="container">  <!-- container -->
+        <ul class="breadcrumb">
+          <li><a href='toc.html'><b>Table of Contents</b></a></li><li><b>Overview</b></li>
+
+        </ul>
+      </div>  <!-- /container -->
+    </div>  <!-- /segment-breadcrumb -->
+
+    <a name="top"> </a>
+    <div id="segment-content" class="segment">  <!-- segment-content -->
+      <div class="container">  <!-- container -->
+        <div class="row">
+          <div class="inner-wrapper">
+
+<style type="text/css">
+h2:before{color:silver;counter-increment:section;content:var(--heading-prefix) " ";}
+h3:before{color:silver;counter-increment:sub-section;content:var(--heading-prefix) "." counter(sub-section) " ";}
+h4:before{color:silver;counter-increment:composite;content:var(--heading-prefix) "." counter(sub-section) "." counter(composite) " ";}
+h5:before{color:silver;counter-increment:detail;content:var(--heading-prefix) "." counter(sub-section) "." counter(composite) "." counter(detail) " ";}
+h6:before{color:silver;counter-increment:more-detail;content:var(--heading-prefix) "." counter(sub-section) "." counter(composite) "." counter(detail) "." counter(more-detail)" ";}
+</style>
+<div class="col-12">
+  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture - Local Development build (v2.0.0-sd-202312-matchbox-patch) built by the FHIR (HL7® FHIR® Standard) Build Tools. See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
+  <h2>Overview</h2>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+    <p><!-- white space is critical inside of capture --></p>
+<div class="markdown-toc">
+<ul id="markdown-toc">
+  <li><a href="#what-is-the-cda" id="markdown-toc-what-is-the-cda">What is the CDA</a></li>
+  <li><a href="#general-cda-concepts" id="markdown-toc-general-cda-concepts">General CDA Concepts</a></li>
+  <li><a href="#cda-conformance" id="markdown-toc-cda-conformance">CDA Conformance</a></li>
+  <li><a href="#cda-extensibility" id="markdown-toc-cda-extensibility">CDA Extensibility</a></li>
+  <li><a href="#backwards-and-forwards-compatibility" id="markdown-toc-backwards-and-forwards-compatibility">Backwards and Forwards Compatibility</a></li>
+  <li><a href="#cda-context" id="markdown-toc-cda-context">CDA Context</a></li>
+</ul>
+
+</div>
+
+<h3 id="what-is-the-cda">What is the CDA</h3>
+
+<p>The HL7 Clinical Document Architecture (CDA) is a document markup standard that specifies the structure and semantics of “clinical documents” for the purpose of exchange. A clinical document is a documentation of clinical observations and services, with the following characteristics:</p>
+
+<ul>
+  <li>Persistence – A clinical document continues to exist in an unaltered state, for a time period defined by local and regulatory requirements (<strong>NOTE:</strong> There is a distinct scope of persistence for a clinical document, independent of the persistence of any XML-encoded CDA document instance).</li>
+  <li>Stewardship – A clinical document is maintained by an organization entrusted with its care.</li>
+  <li>Potential for authentication - A clinical document is an assemblage of information that is intended to be legally authenticated.</li>
+  <li>Context - A clinical document establishes the default context for its contents.</li>
+  <li>Wholeness - Authentication of a clinical document applies to the whole and does not apply to portions of the document without the full context of the document.</li>
+  <li>Human readability – A clinical document is human readable.</li>
+</ul>
+
+<p>A CDA document is a defined and complete information object that can include text, images, sounds, and other multimedia content.</p>
+
+<h4 id="key-aspects-of-the-cda">Key aspects of the CDA</h4>
+
+<p>Key aspects of the CDA include:</p>
+
+<ul>
+  <li>CDA documents are encoded in Extensible Markup Language (XML). (<strong>NOTE:</strong> When alternate implementations are feasible, suitable conformance requirements will be issued so that in future the syntax may not be limited to XML.)</li>
+  <li>CDA documents derive their machine processable meaning from the HL7 Reference Information Model (RIM) and use the HL7 Version 3 Data Types.</li>
+  <li>The CDA specification is richly expressive and flexible. Document-level, section-level and entry-level templates can be used to constrain the generic CDA specification (see <a href="#the-a-in-cda">The “A” in “CDA”</a>).</li>
+</ul>
+
+<h4 id="scope-of-the-cda">Scope of the CDA</h4>
+
+<p>The scope of the CDA is the standardization of clinical documents for exchange.</p>
+
+<p>The data format of clinical documents outside of the exchange context (e.g., the data format used to store clinical documents) is not addressed in this specification.</p>
+
+<p>CDA documents can be transmitted in HL7 messages designed to transfer clinical documents. While the detailed specification for such messages is outside of the scope of the CDA, this specification does impose requirements upon the packaging of CDA documents in HL7 messages.</p>
+
+<p>The CDA does not specify the creation or management of documents, only their exchange markup. While it may be possible to directly use the CDA Schema in a document authoring environment, such use is not the primary purpose of the CDA specification.</p>
+
+<p>Document management is critically interdependent with the CDA specifications, but the specification of document management messages is outside the scope of the CDA. (For more on this, see <a href="#relationship-of-the-cda-to-hl7-messaging-standards">Relationship of the CDA to HL7 Messaging Standards</a>).</p>
+
+<blockquote>
+  <p><strong>NOTE:</strong> Several committees are developing structured document specifications that overlap in part with the CDA specification. The Structured Documents Technical Committee, in collaboration with Publishing and these other committees, is developing a Structured Documents Infrastructure chapter to clarify these relationships which should be available in upcoming editions.</p>
+</blockquote>
+
+<h4 id="goals-and-design-principles">Goals and Design Principles</h4>
+
+<p>The goals of the CDA are:</p>
+
+<ul>
+  <li>Give priority to delivery of patient care.</li>
+  <li>Allow cost effective implementation across as wide a spectrum of systems as possible.</li>
+  <li>Support exchange of human-readable documents between users, including those with different levels of technical sophistication.</li>
+  <li>Promote longevity of all information encoded according to this architecture.</li>
+  <li>Enable a wide range of post-exchange processing applications.</li>
+  <li>Be compatible with a wide range of document creation applications.</li>
+  <li>Promote exchange that is independent of the underlying transfer or storage mechanism.</li>
+  <li>Prepare the design reasonably quickly.</li>
+  <li>Enable policy-makers to control their own information requirements without extension to this specification.</li>
+</ul>
+
+<p>A number of design principles follow from consideration of the above goals:</p>
+
+<ul>
+  <li>This architecture must be compatible with XML and the HL7 RIM.</li>
+  <li>This architecture must be compatible with representations of clinical information arising from other HL7 committees.</li>
+  <li>Technical barriers to use of the architecture should be minimized.</li>
+  <li>The architecture specifies the representation of instances required for exchange.</li>
+  <li>The architecture should impose minimal constraints or requirements on document structure and content required for exchange.</li>
+  <li>The architecture must be scalable to accommodate fine-grained markup such as highly structured text and coded data.</li>
+  <li>Document specifications based on this architecture should accommodate such constraints and requirements as supplied by appropriate professional, commercial, and regulatory agencies.</li>
+  <li>Document specifications for document creation and processing, if intended for exchange, should map to this exchange architecture.</li>
+  <li>CDA documents must be human readable using widely-available and commonly-deployed XML-aware browsers and print drivers and a generic CDA style sheet written in a standard style sheet language.</li>
+  <li>Use open standards.</li>
+</ul>
+
+<h3 id="general-cda-concepts">General CDA Concepts</h3>
+
+<h4 id="major-components-of-a-cda-document">Major Components of a CDA Document</h4>
+
+<p>This section serves as a high-level introduction to the major components of a CDA document, all of which are described again and in greater detail later on. The intent here is to familiarize the reader with the high-level concepts to facilitate an understanding of the sections that follow.</p>
+
+<p>Major components of a prototypic CDA document are shown in the following skeletal example. (Note that many required components are missing to simplify the example. See <a href="artifacts.html#example-example-instances">Examples</a> for a detailed conformant example).</p>
+
+<p>A CDA document is wrapped by the <code class="language-plaintext highlighter-rouge">&lt;ClinicalDocument&gt;</code> element, and contains a header and a body. The header lies between the <code class="language-plaintext highlighter-rouge">&lt;ClinicalDocument&gt;</code> and the <code class="language-plaintext highlighter-rouge">&lt;structuredBody&gt;</code> elements, and identifies and classifies the document and provides information on authentication, the encounter, the patient, and the involved providers.</p>
+
+<p>The body contains the clinical report, and can be either an unstructured blob, or can be comprised of structured markup. The example shows a structured body, which is wrapped by the <code class="language-plaintext highlighter-rouge">&lt;structuredBody&gt;</code> element, and which is divided up into recursively nestable document sections.</p>
+
+<p>A CDA document section is wrapped by the <code class="language-plaintext highlighter-rouge">&lt;section&gt;</code> element. Each section can contain a single narrative block (see <a href="narrative.html">Section Narrative Block</a>), and any number of CDA entries and external references.</p>
+
+<p>The CDA narrative block is wrapped by the <code class="language-plaintext highlighter-rouge">&lt;text&gt;</code> element within the <code class="language-plaintext highlighter-rouge">&lt;section&gt;</code> element, and must contain the human readable content to be rendered. See also <a href="#human-readability-and-rendering-cda-documents">Human Readability and Rendering CDA Documents</a> and <a href="#cda-conformance">CDA Conformance</a> for principles governing the representation of the narrative block, and conformance requirements on the part of originators when populating the block, and recipients when rendering it.</p>
+
+<p>Within a document section, the narrative block represents content to be rendered, whereas CDA entries represent structured content provided for further computer processing (e.g. decision support applications). CDA entries typically encode content present in the narrative block of the same section. The example shows two <code class="language-plaintext highlighter-rouge">&lt;observation&gt;</code> CDA entries, and a <code class="language-plaintext highlighter-rouge">&lt;substanceAdministration&gt;</code> entry containing a nested <code class="language-plaintext highlighter-rouge">&lt;supply&gt;</code> entry, although several other CDA entries are defined.</p>
+
+<p>CDA entries can nest and they can reference external objects. CDA external references always occur within the context of a CDA entry. External references refer to content that exists outside this CDA document - such as some other image, some other procedure, or some other observation (which is wrapped by the <code class="language-plaintext highlighter-rouge">&lt;externalObservation&gt;</code> element). Externally referenced material is not covered by the authentication of the document referencing it.</p>
+
+<p>Example 1</p>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;ClinicalDocument&gt;</span>
+  ... CDA Header ...
+  <span class="nt">&lt;structuredBody&gt;</span>
+    <span class="nt">&lt;section&gt;</span>
+      <span class="nt">&lt;text&gt;</span>...<span class="nt">&lt;/text&gt;</span>
+      <span class="nt">&lt;observation&gt;</span>...<span class="nt">&lt;/observation&gt;</span>
+      <span class="nt">&lt;substanceAdministration&gt;</span>
+        <span class="nt">&lt;supply&gt;</span>...<span class="nt">&lt;/supply&gt;</span>
+      <span class="nt">&lt;/substanceAdministration&gt;</span>
+      <span class="nt">&lt;observation&gt;</span>
+        <span class="nt">&lt;externalObservation&gt;</span>...
+        <span class="nt">&lt;/externalObservation&gt;</span>
+      <span class="nt">&lt;/observation&gt;</span>
+    <span class="nt">&lt;/section&gt;</span>
+    <span class="nt">&lt;section&gt;</span>
+        <span class="nt">&lt;section&gt;</span>...<span class="nt">&lt;/section&gt;</span>
+    <span class="nt">&lt;/section&gt;</span>
+  <span class="nt">&lt;/structuredBody&gt;</span>
+<span class="nt">&lt;/ClinicalDocument&gt;</span>
+</code></pre></div></div>
+
+<h4 id="the-a-in-cda">The “A” in “CDA”</h4>
+
+<p>The notion of CDA “levels” in CDA, Release One anticipated a hierarchical set of XML DTDs or XML Schemas to achieve the goals enumerated above (see <a href="#goals-and-design-principles">Goals and Design Principles</a>). This hierarchy formed an “architecture”, hence the “A” in “CDA”.</p>
+
+<p>While the notion of levels in CDA, Release Two remains constant, the approach to representing the hierarchies has changed. The current specification consists of a single CDA XML Schema, and the architecture arises from the ability to apply one or more of a hierarchical set of HL7 Templates, which serve to constrain the richness and flexibility of CDA.</p>
+
+<blockquote>
+  <p><strong>NOTE:</strong> The CDA can be constrained by mechanisms defined in HL7 V3 Refinement and Localization. HL7 technical formalisms (e.g. HL7 Template specifications, HL7 Model Interchange Format) to constrain CDA are still in development at the time of writing this standard.</p>
+
+  <p>The RIM’s InfrastructureRoot class contains an attribute, templateId, which is available for use in CDA. Thus, while HL7 Templates are in flux at this time, CDA provides a mechanism to reference a template or implementation guide that has been assigned a unique identifier. Until there is a formal HL7 Template specification, there is no standardized process to test conformance against referenced templates.</p>
+
+  <p>There is no requirement that CDA must be constrained. Implementations that use structured data elements to drive automated processes will typically require that they be either: (1) constrained by an appropriately refined model or other HL7 approved constraint language; or (2) comply with a detailed implementation guide that details the manner in which structured elements are to be represented and their intended interpretation to a level sufficient to ensure a degree of clinical safety that is appropriate to the use case that it is designed to address.</p>
+</blockquote>
+
+<p>There are many kinds of HL7 Templates that might be created. Among them, two are particularly relevant for clinical documents: (1) those that constrain the document sections based on the type of document (section-level templates); (2) those that constrain the entries within document sections (entry-level templates). In fact, a comparison can be made between the prior notion of CDA levels and the current notion of CDA with these two kinds of HL7 Templates:</p>
+
+<p>Table 1: Evolution of CDA “levels” from CDA, Release One to CDA, Release Two</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>CDA, Release One</th>
+      <th>CDA, Release Two</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CDA Level One</td>
+      <td>The unconstrained CDA specification.</td>
+    </tr>
+    <tr>
+      <td>CDA Level Two</td>
+      <td>The CDA specification with section-level templates applied.</td>
+    </tr>
+    <tr>
+      <td>CDA Level Three</td>
+      <td>The CDA specification with entry-level (and optionally section-level) templates applied.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>An illustration of one possible hierarchy of CDA plus HL7 Templates is shown here:</p>
+
+<p>Example 2</p>
+<ul>
+  <li>CDA Schema
+    <ul>
+      <li>CDA Schema :: Progress Note section-level template applied.
+        <ul>
+          <li>CDA Schema :: Progress Note section-level and Vital Signs entry-level template applied.
+            <ul>
+              <li>CDA Schema :: Endocrinology Progress Note section-level and Vital Signs entry-level template applied.</li>
+              <li>CDA Schema :: Progress Note section-level and ICU Vital Signs entry-level template applied.</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>CDA Schema :: Cardiology Progress Note section-level template applied
+        <ul>
+          <li>CDA Schema :: Cardiology Progress Note section-level and Cardiac Exam entry-level template applied.</li>
+        </ul>
+      </li>
+      <li>CDA Schema :: Endocrinology Progress Note section-level template applied.
+        <ul>
+          <li>CDA Schema :: Endocrinology Progress Note section-level and Vital Signs entry-level template applied.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="human-readability-and-rendering-cda-documents">Human Readability and Rendering CDA Documents</h4>
+
+<p>The CDA requirement for human readability guarantees that a receiver of a CDA document can algorithmically display the clinical content of the note on a standard Web browser. CDA, Release Two, with its blend of narrative and CDA entries, presents new challenges to this requirement.</p>
+
+<p>Among the requirements affecting the design of CDA Release 2 are the following:</p>
+
+<ul>
+  <li>There must be a deterministic way for a recipient of an arbitrary CDA document to render the attested content.</li>
+  <li>Human readability shall not require a sender to transmit a special style sheet along with a CDA document. It must be possible to render all CDA documents with a single style sheet and general-market display tools.</li>
+  <li>Human readability applies to the authenticated content. There may be additional information conveyed in the document that is there primarily for machine processing that is not authenticated and need not be rendered.</li>
+  <li>When structured content is derived from narrative, there must be a mechanism to describe the process (e.g. by author, by human coder, by natural language processing algorithm, by specific software) by which machine-processable portions were derived from a block of narrative.</li>
+  <li>When narrative is derived from structured content, there must be a mechanism to identify the process by which narrative was generated from structured data.</li>
+</ul>
+
+<p>These principles and requirements have led to the current approach, where the material to be rendered is placed into the Section.text field (see <a href="narrative.html">Section Narrative Block</a>). The content model of this field is specially hand crafted to meet the above requirements, and corresponds closely to the content model of sections in CDA, Release One. Structured observations can reference narrative content in the Section.text field. Multimedia observations are encoded outside the Section.text field, and the <code class="language-plaintext highlighter-rouge">&lt;renderMultiMedia&gt;</code> tag within the Section.text field provides an outgoing pointer that indicates where the referenced multimedia should be rendered.</p>
+
+<h4 id="xml-markup-of-cda-documents">XML Markup of CDA Documents</h4>
+
+<p>XML markup of CDA documents is prescribed in this specification. CDA instances are valid against the CDA Schema and may be subject to additional validation (see <a href="#cda-conformance">CDA Conformance</a>). There is no prohibition against multiple schema languages (e.g., W3C, DTD, RELAXNG), as long as conforming instances are compatible.</p>
+
+<p>Design Principles of the CDA Schema include:</p>
+
+<ul>
+  <li><strong>General Requirements:</strong> The design of the CDA Schema follows the more general requirements for CDA (see <a href="#goals-and-design-principles">Goals and Design Principles</a>).</li>
+  <li><strong>CDA Schema and V3 Implementation Technology Specification (ITS) :</strong> The CDA Schema will follow the general V3 XML ITS.</li>
+  <li><strong>RIM Mapping:</strong> The CDA Schema describes the style of XML markup of CDA instances for the purpose of exchange. It cannot be understood outside the context of this defining specification. At the same time, the CDA Schema is useful on its own for implementation purposes even though it is not intended to replicate or take the place of the R-MIM and HD. The CDA Schema, then, is not, in and of itself, an adequate map between conforming instance and the HL7 RIM. Semantic interoperability of CDA instances requires use and knowledge of the CDA Schema, R-MIM and HD as well as the corresponding RIM.</li>
+  <li>
+    <p><strong>Document Analysis:</strong> The CDA Schema and conformant instances should adhere to the requirements of document analysis in derivation of the content model.</p>
+
+    <p><strong>NOTE:</strong> Document analysis is a process that might be thought of as the document equivalent of a use case. Document analysis looks at a single instance or class of documents and analyzes their structure and content, often representing this as a tree structure “elm” notation. Document analysis also looks at the business rules for the lifecycle of that document or document class. Traditionally, document analysis determines the content model and overall structure and style of XML.</p>
+
+    <p>Document analysis is an iterative step in content model derivation – the “bottom up” approach to complement the “top down” derivation from the RIM. This will ensure that schemas and instances are not only RIM-derived, but represent recognizable artifacts in a simple manner.</p>
+  </li>
+  <li><strong>Forward and Backward Compatibility:</strong> The CDA Schema should adhere to the requirements for forward and backward compatibility. (See <a href="#backwards-and-forwards-compatibility">Backwards and Forwards Compatibility</a>)</li>
+  <li><strong>Naming:</strong> While XML markup, by definition, is for machine processing, it should be optimized for human review, debug, and design. The CDA Schema is not “self-documenting”, but meaning should be clear from tag name and documentation (e.g., mapping to RIM). The human-language sense of a tag name should not be counterintuitive.</li>
+  <li><strong>Vocabulary:</strong> Vocabulary can be enumerated within the CDA Schema or in an external, referenced source. It is preferable to enumerate it when the vocabulary terms are both limited (not too large in number) and stable (not subject to change between ballot cycles). Where vocabulary is either too large or is subject to change, it is preferable to maintain it external to the CDA Schema and incorporate it by reference. In these cases, XML schema validation will not suffice for conformance.</li>
+</ul>
+
+<h4 id="security-confidentiality-and-data-integrity">Security, Confidentiality, and Data Integrity</h4>
+
+<p>Application systems sending and receiving CDA documents are responsible for meeting all legal requirements for document authentication, confidentiality, and retention. For communications over public media, cryptographic techniques for source/recipient authentication and secure transport of encapsulated documents may be required, and should be addressed with commercially available tools outside the scope of this standard.</p>
+
+<p>The CDA does provide confidentiality status information to aid application systems in managing access to sensitive data. Confidentiality status may apply to the entire document or to specified segments of the document.</p>
+
+<h4 id="relationship-of-the-cda-to-hl7-messaging-standards">Relationship of the CDA to HL7 Messaging Standards</h4>
+
+<p>A CDA document is a defined and complete information object that can exist outside of a messaging context and/or can be a payload within an HL7 message. Thus, the CDA complements HL7 messaging specifications.</p>
+
+<p>Clinical documents can be revised, and they can be appended to existing documents. Ideally, an updated document would declare itself as obsolete, and would contain an explicit pointer to a more recent version. This would lessen the chances of a healthcare provider basing treatment decisions on erroneous or incomplete data.</p>
+
+<p>In practice, however, it is impossible to guarantee an explicit forward pointer from an outdated version to the newer version. Without a process that tracks the chain of custody of clinical documents and all of their copies, there can be no way to guarantee that a clinical document being viewed has not been subsequently revised.</p>
+
+<p>To minimize the risk of viewing superseded information, there is a critical interdependence between clinical documents and document management systems. If CDA documents are viewed outside the context of a document management system, it cannot be known with certainty whether or not the viewed document has been revised. HL7 messages that carry CDA documents (such as the MDM messages in HL7 V2.x and the HL7 V3 Medical Records messages) convey critical contextual information that ensures accurate viewing of clinical data.</p>
+
+<h3 id="cda-conformance">CDA Conformance</h3>
+
+<blockquote>
+  <p><strong>NOTE:</strong> See HL7 V3 Refinement and Localization for a complete discussion of V3 conformance.</p>
+</blockquote>
+
+<p>A conformant CDA document is one that at a minimum validates against the CDA Schema, and that restricts its use of coded vocabulary to values allowable within the specified vocabulary domains. However a computer cannot validate every aspect of conformance. The focus of this section is to highlight these aspects of CDA that cannot be machine validated - particularly those aspects related to the CDA human readability requirements.</p>
+
+<p>A document originator is an application role that creates a CDA document. CDA documents can be created via transformation from some other format, as a direct output of an authoring application, etc. The document originator often is responsible for communicating with a persistent storage location, often using HL7 V2 MDM or HL7 V3 Medical Records messages. The document originator is responsible for ensuring that generated CDA documents are fully conformant to this specification.</p>
+
+<p>A document recipient is an application role that receives status updates and documents from a document originator or document management system. The document recipient is responsible for ensuring that received CDA documents are rendered in accordance to this specification.</p>
+
+<p>Because CDA is an exchange standard and may not represent the original form of a document, there are no persistent storage requirements for CDA documents defined in this standard. However, as noted above (see <a href="#relationship-of-the-cda-to-hl7-messaging-standards">Relationship of the CDA to HL7 Messaging Standards</a>), document management is critically interdependent with the CDA specification. The custodian identified in the CDA header is the participant charged with maintaining the original document, which may be in some form other than CDA.</p>
+
+<h4 id="recipient-responsibilities">Recipient Responsibilities</h4>
+
+<ul>
+  <li><strong>Assume default values where they are defined in this specification, and where the instance does not contain a value</strong> : Where CDA defines default values, the recipient must assume these values in the event that no value is contained in a CDA instance. (<strong>NOTE:</strong> Default values are indicated in this implementation guide by a fixed value on an element or attribute with a minimum cardinality of 0.)</li>
+  <li><strong>Parse and interpret the complete CDA header</strong> : A recipient of a CDA document must be able to parse and interpret the complete CDA header. Because applications may choose to display demographic and other CDA header data drawn from a central master directory, the rendering of the CDA document header is at the discretion of the recipient. In addition, rendering of the CDA document header can be dependent on local business practice and context of use (e.g. electronic health record, de-identified scenario). Where a document originator wants to suggest a rendering, they can include one or more XML style sheets with an exchanged CDA document. Use of these style sheets is at the discretion of the recipient.</li>
+  <li><strong>Parse and interpret the CDA body sufficiently to be able to render it</strong> : A recipient of a CDA document must be able to parse and interpret the body of a CDA document sufficiently to be able to render it, using the following rendering rules:
+    <ul>
+      <li>If the CDA Body is non-XML, it will need to be rendered with a software tool that recognizes its particular MIME media type.</li>
+      <li>If the CDA Body is structured, the label of a section, as conveyed in the Section.title component, must be rendered. The absence of the Section.title component signifies an unlabeled section.</li>
+      <li>If the CDA Body is structured, the contents of the Section.text field must rendered per the rules defined in <a href="narrative.html">Section Narrative Block</a>.</li>
+    </ul>
+  </li>
+  <li>A recipient of a CDA document is not required to parse and interpret the complete set of CDA entries contained within the CDA body. Within a local implementation, trading partners may ascribe additional recipient responsibilities to parse and interpret various entries.</li>
+  <li>A recipient of a CDA document is not required to validate a CDA document against referenced templates. Within a local implementation, trading partners may ascribe additional recipient responsibilities for template validation.</li>
+</ul>
+
+<h4 id="originator-responsibilities">Originator Responsibilities</h4>
+
+<ul>
+  <li><strong>Properly construct CDA Narrative Blocks</strong> : An originator of a CDA document must ensure that the attested portion of the document body is structured such that a recipient, adhering to the recipient responsibilities above, will correctly render the document. This includes:
+    <ul>
+      <li>If the CDA Body is structured, the label of a section must be conveyed in the Section.title component. The absence of the Section.title component signifies an unlabeled section.</li>
+      <li>If the CDA Body is structured, the attested narrative contents of a section must be placed in the Section.text field, regardless of whether information is also conveyed in CDA entries. Attested multimedia referenced in the narrative must be added as ObservationMedia and/or RegionOfInterest CDA entries.</li>
+      <li>If the CDA Body is structured, the contents of the Section.text field must be created per the rules defined in <a href="narrative.html">Section Narrative Block</a></li>
+    </ul>
+  </li>
+  <li>An originator of a CDA document is not required to fully encode all narrative into CDA entries within the CDA body. Within a local implementation, trading partners may ascribe additional originator responsibilities to create various entries.</li>
+</ul>
+
+<h3 id="cda-extensibility">CDA Extensibility</h3>
+
+<p>Locally-defined markup may be used when local semantics have no corresponding representation in the CDA specification. CDA seeks to standardize the highest level of shared meaning while providing a clean and standard mechanism for tagging meaning that is not shared. In order to support local extensibility requirements, it is permitted to include additional XML elements and attributes that are not included in the CDA schema. These extensions should not change the meaning of any of the standard data items, and receivers must be able to safely ignore these elements. Document recipients must be able to faithfully render the CDA document while ignoring extensions.</p>
+
+<p>Extensions may be included in the instance in a namespace other than the HL7v3 namespace, but must not be included within an element of type ED (e.g., <code class="language-plaintext highlighter-rouge">&lt;text&gt;</code> within <code class="language-plaintext highlighter-rouge">&lt;procedure&gt;</code>) since the contents of an ED datatype within the conformant document may be in a different namespace. Since all conformant content (outside of elements of type ED) is in the HL7 namespace, the sender can put any extension content into a foreign namespace (any namespace other than the HL7 namespace). Receiving systems must not report an error if such extensions are present.</p>
+
+<p>When these extension mechanisms mark up content of general relevance, HL7 encourages users to get their requirements formalized in a subsequent version of the standard so as to maximize the use of shared semantics.</p>
+
+<h3 id="backwards-and-forwards-compatibility">Backwards and Forwards Compatibility</h3>
+
+<p>The basic model of CDA, Release Two is essentially unchanged. A CDA document has a header and a body. The body contains nested sections. These sections can be coded using standard vocabularies, and can contain CDA entries. The main evolutionary steps in CDA, Release Two are that both header and body are fully RIM-derived, and there is a much richer assortment of entries to use within CDA sections. CDA, Release Two enables clinical content to be formally expressed to the extent that it is modeled in the RIM.</p>
+
+<p>This section describes the types of changes that can be introduced to a new release of CDA and CDA principles of forward and backward compatibility. In general, changes can include the addition of new components; a renaming of components (including XML element and attribute names in the CDA Schema); a deprecation of components defined in a prior release; a change in cardinality of a component (either to tighten or to loosen); or a change in a vocabulary domain of a component (to add or change values, to change between CWE and CNE). The following set of guiding principles defines how CDA can continue to evolve, while protecting the investment implementers have made through their adoption of earlier releases.</p>
+
+<ul>
+  <li><strong>Documentation</strong> : A new release of CDA will enumerate all substantive changes from the previous release.</li>
+  <li><strong>Attested content</strong>: Attested, human readable content must be completely loss-less across CDA releases. Backwards and forwards compatibility on the attested content will be supported such that it will be possible for an automated transformation script to translate the human readable content in both directions.</li>
+  <li><strong>New components</strong> : A new release of CDA can introduce new components. To preserve roundtrip translation capability, a translation from the new release to a prior release must represent the new components as extensions (e.g. local markup or local namespace).</li>
+  <li><strong>Renaming</strong> : A new release of CDA can rename components (including XML element and attribute names). Where this occurs, a mapping table will list all changes. Renaming will adhere to the naming convention articulated above (see <a href="#xml-markup-of-cda-documents">XML Markup of CDA Documents</a>).</li>
+  <li><strong>Deprecated components</strong> : A new release of CDA can deprecate components defined in a prior release. Deprecated components will be removed from the subsequent release of the standard, and therefore their use is not recommended.</li>
+  <li><strong>Cardinality</strong> : A new release of CDA can change the cardinality of a component. Where an optional component becomes required, a translation between releases requires a dummy value or a null value.</li>
+  <li><strong>Changes to vocabulary domain</strong> : A new release of CDA can change the vocabulary domain of a component. Where this occurs, a mapping table will list changes.</li>
+  <li><strong>Change within CNE</strong> : Where a value in a CNE domain in a prior release is no longer present or has been renamed, a mapping table will indicate what the current value should be.</li>
+  <li><strong>Change within CWE</strong> : When a CWE domain is expanded, users should begin using the new codes in addition to any equivalent local codes they may already be using.</li>
+  <li><strong>Change from CWE to CNE</strong> : To preserve roundtrip translation capability, a translation between releases must represent unrecognized components as extensions (e.g. local markup or local namespace). Ideally these situations will surface during a ballot cycle, allowing the CNE domain to be sufficiently inclusive.</li>
+</ul>
+
+<p>These guiding principles have lead to the current approach, defined in this Release Two of the CDA standard. The goal is to ensure that the documents created using Release One can be transformed into minimally compliant Release Two instances and that Release Two documents received can be down-translated to Release One instances using automated means (transformations) with no loss of attested, human-readable content and known limitation on loss of universal processing semantics.</p>
+
+<h3 id="cda-context">CDA Context</h3>
+
+<p>CDA context is set in the CDA header and applies to the entire document. Context can be overridden at the level of the body, section, and/or CDA entry.</p>
+
+<h4 id="overview-of-cda-context">Overview of CDA Context</h4>
+
+<p>A document, in a sense, is a contextual wrapper for its contents. Assertions in the document header are typically applicable to statements made in the body of the document, unless overridden. For instance, the patient identified in the header is assumed to be the subject of observations described in the body of the document, unless a different subject is explicitly stated, or the author identified in the header is assumed to be the author of the entire document, unless a different author is explicitly identified on a section. The objective of the CDA context rules are to make these practices explicit with relationship to the RIM, such that a computer will understand the context of a portion of a document the same way that a human interprets it.</p>
+
+<p>At the same time, there is no guarantee that machine processing will identify a mistaken application of contextual rules. If a physician records an “outside diagnosis” in narrative but does not nullify the “informant” context, machine processing will not identify the switch in attribution. This is a special case illustrating the limits of automated validation of electronic records and would apply regardless of the context inheritance mechanism. In other words, from some errors of encoding, there is no recovery other than human review.</p>
+
+<p>CDA’s approach to context, and the propagation of that context to nested document components, follows these design principles:</p>
+
+<ul>
+  <li>CDA uses the RIM context mechanism (contextControlCode for Participations; contextConductionInd for ActRelationships), and assigns fixed values to these attributes to accomplish the design objectives below, thus constraining the RIM context model. CDA extends the context propagation property to designated attributes of the CDA Header, which also propagate through any ActRelationship for which contextConductionInd=”true”.</li>
+  <li>The CDA Header sets context for the entire document. A propagating value specified in the document header holds true throughout the document, unless explicitly overridden. This principal applies to both Participations and to designated attributes of the CDA Header. Contextual header components (i.e., those that have propagating values) include:
+    <ul>
+      <li>Author</li>
+      <li>Confidentiality</li>
+      <li>Data enterer</li>
+      <li>Human language</li>
+      <li>Informant</li>
+      <li>Legal authenticator</li>
+      <li>Participant</li>
+      <li>Record target</li>
+    </ul>
+  </li>
+  <li>Context components that can be overridden at the level of the document body include:
+    <ul>
+      <li>Confidentiality</li>
+      <li>Human language</li>
+    </ul>
+  </li>
+  <li>Context components that can be overridden at the level of a document section include:
+    <ul>
+      <li>Author</li>
+      <li>Confidentiality</li>
+      <li>Human language</li>
+      <li>Informant</li>
+      <li>Subject</li>
+    </ul>
+  </li>
+  <li>Context components that can be overridden at the level of a CDA entry include:
+    <ul>
+      <li>Author</li>
+      <li>Human language</li>
+      <li>Informant</li>
+      <li>Participant</li>
+      <li>Subject</li>
+    </ul>
+  </li>
+  <li>Context propagates from outer tags to nested tags. Context that is specified on an outer tag holds true for all nested tags, unless overridden on a nested tag. Context specified on a tag within the CDA body always overrides context propagated from an outer tag. For instance, the specification of authorship at a document section level overrides all authorship propagated from outer tags.</li>
+  <li>Context is sometimes known precisely, and is sometimes unknown, such as in the case where a document is comprised of a large unparsed narrative block that potentially includes statements that contradict outer context. Because CDA context always propagates unless overridden, the representation of unknown context is achieved by overriding with a null value.</li>
+</ul>
+
+<h4 id="technical-aspects-of-cda-context">Technical Aspects of CDA Context</h4>
+
+<p>The RIM defines the “context” of an act as those participants of the act that can be propagated to nested acts. In the RIM, whether or not contextual participants do propagate to nested acts depends on whether or not the intervening act relationship between parent and child act allows for conduction of context. The explicit representation of context, and whether or not the context on an act can propagate to nested acts, is expressed via the RIM attributes Participation.contextControlCode and ActRelationship.contextConductionInd. CDA constrains the general RIM context mechanism such that context always overrides and propagates, as shown in the following table.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>RIM attribute</th>
+      <th>Cardinality</th>
+      <th>Conformance</th>
+      <th>Fixed Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Participation.contextControlCode</td>
+      <td>1..1</td>
+      <td>Mandatory (NULL values not permitted)</td>
+      <td>“OP” (overriding, propagating)</td>
+    </tr>
+    <tr>
+      <td>ActRelationship.contextConductionInd       </td>
+      <td>1..1</td>
+      <td>Mandatory (NULL values not permitted)      </td>
+      <td>“true”*</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>* The one exception to this is entryRelationship.contextConductionInd, which is defaulted to “true”, but can be changed to “false”</p>
+
+<p>Where the context of a nested component is unknown, the propagated context must be overridden with a null-valued component, as shown in the following table.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Context</th>
+      <th>Null value representation</th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Author</td>
+      <td>AssignedAuthor.id = NULL</td>
+      <td>No playing entity; No scoping entity.</td>
+    </tr>
+    <tr>
+      <td>Confidentiality      </td>
+      <td>confidentialityCode = NULL</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Human language      </td>
+      <td>languageCode = NULL</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Informant</td>
+      <td>AssignedEntity.id = NULL</td>
+      <td>No playing entity;  No scoping entity.</td>
+    </tr>
+    <tr>
+      <td>Participant</td>
+      <td>ParticipantRole.id = NULL</td>
+      <td>No playing entity;No scoping entity.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The following exhibit illustrates the CDA context model. ClinicalDocument has an author participant, a confidentialityCode, and a languageCode, all of which will propagate to nested acts. The component act relationship going from ClinicalDocument to bodyChoice has contextConductionInd fixed as “true”, thus allowing for the propagation of context. The bodyChoice classes, NonXMLBody and StructuredBody, contain a confidentialityCode and languageCode which can be used to override the value specified in the header. The component act relationship going from StructuredBody to Section has contextConductionInd fixed at “true”, thus the context on StructuredBody will propagate through to Section. Section can override confidentialityCode, languageCode, and author. A null value for the Section’s author participant indicates that the author for that particular section is unknown.</p>
+
+<p><a href="L-ContextExample.gif"><img src="L-ContextExample.gif" alt="Context Conduction Example" style="max-width:100%" /></a></p>
+
+<p>Because context is always overriding and propagating, one can compute the context of a given node by looking for the most proximate assertion. The following example is a sample XPath expression that can be used to identify the <code class="language-plaintext highlighter-rouge">&lt;author&gt;</code> context of a section or entry:</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">(ancestor-or-self::*/author)[position()=last()]</code></p>
+</blockquote>
+
+
+
+
+</div>
+        </div>  <!-- /inner-wrapper -->
+      </div>  <!-- /row -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-content -->
+
+  <script type="text/javascript" src="assets/js/jquery.js"> </script>     <!-- note keep space here, otherwise it will be transformed to empty tag -> fails -->
+  <script type="text/javascript" src="assets/js/jquery-ui.min.js"> </script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      if(window.location.hash != "") {
+          $('a[href="' + window.location.hash + '"]').click()
+      }
+    });
+  </script>
+  <a name="bottom"> </a>
+  <div id="segment-footer" igtool="footer" class="segment">  <!-- segment-footer -->
+    <div class="container">  <!-- container -->
+
+      <div class="inner-wrapper">
+        <p>
+          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structure">Health Level 7</a>.  Package hl7.cda.uv.core#2.0.0-sd-202312-matchbox-patch based on <a style="color: var(--footer-hyperlink-text-color)" href="http://hl7.org/fhir/R5/">FHIR 5.0.0</a>. Generated <span title="Tue, Mar 12, 2024 18:28+0100">2024-03-12</span>
+          <br/>
+          <span style="color: var(--footer-highlight-text-color)">
+                      Links: <a style="color: var(--footer-hyperlink-text-color)" href="toc.html">Table of Contents</a> |
+                 <a style="color: var(--footer-hyperlink-text-color)" href="qa.html">QA Report</a>
+                 
+                
+                 | <a style="color: #81BEF7" target="_blank" href="http://hl7.org/cda/stds/core/history.html">Version History <img alt="external" style="vertical-align: baseline" src="external.png"/></a></a> |
+                 <a style="color: #81BEF7" rel="license" href="http://hl7.org/fhir/R5/license.html"><img style="border-style: none;" alt="CC0" src="cc0.png"/></a> |
+                 <!--<a style="color: #81BEF7" href="todo.html">Search</a> | --> 
+                 <a style="color: #81BEF7" target="_blank" href="https://jira.hl7.org/projects/CDA/issues">Propose a change <img alt="external" style="vertical-align: baseline" src="external.png"/></a>
+
+          </span>
+        </p>
+      </div>  <!-- /inner-wrapper -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-footer -->
+  
+  <div id="segment-post-footer" class="segment hidden">  <!-- segment-post-footer -->
+    <div class="container">  <!-- container -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-post-footer -->
+  
+  <!-- JS and analytics only. -->
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script type="text/javascript" src="assets/js/bootstrap.min.js"> </script>
+  <script type="text/javascript" src="assets/js/respond.min.js"> </script>
+  <script type="text/javascript" src="assets/js/anchor.min.js"> </script>
+  <script type="text/javascript" src="assets/js/clipboard.min.js"> </script>
+  <script type="text/javascript" src="assets/js/clipboard-btn.js"> </script>
+  <script>anchors.options.visible = 'hover'
+anchors.add()</script>
+  
+<!-- feedback form - Google forms -->
+<!-- v0.1, 2021-01-09 -->
+
+
+
+<!-- / feedback form  -->
+
+  <!-- Analytics Below
+  ================================================== -->
+  </body>
+</html>
+

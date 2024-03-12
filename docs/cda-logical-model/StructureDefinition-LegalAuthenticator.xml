@@ -16,25 +16,31 @@
       </extension>
     </valueBoolean>
   </extension>
-  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
     <valueUri value="urn:hl7-org:v3"/>
   </extension>
-  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
-    <valueUri value="legalAuthenticator"/>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
+    <valueString value="legalAuthenticator"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-container">
+    <valueUri value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/type-profile-style">
+    <valueUri value="cda"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/LegalAuthenticator"/>
-  <version value="2.1.0-draft2-mb"/>
-  <name value="CDAR2.LegalAuthenticator"/>
+  <version value="2.0.0-sd-202312-matchbox-patch"/>
+  <name value="LegalAuthenticator"/>
   <title value="LegalAuthenticator (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-10-04T23:00:58+02:00"/>
+  <date value="2024-03-12T18:28:21+01:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/structdoc"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
     </telecom>
     <telecom>
       <system value="email"/>
@@ -51,13 +57,13 @@
   <kind value="logical"/>
   <abstract value="false"/>
   <type value="http://hl7.org/cda/stds/core/StructureDefinition/LegalAuthenticator"/>
-  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Base"/>
+  <baseDefinition value="http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"/>
   <derivation value="specialization"/>
   <snapshot>
     <element id="LegalAuthenticator">
       <path value="LegalAuthenticator"/>
       <short value="Base for all types and resources"/>
-      <definition value="Base definition for all types defined in FHIR type system."/>
+      <definition value="Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type."/>
       <min value="1"/>
       <max value="1"/>
       <base>
@@ -65,13 +71,6 @@
         <min value="0"/>
         <max value="*"/>
       </base>
-      <constraint>
-        <key value="ele-1"/>
-        <severity value="error"/>
-        <human value="All FHIR elements must have a @value or children"/>
-        <expression value="hasValue() or (children().count() &gt; id.count())"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
-      </constraint>
       <isModifier value="false"/>
       <mapping>
         <identity value="rim"/>
@@ -86,7 +85,7 @@
       <min value="0"/>
       <max value="1"/>
       <base>
-        <path value="LegalAuthenticator.nullFlavor"/>
+        <path value="ANY.nullFlavor"/>
         <min value="0"/>
         <max value="1"/>
       </base>
@@ -96,8 +95,142 @@
       </type>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-NullFlavor"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"/>
       </binding>
+    </element>
+    <element id="LegalAuthenticator.realmCode">
+      <path value="LegalAuthenticator.realmCode"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="InfrastructureRoot.realmCode"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
+      </type>
+    </element>
+    <element id="LegalAuthenticator.typeId">
+      <path value="LegalAuthenticator.typeId"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="InfrastructureRoot.typeId"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
+      </type>
+    </element>
+    <element id="LegalAuthenticator.typeId.nullFlavor">
+      <path value="LegalAuthenticator.typeId.nullFlavor"/>
+      <representation value="xmlAttr"/>
+      <label value="Exceptional Value Detail"/>
+      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ANY.nullFlavor"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"/>
+      </binding>
+    </element>
+    <element id="LegalAuthenticator.typeId.assigningAuthorityName">
+      <path value="LegalAuthenticator.typeId.assigningAuthorityName"/>
+      <representation value="xmlAttr"/>
+      <label value="Assigning Authority Name"/>
+      <definition value="A human readable name or mnemonic for the assigning authority. The Assigning Authority Name has no computational value. The purpose of a Assigning Authority Name is to assist an unaided human interpreter of an II value to interpret the authority. Note: no automated processing must depend on the assigning authority name to be present in any form."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="II.assigningAuthorityName"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
+      </type>
+    </element>
+    <element id="LegalAuthenticator.typeId.displayable">
+      <path value="LegalAuthenticator.typeId.displayable"/>
+      <representation value="xmlAttr"/>
+      <label value="Displayable"/>
+      <definition value="Specifies if the identifier is intended for human display and data entry (displayable = true) as opposed to pure machine interoperation (displayable = false)."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="II.displayable"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="boolean"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"/>
+      </type>
+    </element>
+    <element id="LegalAuthenticator.typeId.root">
+      <path value="LegalAuthenticator.typeId.root"/>
+      <representation value="xmlAttr"/>
+      <label value="Root"/>
+      <definition value="Identifies the type as an HL7 Registered model"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="II.root"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/oid"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/uuid"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/ruid"/>
+      </type>
+      <fixedString value="2.16.840.1.113883.1.3"/>
+    </element>
+    <element id="LegalAuthenticator.typeId.extension">
+      <path value="LegalAuthenticator.typeId.extension"/>
+      <representation value="xmlAttr"/>
+      <label value="Extension"/>
+      <definition value="A character string as a unique identifier within the scope of the identifier root."/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="II.extension"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
+      </type>
+    </element>
+    <element id="LegalAuthenticator.templateId">
+      <path value="LegalAuthenticator.templateId"/>
+      <definition value="When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="InfrastructureRoot.templateId"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
+      </type>
     </element>
     <element id="LegalAuthenticator.typeCode">
       <path value="LegalAuthenticator.typeCode"/>
@@ -139,48 +272,6 @@
         <valueSet value="http://terminology.hl7.org/ValueSet/v3-ContextControl"/>
       </binding>
     </element>
-    <element id="LegalAuthenticator.realmCode">
-      <path value="LegalAuthenticator.realmCode"/>
-      <definition value="When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question"/>
-      <min value="0"/>
-      <max value="*"/>
-      <base>
-        <path value="LegalAuthenticator.realmCode"/>
-        <min value="0"/>
-        <max value="*"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
-      </type>
-    </element>
-    <element id="LegalAuthenticator.typeId">
-      <path value="LegalAuthenticator.typeId"/>
-      <definition value="When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question."/>
-      <min value="0"/>
-      <max value="1"/>
-      <base>
-        <path value="LegalAuthenticator.typeId"/>
-        <min value="0"/>
-        <max value="1"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
-      </type>
-    </element>
-    <element id="LegalAuthenticator.templateId">
-      <path value="LegalAuthenticator.templateId"/>
-      <definition value="When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question"/>
-      <min value="0"/>
-      <max value="*"/>
-      <base>
-        <path value="LegalAuthenticator.templateId"/>
-        <min value="0"/>
-        <max value="*"/>
-      </base>
-      <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
-      </type>
-    </element>
     <element id="LegalAuthenticator.time">
       <path value="LegalAuthenticator.time"/>
       <min value="1"/>
@@ -206,15 +297,26 @@
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
       </type>
+      <constraint>
+        <key value="signature"/>
+        <severity value="warning"/>
+        <human value="CDA Release One represented either an intended ('X') or actual ('S') authenticator. CDA Release Two only represents an actual authenticator, so has deprecated the value of 'X'."/>
+        <expression value="code.exists() implies code != 'X'"/>
+      </constraint>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDASignatureCode"/>
+      </binding>
     </element>
     <element id="LegalAuthenticator.sdtcSignatureText">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:hl7-org:sdtc"/>
       </extension>
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
         <valueString value="signatureText"/>
       </extension>
       <path value="LegalAuthenticator.sdtcSignatureText"/>
+      <definition value="A textual or multimedia depiction of the signature by which the participant endorses his or her participation in the Act as specified in the Participation.typeCode and that he or she agrees to assume the associated accountability."/>
       <min value="0"/>
       <max value="1"/>
       <base>
@@ -246,22 +348,6 @@
       <min value="1"/>
       <max value="1"/>
     </element>
-    <element id="LegalAuthenticator.nullFlavor">
-      <path value="LegalAuthenticator.nullFlavor"/>
-      <representation value="xmlAttr"/>
-      <label value="Exceptional Value Detail"/>
-      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="code"/>
-        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
-      </type>
-      <binding>
-        <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-NullFlavor"/>
-      </binding>
-    </element>
     <element id="LegalAuthenticator.typeCode">
       <path value="LegalAuthenticator.typeCode"/>
       <representation value="xmlAttr"/>
@@ -292,33 +378,6 @@
         <valueSet value="http://terminology.hl7.org/ValueSet/v3-ContextControl"/>
       </binding>
     </element>
-    <element id="LegalAuthenticator.realmCode">
-      <path value="LegalAuthenticator.realmCode"/>
-      <definition value="When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question"/>
-      <min value="0"/>
-      <max value="*"/>
-      <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
-      </type>
-    </element>
-    <element id="LegalAuthenticator.typeId">
-      <path value="LegalAuthenticator.typeId"/>
-      <definition value="When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question."/>
-      <min value="0"/>
-      <max value="1"/>
-      <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
-      </type>
-    </element>
-    <element id="LegalAuthenticator.templateId">
-      <path value="LegalAuthenticator.templateId"/>
-      <definition value="When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question"/>
-      <min value="0"/>
-      <max value="*"/>
-      <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
-      </type>
-    </element>
     <element id="LegalAuthenticator.time">
       <path value="LegalAuthenticator.time"/>
       <min value="1"/>
@@ -334,15 +393,26 @@
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
       </type>
+      <constraint>
+        <key value="signature"/>
+        <severity value="warning"/>
+        <human value="CDA Release One represented either an intended ('X') or actual ('S') authenticator. CDA Release Two only represents an actual authenticator, so has deprecated the value of 'X'."/>
+        <expression value="code.exists() implies code != 'X'"/>
+      </constraint>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDASignatureCode"/>
+      </binding>
     </element>
     <element id="LegalAuthenticator.sdtcSignatureText">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:hl7-org:sdtc"/>
       </extension>
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
         <valueString value="signatureText"/>
       </extension>
       <path value="LegalAuthenticator.sdtcSignatureText"/>
+      <definition value="A textual or multimedia depiction of the signature by which the participant endorses his or her participation in the Act as specified in the Participation.typeCode and that he or she agrees to assume the associated accountability."/>
       <min value="0"/>
       <max value="1"/>
       <type>

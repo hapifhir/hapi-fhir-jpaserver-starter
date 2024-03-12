@@ -1,0 +1,65 @@
+{
+  "codeSystems" : [
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/BinaryDataEncoding",
+      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "status" : "draft",
+      "name" : "BinaryDataEncoding",
+      "title" : "Binary Data Encoding Value Set",
+      "description" : "Identifies the representation of binary data in a text field",
+      "systems" : ["http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding"]
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDACompressionAlgorithm",
+      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDACompressionAlgorithm",
+      "title" : "CompressionAlgorithm",
+      "description" : "Type of compression algorithm used - limited to 4 concepts from original CDA definition",
+      "systems" : [
+        "http://terminology.hl7.org/CodeSystem/v3-CompressionAlgorithm"
+      ]
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityNameUse",
+      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAEntityNameUse",
+      "title" : "CDAEntityNameUse",
+      "description" : "A set of codes advising a system or user which name in a set of names to select for a given purpose - limited to values allowed in original CDA definition",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-EntityNameUse"]
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor",
+      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDANullFlavor",
+      "title" : "CDANullFlavor",
+      "description" : "CDA NullFlavors - limited to values allowed in original CDA definition",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-NullFlavor"]
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse",
+      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAPostalAddressUse",
+      "title" : "CDAPostalAddressUse",
+      "description" : "A set of codes advising a system or user which address in a set of like addresses to select for a given purpose - limited to values allowed in original CDA definition",
+      "systems" : [
+        "http://terminology.hl7.org/CodeSystem/v3-EntityNameUse",
+        "http://terminology.hl7.org/CodeSystem/v3-AddressUse"
+      ]
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDASignatureCode",
+      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDASignatureCode",
+      "title" : "CDASignatureCode",
+      "description" : "A set of codes specifying whether and how the participant has attested his participation through a signature - limited to values allowed in original CDA definition.\n\n**Note:** CDA Release One represented either an intended (`X`) or actual (`S`) authenticator. CDA Release Two only represents an actual authenticator, so has deprecated the value of `X`.",
+      "systems" : [
+        "http://terminology.hl7.org/CodeSystem/v3-ParticipationSignature"
+      ]
+    }
+  ]
+}

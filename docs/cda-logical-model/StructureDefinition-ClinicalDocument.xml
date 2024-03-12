@@ -17,25 +17,31 @@
       </extension>
     </valueBoolean>
   </extension>
-  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
     <valueUri value="urn:hl7-org:v3"/>
   </extension>
-  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
-    <valueUri value="ClinicalDocument"/>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
+    <valueString value="ClinicalDocument"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/type-profile-style">
+    <valueUri value="cda"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-container">
+    <valueUri value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
-  <version value="2.1.0-draft2-mb"/>
-  <name value="CDAR2.ClinicalDocument"/>
+  <version value="2.0.0-sd-202312-matchbox-patch"/>
+  <name value="ClinicalDocument"/>
   <title value="ClinicalDocument (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-10-04T23:00:58+02:00"/>
+  <date value="2024-03-12T18:28:21+01:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/structdoc"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
     </telecom>
     <telecom>
       <system value="email"/>
@@ -52,13 +58,13 @@
   <kind value="logical"/>
   <abstract value="false"/>
   <type value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
-  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Base"/>
+  <baseDefinition value="http://hl7.org/cda/stds/core/StructureDefinition/ANY"/>
   <derivation value="specialization"/>
   <snapshot>
     <element id="ClinicalDocument">
       <path value="ClinicalDocument"/>
       <short value="Base for all types and resources"/>
-      <definition value="Base definition for all types defined in FHIR type system."/>
+      <definition value="Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type."/>
       <min value="1"/>
       <max value="1"/>
       <base>
@@ -66,18 +72,32 @@
         <min value="0"/>
         <max value="*"/>
       </base>
-      <constraint>
-        <key value="ele-1"/>
-        <severity value="error"/>
-        <human value="All FHIR elements must have a @value or children"/>
-        <expression value="hasValue() or (children().count() &gt; id.count())"/>
-        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
-      </constraint>
       <isModifier value="false"/>
       <mapping>
         <identity value="rim"/>
         <map value="n/a"/>
       </mapping>
+    </element>
+    <element id="ClinicalDocument.nullFlavor">
+      <path value="ClinicalDocument.nullFlavor"/>
+      <representation value="xmlAttr"/>
+      <label value="Exceptional Value Detail"/>
+      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ANY.nullFlavor"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"/>
+      </binding>
     </element>
     <element id="ClinicalDocument.classCode">
       <path value="ClinicalDocument.classCode"/>
@@ -95,7 +115,7 @@
       </type>
       <fixedCode value="DOCCLIN"/>
       <binding>
-        <strength value="extensible"/>
+        <strength value="example"/>
         <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActClass"/>
       </binding>
     </element>
@@ -135,48 +155,110 @@
     </element>
     <element id="ClinicalDocument.typeId">
       <path value="ClinicalDocument.typeId"/>
-      <definition value="When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question."/>
-      <min value="1"/>
+      <definition value="ClinicalDocument.typeId is a technology-neutral explicit reference to this CDA, Release Two specification, and must be valued as follows: ClinicalDocument.typeId.root = &quot;2.16.840.1.113883.1.3&quot; (which is the OID for HL7 Registered models); ClinicalDocument.typeId.extension = &quot;POCD_HD000040&quot; (which is the unique identifier for the CDA, Release Two Hierarchical Description)."/>
+      <min value="0"/>
       <max value="1"/>
       <base>
         <path value="ClinicalDocument.typeId"/>
-        <min value="1"/>
+        <min value="0"/>
         <max value="1"/>
       </base>
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
-    <element id="ClinicalDocument.typeId.root">
-      <path value="ClinicalDocument.typeId.root"/>
+    <element id="ClinicalDocument.typeId.nullFlavor">
+      <path value="ClinicalDocument.typeId.nullFlavor"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <label value="Exceptional Value Detail"/>
+      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
+      <min value="0"/>
       <max value="1"/>
       <base>
-        <path value="ClinicalDocument.typeId.root"/>
-        <min value="1"/>
+        <path value="ANY.nullFlavor"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"/>
+      </binding>
+    </element>
+    <element id="ClinicalDocument.typeId.assigningAuthorityName">
+      <path value="ClinicalDocument.typeId.assigningAuthorityName"/>
+      <representation value="xmlAttr"/>
+      <label value="Assigning Authority Name"/>
+      <definition value="A human readable name or mnemonic for the assigning authority. The Assigning Authority Name has no computational value. The purpose of a Assigning Authority Name is to assist an unaided human interpreter of an II value to interpret the authority. Note: no automated processing must depend on the assigning authority name to be present in any form."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="II.assigningAuthorityName"/>
+        <min value="0"/>
         <max value="1"/>
       </base>
       <type>
         <code value="string"/>
         <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
+      </type>
+    </element>
+    <element id="ClinicalDocument.typeId.displayable">
+      <path value="ClinicalDocument.typeId.displayable"/>
+      <representation value="xmlAttr"/>
+      <label value="Displayable"/>
+      <definition value="Specifies if the identifier is intended for human display and data entry (displayable = true) as opposed to pure machine interoperation (displayable = false)."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="II.displayable"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="boolean"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"/>
+      </type>
+    </element>
+    <element id="ClinicalDocument.typeId.root">
+      <path value="ClinicalDocument.typeId.root"/>
+      <representation value="xmlAttr"/>
+      <label value="Root"/>
+      <definition value="Identifies the type as an HL7 Registered model"/>
+      <min value="1"/>
+      <max value="1"/>
+      <base>
+        <path value="II.root"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/oid"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/uuid"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/ruid"/>
       </type>
       <fixedString value="2.16.840.1.113883.1.3"/>
     </element>
     <element id="ClinicalDocument.typeId.extension">
       <path value="ClinicalDocument.typeId.extension"/>
       <representation value="xmlAttr"/>
+      <label value="Extension"/>
+      <definition value="A character string as a unique identifier within the scope of the identifier root."/>
       <min value="1"/>
       <max value="1"/>
       <base>
-        <path value="ClinicalDocument.typeId.extension"/>
-        <min value="1"/>
+        <path value="II.extension"/>
+        <min value="0"/>
         <max value="1"/>
       </base>
       <type>
         <code value="string"/>
         <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
       </type>
+      <fixedString value="POCD_HD000040"/>
     </element>
     <element id="ClinicalDocument.templateId">
       <path value="ClinicalDocument.templateId"/>
@@ -218,7 +300,7 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
       <binding>
-        <strength value="extensible"/>
+        <strength value="example"/>
         <valueSet value="http://hl7.org/fhir/ValueSet/doc-typecodes"/>
       </binding>
     </element>
@@ -235,23 +317,85 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/ST"/>
       </type>
     </element>
-    <element id="ClinicalDocument.statusCode">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+    <element id="ClinicalDocument.sdtcStatusCode">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:hl7-org:sdtc"/>
       </extension>
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
         <valueString value="statusCode"/>
       </extension>
-      <path value="ClinicalDocument.statusCode"/>
+      <path value="ClinicalDocument.sdtcStatusCode"/>
+      <definition value="The statusCode extension attribute allows the implementer to identify a ClinicalDocument that is in other than the completed state. It was created to support the Structured Form Definition IG to identify that the document itself is an unfinished product currently being completed for a patient."/>
       <min value="0"/>
       <max value="1"/>
       <base>
-        <path value="ClinicalDocument.statusCode"/>
+        <path value="ClinicalDocument.sdtcStatusCode"/>
         <min value="0"/>
         <max value="1"/>
       </base>
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActStatus"/>
+      </binding>
+    </element>
+    <element id="ClinicalDocument.terminologyDate">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-at:v3"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
+        <valueString value="terminologyDate"/>
+      </extension>
+      <path value="ClinicalDocument.terminologyDate"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ClinicalDocument.terminologyDate"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/TS"/>
+      </type>
+    </element>
+    <element id="ClinicalDocument.formatCode">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-at:v3"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
+        <valueString value="formatCode"/>
+      </extension>
+      <path value="ClinicalDocument.formatCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ClinicalDocument.formatCode"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CD"/>
+      </type>
+    </element>
+    <element id="ClinicalDocument.practiceSettingCode">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-at:v3"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
+        <valueString value="practiceSettingCode"/>
+      </extension>
+      <path value="ClinicalDocument.practiceSettingCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ClinicalDocument.practiceSettingCode"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CD"/>
       </type>
     </element>
     <element id="ClinicalDocument.effectiveTime">
@@ -294,7 +438,7 @@
       </type>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-HumanLanguage"/>
+        <valueSet value="http://hl7.org/fhir/ValueSet/all-languages"/>
       </binding>
     </element>
     <element id="ClinicalDocument.setId">
@@ -417,11 +561,11 @@
     <element id="ClinicalDocument.legalAuthenticator">
       <path value="ClinicalDocument.legalAuthenticator"/>
       <min value="0"/>
-      <max value="1"/>
+      <max value="*"/>
       <base>
         <path value="ClinicalDocument.legalAuthenticator"/>
         <min value="0"/>
-        <max value="1"/>
+        <max value="*"/>
       </base>
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/LegalAuthenticator"/>
@@ -549,7 +693,7 @@
       </type>
       <fixedCode value="DOCCLIN"/>
       <binding>
-        <strength value="extensible"/>
+        <strength value="example"/>
         <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActClass"/>
       </binding>
     </element>
@@ -579,8 +723,8 @@
     </element>
     <element id="ClinicalDocument.typeId">
       <path value="ClinicalDocument.typeId"/>
-      <definition value="When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question."/>
-      <min value="1"/>
+      <definition value="ClinicalDocument.typeId is a technology-neutral explicit reference to this CDA, Release Two specification, and must be valued as follows: ClinicalDocument.typeId.root = &quot;2.16.840.1.113883.1.3&quot; (which is the OID for HL7 Registered models); ClinicalDocument.typeId.extension = &quot;POCD_HD000040&quot; (which is the unique identifier for the CDA, Release Two Hierarchical Description)."/>
+      <min value="0"/>
       <max value="1"/>
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
@@ -589,23 +733,22 @@
     <element id="ClinicalDocument.typeId.root">
       <path value="ClinicalDocument.typeId.root"/>
       <representation value="xmlAttr"/>
+      <definition value="Identifies the type as an HL7 Registered model"/>
       <min value="1"/>
       <max value="1"/>
-      <type>
-        <code value="string"/>
-        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
-      </type>
       <fixedString value="2.16.840.1.113883.1.3"/>
     </element>
     <element id="ClinicalDocument.typeId.extension">
       <path value="ClinicalDocument.typeId.extension"/>
       <representation value="xmlAttr"/>
+      <definition value="A character string as a unique identifier within the scope of the identifier root."/>
       <min value="1"/>
       <max value="1"/>
       <type>
         <code value="string"/>
         <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
       </type>
+      <fixedString value="POCD_HD000040"/>
     </element>
     <element id="ClinicalDocument.templateId">
       <path value="ClinicalDocument.templateId"/>
@@ -632,7 +775,7 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
       <binding>
-        <strength value="extensible"/>
+        <strength value="example"/>
         <valueSet value="http://hl7.org/fhir/ValueSet/doc-typecodes"/>
       </binding>
     </element>
@@ -644,18 +787,65 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/ST"/>
       </type>
     </element>
-    <element id="ClinicalDocument.statusCode">
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+    <element id="ClinicalDocument.sdtcStatusCode">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
         <valueUri value="urn:hl7-org:sdtc"/>
       </extension>
-      <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-xml-name">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
         <valueString value="statusCode"/>
       </extension>
-      <path value="ClinicalDocument.statusCode"/>
+      <path value="ClinicalDocument.sdtcStatusCode"/>
+      <definition value="The statusCode extension attribute allows the implementer to identify a ClinicalDocument that is in other than the completed state. It was created to support the Structured Form Definition IG to identify that the document itself is an unfinished product currently being completed for a patient."/>
       <min value="0"/>
       <max value="1"/>
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActStatus"/>
+      </binding>
+    </element>
+    <element id="ClinicalDocument.terminologyDate">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-at:v3"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
+        <valueString value="terminologyDate"/>
+      </extension>
+      <path value="ClinicalDocument.terminologyDate"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/TS"/>
+      </type>
+    </element>
+    <element id="ClinicalDocument.formatCode">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-at:v3"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
+        <valueString value="formatCode"/>
+      </extension>
+      <path value="ClinicalDocument.formatCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CD"/>
+      </type>
+    </element>
+    <element id="ClinicalDocument.practiceSettingCode">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-at:v3"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
+        <valueString value="practiceSettingCode"/>
+      </extension>
+      <path value="ClinicalDocument.practiceSettingCode"/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CD"/>
       </type>
     </element>
     <element id="ClinicalDocument.effectiveTime">
@@ -683,7 +873,7 @@
       </type>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-HumanLanguage"/>
+        <valueSet value="http://hl7.org/fhir/ValueSet/all-languages"/>
       </binding>
     </element>
     <element id="ClinicalDocument.setId">
@@ -761,7 +951,7 @@
     <element id="ClinicalDocument.legalAuthenticator">
       <path value="ClinicalDocument.legalAuthenticator"/>
       <min value="0"/>
-      <max value="1"/>
+      <max value="*"/>
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/LegalAuthenticator"/>
       </type>

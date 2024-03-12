@@ -7,25 +7,28 @@
       <p>Primitive type 'uid'</p>
     </div>
   </text>
-  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
     <valueUri value="urn:hl7-org:v3"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-container">
+    <valueUri value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
   </extension>
   <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics">
     <valueCode value="can-bind"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/uid"/>
-  <version value="2.1.0-draft2-mb"/>
+  <version value="2.0.0-sd-202312-matchbox-patch"/>
   <name value="uid"/>
   <title value="uid: Unique Identifier String"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2023-10-04T23:00:58+02:00"/>
+  <date value="2024-03-12T18:28:21+01:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
     <telecom>
       <system value="url"/>
-      <value value="http://www.hl7.org/Special/committees/structdoc"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
     </telecom>
     <telecom>
       <system value="email"/>
@@ -63,7 +66,7 @@
         <key value="uid-pattern"/>
         <severity value="error"/>
         <human value="Must conform to OID (#.#.#), UUID (32 hexadecimal digits separated by hyphens), or RUID (a letter followed by any combination of letters, numbers or hyphens)"/>
-        <expression value="matches('^([0-2](\\.(0|[1-9][0-9]*))+)|([0-9A-Z]{8}-[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{12})|([A-Za-z][A-Za-z0-9\\-]*)$')"/>
+        <expression value="matches('^([0-2](\\.(0|[1-9][0-9]*))+)|([0-9A-Za-z]{8}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{12})|([A-Za-z][A-Za-z0-9\\-]*)$')"/>
       </constraint>
       <isModifier value="false"/>
       <isSummary value="false"/>
@@ -153,7 +156,7 @@
         <key value="uid-pattern"/>
         <severity value="error"/>
         <human value="Must conform to OID (#.#.#), UUID (32 hexadecimal digits separated by hyphens), or RUID (a letter followed by any combination of letters, numbers or hyphens)"/>
-        <expression value="matches('^([0-2](\\.(0|[1-9][0-9]*))+)|([0-9A-Z]{8}-[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{12})|([A-Za-z][A-Za-z0-9\\-]*)$')"/>
+        <expression value="matches('^([0-2](\\.(0|[1-9][0-9]*))+)|([0-9A-Za-z]{8}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{12})|([A-Za-z][A-Za-z0-9\\-]*)$')"/>
       </constraint>
     </element>
     <element id="string.id">

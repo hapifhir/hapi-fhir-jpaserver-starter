@@ -1,0 +1,54 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "610faa6d-d917-4e07-a068-484061ef4901-65",
+  "url" : "http://hl7.org/fhir/comparison/ValueSet/610faa6d-d917-4e07-a068-484061ef4901-65",
+  "name" : "UnionCDAPostalAddressUseAndCDAPostalAddressUse",
+  "title" : "Union of CDAPostalAddressUse And CDAPostalAddressUse",
+  "status" : "draft",
+  "date" : "2024-03-12T18:28:32+01:00",
+  "compose" : {
+    "include" : [{
+      "concept" : [{
+        "code" : "H"
+      },
+      {
+        "code" : "HP"
+      },
+      {
+        "code" : "HV"
+      },
+      {
+        "code" : "WP"
+      },
+      {
+        "code" : "DIR"
+      },
+      {
+        "code" : "PUB"
+      },
+      {
+        "code" : "BAD"
+      },
+      {
+        "code" : "TMP"
+      },
+      {
+        "code" : "PHYS"
+      },
+      {
+        "code" : "PST"
+      }]
+    },
+    {
+      "concept" : [{
+        "code" : "ABC"
+      },
+      {
+        "code" : "IDE"
+      },
+      {
+        "code" : "SYL"
+      }]
+    }]
+  }
+}

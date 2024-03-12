@@ -15,22 +15,26 @@
     }
   },
   {
-    "url" : "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
-    "valueUri" : "urn:hl7-org:v3"
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+    "valueUri" : "urn:hl7-org:sdtc"
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-container",
+    "valueUri" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
   }],
   "url" : "http://hl7.org/cda/stds/core/StructureDefinition/INT-POS",
-  "version" : "2.1.0-draft2-mb",
+  "version" : "2.0.0-sd-202312-matchbox-patch",
   "name" : "INT_POS",
   "title" : "INT_POS: Positive integer numbers (V3 Data Type)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-10-04T23:00:58+02:00",
+  "date" : "2024-03-12T18:28:21+01:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/structdoc"
+      "value" : "http://www.hl7.org/Special/committees/structure"
     },
     {
       "system" : "email",
@@ -45,7 +49,7 @@
     "name" : "RIM Mapping"
   }],
   "kind" : "logical",
-  "abstract" : true,
+  "abstract" : false,
   "type" : "http://hl7.org/cda/stds/core/StructureDefinition/INT_POS",
   "baseDefinition" : "http://hl7.org/cda/stds/core/StructureDefinition/INT",
   "derivation" : "specialization",
@@ -63,11 +67,11 @@
         "max" : "*"
       },
       "constraint" : [{
-        "key" : "ele-1",
+        "key" : "value-null",
         "severity" : "error",
-        "human" : "All FHIR elements must have a @value or children",
-        "expression" : "hasValue() or (children().count() > id.count())",
-        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+        "human" : "value and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(value | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/INT"
       }],
       "isModifier" : false,
       "mapping" : [{
@@ -94,13 +98,15 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
       }
     },
     {
       "id" : "INT_POS.value",
       "path" : "INT_POS.value",
-      "representation" : ["xmlAttr"],
+      "short" : "Primitive Type integer",
+      "definition" : "A whole number",
+      "comment" : "32 bit number; for values larger than this, use decimal",
       "min" : 0,
       "max" : "1",
       "base" : {
@@ -111,7 +117,17 @@
       "type" : [{
         "code" : "integer",
         "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/int-simple"]
-      }]
+      }],
+      "minValueInteger" : 1,
+      "constraint" : [{
+        "key" : "ele-1",
+        "severity" : "error",
+        "human" : "All FHIR elements must have a @value or children",
+        "expression" : "hasValue() or (children().count() > id.count())",
+        "source" : "http://hl7.org/fhir/StructureDefinition/Element"
+      }],
+      "isModifier" : false,
+      "isSummary" : false
     }]
   },
   "differential" : {
@@ -120,6 +136,18 @@
       "path" : "INT_POS",
       "min" : 1,
       "max" : "*"
+    },
+    {
+      "id" : "INT_POS.value",
+      "path" : "INT_POS.value",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "integer",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/int-simple"]
+      }],
+      "minValueInteger" : 1
     }]
   }
 }

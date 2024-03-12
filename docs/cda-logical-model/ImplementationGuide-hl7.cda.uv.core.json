@@ -6,18 +6,18 @@
     "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><h2>ClinicalDocumentArchitecture</h2><p>The official URL for this implementation guide is: </p><pre>http://hl7.org/cda/stds/core/ImplementationGuide/hl7.cda.uv.core</pre></div>"
   },
   "url" : "http://hl7.org/cda/stds/core/ImplementationGuide/hl7.cda.uv.core",
-  "version" : "2.1.0-draft2-mb",
+  "version" : "2.0.0-sd-202312-matchbox-patch",
   "name" : "ClinicalDocumentArchitecture",
   "title" : "Clinical Document Architecture",
   "status" : "active",
   "experimental" : false,
-  "date" : "2023-10-04T23:00:58+02:00",
+  "date" : "2024-03-12T18:28:21+01:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
     "telecom" : [{
       "system" : "url",
-      "value" : "http://www.hl7.org/Special/committees/structdoc"
+      "value" : "http://www.hl7.org/Special/committees/structure"
     },
     {
       "system" : "email",
@@ -46,7 +46,7 @@
   "definition" : {
     "extension" : [{
       "url" : "http://hl7.org/fhir/tools/StructureDefinition/ig-internal-dependency",
-      "valueCode" : "hl7.fhir.uv.tools#current"
+      "valueCode" : "hl7.fhir.uv.tools#0.1.0"
     }],
     "grouping" : [{
       "id" : "classes",
@@ -107,13 +107,13 @@
     {
       "extension" : [{
         "url" : "http://hl7.org/fhir/tools/StructureDefinition/resource-information",
-        "valueString" : "StructureDefinition:logical:abstract"
+        "valueString" : "StructureDefinition:logical"
       }],
       "reference" : {
         "reference" : "StructureDefinition/AlternateIdentification"
       },
       "name" : "AlternateIdentification (CDA Class)",
-      "description" : "Alternate Identifier for a role",
+      "description" : "The alternateIdentification extension provides additional information about an identifier found in the linked role. The extensions augment the id information in the linked role.  The id in the alternateIdentification extension SHALL match an id in the linked role. The alternateIdentification provides additional information about a particular identifier, such as its type. As an extension it needs to be safe for implementers to ignore this additional information.",
       "groupingId" : "classes"
     },
     {
@@ -297,7 +297,8 @@
         "reference" : "Binary/clinicaldocument-example"
       },
       "name" : "Example CDA document",
-      "description" : "Example CDA document",
+      "description" : "Example CDA document from original CDA release",
+      "isExample" : true,
       "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"]
     },
     {
@@ -567,7 +568,7 @@
     {
       "extension" : [{
         "url" : "http://hl7.org/fhir/tools/StructureDefinition/resource-information",
-        "valueString" : "StructureDefinition:logical:abstract"
+        "valueString" : "StructureDefinition:logical"
       }],
       "reference" : {
         "reference" : "StructureDefinition/Entry"
@@ -579,7 +580,7 @@
     {
       "extension" : [{
         "url" : "http://hl7.org/fhir/tools/StructureDefinition/resource-information",
-        "valueString" : "StructureDefinition:logical:abstract"
+        "valueString" : "StructureDefinition:logical"
       }],
       "reference" : {
         "reference" : "StructureDefinition/EntryRelationship"
@@ -675,13 +676,13 @@
     {
       "extension" : [{
         "url" : "http://hl7.org/fhir/tools/StructureDefinition/resource-information",
-        "valueString" : "StructureDefinition:logical:abstract"
+        "valueString" : "StructureDefinition:logical"
       }],
       "reference" : {
         "reference" : "StructureDefinition/IdentifiedBy"
       },
       "name" : "IdentifiedBy (CDA Class)",
-      "description" : "Link to an additional Identifier for a role",
+      "description" : "The alternateIdentification extension provides additional information about an identifier found in the linked role. The extensions augment the id information in the linked role.  The id in the alternateIdentification extension SHALL match an id in the linked role. The alternateIdentification provides additional information about a particular identifier, such as its type. As an extension it needs to be safe for implementers to ignore this additional information.",
       "groupingId" : "classes"
     },
     {
@@ -750,6 +751,18 @@
         "valueString" : "StructureDefinition:logical"
       }],
       "reference" : {
+        "reference" : "StructureDefinition/InFulfillmentOf1"
+      },
+      "name" : "InFulfillmentOf1 (CDA Class)",
+      "description" : "This is an actRelationship called inFulfillmentOf1 that represents the Fulfills General Relationship Operator in QDM 4.1.x in QDM-Base QRDA Category 1, R3.",
+      "groupingId" : "classes"
+    },
+    {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/resource-information",
+        "valueString" : "StructureDefinition:logical"
+      }],
+      "reference" : {
         "reference" : "StructureDefinition/INT"
       },
       "name" : "INT: IntegerNumber (V3 Data Type)",
@@ -759,7 +772,7 @@
     {
       "extension" : [{
         "url" : "http://hl7.org/fhir/tools/StructureDefinition/resource-information",
-        "valueString" : "StructureDefinition:logical:abstract"
+        "valueString" : "StructureDefinition:logical"
       }],
       "reference" : {
         "reference" : "StructureDefinition/INT-POS"
@@ -1068,7 +1081,7 @@
     {
       "extension" : [{
         "url" : "http://hl7.org/fhir/tools/StructureDefinition/resource-information",
-        "valueString" : "StructureDefinition:logical:abstract"
+        "valueString" : "StructureDefinition:logical"
       }],
       "reference" : {
         "reference" : "StructureDefinition/OrganizerComponent"
@@ -1313,6 +1326,30 @@
       },
       "name" : "Precondition (CDA Class)",
       "description" : "The precondition class, derived from the ActRelationship class, is used along with the Precondition class to express a condition that must hold true before some over activity occurs.",
+      "groupingId" : "classes"
+    },
+    {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/resource-information",
+        "valueString" : "StructureDefinition:logical"
+      }],
+      "reference" : {
+        "reference" : "StructureDefinition/Precondition2"
+      },
+      "name" : "Precondition2 (CDA Class)",
+      "description" : "The sdtc:precondition2 extension allows a more flexible set of skip conditions on a set of criteria. Without this extension the skip condition is restricted to all criteria true. The extension allows a choice of the following logical operation extensions sdtc:allTrue, sdtc:allFalse, sdtc:atLeastOneTrue, sdtc:atLeastOneFalse, sdtc:onlyOneFalse, and sdtc:onlyOneTrue to be placed upon the encapsulated criteria or a criterion. The logical operation extensions nest a [0 .. *] sdtc:precondition2 extension allowing for a complex specification of nested skip conditions if needed.",
+      "groupingId" : "classes"
+    },
+    {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/resource-information",
+        "valueString" : "StructureDefinition:logical"
+      }],
+      "reference" : {
+        "reference" : "StructureDefinition/PreconditionBase"
+      },
+      "name" : "PreconditionBase (CDA Class)",
+      "description" : "An abstract class containing the common fields used by sdtc:allTrue, sdtc:allFalse, sdtc:atLeastOneTrue, sdtc:atLeastOneFalse, sdtc:onlyOneTrue, and sdtc:onlyOneFalse.",
       "groupingId" : "classes"
     },
     {
@@ -1806,6 +1843,83 @@
       "name" : "xs:ID",
       "description" : "ID represents the ID attribute type from [XML 1.0 (Second Edition)]. The \"value space\" of ID is the set of all strings that \"match\" the NCName production in [Namespaces in XML]. The \"lexical space\" of ID is the set of all strings that \"match\" the NCName production in [Namespaces in XML].",
       "groupingId" : "datatypes-xml"
+    },
+    {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/resource-information",
+        "valueString" : "CodeSystem"
+      }],
+      "reference" : {
+        "reference" : "CodeSystem/BinaryDataEncoding"
+      },
+      "name" : "Binary Data Encoding Code System",
+      "description" : "Identifies the representation of binary data in a text field"
+    },
+    {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/resource-information",
+        "valueString" : "ValueSet"
+      }],
+      "reference" : {
+        "reference" : "ValueSet/BinaryDataEncoding"
+      },
+      "name" : "Binary Data Encoding Value Set",
+      "description" : "Identifies the representation of binary data in a text field"
+    },
+    {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/resource-information",
+        "valueString" : "ValueSet"
+      }],
+      "reference" : {
+        "reference" : "ValueSet/CDACompressionAlgorithm"
+      },
+      "name" : "CompressionAlgorithm",
+      "description" : "Type of compression algorithm used - limited to 4 concepts from original CDA definition"
+    },
+    {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/resource-information",
+        "valueString" : "ValueSet"
+      }],
+      "reference" : {
+        "reference" : "ValueSet/CDAEntityNameUse"
+      },
+      "name" : "CDAEntityNameUse",
+      "description" : "A set of codes advising a system or user which name in a set of names to select for a given purpose - limited to values allowed in original CDA definition"
+    },
+    {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/resource-information",
+        "valueString" : "ValueSet"
+      }],
+      "reference" : {
+        "reference" : "ValueSet/CDAPostalAddressUse"
+      },
+      "name" : "CDAPostalAddressUse",
+      "description" : "A set of codes advising a system or user which address in a set of like addresses to select for a given purpose - limited to values allowed in original CDA definition"
+    },
+    {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/resource-information",
+        "valueString" : "ValueSet"
+      }],
+      "reference" : {
+        "reference" : "ValueSet/CDASignatureCode"
+      },
+      "name" : "CDASignatureCode",
+      "description" : "A set of codes specifying whether and how the participant has attested his participation through a signature - limited to values allowed in original CDA definition.\n\n**Note:** CDA Release One represented either an intended (`X`) or actual (`S`) authenticator. CDA Release Two only represents an actual authenticator, so has deprecated the value of `X`."
+    },
+    {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/resource-information",
+        "valueString" : "ValueSet"
+      }],
+      "reference" : {
+        "reference" : "ValueSet/CDANullFlavor"
+      },
+      "name" : "CDANullFlavor",
+      "description" : "CDA NullFlavors - limited to values allowed in original CDA definition"
     }],
     "page" : {
       "sourceUrl" : "index.html",
@@ -1813,6 +1927,36 @@
       "title" : "IG Home Page",
       "generation" : "markdown",
       "page" : [{
+        "sourceUrl" : "overview.html",
+        "name" : "overview.html",
+        "title" : "Overview",
+        "generation" : "markdown",
+        "page" : [{
+          "sourceUrl" : "implementation.html",
+          "name" : "implementation.html",
+          "title" : "Implementation Notes",
+          "generation" : "markdown"
+        },
+        {
+          "sourceUrl" : "cda-rmim.html",
+          "name" : "cda-rmim.html",
+          "title" : "Graphical Map of CDA",
+          "generation" : "html"
+        },
+        {
+          "sourceUrl" : "dt-uml.html",
+          "name" : "dt-uml.html",
+          "title" : "Graphical Map of Datatypes",
+          "generation" : "html"
+        },
+        {
+          "sourceUrl" : "narrative.html",
+          "name" : "narrative.html",
+          "title" : "Narrative Block",
+          "generation" : "markdown"
+        }]
+      },
+      {
         "sourceUrl" : "downloads.html",
         "name" : "downloads.html",
         "title" : "Downloads",
@@ -1832,6 +1976,48 @@
         "code" : "apply-version"
       },
       "value" : "true"
+    },
+    {
+      "code" : {
+        "system" : "http://hl7.org/fhir/tools/CodeSystem/ig-parameters",
+        "code" : "excludejson"
+      },
+      "value" : "false"
+    },
+    {
+      "code" : {
+        "system" : "http://hl7.org/fhir/tools/CodeSystem/ig-parameters",
+        "code" : "logging"
+      },
+      "value" : "init"
+    },
+    {
+      "code" : {
+        "system" : "http://hl7.org/fhir/tools/CodeSystem/ig-parameters",
+        "code" : "logging"
+      },
+      "value" : "progress"
+    },
+    {
+      "code" : {
+        "system" : "http://hl7.org/fhir/tools/CodeSystem/ig-parameters",
+        "code" : "logging"
+      },
+      "value" : "generate"
+    },
+    {
+      "code" : {
+        "system" : "http://hl7.org/fhir/tools/CodeSystem/ig-parameters",
+        "code" : "jira-code"
+      },
+      "value" : "cda-sd"
+    },
+    {
+      "code" : {
+        "system" : "http://hl7.org/fhir/tools/CodeSystem/ig-parameters",
+        "code" : "releaselabel"
+      },
+      "value" : "ballot"
     },
     {
       "code" : {
@@ -2089,13 +2275,6 @@
       "code" : {
         "system" : "http://hl7.org/fhir/tools/CodeSystem/ig-parameters",
         "code" : "tabbed-snapshots"
-      },
-      "value" : "true"
-    },
-    {
-      "code" : {
-        "system" : "http://hl7.org/fhir/tools/CodeSystem/ig-parameters",
-        "code" : "excludejson"
       },
       "value" : "true"
     },

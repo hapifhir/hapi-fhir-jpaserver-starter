@@ -1,157 +1,167 @@
-﻿ClinicalDocumentArchitecture : Validation Results
+ClinicalDocumentArchitecture : Validation Results
 =========================================
 
-err = 4, warn = 9, info = 8
-IG Publisher Version: 1.4.10 Out of date - current version is 1.4.11
-Generated Wed Oct 04 23:02:00 CEST 2023. FHIR version 5.0.0 for hl7.cda.uv.core#2.1.0-draft2-mb (canonical = http://hl7.org/cda/stds/core)
- Build Errors : 1 / 8 / 0
- /Users/oegger/Documents/github/cda-core-2.0/input/examples/clinicaldocument-example : 0 / 0 / 9
- /Users/oegger/Documents/github/cda-core-2.0/input/hl7.cda.uv.core : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/AD : 0 / 108 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ADXP : 0 / 2 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ANY : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Act : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/AlternateIdentification : 0 / 2 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/AssignedAuthor : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/AssignedCustodian : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/AssignedEntity : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/AssociatedEntity : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Authenticator : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Author : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/AuthoringDevice : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Authorization : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/BL : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Birthplace : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/CD : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/CE : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/CO : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/CR : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/CS : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/CV : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ClinicalDocument : 0 / 7 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Component : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ComponentOf : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Consent : 0 / 7 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Criterion : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Custodian : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/CustodianOrganization : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/DataEnterer : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Device : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/DocumentationOf : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ED : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/EIVL-TS : 0 / 10 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/EN : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ENXP : 0 / 2 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/EncompassingEncounter : 0 / 9 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Encounter : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/EncounterParticipant : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Entity : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Entry : 0 / 2 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/EntryRelationship : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ExternalAct : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ExternalDocument : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ExternalObservation : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ExternalProcedure : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Guardian : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/HealthCareFacility : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/II : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/INT : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/INT-POS : 0 / 4 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/IVL-INT : 1 / 15 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/IVL-PQ : 1 / 17 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/IVL-TS : 1 / 13 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/IVXB-INT : 0 / 6 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/IVXB-PQ : 0 / 8 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/IVXB-TS : 0 / 6 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/IdentifiedBy : 0 / 2 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/InFulfillmentOf : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Informant : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/InformationRecipient : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/InfrastructureRoot : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/IntendedRecipient : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/LabCriterion : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/LabPrecondition : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/LabeledDrug : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/LanguageCommunication : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/LegalAuthenticator : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/MO : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/MaintainedEntity : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ManufacturedProduct : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Material : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/NonXMLBody : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ON : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Observation : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ObservationMedia : 0 / 7 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ObservationRange : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Order : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Organization : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/OrganizationPartOf : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Organizer : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/OrganizerComponent : 0 / 2 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/PIVL-TS : 0 / 14 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/PN : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/PQ : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/PQR : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ParentDocument : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Participant1 : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Participant2 : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ParticipantRole : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Patient : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/PatientRole : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Performer1 : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Performer2 : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Person : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/PharmContent : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/PharmIngredient : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/PharmMedicineClass : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/PharmPackagedMedicine : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/PharmSpecializedKind : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/PharmSubstance : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/PharmSuperContent : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Place : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/PlayingEntity : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Precondition : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Procedure : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/QTY : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/REAL : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/RTO-PQ-PQ : 0 / 7 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/RecordTarget : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Reference : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/RegionOfInterest : 0 / 7 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/RelatedDocument : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/RelatedEntity : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/RelatedSubject : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/SC : 0 / 2 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ST : 0 / 4 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/SXCM-TS : 0 / 6 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/SXPR-TS : 0 / 7 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Section : 0 / 11 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ServiceEvent : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Specimen : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/SpecimenRole : 0 / 3 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/StructuredBody : 0 / 9 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Subject : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/SubjectPerson : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/SubstanceAdministration : 0 / 5 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/Supply : 0 / 4 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/TEL : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/TN : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/TS : 0 / 0 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/bin : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/bl-simple : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/bn : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/cs-simple : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/int-simple : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/oid : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/probability : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/real-simple : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ruid : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/st-simple : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/ts-simple : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/uid : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/url : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/uuid : 0 / 1 / 1
- /Users/oegger/Documents/github/cda-core-2.0/input/resources/xs-ID : 0 / 1 / 1
+err = 3, warn = 9, info = 2
+IG Publisher Version: 1.6.1
+Generated Tue Mar 12 18:29:33 CET 2024. FHIR version 5.0.0 for hl7.cda.uv.core#2.0.0-sd-202312-matchbox-patch (canonical = http://hl7.org/cda/stds/core)
+ Build Errors : 0 / 9 / 0
+ /Users/oegger/Documents/github/CDA-core-sd/input/examples/clinicaldocument-example : 3 / 1 / 17
+ /Users/oegger/Documents/github/CDA-core-sd/input/hl7.cda.uv.core : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/AD : 0 / 108 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ADXP : 0 / 2 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ANY : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Act : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/AlternateIdentification : 0 / 2 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/AssignedAuthor : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/AssignedCustodian : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/AssignedEntity : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/AssociatedEntity : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Authenticator : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Author : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/AuthoringDevice : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Authorization : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/BL : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Birthplace : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/CD : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/CE : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/CO : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/CR : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/CS : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/CV : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ClinicalDocument : 0 / 8 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Component : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ComponentOf : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Consent : 0 / 7 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Criterion : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Custodian : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/CustodianOrganization : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/DataEnterer : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Device : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/DocumentationOf : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ED : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/EIVL-TS : 0 / 10 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/EN : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ENXP : 0 / 2 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/EncompassingEncounter : 0 / 11 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Encounter : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/EncounterParticipant : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Entity : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Entry : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/EntryRelationship : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ExternalAct : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ExternalDocument : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ExternalObservation : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ExternalProcedure : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Guardian : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/HealthCareFacility : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/II : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/INT : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/INT-POS : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/IVL-INT : 0 / 15 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/IVL-PQ : 0 / 16 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/IVL-TS : 0 / 13 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/IVXB-INT : 0 / 6 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/IVXB-PQ : 0 / 8 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/IVXB-TS : 0 / 6 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/IdentifiedBy : 0 / 2 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/InFulfillmentOf : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/InFulfillmentOf1 : 0 / 6 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Informant : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/InformationRecipient : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/InfrastructureRoot : 0 / 2 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/IntendedRecipient : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/LabCriterion : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/LabPrecondition : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/LabeledDrug : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/LanguageCommunication : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/LegalAuthenticator : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/MO : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/MaintainedEntity : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ManufacturedProduct : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Material : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/NonXMLBody : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ON : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Observation : 0 / 4 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ObservationMedia : 0 / 7 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ObservationRange : 0 / 6 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Order : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Organization : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/OrganizationPartOf : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Organizer : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/OrganizerComponent : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PIVL-TS : 0 / 14 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PN : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PQ : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PQR : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ParentDocument : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Participant1 : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Participant2 : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ParticipantRole : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Patient : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PatientRole : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Performer1 : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Performer2 : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Person : 0 / 10 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmContent : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmIngredient : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmMedicineClass : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmPackagedMedicine : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmSpecializedKind : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmSubstance : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmSuperContent : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Place : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PlayingEntity : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Precondition : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Precondition2 : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PreconditionBase : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Procedure : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/QTY : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/REAL : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/RTO-PQ-PQ : 0 / 7 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/RecordTarget : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Reference : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/RegionOfInterest : 0 / 7 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/RelatedDocument : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/RelatedEntity : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/RelatedSubject : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/SC : 0 / 2 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ST : 0 / 4 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/SXCM-TS : 0 / 6 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/SXPR-TS : 0 / 7 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Section : 0 / 12 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ServiceEvent : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Specimen : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/SpecimenRole : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/StructuredBody : 0 / 10 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Subject : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/SubjectPerson : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/SubstanceAdministration : 0 / 6 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Supply : 0 / 6 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/TEL : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/TN : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/TS : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/bin : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/bl-simple : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/bn : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/codesystem/BinaryDataEncoding : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/cs-simple : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/int-simple : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/oid : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/probability : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/real-simple : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ruid : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/st-simple : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ts-simple : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/uid : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/url : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/uuid : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/BinaryDataEncoding : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDACompressionAlgorithm : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAEntityNameUse : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDANullFlavor : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAPostalAddressUse : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDASignatureCode : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/xs-ID : 0 / 1 / 1
 </table>
 == n/a ==
 WARNING: Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/LabCriterion.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list.
@@ -162,16 +172,13 @@ WARNING: Unable to find ImplementationGuide.definition.resource.description for 
 WARNING: Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmSpecializedKind.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list.
 WARNING: Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmSubstance.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list.
 WARNING: Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmSuperContent.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list.
-ERROR: There is no jira specification file defined with the expected name of CDA-core in the xml folder of the  https://github.com/HL7/Jira-Spec-Artifacts project.  This must exist before ballot or publication.
+WARNING: The jira specification file appears to be out of date with the versions, artifacts and pages currently defined in the IG.  A proposed revised file to be reviewed and, if appropriate, submitted as a pull request against the XML folder in https://github.com/HL7/JIRA-Spec-Artifacts.  To see the differences, perform a file compare on 'template/jira-current.xml' (a normalized view of what is in Github) and 'template/jira-new.xml' (reflects current IG content)
 == input/examples/clinicaldocument-example.xml ==
-INFORMATION: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[1].section.entry[0].observation.classCode: The code 'COND' is valid but is deprecated
-INFORMATION: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[1].section.entry[1].observation.classCode: The code 'COND' is valid but is deprecated
-INFORMATION: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[1].section.entry[2].observation.classCode: The code 'COND' is valid but is deprecated
-INFORMATION: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[9].section.entry[0].observation.classCode: The code 'COND' is valid but is deprecated
-INFORMATION: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[9].section.entry[0].observation.reference[0].externalObservation.classCode: The code 'COND' is valid but is deprecated
-INFORMATION: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[9].section.entry[1].observation.classCode: The code 'COND' is valid but is deprecated
-INFORMATION: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[9].section.entry[1].observation.reference[0].externalObservation.classCode: The code 'COND' is valid but is deprecated
-INFORMATION: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[9].section.entry[2].observation.classCode: The code 'COND' is valid but is deprecated
+ERROR: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[1].section.entry[0].observation.reference[0].externalObservation: ExternalObservation.classCode: minimum required = 1, but only found 0 (from http://hl7.org/cda/stds/core/StructureDefinition/ExternalObservation|2.0.0-sd-202312-matchbox-patch)
+ERROR: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[1].section.entry[1].observation.reference[1].externalObservation: ExternalObservation.classCode: minimum required = 1, but only found 0 (from http://hl7.org/cda/stds/core/StructureDefinition/ExternalObservation|2.0.0-sd-202312-matchbox-patch)
+ERROR: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[1].section.entry[2].observation.reference[0].externalObservation: ExternalObservation.classCode: minimum required = 1, but only found 0 (from http://hl7.org/cda/stds/core/StructureDefinition/ExternalObservation|2.0.0-sd-202312-matchbox-patch)
+INFORMATION: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[10].section: The CDA Template 2.16.840.1.113883.3.27.354 is not known
+INFORMATION: Binary/clinicaldocument-example: ClinicalDocument: The CDA Template 2.16.840.1.113883.3.27.1776 is not known
 == input/hl7.cda.uv.core.xml ==
 == input/resources/AD.xml ==
 == input/resources/ADXP.xml ==
@@ -224,16 +231,14 @@ INFORMATION: Binary/clinicaldocument-example: ClinicalDocument.component.structu
 == input/resources/INT.xml ==
 == input/resources/INT-POS.xml ==
 == input/resources/IVL-INT.xml ==
-ERROR: StructureDefinition/IVL-INT: StructureDefinition.snapshot.element[0].constraint[1]: Error in constraint 'ivl-int-center' with expression 'center.empty() or (low.empty() and high.empty())': Error evaluating FHIRPath expression: The type 'http://hl7.org/cda/stds/core/StructureDefinition/IVL_INT' is unknown or not supported at getChildTypesByName (@char 5)
 == input/resources/IVL-PQ.xml ==
-ERROR: StructureDefinition/IVL-PQ: StructureDefinition.snapshot.element[0].constraint[1]: Error in constraint 'ivl-pq-center' with expression 'center.empty() or (low.empty() and high.empty())': Error evaluating FHIRPath expression: The type 'http://hl7.org/cda/stds/core/StructureDefinition/IVL_PQ' is unknown or not supported at getChildTypesByName (@char 5)
 == input/resources/IVL-TS.xml ==
-ERROR: StructureDefinition/IVL-TS: StructureDefinition.snapshot.element[0].constraint[1]: Error in constraint 'ivl-ts-center' with expression 'center.empty() or (low.empty() and high.empty())': Error evaluating FHIRPath expression: The type 'http://hl7.org/cda/stds/core/StructureDefinition/IVL_TS' is unknown or not supported at getChildTypesByName (@char 5)
 == input/resources/IVXB-INT.xml ==
 == input/resources/IVXB-PQ.xml ==
 == input/resources/IVXB-TS.xml ==
 == input/resources/IdentifiedBy.xml ==
 == input/resources/InFulfillmentOf.xml ==
+== input/resources/InFulfillmentOf1.xml ==
 == input/resources/Informant.xml ==
 == input/resources/InformationRecipient.xml ==
 == input/resources/InfrastructureRoot.xml ==
@@ -259,7 +264,6 @@ ERROR: StructureDefinition/IVL-TS: StructureDefinition.snapshot.element[0].const
 == input/resources/OrganizerComponent.xml ==
 == input/resources/PIVL-TS.xml ==
 == input/resources/PN.xml ==
-WARNING: StructureDefinition/PN: StructureDefinition.snapshot.element[0].constraint[1]: pn-no-ls: The left side is inherently a collection, and so the expression 'qualifier = 'LS'' may fail or return false if there is more than one item in the content being evaluated
 == input/resources/PQ.xml ==
 == input/resources/PQR.xml ==
 == input/resources/ParentDocument.xml ==
@@ -281,6 +285,8 @@ WARNING: StructureDefinition/PN: StructureDefinition.snapshot.element[0].constra
 == input/resources/Place.xml ==
 == input/resources/PlayingEntity.xml ==
 == input/resources/Precondition.xml ==
+== input/resources/Precondition2.xml ==
+== input/resources/PreconditionBase.xml ==
 == input/resources/Procedure.xml ==
 == input/resources/QTY.xml ==
 == input/resources/REAL.xml ==
@@ -310,6 +316,7 @@ WARNING: StructureDefinition/PN: StructureDefinition.snapshot.element[0].constra
 == input/resources/bin.xml ==
 == input/resources/bl-simple.xml ==
 == input/resources/bn.xml ==
+== input/resources/CodeSystem/BinaryDataEncoding.xml ==
 == input/resources/cs-simple.xml ==
 == input/resources/int-simple.xml ==
 == input/resources/oid.xml ==
@@ -321,4 +328,10 @@ WARNING: StructureDefinition/PN: StructureDefinition.snapshot.element[0].constra
 == input/resources/uid.xml ==
 == input/resources/url.xml ==
 == input/resources/uuid.xml ==
+== input/resources/ValueSet/BinaryDataEncoding.xml ==
+== input/resources/ValueSet/CDACompressionAlgorithm.xml ==
+== input/resources/ValueSet/CDAEntityNameUse.xml ==
+== input/resources/ValueSet/CDANullFlavor.xml ==
+== input/resources/ValueSet/CDAPostalAddressUse.xml ==
+== input/resources/ValueSet/CDASignatureCode.xml ==
 == input/resources/xs-ID.xml ==

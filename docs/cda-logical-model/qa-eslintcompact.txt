@@ -1,19 +1,20 @@
-﻿/Users/oegger/Documents/github/cda-core-2.0/input/examples/clinicaldocument-example.xml: line 159, col 52, Info - The code 'COND' is valid but is deprecated (INVALID)
-/Users/oegger/Documents/github/cda-core-2.0/input/examples/clinicaldocument-example.xml: line 175, col 52, Info - The code 'COND' is valid but is deprecated (INVALID)
-/Users/oegger/Documents/github/cda-core-2.0/input/examples/clinicaldocument-example.xml: line 201, col 52, Info - The code 'COND' is valid but is deprecated (INVALID)
-/Users/oegger/Documents/github/cda-core-2.0/input/examples/clinicaldocument-example.xml: line 947, col 52, Info - The code 'COND' is valid but is deprecated (INVALID)
-/Users/oegger/Documents/github/cda-core-2.0/input/examples/clinicaldocument-example.xml: line 955, col 47, Info - The code 'COND' is valid but is deprecated (INVALID)
-/Users/oegger/Documents/github/cda-core-2.0/input/examples/clinicaldocument-example.xml: line 962, col 52, Info - The code 'COND' is valid but is deprecated (INVALID)
-/Users/oegger/Documents/github/cda-core-2.0/input/examples/clinicaldocument-example.xml: line 970, col 47, Info - The code 'COND' is valid but is deprecated (INVALID)
-/Users/oegger/Documents/github/cda-core-2.0/input/examples/clinicaldocument-example.xml: line 977, col 52, Info - The code 'COND' is valid but is deprecated (INVALID)
-/Users/oegger/Documents/github/cda-core-2.0/input/resources/IVL-INT.xml: line 1, col 18008, Error - Error in constraint 'ivl-int-center' with expression 'center.empty() or (low.empty() and high.empty())': Error evaluating FHIRPath expression: The type 'http://hl7.org/cda/stds/core/StructureDefinition/IVL_INT' is unknown or not supported at getChildTypesByName (@char 5) (INVALID)
-/Users/oegger/Documents/github/cda-core-2.0/input/resources/IVL-PQ.xml: line 1, col 19795, Error - Error in constraint 'ivl-pq-center' with expression 'center.empty() or (low.empty() and high.empty())': Error evaluating FHIRPath expression: The type 'http://hl7.org/cda/stds/core/StructureDefinition/IVL_PQ' is unknown or not supported at getChildTypesByName (@char 5) (INVALID)
-/Users/oegger/Documents/github/cda-core-2.0/input/resources/IVL-TS.xml: line 1, col 15043, Error - Error in constraint 'ivl-ts-center' with expression 'center.empty() or (low.empty() and high.empty())': Error evaluating FHIRPath expression: The type 'http://hl7.org/cda/stds/core/StructureDefinition/IVL_TS' is unknown or not supported at getChildTypesByName (@char 5) (INVALID)
-/Users/oegger/Documents/github/cda-core-2.0/input/resources/PN.xml: line 1, col 3221, Warning - pn-no-ls: The left side is inherently a collection, and so the expression 'qualifier = 'LS'' may fail or return false if there is more than one item in the content being evaluated (BUSINESSRULE)
-
-ClinicalDocumentArchitecture : Validation Results
+ClinicalDocumentArchitecture
 =========================================
 
-err = 4, warn = 9, info = 8
-IG Publisher Version: 1.4.10 Out of date - current version is 1.4.11
-Generated Wed Oct 04 23:02:00 CEST 2023. FHIR version 5.0.0 for hl7.cda.uv.core#2.1.0-draft2-mb (canonical = http://hl7.org/cda/stds/core)
+Generic: line 0, col 0, Warning - Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/LabCriterion.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list. (INVARIANT)
+Generic: line 0, col 0, Warning - Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmContent.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list. (INVARIANT)
+Generic: line 0, col 0, Warning - Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmIngredient.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list. (INVARIANT)
+Generic: line 0, col 0, Warning - Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmMedicineClass.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list. (INVARIANT)
+Generic: line 0, col 0, Warning - Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmPackagedMedicine.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list. (INVARIANT)
+Generic: line 0, col 0, Warning - Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmSpecializedKind.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list. (INVARIANT)
+Generic: line 0, col 0, Warning - Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmSubstance.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list. (INVARIANT)
+Generic: line 0, col 0, Warning - Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmSuperContent.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list. (INVARIANT)
+Generic: line 0, col 0, Warning - The jira specification file appears to be out of date with the versions, artifacts and pages currently defined in the IG.  A proposed revised file to be reviewed and, if appropriate, submitted as a pull request against the XML folder in https://github.com/HL7/JIRA-Spec-Artifacts.  To see the differences, perform a file compare on 'template/jira-current.xml' (a normalized view of what is in Github) and 'template/jira-new.xml' (reflects current IG content) (INFORMATIONAL)
+/Users/oegger/Documents/github/CDA-core-sd/input/examples/clinicaldocument-example.xml: line 169, col 30, Error - ExternalObservation.classCode: minimum required = 1, but only found 0 (from http://hl7.org/cda/stds/core/StructureDefinition/ExternalObservation|2.0.0-sd-202312-matchbox-patch) (STRUCTURE)
+/Users/oegger/Documents/github/CDA-core-sd/input/examples/clinicaldocument-example.xml: line 195, col 30, Error - ExternalObservation.classCode: minimum required = 1, but only found 0 (from http://hl7.org/cda/stds/core/StructureDefinition/ExternalObservation|2.0.0-sd-202312-matchbox-patch) (STRUCTURE)
+/Users/oegger/Documents/github/CDA-core-sd/input/examples/clinicaldocument-example.xml: line 219, col 30, Error - ExternalObservation.classCode: minimum required = 1, but only found 0 (from http://hl7.org/cda/stds/core/StructureDefinition/ExternalObservation|2.0.0-sd-202312-matchbox-patch) (STRUCTURE)
+/Users/oegger/Documents/github/CDA-core-sd/input/examples/clinicaldocument-example.xml: line 1001, col 14, Info - The CDA Template 2.16.840.1.113883.3.27.354 is not known (INVALID)
+/Users/oegger/Documents/github/CDA-core-sd/input/examples/clinicaldocument-example.xml: line 3, col 127, Info - The CDA Template 2.16.840.1.113883.3.27.1776 is not known (INVALID)
+
+err = 3, warn = 9, info = 2
+IG Publisher Version: 1.6.1

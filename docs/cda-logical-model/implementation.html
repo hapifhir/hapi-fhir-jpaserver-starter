@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+    <title>Implementation Notes - Clinical Document Architecture v2.0.0-sd-202312-matchbox-patch</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="author" content="http://hl7.org/fhir"/>
+
+    <link href="fhir.css" rel="stylesheet"/>
+
+    <!-- Bootstrap core CSS -->
+    <link href="assets/css/bootstrap-fhir.css" rel="stylesheet"/>
+
+    <!-- Project extras -->
+    <link href="assets/css/project.css" rel="stylesheet"/>
+    <link href="assets/css/pygments-manni.css" rel="stylesheet"/>
+    <link href="assets/css/jquery-ui.css" rel="stylesheet"/>
+  	<link href="assets/css/prism.css" rel="stylesheet" />
+    <!-- Placeholder for child template CSS declarations -->
+    <link href="assets/css/hl7.css" rel="stylesheet"/>
+    <link href="assets/css/cda.css" rel="stylesheet"/>
+
+    <script type="text/javascript" src="fhir-table-scripts.js"> </script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="assets/js/html5shiv.js"></script>
+    <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Favicons -->
+    <link rel="fhir-logo" sizes="144x144" href="assets/ico/icon-fhir-144.png"/>
+    <link rel="fhir-logo" sizes="114x114" href="assets/ico/icon-fhir-114.png"/>
+    <link rel="fhir-logo" sizes="72x72" href="assets/ico/icon-fhir-72.png"/>
+    <link rel="fhir-logo" href="assets/ico/icon-fhir-57.png"/>
+    <link rel="shortcut icon" href="assets/ico/favicon.png"/>
+  </head>
+  <body onload="document.body.style.opacity='1'">
+
+	  <script src="assets/js/prism.js"></script>
+
+    <style type="text/css">h2{--heading-prefix:"2.1"}
+    h3,h4,h5,h6{--heading-prefix:"2.1"}</style>
+    <div id="segment-header" class="segment">  <!-- segment-header -->
+      <div class="container">  <!-- container -->
+        <!-- Placeholder for child template header declarations -->
+
+        <div id="hl7-nav">
+          <a id="hl7-logo" no-external="true" href="http://hl7.org">
+            <img height="50" alt="Visit the HL7 website" src="assets/images/hl7-logo-header.png"/>
+          </a>
+        </div>
+        <div id="family-nav">
+          <a id="family-logo" no-external="true" href="http://hl7.org/cda"><img height="50" alt="Visit the CDA website" src="assets/images/cda_both_trans.jpg"/> </a>
+        </div>
+        <div id="hl7-search">
+          <a id="hl7-search-lnk" no-external="true" href="http://hl7.org/fhir/search.cfm"><img alt="Search FHIR" src="assets/images/search.png"/></a>
+        </div>
+
+
+        <div id="ig-status">
+          <p><span style="font-size:12pt;font-weight:bold">Clinical Document Architecture</span>
+            <br/>
+            <span style="display:inline-block;">2.0.0-sd-202312-matchbox-patch - ballot
+
+
+            </span>
+          </p>
+        </div>
+      </div> <!-- /container -->
+    </div>  <!-- /segment-header -->
+
+    <div id="segment-navbar" class="segment">  <!-- segment-navbar -->
+      <div id="stripe"> </div>
+      <div class="container">  <!-- container -->
+        <!-- HEADER CONTENT -->
+
+        <nav class="navbar navbar-inverse">
+          <!--status-bar-->
+          <div class="container">
+            <button data-target=".navbar-inverse-collapse" class="navbar-toggle" data-toggle="collapse" type="button">
+              <span class="icon-bar"> </span>
+              <span class="icon-bar"> </span>
+              <span class="icon-bar"> </span>
+            </button>
+            <a class="navbar-brand hidden" href="http://hl7.org/fhir/R5/index.html">FHIR</a>
+            <div class="nav-collapse collapse navbar-inverse-collapse">
+              <ul xmlns="http://www.w3.org/1999/xhtml" class="nav navbar-nav">
+  <li><a href="index.html">IG Home</a></li>
+  <li class="dropdown">
+    <a data-toggle="dropdown" href="#">Information<b class="caret"></b></a>
+    <ul class="dropdown-menu">
+      <li><a href="overview.html">CDA Overview</a></li>
+      <li><a href="implementation.html">Implementation Notes</a></li>
+      <li><a href="cda-rmim.html">Graphical Map of CDA</a></li>
+      <li><a href="dt-uml.html">Graphical Map of Datatypes</a></li>
+      <li><a href="narrative.html">Narrative Block</a></li>
+    </ul>
+  </li>
+  <li><a href="artifacts.html">Artifact Index</a></li>
+  <li><a href="downloads.html">Downloads</a></li>
+</ul>
+            </div>  <!-- /.nav-collapse -->
+          </div>  <!-- /.container -->
+        </nav>  <!-- /.navbar -->
+      <!-- /HEADER CONTENT -->
+      </div>  <!-- /container -->
+    </div>  <!-- /segment-navbar -->
+    <!--status-bar-->
+
+    <div id="segment-breadcrumb" class="segment">  <!-- segment-breadcrumb -->
+      <div class="container">  <!-- container -->
+        <ul class="breadcrumb">
+          <li><a href='toc.html'><b>Table of Contents</b></a></li><li><a href='overview.html'><b>Overview</b></a></li><li><b>Implementation Notes</b></li>
+
+        </ul>
+      </div>  <!-- /container -->
+    </div>  <!-- /segment-breadcrumb -->
+
+    <a name="top"> </a>
+    <div id="segment-content" class="segment">  <!-- segment-content -->
+      <div class="container">  <!-- container -->
+        <div class="row">
+          <div class="inner-wrapper">
+
+<style type="text/css">
+h2:before{color:silver;counter-increment:section;content:var(--heading-prefix) " ";}
+h3:before{color:silver;counter-increment:sub-section;content:var(--heading-prefix) "." counter(sub-section) " ";}
+h4:before{color:silver;counter-increment:composite;content:var(--heading-prefix) "." counter(sub-section) "." counter(composite) " ";}
+h5:before{color:silver;counter-increment:detail;content:var(--heading-prefix) "." counter(sub-section) "." counter(composite) "." counter(detail) " ";}
+h6:before{color:silver;counter-increment:more-detail;content:var(--heading-prefix) "." counter(sub-section) "." counter(composite) "." counter(detail) "." counter(more-detail)" ";}
+</style>
+<div class="col-12">
+  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture - Local Development build (v2.0.0-sd-202312-matchbox-patch) built by the FHIR (HL7® FHIR® Standard) Build Tools. See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
+  <h2>Implementation Notes</h2>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+    <p><!-- white space is critical inside of capture --></p>
+<div class="markdown-toc">
+<ul id="markdown-toc">
+  <li><a href="#creating-cda-documents" id="markdown-toc-creating-cda-documents">Creating CDA Documents</a></li>
+  <li><a href="#cda-and-semantic-interoperability" id="markdown-toc-cda-and-semantic-interoperability">CDA and Semantic Interoperability</a></li>
+</ul>
+
+</div>
+
+<h3 id="creating-cda-documents">Creating CDA Documents</h3>
+
+<p><strong>Introduction</strong></p>
+
+<p>There are an ever-increasing variety of tools and techniques for creating CDA documents:</p>
+
+<ol>
+  <li>Transcription: most clinical documents are created through a voice interface. CDA is available as an output from transcription vendors large and small today. Some are integrating natural language processing to provide coded structures within dictated CDAs.</li>
+  <li>EMR/EHR: many electronic medical record vendors have CDA output capability, although they provide it on-demand, not as a standard feature. For EMRs, CDA is relatively simple type of report.</li>
+  <li>XML forms: a new generation of XML tools for forms generation can create CDA on output.</li>
+  <li>Knowledge base: at least one major US provider has built a CDA editor on top of a knowledge base for guided, structured entry.</li>
+  <li>Dynamic query: dynamic assembly of CDA documents is used in some distributed applications to prepopulate documents from existing data stores, such as lab result databases. This method can be used in conjunction with any of the others.</li>
+</ol>
+
+<p>This appendix considers not the specific tools and technologies, but is intended as a general guide to use of CDA in document creation.</p>
+
+<p><strong>Before you start: RIM compliance</strong></p>
+
+<ul>
+  <li>structures, vocabulary, datatypes</li>
+</ul>
+
+<p>Creating a CDA-compliant instance, by definition, means that the information contained within is defined by the HL7 RIM. Regardless of your starting point or method of document generation, when you are done, the computable semantics of the document will derive their meaning from the relationship between RIM classes, controlled vocabulary and the V3 RIM datatypes. Any CDA-generation implementation must start with an examination of how document requirements relate to the RIM, the datatypes and vocabulary.</p>
+
+<p>The RIM, however, is a highly abstract model and recognizes many extensive vocabulary domains. While RIM-mapping is a necessary condition for CDA generation, it is not sufficient to determine the method of generation or to drive a user interface for document creation.</p>
+
+<p><strong>An exchange specification, not an authoring specification</strong></p>
+
+<ul>
+  <li>CDA is not deterministic for document creation</li>
+</ul>
+
+<p>CDA is a specification for the exchange form of a clinical document. A CDA schema can validate many of the conformance requirements, but will be too general for most authoring applications. In general, standards for interoperability and broadbased exchange will not directly drive an authoring GUI. Given the extent of the CDA domain – clinical care – the requirements for generalized exchange overlap with, but don’t match, the requirements for driving an authoring interface.</p>
+
+<p>For example, the CDA requirement for human readability demands that a single stylesheet render the authenticated clinical content of any CDA document. If CDA elements were defined in the generic schema that corresponds to the sections of a document, <code class="language-plaintext highlighter-rouge">&lt;historyOfPresentIllness&gt;</code> or <code class="language-plaintext highlighter-rouge">&lt;Subjective&gt;</code>, for example, a stylesheet would need to recognize each of these tags as section-level tags and render them accordingly. The CDA approach, defining <code class="language-plaintext highlighter-rouge">&lt;section&gt;</code> and asserting the type of section through coded vocabulary means that not only is the CDA extensible through the externally-maintained vocabulary domains, but that document designers have the flexibility to create hierarchies of sections and to name and tag them according to local requirements, while maintaining compatibility for the exchange context. Thus, while specific tagging that makes it easier to drive a GUI is fine locally, where practice can be more tightly constrained, CDA needs to take a more general approach.</p>
+
+<p>Both sets of requirements, for authoring and for exchange, should be recognized. Within a defined community of interest, such as a single business enterprise, a professional society or in some cases, local and regional health authorities, there can be tight agreement on the form of a document so that the authoring definitions and the exchange definitions coincide. Unless and until there is universal agreement, there can be no universal exchange unless the diversity of local requirements is acknowledged. This is a long-winded way of saying that CDA will remain a general exchange standard, and other approaches must be available to define data entry and document creation validation requirements.</p>
+
+<p>General approaches: constrain or transform</p>
+
+<ul>
+  <li>constrain: emit valid CDA directly from the authoring system using a schema that isn’t CDA</li>
+  <li>transform: example - emit local XML, map to CDA</li>
+</ul>
+
+<p>Given that CDA is not an authoring schema, there are two logical alternatives to creating valid CDA instances.</p>
+
+<p>The first is to add constraints to the CDA schema so that the resulting specification defines a particular document type (see the following exhibit “Creating a CDA through a local schema”). There are several technologies available for adding constraints. One approach is to modify the CDA schema itself to a local variant (local.cda.xsd below). Modifications could include limiting the levels of nesting; constraining vocabulary and sequence, for example requiring that a section with a LOINC code for “Subjective” initiate the document body and be followed by a section coded “Objective”. These modifications could be expressed in W3C Schema or as Xpath statements within the local schema. Instances that validate against this constrained, local version of CDA are, by definition, also valid CDA instances.</p>
+
+<p><a href="L-cda_figure3.gif"><img src="L-cda_figure3.gif" alt="Validate with CDA Schema" style="max-width:100%" /></a></p>
+
+<p>Templates are one type of constraint. HL7 is in the process of defining a formal template mechanism (see <a href="overview.html#the-a-in-cda">The “A” in “CDA”</a>).</p>
+
+<p>The second approach is to create a local schema and then transform the local XML instance to CDA</p>
+
+<p><a href="L-cda_figure4.gif"><img src="L-cda_figure4.gif" alt="Transform from local instance" style="max-width:100%" /></a></p>
+
+<h3 id="cda-and-semantic-interoperability">CDA and Semantic Interoperability</h3>
+
+<p>A long term objective of CDA and other specifications in the V3 family is to achieve increasingly greater and greater “semantic interoperability”, which might be defined as the ability of two applications to share data, with no prior negotiations, such that decision support within each application continues to function reliably when processed against the received data.</p>
+
+<p>CDA seeks to achieve the highest level of constraint that can exist in an international standard. Where international consensus is lacking, and where uses cases in different realms currently preclude consensus, CDA will need to be necessarily inclusive. In such areas, ongoing harmonization and consensus building will further enable semantic interoperability, which will be reflected in future iterations of CDA.</p>
+
+<p>While the framework provided by the RIM and by CDA and by the shared HL7 Clinical Statement Model are a critical component of semantic interoperability, they are not currently sufficient, particularly given the lack of global terminology solution, and the fact that each terminology overlaps with the RIM in different ways. Such terminology solutions are outside the scope of CDA, and will need to be addressed in various national and international forums.</p>
+
+
+
+</div>
+        </div>  <!-- /inner-wrapper -->
+      </div>  <!-- /row -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-content -->
+
+  <script type="text/javascript" src="assets/js/jquery.js"> </script>     <!-- note keep space here, otherwise it will be transformed to empty tag -> fails -->
+  <script type="text/javascript" src="assets/js/jquery-ui.min.js"> </script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      if(window.location.hash != "") {
+          $('a[href="' + window.location.hash + '"]').click()
+      }
+    });
+  </script>
+  <a name="bottom"> </a>
+  <div id="segment-footer" igtool="footer" class="segment">  <!-- segment-footer -->
+    <div class="container">  <!-- container -->
+
+      <div class="inner-wrapper">
+        <p>
+          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structure">Health Level 7</a>.  Package hl7.cda.uv.core#2.0.0-sd-202312-matchbox-patch based on <a style="color: var(--footer-hyperlink-text-color)" href="http://hl7.org/fhir/R5/">FHIR 5.0.0</a>. Generated <span title="Tue, Mar 12, 2024 18:28+0100">2024-03-12</span>
+          <br/>
+          <span style="color: var(--footer-highlight-text-color)">
+                      Links: <a style="color: var(--footer-hyperlink-text-color)" href="toc.html">Table of Contents</a> |
+                 <a style="color: var(--footer-hyperlink-text-color)" href="qa.html">QA Report</a>
+                 
+                
+                 | <a style="color: #81BEF7" target="_blank" href="http://hl7.org/cda/stds/core/history.html">Version History <img alt="external" style="vertical-align: baseline" src="external.png"/></a></a> |
+                 <a style="color: #81BEF7" rel="license" href="http://hl7.org/fhir/R5/license.html"><img style="border-style: none;" alt="CC0" src="cc0.png"/></a> |
+                 <!--<a style="color: #81BEF7" href="todo.html">Search</a> | --> 
+                 <a style="color: #81BEF7" target="_blank" href="https://jira.hl7.org/projects/CDA/issues">Propose a change <img alt="external" style="vertical-align: baseline" src="external.png"/></a>
+
+          </span>
+        </p>
+      </div>  <!-- /inner-wrapper -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-footer -->
+  
+  <div id="segment-post-footer" class="segment hidden">  <!-- segment-post-footer -->
+    <div class="container">  <!-- container -->
+    </div>  <!-- /container -->
+  </div>  <!-- /segment-post-footer -->
+  
+  <!-- JS and analytics only. -->
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script type="text/javascript" src="assets/js/bootstrap.min.js"> </script>
+  <script type="text/javascript" src="assets/js/respond.min.js"> </script>
+  <script type="text/javascript" src="assets/js/anchor.min.js"> </script>
+  <script type="text/javascript" src="assets/js/clipboard.min.js"> </script>
+  <script type="text/javascript" src="assets/js/clipboard-btn.js"> </script>
+  <script>anchors.options.visible = 'hover'
+anchors.add()</script>
+  
+<!-- feedback form - Google forms -->
+<!-- v0.1, 2021-01-09 -->
+
+
+
+<!-- / feedback form  -->
+
+  <!-- Analytics Below
+  ================================================== -->
+  </body>
+</html>
+

@@ -1,17 +1,33 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
 "ParticipantRole","ParticipantRole","","","",1,1,"","","","null {[]} {[]}
-","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+","Base for all types and resources","Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","role-choice:playingDevice and playingEntity are mutually exclusive {(playingDevice | playingEntity).count() <= 1}
 ","n/a"
+"ParticipantRole.nullFlavor","ParticipantRole.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"ParticipantRole.realmCode","ParticipantRole.realmCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.realmCode",0,*,"",""
+"ParticipantRole.typeId","ParticipantRole.typeId","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.typeId",0,1,"",""
+"ParticipantRole.typeId.nullFlavor","ParticipantRole.typeId.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"ParticipantRole.typeId.assigningAuthorityName","ParticipantRole.typeId.assigningAuthorityName","","","Assigning Authority Name",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+","","A human readable name or mnemonic for the assigning authority. The Assigning Authority Name has no computational value. The purpose of a Assigning Authority Name is to assist an unaided human interpreter of an II value to interpret the authority. Note: no automated processing must depend on the assigning authority name to be present in any form.","","","","","","","","","",,,,,"",,,,"II.assigningAuthorityName",0,1,"",""
+"ParticipantRole.typeId.displayable","ParticipantRole.typeId.displayable","","","Displayable",0,1,"","","","boolean {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/bl-simple]]} {[]}
+","","Specifies if the identifier is intended for human display and data entry (displayable = true) as opposed to pure machine interoperation (displayable = false).","","","","","","","","","",,,,,"",,,,"II.displayable",0,1,"",""
+"ParticipantRole.typeId.root","ParticipantRole.typeId.root","","","Root",1,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/oid], CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/uuid], CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/ruid]]} {[]}
+","","Identifies the type as an HL7 Registered model","","","","","<valueString xmlns=""http://hl7.org/fhir"" value=""2.16.840.1.113883.1.3""/>","","","","",,,,,"",,,,"II.root",0,1,"",""
+"ParticipantRole.typeId.extension","ParticipantRole.typeId.extension","","","Extension",1,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+","","A character string as a unique identifier within the scope of the identifier root.","","","","","","","","","",,,,,"",,,,"II.extension",0,1,"",""
+"ParticipantRole.templateId","ParticipantRole.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
+","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
 "ParticipantRole.classCode","ParticipantRole.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ROL""/>","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-RoleClassRoot","",,,,"ParticipantRole.classCode",1,1,"",""
-"ParticipantRole.templateId","ParticipantRole.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
-","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"ParticipantRole.templateId",0,*,"",""
 "ParticipantRole.id","ParticipantRole.id","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ParticipantRole.id",0,*,"",""
 "ParticipantRole.sdtcIdentifiedBy","ParticipantRole.sdtcIdentifiedBy","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IdentifiedBy {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ParticipantRole.sdtcIdentifiedBy",0,*,"",""
 "ParticipantRole.code","ParticipantRole.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
-","","","","","","","","","","","",,"extensible","","http://terminology.hl7.org/ValueSet/v3-RoleCode","",,,,"ParticipantRole.code",0,1,"",""
+","","","","","","","","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-RoleCode","",,,,"ParticipantRole.code",0,1,"",""
 "ParticipantRole.addr","ParticipantRole.addr","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/AD {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ParticipantRole.addr",0,*,"",""
 "ParticipantRole.telecom","ParticipantRole.telecom","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/TEL {[]} {[]}

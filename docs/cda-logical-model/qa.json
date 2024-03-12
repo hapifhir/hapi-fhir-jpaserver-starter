@@ -1,13 +1,19 @@
 {
   "url" : "http://hl7.org/cda/stds/core/ImplementationGuide/hl7.cda.uv.core",
   "name" : "ClinicalDocumentArchitecture",
+  "title" : "Clinical Document Architecture",
+  "description" : null,
+  "status" : "active",
   "package-id" : "hl7.cda.uv.core",
-  "ig-ver" : "2.1.0-draft2-mb",
-  "date" : "Wed, 04 Oct, 2023 23:00:58 +0200",
-  "errs" : 4,
+  "ig-ver" : "2.0.0-sd-202312-matchbox-patch",
+  "date" : "Tue, 12 Mar, 2024 18:28:21 +0100",
+  "dateISO8601" : "2024-03-12T18:28:21+01:00",
+  "errs" : 3,
   "warnings" : 9,
-  "hints" : 8,
+  "hints" : 2,
+  "suppressed-hints" : 14,
+  "suppressed-warnings" : 597,
   "version" : "5.0.0",
   "tool" : "5.0.0 (3)",
-  "maxMemory" : 1998884360
+  "maxMemory" : 3362802656
 }

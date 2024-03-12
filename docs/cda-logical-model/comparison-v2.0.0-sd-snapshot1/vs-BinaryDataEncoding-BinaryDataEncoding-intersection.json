@@ -1,0 +1,9 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "610faa6d-d917-4e07-a068-484061ef4901-54",
+  "url" : "http://hl7.org/fhir/comparison/ValueSet/610faa6d-d917-4e07-a068-484061ef4901-54",
+  "name" : "IntersectionBinaryDataEncodingAndBinaryDataEncoding",
+  "title" : "Intersection of Binary Data Encoding Value Set And Binary Data Encoding Value Set",
+  "status" : "draft",
+  "date" : "2024-03-12T18:28:32+01:00"
+}

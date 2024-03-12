@@ -1,9 +1,9 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
 "IVL_INT","IVL_INT","","","",1,*,"","","","null {[]} {[]}
-","Base for all types and resources","Interval of integers","","","","","","","","","",,,,,"",,,,"Base",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-ivl-int-center:Center cannot co-exist with low or high {center.empty() or (low.empty() and high.empty())}","n/a"
+","Base for all types and resources","Interval of integers","","","","","","","","","",,,,,"",,,,"Base",0,*,"","ivl-int-center:Center cannot co-exist with low or high {center.empty() or (low.empty() and high.empty())}
+","n/a"
 "IVL_INT.nullFlavor","IVL_INT.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "IVL_INT.value","IVL_INT.value","","","",0,1,"","","","integer {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/int-simple]]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"IVL_INT.value",0,1,"",""
 "IVL_INT.operator","IVL_INT.operator","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}

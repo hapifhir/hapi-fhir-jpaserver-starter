@@ -25,6 +25,7 @@ import org.apache.commons.io.IOUtils;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBaseOperationOutcome;
 import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.Composition;
 import org.hl7.fhir.r4.model.Condition;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.OperationOutcome;
@@ -140,6 +141,12 @@ class CdaToFhirTransformTests {
 				getEngine().evaluateFhirPath(cdaLabItaly,
 						false,
 						"recordTarget.patientRole.patient.name.item.given.xmlText"));
+
+		// hl7 austria
+
+		assertEquals("2021-06-01", getEngine().evaluateFhirPath(cdaLabItaly, false, "terminologyDate.value"));
+		assertEquals("code", getEngine().evaluateFhirPath(cdaLabItaly, false, "formatCode.code"));
+		assertEquals("F028", getEngine().evaluateFhirPath(cdaLabItaly, false, "practiceSettingCode.code"));
 	}
 
 	@Test
@@ -157,6 +164,12 @@ class CdaToFhirTransformTests {
 				"http://salute.gov.it/ig/cda-fhir-maps/StructureMap/RefertodilaboratorioFULLBODY",
 				true);
 		assertNotNull(result);
+
+		Bundle resource = (Bundle) getEngine().transformToFhir(cdaLabItaly,	false,"http://salute.gov.it/ig/cda-fhir-maps/StructureMap/RefertodilaboratorioFULLBODY");
+		assertNotNull(resource);
+		Composition composition = (Composition) resource.getEntryFirstRep().getResource();
+		assertNotNull(composition);
+		assertEquals("2022-03-30T11:24:26+01:00", composition.getDateElement().getValueAsString());
 	}
 
 	@Test

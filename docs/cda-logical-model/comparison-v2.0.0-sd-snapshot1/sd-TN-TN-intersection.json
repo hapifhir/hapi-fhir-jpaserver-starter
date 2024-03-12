@@ -1,0 +1,168 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "610faa6d-d917-4e07-a068-484061ef4901-6",
+  "url" : "http://hl7.org/fhir/comparison/StructureDefinition/610faa6d-d917-4e07-a068-484061ef4901-6",
+  "name" : "IntersectionTNAndTN",
+  "title" : "Intersection of TN: TrivialName (V3 Data Type) And TN: TrivialName (V3 Data Type)",
+  "status" : "active",
+  "date" : "2024-03-12T18:28:32+01:00",
+  "snapshot" : {
+    "element" : [{
+      "path" : "EN",
+      "short" : "Base for all types and resources",
+      "definition" : "A restriction of entity name that is effectively a simple string used for a simple name for things and places.",
+      "min" : 1,
+      "max" : "*",
+      "mustSupport" : false,
+      "isModifier" : false,
+      "isSummary" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "path" : "EN.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple",
+        "#sd-cs-simple-cs-simple"]
+      }],
+      "mustSupport" : false,
+      "isModifier" : false,
+      "isSummary" : false,
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
+      }
+    },
+    {
+      "path" : "EN.use",
+      "representation" : ["xmlAttr"],
+      "label" : "Use Code",
+      "definition" : "A set of codes advising a system or user which name in a set of like names to select for a given purpose. A name without specific use code might be a default name useful for any purpose, but a name with a specific use code would be preferred for that respective purpose",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple",
+        "#sd-cs-simple-cs-simple"]
+      }],
+      "mustSupport" : false,
+      "isModifier" : false,
+      "isSummary" : false,
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityNameUse"
+      }
+    },
+    {
+      "path" : "EN.item",
+      "definition" : "A series of items that constitute the name.",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/fhir/StructureDefinition/Base"
+      }],
+      "constraint" : [{
+        "key" : "EN-1",
+        "severity" : "error",
+        "human" : "Can only have only one of the possible item elements in each choice",
+        "expression" : "(delimiter | family | given | prefix | suffix | xmlText).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/EN"
+      }],
+      "mustSupport" : false,
+      "isModifier" : false,
+      "isSummary" : false
+    },
+    {
+      "path" : "EN.item.delimiter",
+      "min" : 0,
+      "max" : "0",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ENXP"
+      }],
+      "mustSupport" : false,
+      "isModifier" : false,
+      "isSummary" : false
+    },
+    {
+      "path" : "EN.item.family",
+      "min" : 0,
+      "max" : "0",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ENXP"
+      }],
+      "mustSupport" : false,
+      "isModifier" : false,
+      "isSummary" : false
+    },
+    {
+      "path" : "EN.item.given",
+      "min" : 0,
+      "max" : "0",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ENXP"
+      }],
+      "mustSupport" : false,
+      "isModifier" : false,
+      "isSummary" : false
+    },
+    {
+      "path" : "EN.item.prefix",
+      "min" : 0,
+      "max" : "0",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ENXP"
+      }],
+      "mustSupport" : false,
+      "isModifier" : false,
+      "isSummary" : false
+    },
+    {
+      "path" : "EN.item.suffix",
+      "min" : 0,
+      "max" : "0",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ENXP"
+      }],
+      "mustSupport" : false,
+      "isModifier" : false,
+      "isSummary" : false
+    },
+    {
+      "path" : "EN.item.xmlText",
+      "representation" : ["xmlText"],
+      "short" : "Allows for mixed text content",
+      "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple",
+        "#sd-st-simple-st-simple"]
+      }],
+      "mustSupport" : false,
+      "isModifier" : false,
+      "isSummary" : false
+    },
+    {
+      "path" : "EN.validTime",
+      "label" : "Valid Time",
+      "definition" : "An interval of time specifying the time during which the name is or was used for the entity. This accomodates the fact that people change names for people, places and things.",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"
+      }],
+      "mustSupport" : false,
+      "isModifier" : false,
+      "isSummary" : false
+    }]
+  }
+}

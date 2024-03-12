@@ -1,11 +1,11 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)"
-"string","string","","","",0,*,"","","","null {[]} {[]}
-","Primitive Type string","A sequence of Unicode characters","Note that FHIR strings SHALL NOT exceed 1,048,576 (1024*1024) characters in size","","","","","","","","",,,,,"",,,,"string",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-ts-pattern:A timestamp may be any portion from YYYY to YYYYMMDDhhmmss. If precise to the second, may include fractional seconds, and an offset of +/-HHMM {matches('^[0-9]{1,8}|([0-9]{9,14}|[0-9]{14,14}\\.[0-9]+)([+-][0-9]{1,4})?$')}"
-"string.id","string.id","","","",0,0,"","","","string {[]} {[]}
+"dateTime","dateTime","","","",0,*,"","","","null {[]} {[]}
+","Primitive Type dateTime","A date, date-time or partial date (e.g. just year or year + month).  If hours and minutes are specified, a UTC offset SHALL be populated. The format is a union of the schema types gYear, gYearMonth, date and dateTime. Seconds must be provided due to schema type constraints but may be zero-filled and may be ignored.                 Dates SHALL be valid dates.","UTC offset is allowed for dates and partial dates","","","","","","","","",,,,,"",,,,"dateTime",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"
+"dateTime.id","dateTime.id","","","",0,0,"","","","string {[]} {[]}
 ","xml:id (or equivalent in JSON)","unique id for the element within a resource (for internal references)","","","","","","","","","",,,,,"",,,,"Element.id",0,1,"",""
-"string.extension","string.extension","","","",0,0,"","","","Extension {[]} {[]}
+"dateTime.extension","dateTime.extension","","","",0,0,"","","","Extension {[]} {[]}
 ","Extension","An Extension","","","","","","","","","",,,,,"",,,,"Element.extension",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
 ext-1:Must have either extensions or value[x], not both {extension.exists() != value.exists()}"
-"string.value","string.value","","","",0,1,"","","","string {[]} {[]}
-","Primitive value for string","The actual value","","","","","","","","","",1048576,,,,"",,,,"string.value",0,1,"",""
+"dateTime.value","dateTime.value","","","",0,1,"","","","dateTime {[]} {[]}
+","Primitive value for dateTime","The actual value","","","","","","","","","",,,,,"",,,,"dateTime.value",0,1,"",""

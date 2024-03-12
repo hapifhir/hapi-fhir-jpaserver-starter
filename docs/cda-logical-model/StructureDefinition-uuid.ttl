@@ -13,25 +13,28 @@
      fhir:div "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Primitive type 'uuid'</p>\n    </div>"
   ] ; # 
   fhir:extension ( [
-     fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace"^^xsd:anyURI ] ;
+     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ] ;
      fhir:value [ fhir:v "urn:hl7-org:v3"^^xsd:anyURI ]
+  ] [
+     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/logical-container"^^xsd:anyURI ] ;
+     fhir:value [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"^^xsd:anyURI ]
   ] [
      fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics"^^xsd:anyURI ] ;
      fhir:value [ fhir:v "can-bind" ]
   ] ) ; # 
   fhir:url [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/uuid"^^xsd:anyURI] ; # 
-  fhir:version [ fhir:v "2.1.0-draft2-mb"] ; # 
+  fhir:version [ fhir:v "2.0.0-sd-202312-matchbox-patch"] ; # 
   fhir:name [ fhir:v "uuid"] ; # 
   fhir:title [ fhir:v "uuid: DCE Universal Unique Identifier"] ; # 
   fhir:status [ fhir:v "active"] ; # 
   fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
-  fhir:date [ fhir:v "2023-10-04T23:00:58+02:00"^^xsd:dateTime] ; # 
+  fhir:date [ fhir:v "2024-03-12T18:28:21+01:00"^^xsd:dateTime] ; # 
   fhir:publisher [ fhir:v "Health Level 7"] ; # 
   fhir:contact ( [
      fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
      fhir:telecom ( [
        fhir:system [ fhir:v "url" ] ;
-       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structdoc" ]
+       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structure" ]
      ] [
        fhir:system [ fhir:v "email" ] ;
        fhir:value [ fhir:v "structdog@lists.HL7.org" ]
@@ -73,8 +76,8 @@
        ] [
          fhir:key [ fhir:v "uuid-pattern" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "Must contain 5 hyphen-separated groups of upper-case hexadecimal digits having 8, 4, 4, 4, and 12 places respectively." ] ;
-         fhir:expression [ fhir:v "matches('^[0-9A-Z]{8}-[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{12}$')" ]
+         fhir:human [ fhir:v "Must contain 5 hyphen-separated groups of hexadecimal digits having 8, 4, 4, 4, and 12 places respectively." ] ;
+         fhir:expression [ fhir:v "matches('^[0-9A-Za-z]{8}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{12}$')" ]
        ] ) ;
        fhir:isModifier [ fhir:v "false"^^xsd:boolean ] ;
        fhir:isSummary [ fhir:v "false"^^xsd:boolean ]
@@ -171,8 +174,8 @@
        fhir:constraint ( [
          fhir:key [ fhir:v "uuid-pattern" ] ;
          fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "Must contain 5 hyphen-separated groups of upper-case hexadecimal digits having 8, 4, 4, 4, and 12 places respectively." ] ;
-         fhir:expression [ fhir:v "matches('^[0-9A-Z]{8}-[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{12}$')" ]
+         fhir:human [ fhir:v "Must contain 5 hyphen-separated groups of hexadecimal digits having 8, 4, 4, 4, and 12 places respectively." ] ;
+         fhir:expression [ fhir:v "matches('^[0-9A-Za-z]{8}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{12}$')" ]
        ] )
      ] [
        fhir:id [ fhir:v "string.id" ] ;

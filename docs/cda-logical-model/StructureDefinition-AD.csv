@@ -1,419 +1,421 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
 "AD","AD","","","",1,*,"","","","null {[]} {[]}
-","Base for all types and resources","Mailing and home or office addresses. A sequence of address parts, such as street or post office Box, city, postal code, country, etc.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-","n/a"
+","Base for all types and resources","Mailing and home or office addresses. A sequence of address parts, such as street or post office Box, city, postal code, country, etc.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
 "AD.nullFlavor","AD.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "AD.isNotOrdered","AD.isNotOrdered","","","Is Not Ordered",0,1,"","","","boolean {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/bl-simple]]} {[]}
 ","","A boolean value specifying whether the order of the address parts is known or not. While the address parts are always a Sequence, the order in which they are presented may or may not be known. Where this matters, the isNotOrdered property can be used to convey this information.","","","","","","","","","",,,,,"",,,,"AD.isNotOrdered",0,1,"",""
 "AD.use","AD.use","","","Use Code",0,*,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","A set of codes advising a system or user which address in a set of like addresses to select for a given purpose.","","","","","","","","","",,,,,"",,,,"AD.use",0,*,"",""
-"AD.delimiter","AD.delimiter","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","Delimiters are printed without framing white space. If no value component is provided, the delimiter appears as a line break.","","","","","","","","","",,,,,"",,,,"AD.delimiter",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+","","A set of codes advising a system or user which address in a set of like addresses to select for a given purpose.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse","",,,,"AD.use",0,*,"",""
+"AD.item","AD.item","","","",0,*,"","","","http://hl7.org/fhir/StructureDefinition/Base {[]} {[]}
+","","A series of items that constitute the address.","","","","","","","","","",,,,,"",,,,"AD.item",0,*,"","AD-1:Can only have only one of the possible item elements in each choice {(delimiter | country | state | county | city | postalCode | streetAddressLine | houseNumber | houseNumberNumeric | direction | streetName | streetNameBase | streetNameType | additionalLocator | unitID | unitType | careOf | censusTract | deliveryAddressLine | deliveryInstallationType | deliveryInstallationArea | deliveryInstallationQualifier | deliveryMode | deliveryModeIdentifier | buildingNumberSuffix | postBox | precinct | xmlText).count() = 1}
 "
-"AD.delimiter.nullFlavor","AD.delimiter.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.delimiter.representation","AD.delimiter.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.delimiter","AD.item.delimiter","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","Delimiters are printed without framing white space. If no value component is provided, the delimiter appears as a line break.","","","","","","","","","",,,,,"",,,,"AD.item.delimiter",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
+"
+"AD.item.delimiter.nullFlavor","AD.item.delimiter.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.delimiter.representation","AD.item.delimiter.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.delimiter.mediaType","AD.delimiter.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.delimiter.mediaType","AD.item.delimiter.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.delimiter.language","AD.delimiter.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.delimiter.language","AD.item.delimiter.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.delimiter.xmlText","AD.delimiter.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.delimiter.xmlText","AD.item.delimiter.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.delimiter.partType","AD.delimiter.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.delimiter.partType","AD.item.delimiter.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DEL""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.country","AD.country","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","Country","","","","","","","","","",,,,,"",,,,"AD.country",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.country","AD.item.country","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","Country","","","","","","","","","",,,,,"",,,,"AD.item.country",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.country.nullFlavor","AD.country.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.country.representation","AD.country.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.country.nullFlavor","AD.item.country.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.country.representation","AD.item.country.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.country.mediaType","AD.country.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.country.mediaType","AD.item.country.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.country.language","AD.country.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.country.language","AD.item.country.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.country.xmlText","AD.country.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.country.xmlText","AD.item.country.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.country.partType","AD.country.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.country.partType","AD.item.country.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CNT""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.state","AD.state","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","A sub-unit of a country with limited sovereignty in a federally organized country.","","","","","","","","","",,,,,"",,,,"AD.state",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.state","AD.item.state","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","A sub-unit of a country with limited sovereignty in a federally organized country.","","","","","","","","","",,,,,"",,,,"AD.item.state",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.state.nullFlavor","AD.state.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.state.representation","AD.state.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.state.nullFlavor","AD.item.state.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.state.representation","AD.item.state.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.state.mediaType","AD.state.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.state.mediaType","AD.item.state.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.state.language","AD.state.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.state.language","AD.item.state.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.state.xmlText","AD.state.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.state.xmlText","AD.item.state.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.state.partType","AD.state.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.state.partType","AD.item.state.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""STA""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.county","AD.county","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","A sub-unit of a state or province. (49 of the United States of America use the term ""county;"" Louisiana uses the term ""parish"".)","","","","","","","","","",,,,,"",,,,"AD.county",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.county","AD.item.county","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","A sub-unit of a state or province. (49 of the United States of America use the term ""county;"" Louisiana uses the term ""parish"".)","","","","","","","","","",,,,,"",,,,"AD.item.county",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.county.nullFlavor","AD.county.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.county.representation","AD.county.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.county.nullFlavor","AD.item.county.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.county.representation","AD.item.county.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.county.mediaType","AD.county.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.county.mediaType","AD.item.county.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.county.language","AD.county.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.county.language","AD.item.county.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.county.xmlText","AD.county.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.county.xmlText","AD.item.county.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.county.partType","AD.county.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.county.partType","AD.item.county.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CPA""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.city","AD.city","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","The name of the city, town, village, or other community or delivery center","","","","","","","","","",,,,,"",,,,"AD.city",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.city","AD.item.city","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","The name of the city, town, village, or other community or delivery center","","","","","","","","","",,,,,"",,,,"AD.item.city",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.city.nullFlavor","AD.city.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.city.representation","AD.city.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.city.nullFlavor","AD.item.city.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.city.representation","AD.item.city.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.city.mediaType","AD.city.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.city.mediaType","AD.item.city.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.city.language","AD.city.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.city.language","AD.item.city.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.city.xmlText","AD.city.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.city.xmlText","AD.item.city.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.city.partType","AD.city.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.city.partType","AD.item.city.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CTY""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.postalCode","AD.postalCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","A postal code designating a region defined by the postal service.","","","","","","","","","",,,,,"",,,,"AD.postalCode",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.postalCode","AD.item.postalCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","A postal code designating a region defined by the postal service.","","","","","","","","","",,,,,"",,,,"AD.item.postalCode",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.postalCode.nullFlavor","AD.postalCode.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.postalCode.representation","AD.postalCode.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.postalCode.nullFlavor","AD.item.postalCode.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.postalCode.representation","AD.item.postalCode.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.postalCode.mediaType","AD.postalCode.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.postalCode.mediaType","AD.item.postalCode.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.postalCode.language","AD.postalCode.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.postalCode.language","AD.item.postalCode.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.postalCode.xmlText","AD.postalCode.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.postalCode.xmlText","AD.item.postalCode.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.postalCode.partType","AD.postalCode.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.postalCode.partType","AD.item.postalCode.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ZIP""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.streetAddressLine","AD.streetAddressLine","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","Street address line","","","","","","","","","",,,,,"",,,,"AD.streetAddressLine",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.streetAddressLine","AD.item.streetAddressLine","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","Street address line","","","","","","","","","",,,,,"",,,,"AD.item.streetAddressLine",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.streetAddressLine.nullFlavor","AD.streetAddressLine.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.streetAddressLine.representation","AD.streetAddressLine.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.streetAddressLine.nullFlavor","AD.item.streetAddressLine.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.streetAddressLine.representation","AD.item.streetAddressLine.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.streetAddressLine.mediaType","AD.streetAddressLine.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.streetAddressLine.mediaType","AD.item.streetAddressLine.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.streetAddressLine.language","AD.streetAddressLine.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.streetAddressLine.language","AD.item.streetAddressLine.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.streetAddressLine.xmlText","AD.streetAddressLine.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.streetAddressLine.xmlText","AD.item.streetAddressLine.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.streetAddressLine.partType","AD.streetAddressLine.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.streetAddressLine.partType","AD.item.streetAddressLine.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SAL""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.houseNumber","AD.houseNumber","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","The number of a building, house or lot alongside the street. Also known as ""primary street number"". This does not number the street but rather the building.","","","","","","","","","",,,,,"",,,,"AD.houseNumber",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.houseNumber","AD.item.houseNumber","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","The number of a building, house or lot alongside the street. Also known as ""primary street number"". This does not number the street but rather the building.","","","","","","","","","",,,,,"",,,,"AD.item.houseNumber",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.houseNumber.nullFlavor","AD.houseNumber.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.houseNumber.representation","AD.houseNumber.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.houseNumber.nullFlavor","AD.item.houseNumber.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.houseNumber.representation","AD.item.houseNumber.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.houseNumber.mediaType","AD.houseNumber.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.houseNumber.mediaType","AD.item.houseNumber.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.houseNumber.language","AD.houseNumber.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.houseNumber.language","AD.item.houseNumber.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.houseNumber.xmlText","AD.houseNumber.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.houseNumber.xmlText","AD.item.houseNumber.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.houseNumber.partType","AD.houseNumber.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.houseNumber.partType","AD.item.houseNumber.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""BNR""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.houseNumberNumeric","AD.houseNumberNumeric","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","The numeric portion of a building number","","","","","","","","","",,,,,"",,,,"AD.houseNumberNumeric",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.houseNumberNumeric","AD.item.houseNumberNumeric","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","The numeric portion of a building number","","","","","","","","","",,,,,"",,,,"AD.item.houseNumberNumeric",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.houseNumberNumeric.nullFlavor","AD.houseNumberNumeric.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.houseNumberNumeric.representation","AD.houseNumberNumeric.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.houseNumberNumeric.nullFlavor","AD.item.houseNumberNumeric.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.houseNumberNumeric.representation","AD.item.houseNumberNumeric.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.houseNumberNumeric.mediaType","AD.houseNumberNumeric.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.houseNumberNumeric.mediaType","AD.item.houseNumberNumeric.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.houseNumberNumeric.language","AD.houseNumberNumeric.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.houseNumberNumeric.language","AD.item.houseNumberNumeric.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.houseNumberNumeric.xmlText","AD.houseNumberNumeric.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.houseNumberNumeric.xmlText","AD.item.houseNumberNumeric.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.houseNumberNumeric.partType","AD.houseNumberNumeric.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.houseNumberNumeric.partType","AD.item.houseNumberNumeric.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""BNN""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.direction","AD.direction","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","Direction (e.g., N, S, W, E)","","","","","","","","","",,,,,"",,,,"AD.direction",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.direction","AD.item.direction","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","Direction (e.g., N, S, W, E)","","","","","","","","","",,,,,"",,,,"AD.item.direction",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.direction.nullFlavor","AD.direction.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.direction.representation","AD.direction.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.direction.nullFlavor","AD.item.direction.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.direction.representation","AD.item.direction.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.direction.mediaType","AD.direction.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.direction.mediaType","AD.item.direction.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.direction.language","AD.direction.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.direction.language","AD.item.direction.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.direction.xmlText","AD.direction.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.direction.xmlText","AD.item.direction.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.direction.partType","AD.direction.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.direction.partType","AD.item.direction.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DIR""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.streetName","AD.streetName","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","Name of a roadway or artery recognized by a municipality (including street type and direction)","","","","","","","","","",,,,,"",,,,"AD.streetName",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.streetName","AD.item.streetName","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","Name of a roadway or artery recognized by a municipality (including street type and direction)","","","","","","","","","",,,,,"",,,,"AD.item.streetName",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.streetName.nullFlavor","AD.streetName.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.streetName.representation","AD.streetName.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.streetName.nullFlavor","AD.item.streetName.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.streetName.representation","AD.item.streetName.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.streetName.mediaType","AD.streetName.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.streetName.mediaType","AD.item.streetName.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.streetName.language","AD.streetName.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.streetName.language","AD.item.streetName.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.streetName.xmlText","AD.streetName.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.streetName.xmlText","AD.item.streetName.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.streetName.partType","AD.streetName.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.streetName.partType","AD.item.streetName.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""STR""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.streetNameBase","AD.streetNameBase","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","The base name of a roadway or artery recognized by a municipality (excluding street type and direction)","","","","","","","","","",,,,,"",,,,"AD.streetNameBase",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.streetNameBase","AD.item.streetNameBase","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","The base name of a roadway or artery recognized by a municipality (excluding street type and direction)","","","","","","","","","",,,,,"",,,,"AD.item.streetNameBase",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.streetNameBase.nullFlavor","AD.streetNameBase.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.streetNameBase.representation","AD.streetNameBase.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.streetNameBase.nullFlavor","AD.item.streetNameBase.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.streetNameBase.representation","AD.item.streetNameBase.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.streetNameBase.mediaType","AD.streetNameBase.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.streetNameBase.mediaType","AD.item.streetNameBase.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.streetNameBase.language","AD.streetNameBase.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.streetNameBase.language","AD.item.streetNameBase.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.streetNameBase.xmlText","AD.streetNameBase.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.streetNameBase.xmlText","AD.item.streetNameBase.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.streetNameBase.partType","AD.streetNameBase.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.streetNameBase.partType","AD.item.streetNameBase.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""STB""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.streetNameType","AD.streetNameType","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","The designation given to the street. (e.g. Street, Avenue, Crescent, etc.)","","","","","","","","","",,,,,"",,,,"AD.streetNameType",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.streetNameType","AD.item.streetNameType","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","The designation given to the street. (e.g. Street, Avenue, Crescent, etc.)","","","","","","","","","",,,,,"",,,,"AD.item.streetNameType",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.streetNameType.nullFlavor","AD.streetNameType.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.streetNameType.representation","AD.streetNameType.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.streetNameType.nullFlavor","AD.item.streetNameType.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.streetNameType.representation","AD.item.streetNameType.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.streetNameType.mediaType","AD.streetNameType.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.streetNameType.mediaType","AD.item.streetNameType.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.streetNameType.language","AD.streetNameType.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.streetNameType.language","AD.item.streetNameType.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.streetNameType.xmlText","AD.streetNameType.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.streetNameType.xmlText","AD.item.streetNameType.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.streetNameType.partType","AD.streetNameType.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.streetNameType.partType","AD.item.streetNameType.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""STTYP""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.additionalLocator","AD.additionalLocator","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","This can be a unit designator, such as apartment number, suite number, or floor. There may be several unit designators in an address (e.g., ""3rd floor, Appt. 342""). This can also be a designator pointing away from the location, rather than specifying a smaller location within some larger one (e.g., Dutch ""t.o."" means ""opposite to"" for house boats located across the street facing houses).","","","","","","","","","",,,,,"",,,,"AD.additionalLocator",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.additionalLocator","AD.item.additionalLocator","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","This can be a unit designator, such as apartment number, suite number, or floor. There may be several unit designators in an address (e.g., ""3rd floor, Appt. 342""). This can also be a designator pointing away from the location, rather than specifying a smaller location within some larger one (e.g., Dutch ""t.o."" means ""opposite to"" for house boats located across the street facing houses).","","","","","","","","","",,,,,"",,,,"AD.item.additionalLocator",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.additionalLocator.nullFlavor","AD.additionalLocator.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.additionalLocator.representation","AD.additionalLocator.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.additionalLocator.nullFlavor","AD.item.additionalLocator.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.additionalLocator.representation","AD.item.additionalLocator.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.additionalLocator.mediaType","AD.additionalLocator.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.additionalLocator.mediaType","AD.item.additionalLocator.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.additionalLocator.language","AD.additionalLocator.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.additionalLocator.language","AD.item.additionalLocator.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.additionalLocator.xmlText","AD.additionalLocator.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.additionalLocator.xmlText","AD.item.additionalLocator.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.additionalLocator.partType","AD.additionalLocator.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.additionalLocator.partType","AD.item.additionalLocator.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ADL""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.unitID","AD.unitID","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","The number or name of a specific unit contained within a building or complex, as assigned by that building or complex.","","","","","","","","","",,,,,"",,,,"AD.unitID",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.unitID","AD.item.unitID","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","The number or name of a specific unit contained within a building or complex, as assigned by that building or complex.","","","","","","","","","",,,,,"",,,,"AD.item.unitID",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.unitID.nullFlavor","AD.unitID.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.unitID.representation","AD.unitID.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.unitID.nullFlavor","AD.item.unitID.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.unitID.representation","AD.item.unitID.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.unitID.mediaType","AD.unitID.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.unitID.mediaType","AD.item.unitID.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.unitID.language","AD.unitID.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.unitID.language","AD.item.unitID.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.unitID.xmlText","AD.unitID.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.unitID.xmlText","AD.item.unitID.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.unitID.partType","AD.unitID.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.unitID.partType","AD.item.unitID.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""UNID""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.unitType","AD.unitType","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","Indicates the type of specific unit contained within a building or complex. E.g. Appartment, Floor","","","","","","","","","",,,,,"",,,,"AD.unitType",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.unitType","AD.item.unitType","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","Indicates the type of specific unit contained within a building or complex. E.g. Appartment, Floor","","","","","","","","","",,,,,"",,,,"AD.item.unitType",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.unitType.nullFlavor","AD.unitType.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.unitType.representation","AD.unitType.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.unitType.nullFlavor","AD.item.unitType.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.unitType.representation","AD.item.unitType.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.unitType.mediaType","AD.unitType.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.unitType.mediaType","AD.item.unitType.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.unitType.language","AD.unitType.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.unitType.language","AD.item.unitType.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.unitType.xmlText","AD.unitType.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.unitType.xmlText","AD.item.unitType.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.unitType.partType","AD.unitType.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.unitType.partType","AD.item.unitType.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""UNIT""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.careOf","AD.careOf","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","The name of the party who will take receipt at the specified address, and will take on responsibility for ensuring delivery to the target recipient","","","","","","","","","",,,,,"",,,,"AD.careOf",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.careOf","AD.item.careOf","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","The name of the party who will take receipt at the specified address, and will take on responsibility for ensuring delivery to the target recipient","","","","","","","","","",,,,,"",,,,"AD.item.careOf",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.careOf.nullFlavor","AD.careOf.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.careOf.representation","AD.careOf.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.careOf.nullFlavor","AD.item.careOf.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.careOf.representation","AD.item.careOf.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.careOf.mediaType","AD.careOf.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.careOf.mediaType","AD.item.careOf.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.careOf.language","AD.careOf.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.careOf.language","AD.item.careOf.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.careOf.xmlText","AD.careOf.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.careOf.xmlText","AD.item.careOf.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.careOf.partType","AD.careOf.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.careOf.partType","AD.item.careOf.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CAR""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.censusTract","AD.censusTract","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","A geographic sub-unit delineated for demographic purposes.","","","","","","","","","",,,,,"",,,,"AD.censusTract",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.censusTract","AD.item.censusTract","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","A geographic sub-unit delineated for demographic purposes.","","","","","","","","","",,,,,"",,,,"AD.item.censusTract",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.censusTract.nullFlavor","AD.censusTract.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.censusTract.representation","AD.censusTract.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.censusTract.nullFlavor","AD.item.censusTract.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.censusTract.representation","AD.item.censusTract.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.censusTract.mediaType","AD.censusTract.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.censusTract.mediaType","AD.item.censusTract.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.censusTract.language","AD.censusTract.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.censusTract.language","AD.item.censusTract.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.censusTract.xmlText","AD.censusTract.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.censusTract.xmlText","AD.item.censusTract.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.censusTract.partType","AD.censusTract.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.censusTract.partType","AD.item.censusTract.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CEN""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.deliveryAddressLine","AD.deliveryAddressLine","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","A delivery address line is frequently used instead of breaking out delivery mode, delivery installation, etc. An address generally has only a delivery address line or a street address line, but not both.","","","","","","","","","",,,,,"",,,,"AD.deliveryAddressLine",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.deliveryAddressLine","AD.item.deliveryAddressLine","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","A delivery address line is frequently used instead of breaking out delivery mode, delivery installation, etc. An address generally has only a delivery address line or a street address line, but not both.","","","","","","","","","",,,,,"",,,,"AD.item.deliveryAddressLine",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.deliveryAddressLine.nullFlavor","AD.deliveryAddressLine.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.deliveryAddressLine.representation","AD.deliveryAddressLine.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryAddressLine.nullFlavor","AD.item.deliveryAddressLine.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.deliveryAddressLine.representation","AD.item.deliveryAddressLine.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.deliveryAddressLine.mediaType","AD.deliveryAddressLine.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryAddressLine.mediaType","AD.item.deliveryAddressLine.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.deliveryAddressLine.language","AD.deliveryAddressLine.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryAddressLine.language","AD.item.deliveryAddressLine.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.deliveryAddressLine.xmlText","AD.deliveryAddressLine.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.deliveryAddressLine.xmlText","AD.item.deliveryAddressLine.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.deliveryAddressLine.partType","AD.deliveryAddressLine.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryAddressLine.partType","AD.item.deliveryAddressLine.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DAL""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.deliveryInstallationType","AD.deliveryInstallationType","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","Indicates the type of delivery installation (the facility to which the mail will be delivered prior to final shipping via the delivery mode.) Example: post office, letter carrier depot, community mail center, station, etc.","","","","","","","","","",,,,,"",,,,"AD.deliveryInstallationType",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.deliveryInstallationType","AD.item.deliveryInstallationType","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","Indicates the type of delivery installation (the facility to which the mail will be delivered prior to final shipping via the delivery mode.) Example: post office, letter carrier depot, community mail center, station, etc.","","","","","","","","","",,,,,"",,,,"AD.item.deliveryInstallationType",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.deliveryInstallationType.nullFlavor","AD.deliveryInstallationType.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.deliveryInstallationType.representation","AD.deliveryInstallationType.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryInstallationType.nullFlavor","AD.item.deliveryInstallationType.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.deliveryInstallationType.representation","AD.item.deliveryInstallationType.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.deliveryInstallationType.mediaType","AD.deliveryInstallationType.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryInstallationType.mediaType","AD.item.deliveryInstallationType.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.deliveryInstallationType.language","AD.deliveryInstallationType.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryInstallationType.language","AD.item.deliveryInstallationType.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.deliveryInstallationType.xmlText","AD.deliveryInstallationType.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.deliveryInstallationType.xmlText","AD.item.deliveryInstallationType.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.deliveryInstallationType.partType","AD.deliveryInstallationType.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryInstallationType.partType","AD.item.deliveryInstallationType.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DINST""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.deliveryInstallationArea","AD.deliveryInstallationArea","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","The location of the delivery installation, usually a town or city, and is only required if the area is different from the municipality. Area to which mail delivery service is provided from any postal facility or service such as an individual letter carrier, rural route, or postal route.","","","","","","","","","",,,,,"",,,,"AD.deliveryInstallationArea",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.deliveryInstallationArea","AD.item.deliveryInstallationArea","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","The location of the delivery installation, usually a town or city, and is only required if the area is different from the municipality. Area to which mail delivery service is provided from any postal facility or service such as an individual letter carrier, rural route, or postal route.","","","","","","","","","",,,,,"",,,,"AD.item.deliveryInstallationArea",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.deliveryInstallationArea.nullFlavor","AD.deliveryInstallationArea.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.deliveryInstallationArea.representation","AD.deliveryInstallationArea.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryInstallationArea.nullFlavor","AD.item.deliveryInstallationArea.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.deliveryInstallationArea.representation","AD.item.deliveryInstallationArea.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.deliveryInstallationArea.mediaType","AD.deliveryInstallationArea.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryInstallationArea.mediaType","AD.item.deliveryInstallationArea.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.deliveryInstallationArea.language","AD.deliveryInstallationArea.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryInstallationArea.language","AD.item.deliveryInstallationArea.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.deliveryInstallationArea.xmlText","AD.deliveryInstallationArea.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.deliveryInstallationArea.xmlText","AD.item.deliveryInstallationArea.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.deliveryInstallationArea.partType","AD.deliveryInstallationArea.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryInstallationArea.partType","AD.item.deliveryInstallationArea.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DINSTA""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.deliveryInstallationQualifier","AD.deliveryInstallationQualifier","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","A number, letter or name identifying a delivery installation. E.g., for Station A, the delivery installation qualifier would be 'A'.","","","","","","","","","",,,,,"",,,,"AD.deliveryInstallationQualifier",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.deliveryInstallationQualifier","AD.item.deliveryInstallationQualifier","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","A number, letter or name identifying a delivery installation. E.g., for Station A, the delivery installation qualifier would be 'A'.","","","","","","","","","",,,,,"",,,,"AD.item.deliveryInstallationQualifier",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.deliveryInstallationQualifier.nullFlavor","AD.deliveryInstallationQualifier.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.deliveryInstallationQualifier.representation","AD.deliveryInstallationQualifier.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryInstallationQualifier.nullFlavor","AD.item.deliveryInstallationQualifier.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.deliveryInstallationQualifier.representation","AD.item.deliveryInstallationQualifier.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.deliveryInstallationQualifier.mediaType","AD.deliveryInstallationQualifier.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryInstallationQualifier.mediaType","AD.item.deliveryInstallationQualifier.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.deliveryInstallationQualifier.language","AD.deliveryInstallationQualifier.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryInstallationQualifier.language","AD.item.deliveryInstallationQualifier.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.deliveryInstallationQualifier.xmlText","AD.deliveryInstallationQualifier.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.deliveryInstallationQualifier.xmlText","AD.item.deliveryInstallationQualifier.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.deliveryInstallationQualifier.partType","AD.deliveryInstallationQualifier.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryInstallationQualifier.partType","AD.item.deliveryInstallationQualifier.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DINSTQ""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.deliveryMode","AD.deliveryMode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","Indicates the type of service offered, method of delivery. For example: post office box, rural route, general delivery, etc.","","","","","","","","","",,,,,"",,,,"AD.deliveryMode",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.deliveryMode","AD.item.deliveryMode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","Indicates the type of service offered, method of delivery. For example: post office box, rural route, general delivery, etc.","","","","","","","","","",,,,,"",,,,"AD.item.deliveryMode",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.deliveryMode.nullFlavor","AD.deliveryMode.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.deliveryMode.representation","AD.deliveryMode.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryMode.nullFlavor","AD.item.deliveryMode.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.deliveryMode.representation","AD.item.deliveryMode.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.deliveryMode.mediaType","AD.deliveryMode.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryMode.mediaType","AD.item.deliveryMode.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.deliveryMode.language","AD.deliveryMode.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryMode.language","AD.item.deliveryMode.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.deliveryMode.xmlText","AD.deliveryMode.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.deliveryMode.xmlText","AD.item.deliveryMode.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.deliveryMode.partType","AD.deliveryMode.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryMode.partType","AD.item.deliveryMode.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DMOD""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.deliveryModeIdentifier","AD.deliveryModeIdentifier","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","Represents the routing information such as a letter carrier route number. It is the identifying number of the designator (the box number or rural route number).","","","","","","","","","",,,,,"",,,,"AD.deliveryModeIdentifier",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.deliveryModeIdentifier","AD.item.deliveryModeIdentifier","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","Represents the routing information such as a letter carrier route number. It is the identifying number of the designator (the box number or rural route number).","","","","","","","","","",,,,,"",,,,"AD.item.deliveryModeIdentifier",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.deliveryModeIdentifier.nullFlavor","AD.deliveryModeIdentifier.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.deliveryModeIdentifier.representation","AD.deliveryModeIdentifier.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryModeIdentifier.nullFlavor","AD.item.deliveryModeIdentifier.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.deliveryModeIdentifier.representation","AD.item.deliveryModeIdentifier.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.deliveryModeIdentifier.mediaType","AD.deliveryModeIdentifier.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryModeIdentifier.mediaType","AD.item.deliveryModeIdentifier.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.deliveryModeIdentifier.language","AD.deliveryModeIdentifier.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryModeIdentifier.language","AD.item.deliveryModeIdentifier.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.deliveryModeIdentifier.xmlText","AD.deliveryModeIdentifier.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.deliveryModeIdentifier.xmlText","AD.item.deliveryModeIdentifier.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.deliveryModeIdentifier.partType","AD.deliveryModeIdentifier.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.deliveryModeIdentifier.partType","AD.item.deliveryModeIdentifier.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DMODID""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.buildingNumberSuffix","AD.buildingNumberSuffix","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","Any alphabetic character, fraction or other text that may appear after the numeric portion of a building number","","","","","","","","","",,,,,"",,,,"AD.buildingNumberSuffix",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.buildingNumberSuffix","AD.item.buildingNumberSuffix","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","Any alphabetic character, fraction or other text that may appear after the numeric portion of a building number","","","","","","","","","",,,,,"",,,,"AD.item.buildingNumberSuffix",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.buildingNumberSuffix.nullFlavor","AD.buildingNumberSuffix.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.buildingNumberSuffix.representation","AD.buildingNumberSuffix.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.buildingNumberSuffix.nullFlavor","AD.item.buildingNumberSuffix.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.buildingNumberSuffix.representation","AD.item.buildingNumberSuffix.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.buildingNumberSuffix.mediaType","AD.buildingNumberSuffix.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.buildingNumberSuffix.mediaType","AD.item.buildingNumberSuffix.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.buildingNumberSuffix.language","AD.buildingNumberSuffix.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.buildingNumberSuffix.language","AD.item.buildingNumberSuffix.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.buildingNumberSuffix.xmlText","AD.buildingNumberSuffix.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.buildingNumberSuffix.xmlText","AD.item.buildingNumberSuffix.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.buildingNumberSuffix.partType","AD.buildingNumberSuffix.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.buildingNumberSuffix.partType","AD.item.buildingNumberSuffix.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""BNS""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.postBox","AD.postBox","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","A numbered box located in a post station.","","","","","","","","","",,,,,"",,,,"AD.postBox",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.postBox","AD.item.postBox","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","A numbered box located in a post station.","","","","","","","","","",,,,,"",,,,"AD.item.postBox",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.postBox.nullFlavor","AD.postBox.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.postBox.representation","AD.postBox.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.postBox.nullFlavor","AD.item.postBox.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.postBox.representation","AD.item.postBox.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.postBox.mediaType","AD.postBox.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.postBox.mediaType","AD.item.postBox.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.postBox.language","AD.postBox.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.postBox.language","AD.item.postBox.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.postBox.xmlText","AD.postBox.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.postBox.xmlText","AD.item.postBox.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.postBox.partType","AD.postBox.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.postBox.partType","AD.item.postBox.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""POB""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.precinct","AD.precinct","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
-","","A subsection of a municipality","","","","","","","","","",,,,,"",,,,"AD.precinct",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
+"AD.item.precinct","AD.item.precinct","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ADXP {[]} {[]}
+","","A subsection of a municipality","","","","","","","","","",,,,,"",,,,"AD.item.precinct",0,1,"","text-null:xmlText and nullFlavor are mutually exclusive (one must be present) {(xmlText | nullFlavor).count() = 1}
 "
-"AD.precinct.nullFlavor","AD.precinct.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
-"AD.precinct.representation","AD.precinct.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.precinct.nullFlavor","AD.item.precinct.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"AD.item.precinct.representation","AD.item.precinct.representation","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the representation of the binary data that is the content of the binary data value","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""TXT""/>","","","","",,,,,"",,,,"ST.representation",0,1,"",""
-"AD.precinct.mediaType","AD.precinct.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.precinct.mediaType","AD.item.precinct.mediaType","","","Media Type",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Identifies the type of the encapsulated data and identifies a method to interpret or render the data.","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""text/plain""/>","","","","",,,,,"",,,,"ST.mediaType",0,1,"",""
-"AD.precinct.language","AD.precinct.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.precinct.language","AD.item.precinct.language","","","Language",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","For character based information the language property specifies the human language of the text.","","","","","","","","","",,,,,"",,,,"ST.language",0,1,"",""
-"AD.precinct.xmlText","AD.precinct.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+"AD.item.precinct.xmlText","AD.item.precinct.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
 ","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"ST.xmlText",0,1,"",""
-"AD.precinct.partType","AD.precinct.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+"AD.item.precinct.partType","AD.item.precinct.partType","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","Specifies the type of the address part","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""PRE""/>","","","","",,,,,"",,,,"ADXP.partType",0,1,"",""
-"AD.xmlText","AD.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
-","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"AD.xmlText",0,1,"",""
+"AD.item.xmlText","AD.item.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"AD.item.xmlText",0,1,"",""
 "AD.useablePeriod","AD.useablePeriod","","","Useable Period",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS {[]} {[]}
 http://hl7.org/cda/stds/core/StructureDefinition/EIVL-TS {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/PIVL-TS {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS {[]} {[]}","","A General Timing Specification (GTS) specifying the periods of time during which the address can be used. This is used to specify different addresses for different times of the week or year.","","","","","","","","","",,,,,"",,,,"AD.useablePeriod",0,*,"",""

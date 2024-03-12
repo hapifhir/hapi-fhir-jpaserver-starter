@@ -1,22 +1,24 @@
 "Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
 "EN","EN","","","",1,*,"","","","null {[]} {[]}
-","Base for all types and resources","A name for a person, organization, place or thing. A sequence of name parts, such as given name or family name, prefix, suffix, etc. Examples for entity name values are ""Jim Bob Walton, Jr."", ""Health Level Seven, Inc."", ""Lake Tahoe"", etc. An entity name may be as simple as a character string or may consist of several entity name parts, such as, ""Jim"", ""Bob"", ""Walton"", and ""Jr."", ""Health Level Seven"" and ""Inc."", ""Lake"" and ""Tahoe"".","","","","","","","","","",,,,,"",,,,"Base",0,*,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-","n/a"
+","Base for all types and resources","A name for a person, organization, place or thing. A sequence of name parts, such as given name or family name, prefix, suffix, etc. Examples for entity name values are ""Jim Bob Walton, Jr."", ""Health Level Seven, Inc."", ""Lake Tahoe"", etc. An entity name may be as simple as a character string or may consist of several entity name parts, such as, ""Jim"", ""Bob"", ""Walton"", and ""Jr."", ""Health Level Seven"" and ""Inc."", ""Lake"" and ""Tahoe"".","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
 "EN.nullFlavor","EN.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-NullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "EN.use","EN.use","","","Use Code",0,*,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","A set of codes advising a system or user which name in a set of like names to select for a given purpose. A name without specific use code might be a default name useful for any purpose, but a name with a specific use code would be preferred for that respective purpose","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-EntityNameUse","",,,,"EN.use",0,*,"",""
-"EN.delimiter","EN.delimiter","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ENXP {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"EN.delimiter",0,*,"",""
-"EN.family","EN.family","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ENXP {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"EN.family",0,*,"",""
-"EN.given","EN.given","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ENXP {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"EN.given",0,*,"",""
-"EN.prefix","EN.prefix","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ENXP {[]} {[]}
-","","","","","","","","","","","",,,,,"",,,,"EN.prefix",0,*,"",""
-"EN.suffix","EN.suffix","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ENXP {[]} {[]}
-","","Element EN.family","","","","","","","","","",,,,,"",,,,"EN.suffix",0,*,"",""
-"EN.xmlText","EN.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
-","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"EN.xmlText",0,1,"",""
+","","A set of codes advising a system or user which name in a set of like names to select for a given purpose. A name without specific use code might be a default name useful for any purpose, but a name with a specific use code would be preferred for that respective purpose","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAEntityNameUse","",,,,"EN.use",0,*,"",""
+"EN.item","EN.item","","","",0,*,"","","","http://hl7.org/fhir/StructureDefinition/Base {[]} {[]}
+","","A series of items that constitute the name.","","","","","","","","","",,,,,"",,,,"EN.item",0,*,"","EN-1:Can only have only one of the possible item elements in each choice {(delimiter | family | given | prefix | suffix | xmlText).count() = 1}
+"
+"EN.item.delimiter","EN.item.delimiter","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ENXP {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"EN.item.delimiter",0,*,"",""
+"EN.item.family","EN.item.family","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ENXP {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"EN.item.family",0,*,"",""
+"EN.item.given","EN.item.given","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ENXP {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"EN.item.given",0,*,"",""
+"EN.item.prefix","EN.item.prefix","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ENXP {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"EN.item.prefix",0,*,"",""
+"EN.item.suffix","EN.item.suffix","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ENXP {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"EN.item.suffix",0,*,"",""
+"EN.item.xmlText","EN.item.xmlText","","","",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+","Allows for mixed text content","","This element is represented in XML as textual content. The actual name ""xmlText"" will not appear in a CDA instance.","","","","","","","","",,,,,"",,,,"EN.item.xmlText",0,1,"",""
 "EN.validTime","EN.validTime","","","Valid Time",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS {[]} {[]}
 ","","An interval of time specifying the time during which the name is or was used for the entity. This accomodates the fact that people change names for people, places and things.","","","","","","","","","",,,,,"",,,,"EN.validTime",0,1,"",""

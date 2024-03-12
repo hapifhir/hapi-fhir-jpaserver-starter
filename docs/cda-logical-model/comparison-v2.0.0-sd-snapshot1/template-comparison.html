@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>[%left%] vs [%right%]</title>
+ <link rel="stylesheet" href="fhir.css"/>
+</head>
+<body>
+
+
+<h2>[%left%] vs [%right%]</h2>
+
+<h3>Messages</h3>
+
+<p>
+A series of messages from the comparison algorithm. Errors indicate that solutions cannot be interoperable across 
+both implementation guides (or that there are structural flaws in the definition of at least one).
+</p>
+
+[%messages%]
+
+<a name="intersection"></a>
+<h3>Intersection</h3>
+
+<p>
+The intersection of the 2 constraint statements. This is what resource authors (either client or server) would 
+need to conform to produce content valid against both implementation guides.
+</p>
+
+[%subset%]
+
+<a name="union"></a>
+<h3>Union</h3>
+
+<p>
+The union of the 2 constraint statements. This is what resource authors (either client or server) 
+would need to be able to handle to accept content valid against either implementation guides.
+</p>
+
+[%superset%]
+
+</body>
+</html>
+
+<ul>
+</ul>

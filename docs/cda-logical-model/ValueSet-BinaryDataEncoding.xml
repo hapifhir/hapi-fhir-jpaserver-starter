@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ValueSet xmlns="http://hl7.org/fhir">
+  <id value="BinaryDataEncoding"/>
+  <text>
+    <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml"><ul><li>Include all codes defined in <a href="CodeSystem-BinaryDataEncoding.html"><code>http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding</code></a></li></ul></div>
+  </text>
+  <url value="http://hl7.org/cda/stds/core/ValueSet/BinaryDataEncoding"/>
+  <version value="2.0.0-sd-202312-matchbox-patch"/>
+  <name value="BinaryDataEncoding"/>
+  <title value="Binary Data Encoding Value Set"/>
+  <status value="draft"/>
+  <experimental value="false"/>
+  <date value="2024-03-12T18:28:21+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <name value="HL7 International - Structured Documents"/>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+    <telecom>
+      <system value="email"/>
+      <value value="structdog@lists.HL7.org"/>
+    </telecom>
+  </contact>
+  <description value="Identifies the representation of binary data in a text field"/>
+  <compose>
+    <include>
+      <system value="http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding"/>
+    </include>
+  </compose>
+</ValueSet>
