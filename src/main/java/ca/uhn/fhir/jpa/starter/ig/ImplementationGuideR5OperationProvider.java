@@ -35,9 +35,9 @@ public class ImplementationGuideR5OperationProvider implements IImplementationGu
 
 
 	@Operation(name = "$uninstall", typeName = "ImplementationGuide")
-	public org.hl7.fhir.r4.model.Parameters uninstall(@OperationParam(name = "name", min = 1, max = 1) String name, @OperationParam(name = "version", min = 1, max = 1) String version) {
+	public Parameters uninstall(@OperationParam(name = "name", min = 1, max = 1) String name, @OperationParam(name = "version", min = 1, max = 1) String version) {
 
 		packageInstallerSvc.uninstall(new PackageInstallationSpec().setName(name).setVersion(version));
-		return new org.hl7.fhir.r4.model.Parameters();
+		return new Parameters();
 	}
 }
