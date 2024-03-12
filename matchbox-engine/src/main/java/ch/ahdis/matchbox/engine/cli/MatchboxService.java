@@ -74,13 +74,13 @@ public class MatchboxService {
   public static final String CURRENT_DEFAULT_VERSION = "4.0";
   public static final String CURRENT_DEFAULT_FULL_VERSION = "4.0.1";
 
-  private final SessionCache sessionCache;
+  private final PassiveExpiringSessionCache sessionCache;
 
   public MatchboxService() {
     sessionCache = new PassiveExpiringSessionCache();
   }
 
-  protected MatchboxService(SessionCache cache) {
+  protected MatchboxService(final PassiveExpiringSessionCache cache) {
     this.sessionCache = cache;
   }
 
@@ -370,6 +370,10 @@ public class MatchboxService {
 
   public String initializeValidator(CliContext cliContext, String definitions, TimeTracker tt, String sessionId) throws Exception {
     tt.milestone();
+
+	 // getSessionIds() does the same thing as sessionCache.removeExpiredSessions() (protected access)
+	 sessionCache.getSessionIds();
+
     if (!sessionCache.sessionExists(sessionId)) {
       if (sessionId != null) {
         System.out.println("No such cached session exists for session id " + sessionId + ", re-instantiating validator.");

@@ -114,6 +114,11 @@ public class MatchboxEngine extends ValidationEngine {
 		private String txServer = null;
 
 		/**
+		 * The filesystem package cache mode.
+		 */
+		private FilesystemPackageCacheMode packageCacheMode = FilesystemPackageCacheMode.USER;
+
+		/**
 		 * The filesystem package cache path if FilesystemPackageCacheMode.CUSTOM, or {@code null}.
 		 */
 		private String packageCachePath = null;
@@ -136,6 +141,32 @@ public class MatchboxEngine extends ValidationEngine {
 		 */
 		public void setTxServer(final String txServer) {
 			this.txServer = txServer;
+		}
+
+		/**
+		 * Sets the mode of the filesystem package cache manager. It controls where the package will be stored on the
+		 * filesystem:
+		 * <ul>
+		 *    <li>{@code USER}: {USER HOME}/.fhir/packages</li>
+		 *    <li>{@code SYSTEM}: /var/lib/.fhir/packages</li>
+		 *    <li>{@code TESTING}: {TMP}/.fhir/packages</li>
+		 * </ul>
+		 *
+		 *
+		 * @see FilesystemPackageCacheManager.Builder for details.
+		 * @param packageCacheMode The mode of the filesystem package cache manager.
+		 */
+		public void setPackageCacheMode(final FilesystemPackageCacheMode packageCacheMode) {
+			this.packageCacheMode = packageCacheMode;
+		}
+
+		/**
+		 * Sets the custom path of the package cache.
+		 * @param packageCachePath The package cache path.
+		 */
+		public void setPackageCachePath(final String packageCachePath) {
+			this.packageCacheMode = FilesystemPackageCacheMode.CUSTOM;
+			this.packageCachePath = packageCachePath;
 		}
 
 		/**
@@ -259,13 +290,13 @@ public class MatchboxEngine extends ValidationEngine {
 
 		private FilesystemPackageCacheManager getFilesystemPackageCacheManager() throws MatchboxEngineCreationException {
 			try {
-				// FIXME: need this to be fixed?
-				//if (this.packageCacheMode == FilesystemPackageCacheManager.FilesystemPackageCacheMode.CUSTOM) {
-				// 	return new FilesystemPackageCacheManager(this.packageCachePath);
-				//} else {
-				//  	return new FilesystemPackageCacheManager(this.packageCacheMode);
-				// }
-				return new FilesystemPackageCacheManager.Builder().build();
+				return switch(this.packageCacheMode) {
+					case USER -> new FilesystemPackageCacheManager.Builder().build();
+					case SYSTEM -> new FilesystemPackageCacheManager.Builder().withSystemCacheFolder().build();
+					case TESTING -> new FilesystemPackageCacheManager.Builder().withTestingCacheFolder().build();
+					case CUSTOM ->
+						new FilesystemPackageCacheManager.Builder().withCacheFolder(this.packageCachePath).build();
+				};
 			} catch (final IOException e) {
 				throw new MatchboxEngineCreationException(e);
 			}
@@ -825,5 +856,9 @@ public class MatchboxEngine extends ValidationEngine {
 											 RenderingContext.ResourceRendererMode.END_USER, RenderingContext.GenerationRules.VALID_RESOURCE);
 		RendererFactory.factory(op, rc).render(op);
 		return (OperationOutcome) (VersionConvertorFactory_40_50.convertResource(op));
+	}
+
+	public enum FilesystemPackageCacheMode {
+		USER, SYSTEM, TESTING, CUSTOM
 	}
 }

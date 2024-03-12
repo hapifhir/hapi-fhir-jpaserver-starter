@@ -38,7 +38,6 @@ public class PackageCacheInitializer {
   }
 
   public void pkg(String id, String version, String tgz, String desc) throws IOException, FHIRException {
-    // FIXME old: pcm = new FilesystemPackageCacheManager(FilesystemPackageCacheManager.FilesystemPackageCacheMode.USER);
     pcm = new FilesystemPackageCacheManager.Builder().build();
     if (tgz != null) {
       InputStream inputStream = null;

@@ -152,6 +152,11 @@ public class NpmPackage {
 			return this.folderName;
 		}
 
+		// MATCHBOX FIX: method getFolderPath() backported from upstream
+		public String getFolderPath() {
+			return folder == null ? null : folder.getAbsolutePath();
+		}
+
 		public boolean readIndex(JsonObject index, Map<String, List<String>> typeMap) {
 			if (index.has("index-version") && index.asInteger("index-version") == NpmPackageIndexBuilder.CURRENT_INDEX_VERSION) {
 				if (!NpmPackage.this.minimalMemory) {
