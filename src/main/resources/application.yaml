@@ -12,7 +12,6 @@ management:
 spring:
   main:
     allow-circular-references: true
-    allow-bean-definition-overriding: true
   flyway:
     enabled: false
     baselineOnMigrate: true
@@ -60,7 +59,7 @@ hapi:
     ### This flag when enabled to true, will avail evaluate measure operations from CR Module.
     ### Flag is false by default, can be passed as command line argument to override.
     cr:
-      enabled: true
+      enabled: false
       caregaps:
         reporter: "default"
         section_author: "default"
@@ -104,7 +103,7 @@ hapi:
           profile_mode: DECLARED # ENFORCED, DECLARED, OPTIONAL, TRUST, OFF
 
     cdshooks:
-      enabled: true
+      enabled: false
       clientIdHeaderName: client_id
 
     ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
