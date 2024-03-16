@@ -1,4 +1,4 @@
-version: "3"
+version: "4"
 services:
   hapi-fhir-jpaserver-start:
     build: .
@@ -6,15 +6,27 @@ services:
     restart: on-failure
     ports:
       - "8080:8080"
-  hapi-fhir-postgres:
+    # environment:
+    #   profiles.active: r4
+    #   spring.datasource.url: 'jdbc:postgresql://db:5432/evdm-fhir'
+    #   spring.datasource.username: evidium
+    #   spring.datasource.password: recoverx@123
+    #   spring.datasource.driverClassName: org.postgresql.Driver
+    #   # - "tester.server_address=http://localhost:8080/fhir"
+    # depends_on:
+    #   - db
+
+  db:
     image: postgres:13-alpine
     container_name: hapi-fhir-postgres
     restart: always
     environment:
-      POSTGRES_DB: "hapi"
-      POSTGRES_USER: "admin"
-      POSTGRES_PASSWORD: "admin"
+      POSTGRES_DB: "evdm-fhir"
+      POSTGRES_USER: "evidium"
+      POSTGRES_PASSWORD: "recoverx@123"
+    ports:
+      - 5432:5432
     volumes:
-      - hapi-fhir-postgres:/var/lib/postgresql/data
+      - fhir-data:/var/lib/postgresql/data
 volumes:
-  hapi-fhir-postgres:
+  fhir-data:

@@ -14,29 +14,39 @@ spring:
     allow-circular-references: true
     #allow-bean-definition-overriding: true
   flyway:
-    enabled: false
+    enabled: true
     baselineOnMigrate: true
     fail-on-missing-locations: false
+  # datasource:
+  #   #url: 'jdbc:h2:file:./target/database/h2'
+  #   url: jdbc:h2:mem:test_mem
+  #   username: sa
+  #   password: null
+  #   driverClassName: org.h2.Driver
+  #   max-active: 15
   datasource:
-    #url: 'jdbc:h2:file:./target/database/h2'
-    url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driverClassName: org.h2.Driver
-    max-active: 15
+    url: 'jdbc:postgresql://db:5432/evdm-fhir'
+    username: evidium
+    password: recoverx@123
+    driverClassName: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
+      hibernate.search.enabled: false
+
 
     # database connection pool size
     hikari:
       maximum-pool-size: 10
-  jpa:
-    properties:
-      hibernate.format_sql: false
-      hibernate.show_sql: false
+  # jpa:
+  #   properties:
+  #     hibernate.format_sql: false
+  #     hibernate.show_sql: false
 
       #Hibernate dialect is automatically detected except Postgres and H2.
       #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
       #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+      # hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
   #      hibernate.hbm2ddl.auto: update
   #      hibernate.jdbc.batch_size: 20
   #      hibernate.cache.use_query_cache: false
@@ -45,7 +55,7 @@ spring:
   #      hibernate.cache.use_minimal_puts: false
 
   ###    These settings will enable fulltext search with lucene or elastic
-      hibernate.search.enabled: true
+      # hibernate.search.enabled: true
   ### lucene parameters
 #      hibernate.search.backend.type: lucene
 #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
