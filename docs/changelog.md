@@ -3,6 +3,7 @@
 - update to fhir.core.version 6.3.2 [#210](https://github.com/ahdis/matchbox/issues/210)
 - support for target CDA observation.value as xsi:type CS [#205](https://github.com/ahdis/matchbox/issues/205)
 - update to latest cda logical model 2.0.0-sd-snapshot1 (Note: breaking changes for existing CDA to FHIR maps, see details in issue) [#196](https://github.com/ahdis/matchbox/issues/196)
+- Update to Spring 6.1.5 to fix [CVE-2024-22259](https://github.com/ahdis/matchbox/security/dependabot/105)
 
 2024/03/07 Release 3.7.0
 
