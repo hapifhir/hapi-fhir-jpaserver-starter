@@ -1,12 +1,12 @@
 package ca.uhn.fhir.jpa.starter.ips;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.ips.api.IIpsGenerationStrategy;
 import ca.uhn.fhir.jpa.ips.generator.IIpsGeneratorSvc;
 import ca.uhn.fhir.jpa.ips.generator.IpsGeneratorSvcImpl;
+import ca.uhn.fhir.jpa.ips.jpa.DefaultJpaIpsGenerationStrategy;
 import ca.uhn.fhir.jpa.ips.provider.IpsOperationProvider;
-import ca.uhn.fhir.jpa.ips.strategy.DefaultIpsGenerationStrategy;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Conditional;
 public class StarterIpsConfig {
 	@Bean
 	IIpsGenerationStrategy ipsGenerationStrategy() {
-		return new DefaultIpsGenerationStrategy();
+		return new DefaultJpaIpsGenerationStrategy();
 	}
 
 	@Bean
@@ -24,7 +24,7 @@ public class StarterIpsConfig {
 
 	@Bean
 	public IIpsGeneratorSvc ipsGeneratorSvcImpl(
-			FhirContext theFhirContext, IIpsGenerationStrategy theGenerationStrategy, DaoRegistry theDaoRegistry) {
-		return new IpsGeneratorSvcImpl(theFhirContext, theGenerationStrategy, theDaoRegistry);
+			FhirContext theFhirContext, IIpsGenerationStrategy theGenerationStrategy) {
+		return new IpsGeneratorSvcImpl(theFhirContext, theGenerationStrategy);
 	}
 }
