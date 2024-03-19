@@ -1,5 +1,6 @@
-2024/03/xx Release 3.8.0
+2024/03/19 Release 3.8.0
 
+- `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.8.0`
 - update to fhir.core.version 6.3.2 [#210](https://github.com/ahdis/matchbox/issues/210)
 - support for target CDA observation.value as xsi:type CS [#205](https://github.com/ahdis/matchbox/issues/205)
 - update to latest cda logical model 2.0.0-sd-snapshot1 (Note: breaking changes for existing CDA to FHIR maps, see details in issue) [#196](https://github.com/ahdis/matchbox/issues/196)
