@@ -8,6 +8,21 @@
 				<version>[ignore]</version>
 				<levelValue>[ignore]</levelValue>
 			</fieldNames>
+			<jsonGeneratorDecorator
+				class="net.logstash.logback.mask.MaskingJsonGeneratorDecorator">
+				<valueMask>
+					<value>(?i)(patient[\/=:|-])(\"[^\"]*\"|[^\"\s]+)(.*?)(\"|)</value>
+					<value>(?i)(task[\/=:|-])(\"[^\"]*\"|[^\"\s]+)(.*?)(\"|)</value>
+					<value>(?i)(encounter[\/=:|-])(\"[^\"]*\"|[^\"\s]+)(.*?)(\"|)</value>
+					<value>(?i)(refresh_token[\/=:|-])(\"[^\"]*\"|[^\"\s]+)(.*?)(\"|)</value>
+					<value>(?i)(id_token[\/=:|-])(\"[^\"]*\"|[^\"\s]+)(.*?)(\"|)</value>
+					<value>(?i)(access_token[\/=:|-])(\"[^\"]*\"|[^\"\s]+)(.*?)(\"|)</value>
+					<value>(?i)(authorization[\/=:|-])(\"[^\"]*\"|[^\"\s]+)(.*?)(\"|)</value>
+					<value>(?i)(MedicationRequest[\/=:|-])(\"[^\"]*\"|[^\"\s]+)(.*?)(\"|)</value>
+					<value>(?i)(observation[\/=:|-])(\"[^\"]*\"|[^\"\s]+)(.*?)(\"|)</value>
+					<mask>$1****$3$4</mask>					
+				</valueMask>
+			</jsonGeneratorDecorator>
 		</encoder>
 	</appender>
 
