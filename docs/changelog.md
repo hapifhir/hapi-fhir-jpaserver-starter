@@ -6,6 +6,7 @@
 - Update to Spring 6.1.5 to fix [CVE-2024-22259](https://github.com/ahdis/matchbox/security/dependabot/105)
 - Update to Tomcat 10.1.19 to fix [CVE-2024-24549](https://github.com/ahdis/matchbox/security/dependabot/104)
 - Update frontend dependencies
+- Fixed invalid imports in FhirPathR4 [#5](https://github.com/ahdis/matchbox-int-tests/issues/5)
 
 2024/03/07 Release 3.7.0
 
