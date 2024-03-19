@@ -91,7 +91,7 @@ configs:
      file: ./hapi.application.yaml
 ```
 
-Provide the following content in ``./hapi.aplication.yaml``:
+Provide the following content in ``./hapi.application.yaml``:
 
 ```yaml
 spring:
@@ -144,7 +144,7 @@ configs:
      file: ./hapi-extra-classes
 ```
 
-Provide the following content in ``./hapi.aplication.yaml``:
+Provide the following content in ``./hapi.application.yaml``:
 
 ```yaml
 spring:
