@@ -110,6 +110,8 @@
         <lombok_version>1.18.30</lombok_version>
         <byte_buddy_version>1.14.8</byte_buddy_version>
         <apache_poi_version>5.2.1</apache_poi_version>
+
+        <excludePackageNames>org.hl7.*:ca.uhn.*</excludePackageNames>
     </properties>
 
     <developers>
