@@ -159,7 +159,6 @@ public class CrCommonConfig {
 	@Bean
 	CareGapsProperties careGapsProperties(CrProperties theCrProperties) {
 		var careGapsProperties = new CareGapsProperties();
-		careGapsProperties.setThreadedCareGapsEnabled(false);
 		careGapsProperties.setCareGapsReporter(theCrProperties.getCareGaps().getReporter());
 		careGapsProperties.setCareGapsCompositionSectionAuthor(theCrProperties.getCareGaps().getSection_author());
 		return careGapsProperties;
