@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.batch2.jobs.config.Batch2JobsConfig;
+import ca.uhn.fhir.interceptor.api.IInterceptorService;
 import ca.uhn.fhir.jpa.batch2.JpaBatch2Config;
 import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
 import ca.uhn.fhir.jpa.starter.cdshooks.StarterCdsHooksConfig;
@@ -55,8 +56,9 @@ public class Application extends SpringBootServletInitializer {
 
 	@Bean
 	@Conditional(OnEitherVersion.class)
-	public ServletRegistrationBean hapiServletRegistration(RestfulServer restfulServer) {
+	public ServletRegistrationBean hapiServletRegistration(RestfulServer restfulServer, IInterceptorService theInterceptorService) {
 		ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean();
+		restfulServer.setInterceptorService(theInterceptorService);
 		beanFactory.autowireBean(restfulServer);
 		servletRegistrationBean.setServlet(restfulServer);
 		servletRegistrationBean.addUrlMappings("/fhir/*");
