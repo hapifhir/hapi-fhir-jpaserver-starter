@@ -76,8 +76,8 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
   src-> content.attachment = create('Attachment') as attachment,  attachment.title = 'string' "comp";
   } "content";
   src -> DocumentReference.context = create('BackboneElement') as context then {
-    src -> context.related = create('Reference') as referenceComp,  referenceComp.reference = ('https://example/Composition/' + %tgt.id) "comp";
-  } "context";
+    src -> context.related = create('Reference') as referenceComp,  referenceComp.reference = ('Composition/' + %tgt.id) "comp";
+   }"context";
   src.id where src.setId.exists().not() -> tgt.identifier "identifier";
   src.setId -> tgt.identifier "identifier";
   src -> tgt.status = 'final' "status";
@@ -92,8 +92,8 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
   src.versionNumber as versionNumber where(value > 1) -> tgt.extension as ext2 then ChExtEprVersionNumber(versionNumber, ext2);
   src.confidentialityCode -> tgt.confidentiality;
   src.recordTarget as recordTarget then {
-    recordTarget.patientRole as patient ->  tgt.subject = create('Reference') as reference,  reference.reference = ('https://example/Patient/' + %patientResource.id) then ClinicalDocumentPatientRole(patient, patientResource, bundle) "subject";
-    recordTarget.patientRole as patient -> DocumentReference.subject = create('Reference') as reference1,  reference1.reference = ('https://example/Patient/' + %patientResource.id);
+    recordTarget.patientRole as patient ->  tgt.subject = create('Reference') as reference,  reference.reference = ('Patient/' + %patientResource.id) then ClinicalDocumentPatientRole(patient, patientResource, bundle) "subject";
+    recordTarget.patientRole as patient -> DocumentReference.subject = create('Reference') as reference1,  reference1.reference = ('Patient/' + %patientResource.id);
   } "patientRole";
   
   //START AUTHOR
@@ -102,7 +102,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
     srcAuthor.assignedAuthor as assignedAuthor then {
       // Codice Fiscale
         assignedAuthor.id as id where (root!='2.16.840.1.113883.2.9.6.3.2') then {
-         assignedAuthor->bundle.entry as e1, e1.request = create('BackboneElement') as request, request.method = 'POST', e1.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid1,  e1.fullUrl = append('https://example/PractitionerRole/', uuid1), request.url='PractitionerRole', tgt.author = create('Reference') as reference,  reference.reference = ('https://example/PractitionerRole/' + %practitionerRole.id) then {
+         assignedAuthor->bundle.entry as e1, e1.request = create('BackboneElement') as request, request.method = 'POST', e1.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid1,  e1.fullUrl = append('https://example/PractitionerRole/', uuid1), request.url='PractitionerRole', tgt.author = create('Reference') as reference,  reference.reference = ('PractitionerRole/' + %practitionerRole.id) then {
           // assignedAuthor.code as codice -> practitionerRole.code as code2 then CECodeableConcept(codice,code2);
             assignedAuthor -> bundle.entry as e2,  e2.request = create('BackboneElement') as request, request.method = 'PUT', e2.resource = create('Practitioner') as practitioner then { 
               srcAuthor.functionCode -> practitionerRole.code;
@@ -120,7 +120,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
               //  }"ext";
                   id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
                   id.root as r then {
-                    id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2,  e2.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id)"aut";
+                    id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2,  e2.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('Practitioner/' + %practitioner.id)"aut";
                   }"r";
               }"identifier";
               assignedAuthor.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
@@ -137,7 +137,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                   birthTime.value as date -> practitioner.birthDate= truncate(date, 10);
                 }"birth";
                 } "name";
-                assignedAuthor -> DocumentReference.author = create('Reference') as referenceAuth,  referenceAuth.reference = ('https://example/Practitioner/' + %practitioner.id) "refAuth";
+                assignedAuthor -> DocumentReference.author = create('Reference') as referenceAuth,  referenceAuth.reference = ('Practitioner/' + %practitioner.id) "refAuth";
               } "ASSAUth";
               assignedAuthor.representedOrganization as representedOrganization ->  bundle.entry as e3,  e3.request = create('BackboneElement') as request, request.method = 'PUT',  e3.resource = create('Organization') as organization then {
                 representedOrganization.id as id -> organization.identifier as identifier then {
@@ -224,7 +224,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                   }"ext";
                   id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
                   id.root as r then {
-                    id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid2,  e251.fullUrl = append('https://example/Organization/', uuid2),  device.owner = create('Reference') as reference, reference.reference = ('https://example/Organization/' + %organization.id);
+                    id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid2,  e251.fullUrl = append('https://example/Organization/', uuid2),  device.owner = create('Reference') as reference, reference.reference = ('Organization/' + %organization.id);
                   }"r" ;
               }"identifier";
              }"OrgPartitaIVA";
@@ -247,7 +247,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
     } "assignedAuthor";
 
     //START DATA ENTER
-  src.xmlTextEnterer as dataEnt ->  bundle.entry as e6, e6.request = create('BackboneElement') as request, request.method = 'POST',  e6.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid1,  e6.fullUrl = append('https://example/PractitionerRole/', uuid1), request.url ='PractitionerRole' , tgt.author = create('Reference') as reference,  reference.reference = ('https://example/PractitionerRole/' + %practitionerRole.id) then {
+  src.xmlTextEnterer as dataEnt ->  bundle.entry as e6, e6.request = create('BackboneElement') as request, request.method = 'POST',  e6.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid1,  e6.fullUrl = append('https://example/PractitionerRole/', uuid1), request.url ='PractitionerRole' , tgt.author = create('Reference') as reference,  reference.reference = ('PractitionerRole/' + %practitionerRole.id) then {
     dataEnt.time as time -> tgt.date;
     dataEnt.assignedEntity as assignedEntity -> bundle.entry as e7,  e7.request = create('BackboneElement') as request, request.method = 'PUT', e7.resource = create('Practitioner') as practitioner then {
       
@@ -264,7 +264,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
         id.extension as ext->identifier.value = ext; 
         id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
         id.root as r then {
-          id.extension as ext  -> practitioner.id  =  (r +'-'+ ext) as uuid2,  e7.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id)  "dataenterer";
+          id.extension as ext  -> practitioner.id  =  (r +'-'+ ext) as uuid2,  e7.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('Practitioner/' + %practitioner.id)  "dataenterer";
         }"r";
     }"identifier";
 
@@ -360,7 +360,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
      informant.assignedEntity as assignedEntity  ->bundle.entry as e11, e11.request = create('BackboneElement') as request, request.method = 'POST', e11.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid1,  e11.fullUrl = append('https://example/PractitionerRole/', uuid1), request.url = 'PractitionerRole' then {
         informant -> tgt.attester as attester then {
         informant -> attester.mode='professional' "mode";
-        informant -> attester.party = create('Reference') as reference,  reference.reference = ('https://example/PractitionerRole/' + %practitionerRole.id)"reference";
+        informant -> attester.party = create('Reference') as reference,  reference.reference = ('PractitionerRole/' + %practitionerRole.id)"reference";
         assignedEntity.code -> practitionerRole.code;
         assignedEntity as entity-> bundle.entry as e12, e12.request = create('BackboneElement') as request, request.method = 'PUT', e12.resource = create('Practitioner') as practitioner  then {
           
@@ -376,7 +376,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
             id.extension as ext->identifier.value = ext;
             id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
             id.root as r then {
-              id.extension as ext  -> practitioner.id =  (r +'-'+ ext) as uuid2,  e12.fullUrl = append('https://example/Practitioner/', uuid2), practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id) "dataenterer";
+              id.extension as ext  -> practitioner.id =  (r +'-'+ ext) as uuid2,  e12.fullUrl = append('https://example/Practitioner/', uuid2), practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('Practitioner/' + %practitioner.id) "dataenterer";
             }"r" ;
         }"identifier";
         assignedEntity.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
@@ -409,7 +409,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
             }"ext";
             id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
             id.root as r then {
-              id.extension as ext  -> organization.id =  (r +'-'+ ext) as uuid3,  e13.fullUrl = append('https://example/Organization/', uuid3),  practitionerRole.organization = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %organization.id);
+              id.extension as ext  -> organization.id =  (r +'-'+ ext) as uuid3,  e13.fullUrl = append('https://example/Organization/', uuid3),  practitionerRole.organization = create('Reference') as reference,  reference.reference = ('Organization/' + %organization.id);
             }"r" ;
         }"identifier";
         representedOrganization.name as v -> organization.name = (v.xmlText);
@@ -432,7 +432,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
             }"ext";
             id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
             id.root as r then {
-              id.extension as ext  -> organization1.id =  (r +'-'+ ext) as uuid4,  e14.fullUrl = append('https://example/Organization/', uuid4), organization.partOf = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %organization1.id);
+              id.extension as ext  -> organization1.id =  (r +'-'+ ext) as uuid4,  e14.fullUrl = append('https://example/Organization/', uuid4), organization.partOf = create('Reference') as reference,  reference.reference = ('Organization/' + %organization1.id);
             }"r" ;
         }"identifier";
         organizationPartOf.code -> organization1.type;
@@ -454,7 +454,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
             }"ext";
             id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
             id.root as r then {
-              id.extension as ext  -> organization2.id = (r +'-'+ ext) as uuid5,  e15.fullUrl = append('https://example/Organization/', uuid5)  , organization1.partOf = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %organization2.id);
+              id.extension as ext  -> organization2.id = (r +'-'+ ext) as uuid5,  e15.fullUrl = append('https://example/Organization/', uuid5)  , organization1.partOf = create('Reference') as reference,  reference.reference = ('Organization/' + %organization2.id);
             }"r" ;
         }"identifier";
         wholeOrganization.name as v -> organization2.name = (v.xmlText);
@@ -475,7 +475,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
     informant.relatedEntity as related  -> bundle.entry as e16, e16.request = create('BackboneElement') as request, request.method = 'POST', e16.resource = create('RelatedPerson') as relatedPerson,  relatedPerson.id = uuid() as uuid1,  e16.fullUrl = append('https://example/RelatedPerson/', uuid1),request.url = 'RelatedPerson' then {
     informant -> tgt.attester as attester then {
     informant -> attester.mode='professional' "mode";
-    informant-> attester.party = create('Reference') as reference,  reference.reference = ('https://example/RelatedPerson/' + %relatedPerson.id)"reference";
+    informant-> attester.party = create('Reference') as reference,  reference.reference = ('RelatedPerson/' + %relatedPerson.id)"reference";
     related.relatedPerson as Person then {
     related.code -> relatedPerson.relationship;
     related.telecom -> relatedPerson.telecom;
@@ -484,7 +484,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
     related.birthTime as date then{
       date.value as value -> relatedPerson.birthDate = truncate(value, 10) "valueD"; 
     }"birthinformant";
-    related->relatedPerson.patient= create('Reference') as reference,  reference.reference = ('https://example/Patient/' + %patientResource.id) "reference";
+    related->relatedPerson.patient= create('Reference') as reference,  reference.reference = ('Patient/' + %patientResource.id) "reference";
      }"relatedPerson1";
       }"relatedPerson";
     }"informant";
@@ -512,8 +512,8 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
           id.extension as ext  -> Organization.id = (r +'-'+ ext) as uuid,  e17.fullUrl = append('https://example/Organization/', uuid);
         }"r" ;
     }"identifier";
-    assignedCustodian -> DocumentReference.custodian = create('Reference') as referenceCU,  referenceCU.reference = ('https://example/Organization/' + %Organization.id) "RefCustodian";
-    representedCustodianOrganization -> tgt.custodian = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %Organization.id)  then CustodianOrganization(representedCustodianOrganization,Organization) "custodian1";
+    assignedCustodian -> DocumentReference.custodian = create('Reference') as referenceCU,  referenceCU.reference = ('Organization/' + %Organization.id) "RefCustodian";
+    representedCustodianOrganization -> tgt.custodian = create('Reference') as reference,  reference.reference = ('Organization/' + %Organization.id)  then CustodianOrganization(representedCustodianOrganization,Organization) "custodian1";
     }"representedCustodianOrganization";
     }"organization";
   }"custodian";
@@ -537,7 +537,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                         id.extension as ext->identifier.value = ext;
                         id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
                         id.root as r then {
-                          id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2,  e19.fullUrl = append('https://example/Practitioner/', uuid2),  attester.party = create('Reference') as reference1, reference1.reference = ('https://example/Practitioner/' + %practitioner.id);
+                          id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2,  e19.fullUrl = append('https://example/Practitioner/', uuid2),  attester.party = create('Reference') as reference1, reference1.reference = ('Practitioner/' + %practitioner.id);
                         }"r" ;
                     }"identifier";
                     intendedRecipient.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
@@ -574,13 +574,13 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                     }"ext";
                     id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
                     id.root as r then {
-                      id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid3,  e20.fullUrl = append('https://example/Organization/', uuid3),  attester.party = create('Reference') as reference2, reference2.reference = ('https://example/Organization/' + %organization.id);
+                      id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid3,  e20.fullUrl = append('https://example/Organization/', uuid3),  attester.party = create('Reference') as reference2, reference2.reference = ('Organization/' + %organization.id);
                     }"r" ;
                 }"identifier";
                 receivedOrganization.name as v -> organization.name = (v.xmlText);
                 receivedOrganization.telecom -> organization.telecom;
                 receivedOrganization.addr -> organization.address;
-                receivedOrganization.asOrganizationPartOf as asOrganizationPartOf -> bundle.entry as e21, e21.request = create('BackboneElement') as request, request.method = 'PUT', e21.resource = create('Organization') as organization2 , organization2.id = uuid() as uuid4,  e21.fullUrl = append('https://example/Organization', uuid4), organization.partOf = create('Reference') as referenceor, referenceor.reference = ('https://example/Organization' + %organization2.id) then {
+                receivedOrganization.asOrganizationPartOf as asOrganizationPartOf -> bundle.entry as e21, e21.request = create('BackboneElement') as request, request.method = 'PUT', e21.resource = create('Organization') as organization2 , organization2.id = uuid() as uuid4,  e21.fullUrl = append('https://example/Organization', uuid4), organization.partOf = create('Reference') as referenceor, referenceor.reference = ('Organization' + %organization2.id) then {
                  
                   asOrganizationPartOf->organization2.meta as meta then {
                     asOrganizationPartOf->meta.tag = create('Coding') as coding then {
@@ -596,7 +596,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                     }"ext";
                     id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
                      id.root as r then {
-                      id.extension as ext  -> organization2.id = (r +'-'+ ext) as uuid4,  e21.fullUrl = append('https://example/Organization/', uuid4), organization.partOf = create('Reference') as referenceor, referenceor.reference = ('https://example/Organization/' + %organization2.id);
+                      id.extension as ext  -> organization2.id = (r +'-'+ ext) as uuid4,  e21.fullUrl = append('https://example/Organization/', uuid4), organization.partOf = create('Reference') as referenceor, referenceor.reference = ('Organization/' + %organization2.id);
                     }"r" ;
                 }"identifier";
                     asOrganizationPartOf.code -> organization2.type;
@@ -617,7 +617,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                         }"ext";
                         id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
                         id.root as r then {
-                          id.extension as ext  -> organization3.id = (r +'-'+ ext) as uuid5,  e22.fullUrl = append('https://example/Organization/', uuid5),  organization2.partOf = create('Reference') as referenceor, referenceor.reference = ('https://example/Organization/' + %organization3.id);
+                          id.extension as ext  -> organization3.id = (r +'-'+ ext) as uuid5,  e22.fullUrl = append('https://example/Organization/', uuid5),  organization2.partOf = create('Reference') as referenceor, referenceor.reference = ('Organization/' + %organization3.id);
                         }"r" ;   
                     }"identifier";
                         wholeOrganization3.name as v -> organization3.name = (v.xmlText);
@@ -640,7 +640,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
        entity.id as id where (root='2.16.840.1.113883.2.9.4.3.2') ->  bundle.entry as e23, e23.request = create('BackboneElement') as request, request.method = 'POST', e23.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid,  e23.fullUrl = append('https://example/PractitionerRole/', uuid), request.url = 'PractitionerRole' then {
                legalAuth -> attester.mode = 'legal' "mode";
                legalAuth.time -> attester.time;
-               legalAuth -> attester.party = create('Reference') as reference,  reference.reference = ('https://example/PractitionerRole/' + %practitionerRole.id) then{
+               legalAuth -> attester.party = create('Reference') as reference,  reference.reference = ('PractitionerRole/' + %practitionerRole.id) then{
              entity ->  bundle.entry as e24, e24.request = create('BackboneElement') as request, request.method = 'PUT', e24.resource = create('Practitioner') as practitioner then {
              entity->practitioner.meta as meta then {
                  entity->meta.tag = create('Coding') as coding then {
@@ -654,7 +654,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                  id.extension as ext->identifier.value = ext;
                  id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
                  id.root as r then {
-                   id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid1,  e24.fullUrl = append('https://example/Practitioner/', uuid1), practitionerRole.practitioner = create('Reference') as reference, reference.reference = ('https://example/Practitioner/' + %practitioner.id);
+                   id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid1,  e24.fullUrl = append('https://example/Practitioner/', uuid1), practitionerRole.practitioner = create('Reference') as reference, reference.reference = ('Practitioner/' + %practitioner.id);
                  }"r" ; 
              }"identifier";
              entity.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
@@ -686,7 +686,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                    }"ext";
                    id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
                    id.root as r then {
-                     id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid2,  e25.fullUrl = append('https://example/Organization/', uuid2),  practitionerRole.organization = create('Reference') as reference, reference.reference = ('https://example/Organization/' + %organization.id);
+                     id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid2,  e25.fullUrl = append('https://example/Organization/', uuid2),  practitionerRole.organization = create('Reference') as reference, reference.reference = ('Organization/' + %organization.id);
                    }"r" ;
                }"identifier";
                rapresentedOrg.name as v -> organization.name = (v.xmlText);
@@ -708,13 +708,13 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                        }"ext";
                        id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
                        id.root as r then {
-                         id.extension as ext  -> asorganization.id  = (r +'-'+ ext) as uuid2,  e26.fullUrl = append('https://example/Organization/', uuid2),  organization.partOf = create('Reference') as reference, reference.reference = ('https://example/Organization/' + %asorganization.id);
+                         id.extension as ext  -> asorganization.id  = (r +'-'+ ext) as uuid2,  e26.fullUrl = append('https://example/Organization/', uuid2),  organization.partOf = create('Reference') as reference, reference.reference = ('Organization/' + %asorganization.id);
                        }"r" ;
                    }"identifier";
                        asOrgPartOf1.code -> asorganization.type;
                        asOrgPartOf1.statusCode as status where (code='active') -> asorganization.active = create('boolean'), asorganization.active = true;
                          asOrgPartOf1.wholeOrganization as wholeOrg then{
-                           wholeOrg as wholeOrg1 -> bundle.entry as e27, e27.request = create('BackboneElement') as request, request.method = 'PUT', e27.resource = create('Organization') as wholeorganization,  wholeorganization.id = uuid() as uuid4,  e27.fullUrl = append('https://example/Organization/', uuid4), asorganization.partOf = create('Reference') as reference, reference.reference = ('https://example/Organization/' + %wholeorganization.id) then {
+                           wholeOrg as wholeOrg1 -> bundle.entry as e27, e27.request = create('BackboneElement') as request, request.method = 'PUT', e27.resource = create('Organization') as wholeorganization,  wholeorganization.id = uuid() as uuid4,  e27.fullUrl = append('https://example/Organization/', uuid4), asorganization.partOf = create('Reference') as reference, reference.reference = ('Organization/' + %wholeorganization.id) then {
                              wholeOrg1->wholeorganization.meta as meta then {
                                wholeOrg1->meta.tag = create('Coding') as coding then {
                                  wholeOrg1 -> coding.system ='http://algoritmodiscoring'"system";
@@ -728,7 +728,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                                }"ext";
                                id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
                                id.root as r then {
-                                 id.extension as ext  -> wholeorganization.id= (r +'-'+ ext) as uuid4,  e27.fullUrl = append('https://example/Organization/', uuid4), asorganization.partOf = create('Reference') as reference, reference.reference = ('https://example/Organization/' + %wholeorganization.id);
+                                 id.extension as ext  -> wholeorganization.id= (r +'-'+ ext) as uuid4,  e27.fullUrl = append('https://example/Organization/', uuid4), asorganization.partOf = create('Reference') as reference, reference.reference = ('Organization/' + %wholeorganization.id);
                                }"r" ;
                            }"identifier";
                                wholeOrg1.name as v -> wholeorganization.name = (v.xmlText);
@@ -758,7 +758,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                }"ext";
                id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
                id.root as r then {
-                 id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid2,  e251.fullUrl = append('https://example/Organization/', uuid2),  attester.party = create('Reference') as reference, reference.reference = ('https://example/Organization/' + %organization.id);
+                 id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid2,  e251.fullUrl = append('https://example/Organization/', uuid2),  attester.party = create('Reference') as reference, reference.reference = ('Organization/' + %organization.id);
                }"r" ;
            }"identifier";
           }"OrgPartitaIVA";
@@ -771,9 +771,9 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
    Auth -> tgt.attester as attester then {
       Auth.time -> attester.time;
       Auth -> attester.mode = 'professional' "mode";
-      Auth.assignedEntity as entity ->  attester.party = create('Reference') as reference,  reference.reference = ('https://example/PractitionerRole/' + %practitionerRole.id) then {
+      Auth.assignedEntity as entity ->  attester.party = create('Reference') as reference,  reference.reference = ('PractitionerRole/' + %practitionerRole.id) then {
         entity.code -> practitionerRole.code;
-        entity -> bundle.entry as e29, e29.request = create('BackboneElement') as request, request.method = 'PUT', e29.resource = create('Practitioner') as practitioner,  practitioner.id = uuid() as uuid2,  e29.fullUrl = append('https://example/Practitioner', uuid2),  practitionerRole.practitioner = create('Reference') as reference, reference.reference = ('https://example/Practitioner' + %practitioner.id) then {
+        entity -> bundle.entry as e29, e29.request = create('BackboneElement') as request, request.method = 'PUT', e29.resource = create('Practitioner') as practitioner,  practitioner.id = uuid() as uuid2,  e29.fullUrl = append('https://example/Practitioner', uuid2),  practitionerRole.practitioner = create('Reference') as reference, reference.reference = ('Practitioner' + %practitioner.id) then {
           
           entity->practitioner.meta as meta then {
             entity->meta.tag = create('Coding') as coding then {
@@ -787,7 +787,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
             id.extension as ext->identifier.value = ext;
             id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
             id.root as r then {
-              id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2,  e29.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference, reference.reference = ('https://example/Practitioner/' + %practitioner.id);
+              id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2,  e29.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference, reference.reference = ('Practitioner/' + %practitioner.id);
             }"r" ; 
         }"identifier";
         entity.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
@@ -822,7 +822,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
           }"ext";
           id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
           id.root as r then {
-            id.extension as ext  -> organization.id =(r +'-'+ ext) as uuid3,  e30.fullUrl = append('https://example/Organization/', uuid3), practitionerRole.organization = create('Reference') as reference, reference.reference = ('https://example/Organization/' + %organization.id);
+            id.extension as ext  -> organization.id =(r +'-'+ ext) as uuid3,  e30.fullUrl = append('https://example/Organization/', uuid3), practitionerRole.organization = create('Reference') as reference, reference.reference = ('Organization/' + %organization.id);
           }"r" ;   
       }"identifier";
       reporganization.name as v -> organization.name = (v.xmlText);
@@ -845,12 +845,12 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
           }"ext";
           id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
           id.root as r then {
-            id.extension as ext  -> asOrganizationpartof.id = (r +'-'+ ext) as uuid4, e31.fullUrl = append('https://example/Organization/', uuid4), organization.partOf = create('Reference') as reference, reference.reference = ('https://example/Organization/' + %asOrganizationpartof.id);
+            id.extension as ext  -> asOrganizationpartof.id = (r +'-'+ ext) as uuid4, e31.fullUrl = append('https://example/Organization/', uuid4), organization.partOf = create('Reference') as reference, reference.reference = ('Organization/' + %asOrganizationpartof.id);
           }"r" ;   
       }"identifier";
         organizationpartof.code -> asOrganizationpartof.type;
         organizationpartof.statusCode as status where (code='active') -> asOrganizationpartof.active = create('boolean'), asOsrganizationpartof.active = 'true';     
-            organizationpartof.wholeOrganization as wholeorg -> bundle.entry as e32, e32.request = create('BackboneElement') as request, request.method = 'PUT', e32.resource = create('Organization') as wholeOrganization,  wholeOrganization.id = uuid() as uuid5,  e32.fullUrl = append('https://example/Organization/', uuid5), asOrganizationpartof.partOf = create('Reference') as reference, reference.reference = ('https://example/Organization/' + %wholeOrganization.id) then {
+            organizationpartof.wholeOrganization as wholeorg -> bundle.entry as e32, e32.request = create('BackboneElement') as request, request.method = 'PUT', e32.resource = create('Organization') as wholeOrganization,  wholeOrganization.id = uuid() as uuid5,  e32.fullUrl = append('https://example/Organization/', uuid5), asOrganizationpartof.partOf = create('Reference') as reference, reference.reference = ('Organization/' + %wholeOrganization.id) then {
               
               wholeorg->wholeOrganization.meta as meta then {
                 wholeorg->meta.tag = create('Coding') as coding then {
@@ -866,7 +866,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                 }"ext";
                 id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
                 id.root as r then {
-                  id.extension as ext  -> wholeOrganization.id = (r +'-'+ ext) as uuid5,  e32.fullUrl = append('https://example/Organization/', uuid5), asOrganizationpartof.partOf = create('Reference') as reference, reference.reference = ('https://example/Organization/' + %wholeOrganization.id);
+                  id.extension as ext  -> wholeOrganization.id = (r +'-'+ ext) as uuid5,  e32.fullUrl = append('https://example/Organization/', uuid5), asOrganizationpartof.partOf = create('Reference') as reference, reference.reference = ('Organization/' + %wholeOrganization.id);
                 }"r" ;  
             }"identifier";
             wholeorg.name as v -> wholeOrganization.name = (v.xmlText);
@@ -908,7 +908,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                   id.extension as ext->identifier.value = ext;
                   id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
                   id.root as r then {
-                    id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2, e33.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id) ;
+                    id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2, e33.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('Practitioner/' + %practitioner.id) ;
                   }"r" ;    
               }"identifier";
               associetedEntity.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
@@ -942,7 +942,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                 }"ext";
                 id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
                 id.root as r then {
-                  id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid3,  e34.fullUrl = append('https://example/Organization/', uuid3),  practitionerRole.organization = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %organization.id);
+                  id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid3,  e34.fullUrl = append('https://example/Organization/', uuid3),  practitionerRole.organization = create('Reference') as reference,  reference.reference = ('Organization/' + %organization.id);
                 }"r" ; 
             }"identifier";
               scopingOrganization.name as v -> organization.name = (v.xmlText);
@@ -1027,7 +1027,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                   id.extension as ext->identifier.value = ext;
                   id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
                   id.root as r then {
-                    id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2, e33.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id) ;
+                    id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2, e33.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('Practitioner/' + %practitioner.id) ;
                   }"r" ;    
               }"identifier";
               associetedEntity.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
@@ -1061,7 +1061,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
                 }"ext";
                 id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
                 id.root as r then {
-                  id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid3,  e34.fullUrl = append('https://example/Organization/', uuid3),  practitionerRole.organization = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %organization.id);
+                  id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid3,  e34.fullUrl = append('https://example/Organization/', uuid3),  practitionerRole.organization = create('Reference') as reference,  reference.reference = ('Organization/' + %organization.id);
                 }"r" ;   
             }"identifier";
               scopingOrganization.name as v -> organization.name = (v.xmlText);
@@ -1122,9 +1122,9 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
       associetedEntity-> bundle.entry as e3131,   e3131.request = create('BackboneElement') as request, request.method = 'POST',  e3131.resource = create('RelatedPerson') as RelatedPerson, RelatedPerson.id = uuid() as uuid1, e3131.fullUrl = append('https://example/RelatedPerson/', uuid1), request.url= 'RelatedPerson' then {
             associetedEntity->  patientResource.link as link then {
                 associetedEntity ->  link.type='refer'"type";
-                associetedEntity -> link.other = create('Reference') as reference,  reference.reference = ('https://example/RelatedPerson/' + %RelatedPerson.id) "reference";
+                associetedEntity -> link.other = create('Reference') as reference,  reference.reference = ('RelatedPerson/' + %RelatedPerson.id) "reference";
                 associetedEntity.id->RelatedPerson.identifier;
-                associetedEntity-> RelatedPerson.patient=create('Reference') as reference,  reference.reference = ('https://example/Patient/' + %patientResource.id) "reference";
+                associetedEntity-> RelatedPerson.patient=create('Reference') as reference,  reference.reference = ('Patient/' + %patientResource.id) "reference";
                 associetedEntity.code->RelatedPerson.relationship;
                 associetedEntity.telecom->RelatedPerson.telecom;
                 associetedEntity.associatedPerson as associatedperson then {
@@ -1221,12 +1221,12 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
     }"repOrg";
   };  
   src.inFulfillmentOf as inFulfillmentOf then{
-    inFulfillmentOf.order as order -> bundle.entry as e40,  e40.request = create('BackboneElement') as request, request.method = 'POST', e40.resource = create('ServiceRequest') as serviceRequest,  serviceRequest.id = uuid() as uuid1,  e40.fullUrl = append('https://example/ServiceRequest/', uuid1), request.url = 'ServiceRequest', encounter.basedOn = create('Reference') as reference,  reference.reference = ('https://example/ServiceRequest/' + %serviceRequest.id) then {
+    inFulfillmentOf.order as order -> bundle.entry as e40,  e40.request = create('BackboneElement') as request, request.method = 'POST', e40.resource = create('ServiceRequest') as serviceRequest,  serviceRequest.id = uuid() as uuid1,  e40.fullUrl = append('https://example/ServiceRequest/', uuid1), request.url = 'ServiceRequest', encounter.basedOn = create('Reference') as reference,  reference.reference = ('ServiceRequest/' + %serviceRequest.id) then {
         order.id -> serviceRequest.identifier;
         order -> serviceRequest.status='active'"status";
         order -> serviceRequest.intent='order'"intent";
-        order -> serviceRequest.subject=create('Reference') as reference,  reference.reference = ('https://example/Patient/' + %patientResource.id) "reference";
-        order -> serviceRequest.encounter=create('Reference') as reference,  reference.reference = ('https://example/Encounter/' + %encounter.id) "reference";
+        order -> serviceRequest.subject=create('Reference') as reference,  reference.reference = ('Patient/' + %patientResource.id) "reference";
+        order -> serviceRequest.encounter=create('Reference') as reference,  reference.reference = ('Encounter/' + %encounter.id) "reference";
          order.code -> serviceRequest.code;
         order.priorityCode as priorityCode then{
           priorityCode.code as v -> serviceRequest.priority = translate(v, '#priority', 'code') "priority";
@@ -1247,7 +1247,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
         effectivetime1 -> period.start =  create('dateTime') as start then TSDateTime(effectivetime1,start) "val"; 
       }"efft";
       serviceEvent.performer as performer ->  bundle.entry as e41, e41.request = create('BackboneElement') as request, request.method = 'POST',  e41.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid1,  e41.fullUrl = append('https://example/PractitionerRole/', uuid1), request.url = 'PractitionerRole' then{
-			 performer -> event.detail = create('Reference') as reference,  reference.reference = ('https://example/PractitionerRole/' + %practitionerRole.id) then {
+			 performer -> event.detail = create('Reference') as reference,  reference.reference = ('PractitionerRole/' + %practitionerRole.id) then {
         performer.assignedEntity as assignedEntity -> bundle.entry as e42,  e42.request = create('BackboneElement') as request, request.method = 'PUT', e42.resource = create('Practitioner') as practitioner then {
             assignedEntity->practitioner.meta as meta then {
             assignedEntity->meta.tag = create('Coding') as coding then {
@@ -1263,7 +1263,7 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
             id.extension as ext->identifier.value = ext;
             id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
             id.root as r then {
-              id.extension as ext  ->practitioner.id =(r +'-'+ ext) as uuid2,  e42.fullUrl = append('https://example/Practitioner/', uuid2), practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id) ;
+              id.extension as ext  ->practitioner.id =(r +'-'+ ext) as uuid2,  e42.fullUrl = append('https://example/Practitioner/', uuid2), practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('Practitioner/' + %practitioner.id) ;
             }"r" ; 
         }"identifier";
         assignedEntity.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
@@ -1354,10 +1354,10 @@ group ClinicalDocumentComposition(source src : ClinicalDocument, target tgt : Co
    } "docOf";
   };
 };
-  src where src.componentOf.exists().not() ->  tgt.encounter = create('Reference') as reference,  reference.reference = ('https://example/Encounter/' + %encounter.id) then ClinicalDocumentEncounter(src, bundle, encounter,patientResource)"encounterExist";
+  src where src.componentOf.exists().not() ->  tgt.encounter = create('Reference') as reference,  reference.reference = ('Encounter/' + %encounter.id) then ClinicalDocumentEncounter(src, bundle, encounter,patientResource)"encounterExist";
   src.componentOf as comp then {
-    comp where comp.encompassingEncounter.exists().not() ->  tgt.encounter = create('Reference') as reference,  reference.reference = ('https://example/Encounter/' + %encounter.id) then ClinicalDocumentEncounter(srcEnc, bundle, encounter,patientResource)"enc";
-    comp.encompassingEncounter as srcEnc ->  tgt.encounter = create('Reference') as reference,  reference.reference = ('https://example/Encounter/' + %encounter.id) then ClinicalDocumentEncounter(srcEnc, bundle, encounter,patientResource);
+    comp where comp.encompassingEncounter.exists().not() ->  tgt.encounter = create('Reference') as reference,  reference.reference = ('Encounter/' + %encounter.id) then ClinicalDocumentEncounter(srcEnc, bundle, encounter,patientResource)"enc";
+    comp.encompassingEncounter as srcEnc ->  tgt.encounter = create('Reference') as reference,  reference.reference = ('Encounter/' + %encounter.id) then ClinicalDocumentEncounter(srcEnc, bundle, encounter,patientResource);
     }"encompassingEncounter";
     
     //Related document 
@@ -1408,10 +1408,10 @@ group ClinicalDocumentPatientRole(source src : PatientRole, target tgt : Patient
           person.birthTime  as birthTime then{
             birthTime.value as date -> relatedPerson.birthDate = truncate(date, 10) "birthTimelegal";
           } "birth";
-          person-> relatedPerson.patient = create('Reference') as reference,  reference.reference = ('https://example/Patient/' + %tgt.id) "reference";
+          person-> relatedPerson.patient = create('Reference') as reference,  reference.reference = ('Patient/' + %tgt.id) "reference";
           person ->  tgt.link as link then {
           person ->  link.type='refer'"type";
-          person -> link.other = create('Reference') as reference,  reference.reference = ('https://example/RelatedPerson/' + %relatedPerson.id) "reference";
+          person -> link.other = create('Reference') as reference,  reference.reference = ('RelatedPerson/' + %relatedPerson.id) "reference";
            guardian.addr -> relatedPerson.address;
            guardian.telecom -> relatedPerson.telecom;
            guardian.id -> relatedPerson.identifier;
@@ -1428,7 +1428,7 @@ group ClinicalDocumentPatientRole(source src : PatientRole, target tgt : Patient
           }"meta";
           
           guardianorg ->  tgt.contact as contact then {
-            guardianorg -> contact.organization  = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %organizationcontact.id) "OrganizationContact";
+            guardianorg -> contact.organization  = create('Reference') as reference,  reference.reference = ('Organization/' + %organizationcontact.id) "OrganizationContact";
             guardianorg.id as id -> organizationcontact.identifier as identifier then {
               id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
               id.extension as ext->identifier.value = ext then {
@@ -1452,7 +1452,7 @@ group ClinicalDocumentPatientRole(source src : PatientRole, target tgt : Patient
                 }"coding";
               }"meta";
            
-              OrgPartOf -> organizationcontact.partOf  = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %organizationpartOf.id) "asorganization";
+              OrgPartOf -> organizationcontact.partOf  = create('Reference') as reference,  reference.reference = ('Organization/' + %organizationpartOf.id) "asorganization";
                OrgPartOf.id as id -> organizationpartOf.identifier as identifier then {
                 id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
                 id.extension as ext->identifier.value = ext then {
@@ -1474,7 +1474,7 @@ group ClinicalDocumentPatientRole(source src : PatientRole, target tgt : Patient
                         }"coding";
                       }"meta";
                       
-                      wholeORG -> organizationpartOf.partOf  = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %WholeOrganization.id) "asOrganization";
+                      wholeORG -> organizationpartOf.partOf  = create('Reference') as reference,  reference.reference = ('Organization/' + %WholeOrganization.id) "asOrganization";
                        wholeORG.id as id -> WholeOrganization.identifier as identifier then {
                         id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
                         id.extension as ext->identifier.value = ext then {
@@ -1515,7 +1515,7 @@ group ClinicalDocumentPatientRole(source src : PatientRole, target tgt : Patient
         }"ext";
         id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
         id.root as r then {
-          id.extension as ext  ->providerorganization.id =(r +'-'+ ext) as uuid5,  e4.fullUrl = append('https://example/Organization/', uuid5), tgt.managingOrganization = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %providerorganization.id) "reference";
+          id.extension as ext  ->providerorganization.id =(r +'-'+ ext) as uuid5,  e4.fullUrl = append('https://example/Organization/', uuid5), tgt.managingOrganization = create('Reference') as reference,  reference.reference = ('Organization/' + %providerorganization.id) "reference";
         }"r" ;  
     }"identifier";
           org.name as v -> providerorganization.name = (v.xmlText);
@@ -1538,7 +1538,7 @@ group ClinicalDocumentPatientRole(source src : PatientRole, target tgt : Patient
                 }"ext";
                 id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
                 id.root as r then {
-                  id.extension as ext  ->organizationpartOfprovider.id =(r +'-'+ ext) as uuid6,  e5.fullUrl = append('https://example/Organization/', uuid6),providerorganization.partOf  = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %organizationpartOfprovider.id) "asorganization";
+                  id.extension as ext  ->organizationpartOfprovider.id =(r +'-'+ ext) as uuid6,  e5.fullUrl = append('https://example/Organization/', uuid6),providerorganization.partOf  = create('Reference') as reference,  reference.reference = ('Organization/' + %organizationpartOfprovider.id) "asorganization";
                 }"r" ;    
             }"identifier";
               OrgPartOfProvider.code -> organizationpartOfprovider.type;
@@ -1552,7 +1552,7 @@ group ClinicalDocumentPatientRole(source src : PatientRole, target tgt : Patient
                       }"coding";
                 }"meta";
                 
-                wholeORGproveder-> organizationpartOfprovider.partOf  = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %WholeOrganizationprovider.id) "asOrganization";
+                wholeORGproveder-> organizationpartOfprovider.partOf  = create('Reference') as reference,  reference.reference = ('Organization/' + %WholeOrganizationprovider.id) "asOrganization";
                 wholeORGproveder.id as id -> WholeOrganizationprovider.identifier as identifier then {
                   id.root as r ->identifier.system= translate(r, 'http://hl7.org/fhir/ConceptMap/special-oid2uri', 'uri') "root1";
                   id.extension as ext->identifier.value = ext then {
@@ -1591,7 +1591,7 @@ group ClinicalDocumentEncounter(source src : EncompassingEncounter, target bundl
     src ->coding.system= 'http://terminology.hl7.org/CodeSystem/v3-ActCode' "codeS";
     src ->coding.display= 'ambulatory' "display";
    }"NonCodeclass";
-  src -> encounter.subject=create('Reference') as reference,  reference.reference = ('https://example/Patient/' + %patient.id) "reference";
+  src -> encounter.subject=create('Reference') as reference,  reference.reference = ('Patient/' + %patient.id) "reference";
   src -> encounter.status='finished'"status";
   // effectiveTime=period
   src where effectiveTime.low.exists() or effectiveTime.high.exists() then {
@@ -1611,7 +1611,7 @@ group ClinicalDocumentEncounter(source src : EncompassingEncounter, target bundl
   } "discharge";
 
   src.responsibleParty as responsibleParty -> encounter.participant as participant then {
-    responsibleParty.assignedEntity as entity ->  bundle.entry as e, e.request = create('BackboneElement') as request, request.method = 'POST',  e.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid1,  e.fullUrl = append('https://example/PractitionerRole/', uuid1), request.url = 'PractitionerRole', participant.individual = create('Reference') as reference,  reference.reference = ('https://example/PractitionerRole/' + %practitionerRole.id) then {
+    responsibleParty.assignedEntity as entity ->  bundle.entry as e, e.request = create('BackboneElement') as request, request.method = 'POST',  e.resource = create('PractitionerRole') as practitionerRole,  practitionerRole.id = uuid() as uuid1,  e.fullUrl = append('https://example/PractitionerRole/', uuid1), request.url = 'PractitionerRole', participant.individual = create('Reference') as reference,  reference.reference = ('PractitionerRole/' + %practitionerRole.id) then {
         entity.code -> practitionerRole.code;
         entity-> bundle.entry as e1, e1.request = create('BackboneElement') as request, request.method = 'PUT',  e1.resource = create('Practitioner') as practitioner then {
           
@@ -1627,7 +1627,7 @@ group ClinicalDocumentEncounter(source src : EncompassingEncounter, target bundl
             id.extension as ext->identifier.value = ext;
             id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
             id.root as r then {
-              id.extension as ext  ->practitioner.id =(r +'-'+ ext) as  uuid2,  e1.fullUrl = append('https://example/Practitioner/', uuid2), practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id);
+              id.extension as ext  ->practitioner.id =(r +'-'+ ext) as  uuid2,  e1.fullUrl = append('https://example/Practitioner/', uuid2), practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('Practitioner/' + %practitioner.id);
             }"r" ; 
           }"identifier";
           entity.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
@@ -1662,7 +1662,7 @@ group ClinicalDocumentEncounter(source src : EncompassingEncounter, target bundl
             }"ext";
             id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
             id.root as r then {
-              id.extension as ext  -> rapresentedorganization.id =(r +'-'+ ext) as uuid3,  e2.fullUrl = append('https://example/Organization/', uuid3), practitionerRole.organization = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %rapresentedorganization.id);
+              id.extension as ext  -> rapresentedorganization.id =(r +'-'+ ext) as uuid3,  e2.fullUrl = append('https://example/Organization/', uuid3), practitionerRole.organization = create('Reference') as reference,  reference.reference = ('Organization/' + %rapresentedorganization.id);
             }"r" ;  
             }"identifier";
            raporg.name as v -> rapresentedorganization.name = (v.xmlText);
@@ -1747,7 +1747,7 @@ group ClinicalDocumentEncounter(source src : EncompassingEncounter, target bundl
          id.extension as ext->identifier.value = ext;
          id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
          id.root as r then {
-           id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2, e33.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('https://example/Practitioner/' + %practitioner.id) ;
+           id.extension as ext  -> practitioner.id = (r +'-'+ ext) as uuid2, e33.fullUrl = append('https://example/Practitioner/', uuid2),  practitionerRole.practitioner = create('Reference') as reference,  reference.reference = ('Practitioner/' + %practitioner.id) ;
          }"r" ;    
      }"identifier";
      assignedEntity.id as id where (root='2.16.840.1.113883.2.9.4.3.2') then {
@@ -1781,7 +1781,7 @@ group ClinicalDocumentEncounter(source src : EncompassingEncounter, target bundl
        }"ext";
        id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
        id.root as r then {
-         id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid3,  e34.fullUrl = append('https://example/Organization/', uuid3),  practitionerRole.organization = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %organization.id);
+         id.extension as ext  -> organization.id = (r +'-'+ ext) as uuid3,  e34.fullUrl = append('https://example/Organization/', uuid3),  practitionerRole.organization = create('Reference') as reference,  reference.reference = ('Organization/' + %organization.id);
        }"r" ; 
    }"identifier";
    representedOrganization.name as v -> organization.name = (v.xmlText);
@@ -1857,7 +1857,7 @@ group ClinicalDocumentEncounter(source src : EncompassingEncounter, target bundl
       }"ext";
       id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
       id.root as r then {
-        id.extension as ext  -> loc.id =(r +'-'+ ext) as uuid6,  e5.fullUrl = append('https://example/Location/', uuid6), locations.location = create('Reference') as reference, reference.reference = ('https://example/Location/' + %loc.id)"locc";
+        id.extension as ext  -> loc.id =(r +'-'+ ext) as uuid6,  e5.fullUrl = append('https://example/Location/', uuid6), locations.location = create('Reference') as reference, reference.reference = ('Location/' + %loc.id)"locc";
       }"r" ; 
       }"identifier";
       HCF.code -> loc.type;
@@ -1881,7 +1881,7 @@ group ClinicalDocumentEncounter(source src : EncompassingEncounter, target bundl
           }"ext";
           id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
           id.root as r then {
-            id.extension as ext  -> serviceProviderOrganization.id =(r +'-'+ ext) as uuid,  e.fullUrl = append('https://example/Organization/', uuid), loc.managingOrganization = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %serviceProviderOrganization.id);
+            id.extension as ext  -> serviceProviderOrganization.id =(r +'-'+ ext) as uuid,  e.fullUrl = append('https://example/Organization/', uuid), loc.managingOrganization = create('Reference') as reference,  reference.reference = ('Organization/' + %serviceProviderOrganization.id);
           }"r" ;  
         }"identifier";
         servProvOrg.name as v -> serviceProviderOrganization.name = (v.xmlText);
@@ -1904,7 +1904,7 @@ group ClinicalDocumentEncounter(source src : EncompassingEncounter, target bundl
               }"ext";
               id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
               id.root as r then {
-                id.extension as ext  -> asorganization.id =(r +'-'+ ext) as uuid1,  e1.fullUrl = append('https://example/Organization/', uuid1), serviceProviderOrganization.partOf = create('Reference') as reference, reference.reference = ('https://example/Organization/' + %asorganization.id);
+                id.extension as ext  -> asorganization.id =(r +'-'+ ext) as uuid1,  e1.fullUrl = append('https://example/Organization/', uuid1), serviceProviderOrganization.partOf = create('Reference') as reference, reference.reference = ('Organization/' + %asorganization.id);
               }"r" ;  
             }"identifier";
             asOrgPartOf1.code -> asorganization.type;
@@ -1926,7 +1926,7 @@ group ClinicalDocumentEncounter(source src : EncompassingEncounter, target bundl
                       }"ext";
                       id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
                       id.root as r then {
-                        id.extension as ext  ->  wholeorganization.id =(r +'-'+ ext) as uuid2,  e2.fullUrl = append('https://example/Organization/', uuid2), asorganization.partOf = create('Reference') as reference, reference.reference = ('https://example/Organization/' + %wholeorganization.id);
+                        id.extension as ext  ->  wholeorganization.id =(r +'-'+ ext) as uuid2,  e2.fullUrl = append('https://example/Organization/', uuid2), asorganization.partOf = create('Reference') as reference, reference.reference = ('Organization/' + %wholeorganization.id);
                       }"r" ;    
                     }"identifier";
                     wholeOrg1.name as v -> wholeorganization.name = (v.xmlText);
@@ -1965,7 +1965,7 @@ group ClinicalDocumentationOf(source src: representedOrganization, target tgt: o
             }"ext";
             id.assigningAuthorityName as s ->  identifier.assigner as a,  a.display = s;
             id.root as r then {
-              id.extension as ext  ->  organization2.id =(r +'-'+ ext) as uuid,  e.fullUrl = append('https://example/Organization/', uuid), tgt.partOf = create('Reference') as reference, reference.reference = ('https://example/Organization/'+ %organization2.id);
+              id.extension as ext  ->  organization2.id =(r +'-'+ ext) as uuid,  e.fullUrl = append('https://example/Organization/', uuid), tgt.partOf = create('Reference') as reference, reference.reference = ('Organization/'+ %organization2.id);
             }"r" ;   
         }"identifier";
           asOrganizationPartOf.code -> organization2.type;
@@ -2008,7 +2008,7 @@ group ClinicalDocumentationOf(source src: representedOrganization, target tgt: o
 //     srcLocation.name as v -> loc.name = (v.xmlText);
 //     srcLocation.addr -> loc.address;
 //     }"location2";
-//     src.serviceProviderOrganization as servProvOrg ->  bundle.entry as e, e.request = create('BackboneElement') as request, request.method = 'PUT',  e.resource = create('Organization') as serviceProviderOrganization,  serviceProviderOrganization.id = uuid() as uuid,  e.fullUrl = append('https://example/Organization/', uuid),  loc.managingOrganization = create('Reference') as reference,  reference.reference = ('https://example/Organization/' + %serviceProviderOrganization.id)  then {
+//     src.serviceProviderOrganization as servProvOrg ->  bundle.entry as e, e.request = create('BackboneElement') as request, request.method = 'PUT',  e.resource = create('Organization') as serviceProviderOrganization,  serviceProviderOrganization.id = uuid() as uuid,  e.fullUrl = append('https://example/Organization/', uuid),  loc.managingOrganization = create('Reference') as reference,  reference.reference = ('Organization/' + %serviceProviderOrganization.id)  then {
       
 //       servProvOrg->serviceProviderOrganization.meta as meta then {
 //         servProvOrg->meta.tag = create('Coding') as coding then {
@@ -2029,7 +2029,7 @@ group ClinicalDocumentationOf(source src: representedOrganization, target tgt: o
 //             servProvOrg.telecom -> serviceProviderOrganization.telecom;
 //             servProvOrg.addr -> serviceProviderOrganization.address;
 //             servProvOrg.asOrganizationPartOf as asOrgPartOf then {
-//             asOrgPartOf as asOrgPartOf1 -> bundle.entry as e1, e1.request = create('BackboneElement') as request, request.method = 'PUT', e1.resource = create('Organization') as asorganization,  asorganization.id = uuid() as uuid1,  e1.fullUrl = append('https://example/Organization/', uuid1),   serviceProviderOrganization.partOf = create('Reference') as reference, reference.reference = ('https://example/Organization/' + %asorganization.id) then {
+//             asOrgPartOf as asOrgPartOf1 -> bundle.entry as e1, e1.request = create('BackboneElement') as request, request.method = 'PUT', e1.resource = create('Organization') as asorganization,  asorganization.id = uuid() as uuid1,  e1.fullUrl = append('https://example/Organization/', uuid1),   serviceProviderOrganization.partOf = create('Reference') as reference, reference.reference = ('Organization/' + %asorganization.id) then {
               
 //               asOrgPartOf1->asorganization.meta as meta then {
 //                 asOrgPartOf1->meta.tag = create('Coding') as coding then {
@@ -2050,7 +2050,7 @@ group ClinicalDocumentationOf(source src: representedOrganization, target tgt: o
 //                 asOrgPartOf1.statusCode as status where (code='active') -> asorganization.active = create('boolean'), asorganization.active = 'true';
 //                 //asOrgPartOf1.effectiveTime -> 
 //                 asOrgPartOf1.wholeOrganization as wholeOrg then{
-//                     wholeOrg as wholeOrg1 -> bundle.entry as e2, e2.request = create('BackboneElement') as request, request.method = 'PUT', e2.resource = create('Organization') as wholeorganization,  wholeorganization.id = uuid() as uuid2,  e2.fullUrl = append('https://example/Organization/', uuid2),  asorganization.partOf = create('Reference') as reference, reference.reference = ('https://example/Organization/' + %wholeorganization.id) then {
+//                     wholeOrg as wholeOrg1 -> bundle.entry as e2, e2.request = create('BackboneElement') as request, request.method = 'PUT', e2.resource = create('Organization') as wholeorganization,  wholeorganization.id = uuid() as uuid2,  e2.fullUrl = append('https://example/Organization/', uuid2),  asorganization.partOf = create('Reference') as reference, reference.reference = ('Organization/' + %wholeorganization.id) then {
                       
 //                       wholeOrg1->wholeorganization.meta as meta then {
 //                         wholeOrg1->meta.tag = create('Coding') as coding then {

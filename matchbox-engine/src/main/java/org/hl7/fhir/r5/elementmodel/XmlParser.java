@@ -874,13 +874,13 @@ public class XmlParser extends ParserBase {
         if (linkResolver != null)
           xml.link(linkResolver.resolveProperty(element.getProperty()));
         if (element.hasChildren()) {
-          xml.enter(element.getProperty().getXmlNamespace(), elementName);
-          if (linkResolver != null && element.getProperty().isReference()) {
-            String ref = linkResolver.resolveReference(getReferenceForElement(element));
-            if (ref != null) {
-              xml.externalLink(ref);
-            }
-          }
+            xml.enter(element.getProperty().getXmlNamespace(), elementName);
+            if (linkResolver != null && element.getProperty().isReference()) {
+              String ref = linkResolver.resolveReference(getReferenceForElement(element));
+              if (ref != null) {
+                xml.externalLink(ref);
+              }
+            }  
           for (Element child : element.getChildren()) 
             composeElement(xml, child, child.getName(), false);
           xml.exit(element.getProperty().getXmlNamespace(),elementName);
@@ -909,23 +909,26 @@ public class XmlParser extends ParserBase {
 					xml.attribute(child.getProperty().getXmlName(), av);
         }
       }
-      if (linkResolver != null)
-        xml.link(linkResolver.resolveProperty(element.getProperty()));
-      if (!xml.namespaceDefined(element.getProperty().getXmlNamespace())) {
-        String abbrev = makeNamespaceAbbrev(element.getProperty(), xml);
-        xml.namespace(element.getProperty().getXmlNamespace(), abbrev);
-      }
-      xml.enter(element.getProperty().getXmlNamespace(), elementName);
-
-      if (!root && element.getSpecial() != null) {
+      // matchbox cda logical model 2.0.0-sd-snapshot1 #196
+      if (!element.getProperty().getDefinition().hasExtension(ToolingExtensions.EXT_ID_CHOICE_GROUP)) {
         if (linkResolver != null)
           xml.link(linkResolver.resolveProperty(element.getProperty()));
-        xml.enter(element.getProperty().getXmlNamespace(),element.getType());
-      }
-      if (linkResolver != null && element.getProperty().isReference()) {
-        String ref = linkResolver.resolveReference(getReferenceForElement(element));
-        if (ref != null) {
-          xml.externalLink(ref);
+        if (!xml.namespaceDefined(element.getProperty().getXmlNamespace())) {
+          String abbrev = makeNamespaceAbbrev(element.getProperty(), xml);
+          xml.namespace(element.getProperty().getXmlNamespace(), abbrev);
+        }
+        xml.enter(element.getProperty().getXmlNamespace(), elementName);
+
+        if (!root && element.getSpecial() != null) {
+          if (linkResolver != null)
+            xml.link(linkResolver.resolveProperty(element.getProperty()));
+          xml.enter(element.getProperty().getXmlNamespace(),element.getType());
+        }
+        if (linkResolver != null && element.getProperty().isReference()) {
+          String ref = linkResolver.resolveReference(getReferenceForElement(element));
+          if (ref != null) {
+            xml.externalLink(ref);
+          }
         }
       }
       for (Element child : element.getChildren()) {
@@ -938,9 +941,12 @@ public class XmlParser extends ParserBase {
             composeElement(xml, child, child.getName(), false);
         }
       }
-      if (!root && element.getSpecial() != null)
-        xml.exit(element.getProperty().getXmlNamespace(),element.getType());
-      xml.exit(element.getProperty().getXmlNamespace(),elementName);
+      // matchbox cda logical model 2.0.0-sd-snapshot1 #196
+      if (!element.getProperty().getDefinition().hasExtension(ToolingExtensions.EXT_ID_CHOICE_GROUP)) {
+        if (!root && element.getSpecial() != null)
+          xml.exit(element.getProperty().getXmlNamespace(),element.getType());
+        xml.exit(element.getProperty().getXmlNamespace(),elementName);
+      }
     }
   }
 
