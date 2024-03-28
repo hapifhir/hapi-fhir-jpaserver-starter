@@ -1,6 +1,7 @@
 2024/04/xx Release 3.8.1
 
 - update to latest cda logical model 2.0.0-sd-snapshot1 (CDA Serialization issue) [#196](https://github.com/ahdis/matchbox/issues/196)
+- Adapt the simple terminology server to the new API [#217](https://github.com/ahdis/matchbox/issues/217)
 
 2024/03/19 Release 3.8.0
 
