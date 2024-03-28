@@ -198,9 +198,9 @@ public class ImplementationGuideProviderR4 extends ImplementationGuideResourcePr
 		if (cliContext!=null && cliContext.getOnlyOneEngine()) {
 			MatchboxEngine engine = matchboxEngineSupport.getMatchboxEngine(FHIRVersion._4_0_1.getDisplay(), this.cliContext, false, false);
 			try {
-				engine.loadPackage(theResource.getUrl(), theResource.getVersion());
+				engine.loadPackage(theResource.getPackageId(), theResource.getVersion());
 			} catch (Exception e) {
-				log.error("Error loading package " + theResource.getUrl() + " " + theResource.getVersion(), e);
+				log.error("Error loading package " + theResource.getPackageId() + " " + theResource.getVersion(), e);
 			}
 		} else {
 			matchboxEngineSupport.getMatchboxEngine(FHIRVersion._4_0_1.getDisplay(), this.cliContext, false, true);
