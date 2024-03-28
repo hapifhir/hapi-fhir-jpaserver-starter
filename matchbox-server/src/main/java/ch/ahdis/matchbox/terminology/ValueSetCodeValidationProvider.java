@@ -87,6 +87,10 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 			? request.getParameterValue("cache-id").toString()
 			: null;
 
+		final boolean inferSystem = request.hasParameter("inferSystem")
+			? request.getParameterBool("inferSystem")
+			: false;
+
 		if (!request.hasParameter("coding")) {
 			servletResponse.setStatus(422);
 			return mapErrorToOperationOutcome("Missing parameter 'coding' in the request");
@@ -98,22 +102,29 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 
 			String url = null;
 			ValueSet valueSet = null;
+			boolean cachedValueSet = false;
 			if (request.hasParameter("url")) {
 				url = request.getParameterValue("url").toString();
+				valueSet = this.getExpandedValueSet(cacheId, url);
+				cachedValueSet = true;
 			} else if (request.hasParameter("valueSet")) {
 				valueSet = (ValueSet) request.getParameter("valueSet").getResource();
 				url = valueSet.getUrl();
 			}
-			log.debug("Validating code in VS: {}|{} in {}", coding.getCode(), coding.getSystem(), url);
 
 			if (valueSet == null) {
-				valueSet = this.getExpandedValueSet(cacheId, url);
-				if (valueSet == null) {
-					// That value set is not cached
-					log.debug("OK - cache miss");
-					return mapCodingToSuccessfulParameters(coding);
-				}
-			} else {
+				// That value set is not cached
+				log.debug("OK - cache miss, value set is null");
+				return mapCodingToSuccessfulParameters(coding);
+			}
+			log.debug("Validating code in VS: {}|{} in {}", coding.getCode(), coding.getSystem(), url);
+
+			if (inferSystem && !coding.hasSystem()) {
+				// Infer the coding system as the first included system in the composition
+				coding.setSystem(valueSet.getCompose().getIncludeFirstRep().getSystem());
+			}
+
+			if (!cachedValueSet) {
 				// We have to expand the value set
 				final IValidationSupport.ValueSetExpansionOutcome result = this.inMemoryTerminologySupport.expandValueSet(
 					this.validationSupportContext,
@@ -182,8 +193,8 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 			.put(valueSetUrl, valueSet);
 	}
 
-	private boolean validateCodeInValueSet(final Coding coding,
-														final ValueSet valueSet) {
+	private boolean validateCodeInExpandedValueSet(final Coding coding,
+																  final ValueSet valueSet) {
 		for (final var item : valueSet.getExpansion().getContains()) {
 			if (item.getSystem().equals(coding.getSystem()) && item.getCode().equals(coding.getCode())) {
 				return true;
