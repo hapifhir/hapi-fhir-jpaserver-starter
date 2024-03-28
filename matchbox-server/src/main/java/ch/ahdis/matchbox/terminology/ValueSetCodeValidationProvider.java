@@ -164,7 +164,8 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 					coding.getCode(),
 					url,
 					valueSet.getExpansion().getContains().size()
-				)
+				),
+				coding
 			);
 		}
 
