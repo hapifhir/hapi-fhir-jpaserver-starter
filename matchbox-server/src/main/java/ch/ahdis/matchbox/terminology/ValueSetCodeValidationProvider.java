@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import static ch.ahdis.matchbox.terminology.TerminologyUtils.*;
 import static java.util.Objects.requireNonNull;
@@ -151,7 +152,7 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 			}
 
 			// Now we have an expanded value set, we can properly validate the code
-			if (this.validateCodeInValueSet(coding, valueSet)) {
+			if (this.validateCodeInExpandedValueSet(coding, valueSet)) {
 				log.debug("OK - present in expanded value set (expansion contains {} codes)",
 							 valueSet.getExpansion().getContains().size());
 				return mapCodingToSuccessfulParameters(coding);
@@ -171,6 +172,44 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 		// Original error message is:
 		// Unable to find code to validate (looked for coding | codeableConcept | code)
 		return mapErrorToOperationOutcome("Unable to find code to validate (looked for coding)");
+	}
+
+	/**
+	 * Try to infer from a value set composition (we failed to expand it) if a given code is explicitly included or
+	 * excluded.
+	 */
+	private CodeMembership evaluateCodeInComposition(final Coding coding,
+																	 final ValueSet.ValueSetComposeComponent compose) {
+		int mayBeIncludedByInclude = 0;
+		for (final var include : compose.getInclude()) {
+			if (include.hasSystem() && !include.getSystem().equals(coding.getSystem())) {
+				continue;
+			}
+
+			for (final var concept : include.getConcept()) {
+				if (concept.getCode().equals(coding.getCode())) {
+					return CodeMembership.INCLUDED;
+				}
+			}
+
+			for (final var filter : include.getFilter()) {
+				if ("regex".equals(filter.getOp().toCode())) {
+					final var pattern = Pattern.compile(filter.getOp().toCode());
+					// Try to match the full code with the regex
+					if (!pattern.matcher(coding.getCode()).matches()) {
+						return CodeMembership.EXCLUDED;
+					}
+				}
+			}
+			++mayBeIncludedByInclude;
+		}
+
+		if (mayBeIncludedByInclude > 0) {
+			return CodeMembership.UNKNOWN;
+		}
+
+		// The system is not present in the composition
+		return CodeMembership.EXCLUDED;
 	}
 
 	private @Nullable ValueSet getExpandedValueSet(final String cacheId,
@@ -213,8 +252,7 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 		};
 	}
 
-
-	public class DummyValidationSupport implements IValidationSupport {
+	public static class DummyValidationSupport implements IValidationSupport {
 
 		private final FhirContext context;
 
@@ -226,5 +264,9 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 		public FhirContext getFhirContext() {
 			return context;
 		}
+	}
+
+	enum CodeMembership {
+		INCLUDED, EXCLUDED, UNKNOWN
 	}
 }
