@@ -134,8 +134,25 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 				if (result == null || result.getValueSet() == null) {
 					// We have failed expanding the value set, this means it may be a complex one
 					log.debug("OK - expansion failed");
+					final var membership = this.evaluateCodeInComposition(coding, valueSet.getCompose());
+					if (membership == CodeMembership.EXCLUDED) {
+						log.debug("OK - code is excluded from value set composition");
+						return mapCodeErrorToParameters(
+							"The code '%s' is excluded from the value set '%s' composition".formatted(
+								coding.getCode(),
+								url
+							),
+							coding
+						);
+					} else if (membership == CodeMembership.INCLUDED) {
+						log.debug("OK - code is included in value set composition");
+					} else {
+						log.debug("OK - code is not included/excluded from value set composition, inferring inclusion");
+					}
 					return mapCodingToSuccessfulParameters(coding);
 				}
+
+				// Value set is expanded
 				final var baseValueSet = (IDomainResource) result.getValueSet();
 				if (baseValueSet instanceof final ValueSet valueSetR5) {
 					valueSet = valueSetR5;
@@ -144,6 +161,12 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 				} else {
 					throw new MatchboxUnsupportedFhirVersionException("ValueSetCodeValidationProvider",
 																					  this.fhirContext.getVersion().getVersion());
+				}
+
+				if (valueSet.getExpansion().getContains().isEmpty()) {
+					// The value set is empty
+					log.debug("OK - expansion failed without reporting errors (empty value set)");
+					return mapCodingToSuccessfulParameters(coding);
 				}
 
 				if (cacheId != null) {
