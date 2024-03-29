@@ -25,6 +25,7 @@ import ca.uhn.fhir.jpa.starter.model.ComGenerator;
 import ca.uhn.fhir.jpa.starter.model.ComGenerator.MessageStatus;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import java.sql.Timestamp;
 
 @Service
 public class NotificationService {
@@ -77,7 +78,8 @@ public class NotificationService {
 						sendSmsAndUpdateStatus(patientDetailsMessage, mobile, record);
 						sendSmsAndUpdateStatus(oclLinkMessage, mobile, record);
 					} else if (record.getResourceType().equals("Appointment")) {
-						patientDetailsMessage += "Your next visit details are: \nName: " + patientName + " \nDate: " + date + " \nYour OCL Id is:\n" + patientOclId + "";
+						Timestamp nextVisitDate = record.getNextVisitDate();
+						patientDetailsMessage += "Your next visit details are: \nName: " + patientName + (nextVisitDate != null ? "\nDate: " + nextVisitDate : "") + "\nYour OCL Id is:\n" + patientOclId;
 						sendSmsAndUpdateStatus(patientDetailsMessage, mobile, record);
 					}
 				}
