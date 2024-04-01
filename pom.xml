@@ -596,9 +596,20 @@
                 </dependency>
             </dependencies>
         </profile>
-        <!-- examples of how to start the server using the default profile-->
-        <!-- mvn clean package jetty:run -->
-        <!-- java -jar jetty-runner.jar target/hapi-fhir-jpaserver.war -->
+        <!--                                                              -->
+        <!-- Examples of how to run the server:                           -->
+        <!--                                                              -->
+        <!-- For Spring Boot use:                                         -->
+        <!-- mvn spring-boot:run                                          -->
+        <!--                                                              -->
+        <!-- For JETTY use:                                               -->
+        <!-- mvn -Pjetty spring-boot:run                                  -->
+        <!--                                                              -->
+        <!-- For the Tomcat WAR approach use:                             -->
+        <!-- mvn clean package -DskipTests && java -jar ./target/ROOT.war -->
+        <!--                                                              -->
+        <!-- NEXT: Browse to http://localhost:8080/fhir                   -->
+        <!--                                                              -->
         <profile>
             <id>jetty</id>
             <dependencies>
