@@ -65,6 +65,9 @@ public class FixNullReferenceInBundle {
 	FhirClientAuthenticatorService fhirClientAuthenticatorService;
 	private static final Logger logger = LoggerFactory.getLogger(FixNullReferenceInBundle.class);
 
+	private static final String CONTENT_ENCODING_HEADER =  "Content-Encoding";
+	private static final String CONTENT_ENCODING_HEADER_GZIP =  "gzip";
+
 	public void uploadToS3Async(Bundle bundle, String userName) {
 		new Thread(new Runnable() {
 			public void run() {
@@ -79,11 +82,12 @@ public class FixNullReferenceInBundle {
 
 	public HttpServletRequest fixNullReference(HttpServletRequest request, String username) throws IOException {
 		InputStream inputStream = request.getInputStream();
+		Map<String, String> modifiedHeaders = new HashMap<>();
 		boolean specialTreatment = false;
 		try {
 			String requestBody ="";
-			if(null!=request.getHeader("Content-Encoding")) {
-				if(request.getHeader("Content-Encoding").contains("gzip")) {
+			if(null!=request.getHeader(CONTENT_ENCODING_HEADER)) {
+				if(request.getHeader(CONTENT_ENCODING_HEADER).contains(CONTENT_ENCODING_HEADER_GZIP)) {
 					// Create a GZIPInputStream to decompress the data
 					GZIPInputStream gzipInputStream = new GZIPInputStream(inputStream);
 
@@ -102,7 +106,8 @@ public class FixNullReferenceInBundle {
 
 					// Now, you can process the decompressed data as needed
 					requestBody = new String(decompressedData.toByteArray(), "UTF-8");
-		
+
+					modifiedHeaders.put(CONTENT_ENCODING_HEADER, request.getHeader(CONTENT_ENCODING_HEADER).replace(CONTENT_ENCODING_HEADER_GZIP, ""));
 				}else {
 					// Now, you can process the decompressed data as needed
 					requestBody = Utils.getBody(request);
@@ -292,8 +297,6 @@ public class FixNullReferenceInBundle {
 				}
 			}
 
-			Map<String, String> modifiedHeaders = new HashMap<>();
-			modifiedHeaders.put("Content-Encoding", request.getHeader("Content-Encoding").replace("gzip", ""));
 
 			ModifiedBodyRequestWrapper modifiedRequest = new ModifiedBodyRequestWrapper(request, modifiedBody,
 					modifiedHeaders);
