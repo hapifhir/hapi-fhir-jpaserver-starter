@@ -1,0 +1,65 @@
+pipeline {
+  agent { label 'ecs' }
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '10'))
+  }
+  environment {
+    AWS_CREDENTIALS = credentials('AWS-KEYS')
+    AWS_ENV = """${sh(
+      returnStdout: true,
+      script: 'env | awk -F= \'/^AWS/ {print "-e " $1}\''
+    )}"""
+    GIT_ENV = """${sh(
+      returnStdout: true,
+      script: 'env | awk -F= \'/^GIT/ {print "-e " $1}\''
+    )}"""
+  }
+  stages {
+    stage('Setup') {
+      steps {
+        sh '''
+          docker pull $CICD_ECR_REGISTRY/cicd:latest
+          docker tag $CICD_ECR_REGISTRY/cicd:latest cicd:latest
+        '''
+      }
+    }
+    stage('Build') {
+      steps {
+        echo 'Building Docker Image'
+        sh 'docker build -t hapi-fhir-jpaserver-starter-dev . '
+      }
+    }
+    stage('Push') {
+      steps {
+        echo 'Pushing Docker Image'
+        sh 'docker run -v /var/run/docker.sock:/var/run/docker.sock $AWS_ENV $GIT_ENV cicd push hapi-fhir-jpaserver-starter-dev'
+      }
+    }
+    stage('Deploy') {
+      steps {
+        echo 'Deploying hapi-fhir-jpaserver-starter in dev'
+        sh 'docker run -v /var/run/docker.sock:/var/run/docker.sock $AWS_ENV $GIT_ENV cicd deploy hapi-fhir-jpaserver-starter-dev dev $GIT_COMMIT'
+        }
+    }
+    stage('Wait') {
+      steps {
+        echo 'Waiting for hapi-fhir-jpaserver-starter service to reach steady state'
+        sh 'docker run -v /var/run/docker.sock:/var/run/docker.sock $AWS_ENV $GIT_ENV cicd wait hapi-fhir-jpaserver-starter-dev dev'
+        }
+    }
+    stage('Healthcheck') {
+      steps {
+        echo 'Checking health of hapi-fhir-jpaserver-starter-dev service'
+        sh 'curl -m 10 https://fhir4-dev.elimuinformatics.com/actuator/health'  
+      }
+    }
+  }
+  post {
+    unsuccessful {
+      slackSend color: 'danger', channel: '#product-ops-dev', message: "Pipeline Failed: ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+    }
+    fixed {
+      slackSend color: 'good', channel: '#product-ops-dev', message: "Pipeline Ran Successfully: ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+    }
+  }
+}

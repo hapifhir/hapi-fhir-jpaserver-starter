@@ -70,7 +70,6 @@ class MultitenantServerR4IT {
   void testCreateAndReadInTenantB() {
 
 
-
     // Create tenant A
     ourClientTenantInterceptor.setTenantId("DEFAULT");
     ourClient

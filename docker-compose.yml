@@ -13,14 +13,14 @@ services:
       spring.config.location: classpath:/application-custom.yaml
 
       # Enable these for MySQL
-      spring.datasource.url: 'jdbc:mysql://hapi-fhir-mysql:3306/hapi'
-      spring.datasource.driverClassName: com.mysql.jdbc.Driver
-      spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+      # spring.datasource.url: 'jdbc:mysql://hapi-fhir-mysql:3306/hapi'
+      # spring.datasource.driverClassName: com.mysql.jdbc.Driver
+      # spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 
       # Enable these for PostgreSQL
-      # spring.datasource.url: 'jdbc:postgresql://hapi-fhir-postgres:5432/hapi'
-      # spring.datasource.driverClassName: org.postgresql.Driver
-      # spring.jpa.properties.hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+      spring.datasource.url: 'jdbc:postgresql://hapi-fhir-postgres:5432/hapi'
+      spring.datasource.driverClassName: org.postgresql.Driver
+      spring.jpa.properties.hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
 
       OAUTH_ENABLED: true
       OAUTH_CLIENT_ID: fhir4-api
@@ -37,10 +37,23 @@ services:
       SMART_INTROSPECTION_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/token/introspect
       SMART_REVOCATION_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/protocol/openid-connect/revoke
       SMART_MANAGE_URL: https://auth-internal.elimuinformatics.com/auth/realms/product/account
-  hapi-fhir-mysql:
-    platform: linux/x86_64
-    image: mysql:5.7
-    container_name: hapi-fhir-mysql
+  # hapi-fhir-mysql:
+  #   platform: linux/x86_64
+  #   image: mysql:5.7
+  #   container_name: hapi-fhir-mysql
+  #   restart: always
+  #   environment:
+  #     MYSQL_DATABASE: "hapi"
+  #     MYSQL_USER: "admin"
+  #     MYSQL_PASSWORD: "admin"
+  #     MYSQL_ROOT_PASSWORD: "admin"
+  #   ports:
+  #     - '3306:3306'
+  #   volumes:
+  #     - hapi-fhir-mysql:/var/lib/mysql
+  hapi-fhir-postgres:
+    image: postgres:13-alpine
+    container_name: hapi-fhir-postgres
     restart: always
     environment:
       MYSQL_DATABASE: "hapi"
@@ -62,5 +75,5 @@ services:
   #   volumes:
   #     - hapi-fhir-postgres:/var/lib/postgresql/data
 volumes:
-  hapi-fhir-mysql:
-  # hapi-fhir-postgres:
+  # hapi-fhir-mysql:
+  hapi-fhir-postgres:
