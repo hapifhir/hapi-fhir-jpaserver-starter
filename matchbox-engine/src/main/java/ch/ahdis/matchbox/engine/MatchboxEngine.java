@@ -603,6 +603,24 @@ public class MatchboxEngine extends ValidationEngine {
 		return null;
 	}
 
+	/**
+	 * Returns a canonical resource defined by its url
+	 * 
+	 * @param canonical
+	 * @return
+	 */
+	public org.hl7.fhir.r5.model.Resource getCanonicalResourceR5(String canonical) {
+		org.hl7.fhir.r5.model.Resource fetched = this.getContext().fetchResource(null, canonical);
+		// allResourcesById is not package aware (???) so we need to fetch it again
+		if (fetched!=null) {
+		 	org.hl7.fhir.r5.model.Resource fetched2  = this.getContext().fetchResource(fetched.getClass(), canonical);
+		 	if (fetched2 != null) {
+		 		return fetched2;
+		 	}
+		}
+		return null;
+	}
+
     /**
 	 * Returns a canonical resource defined by its url
 	 * 
@@ -740,6 +758,28 @@ public class MatchboxEngine extends ValidationEngine {
 			return null;
 		  }
 		return (org.hl7.fhir.r4.model.StructureDefinition) VersionConvertorFactory_40_50.convertResource(sdR5);
+	}
+
+	/**
+	 * creates the snapshot for the provided StructureDefinition
+	 * 
+	 * @param sd StructureDefinition with differential
+	 * @return StructureDefinition with snapshot (differential applied to base
+	 *         definition)
+	 * @throws FHIRException FHIR Exception
+	 * @throws IOException   IO Exception
+	 */
+	public org.hl7.fhir.r5.model.StructureDefinition createSnapshot(org.hl7.fhir.r5.model.StructureDefinition sd)
+			throws FHIRException, IOException {
+		StructureDefinition sdR5 = sd;
+		try {
+			new ContextUtilities(this.getContext()).generateSnapshot(sdR5); 
+		  } catch (Exception e) {
+			// not sure what to do in this case?
+			log.error("Unable to generate snapshot for "+sd.getUrl(), e);
+			return null;
+		  }
+		return sd;
 	}
 
 	/**

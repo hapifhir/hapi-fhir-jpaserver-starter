@@ -50,6 +50,15 @@
     },
     {
       "type": "java",
+      "name": "Launch Matchbox-Server (cda) with R5",
+      "request": "launch",
+      "mainClass": "ca.uhn.fhir.jpa.starter.Application",
+      "projectName": "matchbox-server",
+      "vmArgs": "-Dspring.config.additional-location=file:with-cda-r5/application.yaml",
+      "cwd": "${workspaceFolder}/matchbox-server"
+    },
+    {
+      "type": "java",
       "name": "Launch Matchbox-Server (ch-elm)",
       "request": "launch",
       "mainClass": "ca.uhn.fhir.jpa.starter.Application",

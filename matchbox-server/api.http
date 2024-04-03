@@ -1,5 +1,6 @@
-### @host = http://localhost:8080/matchbox
-@host = https://test.ahdis.ch/matchboxv3
+@host = http://localhost:8080/matchbox
+### @host = https://test.ahdis.ch/matchbox
+### @host = https://test.ahdis.ch/matchboxv3
 
 
 ### Liveness check

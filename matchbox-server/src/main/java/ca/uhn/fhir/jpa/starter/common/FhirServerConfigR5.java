@@ -12,14 +12,14 @@ import ca.uhn.fhir.jpa.validation.ValidatorResourceFetcher;
 import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR5;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.*;
-import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
+import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProviderR5;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR5;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR5;
 import ch.ahdis.matchbox.terminology.CodeSystemCodeValidationProvider;
 import ch.ahdis.matchbox.terminology.ValueSetCodeValidationProvider;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 import org.hl7.fhir.r5.model.ImplementationGuide;
 import org.hl7.fhir.r5.model.StructureMap;
-import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
@@ -53,6 +53,11 @@ public class FhirServerConfigR5 {
 	@Bean
 	public QuestionnaireAssembleProviderR5 assembleProvider() {
 		return new QuestionnaireAssembleProviderR5();
+	}
+
+	@Bean
+	public QuestionnaireResponseExtractProviderR5 questionnaireResponseProvider() {
+		return new QuestionnaireResponseExtractProviderR5();
 	}
 
 	@Bean(name = "myImplementationGuideDaoR5")
@@ -121,9 +126,9 @@ public class FhirServerConfigR5 {
 
 	@Bean(name = "myStructureMapRpR5")
 	@Primary
-	public StructureMapTransformProvider rpStructureMapR5() {
-		StructureMapTransformProvider retVal;
-		retVal = new StructureMapTransformProvider();
+	public StructureMapTransformProviderR5 rpStructureMapR5() {
+		StructureMapTransformProviderR5 retVal;
+		retVal = new StructureMapTransformProviderR5();
 //    retVal.setContext(fhirContext);
 //    retVal.setDao(daoStructureMapR5());
 		return retVal;

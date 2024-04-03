@@ -183,8 +183,14 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 				} else {
 					resources.addAll(matchboxEngine.getContext().fetchResourcesByType(classR5));
 				}
-				return new SimpleBundleProvider(
-					resources.stream().map(VersionConvertorFactory_40_50::convertResource).collect(Collectors.toList()));
+				switch (getFhirVersion(this.cliContext.getFhirVersion())) {
+					case "4.0.1": return new SimpleBundleProvider(
+						resources.stream().map(VersionConvertorFactory_40_50::convertResource).collect(Collectors.toList()));
+					case "4.3.0": return new SimpleBundleProvider(
+						resources.stream().map(VersionConvertorFactory_43_50::convertResource).collect(Collectors.toList()));
+					case "5.0.0": return new SimpleBundleProvider(
+						resources.stream().collect(Collectors.toList()));
+				}
 			}
 		}
 		return null;

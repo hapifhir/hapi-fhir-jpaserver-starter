@@ -62,6 +62,7 @@ import ca.uhn.fhir.jpa.model.entity.NpmPackageVersionResourceEntity;
 import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager;
 import ca.uhn.fhir.jpa.packages.JpaPackageCache;
 import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager.PackageContents;
+import ca.uhn.fhir.model.api.IFhirVersion;
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import ca.uhn.fhir.util.BinaryUtil;
 
@@ -150,24 +151,34 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 		}
 		if (src.equals("hl7.fhir.cda#dev")) {
 			final var replace = "hl7.cda.uv.core#2.0.0-sd-202312-matchbox-patch";
-			log.debug("Replacing 'hl7.fhir.cda#dev' with '{}'", replace);
+			log.info("Replacing 'hl7.fhir.cda#dev' with '{}'", replace);
 			loadIg(igs, binaries, replace, recursive);
 			return;
 		}
 		if (src.equals("ch.fhir.ig.ch-epr-term#current")) {
 			final var replace = "ch.fhir.ig.ch-epr-term#2.0.x";
-			log.debug("Replacing 'ch.fhir.ig.ch-epr-term#current' with '{}'", replace);
+			log.info("Replacing 'ch.fhir.ig.ch-epr-term#current' with '{}'", replace);
 			loadIg(igs, binaries, replace, recursive);
 			return;
 		}
 		if ("hl7.fhir.uv.extensions#current".equals(src)) {
 			final var replace = "hl7.fhir.uv.extensions#1.0.0";
-			log.debug("Replacing 'hl7.fhir.uv.extensions#current' with '{}'", replace);
+			log.info("Replacing 'hl7.fhir.uv.extensions#current' with '{}'", replace);
+			loadIg(igs, binaries, replace, recursive);
+			return;
+		}
+		if ("hl7.fhir.uv.extensions.r5#1.0.0".equals(src)) {
+			final var replace = "hl7.fhir.uv.extensions#1.0.0";
+			log.info("Replacing 'hl7.fhir.uv.extensions.r5#1.0.0' with '{}'", replace);
 			loadIg(igs, binaries, replace, recursive);
 			return;
 		}
 		if (getContext().getLoadedPackages().contains(src)) {
-			log.debug("Package '{}' already in context", src);
+			log.info("Package '{}' already in context", src);
+			return;
+		}
+		if (this.getVersion()!=null && getVersion().equals("5.0.0") && (src.startsWith("hl7.fhir.r4.core") || src.startsWith("hl7.fhir.uv.extensions.r4")) ) {
+			log.info("do not load r4 in a r5 context: '{}'", src);
 			return;
 		}
 		new TransactionTemplate(myTxManager).execute(tx -> {
@@ -183,10 +194,9 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 				return null;
 			}
 			for (final String dependency : npm.dependencies()) {
-
-				if ("hl7.terminology".equals(id)) {
+				if (id.startsWith("hl7.terminology#5.4.0")) {
 					// FHIR Core should be loaded manually, see MatchboxEngineSupport.getMatchboxEngineNotSynchronized()
-					log.trace("Ignoring FHIR Core dependency");
+					log.info("Ignoring dependency '{}' for '{}'", dependency, id);
 					continue;
 				}
 				log.debug("Loading depending package " + dependency + " for "+src);

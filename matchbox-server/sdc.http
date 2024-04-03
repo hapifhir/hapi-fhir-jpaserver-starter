@@ -10,7 +10,7 @@ Accept: application/json+fhir
 
 ### Post fixed StructureMap which is not integrated in the implementation guide 
 POST {{host}}/StructureMap HTTP/1.1
-Accept: application/fhir+xml;fhirVersion=4.0
+Accept: application/fhir+xml
 Content-Type: text/fhir-mapping
 
 < ./poc/OrfQrToBundle.map

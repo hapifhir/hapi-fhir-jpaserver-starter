@@ -7,9 +7,9 @@ import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.hl7.fhir.r4.model.Extension;
-import org.hl7.fhir.r4.model.Questionnaire;
-import org.hl7.fhir.r4.model.QuestionnaireResponse;
+import org.hl7.fhir.r5.model.Extension;
+import org.hl7.fhir.r5.model.Questionnaire;
+import org.hl7.fhir.r5.model.QuestionnaireResponse;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.formats.IParser.OutputStyle;
@@ -27,9 +27,9 @@ import ch.ahdis.matchbox.engine.MatchboxEngine;
  * $extract Operation for QuestionnaireResponse Resource
  *s
  */
-public class QuestionnaireResponseExtractProvider  {
+public class QuestionnaireResponseExtractProviderR5  {
 	
-  protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(QuestionnaireResponseExtractProvider.class);
+  protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(QuestionnaireResponseExtractProviderR4.class);
 
 
   public final static String TARGET_STRUCTURE_MAP = "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap";
@@ -77,7 +77,7 @@ public class QuestionnaireResponseExtractProvider  {
           "Could not get matcbox-enginge with questionnaire with canonical URL '" + questionnaireUri + "'");
 
    
-    Questionnaire questionnaire = (Questionnaire) matchboxEngine.getCanonicalResourceR4(questionnaireUri);
+    Questionnaire questionnaire = (Questionnaire) matchboxEngine.getCanonicalResourceR5(questionnaireUri);
     if (questionnaire == null)
       throw new UnprocessableEntityException(
           "Could not fetch questionnaire with canonical URL '" + questionnaireUri + "'");

@@ -31,8 +31,7 @@ import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IDomainResource;
 import org.hl7.fhir.instance.model.api.IIdType;
-import org.hl7.fhir.r4.model.Narrative.NarrativeStatus;
-import org.hl7.fhir.r4.model.StructureMap;
+import org.hl7.fhir.r5.model.StructureMap;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.formats.IParser.OutputStyle;
 import org.hl7.fhir.r5.model.StructureMap.StructureMapStructureComponent;
@@ -61,7 +60,7 @@ import ch.ahdis.matchbox.engine.MatchboxEngine;
 
  *
  */
-public class StructureMapTransformProvider extends StructureMapResourceProvider {
+public class StructureMapTransformProviderR5 extends StructureMapResourceProvider {
 	
 	@Autowired
 	protected MatchboxEngineSupport matchboxEngineSupport;
@@ -70,19 +69,6 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
     org.hl7.fhir.r5.model.StructureMap map = (org.hl7.fhir.r5.model.StructureMap) this.getCanonical(theResource);
     if (!map.hasText()) {
       String render = StructureMapUtilities.render(map);
-      if (classR4.isInstance(theResource)) {
-        org.hl7.fhir.r4.model.StructureMap  r4 = classR4.cast(theResource);
-        r4.getText().setStatus(NarrativeStatus.GENERATED);
-        r4.getText().setDiv(new XhtmlNode(NodeType.Element, "div"));
-        r4.getText().getDiv().addTag("pre").addText(render);
-        return ; 
-        }
-      if (classR4B.isInstance(theResource)) {
-        org.hl7.fhir.r4b.model.StructureMap  r4b = classR4B.cast(theResource);
-        r4b.getText().setStatus(org.hl7.fhir.r4b.model.Narrative.NarrativeStatus.GENERATED);
-        r4b.getText().setDiv(new XhtmlNode(NodeType.Element, "div"));
-        r4b.getText().getDiv().addTag("pre").addText(render);
-      }
       if (classR5.isInstance(theResource)) {
         org.hl7.fhir.r5.model.StructureMap  r5 = classR5.cast(theResource);
         r5.getText().setStatus(org.hl7.fhir.r5.model.Narrative.NarrativeStatus.GENERATED);
@@ -105,7 +91,7 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
     return super.update(theRequest, theResource, theId, theConditional, theRequestDetails);
   }
 
-  protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StructureMapTransformProvider.class);
+  protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StructureMapTransformProviderR4.class);
 
   @Operation(name = "$transform", type = StructureMap.class, manualResponse = true, manualRequest = true)
   public void manualInputAndOutput(HttpServletRequest theServletRequest, HttpServletResponse theServletResponse)

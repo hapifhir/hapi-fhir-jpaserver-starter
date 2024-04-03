@@ -70,9 +70,12 @@ import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.interceptor.ImplementationGuidePackageInterceptor;
 import ch.ahdis.matchbox.interceptor.MappingLanguageInterceptor;
-import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
+import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProviderR4;
+import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProviderR5;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR4;
-import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR4;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR5;
+
 import org.springframework.data.domain.Page;
 
 import ca.uhn.fhir.jpa.bulk.export.model.ExportPIDIteratorParameters;
@@ -99,7 +102,10 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	QuestionnaireResourceProvider questionnaireProvider;
 
 	@Autowired(required = false)
-	QuestionnaireResponseExtractProvider questionnaireResponseProviderR4;
+	QuestionnaireResponseExtractProviderR4 questionnaireResponseProviderR4;
+
+	@Autowired(required = false)
+	QuestionnaireResponseExtractProviderR5 questionnaireResponseProviderR5;
 
 	@Autowired
 	private IHapiPackageCacheManager myPackageCacheManager;
@@ -128,8 +134,11 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	@Autowired
 	protected StructureDefinitionResourceProvider structureDefinitionProvider;
 
-	@Autowired
-	protected StructureMapTransformProvider structureMapTransformProvider;
+	@Autowired(required = false)
+	protected StructureMapTransformProviderR4 structureMapTransformProviderR4;
+
+	@Autowired(required = false)
+	protected StructureMapTransformProviderR5 structureMapTransformProviderR5;
 
 	@Autowired
 	private ApplicationContext context;
@@ -177,13 +186,13 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 		fhirServer.registerInterceptor(new TerminologyCapabilitiesInterceptor());
 		fhirServer.registerProviders(validationProvider, questionnaireProvider,
 											  conceptMapProvider, codeSystemProvider, valueSetProvider, structureDefinitionProvider,
-											  structureMapTransformProvider, codeSystemCodeValidationProvider,
+											codeSystemCodeValidationProvider,
 											  valueSetCodeValidationProvider);
 
 		switch (this.myFhirContext.getVersion().getVersion()) {
 			case R4 -> {
 				fhirServer.registerProviders(this.implementationGuideResourceProviderR4, this.assembleProviderR4,
-													  this.questionnaireResponseProviderR4);
+													  this.questionnaireResponseProviderR4, this.structureMapTransformProviderR4);
 
 				if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages()
 					&& appProperties.getImplementationGuides() != null) {
@@ -193,7 +202,7 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 				}
 			}
 			case R5 -> {
-				fhirServer.registerProviders(this.implementationGuideResourceProviderR5, this.assembleProviderR5);
+				fhirServer.registerProviders(this.implementationGuideResourceProviderR5, this.assembleProviderR5, this.questionnaireResponseProviderR5, this.structureMapTransformProviderR5);
 
 				if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages()
 					&& appProperties.getImplementationGuides() != null) {

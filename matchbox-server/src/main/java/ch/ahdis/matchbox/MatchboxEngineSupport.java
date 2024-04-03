@@ -70,6 +70,10 @@ public class MatchboxEngineSupport {
 		this.matchboxFhirContextProperties = Objects.requireNonNull(matchboxFhirContextProperties);
 	}
 
+	public CliContext getClientContext() {
+		return this.cliContext;
+	}
+
 	public NpmPackageVersionResourceEntity loadPackageAssetByUrl(String theCanonicalUrl) {
 		NpmPackageVersionResourceEntity resourceEntity  = new TransactionTemplate(myTxManager).execute(tx -> {
 			String canonicalUrl = theCanonicalUrl;
@@ -287,9 +291,10 @@ public class MatchboxEngineSupport {
 			} else if (cliContext.getFhirVersion().equals("5.0.0")) {
 				log.debug("Preconfigure FHIR R5");
 				try {
+					mainEngine.setVersion("5.0.0");
 					mainEngine.getIgLoader().loadIg(mainEngine.getIgs(), mainEngine.getBinaries(), "hl7.fhir.r5.core#5.0.0", true);
-					mainEngine.loadPackage("hl7.fhir.r5.core", "5.0.0");
 					mainEngine.loadPackage("hl7.terminology", "5.4.0");
+					mainEngine.loadPackage("hl7.fhir.uv.extensions", "1.0.0");
 				} catch (final Exception e) {
 					throw new IgLoadException("Failed to load R5", e);
 				}

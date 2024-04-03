@@ -30,7 +30,6 @@ public class StructureDefinitionResourceProvider extends
 	}
 
 	private MethodOutcome createSnapshot(IBaseResource resource) {
-		// FIXME only supported for R4 at the moment
 		if (classR4.isInstance(resource)) {
 			StructureDefinition theResource = (StructureDefinition) classR4.cast(resource);
 			if (theResource.getSnapshot().isEmpty()) {
@@ -38,6 +37,26 @@ public class StructureDefinitionResourceProvider extends
 						null, false, false);
 				try {
 					StructureDefinition theSnapShotResource = matchboxEngine.createSnapshot(theResource);
+					theResource.setSnapshot(theSnapShotResource.getSnapshot());
+				} catch (FHIRException | IOException e) {
+					ourLog.error("Error creating snapshot for StructureDefinition " + theResource.getUrl(), e);
+					MethodOutcome outcome = new MethodOutcome();
+					outcome.setResponseStatusCode(400);
+					outcome.setCreated(false);
+					OperationOutcome operationOutcome = new OperationOutcome();
+					operationOutcome.addIssue().setDiagnostics(e.getMessage());
+					outcome.setOperationOutcome(operationOutcome);
+					return outcome;
+				}
+			}
+		}
+		if (classR5.isInstance(resource)) {
+			org.hl7.fhir.r5.model.StructureDefinition theResource = (org.hl7.fhir.r5.model.StructureDefinition) resource;
+			if (theResource.getSnapshot().isEmpty()) {
+				MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(theResource.getBaseDefinition(),
+						null, false, false);
+				try {
+					org.hl7.fhir.r5.model.StructureDefinition theSnapShotResource = matchboxEngine.createSnapshot(theResource);
 					theResource.setSnapshot(theSnapShotResource.getSnapshot());
 				} catch (FHIRException | IOException e) {
 					ourLog.error("Error creating snapshot for StructureDefinition " + theResource.getUrl(), e);

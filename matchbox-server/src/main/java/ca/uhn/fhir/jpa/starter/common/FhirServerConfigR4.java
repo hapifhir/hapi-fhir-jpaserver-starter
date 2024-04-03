@@ -25,9 +25,9 @@ import ch.ahdis.matchbox.MatchboxJpaConfig;
 import ch.ahdis.matchbox.QuestionnaireResourceProvider;
 import ch.ahdis.matchbox.StructureDefinitionResourceProvider;
 import ch.ahdis.matchbox.ValueSetResourceProvider;
-import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
+import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProviderR4;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR4;
-import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR4;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 
 @Configuration
@@ -70,8 +70,8 @@ public class FhirServerConfigR4 {
   }
 
   @Bean
-  public QuestionnaireResponseExtractProvider questionnaireResponseProvider() {
-    return new QuestionnaireResponseExtractProvider();
+  public QuestionnaireResponseExtractProviderR4 questionnaireResponseProvider() {
+    return new QuestionnaireResponseExtractProviderR4();
   }
 
   @Bean(name = "myImplementationGuideDaoR4")
@@ -141,9 +141,9 @@ public class FhirServerConfigR4 {
 
   @Bean(name = "myStructureMapRpR4")
   @Primary
-  public ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider rpStructureMapR4() {
-  	StructureMapTransformProvider retVal;
-    retVal = new StructureMapTransformProvider();
+  public ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProviderR4 rpStructureMapR4() {
+  	StructureMapTransformProviderR4 retVal;
+    retVal = new StructureMapTransformProviderR4();
 //    retVal.setContext(fhirContext);
 //    retVal.setDao(daoStructureMapR4());
     return retVal;

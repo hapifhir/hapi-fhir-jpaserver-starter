@@ -99,11 +99,10 @@ public class MappingLanguageInterceptor extends InterceptorAdapter {
 		if (isNotBlank(wantVersionString)) {
 			return FHIRVersion.fromCode(wantVersionString);
 		}
-		return FHIRVersion._4_0_1;
+		return FHIRVersion.fromCode(matchboxEngineSupport.getClientContext().getFhirVersion());
 	}
 
 	public StructureMap parseMap(String content) throws FHIRException {
-		// TODO: should be changed to FHIR Version 5.0.0 ?
 		MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine("default", null, true, false);
 		return matchboxEngine.parseMapR5(content);
 	}
@@ -142,7 +141,7 @@ public class MappingLanguageInterceptor extends InterceptorAdapter {
 				}
 				theRequestDetails.setRequestContents(json.getBytes());
 			} catch (IOException e) {
-				log.error("Exception while convertion to json", e);
+				log.error("Exception while conversion to json", e);
 			}
 		}
 		return true;

@@ -43,19 +43,19 @@ hapi:
       # These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-
       allowed_origin:
         - "*"
-    implementationguides:
-      fhir_r4_core:
-        name: hl7.fhir.r4.core
-        version: 4.0.1
-        url: classpath:/hl7.fhir.r4.core.tgz
-      fhir_extensions:
-        name: hl7.fhir.uv.extensions.r4
-        version: 1.0.0
-        url: classpath:/hl7.fhir.uv.extensions.r4#1.0.0.tgz
-      fhir_terminology:
-        name: hl7.terminology
-        version: 5.4.0
-        url: classpath:/hl7.terminology#5.4.0.tgz
+#    implementationguides:
+      # fhir_r4_core:
+      #   name: hl7.fhir.r4.core
+      #   version: 4.0.1
+      #   url: classpath:/hl7.fhir.r4.core.tgz
+      # fhir_extensions:
+      #   name: hl7.fhir.uv.extensions.r4
+      #   version: 1.0.0
+      #   url: classpath:/hl7.fhir.uv.extensions.r4#1.0.0.tgz
+      # fhir_terminology:
+      #   name: hl7.terminology
+      #   version: 5.4.0
+      #   url: classpath:/hl7.terminology#5.4.0.tgz
     #      ch-core:
     #        name: ch.fhir.ig.ch-core
     #        version: 4.0.0-ballot

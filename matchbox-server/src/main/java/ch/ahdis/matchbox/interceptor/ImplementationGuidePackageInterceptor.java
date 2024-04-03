@@ -89,7 +89,7 @@ public class ImplementationGuidePackageInterceptor extends InterceptorAdapter {
           output.close();
           return false;
         } catch (FHIRException | IOException e) {
-          log.error("eception retrieving npm package", e);
+          log.error("exception retrieving npm package", e);
           return super.outgoingResponse(theRequestDetails, theResponseDetails, theServletRequest, theServletResponse);
         }
       }
