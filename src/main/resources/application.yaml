@@ -64,7 +64,7 @@ hapi:
         reporter: "default"
         section_author: "default"
       cql:
-        use_embedded_libraries: false
+        use_embedded_libraries: true
         compiler:
           ### These are low-level compiler options.
           ### They are not typically needed by most users.
@@ -89,7 +89,7 @@ hapi:
           # require_from_keyword: false
           # disable_default_model_info_load: false
         runtime:
-          debug_logging_enabled: true
+          debug_logging_enabled: false
           # enable_validation: false
           # enable_expression_caching: true
         terminology:
