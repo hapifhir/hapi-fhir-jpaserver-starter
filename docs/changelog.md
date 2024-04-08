@@ -4,6 +4,7 @@
 - adapt the simple terminology server to the new API [#217](https://github.com/ahdis/matchbox/issues/217)
 - loading of ig's in dev mode into engine [#219](https://github.com/ahdis/matchbox/issues/219)
 - upgrade to JDK 21 (LTS)
+- Path traversal in webpack-dev-middleware [#221](https://github.com/ahdis/matchbox/issues/221)
 
 2024/03/19 Release 3.8.0
 
