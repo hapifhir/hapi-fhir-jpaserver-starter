@@ -27,7 +27,7 @@ jobs:
         uses: actions/setup-java@v3
         # https://github.com/actions/setup-java#usage
         with:
-          java-version: 20
+          java-version: 21
           distribution: adopt
           cache: maven
 
