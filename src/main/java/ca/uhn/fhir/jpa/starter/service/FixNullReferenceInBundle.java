@@ -26,6 +26,7 @@ import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Procedure;
 import org.hl7.fhir.r4.model.QuestionnaireResponse;
+import org.hl7.fhir.r4.model.DocumentReference;
 import org.joda.time.Instant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -208,6 +209,11 @@ public class FixNullReferenceInBundle {
 										+ "15817257-3c21-4fdb-8e5e-e21b81c31b14" + "\"");
 									specialTreatment = true;
 									break;
+								case "e972bec8-10e7-4a6b-b607-ea264a09c7d5":
+									modifiedBody = modifiedBody.replace("\"reference\":\"Patient/null\"", "\"reference\":\"Patient/"
+										+ "5c3b1984-1324-433e-bd25-c5201b7a01c4" + "\"");
+									specialTreatment = true;
+									break;
 								default:
 									break;
 							}
@@ -215,8 +221,15 @@ public class FixNullReferenceInBundle {
 					}
 					else if (entry.getResource().getResourceType().equals(org.hl7.fhir.r4.model.ResourceType.Observation)) {
 						Observation observation = (Observation) entry.getResource();
+						if (observation.getEncounter().getReference().equals("Encounter/null") &&
+							(observation.getIdElement().getIdPart().equals("f04e342e-ee8f-4287-9fb8-d4e520face1f") || observation.getIdElement().getIdPart().equals("76a77571-bc48-40b7-b32b-7623277f02a8"))) {
+							modifiedBody = modifiedBody.replace("\"reference\":\"Encounter/null\"", "\"reference\":\"Encounter/"
+								+ "8331ceea-d9a8-40f4-994e-fa8c93d1449a" + "\"");
+							specialTreatment = true;
+							break;
+						}
 						if (observation.getSubject().getReference().equals("Patient/")
-								|| observation.getEncounter().getReference().equals("Encounter/null")) {
+								|| observation.getEncounter().getReference().equals("Encounter/null") || observation.getSubject().getReference().equals("Patient/null")) {
 							date = observation.getEffectiveDateTimeType().asStringValue();
 							oneMinuteIncrement = DateUtilityHelper.addOneMinute(date);
 							practitionerRole = observation.getPerformer().get(0).getReference().toString();
@@ -225,6 +238,15 @@ public class FixNullReferenceInBundle {
 					}
 					else if (entry.getResource().getResourceType().equals(org.hl7.fhir.r4.model.ResourceType.QuestionnaireResponse)) {
 						QuestionnaireResponse questionnaireResponse = (QuestionnaireResponse) entry.getResource();
+						if (questionnaireResponse.getSubject().getReference().equals("Patient/")
+							&& questionnaireResponse.getEncounter().getReference().equals("Encounter/null") && questionnaireResponse.getIdElement().getIdPart().equals("4d7ddbde-5046-4672-a3c4-d6a693f99b57")) {
+							modifiedBody = modifiedBody.replace("\"reference\":\"Patient/\"", "\"reference\":\"Patient/"
+								+ "984010ff-c7a1-4753-a577-41ad267ac6a6" + "\"");
+							modifiedBody = modifiedBody.replace("\"reference\":\"Encounter/null\"", "\"reference\":\"Encounter/"
+								+ "a37e06c3-2aa2-4cdb-b62b-d998f98c84d3" + "\"");
+							specialTreatment = true;
+							break;
+						}
 						if (questionnaireResponse.getSubject().getReference().equals("Patient/")
 								|| questionnaireResponse.getEncounter().getReference().equals("Encounter/null")) {
 							date = questionnaireResponse.getAuthoredElement().asStringValue();
@@ -248,6 +270,16 @@ public class FixNullReferenceInBundle {
 							practitionerRole = procedure.getRecorder().getReference().toString();
 							break;
 						}
+					}
+					else if (entry.getResource().getResourceType().equals(org.hl7.fhir.r4.model.ResourceType.DocumentReference)) {
+						DocumentReference documentReference = (DocumentReference) entry.getResource();
+						if(documentReference.getIdElement().getIdPart().equals("7c5d894b-4689-4e7d-86b0-1cd6f0abaf81")){
+							modifiedBody = modifiedBody.replace("\"reference\":\"Encounter/null\"", "\"reference\":\"Encounter/"
+								+ "8331ceea-d9a8-40f4-994e-fa8c93d1449a" + "\"");
+							specialTreatment = true;
+							break;
+						}
+
 					}
 				}
 
