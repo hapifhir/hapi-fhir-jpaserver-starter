@@ -258,11 +258,9 @@ public class GazelleValidationWs {
 																											     message.getCol(),
 																												  message.getLocation()));
 
-		/*
-		TODO: invId is only available in later core versions
 		if (message.getInvId() != null) {
 			assertionReport.setAssertionID(message.getInvId());
-		} else */if (message.getMessageId() != null) {
+		} else if (message.getMessageId() != null) {
 			assertionReport.setAssertionID(message.getMessageId());
 		}
 		if (message.getSource() != null) {
