@@ -13,11 +13,7 @@ import ch.ahdis.matchbox.gazelle.models.metadata.Interface;
 import ch.ahdis.matchbox.gazelle.models.metadata.RestBinding;
 import ch.ahdis.matchbox.gazelle.models.metadata.Service;
 import ch.ahdis.matchbox.gazelle.models.validation.*;
-import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.r4.model.StructureDefinition;
-import org.hl7.fhir.r5.model.Duration;
-import org.hl7.fhir.r5.model.StringType;
-import org.hl7.fhir.r5.model.UriType;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +26,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * The WebService for validation with the new Gazelle Validation API.
@@ -106,7 +101,7 @@ public class GazelleValidationWs {
 				profile.setProfileName(packageVersionResource.getFilename());
 				profile.setDomain(packageVersionResource.getPackageVersion().getPackageId());
 				return profile;
-			}).collect(Collectors.toList());
+			}).toList();
 	}
 
 	/**
@@ -129,11 +124,11 @@ public class GazelleValidationWs {
 			engine = this.getEngine(validationRequest.getValidationProfileId());
 		} catch (final Exception exception) {
 			report.addValidationSubReport(unexpectedError(exception.getMessage()));
-			return update(report);
+			return updateReportFields(report);
 		}
 		final StructureDefinition structDef = engine.getStructureDefinition(validationRequest.getValidationProfileId());
 
-		// Add the validation method
+		// Response: add the validation method
 		final var method = new ValidationMethod();
 		method.setValidationProfileID(validationRequest.getValidationProfileId());
 		method.setValidationProfileVersion(structDef.getVersion());
@@ -141,7 +136,7 @@ public class GazelleValidationWs {
 		method.setValidationServiceVersion(VersionUtil.getVersion());
 		report.setValidationMethod(method);
 
-		// Add validation info
+		// Response: add validation info
 		report.setAdditionalMetadata(new ArrayList<>(this.cliContext.getValidateEngineParameters().size() + engine.getContext().getLoadedPackages().size() + 6));
 		final var sessionId = this.matchboxEngineSupport.getSessionId(engine);
 		if (sessionId != null) {
@@ -155,7 +150,7 @@ public class GazelleValidationWs {
 		report.addAdditionalMetadata(new Metadata().setName("profileVersion").setValue(structDef.getVersion()));
 		report.addAdditionalMetadata(new Metadata().setName("profileDate").setValue(structDef.getDateElement().getValueAsString()));
 
-		// Add the validation parameters as additional metadata
+		// Response: add the validation parameters as additional metadata
 		for (final Field field : this.cliContext.getValidateEngineParameters()) {
 			field.setAccessible(true);
 			final var metadata = new Metadata();
@@ -168,7 +163,7 @@ public class GazelleValidationWs {
 			report.addAdditionalMetadata(metadata);
 		}
 
-		// Add the validation items (requests) to the response
+		// Response: add the validation items (requests) to the response
 		report.getValidationItems().addAll(validationRequest.getValidationItems());
 
 		// Perform the validation of all items with the given engine
@@ -180,10 +175,11 @@ public class GazelleValidationWs {
 			}
 		}
 
+		// Response: add the validation duration
 		sw.endCurrentTask();
 		report.addAdditionalMetadata(new Metadata().setName("total").setValue(sw.getMillis() + "ms"));
 
-		return update(report);
+		return updateReportFields(report);
 	}
 
 	/**
@@ -195,7 +191,7 @@ public class GazelleValidationWs {
 			engine = this.matchboxEngineSupport.getMatchboxEngine(profile, cliContext, true, false);
 		} catch (final Exception e) {
 			log.error("Error while initializing the validation engine", e);
-			throw new MatchboxEngineCreationException("Error while initializing the validation engine: %s".formatted(e.getMessage()));
+			throw new MatchboxEngineCreationException("Error while initializing the validation engine: %s".formatted(e.getMessage()), e);
 		}
 		if (engine == null || engine.getStructureDefinition(profile) == null) {
 			throw new MatchboxEngineCreationException(
@@ -285,7 +281,7 @@ public class GazelleValidationWs {
 	}
 
 	/**
-	 * Creates a validation sub-report that only contains an unexpected error.
+	 * Creates a validation subreport that only contains an unexpected error.
 	 */
 	static ValidationSubReport unexpectedError(final String message) {
 		final var report = new ValidationSubReport();
@@ -299,7 +295,7 @@ public class GazelleValidationWs {
 	/**
 	 * Updates the counters and overall result of the given report.
 	 */
-	static ValidationReport update(final ValidationReport report) {
+	static ValidationReport updateReportFields(final ValidationReport report) {
 		report.getReports().forEach(ValidationSubReport::computeCountersSubReport);
 		report.getReports().forEach(ValidationSubReport::computeResultSubReport);
 		report.computeCounters();
