@@ -136,6 +136,7 @@ public class GazelleValidationWs {
 		// Add the validation method
 		final var method = new ValidationMethod();
 		method.setValidationProfileID(validationRequest.getValidationProfileId());
+		method.setValidationProfileVersion(structDef.getVersion());
 		method.setValidationServiceName("Matchbox");
 		method.setValidationServiceVersion(VersionUtil.getVersion());
 		report.setValidationMethod(method);
