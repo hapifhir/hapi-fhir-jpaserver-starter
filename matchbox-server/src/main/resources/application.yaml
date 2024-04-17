@@ -24,6 +24,8 @@ spring:
   batch:
     job:
       enabled: false
+  jackson:
+    default-property-inclusion: non_absent
 server:
   servlet:
     context-path: /matchboxv3
