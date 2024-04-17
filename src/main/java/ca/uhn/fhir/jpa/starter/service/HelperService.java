@@ -986,10 +986,10 @@ public class HelperService {
 		return categoryWithHashCodes;
 	}
 
-	private void saveQueryResultAndHandleException(String organizationId, String startDate, String endDate,
-			LinkedHashMap<String, String> filters, List<String> hashcodes, String env,
-			List<ANCDailySummaryConfig> ancDailySummaryConfig) {
-		ThreadPoolTaskExecutor executor =  asyncConf.asyncExecutor();
+	public void saveQueryResultAndHandleException(String organizationId, String startDate, String endDate,
+														LinkedHashMap<String, String> filters, List<String> hashcodes, String env,
+														List<ANCDailySummaryConfig> ancDailySummaryConfig) {
+		ThreadPoolTaskExecutor executor =  getAsyncExecutor();
 		executor.submit(() -> {
 			try {
 				saveQueryResult(organizationId, startDate, endDate, filters, hashcodes, env, ancDailySummaryConfig);
@@ -1000,6 +1000,9 @@ public class HelperService {
 		});
 		}
 
+		public ThreadPoolTaskExecutor getAsyncExecutor(){
+				return asyncConf.asyncExecutor();
+			}
 
 	public ResponseEntity<?> getAsyncData(Map<String,String> categoryWithHashCodes) throws SQLException, IOException {
 		List<DataResultJava> dataResult = new ArrayList<>();
@@ -1017,24 +1020,50 @@ public class HelperService {
 	}
 
 	public void saveQueryResult(String organizationId, String startDate, String endDate,
-			LinkedHashMap<String, String> filters, List<String> hashcodes, String env,
-			List<ANCDailySummaryConfig> ancDailySummaryConfig) throws FileNotFoundException {
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl(
-				(GenericClient) fhirClientAuthenticatorService.getFhirClient());
+										 LinkedHashMap<String, String> filters, List<String> hashcodes, String env,
+										 List<ANCDailySummaryConfig> ancDailySummaryConfig) throws FileNotFoundException {
+
 		List<String> fhirSearchList = getFhirSearchListByFilters(filters, env);
 		logger.warn("Calling details page function saveQueryResult. StartDate: {} EndDate: {}", startDate, endDate);
 		Long start3 = System.nanoTime();
-		List<DataResult> dataResult = ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(
-				fhirClientProvider, new DateRange(startDate, endDate), organizationId, ancDailySummaryConfig,
-				fhirSearchList);
+		List<DataResult> dataResult = (List<DataResult>) getReportGen("getAncDailySummaryData", organizationId, startDate, endDate,
+			 fhirSearchList, ancDailySummaryConfig);
 		for (String hashcode : hashcodes) {
 			saveInAsyncTable(dataResult.get(hashcodes.indexOf(hashcode)), hashcode);
 		}
 		Long end3 = System.nanoTime();
 		Double diff3 = ((end3 - start3) / 1e9); // Convert nanoseconds to seconds
 		logger.warn("details page function saveQueryResult ended StartDate: {} EndDate: {} timetaken: {}", startDate,
-				endDate, diff3);
+			endDate, diff3);
 	}
+
+	public  List<?> getReportGen(String reportGenType, String organizationId, String startDate, String endDate,
+										  List<String> fhirSearchList, List<?> indicators){
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl(
+			(GenericClient) fhirClientAuthenticatorService.getFhirClient());
+		if(indicators != null) {
+			switch (reportGenType) {
+				case "getAncDailySummaryData":
+					if (((List<?>) indicators).get(0) instanceof ANCDailySummaryConfig) {
+						@SuppressWarnings("unchecked")
+						List<ANCDailySummaryConfig> dailySummaryConfigs = (List<ANCDailySummaryConfig>) indicators;
+						return ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(
+							fhirClientProvider, new DateRange(startDate, endDate), organizationId, dailySummaryConfigs,
+							fhirSearchList);
+					}
+					else return Collections.emptyList();
+				case "getFacilityData":
+					return ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider,
+						organizationId, new DateRange(startDate, endDate), (List<IndicatorItem>) indicators, Collections.emptyList()).get(startDate);
+				// Add more cases as needed
+				default:
+					logger.warn("Unsupported report type: " + reportGenType);
+					return Collections.emptyList();
+			}
+		}
+		return Collections.emptyList();
+	}
+
 
 	// @Scheduled(fixedDelay = 300000)
 	@Scheduled(cron = "0 0 23 * * *")
@@ -1392,8 +1421,8 @@ public class HelperService {
 		return analyticItems;
 	}
 
-	private void performCachingForTabularData(List<TabularItem> indicators, List<String> facilityIds, Date startDate,
-			Date endDate, List<String> fhirSearchList) {
+	void performCachingForTabularData(List<TabularItem> indicators, List<String> facilityIds, Date startDate,
+												 Date endDate, List<String> fhirSearchList) {
 		String filterString = String.join(",", fhirSearchList);
 		notificationDataSource = NotificationDataSource.getInstance();
 		List<String> currentIndicatorMD5List = indicators.stream()
@@ -1447,8 +1476,8 @@ public class HelperService {
 		}
 	}
 
-	private void performCachingForPieChartData(List<PieChartDefinition> pieChartDefinitions, List<String> facilityIds,
-			Date startDate, Date endDate, List<String> fhirSearchList) {
+	void performCachingForPieChartData(List<PieChartDefinition> pieChartDefinitions, List<String> facilityIds,
+												  Date startDate, Date endDate, List<String> fhirSearchList) {
 		String filterString = String.join(",", fhirSearchList);
 		List<String> currentIndicatorMd5List = pieChartDefinitions.stream().flatMap(pieChartDefinitionCategory -> {
 			if (pieChartDefinitionCategory != null) {
@@ -1808,7 +1837,7 @@ public class HelperService {
 			});
 
 			List<OrgIndicatorAverageResult> fromTable = new ArrayList<>();
-			ThreadPoolTaskExecutor executor = asyncConf.asyncExecutor();
+			ThreadPoolTaskExecutor executor = getAsyncExecutor();
 
 			List<Future<List<OrgIndicatorAverageResult>>> futures = new ArrayList<>();
 
@@ -1930,8 +1959,8 @@ public class HelperService {
 		return ResponseEntity.ok(barChartItems);
 	}
 
-	private void performCachingIfNotPresent(List<IndicatorItem> indicators, List<String> facilityIds, Date startDate,
-			Date endDate, List<String> fhirSearchList) {
+	void performCachingIfNotPresent(List<IndicatorItem> indicators, List<String> facilityIds, Date startDate,
+											  Date endDate, List<String> fhirSearchList) {
 		String filterString = String.join(",", fhirSearchList);
 		logger.warn("**** " + filterString);
 		List<String> currentIndicatorMD5List = indicators.stream()
@@ -1983,8 +2012,8 @@ public class HelperService {
 		}
 	}
 
-	private void performCachingIfNotPresentForBarChart(List<BarChartDefinition> barCharts, List<String> facilityIds,
-			Date startDate, Date endDate, List<String> fhirSearchList) {
+	void performCachingIfNotPresentForBarChart(List<BarChartDefinition> barCharts, List<String> facilityIds,
+															 Date startDate, Date endDate, List<String> fhirSearchList) {
 		String filterString = String.join(",", fhirSearchList);
 		List<String> currentIndicatorMD5List = barCharts.stream()
 				.flatMap(barChart -> barChart.getBarChartItemDefinitions().stream()
@@ -2099,8 +2128,8 @@ public class HelperService {
 		return ResponseEntity.ok(lineChartItemCollections);
 	}
 
-	private Double getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(String transform, Date start,
-			Date end, String indicator, List<String> orgIds) {
+	Double getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(String transform, Date start,
+																								 Date end, String indicator, List<String> orgIds) {
 		notificationDataSource = NotificationDataSource.getInstance();
 		if (transform == null) {
 			return notificationDataSource.getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(start, end, indicator,
@@ -2117,8 +2146,8 @@ public class HelperService {
 		}
 	}
 
-	private void performCachingForLineChartIfNotPresent(List<LineChart> lineCharts, List<String> facilityIds,
-			Date startDate, Date endDate, List<String> fhirSearchList) {
+	void performCachingForLineChartIfNotPresent(List<LineChart> lineCharts, List<String> facilityIds,
+															  Date startDate, Date endDate, List<String> fhirSearchList) {
 		String filterString = String.join(",", fhirSearchList);
 		List<String> currentIndicatorMD5List = lineCharts.stream()
 				.flatMap(lineChart -> lineChart.getLineChartItemDefinitions().stream()
@@ -2311,7 +2340,7 @@ public class HelperService {
 	}
 
 	
-	List<BarChartDefinition> getBarChartItemListFromFile(String env) throws NullPointerException {
+	public List<BarChartDefinition> getBarChartItemListFromFile(String env) throws NullPointerException {
 		return dashboardEnvToConfigMap.get(env).getBarChartDefinitions();
 	}
 

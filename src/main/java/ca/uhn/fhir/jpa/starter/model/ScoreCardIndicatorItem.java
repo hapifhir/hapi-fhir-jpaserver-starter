@@ -27,4 +27,8 @@ public class ScoreCardIndicatorItem {
 	public void setIndicators(List<IndicatorItem> indicators) {
 		this.indicators = indicators;
 	}
+	public ScoreCardIndicatorItem(String categoryId, List<IndicatorItem> indicators) {
+		this.categoryId = categoryId;
+		this.indicators = indicators;
+	}
 }
