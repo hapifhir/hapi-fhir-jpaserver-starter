@@ -81,8 +81,8 @@ public class GazelleValidationWs {
 		theInterface.setRequired(true);
 
 		final var binding = new RestBinding();
-		//binding.setServiceUrl(request.getRequestURL().toString().replace(METADATA_PATH, VALIDATE_PATH));
-		binding.setServiceUrl("https://3mb7wd5k-8080.euw.devtunnels.ms/matchboxv3/gazelle/validation/validate");
+		binding.setServiceUrl(request.getRequestURL().toString().replace(METADATA_PATH, VALIDATE_PATH));
+		//binding.setServiceUrl("https://3mb7wd5k-8080.euw.devtunnels.ms/matchboxv3/gazelle/validation/validate");
 		binding.setType("restBinding");
 
 		theInterface.setValidationProfiles(this.getProfiles());
