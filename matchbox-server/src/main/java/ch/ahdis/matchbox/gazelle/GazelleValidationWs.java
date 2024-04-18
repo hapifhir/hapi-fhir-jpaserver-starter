@@ -259,12 +259,11 @@ public class GazelleValidationWs {
 			assertionReport.setAssertionID(message.getInvId());
 		} else if (message.getMessageId() != null) {
 			assertionReport.setAssertionID(message.getMessageId());
+		} else if (message.getType() != null) {
+			assertionReport.setAssertionID(message.getType().name());
 		}
 		if (message.getSource() != null) {
-			assertionReport.setAssertionType("%s (reported by the %s)".formatted(message.getType().getDisplay(),
-																						            message.getSource().name()));
-		} else {
-			assertionReport.setAssertionType(message.getType().getDisplay());
+			assertionReport.setAssertionType(message.getSource().name());
 		}
 
 		// Description, with slice info if available
