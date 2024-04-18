@@ -93,12 +93,13 @@ public class GazelleValidationWs {
 	 */
 	@GetMapping(path = PROFILES_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<ValidationProfile> getProfiles() {
-		return this.structureDefinitionProvider.getCurrentPackageResources().stream()
+		return this.structureDefinitionProvider.getPackageResources().stream()
 			.map(packageVersionResource -> {
 				final var profile = new ValidationProfile();
-				profile.setProfileID(packageVersionResource.getCanonicalUrl());
+				final var version = packageVersionResource.getCanonicalVersion();
+				profile.setProfileID("%s|%s".formatted(packageVersionResource.getCanonicalUrl(), version));
 				// PATCHed: filename contains the StructureDefinition title.
-				profile.setProfileName(packageVersionResource.getFilename());
+				profile.setProfileName("%s (%s)".formatted(packageVersionResource.getFilename(), version));
 				profile.setDomain(packageVersionResource.getPackageVersion().getPackageId());
 				return profile;
 			}).toList();
