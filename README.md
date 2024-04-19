@@ -191,6 +191,13 @@ public class YourInterceptor
 
 The easiest way to run this server entirely depends on your environment requirements. The following ways are supported:
 
+### Using jetty
+```bash
+mvn -Pjetty spring-boot:run
+```
+
+The Server will then be accessible at http://localhost:8080/fhir and the CapabilityStatement will be found at http://localhost:8080/fhir/metadata.
+
 ### Using Spring Boot
 ```bash
 mvn spring-boot:run
@@ -198,18 +205,16 @@ mvn spring-boot:run
 
 The Server will then be accessible at http://localhost:8080/fhir and the CapabilityStatement will be found at http://localhost:8080/fhir/metadata.
 
-### Using jetty
-```bash
-mvn -Pjetty spring-boot:run
+If you want to run this server on a different port, you can change the port in the `src/main/resources/application.yaml` file as follows:
+
+```yaml
+server:
+#  servlet:
+#    context-path: /example/path
+  port: 8888
 ```
 
-If you need to run this server on a different port (using Maven), you can change the port in the run command as follows:
-
-```bash
-mvn -Pjetty -Dserver.port=8888 spring-boot:run
-```
-
-The Server will then be accessible at http://localhost:8888/ and eg. http://localhost:8888/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to the following:
+The Server will then be accessible at http://localhost:8888/fhir and the CapabilityStatement will be found at http://localhost:8888/fhir/metadata. Remember to adjust your overlay configuration in the `application.yaml` file to the following:
 
 ```yaml
     tester:
