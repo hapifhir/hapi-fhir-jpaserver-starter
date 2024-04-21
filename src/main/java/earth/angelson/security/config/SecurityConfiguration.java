@@ -3,6 +3,7 @@ package earth.angelson.security.config;
 import earth.angelson.security.AuthorizationInterceptor;
 import earth.angelson.security.cache.TokenCacheService;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
@@ -15,9 +16,13 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class SecurityConfiguration {
 
+
+	@Value("${security.service.url:http://localhost:8081/account/info}")
+	private String securityServiceUrl;
+
 	@Bean
 	public TokenCacheService tokenCacheService() {
-		return new TokenCacheService("http://localhost:8081/account/info");
+		return new TokenCacheService(securityServiceUrl);
 	}
 
 	@Bean
