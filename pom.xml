@@ -676,5 +676,18 @@
                 </plugins>
             </build>
         </profile>
+        <!-- For connecting to GCP CloudSQL Postgres instances:
+        https://github.com/GoogleCloudPlatform/cloud-sql-jdbc-socket-factory/blob/main/docs/jdbc.md#postgres-1
+        Needs 'boot' profile as well. -->
+        <profile>
+            <id>cloudsql-postgres</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.google.cloud.sql</groupId>
+                    <artifactId>postgres-socket-factory</artifactId>
+                    <version>1.17.0</version>
+                </dependency>
+            </dependencies>
+        </profile>       
     </profiles>
 </project>
