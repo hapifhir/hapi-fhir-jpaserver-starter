@@ -101,7 +101,7 @@ docker-compose exec -T matchbox-test-db pg_restore -c -U matchbox -d matchbox < 
 cd matchbox-server
 mvn package -DskipTests
 docker build -t matchbox .
-docker run -d --name matchbox -p 8080:8080 -v /Users/oliveregger/apps/:/apps/ matchbox
+docker run -d --name matchbox -p 8080:8080 -v /Users/oegger/Documents/github/matchbox/matchbox-server/with-cda:/config matchbox
 ```
 
 Server will then be accessible at http://localhost:8080/matchboxv3/fhir/metadata.

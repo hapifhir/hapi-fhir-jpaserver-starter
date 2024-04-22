@@ -6,6 +6,13 @@ COPY ./target/matchbox.jar /matchbox.jar
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 RUN mkdir -p /data/hapi/lucenefiles && chmod 775 /data/hapi/lucenefiles
+RUN apk --purge del
+
+# Create a new user and switch to it
+RUN adduser --disabled-password --gecos '' matchbox
+RUN mkdir -p /database && chown matchbox:matchbox /database
+
+USER matchbox
 
 ENTRYPOINT java -Xmx3072M -jar /matchbox.jar -Dspring.config.additional-location=optional:file:/config/application.yaml,optional:file:application.yaml
 
