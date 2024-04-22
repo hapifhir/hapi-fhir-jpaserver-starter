@@ -1,7 +1,8 @@
-To be released
+2024/04/22 Release 3.8.2
 
 - Improvements in the Gazelle validation API
 - Upgrade to Spring 6.1.6 to fix [CVE-2024-22262](https://github.com/ahdis/matchbox/security/code-scanning/59)
+- Fix [CVE-2023-4043](https://nvd.nist.gov/vuln/detail/CVE-2023-4043)
 - Upgrade to HAPI FHIR 7.0.2 and org.hl7.fhir.core 6.3.5 [#222](https://github.com/ahdis/matchbox/issues/222)
 
 2024/04/09 Release 3.8.1
