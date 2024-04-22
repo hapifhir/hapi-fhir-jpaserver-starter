@@ -119,6 +119,14 @@ public class GazelleValidationWs {
 		report.setReports(new ArrayList<>(validationRequest.getValidationItems().size()));
 		report.setDisclaimer("Matchbox disclaims");
 
+		// Response: create the validation method now, with the info we already have
+		final var method = new ValidationMethod();
+		method.setValidationProfileID(validationRequest.getValidationProfileId());
+		method.setValidationProfileVersion("unknown yet");
+		method.setValidationServiceName("Matchbox");
+		method.setValidationServiceVersion(VersionUtil.getVersion());
+		report.setValidationMethod(method);
+
 		// Get the Matchbox engine for the requested profile
 		final MatchboxEngine engine;
 		try {
@@ -129,13 +137,8 @@ public class GazelleValidationWs {
 		}
 		final StructureDefinition structDef = engine.getStructureDefinition(validationRequest.getValidationProfileId());
 
-		// Response: add the validation method
-		final var method = new ValidationMethod();
-		method.setValidationProfileID(validationRequest.getValidationProfileId());
+		// Response: update the validation method
 		method.setValidationProfileVersion(structDef.getVersion());
-		method.setValidationServiceName("Matchbox");
-		method.setValidationServiceVersion(VersionUtil.getVersion());
-		report.setValidationMethod(method);
 
 		// Response: add validation info
 		report.setAdditionalMetadata(new ArrayList<>(this.cliContext.getValidateEngineParameters().size() + engine.getContext().getLoadedPackages().size() + 6));
