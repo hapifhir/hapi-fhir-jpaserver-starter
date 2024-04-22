@@ -430,6 +430,12 @@
                 <artifactId>nimbus-jose-jwt</artifactId>
                 <version>9.37.3</version>
             </dependency>
+            <dependency>
+                <!-- Upgrading because of CVE-2023-4043 (https://nvd.nist.gov/vuln/detail/CVE-2023-4043) -->
+                <groupId>org.eclipse.parsson</groupId>
+                <artifactId>parsson</artifactId>
+                <version>1.0.4</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
