@@ -248,7 +248,7 @@ public class GazelleValidationWs {
 			case INFORMATION:
 			default:
 				assertionReport.setResult(ValidationTestResult.PASSED); // Can't use UNDEFINED here, because it weights
-				// more than FAILED
+				// more than FAILED, so the overall result would be UNDEFINED instead of PASSED/FAILED
 				assertionReport.setSeverity(SeverityLevel.INFO);
 				break;
 		}
