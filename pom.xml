@@ -214,6 +214,11 @@
                         <groupId>com.zaxxer</groupId>
                         <artifactId>*</artifactId>
                     </exclusion>
+                    <!-- exclude co.elastic.clients which has a dependency to parsson 1.0.0  -->
+                    <exclusion>
+                        <groupId>co.elastic.clients</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
