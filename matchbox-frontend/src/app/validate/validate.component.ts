@@ -74,7 +74,7 @@ export class ValidateComponent implements AfterViewInit {
                     sdCanonical += `|${igVersion}`;
                   }
 
-                  this.supportedProfiles.set(sdCanonical, `${sdTitle} — ${igId}#${igVersion}${current}`);
+                  this.supportedProfiles.set(sdCanonical, `${sdCanonical} - ${sdTitle} — ${igId}#${igVersion}${current}`);
                 });
                 this.updateProfileFilter();
               }

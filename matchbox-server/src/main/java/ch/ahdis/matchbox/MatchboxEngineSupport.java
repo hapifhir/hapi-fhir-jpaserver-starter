@@ -129,6 +129,7 @@ public class MatchboxEngineSupport {
 						// remove resource name
 					String canonicalUrlLike = canonical.substring(0, canonical.lastIndexOf("/")) +"*";
 					NpmPackageVersionResourceEntity resourceEntity  = new TransactionTemplate(myTxManager).execute(tx -> {
+//						Slice<NpmPackageVersionResourceEntity> slice = myPackageVersionResourceDao.findCurrentVersionByLikeCanonicalUrl(PageRequest.of(0, 1), theFhirVersion, canonicalUrlLike);
 						Slice<NpmPackageVersionResourceEntity> slice = myPackageVersionResourceDao.findCurrentVersionByLikeCanonicalUrl(PageRequest.of(0, 1), theFhirVersion, canonicalUrlLike);
 						if (slice.isEmpty()) {
 							return null;
@@ -347,21 +348,12 @@ public class MatchboxEngineSupport {
 				NpmPackageVersionResourceEntity npm = loadPackageAssetByUrl(canonical,
 																								FhirVersionEnum.forVersionString(cliContext.getFhirVersion()));
 				if (npm == null) {
-					npm = loadPackageAssetByLikeCanonicalCurrent(canonical,
-																				FhirVersionEnum.forVersionString(cliContext.getFhirVersion()));
+					npm = loadPackageAssetByUrl(canonical);
 				}
 				if (npm != null) {
 					String ig = npm.getPackageVersion().getPackageId() + "#" + npm.getPackageVersion().getVersionId();
-					log.debug("Using ig {} for canonical url {}", ig, canonical);
+					cliContext.setFhirVersion(npm.getFhirVersion().getFhirVersionString());
 					cliContext.setIg(ig); // set the ig in the cliContext that hashCode will be set
-				} else {
-					// lets try to find a package that contains the canonical with a different FHIR version (e.g. for mapping between versions)
-					npm = loadPackageAssetByUrl(canonical);
-					if (npm != null) {
-						String ig = npm.getPackageVersion().getPackageId() + "#" + npm.getPackageVersion().getVersionId();
-						cliContext.setFhirVersion(npm.getFhirVersion().getFhirVersionString());
-						cliContext.setIg(ig); // set the ig in the cliContext that hashCode will be set
-					}
 				}
 			}
 		}

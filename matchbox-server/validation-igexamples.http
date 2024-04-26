@@ -1,26 +1,81 @@
 ### @host = http://test.ahdis.ch/matchbox/fhir
-### @host = http://localhost:8080/matchboxv3/fhir
+@host = http://localhost:8083/matchboxv3/fhir
 ### @host = http://hapi.fhir.org/baseR4
-@host = http://localhost:18002/eprik-fhir/camel/matchbox/matchboxv3/fhir
+### @host = http://localhost:18002/eprik-fhir/camel/matchbox/matchboxv3/fhir
 
 ## No issues detected during validation
-POST {{host}}/$validate?profile=http://hl7.org/fhir/StructureDefinition/DiagnosticReport HTTP/1.1
+POST {{host}}/$validate?profile=http://matchbox.health/ig/test/r4/StructureDefinition/practitioner-identifier-version-different-then-ig HTTP/1.1
 Accept: application/fhir+json
 Content-Type: application/fhir+json
 
 {
-    "resourceType" : "DiagnosticReport",
-    "extension" : [{
-    "url" : "http://hl7.org/fhir/5.0/StructureDefinition/extension-DiagnosticReport.composition",
-    "valueReference" : {
-        "reference" : "urn:uuid:da065461-34df-4e2e-b69f-4181908575d0",
-        "type" : "Composition"
+  "resourceType" : "Practitioner",
+  "id" : "PractitionerWithIdentifier",
+  "meta" : {
+    "profile" : [
+      "http://matchbox.health/ig/test/r4/StructureDefinition/practitioner-identifier-required"
+    ]
+  },
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Generated Narrative: Practitioner</b><a name=\"PractitionerWithIdentifier\"> </a><a name=\"hcPractitionerWithIdentifier\"> </a></p><div style=\"display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%\"><p style=\"margin-bottom: 0px\">Resource Practitioner &quot;PractitionerWithIdentifier&quot; </p><p style=\"margin-bottom: 0px\">Profile: <a href=\"StructureDefinition-practitioner-identifier-required.html\">Practitioner with a required identifier</a></p></div><p><b>identifier</b>: <a href=\"https://www.gs1.org/standards/id-keys/gln\" title=\"Global Location Number\">GLN</a>/7610000050719</p></div>"
+  },
+  "identifier" : [
+    {
+      "system" : "urn:oid:2.51.1.3",
+      "value" : "7610000050719"
     }
-    }],
-    "status" : "final",
-    "code" : {
-    "text" : "test"
+  ]
+}
+
+### No issues detected during validation
+POST {{host}}/$validate?profile=http://hl7.org/fhir/StructureDefinition/Practitioner|5.0.0  HTTP/1.1
+Accept: application/fhir+json
+Content-Type: application/fhir+json
+
+{
+  "resourceType" : "Practitioner",
+  "id" : "PractitionerWithIdentifier",
+  "meta" : {
+    "profile" : [
+      "http://matchbox.health/ig/test/r4/StructureDefinition/practitioner-identifier-required"
+    ]
+  },
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Generated Narrative: Practitioner</b><a name=\"PractitionerWithIdentifier\"> </a><a name=\"hcPractitionerWithIdentifier\"> </a></p><div style=\"display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%\"><p style=\"margin-bottom: 0px\">Resource Practitioner &quot;PractitionerWithIdentifier&quot; </p><p style=\"margin-bottom: 0px\">Profile: <a href=\"StructureDefinition-practitioner-identifier-required.html\">Practitioner with a required identifier</a></p></div><p><b>identifier</b>: <a href=\"https://www.gs1.org/standards/id-keys/gln\" title=\"Global Location Number\">GLN</a>/7610000050719</p></div>"
+  },
+  "identifier" : [
+    {
+      "system" : "urn:oid:2.51.1.3",
+      "value" : "7610000050719"
     }
+  ]
+}
+
+### No issues detected during validation
+POST {{host}}/$validate?profile=http://matchbox.health/ig/test/r4/StructureDefinition/practitioner-identifier-version-different-then-ig|0.1.0 HTTP/1.1
+Accept: application/fhir+json
+Content-Type: application/fhir+json
+
+{
+  "resourceType" : "Practitioner",
+  "id" : "PractitionerWithIdentifier",
+  "meta" : {
+    "profile" : [
+      "http://matchbox.health/ig/test/r4/StructureDefinition/practitioner-identifier-required"
+    ]
+  },
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Generated Narrative: Practitioner</b><a name=\"PractitionerWithIdentifier\"> </a><a name=\"hcPractitionerWithIdentifier\"> </a></p><div style=\"display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%\"><p style=\"margin-bottom: 0px\">Resource Practitioner &quot;PractitionerWithIdentifier&quot; </p><p style=\"margin-bottom: 0px\">Profile: <a href=\"StructureDefinition-practitioner-identifier-required.html\">Practitioner with a required identifier</a></p></div><p><b>identifier</b>: <a href=\"https://www.gs1.org/standards/id-keys/gln\" title=\"Global Location Number\">GLN</a>/7610000050719</p></div>"
+  },
+  "identifier" : [
+    {
+      "system" : "urn:oid:2.51.1.3",
+      "value" : "7610000050719"
+    }
+  ]
 }
 
 ### No issues detected during validation

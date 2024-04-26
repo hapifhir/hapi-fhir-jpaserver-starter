@@ -1,8 +1,12 @@
 package ch.ahdis.matchbox.test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.IBase;
@@ -15,7 +19,6 @@ import org.hl7.fhir.r4.model.OperationOutcome.IssueSeverity;
 import org.hl7.fhir.r4.model.OperationOutcome.OperationOutcomeIssueComponent;
 import org.hl7.fhir.r4.model.Parameters;
 import org.junit.jupiter.api.BeforeAll;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,16 +28,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.util.List;
-
 import ca.uhn.fhir.context.BaseRuntimeChildDefinition;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.RuntimeResourceDefinition;
 import ca.uhn.fhir.jpa.starter.Application;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @ContextConfiguration(classes = { Application.class })
@@ -211,6 +209,58 @@ public class MatchboxApiR4Test {
     assertNotEquals(sessionIdCore, sessionId3CoreTxNa);
     assertEquals("n/a", this.getTxServer(contextR4, operationOutcome));
   }
+
+  @Test
+  public void verifyIgVersioning() {
+    FhirContext contextR4 = FhirVersionEnum.R4.newContext();
+    ValidationClient validationClient = new ValidationClient(contextR4, this.targetServer);
+
+    String resource = "<Practitioner xmlns=\"http://hl7.org/fhir\">\n" + //
+            "  <identifier>\n" + //
+            "    <system value=\"urn:oid:2.51.1.3\"/>\n" + //
+            "    <value value=\"7610000050719\"/>\n" + //
+            "  </identifier>\n" + //
+            "</Practitioner>";
+
+    String profileMatchbox = "http://matchbox.health/ig/test/r4/StructureDefinition/practitioner-identifier-required";
+
+    // validate just with the profile, profile has no business version
+    IBaseOperationOutcome operationOutcome = validationClient.validate(resource, profileMatchbox);
+    String sessionIdFirst = getSessionId(contextR4, operationOutcome);
+
+    assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
+    assertEquals("matchbox.health.test.ig.r4#0.1.0", getIg(contextR4, operationOutcome));
+
+    // validate with the profile and the ig
+    Parameters parameters = new Parameters();
+    parameters.addParameter("ig", "matchbox.health.test.ig.r4#0.1.0");
+    operationOutcome = validationClient.validate(resource, profileMatchbox, parameters);
+    String sessionIdSecond = getSessionId(contextR4, operationOutcome);
+    assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
+    assertEquals("matchbox.health.test.ig.r4#0.1.0", getIg(contextR4, operationOutcome));
+    assertEquals(sessionIdFirst, sessionIdSecond);
+
+    operationOutcome = validationClient.validate(resource, profileMatchbox+"|0.1.0");
+    String sessionIdThird = getSessionId(contextR4, operationOutcome);
+    assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
+    assertEquals("matchbox.health.test.ig.r4#0.1.0", getIg(contextR4, operationOutcome));
+    assertEquals(sessionIdFirst, sessionIdThird);
+
+    // validate with the profile and the ig version, has an internal business version 9.9.9
+    profileMatchbox = "http://matchbox.health/ig/test/r4/StructureDefinition/practitioner-identifier-version-different-then-ig";
+    operationOutcome = validationClient.validate(resource, profileMatchbox);
+    String sessionIdForth = getSessionId(contextR4, operationOutcome);
+    assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
+    assertEquals("matchbox.health.test.ig.r4#0.1.0", getIg(contextR4, operationOutcome));
+    assertEquals(sessionIdFirst, sessionIdForth);
+
+    operationOutcome = validationClient.validate(resource, profileMatchbox+"|0.1.0");
+    String sessionIdFifth = getSessionId(contextR4, operationOutcome);
+    assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
+    assertEquals("matchbox.health.test.ig.r4#0.1.0", getIg(contextR4, operationOutcome));
+    assertEquals(sessionIdFirst, sessionIdFifth);
+  }
+
 
   @Test
   // https://gazelle.ihe.net/jira/browse/EHS-431

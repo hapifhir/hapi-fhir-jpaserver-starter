@@ -4,6 +4,7 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+    
 
     {
       "type": "java",
@@ -81,7 +82,7 @@
       "request": "launch",
       "mainClass": "ca.uhn.fhir.jpa.starter.Application",
       "projectName": "matchbox-server",
-      "vmArgs": "-Dspring.config.additional-location=file:/Users/oegger/Documents/github/matchbox/matchbox-server/target/test-classes/application-test.yaml",
+      "vmArgs": "-Dspring.config.additional-location=file:/Users/oegger/Documents/github/matchbox/matchbox-server/target/test-classes/application-test-r5onr4.yaml",
       "cwd": "${workspaceFolder}/matchbox-server"
     },    {
       "type": "java",

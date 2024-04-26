@@ -21,6 +21,7 @@ package ch.ahdis.fhir.hapi.jpa.validation;
  */
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.jpa.model.entity.NpmPackageVersionResourceEntity;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.api.EncodingEnum;
@@ -133,7 +134,7 @@ public class ValidationProvider {
 		if (theRequest.getParameter("profile") == null) {
 			return this.getOoForError("The 'profile' parameter must be provided");
 		}
-		final String profile = theRequest.getParameter("profile");
+		String profile = theRequest.getParameter("profile");
 
 		boolean reload = false;
 		if (theRequest.getParameter("reload") != null) {
@@ -160,10 +161,19 @@ public class ValidationProvider {
 			log.error("Error while initializing the validation engine", e);
 			return this.getOoForError("Error while initializing the validation engine: %s".formatted(e.getMessage()));
 		}
-		if (engine == null || engine.getStructureDefinition(profile) == null) {
+		if (engine == null) {
 			return this.getOoForError(
-				"Validation for profile '%s' not supported by this server, but additional ig's could be configured.".formatted(
+				"Matchbox engine for profile '%s' could not be created, is an an ig configured for matchbox?".formatted(
 					profile));
+		}
+		int versionSeparator = profile.lastIndexOf('|');
+		if (versionSeparator != -1) {
+			profile = profile.substring(0, versionSeparator);
+		}
+		if (engine.getStructureDefinition(profile) == null) {
+			return this.getOoForError(
+				"Engine configured, but validation for profile '%s' not found. ".formatted(
+					profile)+engine.toString());
 		}
 		if (!this.matchboxEngineSupport.isInitialized()) {
 			return this.getOoForError("Validation engine not initialized, please try again");

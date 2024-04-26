@@ -210,6 +210,7 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 						"Could not load NPM package " + theInstallationSpec.getName() + "#" + theInstallationSpec.getVersion(), e);
 			}
 
+
 			// We have installed at least one new package, let's save the StructureDefinition titles in the database
 			ourLog.debug("Updating StructureDefinition titles...");
 			final var parserR4 = new org.hl7.fhir.r4.formats.JsonParser();
@@ -223,6 +224,10 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 								// The filename has already been modified
 								return;
 							}
+							// we update the canonical version to the package version for StructureDefinitions
+							// https://github.com/ahdis/matchbox/issues/225
+							npmPackageVersionResourceEntity.setCanonicalVersion(npmPackageVersionResourceEntity.getPackageVersion().getVersionId());
+
 							final var sdBinary = MatchboxServerUtils.getBinaryFromId(npmPackageVersionResourceEntity.getResourceBinary().getId(), myDaoRegistry);
 							final byte[] resourceContentsBytes;
 							resourceContentsBytes = MatchboxServerUtils.fetchBlobFromBinary(sdBinary, myBinaryStorageSvc,
