@@ -21,7 +21,6 @@ package ch.ahdis.matchbox.engine;
  */
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -66,7 +65,6 @@ import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
-import org.hl7.fhir.validation.Content;
 import org.hl7.fhir.validation.IgLoader;
 import org.hl7.fhir.validation.ValidationEngine;
 import org.hl7.fhir.validation.instance.InstanceValidator;
@@ -520,69 +518,43 @@ public class MatchboxEngine extends ValidationEngine {
 														 final @NonNull InputStream stream,
 														 final @Nullable String profileUrl)
 			throws FHIRException, IOException, EOperationOutcome {
-		final List<StructureDefinition> structureDefinitions;
+		StructureDefinition sd = null;
 		if (profileUrl != null) {
-			structureDefinitions = asSdList(List.of(profileUrl));
-			for (StructureDefinition sd : structureDefinitions) {
-				log.info("Using profile for validation " + sd.getUrl() + "|" + sd.getVersion() + " "
+			sd = this.getStructureDefinitionR5(profileUrl);
+			log.info("Using profile for validation " + sd.getUrl() + "|" + sd.getVersion() + " "
 						+ (sd.getDateElement() != null ? "(" + sd.getDateElement().asStringValue() + ")" : ""));
-			}
-		} else {
-			structureDefinitions = null;
 		}
 		final List<ValidationMessage> messages = new ArrayList<>();
 //		this.getContext().getTxCache().clear();
 		final InstanceValidator validator = getValidator(format);
 		//validator.getBaseOptions().setCheckValueSetOnly();
 		//validator.getBaseOptions().setNoServer(true);
-		validator.validate(null, messages, stream, format, structureDefinitions);
+		validator.validate(null, messages, stream, format, (sd != null) ? List.of(sd) : Collections.emptyList());
 		return this.filterValidationMessages(messages);
 	}
 
 	/**
-	 * internal use, checks if all profiles can be resolved
-	 * 
-	 * @param profiles canonical url of profiles (StructureDefinition)
-	 * @return StructureDefintions
-	 * @throws Error if profile cannot be resolved
-	 */
-	@Override
-	public List<StructureDefinition> asSdList(final @Nullable List<String> profiles) throws Error {
-		final List<StructureDefinition> list = new ArrayList<>();
-		if (profiles != null) {
-			for (final String p : profiles) {
-				final StructureDefinition sd = this.getContext().fetchResource(StructureDefinition.class, p);
-				if (sd == null) {
-					log.error("Unable to resolve profile " + p);
-					throw new Error("Unable to resolve profile " + p);
-				}
-				list.add(sd);
-			}
-		}
-		return list;
-	}
-
-	/**
-	 * Get the corresponding Struc
+	 * Get the corresponding StructureDefinition (R4)
 	 * 
 	 * @param profile
 	 * @return
 	 */
-	public org.hl7.fhir.r4.model.StructureDefinition getStructureDefinition(String profile) {
-		ArrayList<String> profiles = new ArrayList<>();
-		profiles.add(profile);
-		try {
-			List<StructureDefinition> sds = asSdList(profiles);
-			if (sds.size() > 0) {
-				if (sds.size() > 1) {
-					log.debug("Multiple StructureDefinitions for profile " + profile);
-				}
-				return (org.hl7.fhir.r4.model.StructureDefinition) VersionConvertorFactory_40_50
-						.convertResource(sds.get(0));
-			}
-		} catch (Error e) {
+	public org.hl7.fhir.r4.model.StructureDefinition getStructureDefinitionR4(final String profile) {
+		final StructureDefinition sd = this.getStructureDefinitionR5(profile);
+		if (sd == null) {
+			return null;
 		}
-		return null;
+		return (org.hl7.fhir.r4.model.StructureDefinition) VersionConvertorFactory_40_50.convertResource(sd);
+	}
+
+	/**
+	 * Get the corresponding StructureDefinition (R5)
+	 *
+	 * @param profile
+	 * @return
+	 */
+	public StructureDefinition getStructureDefinitionR5(final String profile) {
+		return this.getContext().fetchResource(StructureDefinition.class, profile);
 	}
 
 	/**

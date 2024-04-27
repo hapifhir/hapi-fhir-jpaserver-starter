@@ -129,7 +129,6 @@ public class MatchboxEngineSupport {
 						// remove resource name
 					String canonicalUrlLike = canonical.substring(0, canonical.lastIndexOf("/")) +"*";
 					NpmPackageVersionResourceEntity resourceEntity  = new TransactionTemplate(myTxManager).execute(tx -> {
-//						Slice<NpmPackageVersionResourceEntity> slice = myPackageVersionResourceDao.findCurrentVersionByLikeCanonicalUrl(PageRequest.of(0, 1), theFhirVersion, canonicalUrlLike);
 						Slice<NpmPackageVersionResourceEntity> slice = myPackageVersionResourceDao.findCurrentVersionByLikeCanonicalUrl(PageRequest.of(0, 1), theFhirVersion, canonicalUrlLike);
 						if (slice.isEmpty()) {
 							return null;

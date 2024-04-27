@@ -21,7 +21,6 @@ package ch.ahdis.fhir.hapi.jpa.validation;
  */
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.jpa.model.entity.NpmPackageVersionResourceEntity;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.api.EncodingEnum;
@@ -170,7 +169,7 @@ public class ValidationProvider {
 		if (versionSeparator != -1) {
 			profile = profile.substring(0, versionSeparator);
 		}
-		if (engine.getStructureDefinition(profile) == null) {
+		if (engine.getStructureDefinitionR4(profile) == null) {
 			return this.getOoForError(
 				"Engine configured, but validation for profile '%s' not found. ".formatted(
 					profile)+engine.toString());
@@ -217,7 +216,7 @@ public class ValidationProvider {
 			issue.setSeverity(OperationOutcome.IssueSeverity.INFORMATION);
 			issue.setCode(OperationOutcome.IssueType.INFORMATIONAL);
 
-			final StructureDefinition structDef = engine.getStructureDefinition(profile);
+			final StructureDefinition structDef = engine.getStructureDefinitionR4(profile);
 			final org.hl7.fhir.r5.model.StructureDefinition structDefR5 = (org.hl7.fhir.r5.model.StructureDefinition) VersionConvertorFactory_40_50.convertResource(structDef);
 
 			final var profileDate = (structDef.getDateElement() != null)

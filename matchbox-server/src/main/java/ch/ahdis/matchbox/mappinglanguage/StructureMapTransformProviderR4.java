@@ -123,7 +123,7 @@ public class StructureMapTransformProviderR4 extends StructureMapResourceProvide
           throw new UnprocessableEntityException("Map not available with canonical url "+source[0]);
       }
       for (StructureMapStructureComponent component  : map.getStructure()) {
-        if (component.getUrl() != null && matchboxEngine.getStructureDefinition(component.getUrl()) == null) {
+        if (component.getUrl() != null && matchboxEngine.getStructureDefinitionR5(component.getUrl()) == null) {
           throw new UnprocessableEntityException("matchbox engine could not be initialized with canonical url required for transform for "+source[0]+ " component "+component.getUrl());
         }
       }

@@ -135,7 +135,7 @@ public class GazelleValidationWs {
 			report.addValidationSubReport(unexpectedError(exception.getMessage()));
 			return updateReportFields(report);
 		}
-		final StructureDefinition structDef = engine.getStructureDefinition(validationRequest.getValidationProfileId());
+		final StructureDefinition structDef = engine.getStructureDefinitionR4(profileCanonical);
 
 		// Response: update the validation method
 		method.setValidationProfileVersion(structDef.getVersion());
@@ -197,7 +197,7 @@ public class GazelleValidationWs {
 			log.error("Error while initializing the validation engine", e);
 			throw new MatchboxEngineCreationException("Error while initializing the validation engine: %s".formatted(e.getMessage()), e);
 		}
-		if (engine == null || engine.getStructureDefinition(profile) == null) {
+		if (engine == null || engine.getStructureDefinitionR4(profile) == null) {
 			throw new MatchboxEngineCreationException(
 				"Validation for profile '%s' not supported by this validator instance".formatted(profile));
 		}
