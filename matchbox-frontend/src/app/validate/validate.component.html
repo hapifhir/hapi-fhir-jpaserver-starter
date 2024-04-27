@@ -19,16 +19,31 @@
       <div class="form-field-group">
         <mat-form-field>
           <mat-label>Validation profile (required)</mat-label>
-          <mat-select [(ngModel)]="selectedProfile"
+          <mat-select [(ngModel)]="selectedProfile" id="select-profile"
                       name="selectProfile" placeholder="Validate against specific Profile">
+            <mat-select-trigger *ngIf="supportedProfiles.get(selectedProfile) as profile">
+              <span class="profile-select-option-line1">
+                <span class="ig">{{ profile.igId }}#{{profile.igVersion }}</span>
+                <span class="title" [title]="profile.title">{{ profile.title }}</span>
+              </span>
+              <span class="profile-select-option-line2">
+                <span class="canonical">{{ profile.canonical }}</span>
+              </span>
+            </mat-select-trigger>
             <mat-option>
               <ngx-mat-select-search placeholderLabel="Find a profile…"
                                      noEntriesFoundLabel="'no matching profile found'"
                                      [(ngModel)]="profileFilter"
                                      (ngModelChange)="updateProfileFilter()"></ngx-mat-select-search>
             </mat-option>
-            <mat-option *ngFor="let profile of filteredProfiles | keyvalue" [value]="profile.key">
-              {{ profile.value }}
+            <mat-option *ngFor="let profile of filteredProfiles" [value]="profile.canonical">
+              <span class="profile-select-option-line1">
+                <span class="ig">{{ profile.igId }}#{{profile.igVersion }}</span>
+                <span class="title" [title]="profile.title">{{ profile.title }}</span>
+              </span>
+              <span class="profile-select-option-line2">
+                <span class="canonical">{{ profile.canonical }}</span>
+              </span>
             </mat-option>
           </mat-select>
           <mat-error *ngIf="profileControl.hasError('required')">Please choose a profile</mat-error>
@@ -41,7 +56,7 @@
           <mat-label>Validation IG</mat-label>
           <mat-select [(ngModel)]="selectedIg" name="selectIg"
                       placeholder="Validate against specific Implementation Guide">
-            <mat-option value=""><em>Automatic selection</em></mat-option>
+            <mat-option [value]="AUTO_IG_SELECTION"><em>Automatic selection</em></mat-option>
             <mat-option *ngFor="let ig of installedIgs" [value]="ig">
               {{ ig }}
             </mat-option>

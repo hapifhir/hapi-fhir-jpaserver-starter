@@ -113,3 +113,50 @@ table {
 .column50 {
   width: 40%;
 }
+
+
+.profile-select-option-line1 {
+  display: inline-block;
+  white-space: nowrap;
+  width: 100%;
+
+  .title {
+    display: block;
+    width: auto;
+    text-overflow: ellipsis;
+    padding-right: 6px;
+    overflow: hidden;
+  }
+  .ig {
+    display: block;
+    float: right;
+    width: max-content;
+    color: #7bc7a5;
+  }
+}
+.profile-select-option-line2 {
+  clear: right;
+  display: inline-block;
+  white-space: nowrap;
+  width: 100%;
+  font-size: .8rem;
+  line-height: .8rem;
+
+  .canonical {
+    font-family: monospace, serif;
+    color: #778d9d;
+    letter-spacing: 0px;
+  }
+}
+
+mat-option:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+mat-option {
+  padding: 4px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  line-height: normal;
+}
+::ng-deep .mdc-list-item__primary-text {
+  width: 100%;
+}

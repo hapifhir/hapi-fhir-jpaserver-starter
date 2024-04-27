@@ -10,6 +10,7 @@ import { ValidationParameter } from './validation-parameter';
 import { ITarEntry } from './tar-entry';
 import {Issue, IssueSeverity, OperationResult} from '../util/operation-result';
 import {FormControl, Validators} from "@angular/forms";
+import {StructureDefinition} from "./structure-definition";
 
 const INDENT_SPACES = 4;
 
@@ -19,6 +20,7 @@ const INDENT_SPACES = 4;
   styleUrls: ['./validate.component.scss'],
 })
 export class ValidateComponent implements AfterViewInit {
+  readonly AUTO_IG_SELECTION = 'AUTOMATIC';
 
   // Validation history
   validationEntries: ValidationEntry[] = new Array<ValidationEntry>();
@@ -28,13 +30,13 @@ export class ValidateComponent implements AfterViewInit {
   client: FhirClient;
   capabilityStatement: fhir.r4.CapabilityStatement | null = null;
   installedIgs: Set<string> = new Set<string>();
-  supportedProfiles: Map<string, string> = new Map<string, string>();
+  supportedProfiles: Map<string, StructureDefinition> = new Map<string, StructureDefinition>();
   validatorSettings: ValidationParameter[] = new Array<ValidationParameter>();
 
   // Form
-  filteredProfiles: Map<string, string> = new Map<string, string>();
+  filteredProfiles: Set<StructureDefinition> = new Set<StructureDefinition>();
   profileFilter: string = '';
-  selectedIg: string = null;
+  selectedIg: string = this.AUTO_IG_SELECTION;
   selectedProfile: string;
   profileControl: FormControl = new FormControl<string>(null, Validators.required);
 
@@ -63,18 +65,20 @@ export class ValidateComponent implements AfterViewInit {
             od.parameter?.forEach((parameter: fhir.r4.OperationDefinitionParameter) => {
               if (parameter.name == 'profile') {
                 parameter._targetProfile.forEach(item => {
-                  let sdCanonical = this.getExtensionStringValue(item, 'sd-canonical');
-                  const sdTitle = this.getExtensionStringValue(item, 'sd-title');
-                  const igId = this.getExtensionStringValue(item, 'ig-id');
-                  const igVersion = this.getExtensionStringValue(item, 'ig-version');
-                  let current = '';
+                  const sd = new StructureDefinition();
+                  sd.canonical = this.getExtensionStringValue(item, 'sd-canonical');
+                  sd.title = this.getExtensionStringValue(item, 'sd-title');
+                  sd.igId = this.getExtensionStringValue(item, 'ig-id');
+                  sd.igVersion = this.getExtensionStringValue(item, 'ig-version');
+                  sd.isCurrent = false;
+
                   if (this.getExtensionBoolValue(item, 'ig-current')) {
-                    current = ' (last)';
+                    sd.isCurrent = true;
                   } else {
-                    sdCanonical += `|${igVersion}`;
+                    sd.canonical += `|${sd.igVersion}`;
                   }
 
-                  this.supportedProfiles.set(sdCanonical, `${sdCanonical} - ${sdTitle} — ${igId}#${igVersion}${current}`);
+                  this.supportedProfiles.set(sd.canonical, sd);
                 });
                 this.updateProfileFilter();
               }
@@ -134,7 +138,7 @@ export class ValidateComponent implements AfterViewInit {
       let entry: ValidationEntry = null;
       try {
         this.selectedProfile = null;
-        this.selectedIg = null;
+        this.selectedIg = this.AUTO_IG_SELECTION;
         const reader = new FileReader();
         reader.readAsText(droppedBlob.blob);
         reader.onload = () => {
@@ -144,7 +148,20 @@ export class ValidateComponent implements AfterViewInit {
           this.currentResource = new UploadedFile(droppedBlob.name, droppedBlob.contentType, <string>reader.result, entry.resourceType);
           if (entry.selectedProfile) {
             // Auto-select the right profile in the form select
-            this.selectedProfile = entry.selectedProfile;
+            if (this.supportedProfiles.has(entry.selectedProfile)) {
+              // The canonical exists as-is in the list of supported profiles
+              this.selectedProfile = entry.selectedProfile;
+            } else {
+              // The canonical doesn't exist as-is in the list of supported profiles, but it may be present with its
+              // version as suffix
+              const versionedCanonical = `${entry.selectedProfile}|`;
+              for (let [key, value] of this.supportedProfiles) {
+                if (key.startsWith(versionedCanonical)) {
+                  this.selectedProfile = key;
+                  break;
+                }
+              }
+            }
           }
           this.validationEntries.unshift(entry);
           this.show(entry);
@@ -163,7 +180,7 @@ export class ValidateComponent implements AfterViewInit {
   onValidateIg() {
     let igid: string = '';
 
-    if (this.selectedIg != null) {
+    if (this.selectedIg != this.AUTO_IG_SELECTION) {
       if (this.selectedIg.endsWith(' (last)')) {
         igid = this.selectedIg.substring(0, this.selectedIg.length - 7);
       } else {
@@ -187,7 +204,7 @@ export class ValidateComponent implements AfterViewInit {
 
   addPackage(file) {
     this.selectedProfile = null;
-    this.selectedIg = null;
+    this.selectedIg = this.AUTO_IG_SELECTION;
     const reader = new FileReader();
     reader.readAsArrayBuffer(file);
     reader.onload = () => {
@@ -242,7 +259,7 @@ export class ValidateComponent implements AfterViewInit {
 
   onClear() {
     this.selectedProfile = null;
-    this.selectedIg = null;
+    this.selectedIg = this.AUTO_IG_SELECTION;
     this.show(undefined);
     this.validationEntries.splice(0, this.validationEntries.length);
   }
@@ -255,7 +272,7 @@ export class ValidateComponent implements AfterViewInit {
       entry.selectedProfile = this.selectedProfile;
     }
 
-    if (this.selectedIg != null) {
+    if (this.selectedIg != this.AUTO_IG_SELECTION) {
       if (this.selectedIg.endsWith(' (last)')) {
         entry.ig = this.selectedIg.substring(0, this.selectedIg.length - 7);
       } else {
@@ -340,7 +357,9 @@ export class ValidateComponent implements AfterViewInit {
     let entry = new ValidationEntry(this.currentResource.filename, this.currentResource.content, this.currentResource.contentType, [
       this.selectedProfile,
     ]);
-    entry.ig = this.selectedIg;
+    if (this.selectedIg != this.AUTO_IG_SELECTION) {
+      entry.ig = this.selectedIg;
+    }
     this.validationEntries.unshift(entry);
     this.show(entry);
     this.validate(entry);
@@ -391,9 +410,16 @@ export class ValidateComponent implements AfterViewInit {
     }
   }
 
+  /**
+   * Updates the list of profiles that are shown in the profile select dropdown by selecting those who contain the
+   * search term either in their title or their canonical.
+   */
   updateProfileFilter() {
-    this.filteredProfiles = new Map<string, string>(
-      [...this.supportedProfiles].filter(([_, title]) => title.includes(this.profileFilter))
+    const searchTerm = this.profileFilter.toLowerCase();
+    this.filteredProfiles = new Set<StructureDefinition>(
+      [...this.supportedProfiles.values()].filter((sd) => {
+        return sd.title.toLocaleLowerCase().includes(searchTerm) || sd.canonical.toLocaleLowerCase().includes(searchTerm);
+      }).values()
     );
   }
 
