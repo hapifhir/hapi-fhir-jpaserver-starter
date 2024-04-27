@@ -184,7 +184,7 @@ public class ResourceParameter implements IParameter {
 		if (version != null && !ctx.getVersion().getVersion().getFhirVersionString().equals(version.toCode())) {
 			ctx = FhirContext.forCached(FhirVersionEnum.forVersionString(version.toCode()));
 			theResourceType = null;
-			ourLog.info("matchbox: replacing context with version " + version.toCode() + " for request " + theRequest.getRequestPath());
+			ourLog.debug("matchbox: replacing context with version " + version.toCode() + " for request " + theRequest.getRequestPath());
 		}
 
 		final Charset charset = determineRequestCharset(theRequest);

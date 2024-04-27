@@ -48,13 +48,14 @@ public class GazelleValidationWs {
 
 	private final StructureDefinitionResourceProvider structureDefinitionProvider;
 
-	private final CliContext cliContext;
+	// The base CLI context, with the default parameters
+	private final CliContext baseCliContext;
 
 	public GazelleValidationWs(final MatchboxEngineSupport matchboxEngineSupport,
-										final CliContext cliContext,
+										final CliContext baseCliContext,
 										final StructureDefinitionResourceProvider structureDefinitionProvider) {
 		this.matchboxEngineSupport = Objects.requireNonNull(matchboxEngineSupport);
-		this.cliContext = Objects.requireNonNull(cliContext);
+		this.baseCliContext = Objects.requireNonNull(baseCliContext);
 		this.structureDefinitionProvider = Objects.requireNonNull(structureDefinitionProvider);
 	}
 
@@ -77,7 +78,6 @@ public class GazelleValidationWs {
 
 		final var binding = new RestBinding();
 		binding.setServiceUrl(request.getRequestURL().toString().replace(METADATA_PATH, VALIDATE_PATH));
-		//binding.setServiceUrl("https://3mb7wd5k-8080.euw.devtunnels.ms/matchboxv3/gazelle/validation/validate");
 		binding.setType("restBinding");
 
 		theInterface.setValidationProfiles(this.getProfiles());
@@ -114,23 +114,37 @@ public class GazelleValidationWs {
 		final var sw = new StopWatch();
 		sw.startTask("Total");
 
+		// Use a dedicated instance of the CLI context for this request, to avoid reusing wrong information (as the IGs)
+		final CliContext cliContext = new CliContext(this.baseCliContext);
+
 		final var report = new ValidationReport();
 		report.setValidationItems(new ArrayList<>(validationRequest.getValidationItems().size()));
 		report.setReports(new ArrayList<>(validationRequest.getValidationItems().size()));
 		report.setDisclaimer("Matchbox disclaims");
 
+		String profileCanonical = validationRequest.getValidationProfileId();
+
 		// Response: create the validation method now, with the info we already have
 		final var method = new ValidationMethod();
 		method.setValidationProfileID(validationRequest.getValidationProfileId());
-		method.setValidationProfileVersion("unknown yet");
 		method.setValidationServiceName("Matchbox");
 		method.setValidationServiceVersion(VersionUtil.getVersion());
 		report.setValidationMethod(method);
 
+		// Split the profile ID to get the specified version, if any
+		final int versionSeparator = profileCanonical.lastIndexOf('|');
+		if (versionSeparator != -1) {
+			final String version = profileCanonical.substring(versionSeparator + 1);
+			profileCanonical = profileCanonical.substring(0, versionSeparator);
+			method.setValidationProfileVersion(version);
+		} else {
+			method.setValidationProfileVersion("not determined yet");
+		}
+
 		// Get the Matchbox engine for the requested profile
 		final MatchboxEngine engine;
 		try {
-			engine = this.getEngine(validationRequest.getValidationProfileId());
+			engine = this.getEngine(validationRequest.getValidationProfileId(), profileCanonical, cliContext);
 		} catch (final Exception exception) {
 			report.addValidationSubReport(unexpectedError(exception.getMessage()));
 			return updateReportFields(report);
@@ -141,7 +155,7 @@ public class GazelleValidationWs {
 		method.setValidationProfileVersion(structDef.getVersion());
 
 		// Response: add validation info
-		report.setAdditionalMetadata(new ArrayList<>(this.cliContext.getValidateEngineParameters().size() + engine.getContext().getLoadedPackages().size() + 6));
+		report.setAdditionalMetadata(new ArrayList<>(cliContext.getValidateEngineParameters().size() + engine.getContext().getLoadedPackages().size() + 6));
 		final var sessionId = this.matchboxEngineSupport.getSessionId(engine);
 		if (sessionId != null) {
 			report.addAdditionalMetadata(new Metadata().setName("sessionId").setValue(sessionId));
@@ -155,12 +169,12 @@ public class GazelleValidationWs {
 		report.addAdditionalMetadata(new Metadata().setName("profileDate").setValue(structDef.getDateElement().getValueAsString()));
 
 		// Response: add the validation parameters as additional metadata
-		for (final Field field : this.cliContext.getValidateEngineParameters()) {
+		for (final Field field : cliContext.getValidateEngineParameters()) {
 			field.setAccessible(true);
 			final var metadata = new Metadata();
 			metadata.setName(field.getName());
 			try {
-				metadata.setValue(String.valueOf(field.get(this.cliContext)));
+				metadata.setValue(String.valueOf(field.get(cliContext)));
 			} catch (final IllegalAccessException exception) {
 				continue;
 			}
@@ -173,7 +187,7 @@ public class GazelleValidationWs {
 		// Perform the validation of all items with the given engine
 		for (final var item : validationRequest.getValidationItems()) {
 			try {
-				report.addValidationSubReport(this.validateItem(engine, item, validationRequest.getValidationProfileId()));
+				report.addValidationSubReport(this.validateItem(engine, item, profileCanonical));
 			} catch (final Exception exception) {
 				report.addValidationSubReport(unexpectedError(exception.getMessage()));
 			}
@@ -189,17 +203,19 @@ public class GazelleValidationWs {
 	/**
 	 * Retrieves the Matchbox engine for the given profile.
 	 */
-	MatchboxEngine getEngine(final String profile) {
+	MatchboxEngine getEngine(final String canonicalWithVersion,
+									 final String canonical,
+									 final CliContext cliContext) {
 		final MatchboxEngine engine;
 		try {
-			engine = this.matchboxEngineSupport.getMatchboxEngine(profile, cliContext, true, false);
+			engine = this.matchboxEngineSupport.getMatchboxEngine(canonicalWithVersion, cliContext, true, false);
 		} catch (final Exception e) {
 			log.error("Error while initializing the validation engine", e);
 			throw new MatchboxEngineCreationException("Error while initializing the validation engine: %s".formatted(e.getMessage()), e);
 		}
-		if (engine == null || engine.getStructureDefinitionR4(profile) == null) {
+		if (engine == null || engine.getStructureDefinitionR4(canonical) == null) {
 			throw new MatchboxEngineCreationException(
-				"Validation for profile '%s' not supported by this validator instance".formatted(profile));
+				"Validation for profile '%s' not supported by this validator instance".formatted(canonicalWithVersion));
 		}
 		if (!this.matchboxEngineSupport.isInitialized()) {
 			throw new RuntimeException("Validation engine not initialized, please try again");
