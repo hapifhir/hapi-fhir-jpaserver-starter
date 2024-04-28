@@ -254,6 +254,7 @@ public class MatchboxEngine extends ValidationEngine {
 			try { engine = new MatchboxEngine(this.fromNothing()); }
 			catch (final IOException e) { throw new MatchboxEngineCreationException(e); }
 			engine.setVersion(this.fhirVersion.toCode());
+			engine.getContext().setAllowLoadingDuplicates(false);
 			if (this.txServer == null) {
 				engine.getContext().setCanRunWithoutTerminology(true);
 				engine.getContext().setNoTerminologyServer(true);

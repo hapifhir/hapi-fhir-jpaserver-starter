@@ -179,10 +179,12 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 				if (theUrl != null) {
 					String url = theUrl.getValuesAsQueryTokens().get(0).getValuesAsQueryTokens().get(0).getValue();
 					R5 r = matchboxEngine.getContext().fetchResource(classR5,url);
-					resources.add(r);
+					if (r != null)
+						resources.add(r);
 				} else {
 					resources.addAll(matchboxEngine.getContext().fetchResourcesByType(classR5));
 				}
+
 				switch (getFhirVersion(this.cliContext.getFhirVersion())) {
 					case "4.0.1": return new SimpleBundleProvider(
 						resources.stream().map(VersionConvertorFactory_40_50::convertResource).collect(Collectors.toList()));

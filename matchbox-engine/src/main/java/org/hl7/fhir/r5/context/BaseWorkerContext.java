@@ -56,6 +56,7 @@ import org.fhir.ucum.UcumService;
 import org.hl7.fhir.exceptions.DefinitionException;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.TerminologyServiceException;
+import org.hl7.fhir.r5.comparison.VersionComparisonAnnotation;
 import org.hl7.fhir.r5.conformance.profile.ProfileUtilities;
 import org.hl7.fhir.r5.context.CanonicalResourceManager.CanonicalResourceProxy;
 import org.hl7.fhir.r5.context.ILoggingService.LogCategory;
@@ -383,9 +384,16 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
 				if (Utilities.existsInList(url, "http://hl7.org/fhir/SearchParameter/example")) {
 					return;
 				}
+				// matchbox patch for duplicate resources, see https://github.com/ahdis/matchbox/issues/227
+				// org.hl7.fhir.r5.conformance.R5ExtensionsLoader.loadR5SpecialTypes(R5ExtensionsLoader.java:141)
 				CanonicalResource ex = fetchResourceWithException(r.getType(), url);
-				throw new DefinitionException(formatMessage(I18nConstants.DUPLICATE_RESOURCE_, url, r.getVersion(), ex.getVersion(),
-																		  ex.fhirType()));
+				if (laterVersion(r.getVersion(), ex.getVersion())) {
+					logger.logMessage("Note replacing old version: " + formatMessage(I18nConstants.DUPLICATE_RESOURCE_, url, r.getVersion(), ex.getVersion(), ex.fhirType()));
+					dropResource(ex);
+				} else {
+					logger.logMessage("Note keeping newer version: " + formatMessage(I18nConstants.DUPLICATE_RESOURCE_, url, r.getVersion(), ex.getVersion(), ex.fhirType()));
+					return;
+				}
 			}
 			switch(r.getType()) {
 				case "StructureDefinition":
@@ -508,9 +516,16 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
 					if (Utilities.existsInList(url, "http://hl7.org/fhir/SearchParameter/example")) {
 						return;
 					}
-					CanonicalResource ex = (CanonicalResource) fetchResourceWithException(r.getClass(), url);
-					throw new DefinitionException(formatMessage(I18nConstants.DUPLICATE_RESOURCE_, url, ((CanonicalResource) r).getVersion(), ex.getVersion(),
-																			  ex.fhirType()));
+					// matchbox patch for duplicate resources, see https://github.com/ahdis/matchbox/issues/227
+					// org.hl7.fhir.r5.conformance.R5ExtensionsLoader.loadR5SpecialTypes(R5ExtensionsLoader.java:141)
+					CanonicalResource ex = fetchResourceWithException(m.fhirType(), url);
+					if (laterVersion(m.getVersion(), ex.getVersion())) {
+						logger.logMessage("Note replacing old version: " + formatMessage(I18nConstants.DUPLICATE_RESOURCE_, url, m.getVersion(), ex.getVersion(), ex.fhirType()));
+						dropResource(ex);
+					} else {
+						logger.logMessage("Note keeping newer version: " + formatMessage(I18nConstants.DUPLICATE_RESOURCE_, url, m.getVersion(), ex.getVersion(), ex.fhirType()));
+						return;
+					}
 				}
 				if (r instanceof StructureDefinition) {
 					StructureDefinition sd = (StructureDefinition) m;

@@ -34,9 +34,11 @@ import ch.ahdis.matchbox.util.MatchboxServerUtils;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_30_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
+import org.hl7.fhir.r4.model.ConceptMap.ConceptMapGroupComponent;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBaseBinary;
 import org.hl7.fhir.r5.context.SimpleWorkerContext;
+import org.hl7.fhir.r5.model.CanonicalResource;
 import org.hl7.fhir.r5.model.ImplementationGuide;
 import org.hl7.fhir.r5.model.Resource;
 import org.hl7.fhir.utilities.ByteProvider;
@@ -104,6 +106,42 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 		return myVersionToContext.computeIfAbsent(theFhirVersion, v -> new FhirContext(v));
 	}
 
+	private void cleanModifierExtensions(org.hl7.fhir.r5.model.ConceptMap r) {
+		for ( org.hl7.fhir.r5.model.ConceptMap.ConceptMapGroupComponent  group :r.getGroup()) {
+			group.getElement().forEach(element -> {
+				element.getTarget().forEach(target -> {
+					target.getModifierExtension().clear();
+				});
+			});
+		}
+	}
+
+	private void cleanModifierExtensions(org.hl7.fhir.r5.model.StructureMap r) {
+		r.getContained().forEach(c -> {
+			if (c instanceof org.hl7.fhir.r5.model.ConceptMap) {
+				cleanModifierExtensions((org.hl7.fhir.r5.model.ConceptMap) c);
+			}
+		});
+	}
+
+	private void cleanModifierExtensions(org.hl7.fhir.r4.model.ConceptMap r) {
+		for ( ConceptMapGroupComponent group :r.getGroup()) {
+			group.getElement().forEach(element -> {
+				element.getTarget().forEach(target -> {
+					target.getModifierExtension().clear();
+				});
+			});
+		}
+	}
+
+	private void cleanModifierExtensions(org.hl7.fhir.r4.model.StructureMap r) {
+		r.getContained().forEach(c -> {
+			if (c instanceof org.hl7.fhir.r4.model.ConceptMap) {
+				cleanModifierExtensions((org.hl7.fhir.r4.model.ConceptMap) c);
+			}
+		});
+	}
+
 	private org.hl7.fhir.r5.model.Resource loadPackageEntity(NpmPackageVersionResourceEntity contents) {
 		try {
 			final var binary = MatchboxServerUtils.getBinaryFromId(contents.getResourceBinary().getId(), myDaoRegistry);
@@ -115,8 +153,12 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 				return VersionConvertorFactory_30_50
 						.convertResource(new org.hl7.fhir.dstu3.formats.JsonParser().parse(resourceContents));
 			case R4:
+				org.hl7.fhir.r4.model.Resource r = new org.hl7.fhir.r4.formats.JsonParser().parse(resourceContents);
+				if (r instanceof org.hl7.fhir.r4.model.StructureMap ) {
+					cleanModifierExtensions((org.hl7.fhir.r4.model.StructureMap) r);
+				}
 				return VersionConvertorFactory_40_50
-						.convertResource(new org.hl7.fhir.r4.formats.JsonParser().parse(resourceContents));
+						.convertResource(r);
 			case R4B:
 				return VersionConvertorFactory_43_50
 						.convertResource(new org.hl7.fhir.r4b.formats.JsonParser().parse(resourceContents));
@@ -224,7 +266,24 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 						Resource r = null;
 						try {
 							r = loadResourceByVersion(npm.fhirVersion(), TextFile.streamToBytes(pi.load("package", s)), s);
-							this.getContext().cacheResource(r);
+							// https://github.com/ahdis/matchbox/issues/227
+							if (r instanceof org.hl7.fhir.r5.model.StructureMap ) {
+								cleanModifierExtensions((org.hl7.fhir.r5.model.StructureMap) r);
+							}			
+							if (r instanceof org.hl7.fhir.r5.model.ConceptMap ) {
+								cleanModifierExtensions((org.hl7.fhir.r5.model.ConceptMap) r);
+							}			
+							if (r instanceof CanonicalResource) {
+								CanonicalResource m = (CanonicalResource) r;
+								String url = m.getUrl();
+								if (this.getContext().hasResource(r.getClass(), url)) {
+									log.error("Duplicate canonical resource: " + r.getClass().getName() + " from package " +pi.name() + "#" + pi.version() + " with url " + url);
+								} else {
+									this.getContext().cacheResource(r);
+								}
+							} else {
+								log.error("Resource is not a CanonicalResource: " + r.getClass().getName() + " from package " +pi.name() + "#" + pi.version());
+							}
 						} catch (FHIRException e) {
 							log.error(s, e);
 						} catch (IOException e) {

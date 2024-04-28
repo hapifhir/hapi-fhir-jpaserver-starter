@@ -1,7 +1,8 @@
-2024/04/xx Release 3.8.3
+2024/04/29 Release 3.8.3
 
 - profile validation with different ig version issues, GUI & EVS Client [#225](https://github.com/ahdis/matchbox/issues/225)
 - improved the profile selection in the validation GUI
+- FML: Side effect exception when updating a StructureMap [#227](https://github.com/ahdis/matchbox/issues/227)
 
 2024/04/22 Release 3.8.2
 
