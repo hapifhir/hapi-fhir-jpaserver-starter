@@ -21,6 +21,7 @@ public class AuthenticationInterceptor {
 		RequestDetails theRequestDetails, HttpServletRequest theRequest, HttpServletResponse theResponse)
 		throws AuthenticationException {
 
+
 		String authHeader = theRequest.getHeader("Authorization");
 
 		// The format of the header must be:
