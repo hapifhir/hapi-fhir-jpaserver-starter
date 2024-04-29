@@ -3,6 +3,7 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.ClientIdStrategyEnum;
+import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.IdStrategyEnum;
 import ca.uhn.fhir.jpa.model.entity.NormalizedQuantitySearchLevel;
 import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.rest.api.EncodingEnum;
@@ -37,6 +38,7 @@ public class AppProperties {
   private Boolean allow_override_default_search_params = true;
   private Boolean auto_create_placeholder_reference_targets = false;
   private final Set<String> auto_version_reference_at_paths = new HashSet<>();
+  private Boolean language_search_parameter_enabled = false;
   private Boolean dao_scheduling_enabled = true;
   private Boolean delete_expunge_enabled = false;
   private Boolean enable_index_missing_fields = false;
@@ -64,6 +66,7 @@ public class AppProperties {
   private EncodingEnum default_encoding = EncodingEnum.JSON;
   private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
   private ClientIdStrategyEnum client_id_strategy = ClientIdStrategyEnum.ALPHANUMERIC;
+  private IdStrategyEnum server_id_strategy = null;
   private List<String> supported_resource_types = new ArrayList<>();
   private List<Bundle.BundleType> allowed_bundle_types = null;
   private Boolean narrative_enabled = true;
@@ -96,12 +99,16 @@ public class AppProperties {
 
   private final List<String> custom_interceptor_classes = new ArrayList<>();
 
+	private final List<String> custom_provider_classes = new ArrayList<>();
 
 
 	public List<String> getCustomInterceptorClasses() {
     return custom_interceptor_classes;
   }
 
+	public List<String> getCustomProviderClasses() {
+		return custom_provider_classes;
+	}
 
 
 	public Boolean getOpenapi_enabled() {
@@ -258,7 +265,15 @@ public Cors getCors() {
     this.client_id_strategy = client_id_strategy;
   }
 
-	public boolean getAdvanced_lucene_indexing() {
+  public IdStrategyEnum getServer_id_strategy() {
+    return server_id_strategy;
+  }
+
+  public void setServer_id_strategy(IdStrategyEnum server_id_strategy) {
+    this.server_id_strategy = server_id_strategy;
+  }
+
+  public boolean getAdvanced_lucene_indexing() {
 		return this.advanced_lucene_indexing;
 	}
 
@@ -607,6 +622,14 @@ public Cors getCors() {
 
 	public void setApp_content_path(String app_content_path) {
 		this.app_content_path = app_content_path;
+	}
+
+	public Boolean getLanguage_search_parameter_enabled() {
+		return language_search_parameter_enabled;
+	}
+
+	public void setLanguage_search_parameter_enabled(Boolean language_search_parameter_enabled) {
+		this.language_search_parameter_enabled = language_search_parameter_enabled;
 	}
 
 	public static class Cors {

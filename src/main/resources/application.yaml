@@ -1,3 +1,7 @@
+#Uncomment the following lines to enable the fhir endpoint to be available at /example/path/fhir instead of /fhir
+#server:
+#  servlet:
+#    context-path: /example/path
 #Adds the option to go to eg. http://localhost:8080/actuator/health for seeing the running configuration
 #see https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
 management:
@@ -11,8 +15,8 @@ spring:
     #allow-bean-definition-overriding: true
   flyway:
     enabled: false
-    check-location: false
     baselineOnMigrate: true
+    fail-on-missing-locations: false
   datasource:
     #url: 'jdbc:h2:file:./target/database/h2'
     url: jdbc:h2:mem:test_mem
@@ -127,6 +131,7 @@ hapi:
     advanced_lucene_indexing: false
     bulk_export_enabled: false
     bulk_import_enabled: false
+    #    language_search_parameter_enabled: true
     #    enforce_referential_integrity_on_delete: false
     # This is an experimental feature, and does not fully support _total and other FHIR features.
     #    enforce_referential_integrity_on_delete: false
@@ -134,6 +139,7 @@ hapi:
     #    etag_support_enabled: true
     #    expunge_enabled: true
     #    client_id_strategy: ALPHANUMERIC
+    #    server_id_strategy: SEQUENTIAL_NUMERIC
     #    fhirpath_interceptor_enabled: false
     #    filter_search_enabled: true
     #    graphql_enabled: true
@@ -173,6 +179,11 @@ hapi:
     # or will be instantiated via reflection using an no-arg contructor; then registered with the server  
     #custom-interceptor-classes:  
 
+    # comma-separated list of fully qualified provider classes. 
+    # classes listed here will be fetched from the Spring context when combined with 'custom-bean-packages', 
+    # or will be instantiated via reflection using an no-arg contructor; then registered with the server  
+    #custom-provider-classes:  
+    
     # Threadpool size for BATCH'ed GETs in a bundle.
     #    bundle_batch_pool_size: 10
     #    bundle_batch_pool_max_size: 50

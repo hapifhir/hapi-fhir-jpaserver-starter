@@ -62,6 +62,7 @@ import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
+import jakarta.persistence.EntityManagerFactory;
 import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +77,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.*;
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory.ENABLE_REPOSITORY_VALIDATING_INTERCEPTOR;
@@ -133,11 +133,11 @@ public class StarterJpaConfig {
 	@Primary
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-			DataSource myDataSource,
-			ConfigurableListableBeanFactory myConfigurableListableBeanFactory,
-			FhirContext theFhirContext) {
+		DataSource myDataSource,
+		ConfigurableListableBeanFactory myConfigurableListableBeanFactory,
+		FhirContext theFhirContext, JpaStorageSettings theStorageSettings) {
 		LocalContainerEntityManagerFactoryBean retVal =
-				HapiEntityManagerFactoryUtil.newEntityManagerFactory(myConfigurableListableBeanFactory, theFhirContext);
+				HapiEntityManagerFactoryUtil.newEntityManagerFactory(myConfigurableListableBeanFactory, theFhirContext, theStorageSettings);
 		retVal.setPersistenceUnitName("HAPI_PU");
 
 		try {
@@ -455,6 +455,9 @@ public class StarterJpaConfig {
 			fhirServer.registerProvider(theIpsOperationProvider.get());
 		}
 
+		// register custom providers
+		registerCustomProviders(fhirServer, appContext, appProperties.getCustomProviderClasses());
+
 		return fhirServer;
 	}
 
@@ -494,6 +497,45 @@ public class StarterJpaConfig {
 				}
 			}
 			fhirServer.registerInterceptor(interceptor);
+		}
+	}
+
+	/**
+	 * check the properties for custom provider classes and registers them.
+	 */
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	private void registerCustomProviders(
+		RestfulServer fhirServer, ApplicationContext theAppContext, List<String> customProviderClasses) {
+
+		if (customProviderClasses == null) {
+			return;
+		}
+
+		for (String className : customProviderClasses) {
+			Class clazz;
+			try {
+				clazz = Class.forName(className);
+			} catch (ClassNotFoundException e) {
+				throw new ConfigurationException("Provider class was not found on classpath: " + className, e);
+			}
+
+			// first check if the class a Bean in the app context
+			Object provider = null;
+			try {
+				provider = theAppContext.getBean(clazz);
+			} catch (NoSuchBeanDefinitionException ex) {
+				// no op - if it's not a bean we'll try to create it
+			}
+
+			// if not a bean, instantiate the interceptor via reflection
+			if (provider == null) {
+				try {
+					provider = clazz.getConstructor().newInstance();
+				} catch (Exception e) {
+					throw new ConfigurationException("Unable to instantiate provider class : " + className, e);
+				}
+			}
+			fhirServer.registerProvider(provider);
 		}
 	}
 
