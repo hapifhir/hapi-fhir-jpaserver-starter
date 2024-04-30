@@ -11,7 +11,7 @@ see [matchbox-engine](matchbox-engine.md) for using the validation functionality
 
 ## matchbox
 
-### API
+### FHIR API
 
 For the $validate operation on the server see the OperationDefintion for validation support: [[server]/$validate](https://test.ahdis.ch/matchboxv3/fhir/OperationDefinition/-s-validate) for checking FHIR resources conforming to the loaded implementation guides.
 
@@ -96,6 +96,37 @@ matchbox:
         ch.fhir.ig.ch-elm#1.0.0:
           - "regex:Binding for path (.+).ofType\(Coding\) has no source, so can't be checked"
 ```
+
+### Gazelle EVS API
+
+To integrate Matchbox in the [IHE Gazelle Testing Plateform](https://www.ihe-europe.net/testing-IHE/gazelle), the 
+EVS API has also been implemented. See the 
+[validation-service-api](https://gitlab.inria.fr/gazelle/library/validation-service-api) project for the existing 
+documentation.
+
+The list of available profiles is available at
+[[server]/gazelle/validation/profiles](https://test.ahdis.ch/matchboxv3/gazelle/validation/profiles), and the 
+validation request is sent to `POST [server]/gazelle/validation/validate`.
+
+To configure a Matchbox instance in the EVSClient, the following actions shall be done:
+
+1. In `Administration → Validations services`, create a new validation service with the following parameters:
+     - Validator Type: _DEFAULT_
+     - Name: as you want
+     - Stylesheet report location: any value will do
+     - Target endpoint: _[server]/gazelle_
+     - Support compression: _YES_
+     - Is available: _YES_
+     - [Example screenshot](assets/evsclient_validation_service.png)
+2. In `Administration → Referenced standards`, create a new standard:
+     - Display name: as you want
+     - Validator Type: _DEFAULT_
+     - Validation filter: optional, can be used to filter the profiles by their IG identifier. E.g. _ch.fhir.ig.ch-core_
+     - In _Available validation services_, add the previously created validation service by clicking on the "plus" icon.
+     - [Example screenshot](assets/evsclient_referenced_standard.png)
+3. In `Administration → Menu Configuration`, add your new standard to an existing menu.
+     - [Example screenshot](assets/evsclient_menu.png)
+4. You can now validate your resource, the new standard appears in the menu.
 
 ## Terminology server
 
