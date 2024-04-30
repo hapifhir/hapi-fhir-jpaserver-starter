@@ -7,7 +7,7 @@ Validation is based on the official [HL7 Java reference validator](https://confl
 
 ## matchbox engine
 
-see [matchbox-engine](/matchbox-engine) for using the validation functionality as a library.
+see [matchbox-engine](matchbox-engine.md) for using the validation functionality as a library.
 
 ## matchbox
 

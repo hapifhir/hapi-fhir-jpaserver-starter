@@ -9,9 +9,9 @@ The software is licensed under the business-friendly [Apache Software License 2.
 
 ## Changelog
 
-[Changelog](changelog)
+[Changelog](changelog.md)
 
 ## Main Features
 
-- [Validation of FHIR implementations](features/#validation-of-fhir-implementations)
-- [Mapping health data to and from FHIR using the FHIR mapping language](features/#mapping-health-data-to-and-from-fhir-using-the-fhir-mapping-language)
+- [Validation of FHIR implementations](features.md/#validation-of-fhir-implementations)
+- [Mapping health data to and from FHIR using the FHIR mapping language](features.md/#mapping-health-data-to-and-from-fhir-using-the-fhir-mapping-language)
