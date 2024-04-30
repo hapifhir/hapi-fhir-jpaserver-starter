@@ -99,7 +99,7 @@ matchbox:
 
 ### Gazelle EVS API
 
-To integrate Matchbox in the [IHE Gazelle Testing Plateform](https://www.ihe-europe.net/testing-IHE/gazelle), the 
+To integrate Matchbox in the [IHE Gazelle Testing Platform](https://www.ihe-europe.net/testing-IHE/gazelle), the 
 EVS API has also been implemented. See the 
 [validation-service-api](https://gitlab.inria.fr/gazelle/library/validation-service-api) project for the existing 
 documentation.
