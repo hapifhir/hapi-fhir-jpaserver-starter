@@ -47,7 +47,7 @@ public class NotificationDataSource {
 				.addAnnotatedClass(OrgHierarchy.class).addAnnotatedClass(OrgIndicatorAverageResult.class)
 				.addAnnotatedClass(CacheEntity.class).addAnnotatedClass(MapCacheEntity.class).addAnnotatedClass(ApiAsyncTaskEntity.class)
 				.addAnnotatedClass(EncounterIdEntity.class).addAnnotatedClass(PatientIdentifierEntity.class)
-				.addAnnotatedClass(LastSyncEntity.class);
+				.addAnnotatedClass(LastSyncEntity.class).addAnnotatedClass(SMSInfo.class);
 		sf = conf.buildSessionFactory();
 	}
 
@@ -354,6 +354,16 @@ public class NotificationDataSource {
 		return result.get(0);
 	}
 
+	public List<SMSInfo> fetchSMSRecordsByResourceId(String resourceId){
+		Session session = sf.openSession();
+		Query query = session
+			.createQuery("FROM SMSInfo WHERE resourceId=:param1");
+		query.setParameter("param1", resourceId);
+		List<SMSInfo> resultList = query.getResultList();
+		session.close();
+		return resultList;
+	}
+
 	public List<ComGenerator> fetchRecordsByScheduledDateAndStatus(Date date, MessageStatus status) {
 		Session session = sf.openSession();
 		Query query = session
@@ -365,7 +375,7 @@ public class NotificationDataSource {
 		return resultList;
 	}
 
-	public List<ComGenerator> fetchRecordsByResourceId(String resourceId, MessageStatus status) {
+	public List<ComGenerator> fetchCOMGenRecordsById(String resourceId, MessageStatus status) {
 		Session session = sf.openSession();
 		Query query = session
 			.createQuery("FROM ComGenerator WHERE communicationStatus=:param1 AND resource_id=:param2");

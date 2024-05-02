@@ -14,7 +14,10 @@ import java.util.Objects;
 
 import android.util.Base64;
 import autovalue.shaded.kotlin.Triple;
-import ca.uhn.fhir.jpa.starter.model.*;
+import ca.uhn.fhir.jpa.starter.model.PatientIdentifierEntity;
+import ca.uhn.fhir.jpa.starter.model.ComGenerator;
+import ca.uhn.fhir.jpa.starter.model.EncounterIdEntity;
+import ca.uhn.fhir.jpa.starter.model.SMSInfo;
 
 import com.iprd.fhir.utils.FhirUtils;
 import com.iprd.fhir.utils.PatientIdentifierStatus;
@@ -23,7 +26,16 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.HibernateException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.*;
+import org.hl7.fhir.r4.model.Media;
+import org.hl7.fhir.r4.model.Encounter;
+import org.hl7.fhir.r4.model.Appointment;
+import org.hl7.fhir.r4.model.QuestionnaireResponse;
+import org.hl7.fhir.r4.model.Identifier;
+import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.Attachment;
+import org.hl7.fhir.r4.model.ResourceType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,18 +102,66 @@ public class ServerInterceptor {
 							patientId, null);
 
 					notificationDataSource.persist(comGen);
-
+					generateAndInsertPatientRegistrationSMSInfo(encounter, patientId, messageStatus);
 				} catch (Exception e) {
 					logger.warn(ExceptionUtils.getStackTrace(e));
 				}
 			}
 		} else if (theResource.fhirType().equals("Appointment")) {
 			generateAndInsertAppointmentNotifications((Appointment) theResource);
+			generateAndInsertAppointmentSMSInfo((Appointment) theResource);
 		} else if (theResource.fhirType().equals("QuestionnaireResponse")) {
 			processQuestionnaireResponse((QuestionnaireResponse) theResource);
 		} else if (theResource.fhirType().equals("Patient")) {
 			processPatientInsert(theResource);
 		}
+	}
+
+	public void generateAndInsertPatientRegistrationSMSInfo(
+		Encounter encounter,
+		String patientId,
+		String status)
+	{
+		Timestamp createdAt = DateUtilityHelper.getCurrentTimestamp();
+		String encounterId = encounter.getIdElement().getIdPart();
+		String organizationId = FhirUtils.getOrganizationIdFromEncounter(encounter);
+		String serviceType = "Patient Registration";
+		String resourceType = ResourceType.Encounter.name();
+		SMSInfo smsInfo = new SMSInfo(
+			status,
+			createdAt,
+			patientId,
+			organizationId,
+			encounterId,
+			serviceType,
+			encounterId,
+			null,
+			resourceType
+		);
+		notificationDataSource.persist(smsInfo);
+	}
+
+	public void generateAndInsertAppointmentSMSInfo(
+		Appointment appointment
+	){
+		Timestamp createdAt = DateUtilityHelper.getCurrentTimestamp();
+		String appointmentId = appointment.getIdElement().getIdPart();
+		String patientId = appointment.getParticipantFirstRep().getActor().getReferenceElement().getIdPart();
+		String serviceType = ResourceType.Appointment.name();
+		String resourceType = ResourceType.Appointment.name();
+		String status = ComGenerator.MessageStatus.PENDING.name();
+		SMSInfo smsInfo = new SMSInfo(
+			status,
+			createdAt,
+			patientId,
+			null,
+			null,
+			serviceType,
+			appointmentId,
+			null,
+			resourceType
+		);
+		notificationDataSource.persist(smsInfo);
 	}
 
 	public void generateAndInsertAppointmentNotifications(Appointment appointment){
@@ -152,7 +212,7 @@ public class ServerInterceptor {
 			if(!oldAppointment.getStart().equals(updatedAppointment.getStart())){
 				String oldAppointmentId = oldAppointment.getIdElement().getIdPart();
 				try {
-					List<ComGenerator> records = notificationDataSource.fetchRecordsByResourceId(oldAppointmentId, ComGenerator.MessageStatus.PENDING);
+					List<ComGenerator> records = notificationDataSource.fetchCOMGenRecordsById(oldAppointmentId, ComGenerator.MessageStatus.PENDING);
 					ArrayList<ComGenerator> comGeneratorEntitiesToUpdate = new ArrayList<ComGenerator>();
 					for (ComGenerator record: records) {
 						record.setCommunicationStatus(ComGenerator.MessageStatus.DELETED.name());

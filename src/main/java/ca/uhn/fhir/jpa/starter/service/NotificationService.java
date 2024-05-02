@@ -3,29 +3,31 @@ package ca.uhn.fhir.jpa.starter.service;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
-
+import autovalue.shaded.kotlin.Pair;
 import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.jpa.starter.model.SMSInfo;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.server.exceptions.ResourceGoneException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import okhttp3.Request;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.ResourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
 import com.iprd.fhir.utils.DateUtilityHelper;
 import com.iprd.fhir.utils.FhirUtils;
-
 import autovalue.shaded.kotlin.Triple;
 import ca.uhn.fhir.jpa.starter.model.ComGenerator;
 import ca.uhn.fhir.jpa.starter.model.ComGenerator.MessageStatus;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Service
 public class NotificationService {
@@ -77,10 +79,12 @@ public class NotificationService {
 						String oclLinkMessage = "The QR image for OCL code:\n" + patientOclId + "\nis here:\n" + patientOclLink + "";
 						sendSmsAndUpdateStatus(patientDetailsMessage, mobile, record);
 						sendSmsAndUpdateStatus(oclLinkMessage, mobile, record);
+						updateSMSInfoRecord(record);
 					} else if (record.getResourceType().equals("Appointment")) {
 						Timestamp nextVisitDate = record.getNextVisitDate();
 						patientDetailsMessage += "Your next visit details are: \nName: " + patientName + (nextVisitDate != null ? "\nDate: " + nextVisitDate : "") + "\nYour OCL Id is:\n" + patientOclId;
 						sendSmsAndUpdateStatus(patientDetailsMessage, mobile, record);
+						updateSMSInfoRecord(record);
 					}
 				}
 			} catch (ResourceNotFoundException | IllegalStateException | ResourceGoneException ex) {
@@ -96,6 +100,28 @@ public class NotificationService {
 		NotificationDataSource datasource = NotificationDataSource.getInstance();
 		Date previousDate = DateUtilityHelper.getPreviousDateByDays(DateUtilityHelper.getCurrentSqlDate(), 15);
 		datasource.deleteRecordsByTimePeriod(previousDate);
+	}
+
+	private void updateSMSInfoRecord(ComGenerator comGenerator){
+		IGenericClient fhirClient = FhirClientAuthenticatorService.getFhirClient();
+		String resourceId = comGenerator.getResourceId();
+		String patientId = comGenerator.getPatientId();
+		String patientCardNumber = FhirUtils.getPatientCardNumberByPatientId(patientId, fhirClient);
+		NotificationDataSource dataSource = NotificationDataSource.getInstance();
+		List<SMSInfo> smsInfo = dataSource.fetchSMSRecordsByResourceId(resourceId);
+		Pair<String, String> encIdAndOrgIdPair = FhirUtils.getEncounterIdAndOrganizationIdForAppointment(resourceId, fhirClient);
+		if (!smsInfo.isEmpty() && encIdAndOrgIdPair != null){
+			SMSInfo smsInfoRecord = smsInfo.get(0);
+			smsInfoRecord.setStatus(comGenerator.getCommunicationStatus());
+			smsInfoRecord.setPatientCardNumber(patientCardNumber);
+			if (Objects.equals(comGenerator.getCommunicationStatus(), MessageStatus.SENT.name()))
+				smsInfoRecord.setSentAt(comGenerator.getUpdatedAt());
+			if (comGenerator.getResourceType().equals(ResourceType.Appointment.name())){
+				smsInfoRecord.setEncounterId(encIdAndOrgIdPair.getFirst());
+				smsInfoRecord.setOrganizationId(encIdAndOrgIdPair.getSecond());
+			}
+			dataSource.update(smsInfoRecord);
+		}
 	}
 
 	private void sendSmsAndUpdateStatus(String message, String mobileNumber, ComGenerator comGeneratorEntity) throws IOException {

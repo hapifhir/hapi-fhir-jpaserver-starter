@@ -188,4 +188,8 @@ public class DateUtilityHelper {
 		long targetMillis = currentMillis - (days * millisecondsInADay);
 		return targetMillis;
 	}
+
+	public static Timestamp getCurrentTimestamp(){
+		return new Timestamp(System.currentTimeMillis());
+	}
 }

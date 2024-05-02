@@ -8,21 +8,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import ca.uhn.fhir.jpa.starter.service.FhirClientAuthenticatorService;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-
+import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
+import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.Provenance;
+import org.hl7.fhir.r4.model.QuestionnaireResponse;
+import org.hl7.fhir.r4.model.Encounter;
+import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.PractitionerRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import autovalue.shaded.kotlin.Pair;
 import autovalue.shaded.kotlin.Triple;
-
 import org.apache.jena.ext.xerces.util.URI.MalformedURIException;
-import org.hl7.fhir.r4.model.Identifier;
 
 public class FhirUtils {
 	
@@ -51,6 +50,40 @@ public class FhirUtils {
 			logger.debug(e.getMessage());
 		}
 		return oclId;
+	}
+
+	public static Pair<String, String> getEncounterIdAndOrganizationIdForAppointment(String appointmentId, IGenericClient fhirClient){
+		QuestionnaireResponse questionnaireResponse;
+		Encounter encounter;
+		Bundle provenanceBundle = fhirClient.search().forResource(Provenance.class).where(Provenance.TARGET.hasId(appointmentId)).returnBundle(Bundle.class).execute();
+		if (!provenanceBundle.hasEntry()){
+			return null;
+		}
+		Provenance provenance = (Provenance) provenanceBundle.getEntry().get(0).getResource();
+		String questionnaireResponseId = provenance.getEntityFirstRep().getWhat().getReferenceElement().getIdPart();
+		try{
+			questionnaireResponse = fhirClient.read().resource(QuestionnaireResponse.class).withId(questionnaireResponseId).execute();
+		} catch (ResourceNotFoundException resourceNotFoundException){
+			resourceNotFoundException.printStackTrace();
+			return null;
+		}
+		String encounterId = questionnaireResponse.getEncounter().getReferenceElement().getIdPart();
+		try{
+			encounter = fhirClient.read().resource(Encounter.class).withId(encounterId).execute();
+		} catch (ResourceNotFoundException resourceNotFoundException){
+			resourceNotFoundException.printStackTrace();
+			return null;
+		}
+		String organizationId = encounter.getServiceProvider().getReferenceElement().getIdPart();
+		return new Pair<>(encounterId, organizationId);
+	}
+
+	public static String getPatientCardNumberByPatientId(String patientId, IGenericClient fhirClient) {
+		Bundle patientBundle = 	fhirClient.search().forResource(Patient.class).where(Patient.RES_ID.exactly().identifier(patientId)).returnBundle(Bundle.class).execute();
+		if (!patientBundle.hasEntry())
+			return null;
+		Patient patient = (Patient) patientBundle.getEntry().get(0).getResource();
+		return getPatientCardNumber(patient.getIdentifier());
 	}
 
 	public static String getPatientCardNumber(List<Identifier> identifiers) {
@@ -127,6 +160,10 @@ public class FhirUtils {
 			}
 		}
 		return null;
+	}
+
+	public static String getOrganizationIdFromEncounter(Encounter encounter){
+		return encounter.getServiceProvider().getReferenceElement().getIdPart();
 	}
 
 	public String getPractitionerRoleFromId(String practitionerRoleId,IGenericClient fhirClient){

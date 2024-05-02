@@ -750,7 +750,7 @@ class HelperServiceTest {
 //		assertEquals(ancDailySummaryConfig,capturedList);
 //		assertEquals(categoryWithHashCodes.get("patient-bio-data"),"e15b899b-8d94-4279-8cb7-3eb90a14279b2023-11-012024-01-04patient-bio-dataV2age-2");
 //	}
-
+  
 	@Test
 	void testGetCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection() throws NoSuchMethodException {
 		Date start = Date.valueOf(LocalDate.of(2024,01,05)); // replace with your desired start date
