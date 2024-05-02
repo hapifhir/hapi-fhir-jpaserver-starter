@@ -329,6 +329,13 @@ public class FixNullReferenceInBundle {
 				}
 			}
 
+			if (requestBody.toString().contains("Location/54aaf89d-8aac-4b3c-b818-19bdfb18f501") || requestBody.toString().contains("Organization/3880a7e4-24ae-45a6-8023-2d473938ec93")) {
+				modifiedBody = modifiedBody.replace("Location/54aaf89d-8aac-4b3c-b818-19bdfb18f501", "Location/f9622c21-829c-416c-9194-730e074e4c23");
+
+				modifiedBody = modifiedBody.replace("Organization/3880a7e4-24ae-45a6-8023-2d473938ec93", "Organization/52a6adc6-a961-4e7d-bd3a-445401cf9bd0");
+				logger.warn("Modified Request body " + modifiedBody);
+			}
+
 
 			ModifiedBodyRequestWrapper modifiedRequest = new ModifiedBodyRequestWrapper(request, modifiedBody,
 					modifiedHeaders);

@@ -116,6 +116,11 @@ public class DashboardEnvironmentConfig {
 							envConfigContainer.setCategoryItem(new Gson().fromJson(reader, CategoryItem.class));
 							break;
 						}
+						case REPORT_DEFINITIONS: {
+							envConfigContainer.setReportItems(new Gson().fromJson(reader, new TypeToken<List<TabularItem>>() {
+							}.getType()));
+							break;
+						}
 					}
 				} catch (FileNotFoundException e) {
 					logger.warn(ExceptionUtils.getStackTrace(e));

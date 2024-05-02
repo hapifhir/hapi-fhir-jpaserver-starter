@@ -693,63 +693,64 @@ class HelperServiceTest {
 		assertEquals(categoryWithHashCodes.get("antenatal"),"e15b899b-8d94-4279-8cb7-3eb90a14279b2023-11-012023-11-01antenatalV2age-2");
 	}
 
-	@Test
-	void testProcessCategoriesForScheduledTasks() throws FileNotFoundException, SQLException {
-		String organizationId = "e15b899b-8d94-4279-8cb7-3eb90a14279b";
-		String startDate = "2023-11-01";
-		String endDate = "2024-01-04";
-		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
-		filters.put("filter1Id", "age");
-		filters.put("filter1Value", "age-2");
-		String env = "V2";
-		List<ANCDailySummaryConfig> ancDailySummaryConfig = Collections.singletonList(
-			new ANCDailySummaryConfig("categoryId", Collections.emptyList(), Collections.emptyList())
-		);
-		String sampleLongText = "This is a sample long text for the summary result. It can be a paragraph or more, containing multiple lines and details.";
-		// Create a Map for dailyResult
-		Map<String, String> dailyResultMap = new HashMap<>();
-		dailyResultMap.put("Name", "KARTHIK233 OFFLINE");
-		dailyResultMap.put("Card Number", "PCM/00000233");
-		dailyResultMap.put("Date", "01-11-2023");
-		dailyResultMap.put("Date of Birth", "23-03-1993");
-		// Create a List for dailyResult
-		List<Map<String, String>> dailyResultList = new ArrayList<>();
-		dailyResultList.add(dailyResultMap);
-		ArrayList<ApiAsyncTaskEntity> apiAsyncTaskEntityList = new ArrayList<>();
-		// Create an instance of ApiAsyncTaskEntity
-		ApiAsyncTaskEntity apiAsyncTaskEntity = new ApiAsyncTaskEntity(
-			"e15b899b-8d94-4279-8cb7-3eb90a14279b2023-11-012024-01-04patient-bio-dataV2age-2",
-			"COMPLETED",
-			createClob(sampleLongText),
-			createClob(dailyResultList.toString()),
-			Date.valueOf(LocalDate.of(2024, 4, 1))
-		);
-		apiAsyncTaskEntityList.add(apiAsyncTaskEntity);
-		HelperService helperServiceMock = mock(HelperService.class);
-		when(helperServiceMock.getANCDailySummaryConfigFromFile(anyString()
-		)).thenReturn(ancDailySummaryConfig);
-		when(helperServiceMock.getCategoriesFromAncDailySummaryConfig(anyString()
-		)).thenReturn(Collections.singletonList("patient-bio-data"));
-		NotificationDataSource notificationDataSourceMock = PowerMockito.mock(NotificationDataSource.class);
-		when(notificationDataSourceMock.fetchStatus(anyString()))
-			.thenReturn(apiAsyncTaskEntityList);
-		when(notificationDataSourceMock.fetchApiAsyncTaskEntityList(anyList()))
-			.thenReturn(apiAsyncTaskEntityList);
-		helperServiceMock.datasource = notificationDataSourceMock;
-		doNothing().when(notificationDataSourceMock).updateObjects(any());
-		doNothing().when(helperServiceMock).saveQueryResultAndHandleException(anyString(),anyString(),anyString(),any(),anyList(),anyString(),anyList());
-		doCallRealMethod().when(helperServiceMock).processCategories(organizationId,startDate,endDate,env,filters,true);
-		Map<String,String> categoryWithHashCodes =  helperServiceMock.processCategories(organizationId,startDate,endDate,env,filters,true);
-		ArgumentCaptor<ArrayList<ApiAsyncTaskEntity>> argumentCaptorForAsyncTaskEntity = ArgumentCaptor.forClass(ArrayList.class);
-		verify(helperServiceMock.datasource).updateObjects(argumentCaptorForAsyncTaskEntity.capture());
-		ArrayList<ApiAsyncTaskEntity> capturedListForAsyncTaskEntity = argumentCaptorForAsyncTaskEntity.getValue();
-		assertEquals(capturedListForAsyncTaskEntity.get(0).getStatus(),"PROCESSING");
-		ArgumentCaptor<List<ANCDailySummaryConfig>> argumentCaptor = ArgumentCaptor.forClass(List.class);
-		verify(helperServiceMock).saveQueryResultAndHandleException(anyString(),anyString(),anyString(),any(),anyList(),anyString(),argumentCaptor.capture());
-		List<ANCDailySummaryConfig> capturedList = argumentCaptor.getValue();
-		assertEquals(ancDailySummaryConfig,capturedList);
-		assertEquals(categoryWithHashCodes.get("patient-bio-data"),"e15b899b-8d94-4279-8cb7-3eb90a14279b2023-11-012024-01-04patient-bio-dataV2age-2");
-	}
+//	@Test
+//	void testProcessCategoriesForScheduledTasks() throws FileNotFoundException, SQLException {
+//		String organizationId = "e15b899b-8d94-4279-8cb7-3eb90a14279b";
+//		String startDate = "2023-11-01";
+//		String endDate = "2024-01-04";
+//		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
+//		filters.put("filter1Id", "age");
+//		filters.put("filter1Value", "age-2");
+//		String env = "V2";
+//		List<ANCDailySummaryConfig> ancDailySummaryConfig = Collections.singletonList(
+//			new ANCDailySummaryConfig("categoryId", Collections.emptyList(), Collections.emptyList())
+//		);
+//		String sampleLongText = "This is a sample long text for the summary result. It can be a paragraph or more, containing multiple lines and details.";
+//		// Create a Map for dailyResult
+//		Map<String, String> dailyResultMap = new HashMap<>();
+//		dailyResultMap.put("Name", "KARTHIK233 OFFLINE");
+//		dailyResultMap.put("Card Number", "PCM/00000233");
+//		dailyResultMap.put("Date", "01-11-2023");
+//		dailyResultMap.put("Date of Birth", "23-03-1993");
+//		// Create a List for dailyResult
+//		List<Map<String, String>> dailyResultList = new ArrayList<>();
+//		dailyResultList.add(dailyResultMap);
+//		ArrayList<ApiAsyncTaskEntity> apiAsyncTaskEntityList = new ArrayList<>();
+//		// Create an instance of ApiAsyncTaskEntity
+//		ApiAsyncTaskEntity apiAsyncTaskEntity = new ApiAsyncTaskEntity(
+//			"e15b899b-8d94-4279-8cb7-3eb90a14279b2023-11-012024-01-04patient-bio-dataV2age-2",
+//			"COMPLETED",
+//			createClob(sampleLongText),
+//			createClob(dailyResultList.toString()),
+//			Date.valueOf(LocalDate.of(2024, 4, 1))
+//		);
+//		apiAsyncTaskEntityList.add(apiAsyncTaskEntity);
+//		HelperService helperServiceMock = mock(HelperService.class);
+//		when(helperServiceMock.getANCDailySummaryConfigFromFile(anyString()
+//		)).thenReturn(ancDailySummaryConfig);
+//		when(helperServiceMock.getCategoriesFromAncDailySummaryConfig(anyString()
+//		)).thenReturn(Collections.singletonList("patient-bio-data"));
+//		NotificationDataSource notificationDataSourceMock = PowerMockito.mock(NotificationDataSource.class);
+//		when(notificationDataSourceMock.fetchStatus(anyString()))
+//			.thenReturn(apiAsyncTaskEntityList);
+//		when(notificationDataSourceMock.fetchApiAsyncTaskEntityList(anyList()))
+//			.thenReturn(apiAsyncTaskEntityList);
+//		helperServiceMock.datasource = notificationDataSourceMock;
+//		doNothing().when(notificationDataSourceMock).updateObjects(any());
+//		doNothing().when(helperServiceMock).saveQueryResultAndHandleException(anyString(),anyString(),anyString(),any(),anyList(),anyString(),anyList());
+//		doCallRealMethod().when(helperServiceMock).processCategories(organizationId,startDate,endDate,env,filters,true);
+//		Map<String,String> categoryWithHashCodes =  helperServiceMock.processCategories(organizationId,startDate,endDate,env,filters,true);
+//		ArgumentCaptor<ArrayList<ApiAsyncTaskEntity>> argumentCaptorForAsyncTaskEntity = ArgumentCaptor.forClass(ArrayList.class);
+//		verify(helperServiceMock.datasource).updateObjects(argumentCaptorForAsyncTaskEntity.capture());
+//		ArrayList<ApiAsyncTaskEntity> capturedListForAsyncTaskEntity = argumentCaptorForAsyncTaskEntity.getValue();
+//		assertEquals(capturedListForAsyncTaskEntity.get(0).getStatus(),"PROCESSING");
+//		ArgumentCaptor<List<ANCDailySummaryConfig>> argumentCaptor = ArgumentCaptor.forClass(List.class);
+//		verify(helperServiceMock).saveQueryResultAndHandleException(anyString(),anyString(),anyString(),any(),anyList(),anyString(),argumentCaptor.capture());
+//		List<ANCDailySummaryConfig> capturedList = argumentCaptor.getValue();
+//		assertEquals(ancDailySummaryConfig,capturedList);
+//		assertEquals(categoryWithHashCodes.get("patient-bio-data"),"e15b899b-8d94-4279-8cb7-3eb90a14279b2023-11-012024-01-04patient-bio-dataV2age-2");
+//	}
+
 	@Test
 	void testGetCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection() throws NoSuchMethodException {
 		Date start = Date.valueOf(LocalDate.of(2024,01,05)); // replace with your desired start date

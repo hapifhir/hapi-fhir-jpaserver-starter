@@ -51,6 +51,14 @@ public class DashboardConfigContainer {
 		this.scoreCardIndicatorItems = scoreCardIndicatorItems;
 	}
 
+	public List<TabularItem> getReportItems() {
+		return reportItems;
+	}
+
+	public void setReportItems(List<TabularItem> reportItems) {
+		this.reportItems = reportItems;
+	}
+
 	public CategoryItem getCategoryItem() {
 		return categoryItem;
 	}
@@ -76,6 +84,7 @@ public class DashboardConfigContainer {
 	private List<PieChartDefinition> pieChartDefinitions;
 	private List<LineChart> lineCharts;
 	private List<TabularItem> tabularItems;
+	private List<TabularItem> reportItems;
 	private List<ScoreCardIndicatorItem> scoreCardIndicatorItems;
 	private List<IndicatorItem> analyticsIndicatorItems;
 	private List<ANCDailySummaryConfig> ancDailySummaryConfig;

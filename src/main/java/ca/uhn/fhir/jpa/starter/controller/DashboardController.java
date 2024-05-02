@@ -138,6 +138,11 @@ public class DashboardController {
 		return helperService.getTabularIndicators(env);
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value = "/facilitySummaryIndicator")
+	public ResponseEntity<?> facilitySummaryIndicators(@RequestParam("env") String env) {
+		return helperService.getFacilitySummaryDefinition(env);
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "/filters")
 	public ResponseEntity<?> filter(@RequestParam("env") String env) {
 		return helperService.getFilters(env);
@@ -313,6 +318,28 @@ public class DashboardController {
 		return helperService.getEncounterForMap(orgId, from, to);
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value = "/facilitySummaryData")
+	public ResponseEntity<?> getFacilitySummaryData(
+		@RequestHeader(name = "Authorization") String token,
+		@RequestParam("env") String env,
+		@RequestParam("lga") String lga,
+		@RequestParam Map<String, String> allFilters
+	) {
+		String startDate = allFilters.get("from");
+		String endDate = allFilters.get("to");
+		ReportType type = ReportType.valueOf(allFilters.get("type"));
+		allFilters.remove("from");
+		allFilters.remove("to");
+		allFilters.remove("lga");
+		allFilters.remove("env");
+		allFilters.remove("type");
+		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
+		if (practitionerRoleId == null) {
+			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
+		}
+		LinkedHashMap<String, String> filters = new LinkedHashMap<>(allFilters);
+		return helperService.processDataForReport(startDate, endDate,type, filters, env, lga);
+	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/cacheDashboardDataSequential")
 	public ResponseEntity<?> cacheDashboardDataSequential(
