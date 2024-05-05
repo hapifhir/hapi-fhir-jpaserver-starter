@@ -1,4 +1,11 @@
-import { Aspects, CfnOutput, Duration, Stack, StackProps } from "aws-cdk-lib";
+import {
+  Aspects,
+  CfnOutput,
+  Duration,
+  RemovalPolicy,
+  Stack,
+  StackProps,
+} from "aws-cdk-lib";
 import * as cloudwatch from "aws-cdk-lib/aws-cloudwatch";
 import { SnsAction } from "aws-cdk-lib/aws-cloudwatch-actions";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
@@ -19,6 +26,7 @@ import { Construct } from "constructs";
 import { EnvConfig } from "./env-config";
 import { getConfig } from "./shared/config";
 import { vCPU } from "./shared/fargate";
+import { addDefaultMetricsToTargetGroup } from "./shared/target-group";
 import { isProd, isSandbox, mbToBytes } from "./util";
 
 export function settings() {
@@ -146,6 +154,8 @@ export class FHIRServerStack extends Stack {
       storageEncrypted: true,
       parameterGroup,
       cloudwatchLogsExports: ["postgresql"],
+      deletionProtection: true,
+      removalPolicy: RemovalPolicy.RETAIN,
     });
 
     Aspects.of(dbCluster).add({
@@ -293,6 +303,14 @@ export class FHIRServerStack extends Stack {
       scaleOutCooldown: Duration.seconds(30),
     });
 
+    const targetGroup = fargateService.targetGroup;
+    addDefaultMetricsToTargetGroup({
+      targetGroup,
+      scope: this,
+      id: "FhirServer",
+      alarmAction,
+    });
+
     // allow the NLB to talk to fargate
     fargateService.service.connections.allowFrom(
       ec2.Peer.ipv4(this.vpc.vpcCidrBlock),
@@ -383,6 +401,21 @@ export class FHIRServerStack extends Stack {
       name: "ACUUtilizationAlarm",
       threshold: 80, // pct
       evaluationPeriods: 1,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+    });
+
+    /**
+     * For Aurora Serverless, this alarm is not important as it auto-scales. However, we always
+     * create this alarm because of compliance controls (SOC2).
+     * @see: https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Overview.StorageReliability.html#aurora-storage-growth
+     */
+    createAlarm({
+      metric: dbCluster.metricFreeLocalStorage(),
+      name: "FreeLocalStorageAlarm",
+      threshold: mbToBytes(10_000),
+      evaluationPeriods: 1,
+      comparisonOperator:
+        cloudwatch.ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
       treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
     });
   }
