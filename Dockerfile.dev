@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 maven:3.9-eclipse-temurin-17 as build-fhir
+FROM --platform=linux/arm64/v8 maven:3.9-eclipse-temurin-17 as build-fhir
 WORKDIR /tmp/hapi-fhir-jpaserver-starter
 
 ARG OPENTELEMETRY_JAVA_AGENT_VERSION=1.17.0
