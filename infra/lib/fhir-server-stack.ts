@@ -264,7 +264,7 @@ export class FHIRServerStack extends Stack {
     const fargateCPUAlarm = fargateService.service
       .metricCpuUtilization()
       .createAlarm(this, "FHIRCPUAlarm", {
-        threshold: 80,
+        threshold: 79, // can revert to 80
         evaluationPeriods: 3,
         datapointsToAlarm: 2,
         treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
