@@ -194,6 +194,9 @@ public class FhirServerConfigCommon {
 			jpaStorageSettings.setResourceServerIdStrategy(appProperties.getServer_id_strategy());
 			ourLog.info("Server configured to use '" + appProperties.getServer_id_strategy() + "' Server ID Strategy");
 		}
+		
+		//to Disable the Resource History
+		jpaStorageSettings.setResourceDbHistoryEnabled(appProperties.getResource_dbhistory_enabled());
 
 		// Parallel Batch GET execution settings
 		jpaStorageSettings.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_size());
