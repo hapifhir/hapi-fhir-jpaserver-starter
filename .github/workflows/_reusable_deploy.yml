@@ -53,6 +53,15 @@ jobs:
       # INSTALL DEPENDENCIES
       - name: Install NodeJS dependencies
         run: npm ci --ignore-scripts
+        working-directory: "./infra"
+
+      - name: Build
+        run: npm run build
+        working-directory: "./infra"
+
+      - name: Test
+        run: npm run test
+        working-directory: "./infra"
 
       # CDK DIFF
       - name: Diff CDK stack
