@@ -237,7 +237,7 @@ export class FHIRServerStack extends Stack {
           publicLoadBalancer: false,
           idleTimeout: maxExecutionTimeout,
           runtimePlatform: {
-            cpuArchitecture: ecs.CpuArchitecture.ARM64,
+            cpuArchitecture: ecs.CpuArchitecture.X86_64,
             operatingSystemFamily: ecs.OperatingSystemFamily.LINUX,
           },
         }
