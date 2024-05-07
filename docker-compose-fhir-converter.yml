@@ -1,0 +1,35 @@
+version: "3"
+services:
+  fhir-server-fhir-converter:
+    build: .
+    container_name: fhir-server-fhir-converter
+    depends_on:
+      fhir-postgres-fhir-converter:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: "local"
+      DB_USERNAME: "admin"
+      DB_PASSWORD: "admin"
+      DB_URL: "jdbc:postgresql://fhir-postgres-fhir-converter:5432/db"
+    restart: on-failure
+    ports:
+      - "8889:8888"
+  fhir-postgres-fhir-converter:
+    image: postgres:14.4-alpine
+    container_name: fhir-postgres-fhir-converter
+    restart: always
+    environment:
+      POSTGRES_DB: "db"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
+    ports:
+      - "5437:5432"
+    volumes:
+      - fhir-postgres-fhir-converter:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 2s
+      timeout: 2s
+      retries: 2
+volumes:
+  fhir-postgres-fhir-converter:
