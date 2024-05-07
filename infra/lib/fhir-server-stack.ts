@@ -231,6 +231,7 @@ export class FHIRServerStack extends Stack {
               SPRING_PROFILES_ACTIVE: props.config.environmentType,
               DB_URL: dbUrl,
               DB_USERNAME: dbCreds.username,
+              TEMPORARY: "temporary-env-var",
             },
           },
           healthCheckGracePeriod: Duration.seconds(120),
@@ -264,7 +265,7 @@ export class FHIRServerStack extends Stack {
     const fargateCPUAlarm = fargateService.service
       .metricCpuUtilization()
       .createAlarm(this, "FHIRCPUAlarm", {
-        threshold: 79, // can revert to 80
+        threshold: 80,
         evaluationPeriods: 3,
         datapointsToAlarm: 2,
         treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
