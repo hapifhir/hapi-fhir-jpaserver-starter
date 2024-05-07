@@ -1,7 +1,9 @@
 version: "3"
 services:
   fhir-server-fhir-converter:
-    build: .
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.dev
     container_name: fhir-server-fhir-converter
     depends_on:
       fhir-postgres-fhir-converter:
