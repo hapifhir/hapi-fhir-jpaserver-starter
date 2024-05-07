@@ -231,7 +231,6 @@ export class FHIRServerStack extends Stack {
               SPRING_PROFILES_ACTIVE: props.config.environmentType,
               DB_URL: dbUrl,
               DB_USERNAME: dbCreds.username,
-              TEMPORARY: "temporary-env-var",
             },
           },
           healthCheckGracePeriod: Duration.seconds(120),
