@@ -14,7 +14,7 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <version>7.1.8-SNAPSHOT</version>
+        <version>7.1.11-SNAPSHOT</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
@@ -605,9 +605,20 @@
                 </dependency>
             </dependencies>
         </profile>
-        <!-- examples of how to start the server using the default profile-->
-        <!-- mvn clean package jetty:run -->
-        <!-- java -jar jetty-runner.jar target/hapi-fhir-jpaserver.war -->
+        <!--                                                              -->
+        <!-- Examples of how to run the server:                           -->
+        <!--                                                              -->
+        <!-- For Spring Boot use:                                         -->
+        <!-- mvn spring-boot:run                                          -->
+        <!--                                                              -->
+        <!-- For JETTY use:                                               -->
+        <!-- mvn -Pjetty spring-boot:run                                  -->
+        <!--                                                              -->
+        <!-- For the Tomcat WAR approach use:                             -->
+        <!-- mvn clean package -DskipTests && java -jar ./target/ROOT.war -->
+        <!--                                                              -->
+        <!-- NEXT: Browse to http://localhost:8080/fhir                   -->
+        <!--                                                              -->
         <profile>
             <id>jetty</id>
             <dependencies>
@@ -685,5 +696,18 @@
                 </plugins>
             </build>
         </profile>
+        <!-- For connecting to GCP CloudSQL Postgres instances:
+        https://github.com/GoogleCloudPlatform/cloud-sql-jdbc-socket-factory/blob/main/docs/jdbc.md#postgres-1
+        Needs 'boot' profile as well. -->
+        <profile>
+            <id>cloudsql-postgres</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.google.cloud.sql</groupId>
+                    <artifactId>postgres-socket-factory</artifactId>
+                    <version>1.17.0</version>
+                </dependency>
+            </dependencies>
+        </profile>       
     </profiles>
 </project>

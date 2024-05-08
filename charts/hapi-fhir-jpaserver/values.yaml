@@ -7,7 +7,7 @@ image:
   # -- the path inside the repository
   repository: hapiproject/hapi
   # -- the image tag. As of v5.7.0, this is the `distroless` flavor by default, add `-tomcat` to use the Tomcat-based image.
-  tag: "v6.10.1@sha256:4eac1b3481180b028616d1fab7e657e368538063d75f7ed3be2032e34c657dd4"
+  tag: "v7.0.3@sha256:73ff82fec42e5cbb7e66338d47af09ba91c140e98beeaee41a5459572d5ae1ce"
   # -- image pullPolicy to use
   pullPolicy: IfNotPresent
 
@@ -109,6 +109,9 @@ postgresql:
   # see <https://github.com/bitnami/charts/tree/master/bitnami/postgresql> for details
   # if set to `false`, the values under `externalDatabase` are used
   enabled: true
+  primary:
+    containerSecurityContext:
+      readOnlyRootFilesystem: true
   auth:
     # -- name for a custom database to create
     database: "fhir"
