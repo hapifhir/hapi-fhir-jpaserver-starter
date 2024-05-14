@@ -9,7 +9,8 @@ RUN mkdir -p /data/hapi/lucenefiles && chmod 775 /data/hapi/lucenefiles
 RUN apk --purge del
 
 # Create a new user and switch to it
-RUN adduser --disabled-password --gecos '' matchbox
+RUN adduser -D matchbox --disabled-password --gecos '' matchbox
+ENV HOME=/home/matchbox
 RUN mkdir -p /database && chown matchbox:matchbox /database
 
 USER matchbox

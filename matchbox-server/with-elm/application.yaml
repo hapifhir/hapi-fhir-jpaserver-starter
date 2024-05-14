@@ -1,4 +1,5 @@
 server:
+  port: 8080
   servlet:
     context-path: /matchboxv3
 hapi:
@@ -17,29 +18,16 @@ hapi:
         name: hl7.fhir.uv.extensions.r4
         version: 1.0.0
         url: classpath:/hl7.fhir.uv.extensions.r4#1.0.0.tgz
-      hl7_fhir_uv_ips:
-        name: hl7.fhir.uv.ips
-        version: current
-        url: file:/Users/oegger/Documents/github/matchbox-ch-elm/src/hl7.fhir.uv.ips-current.tgz
-      fhir_eu_lab:
-        name: hl7.fhir.eu.laboratory
-        version: current
-        url: file:/Users/oegger/Documents/github/matchbox-ch-elm/src/hl7.fhir.eu.laboratory-current.tgz
-      ch_core:
-        name: ch.fhir.ig.ch-core
-        version: current
-        url: file:/Users/oegger/Documents/github/matchbox-ch-elm/src/ch.fhir.ig.ch-core-current.tgz
-      fhir_ch_lab:
-        name: ch.fhir.ig.ch-lab-report
-        version: current
-        url: file:/Users/oegger/Documents/github/matchbox-ch-elm/src/ch.fhir.ig.ch-lab-report-current.tgz
       ch_elm:
         name: ch.fhir.ig.ch-elm
-        version: 1.0.0
-        url: file:/Users/oegger/Documents/github/matchbox-ch-elm/src/ch.fhir.ig.ch-elm-1.0.0.tgz
+        version: 1.2.0
     staticLocation: file:/apps/
 matchbox:
   fhir:
     context:
       fhirVersion: 4.0.1
-      txServer: http://tx.fhir.org
+      txServer: http://localhost:${server.port}/matchboxv3/fhir
+#      txServer: http://tx.fhir.org
+spring:
+  datasource:
+    url: "jdbc:h2:mem:test"
