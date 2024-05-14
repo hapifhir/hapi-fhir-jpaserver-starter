@@ -10,6 +10,7 @@ import ca.uhn.fhir.util.BundleUtil;
 import ca.uhn.fhir.util.UrlUtil;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsHooksDaoAuthorizationSvc;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsServiceMethod;
+import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServiceJson;
 import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServiceRequestAuthorizationJson;
 import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServiceRequestJson;
 import ca.uhn.hapi.fhir.cdshooks.svc.prefetch.CdsPrefetchDaoSvc;
@@ -60,42 +61,46 @@ public class ModuleConfigurationPrefetchSvc extends CdsPrefetchSvc {
 
 	@Override
 	public void augmentRequest(CdsServiceRequestJson theCdsServiceRequestJson, ICdsServiceMethod theServiceMethod) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(new Date());
-		calendar.add(Calendar.YEAR, -1);
-		String aYearAgo = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
+		CdsServiceJson serviceSpec = theServiceMethod.getCdsServiceJson();
+		Set<String> missingPrefetch = this.findMissingPrefetch(serviceSpec, theCdsServiceRequestJson);
+		if (!missingPrefetch.isEmpty()) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(new Date());
+			calendar.add(Calendar.YEAR, -1);
+			String aYearAgo = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
 
-		String patientId = theCdsServiceRequestJson.getContext().getString("patientId");
+			String patientId = theCdsServiceRequestJson.getContext().getString("patientId");
 
-		IGenericClient client = buildClient(theCdsServiceRequestJson);
+			IGenericClient client = buildClient(theCdsServiceRequestJson);
 
-		String patientUrl = PATIENT.replace("{{context.patientId}}", patientId.replace("Patient/", ""));
-		IBaseResource patient = resourceFromUrl(client, patientUrl);
-		String thePatientId = patient.getIdElement().getValue();
-		if (resourceExists(patient)) {
-			theCdsServiceRequestJson.addPrefetch("item1", patient);
-		}
+			String patientUrl = PATIENT.replace("{{context.patientId}}", patientId.replace("Patient/", ""));
+			IBaseResource patient = resourceFromUrl(client, patientUrl);
+			String thePatientId = patient.getIdElement().getValue();
+			if (resourceExists(patient)) {
+				theCdsServiceRequestJson.addPrefetch("item1", patient);
+			}
 
-		String activeMedsUrl = ACTIVE_MEDICATION_ORDERS.replace("{{context.patientId}}", patientId);
-		IBaseResource meds = resourceFromUrl(client, activeMedsUrl);
-		if (resourceExists(meds)) {
-			theCdsServiceRequestJson.addPrefetch("item2", meds);
-		}
-		IBaseResource conditions = resourceFromUrl(client, ACTIVE_CATEGORIZED_CONDITIONS.replace("{{context.patientId}}", patientId));
-		if (resourceExists(conditions)) {
-			theCdsServiceRequestJson.addPrefetch("item3", conditions);
-		}
-		IBaseResource encounters = resourceFromUrl(client, ENCOUNTERS_IN_PAST_YEAR.replace("{{today}}", aYearAgo).replace("{{context.patientId}}", patientId));
-		if (resourceExists(encounters)) {
-			theCdsServiceRequestJson.addPrefetch("item4", encounters);
-		}
-		IBaseResource serviceReqs = resourceFromUrl(client, ACTIVE_OR_COMPLETED_SERVICE_REQUESTS.replace("{{context.patientId}}", patientId));
-		if (resourceExists(serviceReqs)) {
-			theCdsServiceRequestJson.addPrefetch("item5", serviceReqs);
-		}
-		IBaseResource labs = resourceFromUrl(client, UDS_LABS_POST.replace("{{today}}", aYearAgo).replace("{{context.patientId}}", patientId));
-		if (resourceExists(labs)) {
-			theCdsServiceRequestJson.addPrefetch("item6", labs);
+			String activeMedsUrl = ACTIVE_MEDICATION_ORDERS.replace("{{context.patientId}}", patientId);
+			IBaseResource meds = resourceFromUrl(client, activeMedsUrl);
+			if (resourceExists(meds)) {
+				theCdsServiceRequestJson.addPrefetch("item2", meds);
+			}
+			IBaseResource conditions = resourceFromUrl(client, ACTIVE_CATEGORIZED_CONDITIONS.replace("{{context.patientId}}", patientId));
+			if (resourceExists(conditions)) {
+				theCdsServiceRequestJson.addPrefetch("item3", conditions);
+			}
+			IBaseResource encounters = resourceFromUrl(client, ENCOUNTERS_IN_PAST_YEAR.replace("{{today}}", aYearAgo).replace("{{context.patientId}}", patientId));
+			if (resourceExists(encounters)) {
+				theCdsServiceRequestJson.addPrefetch("item4", encounters);
+			}
+			IBaseResource serviceReqs = resourceFromUrl(client, ACTIVE_OR_COMPLETED_SERVICE_REQUESTS.replace("{{context.patientId}}", patientId));
+			if (resourceExists(serviceReqs)) {
+				theCdsServiceRequestJson.addPrefetch("item5", serviceReqs);
+			}
+			IBaseResource labs = resourceFromUrl(client, UDS_LABS_POST.replace("{{today}}", aYearAgo).replace("{{context.patientId}}", patientId));
+			if (resourceExists(labs)) {
+				theCdsServiceRequestJson.addPrefetch("item6", labs);
+			}
 		}
 	}
 
