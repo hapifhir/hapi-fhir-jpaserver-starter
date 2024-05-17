@@ -131,13 +131,6 @@ class ExampleServerR4IT implements IServerSupport {
 		assertEquals(measureUrl + "|0.0.003", report.getMeasure());
 	}
 
-	private org.hl7.fhir.r4.model.Bundle loadBundle(String theLocation, FhirContext theCtx, IGenericClient theClient) throws IOException {
-		String json = stringFromResource(theLocation);
-		org.hl7.fhir.r4.model.Bundle bundle = (org.hl7.fhir.r4.model.Bundle) theCtx.newJsonParser().parseResource(json);
-		org.hl7.fhir.r4.model.Bundle result = theClient.transaction().withBundle(bundle).execute();
-		return result;
-	}
-
 	public Parameters runCqlExecution(Parameters parameters) {
 
 		var results = ourClient.operation().onServer()
