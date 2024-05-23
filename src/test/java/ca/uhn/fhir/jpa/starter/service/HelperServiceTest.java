@@ -938,14 +938,14 @@ class HelperServiceTest {
 		doNothing().when(helperServiceMock).performCachingIfNotPresent(anyList(),anyList(),any(),any(),anyList());
 		NotificationDataSource notificationDataSourceMock = PowerMockito.mock(NotificationDataSource.class);
 		PowerMockito.when(notificationDataSourceMock.getOrganizationalHierarchyList(anyString())).thenReturn(orgHierarchyList);
-		PowerMockito.when(notificationDataSourceMock.getOrgIndicatorAverageResult(anyList(),anyList(),any(),any())).thenReturn(orgIndicatorAverageResults);
+		PowerMockito.when(notificationDataSourceMock.getCacheValueAverageWithZeroByDateRangeIndicatorAndMultipleOrgIdForScorecard(anyList(),anyList(),any(),any())).thenReturn(orgIndicatorAverageResults);
 		Whitebox.setInternalState(NotificationDataSource.class, notificationDataSourceMock);
 		AppProperties appPropertiesMock =  new AppProperties();
 		appPropertiesMock.setFacility_batch_size(50);
 		Whitebox.setInternalState(helperServiceMock, appPropertiesMock);
 		doCallRealMethod().when(helperServiceMock).getDataByPractitionerRoleId(anyString(),anyString(),anyString(),any(),any(),anyString());
 		doCallRealMethod().when(helperServiceMock).getFacilitiesForOrganization(any(),anyList());
-		doCallRealMethod().when(helperServiceMock).calculateAverage(anyList(),anyList(),anyString(),anyString());
+		doCallRealMethod().when(helperServiceMock).calculateAverage(anyList(),anyList(),anyString());
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.initialize();
 		when(helperServiceMock.getAsyncExecutor(

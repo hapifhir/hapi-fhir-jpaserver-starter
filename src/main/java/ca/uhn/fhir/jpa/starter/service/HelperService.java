@@ -156,6 +156,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import static org.hibernate.search.util.common.impl.CollectionHelper.asList;
 import static org.keycloak.util.JsonSerialization.mapper;
 
@@ -190,7 +191,8 @@ public class HelperService {
 	private static String EXTENSION_PLUSCODE_URL = "http://iprdgroup.org/fhir/Extention/location-plus-code";
 	private static String IDENTIFIER_SYSTEM = "http://www.iprdgroup.com/Identifier/System";
 	private static String SMS_EXTENTION_URL = "http://iprdgroup.com/Extentions/sms-sent";
-
+	public static final String TRANSFORM_SERVER_WITH_ZERO = "getCacheValueAverageWithZeroByDateRangeIndicatorAndMultipleOrgIdForScorecard";
+	public static final String TRANSFORM_SERVER_WITHOUT_ZERO = "getCacheValueAverageWithoutZeroByDateRangeIndicatorAndMultipleOrgIdForScorecard";
 	NotificationDataSource notificationDataSource;
 	LinkedHashMap<String, Pair<List<String>, LinkedHashMap<String, List<String>>>> mapOfIdsAndOrgIdToChildrenMapPair;
 	LinkedHashMap<String, List<OrgItem>> mapOfOrgHierarchy;
@@ -986,9 +988,9 @@ public class HelperService {
 	}
 
 	public void saveQueryResultAndHandleException(String organizationId, String startDate, String endDate,
-														LinkedHashMap<String, String> filters, List<String> hashcodes, String env,
-														List<ANCDailySummaryConfig> ancDailySummaryConfig) {
-		ThreadPoolTaskExecutor executor =  getAsyncExecutor();
+																 LinkedHashMap<String, String> filters, List<String> hashcodes, String env,
+																 List<ANCDailySummaryConfig> ancDailySummaryConfig) {
+		ThreadPoolTaskExecutor executor = getAsyncExecutor();
 		executor.submit(() -> {
 			try {
 				saveQueryResult(organizationId, startDate, endDate, filters, hashcodes, env, ancDailySummaryConfig);
@@ -999,9 +1001,9 @@ public class HelperService {
 		});
 	}
 
-		public ThreadPoolTaskExecutor getAsyncExecutor(){
-				return asyncConf.asyncExecutor();
-			}
+	public ThreadPoolTaskExecutor getAsyncExecutor() {
+		return asyncConf.asyncExecutor();
+	}
 
 	public ResponseEntity<?> getAsyncData(Map<String, String> categoryWithHashCodes) throws SQLException, IOException {
 		List<DataResultJava> dataResult = new ArrayList<>();
@@ -1028,7 +1030,7 @@ public class HelperService {
 		logger.warn("Calling details page function saveQueryResult. StartDate: {} EndDate: {}", startDate, endDate);
 		Long start3 = System.nanoTime();
 		List<DataResult> dataResult = (List<DataResult>) getReportGen("getAncDailySummaryData", organizationId, startDate, endDate,
-			 fhirSearchList, ancDailySummaryConfig);
+			fhirSearchList, ancDailySummaryConfig);
 		for (String hashcode : hashcodes) {
 			saveInAsyncTable(dataResult.get(hashcodes.indexOf(hashcode)), hashcode);
 		}
@@ -1038,11 +1040,11 @@ public class HelperService {
 			endDate, diff3);
 	}
 
-	public  List<?> getReportGen(String reportGenType, String organizationId, String startDate, String endDate,
-										  List<String> fhirSearchList, List<?> indicators){
+	public List<?> getReportGen(String reportGenType, String organizationId, String startDate, String endDate,
+										 List<String> fhirSearchList, List<?> indicators) {
 		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl(
 			(GenericClient) fhirClientAuthenticatorService.getFhirClient());
-		if(indicators != null) {
+		if (indicators != null) {
 			switch (reportGenType) {
 				case "getAncDailySummaryData":
 					if (((List<?>) indicators).get(0) instanceof ANCDailySummaryConfig) {
@@ -1051,8 +1053,7 @@ public class HelperService {
 						return ReportGeneratorFactory.INSTANCE.reportGenerator().getAncDailySummaryData(
 							fhirClientProvider, new DateRange(startDate, endDate), organizationId, dailySummaryConfigs,
 							fhirSearchList);
-					}
-					else return Collections.emptyList();
+					} else return Collections.emptyList();
 				case "getFacilityData":
 					return ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider,
 						organizationId, new DateRange(startDate, endDate), (List<IndicatorItem>) indicators, Collections.emptyList()).get(startDate);
@@ -1588,11 +1589,10 @@ public class HelperService {
 	}
 
 	public Double calculateAverage(List<String> targetOrgIds, List<OrgIndicatorAverageResult> fromTable,
-											 String hashedId, String transformServer) {
+											 String hashedId) {
 		List<OrgIndicatorAverageResult> filteredList = fromTable.stream().filter(cacheEntity -> targetOrgIds
 				.contains(cacheEntity.getOrgId()) && hashedId.contains(cacheEntity.getIndicator())
-				&& (!transformServer.equals("getCacheValueAverageWithoutZeroByDateRangeIndicatorAndMultipleOrgId")
-				|| cacheEntity.getAverageValue() > 0.0))
+				&& cacheEntity.getAverageValue() > 0.0)
 			.collect(Collectors.toList());
 
 		if (filteredList.isEmpty()) {
@@ -1848,6 +1848,9 @@ public class HelperService {
 				indicatorIds.add(Utils.md5Bytes(keyBuilder.getBytes(StandardCharsets.UTF_8)));
 			});
 
+			List<String> indicatorIdsWithZero = filterIndicators(indicators, TRANSFORM_SERVER_WITH_ZERO, fhirSearchList);
+			List<String> indicatorIdsWithoutZero = filterIndicators(indicators, TRANSFORM_SERVER_WITHOUT_ZERO, fhirSearchList);
+
 			List<OrgIndicatorAverageResult> fromTable = new ArrayList<>();
 			ThreadPoolTaskExecutor executor = getAsyncExecutor();
 
@@ -1865,8 +1868,7 @@ public class HelperService {
 				// Submit each chunk for parallel processing using the existing thread pool
 				Future<List<OrgIndicatorAverageResult>> future = executor.submit(() -> {
 					try {
-						List<OrgIndicatorAverageResult> result = notificationDataSource
-							.getOrgIndicatorAverageResult(chunk, indicatorIds, start, end);
+						List<OrgIndicatorAverageResult> result = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflectionForScorecard(TRANSFORM_SERVER_WITH_ZERO, chunk, indicatorIdsWithZero, start, end);
 						return result;
 					} catch (JDBCException | DataAccessException e) {
 						// Handle exceptions here, e.g., log the error
@@ -1903,7 +1905,7 @@ public class HelperService {
 			Long end47 = System.nanoTime();
 			Double diff47 = ((end47 - start47) / 1e9); // Convert nanoseconds to seconds
 			logger.warn("getDataByPractitionerRoleId got results from db call " + diff47);
-
+			List<OrgIndicatorAverageResult> orgIndicatorAverageResultWithoutZero = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflectionForScorecard(TRANSFORM_SERVER_WITHOUT_ZERO, facilities, indicatorIdsWithoutZero, start, end);
 			scoreCardIndicatorItemsList.forEach(scoreCardIndicatorItem -> {
 				ScoreCardResponseItem scoreCardResponseItem = new ScoreCardResponseItem();
 				scoreCardResponseItem.setCategoryId(scoreCardIndicatorItem.getCategoryId());
@@ -1915,11 +1917,17 @@ public class HelperService {
 							// Call the other function with orgHierarchy as an argument
 							List<String> facility = getFacilitiesForOrganization(orgHierarchyItem, orgHierarchyList);
 							for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
+								String transformServer = indicator.getFhirPath().getTransformServer();
 								String keyBuilder = new StringBuilder().append(indicator.getFhirPath().getExpression())
 									.append(String.join(",", fhirSearchList)).toString();
 								String hashedId = Utils.md5Bytes(keyBuilder.getBytes(StandardCharsets.UTF_8));
-								Double value = calculateAverage(facility, fromTable, hashedId,
-									indicator.getFhirPath().getTransformServer());
+								Double value = 0.0;
+								if (TRANSFORM_SERVER_WITH_ZERO.equals(transformServer)) {
+									value = calculateAverage(facility, fromTable, hashedId);
+								}
+								if (TRANSFORM_SERVER_WITHOUT_ZERO.equals(transformServer)) {
+									value = calculateAverage(facility, orgIndicatorAverageResultWithoutZero, hashedId);
+								}
 								scoreCardItems.add(new ScoreCardItem(orgHierarchyItem.getOrgId(), indicator.getId(),
 									value.toString(), startDate, endDate));
 							}
@@ -1932,6 +1940,22 @@ public class HelperService {
 		}
 
 		return ResponseEntity.ok(scoreCardResponseItems);
+	}
+
+	public List<String> filterIndicators(List<IndicatorItem> indicators, String transformServer, List<String> fhirSearchList) {
+		List<String> indicatorIds = new ArrayList<>();
+		indicators.forEach(indicatorItem -> {
+			if (indicatorItem.getFhirPath().getTransformServer() != null) {
+				if (indicatorItem.getFhirPath().getTransformServer().equals(transformServer)) {
+					String keyBuilder = new StringBuilder()
+						.append(indicatorItem.getFhirPath().getExpression())
+						.append(String.join(",", fhirSearchList))
+						.toString();
+					indicatorIds.add(Utils.md5Bytes(keyBuilder.getBytes(StandardCharsets.UTF_8)));
+				}
+			};
+		});
+		return indicatorIds;
 	}
 
 	public ResponseEntity<?> getBarChartData(String startDate, String endDate, LinkedHashMap<String, String> filters,
@@ -2158,6 +2182,24 @@ public class HelperService {
 		}
 	}
 
+
+	public List<OrgIndicatorAverageResult> getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflectionForScorecard(String transform, List<String> orgIds, List<String> indicators, Date startDate, Date endDate) {
+		notificationDataSource = NotificationDataSource.getInstance();
+		if (transform == null) {
+			return notificationDataSource.getCacheValueAverageWithZeroByDateRangeIndicatorAndMultipleOrgIdForScorecard(orgIds, indicators, startDate,
+				endDate);
+		} else {
+			try {
+				return (List<OrgIndicatorAverageResult>) notificationDataSource.getClass()
+					.getMethod(transform, List.class, List.class, Date.class, Date.class)
+					.invoke(notificationDataSource, orgIds, indicators, startDate, endDate);
+			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+				logger.warn(ExceptionUtils.getStackTrace(e));
+			}
+		}
+		return Collections.emptyList();
+	}
+
 	void performCachingForLineChartIfNotPresent(List<LineChart> lineCharts, List<String> facilityIds,
 															  Date startDate, Date endDate, List<String> fhirSearchList) {
 		String filterString = String.join(",", fhirSearchList);
@@ -2351,7 +2393,7 @@ public class HelperService {
 		return dashboardEnvToConfigMap.get(env).getCategoryItem();
 	}
 
-	
+
 	public List<BarChartDefinition> getBarChartItemListFromFile(String env) throws NullPointerException {
 		return dashboardEnvToConfigMap.get(env).getBarChartDefinitions();
 	}

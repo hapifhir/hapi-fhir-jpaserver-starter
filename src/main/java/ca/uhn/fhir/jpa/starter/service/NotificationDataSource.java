@@ -488,7 +488,7 @@ public class NotificationDataSource {
 		}
 	}
 
-	public List<OrgIndicatorAverageResult> getOrgIndicatorAverageResult(List<String> orgIds,List<String> indicators,Date startDate, Date endDate) {
+	public List<OrgIndicatorAverageResult> getCacheValueAverageWithZeroByDateRangeIndicatorAndMultipleOrgIdForScorecard(List<String> orgIds, List<String> indicators, Date startDate, Date endDate) {
 		Session session = sf.openSession();
 		Transaction transaction = session.beginTransaction();
 		List<OrgIndicatorAverageResult> orgIndicatorAverageResults = new ArrayList<>();
@@ -522,7 +522,42 @@ public class NotificationDataSource {
 
 	}
 
-	public Double getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(Date from, Date to, String indicator,
+	public List<OrgIndicatorAverageResult> getCacheValueAverageWithoutZeroByDateRangeIndicatorAndMultipleOrgIdScorecard(List<String> orgIds, List<String> indicators, Date startDate, Date endDate) {
+		Session session = sf.openSession();
+		Transaction transaction = session.beginTransaction();
+		List<OrgIndicatorAverageResult> orgIndicatorAverageResults = new ArrayList<>();
+
+		try {
+			Query query = session
+				.createQuery(
+					"SELECT new OrgIndicatorAverageResult(orgId, indicator, ROUND(AVG(value), 2) AS averageValue) " +
+						"FROM CacheEntity " +
+						"WHERE value <> 0 " +
+						"AND orgId IN :param1 " +
+						"AND indicator IN :param2 " +
+						"AND date >= :param3 " +
+						"AND date <= :param4 " +
+						"GROUP BY orgId, indicator");
+
+			query.setParameter("param1", orgIds)
+				.setParameter("param2", indicators)
+				.setParameter("param3", startDate)
+				.setParameter("param4", endDate);
+
+			orgIndicatorAverageResults = query.getResultList();
+			transaction.commit();
+		} catch (Exception e) {
+			logger.warn(ExceptionUtils.getStackTrace(e));
+			transaction.rollback();
+		} finally {
+			session.close();
+		}
+
+		return orgIndicatorAverageResults;
+
+	}
+
+		public Double getCacheValueSumByDateRangeIndicatorAndMultipleOrgId(Date from, Date to, String indicator,
 			List<String> orgIds) {
 		Session session = sf.openSession();
 		Query query = session.createQuery(
