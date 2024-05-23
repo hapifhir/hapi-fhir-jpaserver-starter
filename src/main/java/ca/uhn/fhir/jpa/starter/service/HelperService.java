@@ -2266,6 +2266,9 @@ public class HelperService {
 		List<BarChartDefinition> barCharts = getBarChartItemListFromFile(env);
 		List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
 		List<TabularItem> tabularItemList = getTabularItemListFromFile(env);
+		List<TabularItem> reportItemList = getReportItemListFromFile(env);
+		// Concatenating reportItemList with tabularItemList so that report items are processed as tabularItems while caching
+		tabularItemList.addAll(reportItemList);
 		ThreadPoolTaskExecutor executor = asyncConf.asyncExecutor();
 		HashMap<String, Pair<Long, Long>> orgToTiming = new HashMap();
 		List<List<String>> facilityBatches = Utils.partitionFacilities(facilities, appProperties.getExecutor_max_pool_size());
