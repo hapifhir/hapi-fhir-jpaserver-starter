@@ -916,7 +916,7 @@ class HelperServiceTest {
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		String practitionerRoleId = "c91ee7cd-f994-4771-8863-3713e6e52e98";
 		ReportType type = ReportType.valueOf("summary");
-		FhirPathTransformation fhirPathTransformation = new FhirPathTransformation("Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/delivery').item.where(linkId='11.0').item.where(linkId='11.1').answer.where(value.code ='trained-staff').count() / Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.End.18').count()","","getCacheValueAverageWithZeroByDateRangeIndicatorAndMultipleOrgId");
+		FhirPathTransformation fhirPathTransformation = new FhirPathTransformation("Bundle.entry.resource.ofType(QuestionnaireResponse).where( questionnaire = 'Questionnaire/delivery').item.where(linkId='11.0').item.where(linkId='11.1').answer.where(value.code ='trained-staff').count() / Bundle.entry.resource.ofType(Observation).where(code.coding.code= 'ANC.End.18').count()","","getCacheValueAverageWithZeroByDateRangeIndicatorAndMultipleOrgIdForScorecard");
 		IndicatorItem indicatorItem = new IndicatorItem(3,"SBA/ Deliveries ","(Delivery by Skilled birth Attendant / Reported Facility Deliveries) *100","0.5","0.8","percent",fhirPathTransformation);
 		List<IndicatorItem> indicators = new ArrayList<IndicatorItem>();
 		indicators.add(indicatorItem);
@@ -938,7 +938,7 @@ class HelperServiceTest {
 		doNothing().when(helperServiceMock).performCachingIfNotPresent(anyList(),anyList(),any(),any(),anyList());
 		NotificationDataSource notificationDataSourceMock = PowerMockito.mock(NotificationDataSource.class);
 		PowerMockito.when(notificationDataSourceMock.getOrganizationalHierarchyList(anyString())).thenReturn(orgHierarchyList);
-		PowerMockito.when(notificationDataSourceMock.getCacheValueAverageWithZeroByDateRangeIndicatorAndMultipleOrgIdForScorecard(anyList(),anyList(),any(),any())).thenReturn(orgIndicatorAverageResults);
+		PowerMockito.when(helperServiceMock.getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflectionForScorecard(anyString(),anyList(),anyList(),any(),any())).thenReturn(orgIndicatorAverageResults);
 		Whitebox.setInternalState(NotificationDataSource.class, notificationDataSourceMock);
 		AppProperties appPropertiesMock =  new AppProperties();
 		appPropertiesMock.setFacility_batch_size(50);
