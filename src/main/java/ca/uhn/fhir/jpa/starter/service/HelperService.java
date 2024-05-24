@@ -2268,6 +2268,9 @@ public class HelperService {
 		List<TabularItem> tabularItemList = getTabularItemListFromFile(env);
 		List<TabularItem> reportItemList = getReportItemListFromFile(env);
 		// Concatenating reportItemList with tabularItemList so that report items are processed as tabularItems while caching
+		List<TabularItem> combinedReportAndTabularItemList = new ArrayList<>();
+		combinedReportAndTabularItemList.addAll(tabularItemList);
+		combinedReportAndTabularItemList.addAll(reportItemList);
 		tabularItemList.addAll(reportItemList);
 		ThreadPoolTaskExecutor executor = asyncConf.asyncExecutor();
 		HashMap<String, Pair<Long, Long>> orgToTiming = new HashMap();
@@ -2291,7 +2294,7 @@ public class HelperService {
 							ApiAsyncTaskEntity.Status.PROCESSING.name(), env,
 							new Timestamp(System.currentTimeMillis()), null);
 						datasource.insert(lastSyncEntity);
-						cacheDashboardData(facilityId, startDate, endDate, indicators, barCharts, tabularItemList,
+						cacheDashboardData(facilityId, startDate, endDate, indicators, barCharts, combinedReportAndTabularItemList,
 							lineCharts, pieChartDefinitions, countFinal, orgToTiming, env);
 
 					}

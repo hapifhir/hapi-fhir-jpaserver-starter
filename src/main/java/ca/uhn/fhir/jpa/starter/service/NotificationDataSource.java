@@ -522,7 +522,7 @@ public class NotificationDataSource {
 
 	}
 
-	public List<OrgIndicatorAverageResult> getCacheValueAverageWithoutZeroByDateRangeIndicatorAndMultipleOrgIdScorecard(List<String> orgIds, List<String> indicators, Date startDate, Date endDate) {
+	public List<OrgIndicatorAverageResult> getCacheValueAverageWithoutZeroByDateRangeIndicatorAndMultipleOrgIdForScorecard(List<String> orgIds, List<String> indicators, Date startDate, Date endDate) {
 		Session session = sf.openSession();
 		Transaction transaction = session.beginTransaction();
 		List<OrgIndicatorAverageResult> orgIndicatorAverageResults = new ArrayList<>();
