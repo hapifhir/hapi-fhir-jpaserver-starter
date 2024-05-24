@@ -18,7 +18,7 @@ RUN mkdir /app && cp /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /app/main.
 
 ########### bitnami tomcat version is suitable for debugging and comes with a shell
 ########### it can be built using eg. `docker build --target tomcat .`
-FROM bitnami/tomcat:9.0 AS tomcat
+FROM bitnami/tomcat:10.1 AS tomcat
 
 RUN rm -rf /opt/bitnami/tomcat/webapps/ROOT && \
     mkdir -p /opt/bitnami/hapi/data/hapi/lucenefiles && \
