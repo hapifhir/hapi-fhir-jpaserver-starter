@@ -325,7 +325,18 @@ public class ValidationProvider {
 
 		final var format = encoding == EncodingEnum.XML ? FhirFormat.XML : FhirFormat.JSON;
 		final var stream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-		messages.addAll(engine.validate(format, stream, profile));
+		try {
+			messages.addAll(engine.validate(format, stream, profile));
+		} catch (Exception e) {
+			log.error("Internal validation error", e);
+			final var m = new ValidationMessage();
+			m.setLevel(ValidationMessage.IssueSeverity.FATAL);
+			m.setMessage(
+				"Internal validation exception, contact support "+e.getMessage());
+			m.setCol(0);
+			m.setLine(0);
+			messages.add(m);
+		} 
 		return messages;
 	}
 }

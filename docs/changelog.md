@@ -1,3 +1,8 @@
+2024/05/26 Release 3.8.4
+
+- R5 validation problem from EVS Client [#234](https://github.com/ahdis/matchbox/issues/234)
+
+
 2024/04/29 Release 3.8.3
 
 - profile validation with different ig version issues, GUI & EVS Client [#225](https://github.com/ahdis/matchbox/issues/225)

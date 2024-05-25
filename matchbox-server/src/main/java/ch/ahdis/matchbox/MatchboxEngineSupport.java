@@ -1,5 +1,7 @@
 package ch.ahdis.matchbox;
 
+import static org.apache.commons.lang3.StringUtils.defaultString;
+
 import java.util.*;
 
 import ch.ahdis.matchbox.config.MatchboxFhirContextProperties;
@@ -390,11 +392,21 @@ public class MatchboxEngineSupport {
 			MatchboxEngine baseEngine = mainEngine;
 			if (!cliContext.getFhirVersion().equals(baseEngine.getVersion())) {
 				log.debug("Creating base engine for {} with parameters and fhir Version {}",
-							 (cliContext.getIg() != null ? "for " + cliContext.getIg() : ""),
-							 cliContext.getFhirVersion());
+						(cliContext.getIg() != null ? "for " + cliContext.getIg() : ""),
+						cliContext.getFhirVersion());
 				try {
-					baseEngine = new MatchboxEngineBuilder().getEngine();
-					baseEngine.setVersion(cliContext.getFhirVersion());
+					switch (cliContext.getFhirVersion()) {
+						case "5.0.0":
+							baseEngine = new MatchboxEngineBuilder().getEngineR5();
+							break;
+						case "4.0.1":
+							baseEngine = new MatchboxEngineBuilder().getEngineR4();
+							break;
+						default:
+							log.error("FHIR version not yet supported in mixed mode, needs to be added for version "
+									+ cliContext.getFhirVersion());
+							return null;
+					}
 				} catch (final Exception e) {
 					log.error("Error generating matchbox engine", e);
 					return null;
