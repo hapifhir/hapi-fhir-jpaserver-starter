@@ -56,6 +56,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static ch.ahdis.matchbox.util.MatchboxServerUtils.addExtension;
@@ -128,6 +129,11 @@ public class ValidationProvider {
 						cliContextProperty));
 				}
 			}
+		}
+
+		if (theRequest.getParameter("extensions") != null) {
+			String extensions = theRequest.getParameter("extensions");
+			cliContext.setExtensions(new ArrayList<String>(Arrays.asList(extensions.split(","))));
 		}
 
 		if (theRequest.getParameter("profile") == null) {
@@ -327,7 +333,7 @@ public class ValidationProvider {
 		final var stream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
 		try {
 			messages.addAll(engine.validate(format, stream, profile));
-		} catch (Exception e) {
+		} catch (IOException e) {
 			log.error("Internal validation error", e);
 			final var m = new ValidationMessage();
 			m.setLevel(ValidationMessage.IssueSeverity.FATAL);

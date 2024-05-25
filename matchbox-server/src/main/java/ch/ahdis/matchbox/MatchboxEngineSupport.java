@@ -465,13 +465,14 @@ public class MatchboxEngineSupport {
 		validator.setLevel(cli.getLevel());
 		validator.setDoNative(cli.isDoNative());
 		validator.setHintAboutNonMustSupport(cli.isHintAboutNonMustSupport());
-//			for (String s : cliContext.getExtensions()) {
-//			if ("any".equals(s)) {
-		validator.setAnyExtensionsAllowed(true);
-//			} else {
-//				validator.getExtensionDomains().add(s);
-//			}
-//			}
+		validator.setAnyExtensionsAllowed(false);
+		for (String s : cli.getExtensions()) {
+			if ("any".equals(s)) {
+				validator.setAnyExtensionsAllowed(true);
+			} else {	
+				validator.getExtensionDomains().add(s);
+			}
+		}
 		validator.setLanguage(cli.getLang());
 		validator.setLocale(Locale.forLanguageTag(cli.getLocale()));
 		if (cli.getSnomedCT() != null) {

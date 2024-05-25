@@ -1,5 +1,6 @@
 package ch.ahdis.matchbox;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +41,18 @@ public class CliContext {
 
   @JsonProperty("doNative")
   private boolean doNative = false;
+
+  @JsonProperty("extensions")
+  public List<String> getExtensions() {
+    return extensions;
+  }
+
+  @JsonProperty("extensions")
+  public CliContext setExtensions(List<String> extensions) {
+    this.extensions = extensions;
+    return this;
+  }
+
   @JsonProperty("hintAboutNonMustSupport")
   private boolean hintAboutNonMustSupport = false;
   @JsonProperty("recursive")
@@ -97,8 +110,8 @@ public class CliContext {
   @JsonProperty("fhirVersion")
   private String fhirVersion = null;
 
-  // @JsonProperty("extensions")
-  // private List<String> extensions = new ArrayList<String>();
+  @JsonProperty("extensions")
+  private List<String> extensions = new ArrayList<String>();
   // @JsonProperty("igs")
   // private List<String> igs = new ArrayList<String>();
   @JsonProperty("ig")
@@ -191,6 +204,7 @@ public class CliContext {
     this.igsPreloaded = environment.getProperty("matchbox.fhir.context.igsPreloaded", String[].class);
     this.onlyOneEngine = environment.getProperty("matchbox.fhir.context.onlyOneEngine", Boolean.class, false);
     this.httpReadOnly = environment.getProperty("matchbox.fhir.context.httpReadOnly", Boolean.class, false);
+    this.extensions = Arrays.asList(environment.getProperty("matchbox.fhir.context.extensions", String[].class, new String[]{"any"}));
   }
 
   public CliContext(CliContext other) {
@@ -209,6 +223,7 @@ public class CliContext {
     this.igsPreloaded = other.igsPreloaded;
     this.onlyOneEngine = other.onlyOneEngine;
     this.httpReadOnly = other.httpReadOnly;
+    this.extensions = other.extensions;
   }
 
   @JsonProperty("ig")
@@ -580,6 +595,7 @@ public class CliContext {
         && onlyOneEngine == that.onlyOneEngine
         && httpReadOnly == that.httpReadOnly
         && htmlInMarkdownCheck == that.htmlInMarkdownCheck
+        && Objects.equals(extensions, that.extensions)
         && Objects.equals(txServer, that.txServer)
         && Objects.equals(lang, that.lang)
         && Objects.equals(snomedCT, that.snomedCT)
@@ -597,6 +613,7 @@ public class CliContext {
   @Override
   public int hashCode() {
     int result = Objects.hash(doNative,
+        extensions,
         hintAboutNonMustSupport,
         recursive,
         showMessagesFromReferences,
@@ -634,6 +651,7 @@ public class CliContext {
   public String toString() {
     return "CliContext{" +
         "doNative=" + doNative +
+        ", extensions=" + extensions +
         ", hintAboutNonMustSupport=" + hintAboutNonMustSupport +
         ", recursive=" + recursive +
         ", showMessagesFromReferences=" + showMessagesFromReferences +
@@ -672,7 +690,7 @@ public class CliContext {
 		return Arrays.stream(this.getClass().getDeclaredFields())
 			.filter(f -> f.isAnnotationPresent(JsonProperty.class))
 			.filter(f -> !f.getName().equals("profile"))
-			.filter(f -> f.getType() == String.class || f.getType() == boolean.class)
+			.filter(f -> f.getType() == String.class || f.getType() == boolean.class || f.getType() == String[].class)
 			.collect(Collectors.toList());
 	}
 
@@ -709,5 +727,8 @@ public class CliContext {
 	addExtension(ext, "locale", new StringType(this.locale));
 	// addExtension(ext, "locations", new StringType(this.locations));
 	addExtension(ext, "jurisdiction", new StringType(this.jurisdiction));
+  for( var extension : this.extensions) {
+    addExtension(ext, "extensions", new StringType(extension));
+  }
   }
 }

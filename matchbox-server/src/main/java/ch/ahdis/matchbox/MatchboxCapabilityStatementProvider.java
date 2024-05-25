@@ -177,5 +177,13 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 				.setMax("1")
 				.setType(field.getType().equals(boolean.class) ? Enumerations.FHIRTypes.BOOLEAN : Enumerations.FHIRTypes.STRING);
 		}
+
+		operationDefinition.addParameter()
+		.setName("extensions")
+		.setUse(Enumerations.OperationParameterUse.IN)
+		.setMin(0)
+		.setMax("1")
+		.setType(Enumerations.FHIRTypes.STRING);
+
 	}
 }

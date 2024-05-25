@@ -3092,12 +3092,17 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
 						hint(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_CANONICAL_RESOLVE, url);
 					}
 				} else {
-					if (url.contains("hl7.org") || url.contains("fhir.org")) {
-						ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_URL_RESOLVE, url) && ok;;
-					} else if (url.contains("example.org") || url.contains("acme.com")) {
-						ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_URL_EXAMPLE, url) && ok;;
-					} else {
+					// matchbox patch #233 - should allow unknown extension references if parameter set and only put as a warning
+					if (e.getProperty().getDefinition().getPath().equals("Extension.url") && this.allowUnknownExtension(url)) {
 						warning(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_URL_RESOLVE, url);
+					} else {
+						if (url.contains("hl7.org") || url.contains("fhir.org")) {
+							ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_URL_RESOLVE, url) && ok;;
+						} else if (url.contains("example.org") || url.contains("acme.com")) {
+							ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_URL_EXAMPLE, url) && ok;;
+						} else {
+							warning(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_URL_RESOLVE, url);
+						}
 					}
 				}
 			} else {

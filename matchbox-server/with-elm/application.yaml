@@ -18,9 +18,13 @@ hapi:
         name: hl7.fhir.uv.extensions.r4
         version: 1.0.0
         url: classpath:/hl7.fhir.uv.extensions.r4#1.0.0.tgz
-      ch_elm:
-        name: ch.fhir.ig.ch-elm
-        version: 1.2.0
+      fhir_r5_core:
+        name: hl7.fhir.r5.core
+        version: 5.0.0
+        url: classpath:/hl7.fhir.r5.core.tgz
+      ihe_rad:
+        name: ihe.rad.ira
+        version: 1.0.0
     staticLocation: file:/apps/
 matchbox:
   fhir:
@@ -28,6 +32,3 @@ matchbox:
       fhirVersion: 4.0.1
       txServer: http://localhost:${server.port}/matchboxv3/fhir
 #      txServer: http://tx.fhir.org
-spring:
-  datasource:
-    url: "jdbc:h2:mem:test"
