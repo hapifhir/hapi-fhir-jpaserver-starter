@@ -2271,7 +2271,6 @@ public class HelperService {
 		List<TabularItem> combinedReportAndTabularItemList = new ArrayList<>();
 		combinedReportAndTabularItemList.addAll(tabularItemList);
 		combinedReportAndTabularItemList.addAll(reportItemList);
-		tabularItemList.addAll(reportItemList);
 		ThreadPoolTaskExecutor executor = asyncConf.asyncExecutor();
 		HashMap<String, Pair<Long, Long>> orgToTiming = new HashMap();
 		List<List<String>> facilityBatches = Utils.partitionFacilities(facilities, appProperties.getExecutor_max_pool_size());
