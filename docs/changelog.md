@@ -1,4 +1,4 @@
-2024/05/26 Release 3.8.4
+2024/05/27 Release 3.8.4
 
 - R5 validation problem from EVS Client [#234](https://github.com/ahdis/matchbox/issues/234)
 - IPS validation with unknown extensions should not give an error [#233](https://github.com/ahdis/matchbox/issues/233) 
