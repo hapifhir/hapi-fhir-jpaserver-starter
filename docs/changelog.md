@@ -2,6 +2,7 @@
 
 - R5 validation problem from EVS Client [#234](https://github.com/ahdis/matchbox/issues/234)
 - IPS validation with unknown extensions should not give an error [#233](https://github.com/ahdis/matchbox/issues/233) 
+- Only download NPM package from localhost or ci-build if already installed in container [#232](https://github.com/ahdis/matchbox/issues/232)
 
 2024/04/29 Release 3.8.3
 

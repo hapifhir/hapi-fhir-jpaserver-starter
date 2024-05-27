@@ -178,8 +178,8 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 					ourLog.info("Package {}#{} is already installed", theInstallationSpec.getName(),
 							theInstallationSpec.getVersion());
 					// MODIFIED: This has been added to add remove packages based on url
-					if (theInstallationSpec.getPackageUrl() != null && !theInstallationSpec.getPackageUrl().startsWith("classpath:") && !theInstallationSpec.getPackageUrl().startsWith("file:")) {
-						ourLog.info("Remove Package {}#{} because it is a package based on an external url",
+					if (theInstallationSpec.getPackageUrl() != null && theInstallationSpec.getPackageUrl().startsWith("http") && (theInstallationSpec.getPackageUrl().contains("localhost") || theInstallationSpec.getPackageUrl().contains("build.fhir.org"))){
+						ourLog.info("Remove Package {}#{} because it is a ci-build package or coming form localhost",
 								theInstallationSpec.getName(), theInstallationSpec.getVersion());
 						myPackageCacheManager.uninstallPackage(theInstallationSpec.getName(), theInstallationSpec.getVersion());
 					} else {
