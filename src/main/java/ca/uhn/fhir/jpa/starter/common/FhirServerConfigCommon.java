@@ -2,7 +2,7 @@ package ca.uhn.fhir.jpa.starter.common;
 
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
-import ca.uhn.fhir.jpa.binstore.DatabaseBlobBinaryStorageSvcImpl;
+import ca.uhn.fhir.jpa.binstore.DatabaseBinaryContentStorageSvcImpl;
 import ca.uhn.fhir.jpa.config.HibernatePropertiesProvider;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings.CrossPartitionReferenceMode;
@@ -88,7 +88,7 @@ public class FhirServerConfigCommon {
 	}
 
 	/**
-	 * Configure FHIR properties around the the JPA server via this bean
+	 * Configure FHIR properties around the JPA server via this bean
 	 */
 	@Bean
 	public JpaStorageSettings jpaStorageSettings(AppProperties appProperties) {
@@ -264,7 +264,7 @@ public class FhirServerConfigCommon {
 	@Lazy
 	@Bean
 	public IBinaryStorageSvc binaryStorageSvc(AppProperties appProperties) {
-		DatabaseBlobBinaryStorageSvcImpl binaryStorageSvc = new DatabaseBlobBinaryStorageSvcImpl();
+		DatabaseBinaryContentStorageSvcImpl binaryStorageSvc = new DatabaseBinaryContentStorageSvcImpl();
 
 		if (appProperties.getMax_binary_size() != null) {
 			binaryStorageSvc.setMaximumBinarySize(appProperties.getMax_binary_size());

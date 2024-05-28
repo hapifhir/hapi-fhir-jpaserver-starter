@@ -68,7 +68,6 @@ public class StarterCrR4Config {
 	@Bean
 	CareGapsProperties careGapsProperties(CrProperties theCrProperties) {
 		var careGapsProperties = new CareGapsProperties();
-		careGapsProperties.setThreadedCareGapsEnabled(false);
 		careGapsProperties.setCareGapsReporter(theCrProperties.getCareGapsReporter());
 		careGapsProperties.setCareGapsCompositionSectionAuthor(theCrProperties.getCareGapsSectionAuthor());
 		return careGapsProperties;
