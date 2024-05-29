@@ -498,7 +498,8 @@ public class NotificationDataSource {
 				.createQuery(
 					"SELECT new OrgIndicatorAverageResult(orgId, indicator, ROUND(AVG(value), 2) AS averageValue) " +
 						"FROM CacheEntity " +
-						"WHERE orgId IN :param1 " +
+						"WHERE value <> -1 " +
+						"AND orgId IN :param1 " +
 						"AND indicator IN :param2 " +
 						"AND date >= :param3 " +
 						"AND date <= :param4 " +
@@ -532,7 +533,7 @@ public class NotificationDataSource {
 				.createQuery(
 					"SELECT new OrgIndicatorAverageResult(orgId, indicator, ROUND(AVG(value), 2) AS averageValue) " +
 						"FROM CacheEntity " +
-						"WHERE value <> 0 " +
+						"WHERE (value <> 0 AND value <> -1) " +
 						"AND orgId IN :param1 " +
 						"AND indicator IN :param2 " +
 						"AND date >= :param3 " +
@@ -579,7 +580,11 @@ public class NotificationDataSource {
 																							 List<String> orgIds) {
 		Session session = sf.openSession();
 		Query query = session.createQuery(
-			"SELECT AVG(value) FROM CacheEntity WHERE value <> 0 AND date BETWEEN :param1 AND :param2 AND indicator=:param3 AND org_id IN (:param4)");
+			"SELECT AVG(value) FROM CacheEntity " +
+				"WHERE (value <> 0 AND value <> -1) " +
+				"AND date BETWEEN :param1 AND :param2 " +
+				"AND indicator = :param3 " +
+				"AND org_id IN (:param4)");
 		query.setParameter("param1", from);
 		query.setParameter("param2", to);
 		query.setParameter("param3", indicator);
@@ -597,7 +602,11 @@ public class NotificationDataSource {
 																												 List<String> orgIds) {
 		Session session = sf.openSession();
 		Query query = session.createQuery(
-			"SELECT AVG(value) FROM CacheEntity WHERE date BETWEEN :param1 AND :param2 AND indicator=:param3 AND org_id IN (:param4)");
+			"SELECT AVG(value) FROM CacheEntity " +
+				"WHERE value <> -1 " + // Exclude rows where value is -1
+				"AND date BETWEEN :param1 AND :param2 " +
+				"AND indicator = :param3 " +
+				"AND org_id IN (:param4)");
 		query.setParameter("param1", from);
 		query.setParameter("param2", to);
 		query.setParameter("param3", indicator);

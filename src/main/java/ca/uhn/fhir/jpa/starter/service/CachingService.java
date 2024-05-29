@@ -634,6 +634,8 @@ public class CachingService {
 			dateWiseMapDataList.addAll(ReportGeneratorFactory.INSTANCE.reportGenerator().getMapData(fhirClientProvider, String.join(",", orgIds), new DateRange(startDate, endDate)));
 		}
 		for(DateWiseMapData item: dateWiseMapDataList){
+			resultToCache.clear();
+			resultToUpdateCache.clear();
 			Date date = Date.valueOf(LocalDate.parse(item.getDateKey(), DateTimeFormatter.ISO_DATE));
 			if (item.getDateResponse().size() != 0){
 				Set<Map.Entry<String, Map<String, PositionData>>> dateResponseMap = item.getDateResponse().entrySet();
