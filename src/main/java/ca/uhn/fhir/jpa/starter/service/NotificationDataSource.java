@@ -498,7 +498,7 @@ public class NotificationDataSource {
 				.createQuery(
 					"SELECT new OrgIndicatorAverageResult(orgId, indicator, ROUND(AVG(value), 2) AS averageValue) " +
 						"FROM CacheEntity " +
-						"WHERE value <> -1 " +
+						"WHERE value <> -1 " + // Exclude rows where value is -1
 						"AND orgId IN :param1 " +
 						"AND indicator IN :param2 " +
 						"AND date >= :param3 " +
