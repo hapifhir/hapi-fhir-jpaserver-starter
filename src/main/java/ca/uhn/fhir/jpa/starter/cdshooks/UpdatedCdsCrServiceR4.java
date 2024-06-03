@@ -10,6 +10,7 @@ import org.opencds.cqf.fhir.api.Repository;
 
 import java.util.stream.Collectors;
 
+import static ca.uhn.hapi.fhir.cdshooks.svc.cr.CdsCrConstants.APPLY_PARAMETER_DATA;
 import static ca.uhn.hapi.fhir.cdshooks.svc.cr.CdsCrConstants.APPLY_PARAMETER_DATA_ENDPOINT;
 import static org.opencds.cqf.fhir.utility.r4.Parameters.part;
 
@@ -21,9 +22,8 @@ public class UpdatedCdsCrServiceR4 extends CdsCrServiceR4 {
 	@Override
 	public Parameters encodeParams(CdsServiceRequestJson theJson) {
 		Parameters parameters = super.encodeParams(theJson);
-		if (parameters.hasParameter("data")) {
+		if (parameters.hasParameter(APPLY_PARAMETER_DATA)) {
 			parameters.addParameter(part("useServerData", new BooleanType(false)));
-			parameters.setParameter(parameters.getParameter().stream().filter(x -> !x.getName().equals(APPLY_PARAMETER_DATA_ENDPOINT)).collect(Collectors.toList()));
 		}
 		return parameters;
 	}
