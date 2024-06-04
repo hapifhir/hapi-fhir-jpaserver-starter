@@ -82,7 +82,7 @@ public class CachingService {
 					    @Override public void doIt() {
 					    	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getId()), orgId);
 					    	if (cacheEntities.isEmpty()) {
-								CacheEntity cacheEntity = new CacheEntity(orgId, mapOfIdToMd5.get(item.getId()), date, Double.valueOf(0),Date.valueOf(LocalDate.now()));
+								CacheEntity cacheEntity = new CacheEntity(orgId, mapOfIdToMd5.get(item.getId()), date, Double.valueOf(-1),Date.valueOf(LocalDate.now()));
 								cacheEntitiesForInsert.add(cacheEntity);
 						}
 					  }
