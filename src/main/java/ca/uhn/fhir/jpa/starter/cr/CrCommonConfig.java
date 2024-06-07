@@ -78,12 +78,10 @@ public class CrCommonConfig {
 		if (cqlRuntimeProperties.isEnableValidation()) {
 			options.add(CqlEngine.Options.EnableValidation);
 		}
-
+		cqlEngineOptions.setOptions(options);
 		if (cqlRuntimeProperties.isDebugLoggingEnabled()) {
 			cqlEngineOptions.setDebugLoggingEnabled(true);
 		}
-
-		cqlEngineOptions.setOptions(options);
 		cqlOptions.setCqlEngineOptions(cqlEngineOptions);
 
 		var cqlCompilerOptions = new CqlCompilerOptions();
