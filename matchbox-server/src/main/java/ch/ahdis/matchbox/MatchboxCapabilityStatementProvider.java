@@ -25,6 +25,8 @@ import org.hl7.fhir.r5.model.StringType;
 
 import java.lang.reflect.Field;
 
+import static ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl.SD_EXTENSION_TITLE_PREFIX;
+
 /**
  * A provider of CapabilityStatement customized for Matchbox.
  */
@@ -154,13 +156,18 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 			.setMin(0)
 			.setMax("1")
 			.setType(Enumerations.FHIRTypes.CODE);
+
+		final var profiles = this.structureDefinitionProvider.getCanonicalsR5().stream()
+			.filter(sd -> !sd.getExtensionByUrl("sd-title").getValueStringType().getValue().startsWith(
+				SD_EXTENSION_TITLE_PREFIX))
+			.toList();
 		operationDefinition.addParameter()
 			.setName("profile")
 			.setUse(Enumerations.OperationParameterUse.IN)
 			.setMin(0)
 			.setMax("1")
 			.setType(Enumerations.FHIRTypes.CANONICAL)
-			.setTargetProfile(this.structureDefinitionProvider.getCanonicalsR5());
+			.setTargetProfile(profiles);
 		operationDefinition.addParameter()
 			.setName("reload")
 			.setUse(Enumerations.OperationParameterUse.IN)
@@ -179,11 +186,11 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 		}
 
 		operationDefinition.addParameter()
-		.setName("extensions")
-		.setUse(Enumerations.OperationParameterUse.IN)
-		.setMin(0)
-		.setMax("1")
-		.setType(Enumerations.FHIRTypes.STRING);
+			.setName("extensions")
+			.setUse(Enumerations.OperationParameterUse.IN)
+			.setMin(0)
+			.setMax("1")
+			.setType(Enumerations.FHIRTypes.STRING);
 
 	}
 }

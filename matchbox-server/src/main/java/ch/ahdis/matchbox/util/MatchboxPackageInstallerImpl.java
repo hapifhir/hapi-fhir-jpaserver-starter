@@ -74,6 +74,7 @@ import ca.uhn.fhir.util.SearchParameterUtil;
  *
  */
 public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
+	public static final String SD_EXTENSION_TITLE_PREFIX = "[Extension] ";
 
 	private static final Logger ourLog = LoggerFactory.getLogger(MatchboxPackageInstallerImpl.class);
 	// MODIFIED
@@ -236,17 +237,35 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 							final var title = switch (npmPackageVersionResourceEntity.getFhirVersion()) {
 								case R4 -> {
 									final var sd = (org.hl7.fhir.r4.model.StructureDefinition) parserR4.parse(resourceContents);
+
+									final String sdTitle;
 									if (sd.getTitle() != null) {
-										yield sd.getTitle();
+										sdTitle = sd.getTitle();
+									} else {
+										sdTitle = sd.getName();
 									}
-									yield sd.getName();
+
+									if ("Extension".equals(sd.getType())) {
+										yield SD_EXTENSION_TITLE_PREFIX + sdTitle;
+									} else {
+										yield sdTitle;
+									}
 								}
 								case R5 -> {
 									final var sd = (org.hl7.fhir.r5.model.StructureDefinition) parserR5.parse(resourceContents);
+
+									final String sdTitle;
 									if (sd.getTitle() != null) {
-										yield sd.getTitle();
+										sdTitle = sd.getTitle();
+									} else {
+										sdTitle = sd.getName();
 									}
-									yield sd.getName();
+
+									if ("Extension".equals(sd.getType())) {
+										yield SD_EXTENSION_TITLE_PREFIX + sdTitle;
+									} else {
+										yield sdTitle;
+									}
 								}
 								default -> {
 									ourLog.error("FHIR version not supported for parsing the StructureDefinition");

@@ -1,3 +1,7 @@
+Unreleased
+
+- Extension profiles are not shown for validation anymore [#237](https://github.com/ahdis/matchbox/issues/237)
+
 2024/05/27 Release 3.8.4
 
 - R5 validation problem from EVS Client [#234](https://github.com/ahdis/matchbox/issues/234)
