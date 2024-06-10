@@ -67,11 +67,13 @@ class CdsHooksServletIT implements IServerSupport {
 	@LocalServerPort
 	private int port;
 
+	private String ourServerBase;
+
 	@BeforeEach
 	void beforeEach() {
 		ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
 		ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
-		String ourServerBase = "http://localhost:" + port + "/fhir/";
+		ourServerBase = "http://localhost:" + port + "/fhir/";
 		ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
 		ourCdsBase = "http://localhost:" + port + "/cds-services";
 	}
@@ -134,6 +136,100 @@ class CdsHooksServletIT implements IServerSupport {
 			JsonArray cards = response.getAsJsonArray("cards");
 			assertEquals(1, cards.size());
 			assertEquals("\"Hello World!\"", cards.get(0).getAsJsonObject().get("summary").toString());
+		} catch (IOException ioe) {
+			fail(ioe.getMessage());
+		}
+	}
+
+	@Test
+	void testRec10() throws IOException {
+		loadBundle("r4/opioidcds-10-order-sign-bundle.json", ourCtx, ourClient);
+		await().atMost(10000, TimeUnit.MILLISECONDS).until(() -> getCdsServices().size(), equalTo(1));;
+		var fhirServer = "  \"fhirServer\": " + "\"" + ourServerBase + "\"" + ",\n";
+		var cdsRequest = "{\n" +
+			"  \"hookInstance\": \"055b009c-4a7d-4db4-a35e-0e5198918ed1\",\n" +
+			"  \"hook\": \"order-sign\",\n" +
+			fhirServer +
+			"  \"context\": {\n" +
+			"    \"patientId\": \"example-rec-10-order-sign-illicit-POS-Cocaine-drugs\",\n" +
+			"    \"userId\": \"COREPRACTITIONER1\",\n" +
+			"    \"draftOrders\": {\n" +
+			"      \"resourceType\": \"Bundle\",\n" +
+			"      \"entry\": [\n" +
+			"        {\n" +
+			"          \"resource\": {\n" +
+			"            \"resourceType\": \"MedicationRequest\",\n" +
+			"            \"id\": \"request-123\",\n" +
+			"            \"status\": \"draft\",\n" +
+			"            \"subject\": {\n" +
+			"              \"reference\": \"Patient/example-rec-10-order-sign-illicit-POS-Cocaine-drugs\"\n" +
+			"            },\n" +
+			"            \"authoredOn\": \"2024-03-27\",\n" +
+			"            \"dosageInstruction\": [\n" +
+			"              {\n" +
+			"                \"timing\": {\n" +
+			"                  \"repeat\": {\n" +
+			"                    \"frequency\": 1,\n" +
+			"                    \"period\": 1,\n" +
+			"                    \"periodUnit\": \"d\"\n" +
+			"                  }\n" +
+			"                },\n" +
+			"                \"doseAndRate\": [\n" +
+			"                  {\n" +
+			"                    \"doseQuantity\": {\n" +
+			"                      \"value\": 1,\n" +
+			"                      \"system\": \"http://unitsofmeasure.org\",\n" +
+			"                      \"code\": \"{pill}\"\n" +
+			"                    }\n" +
+			"                  }\n" +
+			"                ]\n" +
+			"              }\n" +
+			"            ],\n" +
+			"            \"dispenseRequest\": {\n" +
+			"              \"expectedSupplyDuration\": {\n" +
+			"                \"value\": 90,\n" +
+			"                \"unit\": \"days\",\n" +
+			"                \"system\": \"http://unitsofmeasure.org\",\n" +
+			"                \"code\": \"d\"\n" +
+			"              }\n" +
+			"            },\n" +
+			"            \"intent\": \"order\",\n" +
+			"            \"category\": {\n" +
+			"              \"coding\": [\n" +
+			"                {\n" +
+			"                  \"system\": \"http://terminology.hl7.org/CodeSystem/medicationrequest-category\",\n" +
+			"                  \"code\": \"community\"\n" +
+			"                }\n" +
+			"              ]\n" +
+			"            },\n" +
+			"            \"medicationCodeableConcept\": {\n" +
+			"              \"coding\": [\n" +
+			"                {\n" +
+			"                  \"system\": \"http://www.nlm.nih.gov/research/umls/rxnorm\",\n" +
+			"                  \"code\": \"1049502\",\n" +
+			"                  \"display\": \"12 HR oxycodone hydrochloride 10 MG Extended Release Oral Tablet\"\n" +
+			"                }\n" +
+			"              ]\n" +
+			"            }\n" +
+			"          }\n" +
+			"        }\n" +
+			"      ]\n" +
+			"    }\n" +
+			"  }\n" +
+			"}";
+		try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+			HttpPost request = new HttpPost(ourCdsBase + "/opioidcds-10-order-sign");
+			request.setEntity(new StringEntity(cdsRequest));
+			request.addHeader("Content-Type", "application/json");
+
+			CloseableHttpResponse httpResponse = httpClient.execute(request);
+			String result = EntityUtils.toString(httpResponse.getEntity());
+			Gson gsonResponse = new Gson();
+			JsonObject response = gsonResponse.fromJson(result, JsonObject.class);
+			assertNotNull(response);
+			JsonArray cards = response.getAsJsonArray("cards");
+			assertEquals(0, cards.size());
+//			assertEquals("\"Hello World!\"", cards.get(0).getAsJsonObject().get("summary").toString());
 		} catch (IOException ioe) {
 			fail(ioe.getMessage());
 		}
