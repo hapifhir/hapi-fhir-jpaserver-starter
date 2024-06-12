@@ -325,12 +325,16 @@ public Cors getCors() {
     this.allow_override_default_search_params = allow_override_default_search_params;
   }
 
-  public Boolean getAuto_create_placeholder_reference_targets() {
-    return auto_create_placeholder_reference_targets;
-  }
-
   public Boolean getEnable_mass_ingestion_mode() {
     return enable_mass_ingestion_mode;
+  }
+
+  public void setEnable_mass_ingestion_mode(Boolean enable_mass_ingestion_mode) {
+    this.enable_mass_ingestion_mode = enable_mass_ingestion_mode;
+  }
+
+  public Boolean getAuto_create_placeholder_reference_targets() {
+    return auto_create_placeholder_reference_targets;
   }
 
   public void setAuto_create_placeholder_reference_targets(
