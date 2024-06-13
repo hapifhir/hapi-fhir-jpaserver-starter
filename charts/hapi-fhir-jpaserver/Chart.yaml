@@ -11,7 +11,7 @@ dependencies:
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
 appVersion: 7.2.0
-version: 0.16.0
+version: 0.17.0
 annotations:
   artifacthub.io/license: Apache-2.0
   artifacthub.io/containsSecurityUpdates: "false"
