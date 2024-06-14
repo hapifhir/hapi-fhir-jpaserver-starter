@@ -325,7 +325,7 @@ public Cors getCors() {
     this.allow_override_default_search_params = allow_override_default_search_params;
   }
 
-  public Boolean getEnable_mass_ingestion_mode() {
+  public Boolean getMass_ingestion_mode_enabled() {
     return enable_mass_ingestion_mode;
   }
 
