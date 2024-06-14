@@ -1,5 +1,6 @@
 2024/06/14 Release 3.8.5
 
+- Exception when using internal terminology server [#236](https://github.com/ahdis/matchbox/issues/236)
 - Extension profiles are not shown for validation anymore [#237](https://github.com/ahdis/matchbox/issues/237)
 - Ignore suppressWarnInfo Version independent [#239](https://github.com/ahdis/matchbox/issues/239)
 

@@ -1,7 +1,9 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ch.ahdis.matchbox.spring.MatchboxEventListener;
+import ch.ahdis.matchbox.terminology.RegistryWs;
 import ch.ahdis.matchbox.gazelle.GazelleValidationWs;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;
@@ -28,7 +30,8 @@ import ch.ahdis.matchbox.MatchboxJpaConfig;
 	MatchboxJpaConfig.class,
 	FhirServerConfigR4.class,
 	MatchboxEventListener.class,
-	GazelleValidationWs.class})
+	GazelleValidationWs.class,
+  RegistryWs.class})
 public class Application extends SpringBootServletInitializer {
 
   public static void main(String[] args) {
