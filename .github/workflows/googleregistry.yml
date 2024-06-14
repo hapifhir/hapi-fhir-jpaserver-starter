@@ -82,3 +82,19 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
+      
+      - name: Send a stream message to Zulip
+        uses: zulip/github-actions-zulip/send-message@v1
+        with:
+          api-key: ${{ secrets.ZULIPAPIKEY }}
+          email: "ahdis-bot@chat.fhir.org"
+          organization-url: "https://chat.fhir.org"
+          to: "matchbox"
+          type: "stream"
+          topic: "new matchbox version published"
+          content: |
+              :rocket: ${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.ref_name }} published :rocket:
+              
+              see also https://github.com/ahdis/matchbox/releases/tag/${{ github.ref_name }}
+              
+              docker pull ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.ref_name }}
