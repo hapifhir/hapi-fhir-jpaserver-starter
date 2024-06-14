@@ -10,8 +10,8 @@ dependencies:
     version: 14.3.1
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
-appVersion: 7.0.3
-version: 0.16.0
+appVersion: 7.2.0
+version: 0.17.0
 annotations:
   artifacthub.io/license: Apache-2.0
   artifacthub.io/containsSecurityUpdates: "false"
@@ -24,7 +24,7 @@ annotations:
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
     - kind: changed
-      description: updated starter image to v7.0.3
+      description: updated starter image to v7.2.0
     - kind: changed
       description: updated curlimages/curl to 8.6.0
     - kind: changed

@@ -13,7 +13,7 @@ In order to use this sample, you should have:
 - [This project](https://github.com/hapifhir/hapi-fhir-jpaserver-starter) checked out. You may wish to create a GitHub Fork of the project and check that out instead so that you can customize the project and save the results to GitHub.
 
 ### and either
- - Oracle Java (JDK) installed: Minimum JDK8 or newer.
+ - Oracle Java (JDK) installed: Minimum JDK17 or newer.
  - Apache Maven build tool (newest version)
 
 ### or
@@ -102,7 +102,7 @@ spring:
     driverClassName: org.postgresql.Driver
   jpa:
     properties:
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
       hibernate.search.enabled: false
 ```
 
@@ -155,7 +155,7 @@ spring:
     driverClassName: org.postgresql.Driver
   jpa:
     properties:
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
       hibernate.search.enabled: false
 hapi:
   fhir:
@@ -312,7 +312,7 @@ spring:
     driverClassName: org.postgresql.Driver
   jpa:
     properties:
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
       hibernate.search.enabled: false
 
       # Then comment all hibernate.search.backend.*
@@ -430,7 +430,7 @@ spring:
     driverClassName: org.postgresql.Driver
 jpa:
   properties:
-    hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+    hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
     hibernate.search.enabled: false
 
     # Then comment all hibernate.search.backend.*
