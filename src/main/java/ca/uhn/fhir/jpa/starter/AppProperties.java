@@ -330,7 +330,7 @@ public Cors getCors() {
   }
 
   public void setMass_ingestion_mode_enabled(Boolean mass_ingestion_mode_enabled) {
-    this.enable_mass_ingestion_mode = enable_mass_ingestion_mode;
+    this.mass_ingestion_mode_enabled = mass_ingestion_mode_enabled;
   }
 
   public Boolean getAuto_create_placeholder_reference_targets() {
