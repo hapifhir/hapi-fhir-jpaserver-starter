@@ -4,15 +4,14 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.cr.config.RepositoryConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.searchparam.config.NicknameServiceConfig;
+import ca.uhn.fhir.jpa.starter.cdshooks.StarterCdsHooksConfig;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsServiceRegistry;
-import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServiceResponseJson;
 import ca.uhn.hapi.fhir.cdshooks.config.CdsHooksConfig;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -21,9 +20,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,15 +30,17 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
 	classes = {
 		Application.class,
 		NicknameServiceConfig.class,
 		RepositoryConfig.class,
-		CdsHooksConfig.class
+		CdsHooksConfig.class,
+		StarterCdsHooksConfig.class
 	}, properties = {
 	"spring.profiles.include=storageSettingsTest",
 	"spring.datasource.url=jdbc:h2:mem:dbr4",
@@ -77,14 +76,19 @@ class CdsHooksServletIT implements IServerSupport {
 		ourServerBase = "http://localhost:" + port + "/fhir/";
 		ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
 		ourCdsBase = "http://localhost:" + port + "/cds-services";
+
+		var cdsServicesJson = myCdsServiceRegistry.getCdsServicesJson();
+		if (cdsServicesJson != null && cdsServicesJson.getServices() != null && !cdsServicesJson.getServices().isEmpty()) {
+			var services = cdsServicesJson.getServices();
+			for (int i = 0; i < services.size(); i++) {
+				myCdsServiceRegistry.unregisterService(services.get(i).getId(), "CR");
+			}
+		}
 	}
 
-	private JsonArray getCdsServices() throws IOException {
+	private Boolean hasCdsServices() throws IOException {
 		var response = callCdsServicesDiscovery();
-		String result = EntityUtils.toString(response.getEntity());
-		Gson gsonResponse = new Gson();
-		JsonObject services = gsonResponse.fromJson(result, JsonObject.class);
-		return !services.has("services") ? new JsonArray() : services.get("services").getAsJsonArray();
+		return response.getEntity().getContentLength() > 21 || response.getEntity().isChunked();
 	}
 
 	private CloseableHttpResponse callCdsServicesDiscovery() {
@@ -107,7 +111,7 @@ class CdsHooksServletIT implements IServerSupport {
 	@Test
 	void testCdsHooks() throws IOException, InterruptedException {
 		loadBundle("r4/HelloWorld-Bundle.json", ourCtx, ourClient);
-		await().atMost(10000, TimeUnit.MILLISECONDS).until(() -> getCdsServices().size(), equalTo(1));
+		await().atMost(10000, TimeUnit.MILLISECONDS).until(() -> hasCdsServices());
 		var cdsRequest = "{\n" +
 			"  \"hookInstance\": \"12345\",\n" +
 			"  \"hook\": \"patient-view\",\n" +
@@ -143,10 +147,9 @@ class CdsHooksServletIT implements IServerSupport {
 	}
 
 	@Test
-	@Disabled("Disable failing test")
 	void testRec10() throws IOException {
 		loadBundle("r4/opioidcds-10-order-sign-bundle.json", ourCtx, ourClient);
-		await().atMost(20000, TimeUnit.MILLISECONDS).until(() -> getCdsServices().size(), equalTo(1));;
+		await().atMost(20000, TimeUnit.MILLISECONDS).until(() -> hasCdsServices());
 		var fhirServer = "  \"fhirServer\": " + "\"" + ourServerBase + "\"" + ",\n";
 		var cdsRequest = "{\n" +
 			"  \"hookInstance\": \"055b009c-4a7d-4db4-a35e-0e5198918ed1\",\n" +

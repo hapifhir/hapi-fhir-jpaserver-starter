@@ -10,6 +10,8 @@ import ca.uhn.hapi.fhir.cdshooks.svc.cr.CdsCrSettings;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.hapi.fhir.cdshooks.svc.cr.CdsCrServiceRegistry;
 import ca.uhn.hapi.fhir.cdshooks.svc.cr.ICdsCrServiceRegistry;
+import ca.uhn.hapi.fhir.cdshooks.svc.cr.discovery.CdsCrDiscoveryServiceRegistry;
+import ca.uhn.hapi.fhir.cdshooks.svc.cr.discovery.ICdsCrDiscoveryServiceRegistry;
 import ca.uhn.hapi.fhir.cdshooks.svc.prefetch.CdsPrefetchDaoSvc;
 import ca.uhn.hapi.fhir.cdshooks.svc.prefetch.CdsPrefetchFhirClientSvc;
 import ca.uhn.hapi.fhir.cdshooks.svc.prefetch.CdsPrefetchSvc;
@@ -39,6 +41,14 @@ public class StarterCdsHooksConfig {
 //			theResourcePrefetchFhirClient,
 //			theCdsHooksDaoAuthorizationSvc);
 //	}
+
+	@Bean
+	public ICdsCrDiscoveryServiceRegistry cdsCrDiscoveryServiceRegistry() {
+		CdsCrDiscoveryServiceRegistry registry = new CdsCrDiscoveryServiceRegistry();
+		registry.unregister(FhirVersionEnum.R4);
+		registry.register(FhirVersionEnum.R4, UpdatedCrDiscoveryServiceR4.class);
+		return registry;
+	}
 
 	@Bean
 	public ICdsCrServiceRegistry cdsCrServiceRegistry() {
