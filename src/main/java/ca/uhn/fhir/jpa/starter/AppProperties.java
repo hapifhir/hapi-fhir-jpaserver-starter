@@ -326,7 +326,7 @@ public Cors getCors() {
   }
 
   public Boolean getMass_ingestion_mode_enabled() {
-    return enable_mass_ingestion_mode;
+    return mass_ingestion_mode_enabled;
   }
 
   public void setMass_ingestion_mode_enabled(Boolean mass_ingestion_mode_enabled) {
