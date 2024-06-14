@@ -336,6 +336,13 @@ public class FixNullReferenceInBundle {
 				logger.warn("Modified Request body " + modifiedBody);
 			}
 
+			if (requestBody.toString().contains("Location/6cbca99b-821a-4fd8-91ee-9ee63b9a84f3") || requestBody.toString().contains("Organization/522cf364-f1cd-4e32-b95e-1e74dbac144d")) {
+				modifiedBody = modifiedBody.replace("Location/6cbca99b-821a-4fd8-91ee-9ee63b9a84f3", "Location/6f4a228b-802f-4a72-9930-47e669dad58c");
+
+				modifiedBody = modifiedBody.replace("Organization/522cf364-f1cd-4e32-b95e-1e74dbac144d", "Organization/11888e66-58bb-4d5a-8866-e94a482bd51c");
+				logger.warn("Modified Request body " + modifiedBody);
+			}
+
 
 			ModifiedBodyRequestWrapper modifiedRequest = new ModifiedBodyRequestWrapper(request, modifiedBody,
 					modifiedHeaders);
