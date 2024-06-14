@@ -101,7 +101,7 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setAutoCreatePlaceholderReferenceTargets(
 				appProperties.getAuto_create_placeholder_reference_targets());
 		jpaStorageSettings.setMassIngestionMode(
-				appProperties.getEnable_mass_ingestion_mode());
+				appProperties.getMass_ingestion_mode_enabled());
 		jpaStorageSettings.setAutoVersionReferenceAtPaths(appProperties.getAuto_version_reference_at_paths());
 		jpaStorageSettings.setEnforceReferentialIntegrityOnWrite(
 				appProperties.getEnforce_referential_integrity_on_write());
