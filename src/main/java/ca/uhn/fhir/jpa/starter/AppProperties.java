@@ -37,7 +37,7 @@ public class AppProperties {
   private Boolean allow_multiple_delete = false;
   private Boolean allow_override_default_search_params = true;
   private Boolean auto_create_placeholder_reference_targets = false;
-  private Boolean enable_mass_ingestion_mode = false;
+  private Boolean mass_ingestion_mode_enabled = false;
   private final Set<String> auto_version_reference_at_paths = new HashSet<>();
   private Boolean language_search_parameter_enabled = false;
   private Boolean dao_scheduling_enabled = true;
