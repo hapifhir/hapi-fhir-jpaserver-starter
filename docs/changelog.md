@@ -1,6 +1,7 @@
-Unreleased
+2024/06/14 Release 3.8.5
 
 - Extension profiles are not shown for validation anymore [#237](https://github.com/ahdis/matchbox/issues/237)
+- Ignore suppressWarnInfo Version independent [#239](https://github.com/ahdis/matchbox/issues/239)
 
 2024/05/27 Release 3.8.4
 

@@ -533,6 +533,13 @@ public class MatchboxEngineSupport {
 					suppressedWarnings.getOrDefault(ig, Collections.emptyList())
 						.forEach(pattern -> this.addSuppressedWarnInfoToEngine(pattern, validator));
 				});
+
+			validator.getContext().getLoadedPackages().stream().filter(pkg -> pkg.contains("#"))
+				.map(pkg -> pkg.substring(0, pkg.indexOf("#")))
+				.forEach(ig -> {
+					suppressedWarnings.getOrDefault(ig, Collections.emptyList())
+						.forEach(pattern -> this.addSuppressedWarnInfoToEngine(pattern, validator));
+				});
 		}
 		log.debug("Added {} suppressed warnings for these IGs", validator.getSuppressedWarnInfoPatterns().size());
 	}
