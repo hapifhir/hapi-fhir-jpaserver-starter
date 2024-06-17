@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 		RepositoryConfig.class
 	}, properties =
   {
-	  "spring.profiles.include=storageSettingsTest",
+	  "spring.profiles.include=subscriptionSettingsTest",
      "spring.datasource.url=jdbc:h2:mem:dbr3",
      "hapi.fhir.fhir_version=dstu3",
 	  "hapi.fhir.cr_enabled=true",
