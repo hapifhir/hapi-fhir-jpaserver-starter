@@ -55,11 +55,10 @@ import static org.opencds.cqf.fhir.utility.r4.Parameters.stringPart;
 		NicknameServiceConfig.class,
 		RepositoryConfig.class
 	}, properties = {
-	"spring.profiles.include=subscriptionSettingsTest",
 	"spring.datasource.url=jdbc:h2:mem:dbr4",
 	"hapi.fhir.enable_repository_validating_interceptor=true",
 	"hapi.fhir.fhir_version=r4",
-	//"hapi.fhir.subscription.websocket_enabled=true",
+	"hapi.fhir.subscription.websocket_enabled=true",
 	//"hapi.fhir.mdm_enabled=true",
 	"hapi.fhir.cr.enabled=true",
 	"hapi.fhir.cr.caregaps_section_author=Organization/alphora-author",
