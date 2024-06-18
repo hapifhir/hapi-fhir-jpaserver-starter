@@ -1,3 +1,7 @@
+2024/06/xx Release 3.8.6
+
+- fhirpath date add/minus with variables in fml [#243](https://github.com/ahdis/matchbox/issues/243)
+
 2024/06/14 Release 3.8.5
 
 - Exception when using internal terminology server [#236](https://github.com/ahdis/matchbox/issues/236)

@@ -1,0 +1,19 @@
+map "http://ahdis.ch/matchbox/fml/qr2patfordates" = "qr2patfordates"
+
+uses "http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse" alias QuestionnaireResponse as source
+uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as target
+
+
+group qrtobundle(source src : QuestionnaireResponse, target tgt : Patient) {
+    src.extension as ext where (url = 'urn:date') then {
+//        ext.value as value -> tgt.birthDate = value "test";
+//          ext.value as value -> tgt.birthDate = (%value.toString()) "ok";
+//		ext.value as value -> tgt.birthDate = (@2023-10-21 + 5 days) "ok";
+ 		ext.value as value -> tgt.birthDate = (%value + 5 days) "ok"; 		
+ 		
+    } "bundle";
+    src.extension as ext where (url = 'urn:dateTime') then {
+ 		ext.value as value -> tgt.deceased = (%value - 5 days) "ok";
+    } "dateTime";
+    
+}

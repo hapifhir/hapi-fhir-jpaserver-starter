@@ -229,6 +229,23 @@ class FhirMappingLanguageTests {
 	}
 
 	@Test
+  void testDateManipulation() throws FHIRException, IOException {
+    MatchboxEngine engine = new MatchboxEngine(FhirMappingLanguageTests.engine);
+    StructureMap sm = engine.parseMap(getFileAsStringFromResources("/qr2patfordates.map"));
+    assertTrue(sm != null);
+    engine.addCanonicalResource(sm);
+    Resource res = engine.transformToFhir(getFileAsStringFromResources("/qrext.json"), true,
+        "http://ahdis.ch/matchbox/fml/qr2patfordates");
+    assertTrue(res != null);
+    assertEquals("Patient", res.getResourceType().name());
+    Patient patient = (Patient) res;
+    assertEquals("2023-10-26", patient.getBirthDateElement().getValueAsString());
+    assertEquals("2023-09-20T13:19:13.502Z", patient.getDeceasedDateTimeType().getValueAsString());
+  }
+	
+	
+
+	@Test
 	@Disabled // R5 maps are not working with that FHIR core version
 	void testTutorialStep1() throws FHIRException, IOException {
 		MatchboxEngine engine = new MatchboxEngine(FhirMappingLanguageTests.engine);
