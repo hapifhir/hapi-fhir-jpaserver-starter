@@ -6,6 +6,7 @@ import ca.uhn.fhir.jpa.binstore.DatabaseBinaryContentStorageSvcImpl;
 import ca.uhn.fhir.jpa.config.HibernatePropertiesProvider;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings.CrossPartitionReferenceMode;
+import ca.uhn.fhir.jpa.model.config.SubscriptionSettings;
 import ca.uhn.fhir.jpa.model.entity.StorageSettings;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.util.JpaHibernatePropertiesProvider;
@@ -87,6 +88,40 @@ public class FhirServerConfigCommon {
 		}
 	}
 
+	@Bean
+	public SubscriptionSettings subscriptionSettings(AppProperties appProperties) {
+		SubscriptionSettings subscriptionSettings = new SubscriptionSettings();
+		if (appProperties.getSubscription() != null) {
+			if (appProperties.getSubscription().getEmail() != null)
+				subscriptionSettings.setEmailFromAddress(
+					appProperties.getSubscription().getEmail().getFrom());
+
+			// Subscriptions are enabled by channel type
+			if (appProperties.getSubscription().getResthook_enabled()) {
+				ourLog.info("Enabling REST-hook subscriptions");
+				subscriptionSettings.addSupportedSubscriptionType(
+					org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.RESTHOOK);
+			}
+			if (appProperties.getSubscription().getEmail() != null) {
+				ourLog.info("Enabling email subscriptions");
+				subscriptionSettings.addSupportedSubscriptionType(
+					org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.EMAIL);
+			}
+			if (appProperties.getSubscription().getWebsocket_enabled()) {
+				ourLog.info("Enabling websocket subscriptions");
+				subscriptionSettings.addSupportedSubscriptionType(
+					org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
+			}
+
+		}
+		if (appProperties.getMdm_enabled()) {
+			// MDM requires the subscription of type message
+			ourLog.info("Enabling message subscriptions");
+			subscriptionSettings.addSupportedSubscriptionType(
+				org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.MESSAGE);
+		}
+		return subscriptionSettings;
+	}
 	/**
 	 * Configure FHIR properties around the JPA server via this bean
 	 */
@@ -112,10 +147,7 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setDeleteExpungeEnabled(appProperties.getDelete_expunge_enabled());
 		jpaStorageSettings.setExpungeEnabled(appProperties.getExpunge_enabled());
 		jpaStorageSettings.setLanguageSearchParameterEnabled(appProperties.getLanguage_search_parameter_enabled());
-		if (appProperties.getSubscription() != null
-				&& appProperties.getSubscription().getEmail() != null)
-			jpaStorageSettings.setEmailFromAddress(
-					appProperties.getSubscription().getEmail().getFrom());
+
 
 		Integer maxFetchSize = appProperties.getMax_page_size();
 		jpaStorageSettings.setFetchSizeDefaultMaximum(maxFetchSize);
@@ -129,24 +161,7 @@ public class FhirServerConfigCommon {
 		Long retainCachedSearchesMinutes = appProperties.getRetain_cached_searches_mins();
 		jpaStorageSettings.setExpireSearchResultsAfterMillis(retainCachedSearchesMinutes * 60 * 1000);
 
-		if (appProperties.getSubscription() != null) {
-			// Subscriptions are enabled by channel type
-			if (appProperties.getSubscription().getResthook_enabled()) {
-				ourLog.info("Enabling REST-hook subscriptions");
-				jpaStorageSettings.addSupportedSubscriptionType(
-						org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.RESTHOOK);
-			}
-			if (appProperties.getSubscription().getEmail() != null) {
-				ourLog.info("Enabling email subscriptions");
-				jpaStorageSettings.addSupportedSubscriptionType(
-						org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.EMAIL);
-			}
-			if (appProperties.getSubscription().getWebsocket_enabled()) {
-				ourLog.info("Enabling websocket subscriptions");
-				jpaStorageSettings.addSupportedSubscriptionType(
-						org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
-			}
-		}
+
 
 		jpaStorageSettings.setFilterParameterEnabled(appProperties.getFilter_search_enabled());
 		jpaStorageSettings.setAdvancedHSearchIndexing(appProperties.getAdvanced_lucene_indexing());
@@ -202,13 +217,6 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_size());
 		jpaStorageSettings.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_max_size());
 
-		if (appProperties.getMdm_enabled()) {
-			// MDM requires the subscription of type message
-			ourLog.info("Enabling message subscriptions");
-			jpaStorageSettings.addSupportedSubscriptionType(
-					org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.MESSAGE);
-		}
-
 		storageSettings(appProperties, jpaStorageSettings);
 		return jpaStorageSettings;
 	}
@@ -249,10 +257,6 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setAllowExternalReferences(appProperties.getAllow_external_references());
 		jpaStorageSettings.setDefaultSearchParamsCanBeOverridden(
 				appProperties.getAllow_override_default_search_params());
-		if (appProperties.getSubscription() != null
-				&& appProperties.getSubscription().getEmail() != null)
-			jpaStorageSettings.setEmailFromAddress(
-					appProperties.getSubscription().getEmail().getFrom());
 
 		jpaStorageSettings.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
 

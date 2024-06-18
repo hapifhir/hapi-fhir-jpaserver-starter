@@ -55,11 +55,10 @@ import static org.opencds.cqf.fhir.utility.r4.Parameters.stringPart;
 		NicknameServiceConfig.class,
 		RepositoryConfig.class
 	}, properties = {
-	"spring.profiles.include=storageSettingsTest",
 	"spring.datasource.url=jdbc:h2:mem:dbr4",
 	"hapi.fhir.enable_repository_validating_interceptor=true",
 	"hapi.fhir.fhir_version=r4",
-	//"hapi.fhir.subscription.websocket_enabled=true",
+	"hapi.fhir.subscription.websocket_enabled=true",
 	//"hapi.fhir.mdm_enabled=true",
 	"hapi.fhir.cr.enabled=true",
 	"hapi.fhir.cr.caregaps_section_author=Organization/alphora-author",
@@ -237,7 +236,7 @@ class ExampleServerR4IT implements IServerSupport {
 		IIdType mySubscriptionId = methodOutcome.getId();
 
 		// Wait for the subscription to be activated
-		await().atMost(1, TimeUnit.MINUTES).until(()->activeSubscriptionCount(), equalTo(initialActiveSubscriptionCount + 1));
+		await().atMost(1, TimeUnit.MINUTES).until(this::activeSubscriptionCount, equalTo(initialActiveSubscriptionCount + 1));
 
 		/*
 		 * Attach websocket
