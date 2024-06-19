@@ -28,12 +28,12 @@
     <valueUri value="cda"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/Encounter"/>
-  <version value="2.0.0-sd-202312-matchbox-patch"/>
+  <version value="2.0.0-sd-202406-matchbox-patch"/>
   <name value="Encounter"/>
   <title value="Encounter (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2024-03-12T18:28:21+01:00"/>
+  <date value="2024-06-19T17:47:42+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
@@ -46,7 +46,7 @@
       <value value="structdog@lists.HL7.org"/>
     </telecom>
   </contact>
-  <description value="A derivative of the RIM PatientEncounter class, used to represent related encounters, such as follow-up visits or referenced past encounters.&#xA;NOTE: The EncompassingEncounter class in the CDA Header (see Header Relationships (§ 4.2.3 )) represents the setting of the clinical encounter during which the documented act occurred. The Encounter class in the CDA Body is used to represent other related encounters."/>
+  <description value="A derivative of the RIM PatientEncounter class, used to represent related encounters, such as follow-up visits or referenced past encounters.&#xA;&#xA;NOTE: The EncompassingEncounter class in the CDA Header (see Header Relationships (§ 4.2.3 )) represents the setting of the clinical encounter during which the documented act occurred. The Encounter class in the CDA Body is used to represent other related encounters."/>
   <fhirVersion value="5.0.0"/>
   <mapping>
     <identity value="rim"/>
@@ -248,7 +248,7 @@
       <fixedCode value="ENC"/>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActClass|2.0.0"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAActClass"/>
       </binding>
     </element>
     <element id="Encounter.moodCode">
@@ -553,7 +553,7 @@
       <fixedCode value="ENC"/>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActClass|2.0.0"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAActClass"/>
       </binding>
     </element>
     <element id="Encounter.moodCode">

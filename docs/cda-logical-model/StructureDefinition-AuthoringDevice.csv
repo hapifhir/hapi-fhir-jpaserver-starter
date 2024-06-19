@@ -24,7 +24,7 @@
 "AuthoringDevice.determinerCode","AuthoringDevice.determinerCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""INSTANCE""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-EntityDeterminer","",,,,"AuthoringDevice.determinerCode",0,1,"",""
 "AuthoringDevice.code","AuthoringDevice.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
-","","","","","","","","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-EntityCode","",,,,"AuthoringDevice.code",0,1,"",""
+","","","","","","","","","","","",,"example","","http://hl7.org/cda/stds/core/ValueSet/CDAEntityCode","",,,,"AuthoringDevice.code",0,1,"",""
 "AuthoringDevice.manufacturerModelName","AuthoringDevice.manufacturerModelName","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/SC {[]} {[]}
 ","","","","","","","","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-ManufacturerModelNameExample","",,,,"AuthoringDevice.manufacturerModelName",0,1,"",""
 "AuthoringDevice.softwareName","AuthoringDevice.softwareName","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/SC {[]} {[]}

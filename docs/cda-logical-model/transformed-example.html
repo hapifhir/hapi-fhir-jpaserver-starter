@@ -1,0 +1,998 @@
+<?xml version="1.0" encoding="utf-8"?><!-- Do NOT edit this HTML directly: it was generated via an XSLT transformation from a CDA Release 2 or 3 XML document. -->
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <title>Good Health Clinic Consultation Note (April 7, 2000)</title><!-- General CSS -->
+      <style type="text/css" media="all">
+                    *{
+                        font-family: Verdana, Tahoma, sans-serif;
+                        font-size: 9pt;
+                    }
+                    body{
+                        padding: 2px;
+                        color: #003366;
+                        background-color: white;
+                        font-size: 9pt;
+                    }
+                    #documentheader,
+                    #documentbody,
+                    #documentfooter{
+                        width: 100%;
+                    }
+                    #documentheader{
+                        border-bottom: 1px solid grey;
+                        margin-bottom: 1em;
+                    }
+                    #documentfooter{
+                        border-top: 1px solid grey;
+                        margin-top: 1em;
+                    }
+                    a{
+                        color: #003366;
+                        background-color: white;
+                    }
+                    h1{
+                        font-size: 12pt;
+                        font-weight: bold;
+                    }
+                    h1.title{
+                        text-align: center;
+                    }
+                    h2{
+                        font-size: 11pt;
+                        font-weight: bold;
+                    }
+                    h3{
+                        font-size: 10pt;
+                        font-weight: bold;
+                    }
+                    h4{
+                        font-size: 9pt;
+                        font-weight: bold;
+                    }
+                    h5{
+                        font-size: 9pt;
+                        font-weight: bold;
+                    }
+                    h6{
+                        font-size: 9pt;
+                        font-weight: bold;
+                    }
+                    hr{
+                        width: 100%;
+                    }
+                    span {
+                        font-size: 9pt; /* IE8 hack: doesn't understand inheritance */
+                        display: inline; /* IE8 hack: would go to next line otherwise */
+                    }
+                    table{
+                        line-height: 10pt;
+                        width: 100%;
+                    }
+                    thead tr, th{
+                        background-color: LightGrey;
+                    }
+                    tbody tr{
+                        background-color: #f2f2f2;
+                    }
+                    td{
+                        font-size: 9pt; /* IE8 hack: doesn't understand inheritance */
+                        padding: 0.1cm 0.2cm;
+                        vertical-align: top;
+                    }
+                    .table_simple{
+                        width: auto;
+                        color: inherit;
+                        background-color: inherit;
+                    }
+                    .table_simple td{
+                        padding: 0;
+                    }
+                    .table_simple td.td_label{
+                        font-size: 9pt; /* IE8 hack: doesn't understand inheritance */
+                        font-weight: inherit;
+                        font-style: italic;
+                        padding-right: 0.2cm;
+                    }
+                    .header_table{
+                        border: 1pt solid #00008b;
+                    }
+                    .narr_table{
+                        width: 100%;
+                        margin: 0.3em 0;
+                    }
+                    .narr_tr{
+                        //background-color: #ffffcc;
+                    }
+                    .narr_th{
+                        background-color: LightGrey;
+                        font-size: 9pt; /* IE8 hack: doesn't understand inheritance */
+                    }
+                    .narr_footnote{
+                        font-size: 8pt;
+                        font-style: italic;
+                    }
+                    .td_label{
+                        font-size: 9pt; /* IE8 hack: doesn't understand inheritance */
+                        font-weight: bold;
+                        background-color: LightGrey;
+                    }
+                    .td_label_width{
+                        width: 20%;
+                    }
+                    .span_label{
+                        font-size: 9pt; /* IE8 hack: doesn't understand inheritance */
+                        font-weight: bold;
+                    }
+                    .span_value{
+                        font-size: 9pt; /* IE8 hack: doesn't understand inheritance */
+                        font-weight: normal;
+                    }
+                    .revision_insert{
+                        text-decoration: underline overline;
+                    }
+                    .revision_insert_final{
+                    }
+                    .revision_delete{
+                        text-decoration: line-through;
+                    }
+                    .revision_delete_final{
+                        display: none;
+                    }
+                    .span_button {
+                        display: table-cell;
+                        cursor: pointer;
+                        border: 2pt inset #585858;
+                        border-radius: 15px;
+                        -moz-border-radius: 15px;
+                        padding: 0.1cm 0.2cm;
+                        background-color: #f2f2f2;
+                        font-weight: bold;
+                        vertical-align: baseline;
+                        width: 150px;
+                    }
+                    .warning-sign {
+                        border: 1px solid red;
+                        background-color: yellow;
+                        margin: 1em 0.5em;
+                    }
+                    div.separator {
+                        height: 1em;
+                    }
+                    div.caption {
+                        font-weight: bold;
+                        text-align: center;
+                    }
+                </style><!-- Stylecode CSS -->
+      <style type="text/css" media="all">
+                    .Bold{
+                        font-weight: bold;
+                    }
+                    .Italics{
+                        font-style: italic;
+                    }
+                    .Underline{
+                        text-decoration: underline;
+                    }
+                    .Emphasis{
+                        font-weight: bold;
+                        font-style: italic;
+                    }
+                    .Lrule{
+                        border-left-width: 2px;
+                        border-left-style: solid;
+                    }
+                    .Rrule{
+                        border-right-width: 2px;
+                        border-right-style: solid;
+                    }
+                    .Toprule{
+                        border-top-width: 2px;
+                        border-top-style: solid;
+                    }
+                    .Botrule{
+                        border-bottom-width: 2px;
+                        border-bottom-style: solid;
+                    }
+                    .Arabic{
+                        list-style: arabic;
+                    }
+                    .LittleRoman{
+                        list-style: lower-roman;
+                    }
+                    .BigRoman{
+                        list-style: upper-roman;
+                    }
+                    .LittleAlpha{
+                        list-style: lower-alpha;
+                    }
+                    .BigAlpha{
+                        list-style: upper-alpha
+                    }
+                    .Disc{
+                        list-style: disc;
+                    }
+                    .Circle{
+                        list-style: circle;
+                    }
+                    .Square{
+                        list-style: square;
+                    }</style><!-- Section Button Toggle CSS -->
+      <style type="text/css" media="screen">
+                    div.button.expandCollapse {
+                        float: left;
+                        margin-right: 10px;
+                        cursor: pointer;
+                    }
+                </style><!-- Revision Toggle CSS -->
+      <style type="text/css" media="print">
+                    button, 
+                    div.button,
+                    #buttontable {
+                        display: none;
+                    }
+                    div.section-content {
+                        display: block !important;
+                    }
+                    .print_visible {
+                        display: block;
+                        float: none;
+                        margin-right: 0;
+                    }
+                </style><!-- Table of Contents CSS -->
+      <style type="text/css" media="screen">
+                    #nav, #nav ul {
+                        padding: 0;
+                        margin: 0;
+                        list-style: none;
+                    }
+                    
+                    #nav li {
+                        float: left;
+                        width: 300px;
+                    }
+                    #nav ul {
+                        position: absolute;
+                        width: 300px;
+                        left: -1000px;
+                    }
+                    #nav li ul li ul {
+                        display: none;
+                    }
+                    
+                    #nav li ul li:hover > ul {
+                        display: block;
+                        position: absolute;
+                        left: 50px !important;
+                    }
+                    #nav li ul li:hover > ul > li > a {
+                        border: 1px solid #585858;
+                    }
+                    
+                    #nav li:hover ul, #nav li.ie_does_hover ul {
+                        left: auto;
+                        background-position: 0 0;
+                    }
+                    
+                    #nav * a {
+                        display: block;
+                        padding: 2px 8px;
+                        text-decoration: none;
+                        font-weight: bold;
+                        font-size: 11px;
+                    }
+                    
+                    #nav ul * a {
+                        font-weight: bold;
+                        color: #585858;
+                        background-color: #f2f2f2;
+                        cursor: pointer;
+                    }
+                    
+                    #nav ul ul a:link, #nav ul ul a:visited {
+                        font-weight: normal;
+                        color: #585858;
+                        background-color: #f2f2f2;
+                        cursor: pointer;
+                    }
+                    
+                    #nav * li a:hover, #nav * li a:active,
+                    #nav * li * li a:hover, #nav * li * li a:active {
+                        /*font-weight: normal;*/
+                        color: white;
+                        background-color: #585858;
+                        cursor: pointer;
+                    }
+                    
+                    #nav * li {
+                        border-left: 2px solid white;
+                    }
+                    
+                    #nav * ul li {
+                        border-top: 2px solid white;
+                        border-left: 0;
+                    }
+                    
+                    /* IE only hack */
+                    * html ul li, * html ul ul li{
+                        border-bottom: 2px solid white;
+                    }
+                    
+                    * html ul ul li{
+                        border-top: 0;
+                    }
+                    /* End IE only hack */
+                </style>
+   </head>
+   <body>
+      <div id="documentheader">
+         <a id="_toc"> </a>
+         <h1 class="title">Good Health Clinic Consultation Note (April 7, 2000)</h1>
+         <table xmlns:xhtml="http://www.w3.org/1999/xhtml" class="header_table">
+            <tbody>
+               <tr>
+                  <td class="td_label">Patient</td>
+                  <td>
+                     <span class="span_value">Henry  LEVIN the 7th</span>
+                     <span style="float: right; margin-left: 1em;">
+                        <span>
+                           <span class="span_label">Date of Birth: </span>
+                           <span class="span_value">September  24, 1932<span title="At document creation time"> (67yr)</span>
+                           </span>
+                        </span>
+                        <span class="span_label">Gender: </span>
+                        <span class="span_value">M</span>
+                     </span>
+                     <span style="float: right;" class="print_visible">
+                        <span class="span_label">Patient-ID: </span>
+                        <span class="span_value">
+                           <span>12345 (2.16.840.1.113883.19.5)</span>
+                        </span>
+                     </span>
+                  </td>
+               </tr>
+               <tr>
+                  <td class="td_label">Encounter</td>
+                  <td>
+                     <span class="span_label">ID: </span>
+                     <span class="span_value">
+                        <span>KPENC1332 (2.16.840.1.113883.19.6)</span>
+                     </span>, <span class="span_label">Date/Time: </span>
+                     <span class="span_value">at April  7, 2000</span>
+                     <div>
+                        <span class="span_label">Location: </span>
+                        <span class="span_value">General internal medicine clinic</span>
+                     </div>
+                  </td>
+               </tr>
+               <tr>
+                  <td class="td_label">Author</td>
+                  <td>
+                     <span class="span_value">Robert  DOLIN MD</span>, <span class="span_label">Organization: </span>
+                     <span class="span_value">Good Health Clinic</span>, <span class="span_label">Authored On: </span>
+                     <span class="span_value">April  7, 2000, 2PM</span>
+                  </td>
+               </tr>
+            </tbody>
+         </table>
+         <div id="buttontable">
+            <table border="0" cellpadding="0" cellspacing="0">
+               <tbody>
+                  <tr>
+                     <td xmlns:xhtml="http://www.w3.org/1999/xhtml" style="width: 35%; background-color: white;">
+                        <ul id="nav">
+                           <li style="list-style: none;">
+                              <div class="span_button">Table of Contents ∇</div>
+                              <ul>
+                                 <li>
+                                    <a href="#section_1">History of Present Illness</a>
+                                 </li>
+                                 <li>
+                                    <a href="#section_2">Past Medical History</a>
+                                 </li>
+                                 <li>
+                                    <a href="#section_3">Medications</a>
+                                 </li>
+                                 <li>
+                                    <a href="#section_4">Allergies and Adverse Reactions</a>
+                                 </li>
+                                 <li>
+                                    <a href="#section_5">Family history</a>
+                                 </li>
+                                 <li>
+                                    <a href="#section_6">Social History</a>
+                                 </li>
+                                 <li>
+                                    <a href="#section_7">Physical Examination ▶</a>
+                                    <ul>
+                                       <li style="padding-left: 2em;">
+                                          <a href="#section_7.1">Vital Signs</a>
+                                       </li>
+                                       <li style="padding-left: 2em;">
+                                          <a href="#section_7.2">Skin Exam</a>
+                                       </li>
+                                       <li style="padding-left: 2em;">
+                                          <a href="#section_7.3">Lungs</a>
+                                       </li>
+                                       <li style="padding-left: 2em;">
+                                          <a href="#section_7.4">Cardiac</a>
+                                       </li>
+                                    </ul>
+                                 </li>
+                                 <li>
+                                    <a href="#section_8">Labs</a>
+                                 </li>
+                                 <li>
+                                    <a href="#section_9">In-office Procedures</a>
+                                 </li>
+                                 <li>
+                                    <a href="#section_10">Assessment</a>
+                                 </li>
+                                 <li>
+                                    <a href="#section_11">Plan</a>
+                                 </li>
+                              </ul>
+                           </li>
+                        </ul>
+                     </td>
+                     <td xmlns:xhtml="http://www.w3.org/1999/xhtml" style="background-color: white;">
+                        <div id="revisionToggleOn" class="span_button" onclick="showReviewMarks();">Show Revisions</div>
+                        <div id="revisionToggleOff" style="display: none;" class="span_button" onclick="hideReviewMarks();">Hide Revisions</div>
+                     </td>
+                     <td xmlns:xhtml="http://www.w3.org/1999/xhtml" style="background-color: white;">
+                        <div id="sectionsToggleExpand" style="display: none;" class="span_button" onclick="expandAllSections();">Expand All</div>
+                        <div id="sectionsToggleCollapse" class="span_button" onclick="collapseAllSections();">Collapse All</div>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+      <div id="documentbody">
+         <div xmlns:xhtml="http://www.w3.org/1999/xhtml" style="margin-left: 0em;" class="section">
+            <div class="section-title">
+               <div class="button expandCollapse" onclick="collapseSection(this)" title="Collapse">▼</div>
+               <h3 id="section_1" title="10164-2">History of Present Illness</h3>
+            </div>
+            <div class="section-content">
+               <div class="section-body">
+                  <div>
+						
+                     <span class="Bold">Henry Levin, the 7<sup>th</sup>
+						
+                     </span> is a 67 year old male referred for further asthma management. Onset of asthma in his <span class="revision_delete_final" title="delete">twenties</span>
+						
+                     <span class="revision_insert_final" title="insert">teens</span>. He was hospitalized twice last year, and already twice this year. He has not been able to be weaned off steroids for the past several months. 
+						</div>
+               </div>
+            </div>
+         </div>
+         <div xmlns:xhtml="http://www.w3.org/1999/xhtml" style="margin-left: 0em;" class="section">
+            <div class="section-title">
+               <div class="button expandCollapse" onclick="collapseSection(this)" title="Collapse">▼</div>
+               <h3 id="section_2" title="10153-2">Past Medical History</h3>
+            </div>
+            <div class="section-content">
+               <div class="section-body">
+                  <div>
+						
+                     <ul>
+                        <li>
+								
+                           <span id="a1">Asthma</span>
+							
+                        </li>
+                        <li>
+								
+                           <span id="a2">Hypertension (see HTN.cda for details)</span>
+							
+                        </li>
+                        <li>
+								
+                           <span id="a3">Osteoarthritis, 
+									<span id="a4">right knee</span>
+								
+                           </span>
+							
+                        </li>
+                     </ul>
+					
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div xmlns:xhtml="http://www.w3.org/1999/xhtml" style="margin-left: 0em;" class="section">
+            <div class="section-title">
+               <div class="button expandCollapse" onclick="collapseSection(this)" title="Collapse">▼</div>
+               <h3 id="section_3" title="10160-0">Medications</h3>
+            </div>
+            <div class="section-content">
+               <div class="section-body">
+                  <div>
+						
+                     <ul>
+                        <li>Theodur 200mg BID</li>
+                        <li>Proventil inhaler 2puffs QID PRN</li>
+                        <li>Prednisone 20mg qd</li>
+                        <li>HCTZ 25mg qd</li>
+                     </ul>
+					
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div xmlns:xhtml="http://www.w3.org/1999/xhtml" style="margin-left: 0em;" class="section">
+            <div class="section-title">
+               <div class="button expandCollapse" onclick="collapseSection(this)" title="Collapse">▼</div>
+               <h3 id="section_4" title="10155-0">Allergies and Adverse Reactions</h3>
+            </div>
+            <div class="section-content">
+               <div class="section-body">
+                  <div>
+						
+                     <ul>
+                        <li>Penicillin - Hives</li>
+                        <li>Aspirin - Wheezing</li>
+                        <li>Codeine - Itching and nausea</li>
+                     </ul>
+					
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div xmlns:xhtml="http://www.w3.org/1999/xhtml" style="margin-left: 0em;" class="section">
+            <div class="section-title">
+               <div class="button expandCollapse" onclick="collapseSection(this)" title="Collapse">▼</div>
+               <h3 id="section_5" title="10157-2">Family history</h3>
+            </div>
+            <div class="section-content">
+               <div class="section-body">
+                  <div>
+						
+                     <ul>
+                        <li>Father had fatal MI in his early 50's.</li>
+                        <li>No cancer or diabetes.</li>
+                     </ul>
+					
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div xmlns:xhtml="http://www.w3.org/1999/xhtml" style="margin-left: 0em;" class="section">
+            <div class="section-title">
+               <div class="button expandCollapse" onclick="collapseSection(this)" title="Collapse">▼</div>
+               <h3 id="section_6" title="29762-2">Social History</h3>
+            </div>
+            <div class="section-content">
+               <div class="section-body">
+                  <div>
+						
+                     <ul>
+                        <li>Smoking :: 1 PPD between the ages of 20 and 55, and then he quit.</li>
+                        <li>Alcohol :: rare</li>
+                     </ul>
+					
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div xmlns:xhtml="http://www.w3.org/1999/xhtml" style="margin-left: 0em;" class="section">
+            <div class="section-title">
+               <div class="button expandCollapse" onclick="collapseSection(this)" title="Collapse">▼</div>
+               <h3 id="section_7" title="11384-5">Physical Examination</h3>
+            </div>
+            <div class="section-content">
+               <div class="section-body">
+                  <div style="margin-left: 2em;" class="section">
+                     <div class="section-title">
+                        <div class="button expandCollapse" onclick="collapseSection(this)" title="Collapse">▼</div>
+                        <h3 id="section_7.1" title="8716-3">Vital Signs</h3>
+                     </div>
+                     <div class="section-content">
+                        <div class="section-body">
+                           <div>
+								
+                              <table class="narr_table" cellspacing="1" cellpadding="1">
+									
+                                 <tbody>
+										
+                                    <tr class="narr_tr">
+											
+                                       <th class="narr_th">Date / Time</th>
+											
+                                       <th class="narr_th">April 7, 2000 14:30</th>
+											
+                                       <th class="narr_th">April 7, 2000 15:30</th>
+										
+                                    </tr>
+										
+                                    <tr class="narr_tr">
+											
+                                       <th class="narr_th">Height</th>
+											
+                                       <td>177 cm (69.7 in)</td>
+										
+                                    </tr>
+										
+                                    <tr class="narr_tr">
+											
+                                       <th class="narr_th">Weight</th>
+											
+                                       <td>194.0 lbs (88.0 kg)</td>
+										
+                                    </tr>
+										
+                                    <tr class="narr_tr">
+											
+                                       <th class="narr_th">BMI</th>
+											
+                                       <td>28.1 kg/m2</td>
+										
+                                    </tr>
+										
+                                    <tr class="narr_tr">
+											
+                                       <th class="narr_th">BSA</th>
+											
+                                       <td>2.05 m2</td>
+										
+                                    </tr>
+										
+                                    <tr class="narr_tr">
+											
+                                       <th class="narr_th">Temperature</th>
+											
+                                       <td>36.9 C (98.5 F)</td>
+											
+                                       <td>36.9 C (98.5 F)</td>
+										
+                                    </tr>
+										
+                                    <tr class="narr_tr">
+											
+                                       <th class="narr_th">Pulse</th>
+											
+                                       <td>86 / minute</td>
+											
+                                       <td>84 / minute</td>
+										
+                                    </tr>
+										
+                                    <tr class="narr_tr">
+											
+                                       <th class="narr_th">Rhythm</th>
+											
+                                       <td>Regular</td>
+											
+                                       <td>Regular</td>
+										
+                                    </tr>
+										
+                                    <tr class="narr_tr">
+											
+                                       <th class="narr_th">Respirations</th>
+											
+                                       <td>16 / minute, unlabored</td>
+											
+                                       <td>14 / minute</td>
+										
+                                    </tr>
+										
+                                    <tr class="narr_tr">
+											
+                                       <th class="narr_th">Systolic</th>
+											
+                                       <td>132 mmHg</td>
+											
+                                       <td>135 mmHg</td>
+										
+                                    </tr>
+										
+                                    <tr class="narr_tr">
+											
+                                       <th class="narr_th">Diastolic</th>
+											
+                                       <td>86 mmHg</td>
+											
+                                       <td>88 mmHg</td>
+										
+                                    </tr>
+										
+                                    <tr class="narr_tr">
+											
+                                       <th class="narr_th">Position / Cuff</th>
+											
+                                       <td>Left Arm</td>
+											
+                                       <td>Left Arm</td>
+										
+                                    </tr>
+									
+                                 </tbody>
+								
+                              </table>
+							
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div style="margin-left: 2em;" class="section">
+                     <div class="section-title">
+                        <div class="button expandCollapse" onclick="collapseSection(this)" title="Collapse">▼</div>
+                        <h3 id="section_7.2" title="8709-8">Skin Exam</h3>
+                     </div>
+                     <div class="section-content">
+                        <div class="section-body">
+                           <div>Erythematous rash, palmar surface, left index finger.
+								 <div>
+                                 <img alt="ID = 2.16.840.1.113883.19.2.1 " title="ID = 2.16.840.1.113883.19.2.1 " src="lefthand.gif"/>
+                              </div>
+							
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div style="margin-left: 2em;" class="section">
+                     <div class="section-title">
+                        <div class="button expandCollapse" onclick="collapseSection(this)" title="Collapse">▼</div>
+                        <h3 id="section_7.3" title="8710-6">Lungs</h3>
+                     </div>
+                     <div class="section-content">
+                        <div class="section-body">
+                           <div>Clear with no wheeze. Good air flow.</div>
+                        </div>
+                     </div>
+                  </div>
+                  <div style="margin-left: 2em;" class="section">
+                     <div class="section-title">
+                        <div class="button expandCollapse" onclick="collapseSection(this)" title="Collapse">▼</div>
+                        <h3 id="section_7.4" title="10223-2">Cardiac</h3>
+                     </div>
+                     <div class="section-content">
+                        <div class="section-body">
+                           <div>RRR with no murmur, no S3, no S4.</div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div xmlns:xhtml="http://www.w3.org/1999/xhtml" style="margin-left: 0em;" class="section">
+            <div class="section-title">
+               <div class="button expandCollapse" onclick="collapseSection(this)" title="Collapse">▼</div>
+               <h3 id="section_8" title="11502-2">Labs</h3>
+            </div>
+            <div class="section-content">
+               <div class="section-body">
+                  <div>
+						
+                     <ul>
+                        <li>CXR 02/03/1999: Hyperinflated. Normal cardiac silhouette, clear lungs.</li>
+                        <li>Peak Flow today: 260 l/m</li>
+                     </ul>
+					
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div xmlns:xhtml="http://www.w3.org/1999/xhtml" style="margin-left: 0em;" class="section">
+            <div class="section-title">
+               <div class="button expandCollapse" onclick="collapseSection(this)" title="Collapse">▼</div>
+               <h3 id="section_9" title="29554-3">In-office Procedures</h3>
+            </div>
+            <div class="section-content">
+               <div class="section-body">
+                  <div>
+						
+                     <ul>
+                        <li>Suture removal, left forearm.</li>
+                     </ul>
+					
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div xmlns:xhtml="http://www.w3.org/1999/xhtml" style="margin-left: 0em;" class="section">
+            <div class="section-title">
+               <div class="button expandCollapse" onclick="collapseSection(this)" title="Collapse">▼</div>
+               <h3 id="section_10" title="11496-7">Assessment</h3>
+            </div>
+            <div class="section-content">
+               <div class="section-body">
+                  <div>
+						
+                     <ul>
+                        <li>Asthma, with prior smoking history. Difficulty weaning off steroids. Will try gradual taper.</li>
+                        <li>Hypertension, well-controlled.</li>
+                        <li>Contact dermatitis on finger.</li>
+                     </ul>
+					
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div xmlns:xhtml="http://www.w3.org/1999/xhtml" style="margin-left: 0em;" class="section">
+            <div class="section-title">
+               <div class="button expandCollapse" onclick="collapseSection(this)" title="Collapse">▼</div>
+               <h3 id="section_11" title="18776-5">Plan</h3>
+            </div>
+            <div class="section-content">
+               <div class="section-body">
+                  <div>
+						
+                     <ul>
+                        <li>Complete PFTs with lung volumes.</li>
+                        <li>Chem-7 tomorrow.</li>
+                        <li>Teach peak flow rate measurement.</li>
+                        <li>Decrease prednisone to 20qOD alternating with 18qOD.</li>
+                        <li>Hydrocortisone cream to finger BID.</li>
+                        <li>RTC 1 week.</li>
+                     </ul>
+					
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div id="documentfooter">
+         <table xmlns:xhtml="http://www.w3.org/1999/xhtml" class="header_table">
+            <tbody>
+               <tr>
+                  <td class="td_label td_label_width">Document</td>
+                  <td style="width: 30%;">
+                     <table class="table_simple">
+                        <tbody>
+                           <tr>
+                              <td class="td_label">ID</td>
+                              <td>
+                                 <span>c266 (2.16.840.1.113883.19.4)</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td class="td_label">Version</td>
+                              <td>2</td>
+                           </tr>
+                           <tr>
+                              <td class="td_label">Set‑ID</td>
+                              <td>
+                                 <span>BB35 (2.16.840.1.113883.19.7)</span>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </td>
+                  <td class="td_label td_label_width">Created On</td>
+                  <td>April  7, 2000</td>
+               </tr>
+            </tbody>
+         </table>
+         <table xmlns:xhtml="http://www.w3.org/1999/xhtml" class="header_table">
+            <tbody>
+               <tr>
+                  <td class="td_label td_label_width">This document relates to document (replaces)</td>
+                  <td style="width: 80%;">
+                     <table class="table_simple">
+                        <tbody>
+                           <tr>
+                              <td class="td_label">ID</td>
+                              <td>
+                                 <span>a123 (2.16.840.1.113883.19.4)</span>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td class="td_label">Version</td>
+                              <td>1</td>
+                           </tr>
+                           <tr>
+                              <td class="td_label">Set‑ID</td>
+                              <td>
+                                 <span>BB35 (2.16.840.1.113883.19.7)</span>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </td>
+               </tr>
+            </tbody>
+         </table>
+         <table xmlns:xhtml="http://www.w3.org/1999/xhtml" class="header_table">
+            <tbody>
+               <tr>
+                  <td class="td_label td_label_width">Custodian</td>
+                  <td>Good Health Clinic</td>
+               </tr>
+            </tbody>
+         </table>
+         <div class="separator"> </div>
+         <table xmlns:xhtml="http://www.w3.org/1999/xhtml" class="header_table">
+            <tbody>
+               <tr>
+                  <td class="td_label td_label_width">Patient</td>
+                  <td style="width: 30%;">Henry  LEVIN the 7th</td>
+                  <td class="td_label td_label_width">Contact Details</td>
+                  <td style="width: 30%;"/>
+               </tr>
+               <tr>
+                  <td class="td_label td_label_width">Date of Birth</td>
+                  <td style="width: 30%;">September  24, 1932 (67yr)</td>
+                  <td class="td_label td_label_width">Gender</td>
+                  <td>M</td>
+               </tr>
+               <tr>
+                  <td class="td_label td_label_width">Patient-IDs</td>
+                  <td colspan="3">
+                     <span>12345 (2.16.840.1.113883.19.5)</span>
+                  </td>
+               </tr>
+               <tr>
+                  <td class="td_label td_label_width">Provider Organization</td>
+                  <td style="width: 30%;">
+                     <div/>
+                     <table class="table_simple">
+                        <tbody>
+                           <tr>
+                              <td class="td_label">ID</td>
+                              <td>
+                                 <span>2.16.840.1.113883.19.5</span>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </td>
+                  <td class="td_label td_label_width">Contact Details (Organization)</td>
+                  <td style="width: 30%;"/>
+               </tr>
+            </tbody>
+         </table>
+         <div class="separator"> </div>
+         <table xmlns:xhtml="http://www.w3.org/1999/xhtml" class="header_table">
+            <tbody>
+               <tr>
+                  <td class="td_label td_label_width">Encounter</td>
+                  <td style="width: 30%;">
+                     <table class="table_simple">
+                        <tbody>
+                           <tr>
+                              <td class="td_label">ID</td>
+                              <td>
+                                 <span>KPENC1332 (2.16.840.1.113883.19.6)</span>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </td>
+                  <td class="td_label td_label_width">Encounter Date</td>
+                  <td>at April  7, 2000</td>
+               </tr>
+               <tr>
+                  <td class="td_label td_label_width">Encounter Location</td>
+                  <td colspan="3">General internal medicine clinic</td>
+               </tr>
+               <tr>
+                  <td class="td_label td_label_width">consultant (at April  7, 2000)</td>
+                  <td colspan="3">Robert  DOLIN MD</td>
+               </tr>
+            </tbody>
+         </table>
+         <div class="separator"> </div>
+         <table xmlns:xhtml="http://www.w3.org/1999/xhtml" class="header_table">
+            <tbody>
+               <tr>
+                  <td class="td_label td_label_width">Author</td>
+                  <td colspan="3">Robert  DOLIN MD, Organization: Good Health Clinic</td>
+               </tr>
+            </tbody>
+         </table>
+         <table xmlns:xhtml="http://www.w3.org/1999/xhtml" class="header_table">
+            <tbody>
+               <tr>
+                  <td class="td_label td_label_width">Legal Authenticator</td>
+                  <td>Robert  DOLIN MD signed at April  8, 2000</td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+   </body>
+</html>

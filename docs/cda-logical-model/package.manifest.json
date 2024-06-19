@@ -1,6 +1,6 @@
 {
-  "version" : "2.0.0-sd-202312-matchbox-patch",
+  "version" : "2.0.0-sd-202406-matchbox-patch",
   "fhirVersion" : ["5.0.0"],
-  "date" : "20240312182804",
+  "date" : "20240619174726",
   "name" : "hl7.cda.uv.core"
 }

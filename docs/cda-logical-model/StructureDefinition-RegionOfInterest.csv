@@ -24,7 +24,7 @@
 "RegionOfInterest.classCode","RegionOfInterest.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ROIOVL""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ROIOVL""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClassROI","",,,,"RegionOfInterest.classCode",1,1,"",""
 "RegionOfInterest.moodCode","RegionOfInterest.moodCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActMood","",,,,"RegionOfInterest.moodCode",1,1,"",""
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAActMood","",,,,"RegionOfInterest.moodCode",1,1,"",""
 "RegionOfInterest.id","RegionOfInterest.id","","","",1,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"RegionOfInterest.id",1,*,"",""
 "RegionOfInterest.code","RegionOfInterest.code","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}

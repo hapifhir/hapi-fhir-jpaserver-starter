@@ -22,7 +22,7 @@
 "StructuredBody.classCode","StructuredBody.classCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DOCBODY""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClassRecordOrganizer","",,,,"StructuredBody.classCode",0,1,"",""
 "StructuredBody.moodCode","StructuredBody.moodCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActMood","",,,,"StructuredBody.moodCode",0,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAActMood","",,,,"StructuredBody.moodCode",0,1,"",""
 "StructuredBody.confidentialityCode","StructuredBody.confidentialityCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"StructuredBody.confidentialityCode",0,1,"",""
 "StructuredBody.languageCode","StructuredBody.languageCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}

@@ -192,7 +192,7 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 			return;
 		}
 		if (src.equals("hl7.fhir.cda#dev")) {
-			final var replace = "hl7.cda.uv.core#2.0.0-sd-202312-matchbox-patch";
+			final var replace = "hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch";
 			log.info("Replacing 'hl7.fhir.cda#dev' with '{}'", replace);
 			loadIg(igs, binaries, replace, recursive);
 			return;

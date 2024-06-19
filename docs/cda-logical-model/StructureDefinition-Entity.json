@@ -31,12 +31,12 @@
     "valueUri" : "cda"
   }],
   "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Entity",
-  "version" : "2.0.0-sd-202312-matchbox-patch",
+  "version" : "2.0.0-sd-202406-matchbox-patch",
   "name" : "Entity",
   "title" : "Entity (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2024-03-12T18:28:21+01:00",
+  "date" : "2024-06-19T17:47:42+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
@@ -49,7 +49,7 @@
       "value" : "structdog@lists.HL7.org"
     }]
   }],
-  "description" : "A physical thing, group of physical things or an organization capable of participating in Acts while in a role.\nAn entity is a physical object that has, had or will have existence. The only exception to this is Organization, which while not having a physical presence, fulfills the other characteristics of an Entity. Entity stipulates the thing itself, not the Roles it may play: the Role of Patient, e.g., is played by the Person Entity.\nLiving subjects (including human beings), organizations, materials, places and their specializations.",
+  "description" : "A physical thing, group of physical things or an organization capable of participating in Acts while in a role.\n\nAn entity is a physical object that has, had or will have existence. The only exception to this is Organization, which while not having a physical presence, fulfills the other characteristics of an Entity. Entity stipulates the thing itself, not the Roles it may play: the Role of Patient, e.g., is played by the Person Entity.\n\nLiving subjects (including human beings), organizations, materials, places and their specializations.",
   "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
@@ -248,11 +248,11 @@
       "id" : "Entity.classCode",
       "path" : "Entity.classCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "base" : {
         "path" : "Entity.classCode",
-        "min" : 1,
+        "min" : 0,
         "max" : "1"
       },
       "type" : [{
@@ -315,7 +315,7 @@
       }],
       "binding" : {
         "strength" : "example",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-EntityCode"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityCode"
       }
     },
     {
@@ -344,7 +344,7 @@
       "id" : "Entity.classCode",
       "path" : "Entity.classCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "type" : [{
         "code" : "code",
@@ -391,7 +391,7 @@
       }],
       "binding" : {
         "strength" : "example",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-EntityCode"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityCode"
       }
     },
     {

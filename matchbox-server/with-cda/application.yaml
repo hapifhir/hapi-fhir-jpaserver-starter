@@ -20,7 +20,7 @@ hapi:
       cda:
         name: hl7.cda.uv.core
         version: 2.0.0-sd-202312-matchbox-patch
-        url: classpath:/hl7.cda.uv.core#2.0.0-sd-202312-matchbox-patch.tgz
+        url: classpath:/hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch.tgz
     staticLocation: file:/apps/
 matchbox:
   fhir:

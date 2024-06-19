@@ -35,12 +35,12 @@
      fhir:value [ fhir:v "cda"^^xsd:anyURI ]
   ] ) ; # 
   fhir:url [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ObservationMedia"^^xsd:anyURI] ; # 
-  fhir:version [ fhir:v "2.0.0-sd-202312-matchbox-patch"] ; # 
+  fhir:version [ fhir:v "2.0.0-sd-202406-matchbox-patch"] ; # 
   fhir:name [ fhir:v "ObservationMedia"] ; # 
   fhir:title [ fhir:v "ObservationMedia (CDA Class)"] ; # 
   fhir:status [ fhir:v "active"] ; # 
   fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
-  fhir:date [ fhir:v "2024-03-12T18:28:21+01:00"^^xsd:dateTime] ; # 
+  fhir:date [ fhir:v "2024-06-19T17:47:42+02:00"^^xsd:dateTime] ; # 
   fhir:publisher [ fhir:v "Health Level 7"] ; # 
   fhir:contact ( [
      fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
@@ -52,7 +52,7 @@
        fhir:value [ fhir:v "structdog@lists.HL7.org" ]
      ] )
   ] ) ; # 
-  fhir:description [ fhir:v "A derivative of the RIM Observation class that represents multimedia that is logically part of the current document. This class is only for multimedia that is logically part of the attested content of the document. Rendering a referenced ObservationMedia requires a software tool that recognizes the particular MIME media type.\nAn XML attribute \"ID\" of type XML ID, is added to ObservationMedia within the CDA Schema. This attribute serves as the target of a renderMultiMedia reference (see renderMultiMedia). All values of attributes of type XML ID must be unique within the document (per the W3C XML specification).\nThe distinction between ObservationMedia and ExternalObservation is that ObservationMedia entries are part of the attested content of the document whereas ExternalObservations are not. For instance, when a clinician draws a picture as part of a progress note, that picture is represented as a CDA ObservationMedia. If that clinician is also describing a finding seen on a chest-x-ray, the referenced chest-x-ray is represented as a CDA ExternalObservation."] ; # 
+  fhir:description [ fhir:v "A derivative of the RIM Observation class that represents multimedia that is logically part of the current document. This class is only for multimedia that is logically part of the attested content of the document. Rendering a referenced ObservationMedia requires a software tool that recognizes the particular MIME media type.\n\nAn XML attribute \"ID\" of type XML ID, is added to ObservationMedia within the CDA Schema. This attribute serves as the target of a renderMultiMedia reference (see renderMultiMedia). All values of attributes of type XML ID must be unique within the document (per the W3C XML specification).\n\nThe distinction between ObservationMedia and ExternalObservation is that ObservationMedia entries are part of the attested content of the document whereas ExternalObservations are not. For instance, when a clinician draws a picture as part of a progress note, that picture is represented as a CDA ObservationMedia. If that clinician is also describing a finding seen on a chest-x-ray, the referenced chest-x-ray is represented as a CDA ExternalObservation."] ; # 
   fhir:fhirVersion [ fhir:v "5.0.0"] ; # 
   fhir:mapping ( [
      fhir:identity [ fhir:v "rim" ] ;
@@ -309,8 +309,8 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-ActClassObservation"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-ActClassObservation>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAActClassObservation"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAActClassObservation>
          ]
        ]
      ] [
@@ -336,8 +336,8 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-ActMood"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-ActMood>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAActMood"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAActMood>
          ]
        ]
      ] [
@@ -563,8 +563,8 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-ActClassObservation"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-ActClassObservation>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAActClassObservation"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAActClassObservation>
          ]
        ]
      ] [
@@ -585,8 +585,8 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-ActMood"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-ActMood>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAActMood"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAActMood>
          ]
        ]
      ] [

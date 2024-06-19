@@ -31,12 +31,12 @@
     "valueUri" : "cda"
   }],
   "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Guardian",
-  "version" : "2.0.0-sd-202312-matchbox-patch",
+  "version" : "2.0.0-sd-202406-matchbox-patch",
   "name" : "Guardian",
   "title" : "Guardian (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2024-03-12T18:28:21+01:00",
+  "date" : "2024-06-19T17:47:42+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
@@ -49,7 +49,7 @@
       "value" : "structdog@lists.HL7.org"
     }]
   }],
-  "description" : "A patient's guardian is a person or organization in the role of guardian (Guardian class). The entity playing the role of guardian is a person (Person class) or organization (Organization class). The entity scoping the role is the patient (Patient class).\nWhere a guardian is not explicitly stated, the value should default to local business practice (e.g. the patient makes their own health care decisions unless incapacitated in which case healthcare decisions are made by the patient's spouse).",
+  "description" : "A patient's guardian is a person or organization in the role of guardian (Guardian class). The entity playing the role of guardian is a person (Person class) or organization (Organization class). The entity scoping the role is the patient (Patient class).\n\nWhere a guardian is not explicitly stated, the value should default to local business practice (e.g. the patient makes their own health care decisions unless incapacitated in which case healthcare decisions are made by the patient's spouse).",
   "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
@@ -322,7 +322,7 @@
       }],
       "binding" : {
         "strength" : "example",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-RoleCode"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDARoleCode"
       }
     },
     {
@@ -447,7 +447,7 @@
       }],
       "binding" : {
         "strength" : "example",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-RoleCode"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDARoleCode"
       }
     },
     {

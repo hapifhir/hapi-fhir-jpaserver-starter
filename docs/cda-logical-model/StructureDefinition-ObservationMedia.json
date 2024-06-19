@@ -31,12 +31,12 @@
     "valueUri" : "cda"
   }],
   "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ObservationMedia",
-  "version" : "2.0.0-sd-202312-matchbox-patch",
+  "version" : "2.0.0-sd-202406-matchbox-patch",
   "name" : "ObservationMedia",
   "title" : "ObservationMedia (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2024-03-12T18:28:21+01:00",
+  "date" : "2024-06-19T17:47:42+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
@@ -49,7 +49,7 @@
       "value" : "structdog@lists.HL7.org"
     }]
   }],
-  "description" : "A derivative of the RIM Observation class that represents multimedia that is logically part of the current document. This class is only for multimedia that is logically part of the attested content of the document. Rendering a referenced ObservationMedia requires a software tool that recognizes the particular MIME media type.\nAn XML attribute \"ID\" of type XML ID, is added to ObservationMedia within the CDA Schema. This attribute serves as the target of a renderMultiMedia reference (see renderMultiMedia). All values of attributes of type XML ID must be unique within the document (per the W3C XML specification).\nThe distinction between ObservationMedia and ExternalObservation is that ObservationMedia entries are part of the attested content of the document whereas ExternalObservations are not. For instance, when a clinician draws a picture as part of a progress note, that picture is represented as a CDA ObservationMedia. If that clinician is also describing a finding seen on a chest-x-ray, the referenced chest-x-ray is represented as a CDA ExternalObservation.",
+  "description" : "A derivative of the RIM Observation class that represents multimedia that is logically part of the current document. This class is only for multimedia that is logically part of the attested content of the document. Rendering a referenced ObservationMedia requires a software tool that recognizes the particular MIME media type.\n\nAn XML attribute \"ID\" of type XML ID, is added to ObservationMedia within the CDA Schema. This attribute serves as the target of a renderMultiMedia reference (see renderMultiMedia). All values of attributes of type XML ID must be unique within the document (per the W3C XML specification).\n\nThe distinction between ObservationMedia and ExternalObservation is that ObservationMedia entries are part of the attested content of the document whereas ExternalObservations are not. For instance, when a clinician draws a picture as part of a progress note, that picture is represented as a CDA ObservationMedia. If that clinician is also describing a finding seen on a chest-x-ray, the referenced chest-x-ray is represented as a CDA ExternalObservation.",
   "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
@@ -279,7 +279,7 @@
       "fixedCode" : "OBS",
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActClassObservation"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAActClassObservation"
       }
     },
     {
@@ -301,7 +301,7 @@
       "fixedCode" : "EVN",
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActMood"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAActMood"
       }
     },
     {
@@ -532,7 +532,7 @@
       "fixedCode" : "OBS",
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActClassObservation"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAActClassObservation"
       }
     },
     {
@@ -549,7 +549,7 @@
       "fixedCode" : "EVN",
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActMood"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAActMood"
       }
     },
     {

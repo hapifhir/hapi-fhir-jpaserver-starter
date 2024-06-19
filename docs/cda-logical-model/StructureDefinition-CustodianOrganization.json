@@ -31,12 +31,12 @@
     "valueUri" : "cda"
   }],
   "url" : "http://hl7.org/cda/stds/core/StructureDefinition/CustodianOrganization",
-  "version" : "2.0.0-sd-202312-matchbox-patch",
+  "version" : "2.0.0-sd-202406-matchbox-patch",
   "name" : "CustodianOrganization",
   "title" : "CustodianOrganization (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2024-03-12T18:28:21+01:00",
+  "date" : "2024-06-19T17:47:42+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
@@ -329,6 +329,28 @@
       }]
     },
     {
+      "id" : "CustodianOrganization.sdtcTelecom",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      },
+      {
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-name",
+        "valueString" : "telecom"
+      }],
+      "path" : "CustodianOrganization.sdtcTelecom",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "CustodianOrganization.sdtcTelecom",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/TEL"
+      }]
+    },
+    {
       "id" : "CustodianOrganization.addr",
       "path" : "CustodianOrganization.addr",
       "min" : 0,
@@ -403,6 +425,23 @@
     {
       "id" : "CustodianOrganization.telecom",
       "path" : "CustodianOrganization.telecom",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/TEL"
+      }]
+    },
+    {
+      "id" : "CustodianOrganization.sdtcTelecom",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      },
+      {
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-name",
+        "valueString" : "telecom"
+      }],
+      "path" : "CustodianOrganization.sdtcTelecom",
       "min" : 0,
       "max" : "*",
       "type" : [{

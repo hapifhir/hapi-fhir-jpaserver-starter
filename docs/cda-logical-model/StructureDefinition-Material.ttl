@@ -35,12 +35,12 @@
      fhir:value [ fhir:v "cda"^^xsd:anyURI ]
   ] ) ; # 
   fhir:url [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/Material"^^xsd:anyURI] ; # 
-  fhir:version [ fhir:v "2.0.0-sd-202312-matchbox-patch"] ; # 
+  fhir:version [ fhir:v "2.0.0-sd-202406-matchbox-patch"] ; # 
   fhir:name [ fhir:v "Material"] ; # 
   fhir:title [ fhir:v "Material (CDA Class)"] ; # 
   fhir:status [ fhir:v "active"] ; # 
   fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
-  fhir:date [ fhir:v "2024-03-12T18:28:21+01:00"^^xsd:dateTime] ; # 
+  fhir:date [ fhir:v "2024-06-19T17:47:42+02:00"^^xsd:dateTime] ; # 
   fhir:publisher [ fhir:v "Health Level 7"] ; # 
   fhir:contact ( [
      fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
@@ -52,7 +52,7 @@
        fhir:value [ fhir:v "structdog@lists.HL7.org" ]
      ] )
   ] ) ; # 
-  fhir:description [ fhir:v "A subtype of Entity that is inanimate and locationally independent.\nMaterials are entities that are neither Living Subjects nor places. Manufactured or processed products are considered material, even if they originate as living matter. Materials come in a wide variety of physical forms and can pass through different states (ie. Gas, liquid, solid) while still retaining their physical composition and material characteristics.\nClarify the meaning of \"locationally independent\"; suggest removing it and supplanting with first Usage Note sentence.\nPharmaceutical substances (including active vaccines containing retarded virus), disposable supplies, durable equipment, implantable devices, food items (including meat or plant products), waste, traded goods."] ; # 
+  fhir:description [ fhir:v "A subtype of Entity that is inanimate and locationally independent.\n\nMaterials are entities that are neither Living Subjects nor places. Manufactured or processed products are considered material, even if they originate as living matter. Materials come in a wide variety of physical forms and can pass through different states (ie. Gas, liquid, solid) while still retaining their physical composition and material characteristics.\n\nClarify the meaning of \"locationally independent\"; suggest removing it and supplanting with first Usage Note sentence.\n\nPharmaceutical substances (including active vaccines containing retarded virus), disposable supplies, durable equipment, implantable devices, food items (including meat or plant products), waste, traded goods."] ; # 
   fhir:fhirVersion [ fhir:v "5.0.0"] ; # 
   fhir:mapping ( [
      fhir:identity [ fhir:v "rim" ] ;
@@ -336,8 +336,8 @@
        fhir:binding [
          fhir:strength [ fhir:v "example" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-MaterialEntityClassType"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-MaterialEntityClassType>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAMaterialEntityClassType"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAMaterialEntityClassType>
          ]
        ]
      ] [
@@ -512,8 +512,8 @@
        fhir:binding [
          fhir:strength [ fhir:v "example" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-MaterialEntityClassType"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-MaterialEntityClassType>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAMaterialEntityClassType"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAMaterialEntityClassType>
          ]
        ]
      ] [

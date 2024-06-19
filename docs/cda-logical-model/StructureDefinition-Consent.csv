@@ -20,9 +20,9 @@
 "Consent.templateId","Consent.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
 "Consent.classCode","Consent.classCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CONS""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClass","",,,,"Consent.classCode",0,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CONS""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAActClass","",,,,"Consent.classCode",0,1,"",""
 "Consent.moodCode","Consent.moodCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActMood","",,,,"Consent.moodCode",0,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAActMood","",,,,"Consent.moodCode",0,1,"",""
 "Consent.id","Consent.id","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Consent.id",0,*,"",""
 "Consent.code","Consent.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}

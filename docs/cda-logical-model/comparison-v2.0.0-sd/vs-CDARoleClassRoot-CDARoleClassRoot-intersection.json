@@ -1,0 +1,232 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "3a08af46-1216-469f-987a-386bb9377b3f-117",
+  "url" : "http://hl7.org/fhir/comparison/ValueSet/3a08af46-1216-469f-987a-386bb9377b3f-117",
+  "name" : "IntersectionCDARoleClassRootAndCDARoleClassRoot",
+  "title" : "Intersection of CDARoleClassRoot And CDARoleClassRoot",
+  "status" : "draft",
+  "date" : "2024-06-19T17:47:55+02:00",
+  "compose" : {
+    "include" : [{
+      "concept" : [{
+        "code" : "LIC"
+      },
+      {
+        "code" : "NOT"
+      },
+      {
+        "code" : "PROV"
+      },
+      {
+        "code" : "CON"
+      },
+      {
+        "code" : "ECON"
+      },
+      {
+        "code" : "NOK"
+      },
+      {
+        "code" : "ASSIGNED"
+      },
+      {
+        "code" : "COMPAR"
+      },
+      {
+        "code" : "SGNOFF"
+      },
+      {
+        "code" : "AGNT"
+      },
+      {
+        "code" : "GUARD"
+      },
+      {
+        "code" : "EMP"
+      },
+      {
+        "code" : "MIL"
+      },
+      {
+        "code" : "INVSBJ"
+      },
+      {
+        "code" : "CASESBJ"
+      },
+      {
+        "code" : "RESBJ"
+      },
+      {
+        "code" : "CIT"
+      },
+      {
+        "code" : "COVPTY"
+      },
+      {
+        "code" : "CRINV"
+      },
+      {
+        "code" : "CRSPNSR"
+      },
+      {
+        "code" : "GUAR"
+      },
+      {
+        "code" : "PAT"
+      },
+      {
+        "code" : "PAYEE"
+      },
+      {
+        "code" : "PAYOR"
+      },
+      {
+        "code" : "POLHOLD"
+      },
+      {
+        "code" : "QUAL"
+      },
+      {
+        "code" : "SPNSR"
+      },
+      {
+        "code" : "STD"
+      },
+      {
+        "code" : "UNDWRT"
+      },
+      {
+        "code" : "CAREGIVER"
+      },
+      {
+        "code" : "PRS"
+      },
+      {
+        "code" : "DST"
+      },
+      {
+        "code" : "RET"
+      },
+      {
+        "code" : "MANU"
+      },
+      {
+        "code" : "THER"
+      },
+      {
+        "code" : "SDLOC"
+      },
+      {
+        "code" : "DSDLOC"
+      },
+      {
+        "code" : "ISDLOC"
+      },
+      {
+        "code" : "ACCESS"
+      },
+      {
+        "code" : "BIRTHPL"
+      },
+      {
+        "code" : "EXPR"
+      },
+      {
+        "code" : "HLD"
+      },
+      {
+        "code" : "HLTHCHRT"
+      },
+      {
+        "code" : "IDENT"
+      },
+      {
+        "code" : "MNT"
+      },
+      {
+        "code" : "OWN"
+      },
+      {
+        "code" : "RGPR"
+      },
+      {
+        "code" : "TERR"
+      },
+      {
+        "code" : "WRTE"
+      },
+      {
+        "code" : "GEN"
+      },
+      {
+        "code" : "GRIC"
+      },
+      {
+        "code" : "INST"
+      },
+      {
+        "code" : "SUBS"
+      },
+      {
+        "code" : "SUBY"
+      },
+      {
+        "code" : "IACT"
+      },
+      {
+        "code" : "COLR"
+      },
+      {
+        "code" : "FLVR"
+      },
+      {
+        "code" : "PRSV"
+      },
+      {
+        "code" : "STBL"
+      },
+      {
+        "code" : "INGR"
+      },
+      {
+        "code" : "ACTI"
+      },
+      {
+        "code" : "ACTM"
+      },
+      {
+        "code" : "ADTV"
+      },
+      {
+        "code" : "BASE"
+      },
+      {
+        "code" : "LOCE"
+      },
+      {
+        "code" : "STOR"
+      },
+      {
+        "code" : "SPEC"
+      },
+      {
+        "code" : "ALQT"
+      },
+      {
+        "code" : "ISLT"
+      },
+      {
+        "code" : "CONT"
+      },
+      {
+        "code" : "MBR"
+      },
+      {
+        "code" : "PART"
+      },
+      {
+        "code" : "ROL"
+      }]
+    }]
+  }
+}

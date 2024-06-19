@@ -19,8 +19,8 @@
 ","","A character string as a unique identifier within the scope of the identifier root.","","","","","","","","","",,,,,"",,,,"II.extension",0,1,"",""
 "ObservationRange.templateId","ObservationRange.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
-"ObservationRange.classCode","ObservationRange.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OBS""/>","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClassObservation","",,,,"ObservationRange.classCode",1,1,"",""
+"ObservationRange.classCode","ObservationRange.classCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OBS""/>","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAActClassObservation","",,,,"ObservationRange.classCode",0,1,"",""
 "ObservationRange.moodCode","ObservationRange.moodCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN.CRT""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActMoodPredicate","",,,,"ObservationRange.moodCode",0,1,"",""
 "ObservationRange.code","ObservationRange.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}
@@ -30,7 +30,7 @@
 "ObservationRange.value","ObservationRange.value","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/BL {[]} {[]}
 http://hl7.org/cda/stds/core/StructureDefinition/ED {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/ST {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/CV {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/CO {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/SC {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/TEL {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/AD {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/EN {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/INT {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/REAL {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/PQ {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/MO {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/TS {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/IVL-PQ {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/PIVL-TS {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/EIVL-TS {[]} {[]}http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS {[]} {[]}","","","","","","","","","","","",,,,,"",,,,"ObservationRange.value",0,1,"",""
 "ObservationRange.interpretationCode","ObservationRange.interpretationCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
-","","","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ObservationInterpretation","",,,,"ObservationRange.interpretationCode",0,1,"",""
+","","","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAObservationInterpretation","",,,,"ObservationRange.interpretationCode",0,1,"",""
 "ObservationRange.sdtcPrecondition1","ObservationRange.sdtcPrecondition1","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot {[]} {[]}
 ","","The sdtc:precondition1 extension allows for the association of a criterion with a reference range (ObservationRange), which allows the expression in a lab report that a reference range is conditional on some criterion such as patient sex or age (or a combination of criterion).","","","","","","","","","",,,,,"",,,,"ObservationRange.sdtcPrecondition1",0,*,"",""
 "ObservationRange.sdtcPrecondition1.nullFlavor","ObservationRange.sdtcPrecondition1.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
@@ -52,12 +52,16 @@ http://hl7.org/cda/stds/core/StructureDefinition/ED {[]} {[]}http://hl7.org/cda/
 "ObservationRange.sdtcPrecondition1.templateId","ObservationRange.sdtcPrecondition1.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
 "ObservationRange.sdtcPrecondition1.typeCode","ObservationRange.sdtcPrecondition1.typeCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""PRCN""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActRelationshipType","",,,,"ObservationRange.sdtcPrecondition1.typeCode",0,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""PRCN""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAActRelationshipType","",,,,"ObservationRange.sdtcPrecondition1.typeCode",0,1,"",""
 "ObservationRange.sdtcPrecondition1.conjunctionCode","ObservationRange.sdtcPrecondition1.conjunctionCode","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
 ","","A code specifying the logical conjunction of the criteria among all the condition-links of Acts (e.g., and, or, exclusive-or).
+
 All AND criteria must be true.
+
 If OR and AND criteria occur together, one criterion out of the OR-group must be true and all AND criteria must be true also.
+
 If XOR criteria occur together with OR and AND criteria, exactly one of the XOR criteria must be true, and at least one of the OR criteria and all AND criteria must be true.
+
 In other words, the sets of AND, OR, and XOR criteria are in turn combined by a logical AND operator (all AND criteria and at least one OR criterion and exactly one XOR criterion).","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-RelationshipConjunction|2.0.0","",,,,"ObservationRange.sdtcPrecondition1.conjunctionCode",1,1,"",""
 "ObservationRange.sdtcPrecondition1.criterion1","ObservationRange.sdtcPrecondition1.criterion1","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Criterion {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ObservationRange.sdtcPrecondition1.criterion1",1,1,"",""

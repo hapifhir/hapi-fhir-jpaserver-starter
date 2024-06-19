@@ -5,5 +5,4 @@
 "INT_POS.nullFlavor","INT_POS.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "INT_POS.value","INT_POS.value","","","",0,1,"","","","integer {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/int-simple]]} {[]}
-","Primitive Type integer","A whole number","32 bit number; for values larger than this, use decimal","","","","","","","<valueInteger xmlns=""http://hl7.org/fhir"" value=""1""/>","",,,,,"",,,,"INT.value",0,1,"","ele-1:All FHIR elements must have a @value or children {hasValue() or (children().count() > id.count())}
-"
+","","","","","","","","","","<valueInteger xmlns=""http://hl7.org/fhir"" value=""1""/>","",,,,,"",,,,"INT.value",0,1,"",""

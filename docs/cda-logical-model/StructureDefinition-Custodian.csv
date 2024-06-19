@@ -20,6 +20,6 @@
 "Custodian.templateId","Custodian.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
 "Custodian.typeCode","Custodian.typeCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CST""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationType","",,,,"Custodian.typeCode",0,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CST""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAParticipationType","",,,,"Custodian.typeCode",0,1,"",""
 "Custodian.assignedCustodian","Custodian.assignedCustodian","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/AssignedCustodian {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Custodian.assignedCustodian",1,1,"",""

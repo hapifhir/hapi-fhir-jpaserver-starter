@@ -19,10 +19,10 @@
 ","","A character string as a unique identifier within the scope of the identifier root.","","","","","","","","","",,,,,"",,,,"II.extension",0,1,"",""
 "ExternalAct.templateId","ExternalAct.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
-"ExternalAct.classCode","ExternalAct.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ACT""/>","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClass","",,,,"ExternalAct.classCode",1,1,"",""
+"ExternalAct.classCode","ExternalAct.classCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ACT""/>","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAActClass","",,,,"ExternalAct.classCode",0,1,"",""
 "ExternalAct.moodCode","ExternalAct.moodCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActMood","",,,,"ExternalAct.moodCode",0,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAActMood","",,,,"ExternalAct.moodCode",0,1,"",""
 "ExternalAct.id","ExternalAct.id","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ExternalAct.id",0,*,"",""
 "ExternalAct.code","ExternalAct.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}

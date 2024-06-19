@@ -11,7 +11,7 @@
 </head>
 <body style="margin: 20px; background-color: #ffffff">
  <h1>Terminology Server Report for ClinicalDocumentArchitecture</h1>
- <p>Generated Tue Mar 12 18:29:33 CET 2024, FHIR version 5.0.0 for hl7.cda.uv.core#2.0.0-sd-202312-matchbox-patch (canonical = <a href="http://hl7.org/cda/stds/core">http://hl7.org/cda/stds/core</a> (<a href="http://hl7.org/cda/stds/core/history.html">history</a>))</p>
+ <p>Generated Wed Jun 19 17:48:57 CEST 2024, FHIR version 5.0.0 for hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch (canonical = <a href="http://hl7.org/cda/stds/core">http://hl7.org/cda/stds/core</a> (<a href="http://hl7.org/cda/stds/core/history.html">history</a>))</p>
 <p>This page provides a report on which terminology servers were used while publishing this IG. Note that terminology caching reduces the server hit count - this page only reports content that wasn't cached</p>
 <h2>Terminology Parameters</h2>
 <ul>
@@ -22,12 +22,40 @@
 </ul>
 <h2>Tx Manager report for 'http://tx.fhir.org/tx-reg'</h2>
 <ul>
-  <li>(No Errors/Reports - all good)</li>
+  <li>Request for system [http://terminology.hl7.org/CodeSystem/v3-ActCode|7.0.0] not handled by any servers. Using master @ 'http://tx.fhir.org/r4'</li>
+  <li>Request for multiple systems [http://terminology.hl7.org/CodeSystem/v3-ActCode, http://terminology.hl7.org/CodeSystem/v3-ActCode|7.0.0] best handled by multiple servers: [auth = , candidates=, auth = , candidates=]. Using master @ 'http://tx.fhir.org/r4'</li>
 </ul>
 <h2>Primary Server: http://tx.fhir.org/r4</h2>
-<p>Use Count: 0. Code Systems used: </p>
-<ul>
-  <li>(None)</li>
-</ul>
+<p>Use Count: 2. Code Systems used: </p>
+<table class="grid">
+  <tr>
+    <th>
+      <b>System</b>
+    </th>
+    <th>
+      <b>#Exp.</b>
+    </th>
+    <th>
+      <b>#Val.</b>
+    </th>
+    <th>
+      <b>Details</b>
+    </th>
+  </tr>
+  <tr>
+    <td>http://terminology.hl7.org/CodeSystem/v3-ActCode</td>
+    <td>0</td>
+    <td>1</td>
+    <td>
+      <a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActCode.html">ActCode</a>
+    </td>
+  </tr>
+  <tr>
+    <td>http://terminology.hl7.org/CodeSystem/v3-ActCode|7.0.0</td>
+    <td>0</td>
+    <td>2</td>
+    <td></td>
+  </tr>
+</table>
 </body>
 </html>

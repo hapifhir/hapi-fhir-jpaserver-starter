@@ -1,0 +1,696 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "3a08af46-1216-469f-987a-386bb9377b3f-93",
+  "url" : "http://hl7.org/fhir/comparison/ValueSet/3a08af46-1216-469f-987a-386bb9377b3f-93",
+  "name" : "IntersectionCDAMaterialEntityClassTypeAndCDAMaterialEntityClassType",
+  "title" : "Intersection of CDAMaterialEntityClassType And CDAMaterialEntityClassType",
+  "status" : "draft",
+  "date" : "2024-06-19T17:47:55+02:00",
+  "compose" : {
+    "include" : [{
+      "concept" : [{
+        "code" : "PKG"
+      },
+      {
+        "code" : "BAG"
+      },
+      {
+        "code" : "PACKT"
+      },
+      {
+        "code" : "PCH"
+      },
+      {
+        "code" : "SACH"
+      },
+      {
+        "code" : "AMP"
+      },
+      {
+        "code" : "MINIM"
+      },
+      {
+        "code" : "NEBAMP"
+      },
+      {
+        "code" : "OVUL"
+      },
+      {
+        "code" : "BOT"
+      },
+      {
+        "code" : "BOTA"
+      },
+      {
+        "code" : "BOTD"
+      },
+      {
+        "code" : "BOTG"
+      },
+      {
+        "code" : "BOTP"
+      },
+      {
+        "code" : "BOTPLY"
+      },
+      {
+        "code" : "BOX"
+      },
+      {
+        "code" : "CAN"
+      },
+      {
+        "code" : "CART"
+      },
+      {
+        "code" : "CNSTR"
+      },
+      {
+        "code" : "JAR"
+      },
+      {
+        "code" : "JUG"
+      },
+      {
+        "code" : "TIN"
+      },
+      {
+        "code" : "TUB"
+      },
+      {
+        "code" : "TUBE"
+      },
+      {
+        "code" : "VIAL"
+      },
+      {
+        "code" : "BLSTRPK"
+      },
+      {
+        "code" : "CARD"
+      },
+      {
+        "code" : "COMPPKG"
+      },
+      {
+        "code" : "DIALPK"
+      },
+      {
+        "code" : "DISK"
+      },
+      {
+        "code" : "DOSET"
+      },
+      {
+        "code" : "STRIP"
+      },
+      {
+        "code" : "KIT"
+      },
+      {
+        "code" : "SYSTM"
+      },
+      {
+        "code" : "LINE"
+      },
+      {
+        "code" : "IALINE"
+      },
+      {
+        "code" : "IVLINE"
+      },
+      {
+        "code" : "AINJ"
+      },
+      {
+        "code" : "PEN"
+      },
+      {
+        "code" : "SYR"
+      },
+      {
+        "code" : "APLCTR"
+      },
+      {
+        "code" : "INH"
+      },
+      {
+        "code" : "DSKS"
+      },
+      {
+        "code" : "DSKUNH"
+      },
+      {
+        "code" : "TRBINH"
+      },
+      {
+        "code" : "PMP"
+      },
+      {
+        "code" : "ACDA"
+      },
+      {
+        "code" : "ACDB"
+      },
+      {
+        "code" : "ACET"
+      },
+      {
+        "code" : "AMIES"
+      },
+      {
+        "code" : "BACTM"
+      },
+      {
+        "code" : "BF10"
+      },
+      {
+        "code" : "BOR"
+      },
+      {
+        "code" : "BOUIN"
+      },
+      {
+        "code" : "BSKM"
+      },
+      {
+        "code" : "C32"
+      },
+      {
+        "code" : "C38"
+      },
+      {
+        "code" : "CARS"
+      },
+      {
+        "code" : "CARY"
+      },
+      {
+        "code" : "CHLTM"
+      },
+      {
+        "code" : "CTAD"
+      },
+      {
+        "code" : "EDTK15"
+      },
+      {
+        "code" : "EDTK75"
+      },
+      {
+        "code" : "EDTN"
+      },
+      {
+        "code" : "ENT"
+      },
+      {
+        "code" : "F10"
+      },
+      {
+        "code" : "FDP"
+      },
+      {
+        "code" : "FL10"
+      },
+      {
+        "code" : "FL100"
+      },
+      {
+        "code" : "HCL6"
+      },
+      {
+        "code" : "HEPA"
+      },
+      {
+        "code" : "HEPL"
+      },
+      {
+        "code" : "HEPN"
+      },
+      {
+        "code" : "HNO3"
+      },
+      {
+        "code" : "JKM"
+      },
+      {
+        "code" : "KARN"
+      },
+      {
+        "code" : "KOX"
+      },
+      {
+        "code" : "LIA"
+      },
+      {
+        "code" : "M4"
+      },
+      {
+        "code" : "M4RT"
+      },
+      {
+        "code" : "M5"
+      },
+      {
+        "code" : "MICHTM"
+      },
+      {
+        "code" : "MMDTM"
+      },
+      {
+        "code" : "NAF"
+      },
+      {
+        "code" : "NONE"
+      },
+      {
+        "code" : "PAGE"
+      },
+      {
+        "code" : "PHENOL"
+      },
+      {
+        "code" : "PVA"
+      },
+      {
+        "code" : "RLM"
+      },
+      {
+        "code" : "SILICA"
+      },
+      {
+        "code" : "SPS"
+      },
+      {
+        "code" : "SST"
+      },
+      {
+        "code" : "STUTM"
+      },
+      {
+        "code" : "THROM"
+      },
+      {
+        "code" : "THYMOL"
+      },
+      {
+        "code" : "THYO"
+      },
+      {
+        "code" : "TOLU"
+      },
+      {
+        "code" : "URETM"
+      },
+      {
+        "code" : "VIRTM"
+      },
+      {
+        "code" : "WEST"
+      },
+      {
+        "code" : "BLDPRD"
+      },
+      {
+        "code" : "VCCNE"
+      }]
+    },
+    {
+      "concept" : [{
+        "code" : "ABS"
+      },
+      {
+        "code" : "AMN"
+      },
+      {
+        "code" : "ASP"
+      },
+      {
+        "code" : "BBL"
+      },
+      {
+        "code" : "BDY"
+      },
+      {
+        "code" : "BIFL"
+      },
+      {
+        "code" : "BLD"
+      },
+      {
+        "code" : "BLDA"
+      },
+      {
+        "code" : "BLDC"
+      },
+      {
+        "code" : "BLDCO"
+      },
+      {
+        "code" : "BLDV"
+      },
+      {
+        "code" : "BON"
+      },
+      {
+        "code" : "BPH"
+      },
+      {
+        "code" : "BPU"
+      },
+      {
+        "code" : "BRN"
+      },
+      {
+        "code" : "BRO"
+      },
+      {
+        "code" : "BRTH"
+      },
+      {
+        "code" : "EXG"
+      },
+      {
+        "code" : "CALC"
+      },
+      {
+        "code" : "STON"
+      },
+      {
+        "code" : "CDM"
+      },
+      {
+        "code" : "CNJT"
+      },
+      {
+        "code" : "CNL"
+      },
+      {
+        "code" : "COL"
+      },
+      {
+        "code" : "CRN"
+      },
+      {
+        "code" : "CSF"
+      },
+      {
+        "code" : "CTP"
+      },
+      {
+        "code" : "CUR"
+      },
+      {
+        "code" : "CVM"
+      },
+      {
+        "code" : "CVX"
+      },
+      {
+        "code" : "CYST"
+      },
+      {
+        "code" : "DIAF"
+      },
+      {
+        "code" : "DOSE"
+      },
+      {
+        "code" : "DRN"
+      },
+      {
+        "code" : "DUFL"
+      },
+      {
+        "code" : "EAR"
+      },
+      {
+        "code" : "EARW"
+      },
+      {
+        "code" : "ELT"
+      },
+      {
+        "code" : "ENDC"
+      },
+      {
+        "code" : "ENDM"
+      },
+      {
+        "code" : "EOS"
+      },
+      {
+        "code" : "EYE"
+      },
+      {
+        "code" : "FIB"
+      },
+      {
+        "code" : "FIST"
+      },
+      {
+        "code" : "FLT"
+      },
+      {
+        "code" : "FLU"
+      },
+      {
+        "code" : "FOOD"
+      },
+      {
+        "code" : "GAS"
+      },
+      {
+        "code" : "GAST"
+      },
+      {
+        "code" : "GEN"
+      },
+      {
+        "code" : "GENC"
+      },
+      {
+        "code" : "GENF"
+      },
+      {
+        "code" : "GENL"
+      },
+      {
+        "code" : "GENV"
+      },
+      {
+        "code" : "HAR"
+      },
+      {
+        "code" : "IHG"
+      },
+      {
+        "code" : "ISLT"
+      },
+      {
+        "code" : "IT"
+      },
+      {
+        "code" : "LAM"
+      },
+      {
+        "code" : "LIQ"
+      },
+      {
+        "code" : "LN"
+      },
+      {
+        "code" : "LNA"
+      },
+      {
+        "code" : "LNV"
+      },
+      {
+        "code" : "LYM"
+      },
+      {
+        "code" : "MAC"
+      },
+      {
+        "code" : "MAR"
+      },
+      {
+        "code" : "MBLD"
+      },
+      {
+        "code" : "MEC"
+      },
+      {
+        "code" : "MILK"
+      },
+      {
+        "code" : "MLK"
+      },
+      {
+        "code" : "NAIL"
+      },
+      {
+        "code" : "NOS"
+      },
+      {
+        "code" : "PAFL"
+      },
+      {
+        "code" : "PAT"
+      },
+      {
+        "code" : "PLAS"
+      },
+      {
+        "code" : "PLB"
+      },
+      {
+        "code" : "PLC"
+      },
+      {
+        "code" : "PLR"
+      },
+      {
+        "code" : "PMN"
+      },
+      {
+        "code" : "PPP"
+      },
+      {
+        "code" : "PRP"
+      },
+      {
+        "code" : "PRT"
+      },
+      {
+        "code" : "PUS"
+      },
+      {
+        "code" : "RBC"
+      },
+      {
+        "code" : "SAL"
+      },
+      {
+        "code" : "SER"
+      },
+      {
+        "code" : "SKM"
+      },
+      {
+        "code" : "SKN"
+      },
+      {
+        "code" : "SMN"
+      },
+      {
+        "code" : "SMPLS"
+      },
+      {
+        "code" : "SNV"
+      },
+      {
+        "code" : "SPRM"
+      },
+      {
+        "code" : "SPT"
+      },
+      {
+        "code" : "SPTC"
+      },
+      {
+        "code" : "SPTT"
+      },
+      {
+        "code" : "STL"
+      },
+      {
+        "code" : "SWT"
+      },
+      {
+        "code" : "TEAR"
+      },
+      {
+        "code" : "THRB"
+      },
+      {
+        "code" : "THRT"
+      },
+      {
+        "code" : "TISG"
+      },
+      {
+        "code" : "TISPL"
+      },
+      {
+        "code" : "TISS"
+      },
+      {
+        "code" : "TISU"
+      },
+      {
+        "code" : "TLGI"
+      },
+      {
+        "code" : "TLNG"
+      },
+      {
+        "code" : "TSMI"
+      },
+      {
+        "code" : "TUB"
+      },
+      {
+        "code" : "ULC"
+      },
+      {
+        "code" : "UMB"
+      },
+      {
+        "code" : "UMED"
+      },
+      {
+        "code" : "UR"
+      },
+      {
+        "code" : "URC"
+      },
+      {
+        "code" : "URNS"
+      },
+      {
+        "code" : "URT"
+      },
+      {
+        "code" : "URTH"
+      },
+      {
+        "code" : "USUB"
+      },
+      {
+        "code" : "VOM"
+      },
+      {
+        "code" : "WAT"
+      },
+      {
+        "code" : "WBC"
+      },
+      {
+        "code" : "WICK"
+      },
+      {
+        "code" : "WND"
+      },
+      {
+        "code" : "WNDA"
+      },
+      {
+        "code" : "WNDD"
+      },
+      {
+        "code" : "WNDE"
+      }]
+    }]
+  }
+}

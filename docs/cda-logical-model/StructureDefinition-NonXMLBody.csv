@@ -22,7 +22,7 @@
 "NonXMLBody.classCode","NonXMLBody.classCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DOCBODY""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClassRecordOrganizer","",,,,"NonXMLBody.classCode",0,1,"",""
 "NonXMLBody.moodCode","NonXMLBody.moodCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActMood","",,,,"NonXMLBody.moodCode",0,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAActMood","",,,,"NonXMLBody.moodCode",0,1,"",""
 "NonXMLBody.text","NonXMLBody.text","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ED {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"NonXMLBody.text",1,1,"",""
 "NonXMLBody.confidentialityCode","NonXMLBody.confidentialityCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}

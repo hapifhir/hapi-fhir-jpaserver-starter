@@ -26,7 +26,7 @@
 "AssignedEntity.sdtcIdentifiedBy","AssignedEntity.sdtcIdentifiedBy","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IdentifiedBy {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"AssignedEntity.sdtcIdentifiedBy",0,*,"",""
 "AssignedEntity.code","AssignedEntity.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
-","","","","","","","","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-RoleCode","",,,,"AssignedEntity.code",0,1,"",""
+","","","","","","","","","","","",,"example","","http://hl7.org/cda/stds/core/ValueSet/CDARoleCode","",,,,"AssignedEntity.code",0,1,"",""
 "AssignedEntity.addr","AssignedEntity.addr","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/AD {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"AssignedEntity.addr",0,*,"",""
 "AssignedEntity.telecom","AssignedEntity.telecom","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/TEL {[]} {[]}

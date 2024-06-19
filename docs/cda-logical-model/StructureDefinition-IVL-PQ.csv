@@ -11,7 +11,7 @@
 "IVL_PQ.translation","IVL_PQ.translation","","","Translation",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/PQR {[]} {[]}
 ","","An alternative representation of the same physical quantity expressed in a different unit, of a different unit code system and possibly with a different value.","","","","","","","","","",,,,,"",,,,"PQ.translation",0,*,"",""
 "IVL_PQ.operator","IVL_PQ.operator","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","A code specifying whether the set component is included (union) or excluded (set-difference) from the set, or other set operations with the current set component and the set as constructed from the representation stream up to the current point.","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""I""/>","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-SetOperator","",,,,"IVL_PQ.operator",0,1,"",""
+","","A code specifying whether the set component is included (union) or excluded (set-difference) from the set, or other set operations with the current set component and the set as constructed from the representation stream up to the current point.","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""I""/>","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDASetOperator","",,,,"IVL_PQ.operator",0,1,"",""
 "IVL_PQ.low","IVL_PQ.low","","","Low Boundary",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IVXB-PQ {[]} {[]}
 ","","This is the low limit of the interval.","","","","","","","","","",,,,,"",,,,"IVL_PQ.low",0,1,"",""
 "IVL_PQ.center","IVL_PQ.center","","","Central Value",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/PQ {[]} {[]}

@@ -20,6 +20,6 @@
 "DocumentationOf.templateId","DocumentationOf.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
 "DocumentationOf.typeCode","DocumentationOf.typeCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DOC""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationType","",,,,"DocumentationOf.typeCode",0,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DOC""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAActRelationshipType","",,,,"DocumentationOf.typeCode",0,1,"",""
 "DocumentationOf.serviceEvent","DocumentationOf.serviceEvent","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ServiceEvent {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"DocumentationOf.serviceEvent",1,1,"",""

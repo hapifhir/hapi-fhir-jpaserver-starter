@@ -27,7 +27,7 @@
 "Guardian.sdtcIdentifiedBy","Guardian.sdtcIdentifiedBy","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IdentifiedBy {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Guardian.sdtcIdentifiedBy",0,*,"",""
 "Guardian.code","Guardian.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
-","","","","","","","","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-RoleCode","",,,,"Guardian.code",0,1,"",""
+","","","","","","","","","","","",,"example","","http://hl7.org/cda/stds/core/ValueSet/CDARoleCode","",,,,"Guardian.code",0,1,"",""
 "Guardian.addr","Guardian.addr","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/AD {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Guardian.addr",0,*,"",""
 "Guardian.telecom","Guardian.telecom","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/TEL {[]} {[]}

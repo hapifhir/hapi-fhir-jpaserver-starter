@@ -1,0 +1,52 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "3a08af46-1216-469f-987a-386bb9377b3f-86",
+  "url" : "http://hl7.org/fhir/comparison/ValueSet/3a08af46-1216-469f-987a-386bb9377b3f-86",
+  "name" : "UnionCDAEntityNameUseAndCDAEntityNameUse",
+  "title" : "Union of CDAEntityNameUse And CDAEntityNameUse",
+  "status" : "draft",
+  "date" : "2024-06-19T17:47:55+02:00",
+  "compose" : {
+    "include" : [{
+      "concept" : [{
+        "code" : "C"
+      },
+      {
+        "code" : "L"
+      },
+      {
+        "code" : "I"
+      },
+      {
+        "code" : "P"
+      },
+      {
+        "code" : "A"
+      },
+      {
+        "code" : "R"
+      },
+      {
+        "code" : "SRCH"
+      },
+      {
+        "code" : "PHON"
+      },
+      {
+        "code" : "SNDX"
+      },
+      {
+        "code" : "ASGN"
+      },
+      {
+        "code" : "ABC"
+      },
+      {
+        "code" : "SYL"
+      },
+      {
+        "code" : "IDE"
+      }]
+    }]
+  }
+}

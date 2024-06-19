@@ -31,12 +31,12 @@
     "valueUri" : "cda"
   }],
   "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Organizer",
-  "version" : "2.0.0-sd-202312-matchbox-patch",
+  "version" : "2.0.0-sd-202406-matchbox-patch",
   "name" : "Organizer",
   "title" : "Organizer (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2024-03-12T18:28:21+01:00",
+  "date" : "2024-06-19T17:47:42+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
@@ -282,7 +282,7 @@
       "fixedCode" : "EVN",
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActMood|2.0.0"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAActMood"
       }
     },
     {
@@ -555,7 +555,7 @@
       "fixedCode" : "EVN",
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActMood|2.0.0"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAActMood"
       }
     },
     {

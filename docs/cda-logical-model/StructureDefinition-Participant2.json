@@ -31,12 +31,12 @@
     "valueUri" : "cda"
   }],
   "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Participant2",
-  "version" : "2.0.0-sd-202312-matchbox-patch",
+  "version" : "2.0.0-sd-202406-matchbox-patch",
   "name" : "Participant2",
   "title" : "Participant2 (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2024-03-12T18:28:21+01:00",
+  "date" : "2024-06-19T17:47:42+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
@@ -261,7 +261,7 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationType"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAParticipationType"
       }
     },
     {
@@ -282,7 +282,7 @@
       "fixedCode" : "OP",
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ContextControl"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAContextControl"
       }
     },
     {
@@ -369,7 +369,7 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationType"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAParticipationType"
       }
     },
     {
@@ -385,7 +385,7 @@
       "fixedCode" : "OP",
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ContextControl"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAContextControl"
       }
     },
     {

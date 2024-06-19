@@ -27,12 +27,12 @@
     <valueUri value="cda"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/Precondition2"/>
-  <version value="2.0.0-sd-202312-matchbox-patch"/>
+  <version value="2.0.0-sd-202406-matchbox-patch"/>
   <name value="Precondition2"/>
   <title value="Precondition2 (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2024-03-12T18:28:21+01:00"/>
+  <date value="2024-06-19T17:47:42+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
@@ -253,7 +253,7 @@
       <fixedCode value="PRCN"/>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActRelationshipType"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAActRelationshipType"/>
       </binding>
     </element>
     <element id="Precondition2.negationInd">
@@ -276,7 +276,7 @@
         <valueUri value="urn:hl7-org:sdtc"/>
       </extension>
       <path value="Precondition2.conjunctionCode"/>
-      <definition value="A code specifying the logical conjunction of the criteria among all the condition-links of Acts (e.g., and, or, exclusive-or).&#xA;All AND criteria must be true.&#xA;If OR and AND criteria occur together, one criterion out of the OR-group must be true and all AND criteria must be true also.&#xA;If XOR criteria occur together with OR and AND criteria, exactly one of the XOR criteria must be true, and at least one of the OR criteria and all AND criteria must be true.&#xA;In other words, the sets of AND, OR, and XOR criteria are in turn combined by a logical AND operator (all AND criteria and at least one OR criterion and exactly one XOR criterion)."/>
+      <definition value="A code specifying the logical conjunction of the criteria among all the condition-links of Acts (e.g., and, or, exclusive-or).&#xA;&#xA;All AND criteria must be true.&#xA;&#xA;If OR and AND criteria occur together, one criterion out of the OR-group must be true and all AND criteria must be true also.&#xA;&#xA;If XOR criteria occur together with OR and AND criteria, exactly one of the XOR criteria must be true, and at least one of the OR criteria and all AND criteria must be true.&#xA;&#xA;In other words, the sets of AND, OR, and XOR criteria are in turn combined by a logical AND operator (all AND criteria and at least one OR criterion and exactly one XOR criterion)."/>
       <min value="1"/>
       <max value="1"/>
       <base>
@@ -429,7 +429,7 @@
       <fixedCode value="PRCN"/>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActRelationshipType"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAActRelationshipType"/>
       </binding>
     </element>
     <element id="Precondition2.negationInd">
@@ -447,7 +447,7 @@
         <valueUri value="urn:hl7-org:sdtc"/>
       </extension>
       <path value="Precondition2.conjunctionCode"/>
-      <definition value="A code specifying the logical conjunction of the criteria among all the condition-links of Acts (e.g., and, or, exclusive-or).&#xA;All AND criteria must be true.&#xA;If OR and AND criteria occur together, one criterion out of the OR-group must be true and all AND criteria must be true also.&#xA;If XOR criteria occur together with OR and AND criteria, exactly one of the XOR criteria must be true, and at least one of the OR criteria and all AND criteria must be true.&#xA;In other words, the sets of AND, OR, and XOR criteria are in turn combined by a logical AND operator (all AND criteria and at least one OR criterion and exactly one XOR criterion)."/>
+      <definition value="A code specifying the logical conjunction of the criteria among all the condition-links of Acts (e.g., and, or, exclusive-or).&#xA;&#xA;All AND criteria must be true.&#xA;&#xA;If OR and AND criteria occur together, one criterion out of the OR-group must be true and all AND criteria must be true also.&#xA;&#xA;If XOR criteria occur together with OR and AND criteria, exactly one of the XOR criteria must be true, and at least one of the OR criteria and all AND criteria must be true.&#xA;&#xA;In other words, the sets of AND, OR, and XOR criteria are in turn combined by a logical AND operator (all AND criteria and at least one OR criterion and exactly one XOR criterion)."/>
       <min value="1"/>
       <max value="1"/>
       <type>

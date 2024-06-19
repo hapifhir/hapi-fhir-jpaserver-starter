@@ -2,14 +2,14 @@
   "codeSystems" : [
     {
       "url" : "http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding",
-      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
       "status" : "draft",
       "name" : "BinaryDataEncoding",
       "title" : "Binary Data Encoding Code System",
       "description" : "Identifies the representation of binary data in a text field",
       "uses" : {
       },
-      "ValueSet-BinaryDataEncoding.html" : "Binary Data Encoding Value Set"
+      "ValueSet-BinaryDataEncoding.html" : "CDABinaryDataEncoding"
     },
     {
       "url" : "http://loinc.org",
@@ -58,16 +58,17 @@
       "oids" : ["2.16.840.1.113883.5.6"],
       "uses" : {
       },
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActClassROI.html" : "ActClassROI",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActClassRecordOrganizer.html" : "ActClassRecordOrganizer",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-xActClassDocumentEntryAct.html" : "x_ActClassDocumentEntryAct",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xActClassDocumentEntryOrganizer.html" : "x_ActClassDocumentEntryOrganizer",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActClass.html" : "ActClass",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActClassObservation.html" : "ActClassObservation",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActClassDocument.html" : "ActClassDocument",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActClassProcedure.html" : "ActClassProcedure",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActClassDocument.html" : "ActClassDocument",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActClassObservation.html" : "ActClassObservation",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActClassSupply.html" : "ActClassSupply",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActClassROI.html" : "ActClassROI",
+      "ValueSet-CDAActClass.html" : "CDAActClass",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActClassClinicalDocument.html" : "ActClassClinicalDocument",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActClassRecordOrganizer.html" : "ActClassRecordOrganizer"
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xActClassDocumentEntryOrganizer.html" : "x_ActClassDocumentEntryOrganizer",
+      "ValueSet-CDAActClassObservation.html" : "CDAActClassObservation"
     },
     {
       "url" : "http://terminology.hl7.org/CodeSystem/v3-ActCode",
@@ -79,11 +80,11 @@
       "oids" : ["2.16.840.1.113883.5.4"],
       "uses" : {
       },
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActEncounterCode.html" : "ActEncounterCode",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActSubstanceAdministrationCode.html" : "ActSubstanceAdministrationCode",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActCode.html" : "v3 Code System ActCode",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-ROIOverlayShape.html" : "ROIOverlayShape",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ObservationType.html" : "ObservationType"
+      "ValueSet-CDAActSubstanceAdministrationCode.html" : "CDAActSubstanceAdministrationCode",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ObservationType.html" : "ObservationType",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActCode.html" : "v3 Code System ActCode",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActEncounterCode.html" : "ActEncounterCode"
     },
     {
       "url" : "http://terminology.hl7.org/CodeSystem/v3-ActMood",
@@ -96,13 +97,13 @@
       "uses" : {
       },
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-xDocumentProcedureMood.html" : "x_DocumentProcedureMood",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xDocumentActMood.html" : "x_DocumentActMood",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-xDocumentEncounterMood.html" : "x_DocumentEncounterMood",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xActMoodDocumentObservation.html" : "x_ActMoodDocumentObservation",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xDocumentSubstanceMood.html" : "x_DocumentSubstanceMood",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActMood.html" : "ActMood",
+      "ValueSet-CDAActMoodIntent.html" : "CDAActMoodIntent",
+      "ValueSet-CDAActMood.html" : "CDAActMood",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActMoodPredicate.html" : "ActMoodPredicate",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActMoodIntent.html" : "ActMoodIntent"
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xDocumentActMood.html" : "x_DocumentActMood",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xActMoodDocumentObservation.html" : "x_ActMoodDocumentObservation",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xDocumentSubstanceMood.html" : "x_DocumentSubstanceMood"
     },
     {
       "url" : "http://terminology.hl7.org/CodeSystem/v3-ActPriority",
@@ -126,13 +127,15 @@
       "oids" : ["2.16.840.1.113883.5.1002"],
       "uses" : {
       },
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xActRelationshipEntry.html" : "x_ActRelationshipEntry",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActRelationshipType.html" : "ActRelationshipType",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xActRelationshipDocument.html" : "x_ActRelationshipDocument",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActRelationshipHasComponent.html" : "ActRelationshipHasComponent",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xActRelationshipEntryRelationship.html" : "x_ActRelationshipEntryRelationship",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActRelationshipType.html" : "ActRelationshipType",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActRelationshipAuthorizedBy.html" : "ActRelationshipAuthorizedBy",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xActRelationshipExternalReference.html" : "x_ActRelationshipExternalReference",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-ActRelationshipFulfills.html" : "ActRelationshipFulfills",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xActRelationshipExternalReference.html" : "x_ActRelationshipExternalReference"
+      "ValueSet-CDAActRelationshipType.html" : "CDAActRelationshipType",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xActRelationshipEntry.html" : "x_ActRelationshipEntry",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xActRelationshipDocument.html" : "x_ActRelationshipDocument",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xActRelationshipEntryRelationship.html" : "x_ActRelationshipEntryRelationship"
     },
     {
       "url" : "http://terminology.hl7.org/CodeSystem/v3-ActSite",
@@ -168,8 +171,8 @@
       "oids" : ["2.16.840.1.113883.5.1119"],
       "uses" : {
       },
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-TelecommunicationAddressUse.html" : "TelecommunicationAddressUse",
-      "ValueSet-CDAPostalAddressUse.html" : "CDAPostalAddressUse"
+      "ValueSet-CDAPostalAddressUse.html" : "CDAPostalAddressUse",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-TelecommunicationAddressUse.html" : "TelecommunicationAddressUse"
     },
     {
       "url" : "http://terminology.hl7.org/CodeSystem/v3-AdministrativeGender",
@@ -193,7 +196,7 @@
       "oids" : ["2.16.840.1.113883.5.1009"],
       "uses" : {
       },
-      "ValueSet-CDACompressionAlgorithm.html" : "CompressionAlgorithm"
+      "ValueSet-CDACompressionAlgorithm.html" : "CDACompressionAlgorithm"
     },
     {
       "url" : "http://terminology.hl7.org/CodeSystem/v3-ContextControl",
@@ -205,7 +208,7 @@
       "oids" : ["2.16.840.1.113883.5.1057"],
       "uses" : {
       },
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ContextControl.html" : "ContextControl"
+      "ValueSet-CDAContextControl.html" : "CDAContextControl"
     },
     {
       "url" : "http://terminology.hl7.org/CodeSystem/v3-EntityClass",
@@ -217,12 +220,12 @@
       "oids" : ["2.16.840.1.113883.5.41"],
       "uses" : {
       },
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-EntityClassOrganization.html" : "EntityClassOrganization",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-EntityClassPlace.html" : "EntityClassPlace",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-EntityClassManufacturedMaterial.html" : "EntityClassManufacturedMaterial",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-EntityClassDevice.html" : "EntityClassDevice",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-EntityClassRoot.html" : "EntityClassRoot",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-EntityClassLivingSubject.html" : "EntityClassLivingSubject"
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-EntityClassOrganization.html" : "EntityClassOrganization",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-EntityClassManufacturedMaterial.html" : "EntityClassManufacturedMaterial",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-EntityClassLivingSubject.html" : "EntityClassLivingSubject",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-EntityClassRoot.html" : "EntityClassRoot"
     },
     {
       "url" : "http://terminology.hl7.org/CodeSystem/v3-EntityCode",
@@ -234,8 +237,8 @@
       "oids" : ["2.16.840.1.113883.5.1060"],
       "uses" : {
       },
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-DrugEntity.html" : "Drug Entity",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-MaterialEntityClassType.html" : "MaterialEntityClassType"
+      "ValueSet-CDAMaterialEntityClassType.html" : "CDAMaterialEntityClassType",
+      "ValueSet-CDAEntityCode.html" : "CDAEntityCode"
     },
     {
       "url" : "http://terminology.hl7.org/CodeSystem/v3-EntityDeterminer",
@@ -260,7 +263,7 @@
       "oids" : ["2.16.840.1.113883.5.43"],
       "uses" : {
       },
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-EntityNamePartQualifier.html" : "EntityNamePartQualifier"
+      "ValueSet-CDAEntityNamePartQualifier.html" : "CDAEntityNamePartQualifier"
     },
     {
       "url" : "http://terminology.hl7.org/CodeSystem/v3-EntityNamePartType",
@@ -284,8 +287,8 @@
       "oids" : ["2.16.840.1.113883.5.45"],
       "uses" : {
       },
-      "ValueSet-CDAEntityNameUse.html" : "CDAEntityNameUse",
-      "ValueSet-CDAPostalAddressUse.html" : "CDAPostalAddressUse"
+      "ValueSet-CDAPostalAddressUse.html" : "CDAPostalAddressUse",
+      "ValueSet-CDAEntityNameUse.html" : "CDAEntityNameUse"
     },
     {
       "url" : "http://terminology.hl7.org/CodeSystem/v3-Ethnicity",
@@ -369,8 +372,8 @@
       "oids" : ["2.16.840.1.113883.5.1008"],
       "uses" : {
       },
-      "ValueSet-CDANullFlavor.html" : "CDANullFlavor",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-NullFlavor.html" : "NullFlavor"
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-NullFlavor.html" : "NullFlavor",
+      "ValueSet-CDANullFlavor.html" : "CDANullFlavor"
     },
     {
       "url" : "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
@@ -382,7 +385,7 @@
       "oids" : ["2.16.840.1.113883.5.83"],
       "uses" : {
       },
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ObservationInterpretation.html" : "ObservationInterpretation"
+      "ValueSet-CDAObservationInterpretation.html" : "CDAObservationInterpretation"
     },
     {
       "url" : "http://terminology.hl7.org/CodeSystem/v3-ObservationMethod",
@@ -418,14 +421,14 @@
       "oids" : ["2.16.840.1.113883.5.90"],
       "uses" : {
       },
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xEncounterParticipant.html" : "x_EncounterParticipant",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ParticipationTargetSubject.html" : "ParticipationTargetSubject",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ParticipationTargetLocation.html" : "ParticipationTargetLocation",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-ParticipationPhysicalPerformer.html" : "ParticipationPhysicalPerformer",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xInformationRecipient.html" : "x_InformationRecipient",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-xServiceEventPerformer.html" : "x_ServiceEventPerformer",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ParticipationTargetSubject.html" : "ParticipationTargetSubject",
+      "ValueSet-CDAParticipationType.html" : "CDAParticipationType",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ParticipationTargetLocation.html" : "ParticipationTargetLocation",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xEncounterParticipant.html" : "x_EncounterParticipant",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-ParticipationTargetDirect.html" : "ParticipationTargetDirect",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-ParticipationType.html" : "ParticipationType"
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-xInformationRecipient.html" : "x_InformationRecipient"
     },
     {
       "url" : "http://terminology.hl7.org/CodeSystem/v3-Race",
@@ -473,18 +476,19 @@
       "oids" : ["2.16.840.1.113883.5.110"],
       "uses" : {
       },
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-RoleClassRelationshipFormal.html" : "RoleClassRelationshipFormal",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-RoleClassMutualRelationship.html" : "RoleClassMutualRelationship",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-RoleClass.html" : "RoleClass",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-RoleClassPartitive.html" : "RoleClassPartitive",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-RoleClassAssignedEntity.html" : "RoleClassAssignedEntity",
+      "ValueSet-CDARoleClassAssociative.html" : "CDARoleClassAssociative",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-RoleClassSpecimen.html" : "RoleClassSpecimen",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-RoleClassAssociative.html" : "RoleClassAssociative",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-RoleClassPassive.html" : "RoleClassPassive",
+      "ValueSet-CDARoleClassMutualRelationship.html" : "CDARoleClassMutualRelationship",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-RoleClassAgent.html" : "RoleClassAgent",
+      "ValueSet-CDARoleClassRoot.html" : "CDARoleClassRoot",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-RoleClassRelationshipFormal.html" : "RoleClassRelationshipFormal",
+      "ValueSet-CDAInformationRecipientRole.html" : "CDAInformationRecipientRole",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-RoleClassServiceDeliveryLocation.html" : "RoleClassServiceDeliveryLocation",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-RoleClassPassive.html" : "RoleClassPassive",
+      "http://terminology.hl7.org/5.3.0/ValueSet-v3-RoleClassPartitive.html" : "RoleClassPartitive",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-RoleClassManufacturedProduct.html" : "RoleClassManufacturedProduct",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-RoleClassRoot.html" : "RoleClassRoot"
+      "ValueSet-CDARoleClass.html" : "CDARoleClass"
     },
     {
       "url" : "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
@@ -497,7 +501,7 @@
       "uses" : {
       },
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-PersonalRelationshipRoleType.html" : "PersonalRelationshipRoleType",
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-RoleCode.html" : "v3 Code System RoleCode",
+      "ValueSet-CDARoleCode.html" : "CDARoleCode",
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-ServiceDeliveryLocationRoleType.html" : "ServiceDeliveryLocationRoleType"
     },
     {
@@ -534,7 +538,7 @@
       "oids" : ["2.16.840.1.113883.5.1069"],
       "uses" : {
       },
-      "http://terminology.hl7.org/5.3.0/ValueSet-v3-SetOperator.html" : "SetOperator"
+      "ValueSet-CDASetOperator.html" : "CDASetOperator"
     },
     {
       "url" : "http://terminology.hl7.org/CodeSystem/v3-SoftwareNameExample",
@@ -547,6 +551,18 @@
       "uses" : {
       },
       "http://terminology.hl7.org/5.3.0/ValueSet-v3-SoftwareNameExample.html" : "Software Name Example"
+    },
+    {
+      "url" : "http://terminology.hl7.org/CodeSystem/v3-SpecimenType",
+      "version" : "2.1.1",
+      "status" : "active",
+      "name" : "SpecimenType",
+      "title" : "SpecimenType",
+      "description" : "**** MISSING DESCRIPTION ****",
+      "oids" : ["2.16.840.1.113883.5.129"],
+      "uses" : {
+      },
+      "ValueSet-CDAMaterialEntityClassType.html" : "CDAMaterialEntityClassType"
     },
     {
       "url" : "http://terminology.hl7.org/CodeSystem/v3-TargetAwareness",

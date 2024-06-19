@@ -2,7 +2,7 @@
 "AlternateIdentification","AlternateIdentification","","","",1,1,"","","","null {[]} {[]}
 ","Base for all types and resources","Base definition for all types defined in FHIR type system.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","","n/a"
 "AlternateIdentification.classCode","AlternateIdentification.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""IDENT""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-RoleClass","",,,,"AlternateIdentification.classCode",1,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""IDENT""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDARoleClass","",,,,"AlternateIdentification.classCode",1,1,"",""
 "AlternateIdentification.id","AlternateIdentification.id","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"AlternateIdentification.id",1,1,"",""
 "AlternateIdentification.code","AlternateIdentification.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}

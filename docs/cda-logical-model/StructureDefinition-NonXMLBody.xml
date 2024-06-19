@@ -28,12 +28,12 @@
     <valueUri value="cda"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/NonXMLBody"/>
-  <version value="2.0.0-sd-202312-matchbox-patch"/>
+  <version value="2.0.0-sd-202406-matchbox-patch"/>
   <name value="NonXMLBody"/>
   <title value="NonXMLBody (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2024-03-12T18:28:21+01:00"/>
+  <date value="2024-06-19T17:47:42+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
@@ -46,7 +46,7 @@
       <value value="structdog@lists.HL7.org"/>
     </telecom>
   </contact>
-  <description value="The NonXMLBody class represents a document body that is in some format other than XML. NonXMLBody.text is used to reference data that is stored externally to the CDA document or to encode the data directly inline.&#xA;Rendering a referenced non-XML body requires a software tool that recognizes the particular MIME media type of the blob."/>
+  <description value="The NonXMLBody class represents a document body that is in some format other than XML. NonXMLBody.text is used to reference data that is stored externally to the CDA document or to encode the data directly inline.&#xA;&#xA;Rendering a referenced non-XML body requires a software tool that recognizes the particular MIME media type of the blob."/>
   <fhirVersion value="5.0.0"/>
   <mapping>
     <identity value="rim"/>
@@ -268,7 +268,7 @@
       <fixedCode value="EVN"/>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActMood"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAActMood"/>
       </binding>
     </element>
     <element id="NonXMLBody.text">
@@ -348,7 +348,7 @@
       <fixedCode value="EVN"/>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActMood"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAActMood"/>
       </binding>
     </element>
     <element id="NonXMLBody.text">

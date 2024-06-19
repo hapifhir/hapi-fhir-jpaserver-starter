@@ -31,12 +31,12 @@
     "valueUri" : "cda"
   }],
   "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Organization",
-  "version" : "2.0.0-sd-202312-matchbox-patch",
+  "version" : "2.0.0-sd-202406-matchbox-patch",
   "name" : "Organization",
   "title" : "Organization (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2024-03-12T18:28:21+01:00",
+  "date" : "2024-06-19T17:47:42+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
@@ -49,7 +49,7 @@
       "value" : "structdog@lists.HL7.org"
     }]
   }],
-  "description" : "An Entity representing a formalized group of persons or other organizations with a common purpose and the infrastructure to carry out that purpose.\nCompanies and institutions, a government department, an incorporated body that is responsible for administering a facility, an insurance company.",
+  "description" : "An Entity representing a formalized group of persons or other organizations with a common purpose and the infrastructure to carry out that purpose.\n\nCompanies and institutions, a government department, an incorporated body that is responsible for administering a facility, an insurance company.",
   "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",

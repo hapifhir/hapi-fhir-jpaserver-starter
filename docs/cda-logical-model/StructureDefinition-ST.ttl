@@ -29,12 +29,12 @@
      fhir:value [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"^^xsd:anyURI ]
   ] ) ; # 
   fhir:url [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI] ; # 
-  fhir:version [ fhir:v "2.0.0-sd-202312-matchbox-patch"] ; # 
+  fhir:version [ fhir:v "2.0.0-sd-202406-matchbox-patch"] ; # 
   fhir:name [ fhir:v "ST"] ; # 
   fhir:title [ fhir:v "ST: CharacterString (V3 Data Type)"] ; # 
   fhir:status [ fhir:v "active"] ; # 
   fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
-  fhir:date [ fhir:v "2024-03-12T18:28:21+01:00"^^xsd:dateTime] ; # 
+  fhir:date [ fhir:v "2024-06-19T17:47:42+02:00"^^xsd:dateTime] ; # 
   fhir:publisher [ fhir:v "Health Level 7"] ; # 
   fhir:contact ( [
      fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;

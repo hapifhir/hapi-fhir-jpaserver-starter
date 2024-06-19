@@ -22,7 +22,7 @@
 "ExternalProcedure.classCode","ExternalProcedure.classCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""PROC""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClassProcedure","",,,,"ExternalProcedure.classCode",0,1,"",""
 "ExternalProcedure.moodCode","ExternalProcedure.moodCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActMood","",,,,"ExternalProcedure.moodCode",0,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAActMood","",,,,"ExternalProcedure.moodCode",0,1,"",""
 "ExternalProcedure.id","ExternalProcedure.id","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ExternalProcedure.id",0,*,"",""
 "ExternalProcedure.code","ExternalProcedure.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}

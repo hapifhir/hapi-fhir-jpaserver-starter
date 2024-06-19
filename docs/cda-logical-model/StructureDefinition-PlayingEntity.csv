@@ -19,12 +19,12 @@
 ","","A character string as a unique identifier within the scope of the identifier root.","","","","","","","","","",,,,,"",,,,"II.extension",0,1,"",""
 "PlayingEntity.templateId","PlayingEntity.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
-"PlayingEntity.classCode","PlayingEntity.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ENT""/>","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-EntityClassRoot","",,,,"PlayingEntity.classCode",1,1,"",""
+"PlayingEntity.classCode","PlayingEntity.classCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ENT""/>","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-EntityClassRoot","",,,,"PlayingEntity.classCode",0,1,"",""
 "PlayingEntity.determinerCode","PlayingEntity.determinerCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""INSTANCE""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-EntityDeterminer","",,,,"PlayingEntity.determinerCode",0,1,"",""
 "PlayingEntity.code","PlayingEntity.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
-","","","","","","","","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-EntityCode","",,,,"PlayingEntity.code",0,1,"",""
+","","","","","","","","","","","",,"example","","http://hl7.org/cda/stds/core/ValueSet/CDAEntityCode","",,,,"PlayingEntity.code",0,1,"",""
 "PlayingEntity.quantity","PlayingEntity.quantity","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/PQ {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"PlayingEntity.quantity",0,*,"",""
 "PlayingEntity.name","PlayingEntity.name","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/PN {[]} {[]}

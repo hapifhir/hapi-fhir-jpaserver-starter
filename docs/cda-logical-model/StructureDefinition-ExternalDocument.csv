@@ -22,7 +22,7 @@
 "ExternalDocument.classCode","ExternalDocument.classCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DOC""/>","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClassDocument","",,,,"ExternalDocument.classCode",0,1,"",""
 "ExternalDocument.moodCode","ExternalDocument.moodCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActMood","",,,,"ExternalDocument.moodCode",0,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAActMood","",,,,"ExternalDocument.moodCode",0,1,"",""
 "ExternalDocument.id","ExternalDocument.id","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ExternalDocument.id",0,*,"",""
 "ExternalDocument.code","ExternalDocument.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}

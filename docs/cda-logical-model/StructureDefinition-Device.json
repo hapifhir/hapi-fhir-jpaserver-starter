@@ -31,12 +31,12 @@
     "valueUri" : "cda"
   }],
   "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Device",
-  "version" : "2.0.0-sd-202312-matchbox-patch",
+  "version" : "2.0.0-sd-202406-matchbox-patch",
   "name" : "Device",
   "title" : "Device (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2024-03-12T18:28:21+01:00",
+  "date" : "2024-06-19T17:47:42+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
@@ -49,7 +49,7 @@
       "value" : "structdog@lists.HL7.org"
     }]
   }],
-  "description" : "A ManufacturedMaterial used in an activity without being substantially changed through that activity.\nThis includes durable (reusable) medical equipment as well as disposable equipment. The kind of device is identified by the code attribute inherited from Entity.",
+  "description" : "A ManufacturedMaterial used in an activity without being substantially changed through that activity.\n\nThis includes durable (reusable) medical equipment as well as disposable equipment. The kind of device is identified by the code attribute inherited from Entity.",
   "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
@@ -248,11 +248,11 @@
       "id" : "Device.classCode",
       "path" : "Device.classCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "base" : {
         "path" : "Device.classCode",
-        "min" : 1,
+        "min" : 0,
         "max" : "1"
       },
       "type" : [{
@@ -301,7 +301,7 @@
       }],
       "binding" : {
         "strength" : "example",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-EntityCode"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityCode"
       }
     },
     {
@@ -352,7 +352,7 @@
       "id" : "Device.classCode",
       "path" : "Device.classCode",
       "representation" : ["xmlAttr"],
-      "min" : 1,
+      "min" : 0,
       "max" : "1",
       "type" : [{
         "code" : "code",
@@ -390,7 +390,7 @@
       }],
       "binding" : {
         "strength" : "example",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-EntityCode"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityCode"
       }
     },
     {

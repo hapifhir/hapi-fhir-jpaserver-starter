@@ -1,0 +1,34 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "3a08af46-1216-469f-987a-386bb9377b3f-65",
+  "url" : "http://hl7.org/fhir/comparison/ValueSet/3a08af46-1216-469f-987a-386bb9377b3f-65",
+  "name" : "UnionCDAActMoodIntentAndCDAActMoodIntent",
+  "title" : "Union of CDAActMoodIntent And CDAActMoodIntent",
+  "status" : "draft",
+  "date" : "2024-06-19T17:47:55+02:00",
+  "compose" : {
+    "include" : [{
+      "concept" : [{
+        "code" : "INT"
+      },
+      {
+        "code" : "APT"
+      },
+      {
+        "code" : "ARQ"
+      },
+      {
+        "code" : "PRMS"
+      },
+      {
+        "code" : "PRP"
+      },
+      {
+        "code" : "RQO"
+      },
+      {
+        "code" : "SLOT"
+      }]
+    }]
+  }
+}

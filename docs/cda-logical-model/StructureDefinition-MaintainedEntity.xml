@@ -28,12 +28,12 @@
     <valueUri value="cda"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/MaintainedEntity"/>
-  <version value="2.0.0-sd-202312-matchbox-patch"/>
+  <version value="2.0.0-sd-202406-matchbox-patch"/>
   <name value="MaintainedEntity"/>
   <title value="MaintainedEntity (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2024-03-12T18:28:21+01:00"/>
+  <date value="2024-06-19T17:47:42+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
@@ -46,7 +46,7 @@
       <value value="structdog@lists.HL7.org"/>
     </telecom>
   </contact>
-  <description value="The MaintainedEntity class is present for backwards compatibility, and its use is discouraged, except where needed to support the transformation of CDA, Release One documents.&#xA;NOTE: In CDA, Release One, it was possible to specify those individuals responsible for the device. This functionality has been deprecated in CDA, Release Two."/>
+  <description value="The MaintainedEntity class is present for backwards compatibility, and its use is discouraged, except where needed to support the transformation of CDA, Release One documents.&#xA;&#xA;NOTE: In CDA, Release One, it was possible to specify those individuals responsible for the device. This functionality has been deprecated in CDA, Release Two."/>
   <fhirVersion value="5.0.0"/>
   <mapping>
     <identity value="rim"/>

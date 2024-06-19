@@ -35,12 +35,12 @@
      fhir:value [ fhir:v "cda"^^xsd:anyURI ]
   ] ) ; # 
   fhir:url [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/MaintainedEntity"^^xsd:anyURI] ; # 
-  fhir:version [ fhir:v "2.0.0-sd-202312-matchbox-patch"] ; # 
+  fhir:version [ fhir:v "2.0.0-sd-202406-matchbox-patch"] ; # 
   fhir:name [ fhir:v "MaintainedEntity"] ; # 
   fhir:title [ fhir:v "MaintainedEntity (CDA Class)"] ; # 
   fhir:status [ fhir:v "active"] ; # 
   fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
-  fhir:date [ fhir:v "2024-03-12T18:28:21+01:00"^^xsd:dateTime] ; # 
+  fhir:date [ fhir:v "2024-06-19T17:47:42+02:00"^^xsd:dateTime] ; # 
   fhir:publisher [ fhir:v "Health Level 7"] ; # 
   fhir:contact ( [
      fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
@@ -52,7 +52,7 @@
        fhir:value [ fhir:v "structdog@lists.HL7.org" ]
      ] )
   ] ) ; # 
-  fhir:description [ fhir:v "The MaintainedEntity class is present for backwards compatibility, and its use is discouraged, except where needed to support the transformation of CDA, Release One documents.\nNOTE: In CDA, Release One, it was possible to specify those individuals responsible for the device. This functionality has been deprecated in CDA, Release Two."] ; # 
+  fhir:description [ fhir:v "The MaintainedEntity class is present for backwards compatibility, and its use is discouraged, except where needed to support the transformation of CDA, Release One documents.\n\nNOTE: In CDA, Release One, it was possible to specify those individuals responsible for the device. This functionality has been deprecated in CDA, Release Two."] ; # 
   fhir:fhirVersion [ fhir:v "5.0.0"] ; # 
   fhir:mapping ( [
      fhir:identity [ fhir:v "rim" ] ;

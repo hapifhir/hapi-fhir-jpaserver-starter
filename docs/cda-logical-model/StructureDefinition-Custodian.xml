@@ -28,12 +28,12 @@
     <valueUri value="cda"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/Custodian"/>
-  <version value="2.0.0-sd-202312-matchbox-patch"/>
+  <version value="2.0.0-sd-202406-matchbox-patch"/>
   <name value="Custodian"/>
   <title value="Custodian (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2024-03-12T18:28:21+01:00"/>
+  <date value="2024-06-19T17:47:42+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
@@ -248,7 +248,7 @@
       <fixedCode value="CST"/>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ParticipationType"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAParticipationType"/>
       </binding>
     </element>
     <element id="Custodian.assignedCustodian">
@@ -283,7 +283,7 @@
       <fixedCode value="CST"/>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ParticipationType"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAParticipationType"/>
       </binding>
     </element>
     <element id="Custodian.assignedCustodian">

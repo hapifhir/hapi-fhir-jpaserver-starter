@@ -3,7 +3,7 @@
 <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
-    <title>Artifacts Summary - Clinical Document Architecture v2.0.0-sd-202312-matchbox-patch</title>
+    <title>Artifacts Summary - Clinical Document Architecture v2.0.0-sd-202406-matchbox-patch</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="author" content="http://hl7.org/fhir"/>
@@ -41,8 +41,8 @@
 
 	  <script src="assets/js/prism.js"></script>
 
-    <style type="text/css">h2{--heading-prefix:"4"}
-    h3,h4,h5,h6{--heading-prefix:"4.0"}</style>
+    <style type="text/css">h2{--heading-prefix:"5"}
+    h3,h4,h5,h6{--heading-prefix:"5.0"}</style>
     <div id="segment-header" class="segment">  <!-- segment-header -->
       <div class="container">  <!-- container -->
         <!-- Placeholder for child template header declarations -->
@@ -63,7 +63,7 @@
         <div id="ig-status">
           <p><span style="font-size:12pt;font-weight:bold">Clinical Document Architecture</span>
             <br/>
-            <span style="display:inline-block;">2.0.0-sd-202312-matchbox-patch - ballot
+            <span style="display:inline-block;">2.0.0-sd-202406-matchbox-patch - release
 
 
             </span>
@@ -100,6 +100,7 @@
     </ul>
   </li>
   <li><a href="artifacts.html">Artifact Index</a></li>
+	<li><a href="terminology.html">Terminology</a></li>
   <li><a href="downloads.html">Downloads</a></li>
 </ul>
             </div>  <!-- /.nav-collapse -->
@@ -133,7 +134,7 @@ h5:before{color:silver;counter-increment:detail;content:var(--heading-prefix) ".
 h6:before{color:silver;counter-increment:more-detail;content:var(--heading-prefix) "." counter(sub-section) "." counter(composite) "." counter(detail) "." counter(more-detail)" ";}
 </style>
 <div class="col-12">
-  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture - Local Development build (v2.0.0-sd-202312-matchbox-patch) built by the FHIR (HL7® FHIR® Standard) Build Tools. See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
+  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture - Local Development build (v2.0.0-sd-202406-matchbox-patch) built by the FHIR (HL7® FHIR® Standard) Build Tools. See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
   <h2>Artifacts Summary</h2>
   
   
@@ -185,8 +186,9 @@ h6:before{color:silver;counter-increment:more-detail;content:var(--heading-prefi
                <a href="StructureDefinition-Act.html" title="StructureDefinition/Act">Act (CDA Class)</a>
             </td>
             <td>
-<p>A derivative of the RIM Act class, to be used when the other more specific classes aren’t appropriate.
-Act.negationInd, when set to “true”, is a positive assertion that the Act as a whole is negated. Some properties such as Act.id, Act.moodCode, and the participations are not affected. These properties always have the same meaning: i.e., the author remains the author of the negative Act. An act statement with negationInd is still a statement about the specific fact described by the Act. For instance, a negated “finding of wheezing on July 1” means that the author positively denies that there was wheezing on July 1, and that he takes the same responsibility for such statement and the same requirement to have evidence for such statement than if he had not used negation.</p>
+<p>A derivative of the RIM Act class, to be used when the other more specific classes aren’t appropriate.</p>
+
+<p>Act.negationInd, when set to “true”, is a positive assertion that the Act as a whole is negated. Some properties such as Act.id, Act.moodCode, and the participations are not affected. These properties always have the same meaning: i.e., the author remains the author of the negative Act. An act statement with negationInd is still a statement about the specific fact described by the Act. For instance, a negated “finding of wheezing on July 1” means that the author positively denies that there was wheezing on July 1, and that he takes the same responsibility for such statement and the same requirement to have evidence for such statement than if he had not used negation.</p>
 </td>
          </tr>
          <tr>
@@ -357,8 +359,9 @@ Act.negationInd, when set to “true”, is a positive assertion that the Act as
                   title="StructureDefinition/Device">Device (CDA Class)</a>
             </td>
             <td>
-<p>A ManufacturedMaterial used in an activity without being substantially changed through that activity.
-This includes durable (reusable) medical equipment as well as disposable equipment. The kind of device is identified by the code attribute inherited from Entity.</p>
+<p>A ManufacturedMaterial used in an activity without being substantially changed through that activity.</p>
+
+<p>This includes durable (reusable) medical equipment as well as disposable equipment. The kind of device is identified by the code attribute inherited from Entity.</p>
 </td>
          </tr>
          <tr>
@@ -394,9 +397,11 @@ This includes durable (reusable) medical equipment as well as disposable equipme
                   title="StructureDefinition/EncompassingEncounter">EncompassingEncounter (CDA Class)</a>
             </td>
             <td>
-<p>This optional class represents the setting of the clinical encounter during which the documented act(s) or ServiceEvent occurred. Documents are not necessarily generated during an encounter, such as when a clinician, in response to an abnormal lab result, attempts to contact the patient but can’t, and writes a Progress Note.
-In some cases, the setting of the encounter is inherent in the ClinicalDocument.code, such as where ClinicalDocument.code is “Diabetes Clinic Progress Note”. The setting of an encounter can also be transmitted in the HealthCareFacility.code attribute. If HealthCareFacility.code is sent, it should be equivalent to or further specialize the value inherent in the ClinicalDocument.code (such as where the ClinicalDocument.code is simply “Clinic Progress Note” and the value of HealthCareFacility.code is “cardiology clinic”), and shall not conflict with the value inherent in the ClinicalDocument.code, as such a conflict would constitute an ambiguous situation.
-EncompassingEncounter.dischargeDispositionCode can be used to depict the disposition of the patient at the time of hospital discharge (e.g., discharged to home, expired, against medical advice, etc.).</p>
+<p>This optional class represents the setting of the clinical encounter during which the documented act(s) or ServiceEvent occurred. Documents are not necessarily generated during an encounter, such as when a clinician, in response to an abnormal lab result, attempts to contact the patient but can’t, and writes a Progress Note.</p>
+
+<p>In some cases, the setting of the encounter is inherent in the ClinicalDocument.code, such as where ClinicalDocument.code is “Diabetes Clinic Progress Note”. The setting of an encounter can also be transmitted in the HealthCareFacility.code attribute. If HealthCareFacility.code is sent, it should be equivalent to or further specialize the value inherent in the ClinicalDocument.code (such as where the ClinicalDocument.code is simply “Clinic Progress Note” and the value of HealthCareFacility.code is “cardiology clinic”), and shall not conflict with the value inherent in the ClinicalDocument.code, as such a conflict would constitute an ambiguous situation.</p>
+
+<p>EncompassingEncounter.dischargeDispositionCode can be used to depict the disposition of the patient at the time of hospital discharge (e.g., discharged to home, expired, against medical advice, etc.).</p>
 </td>
          </tr>
          <tr>
@@ -405,8 +410,9 @@ EncompassingEncounter.dischargeDispositionCode can be used to depict the disposi
                   title="StructureDefinition/Encounter">Encounter (CDA Class)</a>
             </td>
             <td>
-<p>A derivative of the RIM PatientEncounter class, used to represent related encounters, such as follow-up visits or referenced past encounters.
-NOTE: The EncompassingEncounter class in the CDA Header (see Header Relationships (§ 4.2.3 )) represents the setting of the clinical encounter during which the documented act occurred. The Encounter class in the CDA Body is used to represent other related encounters.</p>
+<p>A derivative of the RIM PatientEncounter class, used to represent related encounters, such as follow-up visits or referenced past encounters.</p>
+
+<p>NOTE: The EncompassingEncounter class in the CDA Header (see Header Relationships (§ 4.2.3 )) represents the setting of the clinical encounter during which the documented act occurred. The Encounter class in the CDA Body is used to represent other related encounters.</p>
 </td>
          </tr>
          <tr>
@@ -424,9 +430,11 @@ NOTE: The EncompassingEncounter class in the CDA Header (see Header Relationship
                   title="StructureDefinition/Entity">Entity (CDA Class)</a>
             </td>
             <td>
-<p>A physical thing, group of physical things or an organization capable of participating in Acts while in a role.
-An entity is a physical object that has, had or will have existence. The only exception to this is Organization, which while not having a physical presence, fulfills the other characteristics of an Entity. Entity stipulates the thing itself, not the Roles it may play: the Role of Patient, e.g., is played by the Person Entity.
-Living subjects (including human beings), organizations, materials, places and their specializations.</p>
+<p>A physical thing, group of physical things or an organization capable of participating in Acts while in a role.</p>
+
+<p>An entity is a physical object that has, had or will have existence. The only exception to this is Organization, which while not having a physical presence, fulfills the other characteristics of an Entity. Entity stipulates the thing itself, not the Roles it may play: the Role of Patient, e.g., is played by the Person Entity.</p>
+
+<p>Living subjects (including human beings), organizations, materials, places and their specializations.</p>
 </td>
          </tr>
          <tr>
@@ -488,8 +496,9 @@ Living subjects (including human beings), organizations, materials, places and t
                   title="StructureDefinition/Guardian">Guardian (CDA Class)</a>
             </td>
             <td>
-<p>A patient’s guardian is a person or organization in the role of guardian (Guardian class). The entity playing the role of guardian is a person (Person class) or organization (Organization class). The entity scoping the role is the patient (Patient class).
-Where a guardian is not explicitly stated, the value should default to local business practice (e.g. the patient makes their own health care decisions unless incapacitated in which case healthcare decisions are made by the patient’s spouse).</p>
+<p>A patient’s guardian is a person or organization in the role of guardian (Guardian class). The entity playing the role of guardian is a person (Person class) or organization (Organization class). The entity scoping the role is the patient (Patient class).</p>
+
+<p>Where a guardian is not explicitly stated, the value should default to local business practice (e.g. the patient makes their own health care decisions unless incapacitated in which case healthcare decisions are made by the patient’s spouse).</p>
 </td>
          </tr>
          <tr>
@@ -579,9 +588,11 @@ Where a guardian is not explicitly stated, the value should default to local bus
                   title="StructureDefinition/LanguageCommunication">LanguageCommunication (CDA Class)</a>
             </td>
             <td>
-<p>The language communication capabilities of an Entity.
-While it may seem on the surface that this class would be restricted in usage to only the LivingSubject subtypes, Devices also have the ability to communicate, such as automated telephony devices that transmit patient information to live operators on a triage line or provide automated laboratory results to clinicians.
-A patient who originally came from Mexico may have fluent language capabilities to speak, read and write in Spanish, and rudimentary capabilities in English. A person from Russia may have the capability to communicate equally well in spoken language in Russian, Armenian or Ukrainian, and a preference to speak in Armenian.</p>
+<p>The language communication capabilities of an Entity.</p>
+
+<p>While it may seem on the surface that this class would be restricted in usage to only the LivingSubject subtypes, Devices also have the ability to communicate, such as automated telephony devices that transmit patient information to live operators on a triage line or provide automated laboratory results to clinicians.</p>
+
+<p>A patient who originally came from Mexico may have fluent language capabilities to speak, read and write in Spanish, and rudimentary capabilities in English. A person from Russia may have the capability to communicate equally well in spoken language in Russian, Armenian or Ukrainian, and a preference to speak in Armenian.</p>
 </td>
          </tr>
          <tr>
@@ -599,8 +610,9 @@ A patient who originally came from Mexico may have fluent language capabilities 
                   title="StructureDefinition/MaintainedEntity">MaintainedEntity (CDA Class)</a>
             </td>
             <td>
-<p>The MaintainedEntity class is present for backwards compatibility, and its use is discouraged, except where needed to support the transformation of CDA, Release One documents.
-NOTE: In CDA, Release One, it was possible to specify those individuals responsible for the device. This functionality has been deprecated in CDA, Release Two.</p>
+<p>The MaintainedEntity class is present for backwards compatibility, and its use is discouraged, except where needed to support the transformation of CDA, Release One documents.</p>
+
+<p>NOTE: In CDA, Release One, it was possible to specify those individuals responsible for the device. This functionality has been deprecated in CDA, Release Two.</p>
 </td>
          </tr>
          <tr>
@@ -618,10 +630,13 @@ NOTE: In CDA, Release One, it was possible to specify those individuals responsi
                   title="StructureDefinition/Material">Material (CDA Class)</a>
             </td>
             <td>
-<p>A subtype of Entity that is inanimate and locationally independent.
-Materials are entities that are neither Living Subjects nor places. Manufactured or processed products are considered material, even if they originate as living matter. Materials come in a wide variety of physical forms and can pass through different states (ie. Gas, liquid, solid) while still retaining their physical composition and material characteristics.
-Clarify the meaning of “locationally independent”; suggest removing it and supplanting with first Usage Note sentence.
-Pharmaceutical substances (including active vaccines containing retarded virus), disposable supplies, durable equipment, implantable devices, food items (including meat or plant products), waste, traded goods.</p>
+<p>A subtype of Entity that is inanimate and locationally independent.</p>
+
+<p>Materials are entities that are neither Living Subjects nor places. Manufactured or processed products are considered material, even if they originate as living matter. Materials come in a wide variety of physical forms and can pass through different states (ie. Gas, liquid, solid) while still retaining their physical composition and material characteristics.</p>
+
+<p>Clarify the meaning of “locationally independent”; suggest removing it and supplanting with first Usage Note sentence.</p>
+
+<p>Pharmaceutical substances (including active vaccines containing retarded virus), disposable supplies, durable equipment, implantable devices, food items (including meat or plant products), waste, traded goods.</p>
 </td>
          </tr>
          <tr>
@@ -630,8 +645,9 @@ Pharmaceutical substances (including active vaccines containing retarded virus),
                   title="StructureDefinition/NonXMLBody">NonXMLBody (CDA Class)</a>
             </td>
             <td>
-<p>The NonXMLBody class represents a document body that is in some format other than XML. NonXMLBody.text is used to reference data that is stored externally to the CDA document or to encode the data directly inline.
-Rendering a referenced non-XML body requires a software tool that recognizes the particular MIME media type of the blob.</p>
+<p>The NonXMLBody class represents a document body that is in some format other than XML. NonXMLBody.text is used to reference data that is stored externally to the CDA document or to encode the data directly inline.</p>
+
+<p>Rendering a referenced non-XML body requires a software tool that recognizes the particular MIME media type of the blob.</p>
 </td>
          </tr>
          <tr>
@@ -640,8 +656,9 @@ Rendering a referenced non-XML body requires a software tool that recognizes the
                   title="StructureDefinition/Observation">Observation (CDA Class)</a>
             </td>
             <td>
-<p>A derivative of the RIM Observation class, used for representing coded and other observations.
-Observation.negationInd, when set to “true”, is a positive assertion that the Observation as a whole is negated. Some properties such as Observation.id, Observation.moodCode, and the participations are not negated. These properties always have the same meaning: i.e., the author remains the author of the negative Observation. An observation statement with negationInd is still a statement about the specific fact described by the Observation. For instance, a negated “finding of wheezing on July 1” means that the author positively denies that there was wheezing on July 1, and that he takes the same responsibility for such statement and the same requirement to have evidence for such statement than if he had not used negation.</p>
+<p>A derivative of the RIM Observation class, used for representing coded and other observations.</p>
+
+<p>Observation.negationInd, when set to “true”, is a positive assertion that the Observation as a whole is negated. Some properties such as Observation.id, Observation.moodCode, and the participations are not negated. These properties always have the same meaning: i.e., the author remains the author of the negative Observation. An observation statement with negationInd is still a statement about the specific fact described by the Observation. For instance, a negated “finding of wheezing on July 1” means that the author positively denies that there was wheezing on July 1, and that he takes the same responsibility for such statement and the same requirement to have evidence for such statement than if he had not used negation.</p>
 </td>
          </tr>
          <tr>
@@ -650,9 +667,11 @@ Observation.negationInd, when set to “true”, is a positive assertion that th
                   title="StructureDefinition/ObservationMedia">ObservationMedia (CDA Class)</a>
             </td>
             <td>
-<p>A derivative of the RIM Observation class that represents multimedia that is logically part of the current document. This class is only for multimedia that is logically part of the attested content of the document. Rendering a referenced ObservationMedia requires a software tool that recognizes the particular MIME media type.
-An XML attribute “ID” of type XML ID, is added to ObservationMedia within the CDA Schema. This attribute serves as the target of a renderMultiMedia reference (see renderMultiMedia). All values of attributes of type XML ID must be unique within the document (per the W3C XML specification).
-The distinction between ObservationMedia and ExternalObservation is that ObservationMedia entries are part of the attested content of the document whereas ExternalObservations are not. For instance, when a clinician draws a picture as part of a progress note, that picture is represented as a CDA ObservationMedia. If that clinician is also describing a finding seen on a chest-x-ray, the referenced chest-x-ray is represented as a CDA ExternalObservation.</p>
+<p>A derivative of the RIM Observation class that represents multimedia that is logically part of the current document. This class is only for multimedia that is logically part of the attested content of the document. Rendering a referenced ObservationMedia requires a software tool that recognizes the particular MIME media type.</p>
+
+<p>An XML attribute “ID” of type XML ID, is added to ObservationMedia within the CDA Schema. This attribute serves as the target of a renderMultiMedia reference (see renderMultiMedia). All values of attributes of type XML ID must be unique within the document (per the W3C XML specification).</p>
+
+<p>The distinction between ObservationMedia and ExternalObservation is that ObservationMedia entries are part of the attested content of the document whereas ExternalObservations are not. For instance, when a clinician draws a picture as part of a progress note, that picture is represented as a CDA ObservationMedia. If that clinician is also describing a finding seen on a chest-x-ray, the referenced chest-x-ray is represented as a CDA ExternalObservation.</p>
 </td>
          </tr>
          <tr>
@@ -678,8 +697,9 @@ The distinction between ObservationMedia and ExternalObservation is that Observa
                   title="StructureDefinition/Organization">Organization (CDA Class)</a>
             </td>
             <td>
-<p>An Entity representing a formalized group of persons or other organizations with a common purpose and the infrastructure to carry out that purpose.
-Companies and institutions, a government department, an incorporated body that is responsible for administering a facility, an insurance company.</p>
+<p>An Entity representing a formalized group of persons or other organizations with a common purpose and the infrastructure to carry out that purpose.</p>
+
+<p>Companies and institutions, a government department, an incorporated body that is responsible for administering a facility, an insurance company.</p>
 </td>
          </tr>
          <tr>
@@ -771,8 +791,9 @@ The patient is the player; the provider is the scoper.</p>
                   title="StructureDefinition/Person">Person (CDA Class)</a>
             </td>
             <td>
-<p>A human being.
-This class can be used to represent either a single individual, a group of individuals or a kind of individual based on the values of Entity.determinerCode and Entity.quantity.</p>
+<p>A human being.</p>
+
+<p>This class can be used to represent either a single individual, a group of individuals or a kind of individual based on the values of Entity.determinerCode and Entity.quantity.</p>
 </td>
          </tr>
          <tr>
@@ -780,9 +801,11 @@ This class can be used to represent either a single individual, a group of indiv
                <a href="StructureDefinition-Place.html" title="StructureDefinition/Place">Place (CDA Class)</a>
             </td>
             <td>
-<p>A bounded physical place or site, including any contained structures.
-Place may be natural or man-made. The geographic position of a place may or may not be constant. Places may be work facilities (where relevant acts occur), homes (where people live) or offices (where people work). Places may contain sub-places (floor, room, booth, bed). Places may also be sites that are investigated in the context of health care, social work, public health administration (e.g., buildings, picnic grounds, day care centers, prisons, counties, states, and other focuses of epidemiological events).
-Examples: A field, lake, city, county, state, country, lot (land), building, pipeline, power line, playground, ship, truck</p>
+<p>A bounded physical place or site, including any contained structures.</p>
+
+<p>Place may be natural or man-made. The geographic position of a place may or may not be constant. Places may be work facilities (where relevant acts occur), homes (where people live) or offices (where people work). Places may contain sub-places (floor, room, booth, bed). Places may also be sites that are investigated in the context of health care, social work, public health administration (e.g., buildings, picnic grounds, day care centers, prisons, counties, states, and other focuses of epidemiological events).</p>
+
+<p>Examples: A field, lake, city, county, state, country, lot (land), building, pipeline, power line, playground, ship, truck</p>
 </td>
          </tr>
          <tr>
@@ -827,8 +850,9 @@ Examples: A field, lake, city, county, state, country, lot (land), building, pip
                   title="StructureDefinition/Procedure">Procedure (CDA Class)</a>
             </td>
             <td>
-<p>A derivative of the RIM Procedure class, used for representing procedures.
-Procedure.negationInd, when set to “true”, is a positive assertion that the Procedure as a whole is negated. Some properties such as Procedure.id, Procedure.moodCode, and the participations are not affected. These properties always have the same meaning: i.e., the author remains the author of the negative Procedure. A procedure statement with negationInd is still a statement about the specific fact described by the Procedure. For instance, a negated “appendectomy performed” means that the author positively denies that there was ever an appendectomy performed, and that he takes the same responsibility for such statement and the same requirement to have evidence for such statement than if he had not used negation.</p>
+<p>A derivative of the RIM Procedure class, used for representing procedures.</p>
+
+<p>Procedure.negationInd, when set to “true”, is a positive assertion that the Procedure as a whole is negated. Some properties such as Procedure.id, Procedure.moodCode, and the participations are not affected. These properties always have the same meaning: i.e., the author remains the author of the negative Procedure. A procedure statement with negationInd is still a statement about the specific fact described by the Procedure. For instance, a negated “appendectomy performed” means that the author positively denies that there was ever an appendectomy performed, and that he takes the same responsibility for such statement and the same requirement to have evidence for such statement than if he had not used negation.</p>
 </td>
          </tr>
          <tr>
@@ -859,8 +883,9 @@ Procedure.negationInd, when set to “true”, is a positive assertion that the 
                   title="StructureDefinition/RegionOfInterest">RegionOfInterest (CDA Class)</a>
             </td>
             <td>
-<p>A derivative of the RIM Observation class that represents a region of interest on an image, using an overlay shape. RegionOfInterest is used to make reference to specific regions in images, e.g., to specify the site of a physical finding by “circling” a region in a schematic picture of a human body. The units of the coordinate values in RegionOfInterest.value are in pixels, expressed as a list of integers. The origin is in the upper left hand corner, with positive X values going to the right and positive Y values going down. The relationship between a RegionOfInterest and its referenced ObservationMedia or ExternalObservation is specified by traversing the entryRelationship or reference class, respectively, where typeCode equals “SUBJ”. A RegionOfInterest must reference exactly one ObservationMedia or one ExternalObservation. If the RegionOfInterest is the target of a renderMultimedia reference, then it shall only reference an ObservationMedia and not an ExternalObservation.
-An XML attribute “ID” of type XML ID, is added to RegionOfInterest within the CDA Schema. This attribute serves as the target of a renderMultiMedia reference (see renderMultiMedia). All values of attributes of type XML ID must be unique within the document (per the W3C XML specification).</p>
+<p>A derivative of the RIM Observation class that represents a region of interest on an image, using an overlay shape. RegionOfInterest is used to make reference to specific regions in images, e.g., to specify the site of a physical finding by “circling” a region in a schematic picture of a human body. The units of the coordinate values in RegionOfInterest.value are in pixels, expressed as a list of integers. The origin is in the upper left hand corner, with positive X values going to the right and positive Y values going down. The relationship between a RegionOfInterest and its referenced ObservationMedia or ExternalObservation is specified by traversing the entryRelationship or reference class, respectively, where typeCode equals “SUBJ”. A RegionOfInterest must reference exactly one ObservationMedia or one ExternalObservation. If the RegionOfInterest is the target of a renderMultimedia reference, then it shall only reference an ObservationMedia and not an ExternalObservation.</p>
+
+<p>An XML attribute “ID” of type XML ID, is added to RegionOfInterest within the CDA Schema. This attribute serves as the target of a renderMultiMedia reference (see renderMultiMedia). All values of attributes of type XML ID must be unique within the document (per the W3C XML specification).</p>
 </td>
          </tr>
          <tr>
@@ -896,8 +921,9 @@ An XML attribute “ID” of type XML ID, is added to RegionOfInterest within th
                   title="StructureDefinition/Section">Section (CDA Class)</a>
             </td>
             <td>
-<p>Document sections can nest, can override context propagated from the header (See CDA Context), and can contain narrative and CDA entries.
-An XML attribute “ID” of type XML ID, is added to Section within the CDA Schema. This attribute serves as the target of a linkHtml reference (see linkHtml). All values of attributes of type XML ID must be unique within the document (per the W3C XML specification).</p>
+<p>Document sections can nest, can override context propagated from the header (See CDA Context), and can contain narrative and CDA entries.</p>
+
+<p>An XML attribute “ID” of type XML ID, is added to Section within the CDA Schema. This attribute serves as the target of a linkHtml reference (see linkHtml). All values of attributes of type XML ID must be unique within the document (per the W3C XML specification).</p>
 </td>
          </tr>
          <tr>
@@ -906,9 +932,11 @@ An XML attribute “ID” of type XML ID, is added to Section within the CDA Sch
                   title="StructureDefinition/ServiceEvent">ServiceEvent (CDA Class)</a>
             </td>
             <td>
-<p>This class represents the main Act, such as a colonoscopy or an appendectomy, being documented.
-In some cases, the ServiceEvent is inherent in the ClinicalDocument.code, such as where ClinicalDocument.code is “History and Physical Report” and the procedure being documented is a “History and Physical” act. A ServiceEvent can further specialize the act inherent in the ClinicalDocument.code, such as where the ClinicalDocument.code is simply “Procedure Report” and the procedure was a “colonoscopy”. If ServiceEvent is included, it must be equivalent to or further specialize the value inherent in the ClinicalDocument.code, and shall not conflict with the value inherent in the ClinicalDocument.code, as such a conflict would constitute an ambiguous situation.
-ServiceEvent.effectiveTime can be used to indicate the time the actual event (as opposed to the encounter surrounding the event) took place.</p>
+<p>This class represents the main Act, such as a colonoscopy or an appendectomy, being documented.</p>
+
+<p>In some cases, the ServiceEvent is inherent in the ClinicalDocument.code, such as where ClinicalDocument.code is “History and Physical Report” and the procedure being documented is a “History and Physical” act. A ServiceEvent can further specialize the act inherent in the ClinicalDocument.code, such as where the ClinicalDocument.code is simply “Procedure Report” and the procedure was a “colonoscopy”. If ServiceEvent is included, it must be equivalent to or further specialize the value inherent in the ClinicalDocument.code, and shall not conflict with the value inherent in the ClinicalDocument.code, as such a conflict would constitute an ambiguous situation.</p>
+
+<p>ServiceEvent.effectiveTime can be used to indicate the time the actual event (as opposed to the encounter surrounding the event) took place.</p>
 </td>
          </tr>
          <tr>
@@ -935,8 +963,9 @@ ServiceEvent.effectiveTime can be used to indicate the time the actual event (as
                   title="StructureDefinition/StructuredBody">StructuredBody (CDA Class)</a>
             </td>
             <td>
-<p>The StructuredBody class represents a CDA document body that is comprised of one or more document sections.
-The StructuredBody class is associated with one or more Section classes through a component relationship.</p>
+<p>The StructuredBody class represents a CDA document body that is comprised of one or more document sections.</p>
+
+<p>The StructuredBody class is associated with one or more Section classes through a component relationship.</p>
 </td>
          </tr>
          <tr>
@@ -965,10 +994,13 @@ The StructuredBody class is associated with one or more Section classes through 
                   title="StructureDefinition/SubstanceAdministration">SubstanceAdministration (CDA Class)</a>
             </td>
             <td>
-<p>A derivative of the RIM SubstanceAdministration class, used for representing medication-related events such as medication history or planned medication administration orders.
-SubstanceAdministration.negationInd, when set to “true”, is a positive assertion that the SubstanceAdministration as a whole is negated. Some properties such as SubstanceAdministration.id, SubstanceAdministration.moodCode, and the participations are not affected. These properties always have the same meaning: i.e., the author remains the author of the negative SubstanceAdministration. A substance administration statement with negationInd is still a statement about the specific fact described by the SubstanceAdministration. For instance, a negated “aspirin administration” means that the author positively denies that aspirin is being administered, and that he takes the same responsibility for such statement and the same requirement to have evidence for such statement than if he had not used negation.
-SubstanceAdministration.priorityCode categorizes the priority of a substance administration. SubstanceAdministration.doseQuantity indicates how much medication is given per dose. SubstanceAdministration.rateQuantity can be used to indicate the rate at which the dose is to be administered (e.g., the flow rate for intravenous infusions). SubstanceAdministration.maxDoseQuantity is used to capture the maximum dose of the medication that can be given over a stated time interval (e.g., maximum daily dose of morphine, maximum lifetime dose of doxorubicin). SubstanceAdministration.effectiveTime is used to describe the timing of administration. It is modeled using the GTS data type to accommodate various dosing scenarios.
-The capture of medication-related information also involves the interrelationship of SubstanceAdministration with several other classes. The consumable participation is used to bring in the LabeledDrug or Material entity that describes the administered substance. The LabeledDrug class, which is an Entity class playing the Role of Manufactured Product, identifies the drug that is consumed in the substance administration. The medication is identified by means of the LabeledDrug.code or the LabeledDrug.name. The Material entity is used to identify non-drug administered substances such as vaccines and blood products.</p>
+<p>A derivative of the RIM SubstanceAdministration class, used for representing medication-related events such as medication history or planned medication administration orders.</p>
+
+<p>SubstanceAdministration.negationInd, when set to “true”, is a positive assertion that the SubstanceAdministration as a whole is negated. Some properties such as SubstanceAdministration.id, SubstanceAdministration.moodCode, and the participations are not affected. These properties always have the same meaning: i.e., the author remains the author of the negative SubstanceAdministration. A substance administration statement with negationInd is still a statement about the specific fact described by the SubstanceAdministration. For instance, a negated “aspirin administration” means that the author positively denies that aspirin is being administered, and that he takes the same responsibility for such statement and the same requirement to have evidence for such statement than if he had not used negation.</p>
+
+<p>SubstanceAdministration.priorityCode categorizes the priority of a substance administration. SubstanceAdministration.doseQuantity indicates how much medication is given per dose. SubstanceAdministration.rateQuantity can be used to indicate the rate at which the dose is to be administered (e.g., the flow rate for intravenous infusions). SubstanceAdministration.maxDoseQuantity is used to capture the maximum dose of the medication that can be given over a stated time interval (e.g., maximum daily dose of morphine, maximum lifetime dose of doxorubicin). SubstanceAdministration.effectiveTime is used to describe the timing of administration. It is modeled using the GTS data type to accommodate various dosing scenarios.</p>
+
+<p>The capture of medication-related information also involves the interrelationship of SubstanceAdministration with several other classes. The consumable participation is used to bring in the LabeledDrug or Material entity that describes the administered substance. The LabeledDrug class, which is an Entity class playing the Role of Manufactured Product, identifies the drug that is consumed in the substance administration. The medication is identified by means of the LabeledDrug.code or the LabeledDrug.name. The Material entity is used to identify non-drug administered substances such as vaccines and blood products.</p>
 </td>
          </tr>
          <tr>
@@ -977,9 +1009,11 @@ The capture of medication-related information also involves the interrelationshi
                   title="StructureDefinition/Supply">Supply (CDA Class)</a>
             </td>
             <td>
-<p>A derivative of the RIM Supply class, used for representing the provision of a material by one entity to another.
-The dispensed product is associated with the Supply act via a product participant, which connects to the same ManufacturedProduct role used for SubstanceAdministration.
-The Supply class represents dispensing, whereas the SubstanceAdministration class represents administration. Prescriptions are complex activities that involve both an administration request to the patient (e.g. take digoxin 0.125mg by mouth once per day) and a supply request to the pharmacy (e.g. dispense 30 tablets, with 5 refills). This should be represented in CDA by a SubstanceAdministration entry that has a component Supply entry. The nested Supply entry can have Supply.independentInd set to “false” to signal that the Supply cannot stand alone, without it’s containing SubstanceAdministration. The following example illustrates a prescription representation in CDA.</p>
+<p>A derivative of the RIM Supply class, used for representing the provision of a material by one entity to another.</p>
+
+<p>The dispensed product is associated with the Supply act via a product participant, which connects to the same ManufacturedProduct role used for SubstanceAdministration.</p>
+
+<p>The Supply class represents dispensing, whereas the SubstanceAdministration class represents administration. Prescriptions are complex activities that involve both an administration request to the patient (e.g. take digoxin 0.125mg by mouth once per day) and a supply request to the pharmacy (e.g. dispense 30 tablets, with 5 refills). This should be represented in CDA by a SubstanceAdministration entry that has a component Supply entry. The nested Supply entry can have Supply.independentInd set to “false” to signal that the Supply cannot stand alone, without it’s containing SubstanceAdministration. The following example illustrates a prescription representation in CDA.</p>
 </td>
          </tr>
       </tbody>
@@ -1560,11 +1594,97 @@ The Supply class represents dispensing, whereas the SubstanceAdministration clas
       <tbody>
          <tr>
             <td style="column-width:30%">
+               <a href="ValueSet-CDAActClass.html" title="ValueSet/CDAActClass">CDAActClass</a>
+            </td>
+            <td>
+<p>A code specifying the major type of Act that this Act-instance represents.</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
+               <a href="ValueSet-CDAActClassObservation.html"
+                  title="ValueSet/CDAActClassObservation">CDAActClassObservation</a>
+            </td>
+            <td>
+<p>An act that is intended to result in new information about a subject. The main difference between Observations and other Acts is that Observations have a value attribute.</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
+               <a href="ValueSet-CDAActMood.html" title="ValueSet/CDAActMood">CDAActMood</a>
+            </td>
+            <td>
+<p>A code distinguishing whether an Act is conceived of as a factual statement or in some other manner as a command, possibility, goal, etc.</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
+               <a href="ValueSet-CDAActMoodIntent.html" title="ValueSet/CDAActMoodIntent">CDAActMoodIntent</a>
+            </td>
+            <td>
+<p>An intention or plan to perform a service.</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
+               <a href="ValueSet-CDAActRelationshipType.html"
+                  title="ValueSet/CDAActRelationshipType">CDAActRelationshipType</a>
+            </td>
+            <td>
+<p>A code specifying the meaning and purpose of every ActRelationship instance. Each of its values implies specific constraints to what kinds of Act objects can be related and in which way.</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
+               <a href="ValueSet-CDAActSubstanceAdministrationCode.html"
+                  title="ValueSet/CDAActSubstanceAdministrationCode">CDAActSubstanceAdministrationCode</a>
+            </td>
+            <td>
+<p>Describes the type of substance administration being performed.</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
                <a href="ValueSet-BinaryDataEncoding.html"
-                  title="ValueSet/BinaryDataEncoding">Binary Data Encoding Value Set</a>
+                  title="ValueSet/BinaryDataEncoding">CDABinaryDataEncoding</a>
             </td>
             <td>
 <p>Identifies the representation of binary data in a text field</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
+               <a href="ValueSet-CDACompressionAlgorithm.html"
+                  title="ValueSet/CDACompressionAlgorithm">CDACompressionAlgorithm</a>
+            </td>
+            <td>
+<p>Type of compression algorithm used - limited to 4 concepts from original CDA definition</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
+               <a href="ValueSet-CDAContextControl.html"
+                  title="ValueSet/CDAContextControl">CDAContextControl</a>
+            </td>
+            <td>
+<p>A code that specifies how an ActRelationship or Participation contributes to the context of an Act, and whether it may be propagated to descendent Acts whose association allows such propagation.</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
+               <a href="ValueSet-CDAEntityCode.html" title="ValueSet/CDAEntityCode">CDAEntityCode</a>
+            </td>
+            <td>
+<p>A value representing the specific kind of Entity the instance represents.</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
+               <a href="ValueSet-CDAEntityNamePartQualifier.html"
+                  title="ValueSet/CDAEntityNamePartQualifier">CDAEntityNamePartQualifier</a>
+            </td>
+            <td>
+<p>Qualifies parts of names</p>
 </td>
          </tr>
          <tr>
@@ -1577,10 +1697,46 @@ The Supply class represents dispensing, whereas the SubstanceAdministration clas
          </tr>
          <tr>
             <td style="column-width:30%">
+               <a href="ValueSet-CDAInformationRecipientRole.html"
+                  title="ValueSet/CDAInformationRecipientRole">CDAInformationRecipientRole</a>
+            </td>
+            <td>
+<p>Used to represent the role(s) of those who should receive a copy of a document - limited to values allowed in original CDA definition</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
+               <a href="ValueSet-CDAMaterialEntityClassType.html"
+                  title="ValueSet/CDAMaterialEntityClassType">CDAMaterialEntityClassType</a>
+            </td>
+            <td>
+<p>Types of Material for EntityClass “MAT”</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
                <a href="ValueSet-CDANullFlavor.html" title="ValueSet/CDANullFlavor">CDANullFlavor</a>
             </td>
             <td>
 <p>CDA NullFlavors - limited to values allowed in original CDA definition</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
+               <a href="ValueSet-CDAObservationInterpretation.html"
+                  title="ValueSet/CDAObservationInterpretation">CDAObservationInterpretation</a>
+            </td>
+            <td>
+<p>One or more codes providing a rough qualitative interpretation of the observation - limited to values available in original CDA</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
+               <a href="ValueSet-CDAParticipationType.html"
+                  title="ValueSet/CDAParticipationType">CDAParticipationType</a>
+            </td>
+            <td>
+<p>A code specifying the meaning and purpose of every Participation instance. Each of its values implies specific constraints on the Roles undertaking the participation. Limited to values allowed in original CDA definition</p>
 </td>
          </tr>
          <tr>
@@ -1594,21 +1750,62 @@ The Supply class represents dispensing, whereas the SubstanceAdministration clas
          </tr>
          <tr>
             <td style="column-width:30%">
+               <a href="ValueSet-CDARoleClass.html" title="ValueSet/CDARoleClass">CDARoleClass</a>
+            </td>
+            <td>
+<p>Represent a Role which is an association or relationship between two entities - the entity that plays the role and the entity that scopes the role. Roles names are derived from the name of the playing entity in that role.</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
+               <a href="ValueSet-CDARoleClassAssociative.html"
+                  title="ValueSet/CDARoleClassAssociative">CDARoleClassAssociative</a>
+            </td>
+            <td>
+<p>A general association between two entities that is neither partitive nor ontological.</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
+               <a href="ValueSet-CDARoleClassMutualRelationship.html"
+                  title="ValueSet/CDARoleClassMutualRelationship">CDARoleClassMutualRelationship</a>
+            </td>
+            <td>
+<p>A relationship that is based on mutual behavior of the two Entities as being related. The basis of such relationship may be agreements (e.g., spouses, contract parties) or they may be de facto behavior (e.g. friends) or may be an incidental involvement with each other (e.g. parties over a dispute, siblings, children).</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
+               <a href="ValueSet-CDARoleClassRoot.html" title="ValueSet/CDARoleClassRoot">CDARoleClassRoot</a>
+            </td>
+            <td>
+<p>Corresponds to the Role class</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
+               <a href="ValueSet-CDARoleCode.html" title="ValueSet/CDARoleCode">CDARoleCode</a>
+            </td>
+            <td>
+<p>A set of codes further specifying the kind of Role; specific classification codes for further qualifying RoleClass codes.</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
+               <a href="ValueSet-CDASetOperator.html" title="ValueSet/CDASetOperator">CDASetOperator</a>
+            </td>
+            <td>
+<p>Determins the intersectionality of multiple sets</p>
+</td>
+         </tr>
+         <tr>
+            <td style="column-width:30%">
                <a href="ValueSet-CDASignatureCode.html" title="ValueSet/CDASignatureCode">CDASignatureCode</a>
             </td>
             <td>
 <p>A set of codes specifying whether and how the participant has attested his participation through a signature - limited to values allowed in original CDA definition.</p>
 
 <p><strong>Note:</strong> CDA Release One represented either an intended (<code class="language-plaintext highlighter-rouge">X</code>) or actual (<code class="language-plaintext highlighter-rouge">S</code>) authenticator. CDA Release Two only represents an actual authenticator, so has deprecated the value of <code class="language-plaintext highlighter-rouge">X</code>.</p>
-</td>
-         </tr>
-         <tr>
-            <td style="column-width:30%">
-               <a href="ValueSet-CDACompressionAlgorithm.html"
-                  title="ValueSet/CDACompressionAlgorithm">CompressionAlgorithm</a>
-            </td>
-            <td>
-<p>Type of compression algorithm used - limited to 4 concepts from original CDA definition</p>
 </td>
          </tr>
       </tbody>
@@ -1658,20 +1855,14 @@ The Supply class represents dispensing, whereas the SubstanceAdministration clas
   <script type="text/javascript" src="assets/js/jquery.js"> </script>     <!-- note keep space here, otherwise it will be transformed to empty tag -> fails -->
   <script type="text/javascript" src="assets/js/jquery-ui.min.js"> </script>
 
-  <script type="text/javascript">
-    $(document).ready(function(){
-      if(window.location.hash != "") {
-          $('a[href="' + window.location.hash + '"]').click()
-      }
-    });
-  </script>
+  <script type="text/javascript" src="assets/js/window-hash.js"> </script>
   <a name="bottom"> </a>
   <div id="segment-footer" igtool="footer" class="segment">  <!-- segment-footer -->
     <div class="container">  <!-- container -->
 
       <div class="inner-wrapper">
         <p>
-          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structure">Health Level 7</a>.  Package hl7.cda.uv.core#2.0.0-sd-202312-matchbox-patch based on <a style="color: var(--footer-hyperlink-text-color)" href="http://hl7.org/fhir/R5/">FHIR 5.0.0</a>. Generated <span title="Tue, Mar 12, 2024 18:28+0100">2024-03-12</span>
+          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structure">Health Level 7</a>.  Package hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch based on <a style="color: var(--footer-hyperlink-text-color)" href="http://hl7.org/fhir/R5/">FHIR 5.0.0</a>. Generated <span title="Wed, Jun 19, 2024 17:47+0200">2024-06-19</span>
           <br/>
           <span style="color: var(--footer-highlight-text-color)">
                       Links: <a style="color: var(--footer-hyperlink-text-color)" href="toc.html">Table of Contents</a> |
@@ -1703,16 +1894,8 @@ The Supply class represents dispensing, whereas the SubstanceAdministration clas
   <script type="text/javascript" src="assets/js/anchor.min.js"> </script>
   <script type="text/javascript" src="assets/js/clipboard.min.js"> </script>
   <script type="text/javascript" src="assets/js/clipboard-btn.js"> </script>
-  <script>anchors.options.visible = 'hover'
-anchors.add()</script>
+  <script type="text/javascript" src="assets/js/anchor-hover.js"> </script>
   
-<!-- feedback form - Google forms -->
-<!-- v0.1, 2021-01-09 -->
-
-
-
-<!-- / feedback form  -->
-
   <!-- Analytics Below
   ================================================== -->
   </body>

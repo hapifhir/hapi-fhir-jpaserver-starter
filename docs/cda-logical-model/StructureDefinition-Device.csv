@@ -19,12 +19,12 @@
 ","","A character string as a unique identifier within the scope of the identifier root.","","","","","","","","","",,,,,"",,,,"II.extension",0,1,"",""
 "Device.templateId","Device.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
-"Device.classCode","Device.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DEV""/>","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-EntityClassDevice","",,,,"Device.classCode",1,1,"",""
+"Device.classCode","Device.classCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""DEV""/>","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-EntityClassDevice","",,,,"Device.classCode",0,1,"",""
 "Device.determinerCode","Device.determinerCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""INSTANCE""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-EntityDeterminer","",,,,"Device.determinerCode",0,1,"",""
 "Device.code","Device.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
-","","","","","","","","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-EntityCode","",,,,"Device.code",0,1,"",""
+","","","","","","","","","","","",,"example","","http://hl7.org/cda/stds/core/ValueSet/CDAEntityCode","",,,,"Device.code",0,1,"",""
 "Device.manufacturerModelName","Device.manufacturerModelName","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/SC {[]} {[]}
 ","","","","","","","","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-ManufacturerModelNameExample","",,,,"Device.manufacturerModelName",0,1,"",""
 "Device.softwareName","Device.softwareName","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/SC {[]} {[]}

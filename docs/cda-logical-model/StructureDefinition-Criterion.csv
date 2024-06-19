@@ -19,8 +19,8 @@
 ","","A character string as a unique identifier within the scope of the identifier root.","","","","","","","","","",,,,,"",,,,"II.extension",0,1,"",""
 "Criterion.templateId","Criterion.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
-"Criterion.classCode","Criterion.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OBS""/>","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClassObservation","",,,,"Criterion.classCode",1,1,"",""
+"Criterion.classCode","Criterion.classCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OBS""/>","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAActClassObservation","",,,,"Criterion.classCode",0,1,"",""
 "Criterion.moodCode","Criterion.moodCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN.CRT""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActMoodPredicate","",,,,"Criterion.moodCode",0,1,"",""
 "Criterion.code","Criterion.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}

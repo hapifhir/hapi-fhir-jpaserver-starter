@@ -28,12 +28,12 @@
     <valueUri value="cda"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/RegionOfInterest"/>
-  <version value="2.0.0-sd-202312-matchbox-patch"/>
+  <version value="2.0.0-sd-202406-matchbox-patch"/>
   <name value="RegionOfInterest"/>
   <title value="RegionOfInterest (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2024-03-12T18:28:21+01:00"/>
+  <date value="2024-06-19T17:47:42+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
@@ -46,7 +46,7 @@
       <value value="structdog@lists.HL7.org"/>
     </telecom>
   </contact>
-  <description value="A derivative of the RIM Observation class that represents a region of interest on an image, using an overlay shape. RegionOfInterest is used to make reference to specific regions in images, e.g., to specify the site of a physical finding by &quot;circling&quot; a region in a schematic picture of a human body. The units of the coordinate values in RegionOfInterest.value are in pixels, expressed as a list of integers. The origin is in the upper left hand corner, with positive X values going to the right and positive Y values going down. The relationship between a RegionOfInterest and its referenced ObservationMedia or ExternalObservation is specified by traversing the entryRelationship or reference class, respectively, where typeCode equals &quot;SUBJ&quot;. A RegionOfInterest must reference exactly one ObservationMedia or one ExternalObservation. If the RegionOfInterest is the target of a renderMultimedia reference, then it shall only reference an ObservationMedia and not an ExternalObservation.&#xA;An XML attribute &quot;ID&quot; of type XML ID, is added to RegionOfInterest within the CDA Schema. This attribute serves as the target of a renderMultiMedia reference (see renderMultiMedia). All values of attributes of type XML ID must be unique within the document (per the W3C XML specification)."/>
+  <description value="A derivative of the RIM Observation class that represents a region of interest on an image, using an overlay shape. RegionOfInterest is used to make reference to specific regions in images, e.g., to specify the site of a physical finding by &quot;circling&quot; a region in a schematic picture of a human body. The units of the coordinate values in RegionOfInterest.value are in pixels, expressed as a list of integers. The origin is in the upper left hand corner, with positive X values going to the right and positive Y values going down. The relationship between a RegionOfInterest and its referenced ObservationMedia or ExternalObservation is specified by traversing the entryRelationship or reference class, respectively, where typeCode equals &quot;SUBJ&quot;. A RegionOfInterest must reference exactly one ObservationMedia or one ExternalObservation. If the RegionOfInterest is the target of a renderMultimedia reference, then it shall only reference an ObservationMedia and not an ExternalObservation.&#xA;&#xA;An XML attribute &quot;ID&quot; of type XML ID, is added to RegionOfInterest within the CDA Schema. This attribute serves as the target of a renderMultiMedia reference (see renderMultiMedia). All values of attributes of type XML ID must be unique within the document (per the W3C XML specification)."/>
   <fhirVersion value="5.0.0"/>
   <mapping>
     <identity value="rim"/>
@@ -285,7 +285,7 @@
       <fixedCode value="EVN"/>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActMood"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAActMood"/>
       </binding>
     </element>
     <element id="RegionOfInterest.id">
@@ -513,7 +513,7 @@
       <fixedCode value="EVN"/>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActMood"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAActMood"/>
       </binding>
     </element>
     <element id="RegionOfInterest.id">

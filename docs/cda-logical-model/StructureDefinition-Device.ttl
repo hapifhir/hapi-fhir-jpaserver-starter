@@ -35,12 +35,12 @@
      fhir:value [ fhir:v "cda"^^xsd:anyURI ]
   ] ) ; # 
   fhir:url [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/Device"^^xsd:anyURI] ; # 
-  fhir:version [ fhir:v "2.0.0-sd-202312-matchbox-patch"] ; # 
+  fhir:version [ fhir:v "2.0.0-sd-202406-matchbox-patch"] ; # 
   fhir:name [ fhir:v "Device"] ; # 
   fhir:title [ fhir:v "Device (CDA Class)"] ; # 
   fhir:status [ fhir:v "active"] ; # 
   fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
-  fhir:date [ fhir:v "2024-03-12T18:28:21+01:00"^^xsd:dateTime] ; # 
+  fhir:date [ fhir:v "2024-06-19T17:47:42+02:00"^^xsd:dateTime] ; # 
   fhir:publisher [ fhir:v "Health Level 7"] ; # 
   fhir:contact ( [
      fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
@@ -52,7 +52,7 @@
        fhir:value [ fhir:v "structdog@lists.HL7.org" ]
      ] )
   ] ) ; # 
-  fhir:description [ fhir:v "A ManufacturedMaterial used in an activity without being substantially changed through that activity.\nThis includes durable (reusable) medical equipment as well as disposable equipment. The kind of device is identified by the code attribute inherited from Entity."] ; # 
+  fhir:description [ fhir:v "A ManufacturedMaterial used in an activity without being substantially changed through that activity.\n\nThis includes durable (reusable) medical equipment as well as disposable equipment. The kind of device is identified by the code attribute inherited from Entity."] ; # 
   fhir:fhirVersion [ fhir:v "5.0.0"] ; # 
   fhir:mapping ( [
      fhir:identity [ fhir:v "rim" ] ;
@@ -272,11 +272,11 @@
        fhir:id [ fhir:v "Device.classCode" ] ;
        fhir:path [ fhir:v "Device.classCode" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:base [
          fhir:path [ fhir:v "Device.classCode" ] ;
-         fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+         fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
@@ -336,8 +336,8 @@
        fhir:binding [
          fhir:strength [ fhir:v "example" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-EntityCode"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-EntityCode>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAEntityCode"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAEntityCode>
          ]
        ]
      ] [
@@ -392,7 +392,7 @@
        fhir:id [ fhir:v "Device.classCode" ] ;
        fhir:path [ fhir:v "Device.classCode" ] ;
        fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
-       fhir:min [ fhir:v "1"^^xsd:nonNegativeInteger ] ;
+       fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
          fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
@@ -441,8 +441,8 @@
        fhir:binding [
          fhir:strength [ fhir:v "example" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-EntityCode"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-EntityCode>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAEntityCode"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAEntityCode>
          ]
        ]
      ] [

@@ -20,9 +20,9 @@
 "Author.templateId","Author.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
 "Author.typeCode","Author.typeCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""AUT""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationType","",,,,"Author.typeCode",0,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""AUT""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAParticipationType","",,,,"Author.typeCode",0,1,"",""
 "Author.contextControlCode","Author.contextControlCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OP""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ContextControl","",,,,"Author.contextControlCode",0,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OP""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAContextControl","",,,,"Author.contextControlCode",0,1,"",""
 "Author.functionCode","Author.functionCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Author.functionCode",0,1,"",""
 "Author.time","Author.time","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/TS {[]} {[]}

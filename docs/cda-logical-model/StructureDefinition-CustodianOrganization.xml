@@ -27,12 +27,12 @@
     <valueUri value="cda"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/CustodianOrganization"/>
-  <version value="2.0.0-sd-202312-matchbox-patch"/>
+  <version value="2.0.0-sd-202406-matchbox-patch"/>
   <name value="CustodianOrganization"/>
   <title value="CustodianOrganization (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2024-03-12T18:28:21+01:00"/>
+  <date value="2024-06-19T17:47:42+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
@@ -309,6 +309,25 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/TEL"/>
       </type>
     </element>
+    <element id="CustodianOrganization.sdtcTelecom">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
+        <valueString value="telecom"/>
+      </extension>
+      <path value="CustodianOrganization.sdtcTelecom"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="CustodianOrganization.sdtcTelecom"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/TEL"/>
+      </type>
+    </element>
     <element id="CustodianOrganization.addr">
       <path value="CustodianOrganization.addr"/>
       <min value="0"/>
@@ -377,6 +396,20 @@
     </element>
     <element id="CustodianOrganization.telecom">
       <path value="CustodianOrganization.telecom"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/TEL"/>
+      </type>
+    </element>
+    <element id="CustodianOrganization.sdtcTelecom">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
+        <valueString value="telecom"/>
+      </extension>
+      <path value="CustodianOrganization.sdtcTelecom"/>
       <min value="0"/>
       <max value="*"/>
       <type>

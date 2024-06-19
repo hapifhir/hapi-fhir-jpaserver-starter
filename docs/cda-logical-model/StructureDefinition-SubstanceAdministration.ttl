@@ -35,12 +35,12 @@
      fhir:value [ fhir:v "cda"^^xsd:anyURI ]
   ] ) ; # 
   fhir:url [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/SubstanceAdministration"^^xsd:anyURI] ; # 
-  fhir:version [ fhir:v "2.0.0-sd-202312-matchbox-patch"] ; # 
+  fhir:version [ fhir:v "2.0.0-sd-202406-matchbox-patch"] ; # 
   fhir:name [ fhir:v "SubstanceAdministration"] ; # 
   fhir:title [ fhir:v "SubstanceAdministration (CDA Class)"] ; # 
   fhir:status [ fhir:v "active"] ; # 
   fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
-  fhir:date [ fhir:v "2024-03-12T18:28:21+01:00"^^xsd:dateTime] ; # 
+  fhir:date [ fhir:v "2024-06-19T17:47:42+02:00"^^xsd:dateTime] ; # 
   fhir:publisher [ fhir:v "Health Level 7"] ; # 
   fhir:contact ( [
      fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
@@ -52,7 +52,7 @@
        fhir:value [ fhir:v "structdog@lists.HL7.org" ]
      ] )
   ] ) ; # 
-  fhir:description [ fhir:v "A derivative of the RIM SubstanceAdministration class, used for representing medication-related events such as medication history or planned medication administration orders.\nSubstanceAdministration.negationInd, when set to \"true\", is a positive assertion that the SubstanceAdministration as a whole is negated. Some properties such as SubstanceAdministration.id, SubstanceAdministration.moodCode, and the participations are not affected. These properties always have the same meaning: i.e., the author remains the author of the negative SubstanceAdministration. A substance administration statement with negationInd is still a statement about the specific fact described by the SubstanceAdministration. For instance, a negated \"aspirin administration\" means that the author positively denies that aspirin is being administered, and that he takes the same responsibility for such statement and the same requirement to have evidence for such statement than if he had not used negation.\nSubstanceAdministration.priorityCode categorizes the priority of a substance administration. SubstanceAdministration.doseQuantity indicates how much medication is given per dose. SubstanceAdministration.rateQuantity can be used to indicate the rate at which the dose is to be administered (e.g., the flow rate for intravenous infusions). SubstanceAdministration.maxDoseQuantity is used to capture the maximum dose of the medication that can be given over a stated time interval (e.g., maximum daily dose of morphine, maximum lifetime dose of doxorubicin). SubstanceAdministration.effectiveTime is used to describe the timing of administration. It is modeled using the GTS data type to accommodate various dosing scenarios.\nThe capture of medication-related information also involves the interrelationship of SubstanceAdministration with several other classes. The consumable participation is used to bring in the LabeledDrug or Material entity that describes the administered substance. The LabeledDrug class, which is an Entity class playing the Role of Manufactured Product, identifies the drug that is consumed in the substance administration. The medication is identified by means of the LabeledDrug.code or the LabeledDrug.name. The Material entity is used to identify non-drug administered substances such as vaccines and blood products."] ; # 
+  fhir:description [ fhir:v "A derivative of the RIM SubstanceAdministration class, used for representing medication-related events such as medication history or planned medication administration orders.\n\nSubstanceAdministration.negationInd, when set to \"true\", is a positive assertion that the SubstanceAdministration as a whole is negated. Some properties such as SubstanceAdministration.id, SubstanceAdministration.moodCode, and the participations are not affected. These properties always have the same meaning: i.e., the author remains the author of the negative SubstanceAdministration. A substance administration statement with negationInd is still a statement about the specific fact described by the SubstanceAdministration. For instance, a negated \"aspirin administration\" means that the author positively denies that aspirin is being administered, and that he takes the same responsibility for such statement and the same requirement to have evidence for such statement than if he had not used negation.\n\nSubstanceAdministration.priorityCode categorizes the priority of a substance administration. SubstanceAdministration.doseQuantity indicates how much medication is given per dose. SubstanceAdministration.rateQuantity can be used to indicate the rate at which the dose is to be administered (e.g., the flow rate for intravenous infusions). SubstanceAdministration.maxDoseQuantity is used to capture the maximum dose of the medication that can be given over a stated time interval (e.g., maximum daily dose of morphine, maximum lifetime dose of doxorubicin). SubstanceAdministration.effectiveTime is used to describe the timing of administration. It is modeled using the GTS data type to accommodate various dosing scenarios.\n\nThe capture of medication-related information also involves the interrelationship of SubstanceAdministration with several other classes. The consumable participation is used to bring in the LabeledDrug or Material entity that describes the administered substance. The LabeledDrug class, which is an Entity class playing the Role of Manufactured Product, identifies the drug that is consumed in the substance administration. The medication is identified by means of the LabeledDrug.code or the LabeledDrug.name. The Material entity is used to identify non-drug administered substances such as vaccines and blood products."] ; # 
   fhir:fhirVersion [ fhir:v "5.0.0"] ; # 
   fhir:mapping ( [
      fhir:identity [ fhir:v "rim" ] ;
@@ -290,8 +290,8 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-ActClass|2.0.0"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-ActClass|2.0.0>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAActClass"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAActClass>
          ]
        ]
      ] [
@@ -348,8 +348,8 @@
        fhir:binding [
          fhir:strength [ fhir:v "example" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-ActSubstanceAdministrationCode"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-ActSubstanceAdministrationCode>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAActSubstanceAdministrationCode"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAActSubstanceAdministrationCode>
          ]
        ]
      ] [
@@ -783,8 +783,8 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-ParticipationType"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-ParticipationType>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAParticipationType"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAParticipationType>
          ]
        ]
      ] [
@@ -962,8 +962,8 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-ActClass|2.0.0"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-ActClass|2.0.0>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAActClass"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAActClass>
          ]
        ]
      ] [
@@ -1005,8 +1005,8 @@
        fhir:binding [
          fhir:strength [ fhir:v "example" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-ActSubstanceAdministrationCode"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-ActSubstanceAdministrationCode>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAActSubstanceAdministrationCode"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAActSubstanceAdministrationCode>
          ]
        ]
      ] [
@@ -1187,8 +1187,8 @@
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
-           fhir:v "http://terminology.hl7.org/ValueSet/v3-ParticipationType"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-ParticipationType>
+           fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAParticipationType"^^xsd:anyURI ;
+           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAParticipationType>
          ]
        ]
      ] [

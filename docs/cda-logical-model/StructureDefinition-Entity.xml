@@ -29,12 +29,12 @@
     <valueUri value="cda"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/Entity"/>
-  <version value="2.0.0-sd-202312-matchbox-patch"/>
+  <version value="2.0.0-sd-202406-matchbox-patch"/>
   <name value="Entity"/>
   <title value="Entity (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2024-03-12T18:28:21+01:00"/>
+  <date value="2024-06-19T17:47:42+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
@@ -47,7 +47,7 @@
       <value value="structdog@lists.HL7.org"/>
     </telecom>
   </contact>
-  <description value="A physical thing, group of physical things or an organization capable of participating in Acts while in a role.&#xA;An entity is a physical object that has, had or will have existence. The only exception to this is Organization, which while not having a physical presence, fulfills the other characteristics of an Entity. Entity stipulates the thing itself, not the Roles it may play: the Role of Patient, e.g., is played by the Person Entity.&#xA;Living subjects (including human beings), organizations, materials, places and their specializations."/>
+  <description value="A physical thing, group of physical things or an organization capable of participating in Acts while in a role.&#xA;&#xA;An entity is a physical object that has, had or will have existence. The only exception to this is Organization, which while not having a physical presence, fulfills the other characteristics of an Entity. Entity stipulates the thing itself, not the Roles it may play: the Role of Patient, e.g., is played by the Person Entity.&#xA;&#xA;Living subjects (including human beings), organizations, materials, places and their specializations."/>
   <fhirVersion value="5.0.0"/>
   <mapping>
     <identity value="rim"/>
@@ -235,11 +235,11 @@
     <element id="Entity.classCode">
       <path value="Entity.classCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <base>
         <path value="Entity.classCode"/>
-        <min value="1"/>
+        <min value="0"/>
         <max value="1"/>
       </base>
       <type>
@@ -299,7 +299,7 @@
       </type>
       <binding>
         <strength value="example"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-EntityCode"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAEntityCode"/>
       </binding>
     </element>
     <element id="Entity.desc">
@@ -325,7 +325,7 @@
     <element id="Entity.classCode">
       <path value="Entity.classCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <type>
         <code value="code"/>
@@ -369,7 +369,7 @@
       </type>
       <binding>
         <strength value="example"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-EntityCode"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAEntityCode"/>
       </binding>
     </element>
     <element id="Entity.desc">

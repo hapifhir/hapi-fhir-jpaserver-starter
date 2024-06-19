@@ -21,14 +21,18 @@
 "Precondition2.templateId","Precondition2.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
 "Precondition2.typeCode","Precondition2.typeCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""PRCN""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActRelationshipType","",,,,"Precondition2.typeCode",0,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""PRCN""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAActRelationshipType","",,,,"Precondition2.typeCode",0,1,"",""
 "Precondition2.negationInd","Precondition2.negationInd","","","",0,1,"","","","boolean {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/bl-simple]]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Precondition2.negationInd",0,1,"",""
 "Precondition2.conjunctionCode","Precondition2.conjunctionCode","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
 ","","A code specifying the logical conjunction of the criteria among all the condition-links of Acts (e.g., and, or, exclusive-or).
+
 All AND criteria must be true.
+
 If OR and AND criteria occur together, one criterion out of the OR-group must be true and all AND criteria must be true also.
+
 If XOR criteria occur together with OR and AND criteria, exactly one of the XOR criteria must be true, and at least one of the OR criteria and all AND criteria must be true.
+
 In other words, the sets of AND, OR, and XOR criteria are in turn combined by a logical AND operator (all AND criteria and at least one OR criterion and exactly one XOR criterion).","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-RelationshipConjunction|2.0.0","",,,,"Precondition2.conjunctionCode",1,1,"",""
 "Precondition2.allTrue","Precondition2.allTrue","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/PreconditionBase {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Precondition2.allTrue",0,1,"",""

@@ -1,0 +1,43 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "3a08af46-1216-469f-987a-386bb9377b3f-81",
+  "url" : "http://hl7.org/fhir/comparison/ValueSet/3a08af46-1216-469f-987a-386bb9377b3f-81",
+  "name" : "IntersectionCDAEntityCodeAndCDAEntityCode",
+  "title" : "Intersection of CDAEntityCode And CDAEntityCode",
+  "status" : "draft",
+  "date" : "2024-06-19T17:47:55+02:00",
+  "compose" : {
+    "include" : [{
+      "valueSet" : ["http://hl7.org/cda/stds/core/ValueSet/CDAMaterialEntityClassType"]
+    },
+    {
+      "concept" : [{
+        "code" : "BED"
+      },
+      {
+        "code" : "BLDG"
+      },
+      {
+        "code" : "FLOOR"
+      },
+      {
+        "code" : "ROOM"
+      },
+      {
+        "code" : "WING"
+      },
+      {
+        "code" : "HHOLD"
+      },
+      {
+        "code" : "NAT"
+      },
+      {
+        "code" : "RELIG"
+      },
+      {
+        "code" : "PRAC"
+      }]
+    }]
+  }
+}

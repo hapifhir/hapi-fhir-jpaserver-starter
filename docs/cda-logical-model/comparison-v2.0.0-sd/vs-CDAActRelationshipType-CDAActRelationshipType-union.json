@@ -1,0 +1,181 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "3a08af46-1216-469f-987a-386bb9377b3f-68",
+  "url" : "http://hl7.org/fhir/comparison/ValueSet/3a08af46-1216-469f-987a-386bb9377b3f-68",
+  "name" : "UnionCDAActRelationshipTypeAndCDAActRelationshipType",
+  "title" : "Union of CDAActRelationshipType And CDAActRelationshipType",
+  "status" : "draft",
+  "date" : "2024-06-19T17:47:55+02:00",
+  "compose" : {
+    "include" : [{
+      "concept" : [{
+        "code" : "RSON"
+      },
+      {
+        "code" : "MITGT"
+      },
+      {
+        "code" : "CIND"
+      },
+      {
+        "code" : "PRCN"
+      },
+      {
+        "code" : "TRIG"
+      },
+      {
+        "code" : "COMP"
+      },
+      {
+        "code" : "ARR"
+      },
+      {
+        "code" : "CTRLV"
+      },
+      {
+        "code" : "DEP"
+      },
+      {
+        "code" : "OBJC"
+      },
+      {
+        "code" : "OBJF"
+      },
+      {
+        "code" : "OUTC"
+      },
+      {
+        "code" : "GOAL"
+      },
+      {
+        "code" : "RISK"
+      },
+      {
+        "code" : "CHRG"
+      },
+      {
+        "code" : "COST"
+      },
+      {
+        "code" : "CREDIT"
+      },
+      {
+        "code" : "DEBIT"
+      },
+      {
+        "code" : "SAS"
+      },
+      {
+        "code" : "SPRT"
+      },
+      {
+        "code" : "SPRTBND"
+      },
+      {
+        "code" : "PERT"
+      },
+      {
+        "code" : "AUTH"
+      },
+      {
+        "code" : "CAUS"
+      },
+      {
+        "code" : "COVBY"
+      },
+      {
+        "code" : "DRIV"
+      },
+      {
+        "code" : "EXPL"
+      },
+      {
+        "code" : "ITEMSLOC"
+      },
+      {
+        "code" : "LIMIT"
+      },
+      {
+        "code" : "MFST"
+      },
+      {
+        "code" : "NAME"
+      },
+      {
+        "code" : "PREV"
+      },
+      {
+        "code" : "REFR"
+      },
+      {
+        "code" : "REFV"
+      },
+      {
+        "code" : "SUBJ"
+      },
+      {
+        "code" : "SUMM"
+      },
+      {
+        "code" : "XCRPT"
+      },
+      {
+        "code" : "VRXCRPT"
+      },
+      {
+        "code" : "FLFS"
+      },
+      {
+        "code" : "OCCR"
+      },
+      {
+        "code" : "OREF"
+      },
+      {
+        "code" : "SCH"
+      },
+      {
+        "code" : "RPLC"
+      },
+      {
+        "code" : "SUCC"
+      },
+      {
+        "code" : "SEQL"
+      },
+      {
+        "code" : "APND"
+      },
+      {
+        "code" : "DOC"
+      },
+      {
+        "code" : "ELNK"
+      },
+      {
+        "code" : "GEN"
+      },
+      {
+        "code" : "GEVL"
+      },
+      {
+        "code" : "INST"
+      },
+      {
+        "code" : "MTCH"
+      },
+      {
+        "code" : "OPTN"
+      },
+      {
+        "code" : "REV"
+      },
+      {
+        "code" : "UPDT"
+      },
+      {
+        "code" : "XFRM"
+      }]
+    }]
+  }
+}

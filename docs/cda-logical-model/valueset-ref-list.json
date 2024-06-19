@@ -2,10 +2,10 @@
   "codeSystems" : [
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/BinaryDataEncoding",
-      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
       "status" : "draft",
       "name" : "BinaryDataEncoding",
-      "title" : "Binary Data Encoding Value Set",
+      "title" : "CDABinaryDataEncoding",
       "description" : "Identifies the representation of binary data in a text field",
       "systems" : ["http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding"],
       "uses" : {
@@ -13,11 +13,114 @@
       "StructureDefinition-ED.html" : "ED: EncapsulatedData (V3 Data Type)"
     },
     {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAActClass",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAActClass",
+      "title" : "CDAActClass",
+      "description" : "A code specifying the major type of Act that this Act-instance represents.",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ActClass"],
+      "uses" : {
+      },
+      "StructureDefinition-Encounter.html" : "Encounter (CDA Class)",
+      "StructureDefinition-ExternalAct.html" : "ExternalAct (CDA Class)",
+      "StructureDefinition-Consent.html" : "Consent (CDA Class)",
+      "StructureDefinition-EncompassingEncounter.html" : "EncompassingEncounter (CDA Class)",
+      "StructureDefinition-ServiceEvent.html" : "ServiceEvent (CDA Class)",
+      "StructureDefinition-ClinicalDocument.html" : "ClinicalDocument (CDA Class)",
+      "StructureDefinition-SubstanceAdministration.html" : "SubstanceAdministration (CDA Class)",
+      "StructureDefinition-Order.html" : "Order (CDA Class)"
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAActClassObservation",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAActClassObservation",
+      "title" : "CDAActClassObservation",
+      "description" : "An act that is intended to result in new information about a subject. The main difference between Observations and other Acts is that Observations have a value attribute.",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ActClass"],
+      "uses" : {
+      },
+      "StructureDefinition-ObservationRange.html" : "ObservationRange (CDA Class)",
+      "StructureDefinition-ObservationMedia.html" : "ObservationMedia (CDA Class)",
+      "StructureDefinition-ExternalObservation.html" : "ExternalObservation (CDA Class)",
+      "StructureDefinition-Criterion.html" : "Criterion (CDA Class)",
+      "StructureDefinition-Observation.html" : "Observation (CDA Class)"
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAActMood",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAActMood",
+      "title" : "CDAActMood",
+      "description" : "A code distinguishing whether an Act is conceived of as a factual statement or in some other manner as a command, possibility, goal, etc.",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ActMood"],
+      "uses" : {
+      },
+      "StructureDefinition-NonXMLBody.html" : "NonXMLBody (CDA Class)",
+      "StructureDefinition-ExternalObservation.html" : "ExternalObservation (CDA Class)",
+      "StructureDefinition-ExternalAct.html" : "ExternalAct (CDA Class)",
+      "StructureDefinition-ParentDocument.html" : "ParentDocument (CDA Class)",
+      "StructureDefinition-ExternalProcedure.html" : "ExternalProcedure (CDA Class)",
+      "StructureDefinition-ServiceEvent.html" : "ServiceEvent (CDA Class)",
+      "StructureDefinition-ClinicalDocument.html" : "ClinicalDocument (CDA Class)",
+      "StructureDefinition-ObservationMedia.html" : "ObservationMedia (CDA Class)",
+      "StructureDefinition-Section.html" : "Section (CDA Class)",
+      "StructureDefinition-Consent.html" : "Consent (CDA Class)",
+      "StructureDefinition-Organizer.html" : "Organizer (CDA Class)",
+      "StructureDefinition-RegionOfInterest.html" : "RegionOfInterest (CDA Class)",
+      "StructureDefinition-EncompassingEncounter.html" : "EncompassingEncounter (CDA Class)",
+      "StructureDefinition-StructuredBody.html" : "StructuredBody (CDA Class)",
+      "StructureDefinition-ExternalDocument.html" : "ExternalDocument (CDA Class)"
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAActMoodIntent",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAActMoodIntent",
+      "title" : "CDAActMoodIntent",
+      "description" : "An intention or plan to perform a service.",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ActMood"],
+      "uses" : {
+      },
+      "StructureDefinition-Order.html" : "Order (CDA Class)"
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAActRelationshipType",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAActRelationshipType",
+      "title" : "CDAActRelationshipType",
+      "description" : "A code specifying the meaning and purpose of every ActRelationship instance. Each of its values implies specific constraints to what kinds of Act objects can be related and in which way.",
+      "systems" : [
+        "http://terminology.hl7.org/CodeSystem/v3-ActRelationshipType"
+      ],
+      "uses" : {
+      },
+      "StructureDefinition-Precondition2.html" : "Precondition2 (CDA Class)",
+      "StructureDefinition-ObservationRange.html" : "ObservationRange (CDA Class)",
+      "StructureDefinition-Precondition.html" : "Precondition (CDA Class)",
+      "StructureDefinition-DocumentationOf.html" : "DocumentationOf (CDA Class)",
+      "StructureDefinition-Observation.html" : "Observation (CDA Class)"
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAActSubstanceAdministrationCode",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAActSubstanceAdministrationCode",
+      "title" : "CDAActSubstanceAdministrationCode",
+      "description" : "Describes the type of substance administration being performed.",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ActCode"],
+      "uses" : {
+      },
+      "StructureDefinition-SubstanceAdministration.html" : "SubstanceAdministration (CDA Class)"
+    },
+    {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDACompressionAlgorithm",
-      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
       "status" : "draft",
       "name" : "CDACompressionAlgorithm",
-      "title" : "CompressionAlgorithm",
+      "title" : "CDACompressionAlgorithm",
       "description" : "Type of compression algorithm used - limited to 4 concepts from original CDA definition",
       "systems" : [
         "http://terminology.hl7.org/CodeSystem/v3-CompressionAlgorithm"
@@ -27,8 +130,59 @@
       "StructureDefinition-ED.html" : "ED: EncapsulatedData (V3 Data Type)"
     },
     {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAContextControl",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAContextControl",
+      "title" : "CDAContextControl",
+      "description" : "A code that specifies how an ActRelationship or Participation contributes to the context of an Act, and whether it may be propagated to descendent Acts whose association allows such propagation.",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ContextControl"],
+      "uses" : {
+      },
+      "StructureDefinition-Participant1.html" : "Participant1 (CDA Class)",
+      "StructureDefinition-Author.html" : "Author (CDA Class)",
+      "StructureDefinition-Subject.html" : "Subject (CDA Class)",
+      "StructureDefinition-Informant.html" : "Informant (CDA Class)",
+      "StructureDefinition-RecordTarget.html" : "RecordTarget (CDA Class)",
+      "StructureDefinition-DataEnterer.html" : "DataEnterer (CDA Class)",
+      "StructureDefinition-LegalAuthenticator.html" : "LegalAuthenticator (CDA Class)",
+      "StructureDefinition-Participant2.html" : "Participant2 (CDA Class)"
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityCode",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAEntityCode",
+      "title" : "CDAEntityCode",
+      "description" : "A value representing the specific kind of Entity the instance represents.",
+      "systems" : [
+        "http://terminology.hl7.org/CodeSystem/v3-EntityCode",
+        "http://terminology.hl7.org/CodeSystem/v3-SpecimenType"
+      ],
+      "uses" : {
+      },
+      "StructureDefinition-Entity.html" : "Entity (CDA Class)",
+      "StructureDefinition-AuthoringDevice.html" : "AuthoringDevice (CDA Class)",
+      "StructureDefinition-PlayingEntity.html" : "PlayingEntity (CDA Class)",
+      "StructureDefinition-Device.html" : "Device (CDA Class)"
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityNamePartQualifier",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAEntityNamePartQualifier",
+      "title" : "CDAEntityNamePartQualifier",
+      "description" : "Qualifies parts of names",
+      "systems" : [
+        "http://terminology.hl7.org/CodeSystem/v3-EntityNamePartQualifier"
+      ],
+      "uses" : {
+      },
+      "StructureDefinition-ENXP.html" : "ENXP: Entity Name Part (V3 Data Type)"
+    },
+    {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityNameUse",
-      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
       "status" : "draft",
       "name" : "CDAEntityNameUse",
       "title" : "CDAEntityNameUse",
@@ -40,8 +194,36 @@
       "StructureDefinition-TN.html" : "TN: TrivialName (V3 Data Type)"
     },
     {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAInformationRecipientRole",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAInformationRecipientRole",
+      "title" : "CDAInformationRecipientRole",
+      "description" : "Used to represent the role(s) of those who should receive a copy of a document - limited to values allowed in original CDA definition",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-RoleClass"],
+      "uses" : {
+      },
+      "StructureDefinition-IntendedRecipient.html" : "IntendedRecipient (CDA Class)"
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAMaterialEntityClassType",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAMaterialEntityClassType",
+      "title" : "CDAMaterialEntityClassType",
+      "description" : "Types of Material for EntityClass “MAT”",
+      "systems" : [
+        "http://terminology.hl7.org/CodeSystem/v3-EntityCode",
+        "http://terminology.hl7.org/CodeSystem/v3-SpecimenType"
+      ],
+      "uses" : {
+      },
+      "StructureDefinition-Material.html" : "Material (CDA Class)",
+      "ValueSet-CDAEntityCode.html" : "CDAEntityCode"
+    },
+    {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor",
-      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
       "status" : "draft",
       "name" : "CDANullFlavor",
       "title" : "CDANullFlavor",
@@ -52,8 +234,46 @@
       "StructureDefinition-ANY.html" : "ANY: DataValue (V3 Data Type)"
     },
     {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAObservationInterpretation",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAObservationInterpretation",
+      "title" : "CDAObservationInterpretation",
+      "description" : "One or more codes providing a rough qualitative interpretation of the observation - limited to values available in original CDA",
+      "systems" : [
+        "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
+      ],
+      "uses" : {
+      },
+      "StructureDefinition-ObservationRange.html" : "ObservationRange (CDA Class)",
+      "StructureDefinition-Observation.html" : "Observation (CDA Class)"
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAParticipationType",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAParticipationType",
+      "title" : "CDAParticipationType",
+      "description" : "A code specifying the meaning and purpose of every Participation instance. Each of its values implies specific constraints on the Roles undertaking the participation. Limited to values allowed in original CDA definition",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ParticipationType"],
+      "uses" : {
+      },
+      "StructureDefinition-Specimen.html" : "Specimen (CDA Class)",
+      "StructureDefinition-Participant1.html" : "Participant1 (CDA Class)",
+      "StructureDefinition-Author.html" : "Author (CDA Class)",
+      "StructureDefinition-Custodian.html" : "Custodian (CDA Class)",
+      "StructureDefinition-Informant.html" : "Informant (CDA Class)",
+      "StructureDefinition-RecordTarget.html" : "RecordTarget (CDA Class)",
+      "StructureDefinition-EncompassingEncounter.html" : "EncompassingEncounter (CDA Class)",
+      "StructureDefinition-DataEnterer.html" : "DataEnterer (CDA Class)",
+      "StructureDefinition-LegalAuthenticator.html" : "LegalAuthenticator (CDA Class)",
+      "StructureDefinition-Participant2.html" : "Participant2 (CDA Class)",
+      "StructureDefinition-SubstanceAdministration.html" : "SubstanceAdministration (CDA Class)",
+      "StructureDefinition-Authenticator.html" : "Authenticator (CDA Class)"
+    },
+    {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse",
-      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
       "status" : "draft",
       "name" : "CDAPostalAddressUse",
       "title" : "CDAPostalAddressUse",
@@ -67,8 +287,87 @@
       "StructureDefinition-AD.html" : "AD: PostalAddress (V3 Data Type)"
     },
     {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDARoleClass",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDARoleClass",
+      "title" : "CDARoleClass",
+      "description" : "Represent a Role which is an association or relationship between two entities - the entity that plays the role and the entity that scopes the role. Roles names are derived from the name of the playing entity in that role.",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-RoleClass"],
+      "uses" : {
+      },
+      "StructureDefinition-AlternateIdentification.html" : "AlternateIdentification (CDA Class)"
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDARoleClassAssociative",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDARoleClassAssociative",
+      "title" : "CDARoleClassAssociative",
+      "description" : "A general association between two entities that is neither partitive nor ontological.",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-RoleClass"],
+      "uses" : {
+      },
+      "StructureDefinition-AssociatedEntity.html" : "AssociatedEntity (CDA Class)"
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDARoleClassMutualRelationship",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDARoleClassMutualRelationship",
+      "title" : "CDARoleClassMutualRelationship",
+      "description" : "A relationship that is based on mutual behavior of the two Entities as being related. The basis of such relationship may be agreements (e.g., spouses, contract parties) or they may be de facto behavior (e.g. friends) or may be an incidental involvement with each other (e.g. parties over a dispute, siblings, children).",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-RoleClass"],
+      "uses" : {
+      },
+      "StructureDefinition-RelatedEntity.html" : "RelatedEntity (CDA Class)"
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDARoleClassRoot",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDARoleClassRoot",
+      "title" : "CDARoleClassRoot",
+      "description" : "Corresponds to the Role class",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-RoleClass"],
+      "uses" : {
+      },
+      "StructureDefinition-ParticipantRole.html" : "ParticipantRole (CDA Class)"
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDARoleCode",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDARoleCode",
+      "title" : "CDARoleCode",
+      "description" : "A set of codes further specifying the kind of Role; specific classification codes for further qualifying RoleClass codes.",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-RoleCode"],
+      "uses" : {
+      },
+      "StructureDefinition-ParticipantRole.html" : "ParticipantRole (CDA Class)",
+      "StructureDefinition-AssociatedEntity.html" : "AssociatedEntity (CDA Class)",
+      "StructureDefinition-AssignedAuthor.html" : "AssignedAuthor (CDA Class)",
+      "StructureDefinition-AssignedEntity.html" : "AssignedEntity (CDA Class)",
+      "StructureDefinition-Guardian.html" : "Guardian (CDA Class)",
+      "StructureDefinition-OrganizationPartOf.html" : "OrganizationPartOf (CDA Class)"
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDASetOperator",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDASetOperator",
+      "title" : "CDASetOperator",
+      "description" : "Determins the intersectionality of multiple sets",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-SetOperator"],
+      "uses" : {
+      },
+      "StructureDefinition-IVL-PQ.html" : "IVL_PQ: Interval (V3 Data Type)",
+      "StructureDefinition-IVL-INT.html" : "IVL_INT: Interval (V3 Data Type)",
+      "StructureDefinition-SXCM-TS.html" : "SXCM_TS: GeneralTimingSpecification (V3 Data Type)"
+    },
+    {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDASignatureCode",
-      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
       "status" : "draft",
       "name" : "CDASignatureCode",
       "title" : "CDASignatureCode",
@@ -93,13 +392,13 @@
       "sources" : ["2.16.840.1.113883.4.642.3.21"],
       "uses" : {
       },
+      "StructureDefinition-NonXMLBody.html" : "NonXMLBody (CDA Class)",
+      "StructureDefinition-ObservationMedia.html" : "ObservationMedia (CDA Class)",
+      "StructureDefinition-Section.html" : "Section (CDA Class)",
       "StructureDefinition-Act.html" : "Act (CDA Class)",
       "StructureDefinition-LanguageCommunication.html" : "LanguageCommunication (CDA Class)",
-      "StructureDefinition-NonXMLBody.html" : "NonXMLBody (CDA Class)",
       "StructureDefinition-Procedure.html" : "Procedure (CDA Class)",
-      "StructureDefinition-Section.html" : "Section (CDA Class)",
       "StructureDefinition-StructuredBody.html" : "StructuredBody (CDA Class)",
-      "StructureDefinition-ObservationMedia.html" : "ObservationMedia (CDA Class)",
       "StructureDefinition-ClinicalDocument.html" : "ClinicalDocument (CDA Class)",
       "StructureDefinition-Observation.html" : "Observation (CDA Class)"
     },
@@ -123,30 +422,9 @@
       ],
       "uses" : {
       },
-      "StructureDefinition-ExternalDocument.html" : "ExternalDocument (CDA Class)",
+      "StructureDefinition-ParentDocument.html" : "ParentDocument (CDA Class)",
       "StructureDefinition-ClinicalDocument.html" : "ClinicalDocument (CDA Class)",
-      "StructureDefinition-ParentDocument.html" : "ParentDocument (CDA Class)"
-    },
-    {
-      "url" : "http://terminology.hl7.org/ValueSet/v3-ActClass",
-      "version" : "2.0.0",
-      "status" : "active",
-      "name" : "ActClass",
-      "title" : "ActClass",
-      "description" : "A code specifying the major type of Act that this Act-instance represents.\r\n\r\n*Constraints:* The classCode domain is a tightly controlled vocabulary, not an external or user-defined vocabulary.\r\n\r\nEvery Act-instance must have a classCode. If the act class is not further specified, the most general Act.classCode (ACT) is used.\r\n\r\nThe Act.classCode must be a generalization of the specific Act concept (e.g., as expressed in Act.code), in other words, the Act concepts conveyed in an Act must be specializations of the Act.classCode. Especially, Act.code is not a \"modifier\" that can alter the meaning of a class code. (See Act.code for contrast.)",
-      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ActClass"],
-      "oids" : ["2.16.840.1.113883.1.11.11527"],
-      "sources" : ["2.16.840.1.113883.1.11.11527"],
-      "uses" : {
-      },
-      "StructureDefinition-EncompassingEncounter.html" : "EncompassingEncounter (CDA Class)",
-      "StructureDefinition-ExternalAct.html" : "ExternalAct (CDA Class)",
-      "StructureDefinition-ServiceEvent.html" : "ServiceEvent (CDA Class)",
-      "StructureDefinition-Order.html" : "Order (CDA Class)",
-      "StructureDefinition-ClinicalDocument.html" : "ClinicalDocument (CDA Class)",
-      "StructureDefinition-Encounter.html" : "Encounter (CDA Class)",
-      "StructureDefinition-SubstanceAdministration.html" : "SubstanceAdministration (CDA Class)",
-      "StructureDefinition-Consent.html" : "Consent (CDA Class)"
+      "StructureDefinition-ExternalDocument.html" : "ExternalDocument (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-ActClassClinicalDocument",
@@ -188,12 +466,7 @@
       "sources" : ["2.16.840.1.113883.1.11.11529"],
       "uses" : {
       },
-      "StructureDefinition-ExternalObservation.html" : "ExternalObservation (CDA Class)",
-      "StructureDefinition-LabCriterion.html" : "LabCriterion (CDA Class)",
-      "StructureDefinition-ObservationMedia.html" : "ObservationMedia (CDA Class)",
-      "StructureDefinition-Observation.html" : "Observation (CDA Class)",
-      "StructureDefinition-Criterion.html" : "Criterion (CDA Class)",
-      "StructureDefinition-ObservationRange.html" : "ObservationRange (CDA Class)"
+      "StructureDefinition-LabCriterion.html" : "LabCriterion (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-ActClassProcedure",
@@ -207,8 +480,8 @@
       "sources" : ["2.16.840.1.113883.1.11.19665"],
       "uses" : {
       },
-      "StructureDefinition-Procedure.html" : "Procedure (CDA Class)",
-      "StructureDefinition-ExternalProcedure.html" : "ExternalProcedure (CDA Class)"
+      "StructureDefinition-ExternalProcedure.html" : "ExternalProcedure (CDA Class)",
+      "StructureDefinition-Procedure.html" : "Procedure (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-ActClassROI",
@@ -264,17 +537,17 @@
       "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ActCode"],
       "uses" : {
       },
-      "StructureDefinition-Act.html" : "Act (CDA Class)",
-      "StructureDefinition-Supply.html" : "Supply (CDA Class)",
-      "StructureDefinition-ExternalAct.html" : "ExternalAct (CDA Class)",
-      "StructureDefinition-ExternalObservation.html" : "ExternalObservation (CDA Class)",
-      "StructureDefinition-Order.html" : "Order (CDA Class)",
-      "StructureDefinition-LabCriterion.html" : "LabCriterion (CDA Class)",
-      "StructureDefinition-Consent.html" : "Consent (CDA Class)",
-      "StructureDefinition-Criterion.html" : "Criterion (CDA Class)",
-      "StructureDefinition-ExternalProcedure.html" : "ExternalProcedure (CDA Class)",
       "StructureDefinition-ObservationRange.html" : "ObservationRange (CDA Class)",
-      "StructureDefinition-Organizer.html" : "Organizer (CDA Class)"
+      "StructureDefinition-Act.html" : "Act (CDA Class)",
+      "StructureDefinition-ExternalObservation.html" : "ExternalObservation (CDA Class)",
+      "StructureDefinition-ExternalAct.html" : "ExternalAct (CDA Class)",
+      "StructureDefinition-Consent.html" : "Consent (CDA Class)",
+      "StructureDefinition-ExternalProcedure.html" : "ExternalProcedure (CDA Class)",
+      "StructureDefinition-LabCriterion.html" : "LabCriterion (CDA Class)",
+      "StructureDefinition-Organizer.html" : "Organizer (CDA Class)",
+      "StructureDefinition-Supply.html" : "Supply (CDA Class)",
+      "StructureDefinition-Criterion.html" : "Criterion (CDA Class)",
+      "StructureDefinition-Order.html" : "Order (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-ActEncounterCode",
@@ -288,50 +561,8 @@
       "sources" : ["2.16.840.1.113883.1.11.13955"],
       "uses" : {
       },
-      "StructureDefinition-EncompassingEncounter.html" : "EncompassingEncounter (CDA Class)",
-      "StructureDefinition-Encounter.html" : "Encounter (CDA Class)"
-    },
-    {
-      "url" : "http://terminology.hl7.org/ValueSet/v3-ActMood",
-      "version" : "2.0.0",
-      "status" : "active",
-      "name" : "ActMood",
-      "title" : "ActMood",
-      "description" : "A code distinguishing whether an Act is conceived of as a factual statement or in some other manner as a command, possibility, goal, etc.\r\n\r\n*Constraints:* An Act-instance must have one and only one moodCode value.\r\n\r\nThe moodCode of a single Act-instance never changes. Mood is not state.\r\n\r\nTo describe the progression of a business activity from defined to planned to executed, etc. one must instantiate different Act-instances in the different moods and link them using ActRelationship of general type \"sequel\". (See ActRelationship.type.)",
-      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ActMood"],
-      "oids" : ["2.16.840.1.113883.1.11.10196"],
-      "sources" : ["2.16.840.1.113883.1.11.10196"],
-      "uses" : {
-      },
-      "StructureDefinition-EncompassingEncounter.html" : "EncompassingEncounter (CDA Class)",
-      "StructureDefinition-ExternalAct.html" : "ExternalAct (CDA Class)",
-      "StructureDefinition-Section.html" : "Section (CDA Class)",
-      "StructureDefinition-ServiceEvent.html" : "ServiceEvent (CDA Class)",
-      "StructureDefinition-ExternalObservation.html" : "ExternalObservation (CDA Class)",
-      "StructureDefinition-ObservationMedia.html" : "ObservationMedia (CDA Class)",
-      "StructureDefinition-Consent.html" : "Consent (CDA Class)",
-      "StructureDefinition-Organizer.html" : "Organizer (CDA Class)",
-      "StructureDefinition-NonXMLBody.html" : "NonXMLBody (CDA Class)",
-      "StructureDefinition-ExternalDocument.html" : "ExternalDocument (CDA Class)",
-      "StructureDefinition-RegionOfInterest.html" : "RegionOfInterest (CDA Class)",
-      "StructureDefinition-StructuredBody.html" : "StructuredBody (CDA Class)",
-      "StructureDefinition-ClinicalDocument.html" : "ClinicalDocument (CDA Class)",
-      "StructureDefinition-ParentDocument.html" : "ParentDocument (CDA Class)",
-      "StructureDefinition-ExternalProcedure.html" : "ExternalProcedure (CDA Class)"
-    },
-    {
-      "url" : "http://terminology.hl7.org/ValueSet/v3-ActMoodIntent",
-      "version" : "2.0.0",
-      "status" : "active",
-      "name" : "ActMoodIntent",
-      "title" : "ActMoodIntent",
-      "description" : "An intention or plan to perform a service. Historical note: in previous RIM versions, the intent mood was captured as a separate class hierarchy, called Service\\_intent\\_or\\_order.",
-      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ActMood"],
-      "oids" : ["2.16.840.1.113883.1.11.10199"],
-      "sources" : ["2.16.840.1.113883.1.11.10199"],
-      "uses" : {
-      },
-      "StructureDefinition-Order.html" : "Order (CDA Class)"
+      "StructureDefinition-Encounter.html" : "Encounter (CDA Class)",
+      "StructureDefinition-EncompassingEncounter.html" : "EncompassingEncounter (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-ActMoodPredicate",
@@ -345,9 +576,9 @@
       "sources" : ["2.16.840.1.113883.1.11.10202"],
       "uses" : {
       },
+      "StructureDefinition-ObservationRange.html" : "ObservationRange (CDA Class)",
       "StructureDefinition-LabCriterion.html" : "LabCriterion (CDA Class)",
-      "StructureDefinition-Criterion.html" : "Criterion (CDA Class)",
-      "StructureDefinition-ObservationRange.html" : "ObservationRange (CDA Class)"
+      "StructureDefinition-Criterion.html" : "Criterion (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-ActPriority",
@@ -361,13 +592,29 @@
       "sources" : ["2.16.840.1.113883.1.11.16866"],
       "uses" : {
       },
-      "StructureDefinition-Act.html" : "Act (CDA Class)",
-      "StructureDefinition-Supply.html" : "Supply (CDA Class)",
-      "StructureDefinition-Procedure.html" : "Procedure (CDA Class)",
-      "StructureDefinition-Order.html" : "Order (CDA Class)",
-      "StructureDefinition-Observation.html" : "Observation (CDA Class)",
       "StructureDefinition-Encounter.html" : "Encounter (CDA Class)",
-      "StructureDefinition-SubstanceAdministration.html" : "SubstanceAdministration (CDA Class)"
+      "StructureDefinition-Act.html" : "Act (CDA Class)",
+      "StructureDefinition-Procedure.html" : "Procedure (CDA Class)",
+      "StructureDefinition-Supply.html" : "Supply (CDA Class)",
+      "StructureDefinition-Observation.html" : "Observation (CDA Class)",
+      "StructureDefinition-SubstanceAdministration.html" : "SubstanceAdministration (CDA Class)",
+      "StructureDefinition-Order.html" : "Order (CDA Class)"
+    },
+    {
+      "url" : "http://terminology.hl7.org/ValueSet/v3-ActRelationshipAuthorizedBy",
+      "version" : "2.0.0",
+      "status" : "active",
+      "name" : "ActRelationshipAuthorizedBy",
+      "title" : "ActRelationshipAuthorizedBy",
+      "description" : "A relationship in which the target act authorizes or certifies the source act.",
+      "systems" : [
+        "http://terminology.hl7.org/CodeSystem/v3-ActRelationshipType"
+      ],
+      "oids" : ["2.16.840.1.113883.1.11.19965"],
+      "sources" : ["2.16.840.1.113883.1.11.19965"],
+      "uses" : {
+      },
+      "StructureDefinition-Authorization.html" : "Authorization (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-ActRelationshipFulfills",
@@ -400,9 +647,9 @@
       "sources" : ["2.16.840.1.113883.1.11.10318"],
       "uses" : {
       },
+      "StructureDefinition-ComponentOf.html" : "ComponentOf (CDA Class)",
       "StructureDefinition-OrganizerComponent.html" : "OrganizerComponent (CDA Class)",
-      "StructureDefinition-Component.html" : "Component (CDA Class)",
-      "StructureDefinition-ComponentOf.html" : "ComponentOf (CDA Class)"
+      "StructureDefinition-Component.html" : "Component (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-ActRelationshipType",
@@ -418,11 +665,7 @@
       "sources" : ["2.16.840.1.113883.1.11.10317"],
       "uses" : {
       },
-      "StructureDefinition-Precondition.html" : "Precondition (CDA Class)",
-      "StructureDefinition-Precondition2.html" : "Precondition2 (CDA Class)",
-      "StructureDefinition-LabPrecondition.html" : "LabPrecondition (CDA Class)",
-      "StructureDefinition-Observation.html" : "Observation (CDA Class)",
-      "StructureDefinition-ObservationRange.html" : "ObservationRange (CDA Class)"
+      "StructureDefinition-LabPrecondition.html" : "LabPrecondition (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-ActSite",
@@ -448,29 +691,15 @@
       "sources" : ["2.16.840.1.113883.1.11.15933"],
       "uses" : {
       },
+      "StructureDefinition-Encounter.html" : "Encounter (CDA Class)",
       "StructureDefinition-Act.html" : "Act (CDA Class)",
-      "StructureDefinition-Supply.html" : "Supply (CDA Class)",
+      "StructureDefinition-Consent.html" : "Consent (CDA Class)",
       "StructureDefinition-Procedure.html" : "Procedure (CDA Class)",
+      "StructureDefinition-Organizer.html" : "Organizer (CDA Class)",
+      "StructureDefinition-Supply.html" : "Supply (CDA Class)",
       "StructureDefinition-AlternateIdentification.html" : "AlternateIdentification (CDA Class)",
       "StructureDefinition-ClinicalDocument.html" : "ClinicalDocument (CDA Class)",
       "StructureDefinition-Observation.html" : "Observation (CDA Class)",
-      "StructureDefinition-Encounter.html" : "Encounter (CDA Class)",
-      "StructureDefinition-SubstanceAdministration.html" : "SubstanceAdministration (CDA Class)",
-      "StructureDefinition-Consent.html" : "Consent (CDA Class)",
-      "StructureDefinition-Organizer.html" : "Organizer (CDA Class)"
-    },
-    {
-      "url" : "http://terminology.hl7.org/ValueSet/v3-ActSubstanceAdministrationCode",
-      "version" : "2.0.0",
-      "status" : "active",
-      "name" : "ActSubstanceAdministrationCode",
-      "title" : "ActSubstanceAdministrationCode",
-      "description" : "Describes the type of substance administration being performed.",
-      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ActCode"],
-      "oids" : ["2.16.840.1.113883.1.11.19708"],
-      "sources" : ["2.16.840.1.113883.1.11.19708"],
-      "uses" : {
-      },
       "StructureDefinition-SubstanceAdministration.html" : "SubstanceAdministration (CDA Class)"
     },
     {
@@ -505,27 +734,6 @@
       "StructureDefinition-Patient.html" : "Patient (CDA Class)"
     },
     {
-      "url" : "http://terminology.hl7.org/ValueSet/v3-ContextControl",
-      "version" : "2.0.0",
-      "status" : "active",
-      "name" : "ContextControl",
-      "title" : "ContextControl",
-      "description" : "A code that specifies how an ActRelationship or Participation contributes to the context of an Act, and whether it may be propagated to descendent Acts whose association allows such propagation (see also attributes Participation.contextControlCode, ActRelationship.contextControlCode, ActRelationship.contextConductionInd).",
-      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ContextControl"],
-      "oids" : ["2.16.840.1.113883.1.11.16478"],
-      "sources" : ["2.16.840.1.113883.1.11.16478"],
-      "uses" : {
-      },
-      "StructureDefinition-DataEnterer.html" : "DataEnterer (CDA Class)",
-      "StructureDefinition-Informant.html" : "Informant (CDA Class)",
-      "StructureDefinition-Subject.html" : "Subject (CDA Class)",
-      "StructureDefinition-Author.html" : "Author (CDA Class)",
-      "StructureDefinition-Participant1.html" : "Participant1 (CDA Class)",
-      "StructureDefinition-Participant2.html" : "Participant2 (CDA Class)",
-      "StructureDefinition-LegalAuthenticator.html" : "LegalAuthenticator (CDA Class)",
-      "StructureDefinition-RecordTarget.html" : "RecordTarget (CDA Class)"
-    },
-    {
       "url" : "http://terminology.hl7.org/ValueSet/v3-DocumentSectionType",
       "version" : "2.0.0",
       "status" : "active",
@@ -538,20 +746,6 @@
       "uses" : {
       },
       "StructureDefinition-Section.html" : "Section (CDA Class)"
-    },
-    {
-      "url" : "http://terminology.hl7.org/ValueSet/v3-DrugEntity",
-      "version" : "1.0.0",
-      "status" : "active",
-      "name" : "DrugEntity",
-      "title" : "Drug Entity",
-      "description" : "A value representing the specific kind of Drug Entity the instance represents.",
-      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-EntityCode"],
-      "oids" : ["2.16.840.1.113883.11.21013"],
-      "sources" : ["2.16.840.1.113883.11.21013"],
-      "uses" : {
-      },
-      "StructureDefinition-LabeledDrug.html" : "LabeledDrug (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-EntityClassDevice",
@@ -580,9 +774,9 @@
       "sources" : ["2.16.840.1.113883.1.11.10884"],
       "uses" : {
       },
+      "StructureDefinition-Person.html" : "Person (CDA Class)",
       "StructureDefinition-SubjectPerson.html" : "SubjectPerson (CDA Class)",
-      "StructureDefinition-Patient.html" : "Patient (CDA Class)",
-      "StructureDefinition-Person.html" : "Person (CDA Class)"
+      "StructureDefinition-Patient.html" : "Patient (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-EntityClassManufacturedMaterial",
@@ -596,8 +790,8 @@
       "sources" : ["2.16.840.1.113883.1.11.13934"],
       "uses" : {
       },
-      "StructureDefinition-LabeledDrug.html" : "LabeledDrug (CDA Class)",
-      "StructureDefinition-Material.html" : "Material (CDA Class)"
+      "StructureDefinition-Material.html" : "Material (CDA Class)",
+      "StructureDefinition-LabeledDrug.html" : "LabeledDrug (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-EntityClassOrganization",
@@ -611,8 +805,8 @@
       "sources" : ["2.16.840.1.113883.1.11.10889"],
       "uses" : {
       },
-      "StructureDefinition-CustodianOrganization.html" : "CustodianOrganization (CDA Class)",
-      "StructureDefinition-Organization.html" : "Organization (CDA Class)"
+      "StructureDefinition-Organization.html" : "Organization (CDA Class)",
+      "StructureDefinition-CustodianOrganization.html" : "CustodianOrganization (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-EntityClassPlace",
@@ -640,29 +834,8 @@
       "sources" : ["2.16.840.1.113883.1.11.13922"],
       "uses" : {
       },
-      "StructureDefinition-PlayingEntity.html" : "PlayingEntity (CDA Class)",
-      "StructureDefinition-Entity.html" : "Entity (CDA Class)"
-    },
-    {
-      "url" : "http://terminology.hl7.org/ValueSet/v3-EntityCode",
-      "version" : "2.0.0",
-      "status" : "active",
-      "name" : "EntityCode",
-      "title" : "EntityCode",
-      "description" : "A value representing the specific kind of Entity the instance represents.\r\n\r\n*Examples:* A medical building, a Doberman Pinscher, a blood collection tube, a tissue biopsy.\r\n\r\n*Rationale:* For each Entity, the value for this attribute is drawn from one of several coding systems depending on the Entity classCode, such as living subjects (animal and plant taxonomies), chemical substance (e.g., IUPAC code), organizations, insurance company, government agency, hospital, park, lake, syringe, etc. It is possible that Entity.code may be so fine grained that it represents a single instance. An example is the CDC vaccine manufacturer code, modeled as a concept vocabulary, when in fact each concept refers to a single instance.",
-      "systems" : [
-        "http://terminology.hl7.org/CodeSystem/v3-EntityCode",
-        "urn:iso:std:iso:3166",
-        "http://terminology.hl7.org/CodeSystem/v3-SpecimenType"
-      ],
-      "oids" : ["2.16.840.1.113883.1.11.16040"],
-      "sources" : ["2.16.840.1.113883.1.11.16040"],
-      "uses" : {
-      },
-      "StructureDefinition-AuthoringDevice.html" : "AuthoringDevice (CDA Class)",
-      "StructureDefinition-PlayingEntity.html" : "PlayingEntity (CDA Class)",
-      "StructureDefinition-Device.html" : "Device (CDA Class)",
-      "StructureDefinition-Entity.html" : "Entity (CDA Class)"
+      "StructureDefinition-Entity.html" : "Entity (CDA Class)",
+      "StructureDefinition-PlayingEntity.html" : "PlayingEntity (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-EntityDeterminer",
@@ -676,16 +849,16 @@
       "sources" : ["2.16.840.1.113883.1.11.10878"],
       "uses" : {
       },
-      "StructureDefinition-SubjectPerson.html" : "SubjectPerson (CDA Class)",
-      "StructureDefinition-Place.html" : "Place (CDA Class)",
-      "StructureDefinition-AuthoringDevice.html" : "AuthoringDevice (CDA Class)",
-      "StructureDefinition-PlayingEntity.html" : "PlayingEntity (CDA Class)",
-      "StructureDefinition-Device.html" : "Device (CDA Class)",
-      "StructureDefinition-Entity.html" : "Entity (CDA Class)",
-      "StructureDefinition-CustodianOrganization.html" : "CustodianOrganization (CDA Class)",
       "StructureDefinition-Organization.html" : "Organization (CDA Class)",
+      "StructureDefinition-Entity.html" : "Entity (CDA Class)",
+      "StructureDefinition-Person.html" : "Person (CDA Class)",
+      "StructureDefinition-Place.html" : "Place (CDA Class)",
+      "StructureDefinition-SubjectPerson.html" : "SubjectPerson (CDA Class)",
+      "StructureDefinition-AuthoringDevice.html" : "AuthoringDevice (CDA Class)",
+      "StructureDefinition-CustodianOrganization.html" : "CustodianOrganization (CDA Class)",
       "StructureDefinition-Patient.html" : "Patient (CDA Class)",
-      "StructureDefinition-Person.html" : "Person (CDA Class)"
+      "StructureDefinition-PlayingEntity.html" : "PlayingEntity (CDA Class)",
+      "StructureDefinition-Device.html" : "Device (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-EntityDeterminerDetermined",
@@ -699,24 +872,8 @@
       "sources" : ["2.16.840.1.113883.1.11.10879"],
       "uses" : {
       },
-      "StructureDefinition-LabeledDrug.html" : "LabeledDrug (CDA Class)",
-      "StructureDefinition-Material.html" : "Material (CDA Class)"
-    },
-    {
-      "url" : "http://terminology.hl7.org/ValueSet/v3-EntityNamePartQualifier",
-      "version" : "2.0.0",
-      "status" : "active",
-      "name" : "EntityNamePartQualifier",
-      "title" : "EntityNamePartQualifier",
-      "description" : "***No description***",
-      "systems" : [
-        "http://terminology.hl7.org/CodeSystem/v3-EntityNamePartQualifier"
-      ],
-      "oids" : ["2.16.840.1.113883.1.11.15888"],
-      "sources" : ["2.16.840.1.113883.1.11.15888"],
-      "uses" : {
-      },
-      "StructureDefinition-ENXP.html" : "ENXP: Entity Name Part (V3 Data Type)"
+      "StructureDefinition-Material.html" : "Material (CDA Class)",
+      "StructureDefinition-LabeledDrug.html" : "LabeledDrug (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-EntityNamePartType",
@@ -828,23 +985,6 @@
       "StructureDefinition-Patient.html" : "Patient (CDA Class)"
     },
     {
-      "url" : "http://terminology.hl7.org/ValueSet/v3-MaterialEntityClassType",
-      "version" : "2.0.0",
-      "status" : "active",
-      "name" : "MaterialEntityClassType",
-      "title" : "MaterialEntityClassType",
-      "description" : "Types of Material for EntityClass \"MAT\"",
-      "systems" : [
-        "http://terminology.hl7.org/CodeSystem/v3-EntityCode",
-        "http://terminology.hl7.org/CodeSystem/v3-SpecimenType"
-      ],
-      "oids" : ["2.16.840.1.113883.1.11.16041"],
-      "sources" : ["2.16.840.1.113883.1.11.16041"],
-      "uses" : {
-      },
-      "StructureDefinition-Material.html" : "Material (CDA Class)"
-    },
-    {
       "url" : "http://terminology.hl7.org/ValueSet/v3-MediaType",
       "version" : "2.0.0",
       "status" : "active",
@@ -872,23 +1012,6 @@
       },
       "StructureDefinition-LabCriterion.html" : "LabCriterion (CDA Class)",
       "StructureDefinition-LabPrecondition.html" : "LabPrecondition (CDA Class)"
-    },
-    {
-      "url" : "http://terminology.hl7.org/ValueSet/v3-ObservationInterpretation",
-      "version" : "2.0.0",
-      "status" : "active",
-      "name" : "ObservationInterpretation",
-      "title" : "ObservationInterpretation",
-      "description" : "One or more codes providing a rough qualitative interpretation of the observation,such as \"normal\" / \"abnormal\", \"low\" / \"high\", \"better\" / \"worse\", \"resistant\" / \"susceptible\", \"expected\" / \"not expected\". The value set is intended to be for ANY use where coded representation of an interpretation is needed.\r\n\r\n*Usage Note:* This is being communicated in v2.x in OBX-8, in v3 in ObservationInterpretation (CWE) in R1 (Representative Realm) and in FHIR Observation.interpretation. Historically these values come from the laboratory domain, and these codes are extensively used.",
-      "systems" : [
-        "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
-      ],
-      "oids" : ["2.16.840.1.113883.1.11.78"],
-      "sources" : ["2.16.840.1.113883.1.11.78"],
-      "uses" : {
-      },
-      "StructureDefinition-Observation.html" : "Observation (CDA Class)",
-      "StructureDefinition-ObservationRange.html" : "ObservationRange (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-ObservationMethod",
@@ -992,33 +1115,6 @@
       "StructureDefinition-Subject.html" : "Subject (CDA Class)"
     },
     {
-      "url" : "http://terminology.hl7.org/ValueSet/v3-ParticipationType",
-      "version" : "2.0.0",
-      "status" : "active",
-      "name" : "ParticipationType",
-      "title" : "ParticipationType",
-      "description" : "A code specifying the meaning and purpose of every Participation instance. Each of its values implies specific constraints on the Roles undertaking the participation.",
-      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ParticipationType"],
-      "oids" : ["2.16.840.1.113883.1.11.10901"],
-      "sources" : ["2.16.840.1.113883.1.11.10901"],
-      "uses" : {
-      },
-      "StructureDefinition-EncompassingEncounter.html" : "EncompassingEncounter (CDA Class)",
-      "StructureDefinition-Informant.html" : "Informant (CDA Class)",
-      "StructureDefinition-DocumentationOf.html" : "DocumentationOf (CDA Class)",
-      "StructureDefinition-LegalAuthenticator.html" : "LegalAuthenticator (CDA Class)",
-      "StructureDefinition-Authenticator.html" : "Authenticator (CDA Class)",
-      "StructureDefinition-DataEnterer.html" : "DataEnterer (CDA Class)",
-      "StructureDefinition-Custodian.html" : "Custodian (CDA Class)",
-      "StructureDefinition-Author.html" : "Author (CDA Class)",
-      "StructureDefinition-Participant1.html" : "Participant1 (CDA Class)",
-      "StructureDefinition-Authorization.html" : "Authorization (CDA Class)",
-      "StructureDefinition-Participant2.html" : "Participant2 (CDA Class)",
-      "StructureDefinition-Specimen.html" : "Specimen (CDA Class)",
-      "StructureDefinition-SubstanceAdministration.html" : "SubstanceAdministration (CDA Class)",
-      "StructureDefinition-RecordTarget.html" : "RecordTarget (CDA Class)"
-    },
-    {
       "url" : "http://terminology.hl7.org/ValueSet/v3-PersonalRelationshipRoleType",
       "version" : "2.0.0",
       "status" : "active",
@@ -1030,8 +1126,8 @@
       "sources" : ["2.16.840.1.113883.1.11.19563"],
       "uses" : {
       },
-      "StructureDefinition-RelatedEntity.html" : "RelatedEntity (CDA Class)",
-      "StructureDefinition-RelatedSubject.html" : "RelatedSubject (CDA Class)"
+      "StructureDefinition-RelatedSubject.html" : "RelatedSubject (CDA Class)",
+      "StructureDefinition-RelatedEntity.html" : "RelatedEntity (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-ROIOverlayShape",
@@ -1095,20 +1191,6 @@
       "StructureDefinition-Patient.html" : "Patient (CDA Class)"
     },
     {
-      "url" : "http://terminology.hl7.org/ValueSet/v3-RoleClass",
-      "version" : "2.0.0",
-      "status" : "active",
-      "name" : "RoleClass",
-      "title" : "RoleClass",
-      "description" : "This table includes codes for the Role class hierarchy. The values in this hierarchy, represent a Role which is an association or relationship between two entities - the entity that plays the role and the entity that scopes the role. Roles names are derived from the name of the playing entity in that role.\r\n\r\nThe role hierarchy stems from three core concepts, or abstract domains:\r\n\r\n *  **RoleClassOntological** is an abstract domain that collects roles in which the playing entity is defined or specified by the scoping entity.\r\n *  **RoleClassPartitive** collects roles in which the playing entity is in some sense a \"part\" of the scoping entity.\r\n *  **RoleClassAssociative** collects all of the remaining forms of association between the playing entity and the scoping entity. This set of roles is further partitioned between:\r\n    \r\n     *  **RoleClassPassive** which are roles in which the playing entity is used, known, treated, handled, built, or destroyed, etc. under the auspices of the scoping entity. The playing entity is passive in these roles in that the role exists without an agreement from the playing entity.\r\n     *  **RoleClassMutualRelationship** which are relationships based on mutual behavior of the two entities. The basis of these relationship may be formal agreements or they may be *de facto* behavior. Thus, this sub-domain is further divided into:\r\n        \r\n         *  **RoleClassRelationshipFormal** in which the relationship is formally defined, frequently by a contract or agreement.\r\n         *  **Personal relationship** which inks two people in a personal relationship.\r\n\r\nThe hierarchy discussed above is represented In the current vocabulary tables as a set of abstract domains, with the exception of the \"Personal relationship\" which is a leaf concept.",
-      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-RoleClass"],
-      "oids" : ["2.16.840.1.113883.1.11.11555"],
-      "sources" : ["2.16.840.1.113883.1.11.11555"],
-      "uses" : {
-      },
-      "StructureDefinition-AlternateIdentification.html" : "AlternateIdentification (CDA Class)"
-    },
-    {
       "url" : "http://terminology.hl7.org/ValueSet/v3-RoleClassAgent",
       "version" : "2.0.0",
       "status" : "active",
@@ -1134,23 +1216,9 @@
       "sources" : ["2.16.840.1.113883.1.11.11595"],
       "uses" : {
       },
-      "StructureDefinition-AssignedEntity.html" : "AssignedEntity (CDA Class)",
+      "StructureDefinition-AssignedCustodian.html" : "AssignedCustodian (CDA Class)",
       "StructureDefinition-AssignedAuthor.html" : "AssignedAuthor (CDA Class)",
-      "StructureDefinition-AssignedCustodian.html" : "AssignedCustodian (CDA Class)"
-    },
-    {
-      "url" : "http://terminology.hl7.org/ValueSet/v3-RoleClassAssociative",
-      "version" : "2.0.0",
-      "status" : "active",
-      "name" : "RoleClassAssociative",
-      "title" : "RoleClassAssociative",
-      "description" : "A general association between two entities that is neither partitive nor ontological.",
-      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-RoleClass"],
-      "oids" : ["2.16.840.1.113883.1.11.19313"],
-      "sources" : ["2.16.840.1.113883.1.11.19313"],
-      "uses" : {
-      },
-      "StructureDefinition-AssociatedEntity.html" : "AssociatedEntity (CDA Class)"
+      "StructureDefinition-AssignedEntity.html" : "AssignedEntity (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-RoleClassManufacturedProduct",
@@ -1165,20 +1233,6 @@
       "uses" : {
       },
       "StructureDefinition-ManufacturedProduct.html" : "ManufacturedProduct (CDA Class)"
-    },
-    {
-      "url" : "http://terminology.hl7.org/ValueSet/v3-RoleClassMutualRelationship",
-      "version" : "2.0.0",
-      "status" : "active",
-      "name" : "RoleClassMutualRelationship",
-      "title" : "RoleClassMutualRelationship",
-      "description" : "A relationship that is based on mutual behavior of the two Entities as being related. The basis of such relationship may be agreements (e.g., spouses, contract parties) or they may be *de facto* behavior (e.g. friends) or may be an incidental involvement with each other (e.g. parties over a dispute, siblings, children).",
-      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-RoleClass"],
-      "oids" : ["2.16.840.1.113883.1.11.19316"],
-      "sources" : ["2.16.840.1.113883.1.11.19316"],
-      "uses" : {
-      },
-      "StructureDefinition-RelatedEntity.html" : "RelatedEntity (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-RoleClassPartitive",
@@ -1206,8 +1260,8 @@
       "sources" : ["2.16.840.1.113883.1.11.19105"],
       "uses" : {
       },
-      "StructureDefinition-Birthplace.html" : "Birthplace (CDA Class)",
-      "StructureDefinition-MaintainedEntity.html" : "MaintainedEntity (CDA Class)"
+      "StructureDefinition-MaintainedEntity.html" : "MaintainedEntity (CDA Class)",
+      "StructureDefinition-Birthplace.html" : "Birthplace (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-RoleClassRelationshipFormal",
@@ -1222,20 +1276,6 @@
       "uses" : {
       },
       "StructureDefinition-PatientRole.html" : "PatientRole (CDA Class)"
-    },
-    {
-      "url" : "http://terminology.hl7.org/ValueSet/v3-RoleClassRoot",
-      "version" : "2.0.0",
-      "status" : "active",
-      "name" : "RoleClassRoot",
-      "title" : "RoleClassRoot",
-      "description" : "Corresponds to the Role class",
-      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-RoleClass"],
-      "oids" : ["2.16.840.1.113883.1.11.13940"],
-      "sources" : ["2.16.840.1.113883.1.11.13940"],
-      "uses" : {
-      },
-      "StructureDefinition-ParticipantRole.html" : "ParticipantRole (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-RoleClassServiceDeliveryLocation",
@@ -1264,23 +1304,6 @@
       "uses" : {
       },
       "StructureDefinition-SpecimenRole.html" : "SpecimenRole (CDA Class)"
-    },
-    {
-      "url" : "http://terminology.hl7.org/ValueSet/v3-RoleCode",
-      "version" : "2.0.0",
-      "status" : "active",
-      "name" : "RoleCode",
-      "title" : "v3 Code System RoleCode",
-      "description" : " A set of codes further specifying the kind of Role; specific classification codes for further qualifying RoleClass codes.",
-      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-RoleCode"],
-      "uses" : {
-      },
-      "StructureDefinition-OrganizationPartOf.html" : "OrganizationPartOf (CDA Class)",
-      "StructureDefinition-Guardian.html" : "Guardian (CDA Class)",
-      "StructureDefinition-AssignedEntity.html" : "AssignedEntity (CDA Class)",
-      "StructureDefinition-AssignedAuthor.html" : "AssignedAuthor (CDA Class)",
-      "StructureDefinition-AssociatedEntity.html" : "AssociatedEntity (CDA Class)",
-      "StructureDefinition-ParticipantRole.html" : "ParticipantRole (CDA Class)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-RoleLinkType",
@@ -1325,22 +1348,6 @@
       "uses" : {
       },
       "StructureDefinition-HealthCareFacility.html" : "HealthCareFacility (CDA Class)"
-    },
-    {
-      "url" : "http://terminology.hl7.org/ValueSet/v3-SetOperator",
-      "version" : "2.0.0",
-      "status" : "active",
-      "name" : "SetOperator",
-      "title" : "SetOperator",
-      "description" : "***No description***",
-      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-SetOperator"],
-      "oids" : ["2.16.840.1.113883.1.11.17416"],
-      "sources" : ["2.16.840.1.113883.1.11.17416"],
-      "uses" : {
-      },
-      "StructureDefinition-IVL-PQ.html" : "IVL_PQ: Interval (V3 Data Type)",
-      "StructureDefinition-IVL-INT.html" : "IVL_INT: Interval (V3 Data Type)",
-      "StructureDefinition-SXCM-TS.html" : "SXCM_TS: GeneralTimingSpecification (V3 Data Type)"
     },
     {
       "url" : "http://terminology.hl7.org/ValueSet/v3-SoftwareNameExample",

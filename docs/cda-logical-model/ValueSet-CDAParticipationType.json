@@ -1,0 +1,177 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "CDAParticipationType",
+  "text" : {
+    "status" : "extensions",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include these codes as defined in <a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html\"><code>http://terminology.hl7.org/CodeSystem/v3-ParticipationType</code></a><table class=\"none\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-ADM\">ADM</a></td><td style=\"color: #cccccc\">admitter</td><td>The practitioner who is responsible for admitting a patient to a patient encounter.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-ATND\">ATND</a></td><td style=\"color: #cccccc\">attender</td><td>The practitioner that has responsibility for overseeing a patient's care during a patient encounter.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-CALLBCK\">CALLBCK</a></td><td style=\"color: #cccccc\">callback contact</td><td>A person or organization who should be contacted for follow-up questions about the act in place of the author.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-CON\">CON</a></td><td style=\"color: #cccccc\">consultant</td><td>An advisor participating in the service by performing evaluations and making recommendations.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-DIS\">DIS</a></td><td style=\"color: #cccccc\">discharger</td><td>The practitioner who is responsible for the discharge of a patient from a patient encounter.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-ESC\">ESC</a></td><td style=\"color: #cccccc\">escort</td><td>Only with Transportation services. A person who escorts the patient.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-REF\">REF</a></td><td style=\"color: #cccccc\">referrer</td><td>A person having referred the subject of the service to the performer (referring physician). Typically, a referring physician will receive a report.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-IND\">IND</a></td><td style=\"color: #cccccc\">indirect target</td><td>Target that is not substantially present in the act and which is not directly affected by the act, but which will be a focus of the record or documentation of the act.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-BEN\">BEN</a></td><td style=\"color: #cccccc\">beneficiary</td><td>Target on behalf of whom the service happens, but that is not necessarily present in the service. Can occur together with direct target to indicate that a target is both, as in the case where the patient is the indirect beneficiary of a service rendered to a family member, e.g. counseling or given home care instructions. This concept includes a participant, such as a covered party, who derives benefits from a service act covered by a coverage act.<br/><br/>Note that the semantic role of the intended recipient who benefits from the happening denoted by the verb in the clause. Thus, a patient who has no coverage under a policy or program may be a beneficiary of a health service while not being the beneficiary of coverage for that service.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-COV\">COV</a></td><td style=\"color: #cccccc\">coverage target</td><td>The target participation for an individual in a health care coverage act in which the target role is either the policy holder of the coverage, or a covered party under the coverage.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-HLD\">HLD</a></td><td style=\"color: #cccccc\">holder</td><td>Participant who posses an instrument such as a financial contract (insurance policy) usually based on some agreement with the author.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-RCT\">RCT</a></td><td style=\"color: #cccccc\">record target</td><td>The record target indicates whose medical record holds the documentation of this act. This is especially important when the subject of a service is not the patient himself.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-RCV\">RCV</a></td><td style=\"color: #cccccc\">receiver</td><td>The person (or organization) who receives the product of an Act.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-AUT\">AUT</a></td><td style=\"color: #cccccc\">author (originator)</td><td>**Definition:** A party that originates the Act and therefore has responsibility for the information given in the Act and ownership of this Act.<br/><br/>**Example:** the report writer, the person writing the act definition, the guideline author, the placer of an order, the EKG cart (device) creating a report etc. Every Act should have an author. Authorship is regardless of mood always actual authorship.<br/><br/>Examples of such policies might include:<br/><br/> *  The author and anyone they explicitly delegate may update the report;<br/> *  All administrators within the same clinic may cancel and reschedule appointments created by other administrators within that clinic;<br/><br/>A party that is neither an author nor a party who is extended authorship maintenance rights by policy, may only amend, reverse, override, replace, or follow up in other ways on this Act, whereby the Act remains intact and is linked to another Act authored by that other party.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-ENT\">ENT</a></td><td style=\"color: #cccccc\">data entry person</td><td>A person entering the data into the originating system. The data entry person is collected optionally for internal quality control purposes. This includes the transcriptionist for dictated text.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-INF\">INF</a></td><td style=\"color: #cccccc\">informant</td><td>A source of reported information (e.g., a next of kin who answers questions about the patient's history). For history questions, the patient is logically an informant, yet the informant of history questions is implicitly the subject.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-WIT\">WIT</a></td><td style=\"color: #cccccc\">witness</td><td>Only with service events. A person witnessing the action happening without doing anything. A witness is not necessarily aware, much less approves of anything stated in the service event. Example for a witness is students watching an operation or an advanced directive witness.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-IRCP\">IRCP</a></td><td style=\"color: #cccccc\">information recipient</td><td>A party, who may or should receive or who has recieved the Act or subsequent or derivative information of that Act. Information recipient is inert, i.e., independent of mood.&quot; Rationale: this is a generalization of a too diverse family that the definition can't be any more specific, and the concept is abstract so one of the specializations should be used.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-NOT\">NOT</a></td><td style=\"color: #cccccc\">ugent notification contact</td><td>An information recipient to notify for urgent matters about this Act. (e.g., in a laboratory order, critical results are being called by phone right away, this is the contact to call; or for an inpatient encounter, a next of kin to notify when the patient becomes critically ill).</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-PRCP\">PRCP</a></td><td style=\"color: #cccccc\">primary information recipient</td><td>Information recipient to whom an act statement is primarily directed. E.g., a primary care provider receiving a discharge letter from a hospitalist, a health department receiving information on a suspected case of infectious disease. Multiple of these participations may exist on the same act without requiring that recipients be ranked as primary vs. secondary.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-REFB\">REFB</a></td><td style=\"color: #cccccc\">Referred By</td><td>A participant (e.g. provider) who has referred the subject of an act (e.g. patient).<br/><br/>Typically, a referred by participant will provide a report (e.g. referral).</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-REFT\">REFT</a></td><td style=\"color: #cccccc\">Referred to</td><td>The person who receives the patient</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-TRC\">TRC</a></td><td style=\"color: #cccccc\">tracker</td><td>A secondary information recipient, who receives copies (e.g., a primary care provider receiving copies of results as ordered by specialist).</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-PRF\">PRF</a></td><td style=\"color: #cccccc\">performer</td><td>**Definition:** A person, non-person living subject, organization or device that who actually and principally carries out the action. Device should only be assigned as a performer in circumstances where the device is performing independent of human intervention. Need not be the principal responsible actor.<br/><br/>**Exampe:** A surgery resident operating under supervision of attending surgeon, a search and rescue dog locating survivors, an electronic laboratory analyzer or the laboratory discipline requested to perform a laboratory test. The performer may also be the patient in self-care, e.g. fingerstick blood sugar. The traditional order filler is a performer. This information should accompany every service event.<br/><br/>**Note:** that existing HL7 designs assign an organization as the playing entity of the Role that is the performer. These designs should be revised in subsequent releases to make this the scooping entity for the role involved.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-DIST\">DIST</a></td><td style=\"color: #cccccc\">distributor</td><td>Distributes material used in or generated during the act.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-PPRF\">PPRF</a></td><td style=\"color: #cccccc\">primary performer</td><td>The principal or primary performer of the act.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-SPRF\">SPRF</a></td><td style=\"color: #cccccc\">secondary performer</td><td>A person assisting in an act through his substantial presence and involvement This includes: assistants, technicians, associates, or whatever the job titles may be.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-DEV\">DEV</a></td><td style=\"color: #cccccc\">device</td><td>Participant used in performing the act without being substantially affected by the act (i.e. durable or inert with respect to that particular service).<br/><br/>*Examples:* monitoring equipment, tools, but also access/drainage lines, prostheses, pace maker, etc.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-NRD\">NRD</a></td><td style=\"color: #cccccc\">non-reuseable device</td><td>A device that changes ownership due to the service, e.g., a pacemaker, a prosthesis, an insulin injection equipment (pen), etc. Such material may need to be restocked after he service.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-RDV\">RDV</a></td><td style=\"color: #cccccc\">reusable device</td><td>A device that does not change ownership due to the service, i.e., a surgical instrument or tool or an endoscope. The distinction between reuseable and non-reuseable must be made in order to know whether material must be re-stocked.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-SBJ\">SBJ</a></td><td style=\"color: #cccccc\">subject</td><td>The principle target on which the action happens.<br/><br/>*Examples:* The patient in physical examination, a specimen in a lab observation. May also be a patient's family member (teaching) or a device or room (cleaning, disinfecting, housekeeping).<br/><br/>*UsageNotes:* Not all direct targets are subjects. Consumables and devices used as tools for an act are not subjects. However, a device may be a subject of a maintenance action.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-SPC\">SPC</a></td><td style=\"color: #cccccc\">specimen</td><td>The subject of non-clinical (e.g. laboratory) observation services is a specimen.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-DIR\">DIR</a></td><td style=\"color: #cccccc\">direct target</td><td>Target participant that is substantially present in the act and which is directly involved in the action (includes consumed material, devices, etc.).</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-BBY\">BBY</a></td><td style=\"color: #cccccc\">baby</td><td>In an obstetric service, the baby.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-CSM\">CSM</a></td><td style=\"color: #cccccc\">consumable</td><td>Participant material that is taken up, diminished, altered, or disappears in the act.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-DON\">DON</a></td><td style=\"color: #cccccc\">donor</td><td>In some organ transplantation services and rarely in transfusion services a donor will be a target participant in the service. However, in most cases transplantation is decomposed in three services: explantation, transport, and implantation. The identity of the donor (recipient) is often irrelevant for the explantation (implantation) service.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-PRD\">PRD</a></td><td style=\"color: #cccccc\">product</td><td>Participant material that is brought forth (produced) in the act (e.g., specimen in a specimen collection, access or drainage in a placement service, medication package in a dispense service). It does not matter whether the material produced had existence prior to the service, or whether it is created in the service (e.g., in supply services the product is taken from a stock).</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-LOC\">LOC</a></td><td style=\"color: #cccccc\">location</td><td>The facility where the service is done. May be a static building (or room therein) or a moving location (e.g., ambulance, helicopter, aircraft, train, truck, ship, etc.)</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-DST\">DST</a></td><td style=\"color: #cccccc\">destination</td><td>The destination for services. May be a static building (or room therein) or a movable facility (e.g., ship).</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-ELOC\">ELOC</a></td><td style=\"color: #cccccc\">entry location</td><td>A location where data about an Act was entered.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-ORG\">ORG</a></td><td style=\"color: #cccccc\">origin</td><td>The location of origin for services. May be a static building (or room therein) or a movable facility (e.g., ship).</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-RML\">RML</a></td><td style=\"color: #cccccc\">remote</td><td>Some services take place at multiple concurrent locations (e.g., telemedicine, telephone consultation). The location where the principal performing actor is located is taken as the primary location (LOC) while the other location(s) are considered &quot;remote.&quot;</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-VIA\">VIA</a></td><td style=\"color: #cccccc\">via</td><td>For services, an intermediate location that specifies a path between origin an destination.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-VRF\">VRF</a></td><td style=\"color: #cccccc\">verifier</td><td>A person who verifies the correctness and appropriateness of the service (plan, order, event, etc.) and hence takes on accountability.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-AUTHEN\">AUTHEN</a></td><td style=\"color: #cccccc\">authenticator</td><td>A verifier who attests to the accuracy of an act, but who does not have privileges to legally authenticate the act. An example would be a resident physician who sees a patient and dictates a note, then later signs it. Their signature constitutes an authentication.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-LA\">LA</a></td><td style=\"color: #cccccc\">legal authenticator</td><td>A verifier who legally authenticates the accuracy of an act. An example would be a staff physician who sees a patient and dictates a note, then later signs it. Their signature constitutes a legal authentication.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-RESP\">RESP</a></td><td style=\"color: #cccccc\">responsible party</td><td>The person or organization that has primary responsibility for the act. The responsible party is not necessarily present in an action, but is accountable for the action through the power to delegate, and the duty to review actions with the performing actor after the fact. This responsibility may be ethical, legal, contractual, fiscal, or fiduciary in nature.<br/><br/>*Example:* A person who is the head of a biochemical laboratory; a sponsor for a policy or government program.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationType.html#v3-ParticipationType-CST\">CST</a></td><td style=\"color: #cccccc\">custodian</td><td>An entity (person, organization or device) that is in charge of maintaining the information of this act (e.g., who maintains the report or the master service catalog item, etc.).</td></tr></table></li></ul></div>"
+  },
+  "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAParticipationType",
+  "version" : "2.0.0-sd-202406-matchbox-patch",
+  "name" : "CDAParticipationType",
+  "title" : "CDAParticipationType",
+  "status" : "draft",
+  "experimental" : false,
+  "date" : "2024-06-19T17:47:42+02:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "name" : "HL7 International - Structured Documents",
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    },
+    {
+      "system" : "email",
+      "value" : "structdog@lists.HL7.org"
+    }]
+  }],
+  "description" : "A code specifying the meaning and purpose of every Participation instance. Each of its values implies specific constraints on the Roles undertaking the participation. Limited to values allowed in original CDA definition",
+  "compose" : {
+    "include" : [{
+      "system" : "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+      "concept" : [{
+        "code" : "ADM"
+      },
+      {
+        "code" : "ATND"
+      },
+      {
+        "code" : "CALLBCK"
+      },
+      {
+        "code" : "CON"
+      },
+      {
+        "code" : "DIS"
+      },
+      {
+        "code" : "ESC"
+      },
+      {
+        "code" : "REF"
+      },
+      {
+        "code" : "IND"
+      },
+      {
+        "code" : "BEN"
+      },
+      {
+        "code" : "COV"
+      },
+      {
+        "code" : "HLD"
+      },
+      {
+        "code" : "RCT"
+      },
+      {
+        "code" : "RCV"
+      },
+      {
+        "code" : "AUT"
+      },
+      {
+        "code" : "ENT"
+      },
+      {
+        "code" : "INF"
+      },
+      {
+        "code" : "WIT"
+      },
+      {
+        "code" : "IRCP"
+      },
+      {
+        "code" : "NOT"
+      },
+      {
+        "code" : "PRCP"
+      },
+      {
+        "code" : "REFB"
+      },
+      {
+        "code" : "REFT"
+      },
+      {
+        "code" : "TRC"
+      },
+      {
+        "code" : "PRF"
+      },
+      {
+        "code" : "DIST"
+      },
+      {
+        "code" : "PPRF"
+      },
+      {
+        "code" : "SPRF"
+      },
+      {
+        "code" : "DEV"
+      },
+      {
+        "code" : "NRD"
+      },
+      {
+        "code" : "RDV"
+      },
+      {
+        "code" : "SBJ"
+      },
+      {
+        "code" : "SPC"
+      },
+      {
+        "code" : "DIR"
+      },
+      {
+        "code" : "BBY"
+      },
+      {
+        "code" : "CSM"
+      },
+      {
+        "code" : "DON"
+      },
+      {
+        "code" : "PRD"
+      },
+      {
+        "code" : "LOC"
+      },
+      {
+        "code" : "DST"
+      },
+      {
+        "code" : "ELOC"
+      },
+      {
+        "code" : "ORG"
+      },
+      {
+        "code" : "RML"
+      },
+      {
+        "code" : "VIA"
+      },
+      {
+        "code" : "VRF"
+      },
+      {
+        "code" : "AUTHEN"
+      },
+      {
+        "code" : "LA"
+      },
+      {
+        "code" : "RESP"
+      },
+      {
+        "code" : "CST"
+      }]
+    }]
+  }
+}

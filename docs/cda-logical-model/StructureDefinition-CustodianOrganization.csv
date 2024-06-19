@@ -29,5 +29,7 @@
 ","","","","","","","","","","","",,,,,"",,,,"CustodianOrganization.name",0,1,"",""
 "CustodianOrganization.telecom","CustodianOrganization.telecom","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/TEL {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"CustodianOrganization.telecom",0,*,"",""
+"CustodianOrganization.sdtcTelecom","CustodianOrganization.sdtcTelecom","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/TEL {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"CustodianOrganization.sdtcTelecom",0,*,"",""
 "CustodianOrganization.addr","CustodianOrganization.addr","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/AD {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"CustodianOrganization.addr",0,1,"",""

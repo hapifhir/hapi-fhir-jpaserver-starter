@@ -29,12 +29,12 @@
      fhir:value [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"^^xsd:anyURI ]
   ] ) ; # 
   fhir:url [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/INT-POS"^^xsd:anyURI] ; # 
-  fhir:version [ fhir:v "2.0.0-sd-202312-matchbox-patch"] ; # 
+  fhir:version [ fhir:v "2.0.0-sd-202406-matchbox-patch"] ; # 
   fhir:name [ fhir:v "INT_POS"] ; # 
   fhir:title [ fhir:v "INT_POS: Positive integer numbers (V3 Data Type)"] ; # 
   fhir:status [ fhir:v "active"] ; # 
   fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
-  fhir:date [ fhir:v "2024-03-12T18:28:21+01:00"^^xsd:dateTime] ; # 
+  fhir:date [ fhir:v "2024-06-19T17:47:42+02:00"^^xsd:dateTime] ; # 
   fhir:publisher [ fhir:v "Health Level 7"] ; # 
   fhir:contact ( [
      fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
@@ -119,9 +119,7 @@
      ] [
        fhir:id [ fhir:v "INT_POS.value" ] ;
        fhir:path [ fhir:v "INT_POS.value" ] ;
-       fhir:short [ fhir:v "Primitive Type integer" ] ;
-       fhir:definition [ fhir:v "A whole number" ] ;
-       fhir:comment [ fhir:v "32 bit number; for values larger than this, use decimal" ] ;
+       fhir:representation ( [ fhir:v "xmlAttr" ] ) ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:base [
@@ -136,19 +134,7 @@
            fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/int-simple>
          ] )
        ] ) ;
-       fhir:minValue [ fhir:v "1"^^xsd:integer ] ;
-       fhir:constraint ( [
-         fhir:key [ fhir:v "ele-1" ] ;
-         fhir:severity [ fhir:v "error" ] ;
-         fhir:human [ fhir:v "All FHIR elements must have a @value or children" ] ;
-         fhir:expression [ fhir:v "hasValue() or (children().count() > id.count())" ] ;
-         fhir:source [
-           fhir:v "http://hl7.org/fhir/StructureDefinition/Element"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/fhir/StructureDefinition/Element>
-         ]
-       ] ) ;
-       fhir:isModifier [ fhir:v "false"^^xsd:boolean ] ;
-       fhir:isSummary [ fhir:v "false"^^xsd:boolean ]
+       fhir:minValue [ fhir:v "1"^^xsd:integer ]
      ] )
   ] ; # 
   fhir:differential [

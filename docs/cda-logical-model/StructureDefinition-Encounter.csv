@@ -20,7 +20,7 @@
 "Encounter.templateId","Encounter.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
 "Encounter.classCode","Encounter.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ENC""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClass|2.0.0","",,,,"Encounter.classCode",1,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ENC""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAActClass","",,,,"Encounter.classCode",1,1,"",""
 "Encounter.moodCode","Encounter.moodCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-xDocumentEncounterMood|2.0.0","",,,,"Encounter.moodCode",1,1,"",""
 "Encounter.id","Encounter.id","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}

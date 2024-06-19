@@ -1,0 +1,28 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "3a08af46-1216-469f-987a-386bb9377b3f-71",
+  "url" : "http://hl7.org/fhir/comparison/ValueSet/3a08af46-1216-469f-987a-386bb9377b3f-71",
+  "name" : "UnionCDAActSubstanceAdministrationCodeAndCDAActSubstanceAdministrationCode",
+  "title" : "Union of CDAActSubstanceAdministrationCode And CDAActSubstanceAdministrationCode",
+  "status" : "draft",
+  "date" : "2024-06-19T17:47:55+02:00",
+  "compose" : {
+    "include" : [{
+      "concept" : [{
+        "code" : "DRUG"
+      },
+      {
+        "code" : "FD"
+      },
+      {
+        "code" : "IMMUNIZ"
+      },
+      {
+        "code" : "BOOSTER"
+      },
+      {
+        "code" : "INITIMMUNIZ"
+      }]
+    }]
+  }
+}

@@ -22,7 +22,7 @@
 "Subject.typeCode","Subject.typeCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SBJ""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationTargetSubject","",,,,"Subject.typeCode",0,1,"",""
 "Subject.contextControlCode","Subject.contextControlCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OP""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ContextControl","",,,,"Subject.contextControlCode",0,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OP""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAContextControl","",,,,"Subject.contextControlCode",0,1,"",""
 "Subject.awarenessCode","Subject.awarenessCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-TargetAwareness","",,,,"Subject.awarenessCode",0,1,"",""
 "Subject.relatedSubject","Subject.relatedSubject","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/RelatedSubject {[]} {[]}

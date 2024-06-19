@@ -31,12 +31,12 @@
     "valueUri" : "cda"
   }],
   "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Observation",
-  "version" : "2.0.0-sd-202312-matchbox-patch",
+  "version" : "2.0.0-sd-202406-matchbox-patch",
   "name" : "Observation",
   "title" : "Observation (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2024-03-12T18:28:21+01:00",
+  "date" : "2024-06-19T17:47:42+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
@@ -49,7 +49,7 @@
       "value" : "structdog@lists.HL7.org"
     }]
   }],
-  "description" : "A derivative of the RIM Observation class, used for representing coded and other observations.\nObservation.negationInd, when set to \"true\", is a positive assertion that the Observation as a whole is negated. Some properties such as Observation.id, Observation.moodCode, and the participations are not negated. These properties always have the same meaning: i.e., the author remains the author of the negative Observation. An observation statement with negationInd is still a statement about the specific fact described by the Observation. For instance, a negated \"finding of wheezing on July 1\" means that the author positively denies that there was wheezing on July 1, and that he takes the same responsibility for such statement and the same requirement to have evidence for such statement than if he had not used negation.",
+  "description" : "A derivative of the RIM Observation class, used for representing coded and other observations.\n\nObservation.negationInd, when set to \"true\", is a positive assertion that the Observation as a whole is negated. Some properties such as Observation.id, Observation.moodCode, and the participations are not negated. These properties always have the same meaning: i.e., the author remains the author of the negative Observation. An observation statement with negationInd is still a statement about the specific fact described by the Observation. For instance, a negated \"finding of wheezing on July 1\" means that the author positively denies that there was wheezing on July 1, and that he takes the same responsibility for such statement and the same requirement to have evidence for such statement than if he had not used negation.",
   "fhirVersion" : "5.0.0",
   "mapping" : [{
     "identity" : "rim",
@@ -261,7 +261,7 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActClassObservation|2.0.0"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAActClassObservation"
       }
     },
     {
@@ -546,7 +546,7 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ObservationInterpretation"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAObservationInterpretation"
       }
     },
     {
@@ -927,7 +927,7 @@
       "fixedCode" : "REFV",
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActRelationshipType|2.0.0"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAActRelationshipType"
       }
     },
     {
@@ -986,7 +986,7 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActClassObservation|2.0.0"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAActClassObservation"
       }
     },
     {
@@ -1206,7 +1206,7 @@
       }],
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ObservationInterpretation"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAObservationInterpretation"
       }
     },
     {
@@ -1353,7 +1353,7 @@
       "fixedCode" : "REFV",
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActRelationshipType|2.0.0"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAActRelationshipType"
       }
     },
     {

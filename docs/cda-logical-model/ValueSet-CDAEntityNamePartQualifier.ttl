@@ -1,0 +1,64 @@
+@prefix fhir: <http://hl7.org/fhir/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# - resource -------------------------------------------------------------------
+
+<http://hl7.org/cda/stds/core/ValueSet/CDAEntityNamePartQualifier> a fhir:ValueSet ;
+  fhir:nodeRole fhir:treeRoot ;
+  fhir:id [ fhir:v "CDAEntityNamePartQualifier"] ; # 
+  fhir:text [
+     fhir:status [ fhir:v "extensions" ] ;
+     fhir:div "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include these codes as defined in <a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNamePartQualifier.html\"><code>http://terminology.hl7.org/CodeSystem/v3-EntityNamePartQualifier</code></a><table class=\"none\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNamePartQualifier.html#v3-EntityNamePartQualifier-LS\">LS</a></td><td style=\"color: #cccccc\">Legal status</td><td>For organizations a suffix indicating the legal status, e.g., &quot;Inc.&quot;, &quot;Co.&quot;, &quot;AG&quot;, &quot;GmbH&quot;, &quot;B.V.&quot; &quot;S.A.&quot;, &quot;Ltd.&quot; etc.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNamePartQualifier.html#v3-EntityNamePartQualifier-AC\">AC</a></td><td style=\"color: #cccccc\">academic</td><td>Indicates that a prefix like &quot;Dr.&quot; or a suffix like &quot;M.D.&quot; or &quot;Ph.D.&quot; is an academic title.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNamePartQualifier.html#v3-EntityNamePartQualifier-NB\">NB</a></td><td style=\"color: #cccccc\">nobility</td><td>In Europe and Asia, there are still people with nobility titles (aristocrats). German &quot;von&quot; is generally a nobility title, not a mere voorvoegsel. Others are &quot;Earl of&quot; or &quot;His Majesty King of...&quot; etc. Rarely used nowadays, but some systems do keep track of this.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNamePartQualifier.html#v3-EntityNamePartQualifier-PR\">PR</a></td><td style=\"color: #cccccc\">professional</td><td>Primarily in the British Imperial culture people tend to have an abbreviation of their professional organization as part of their credential suffices.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNamePartQualifier.html#v3-EntityNamePartQualifier-VV\">VV</a></td><td style=\"color: #cccccc\">voorvoegsel</td><td>A Dutch &quot;voorvoegsel&quot; is something like &quot;van&quot; or &quot;de&quot; that might have indicated nobility in the past but no longer so. Similar prefixes exist in other languages such as Spanish, French or Portugese.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNamePartQualifier.html#v3-EntityNamePartQualifier-AD\">AD</a></td><td style=\"color: #cccccc\">adopted</td><td>The name the person was given at the time of adoption.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNamePartQualifier.html#v3-EntityNamePartQualifier-BR\">BR</a></td><td style=\"color: #cccccc\">birth</td><td>A name that a person had shortly after being born. Usually for family names but may be used to mark given names at birth that may have changed later.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNamePartQualifier.html#v3-EntityNamePartQualifier-SP\">SP</a></td><td style=\"color: #cccccc\">spouse</td><td>The name assumed from the partner in a marital relationship (hence the &quot;SP&quot;). Usually the spouse's family name. Note that no inference about gender can be made from the existence of spouse names.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNamePartQualifier.html#v3-EntityNamePartQualifier-CL\">CL</a></td><td style=\"color: #cccccc\">callme</td><td>A callme name is (usually a given name) that is preferred when a person is directly addressed.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNamePartQualifier.html#v3-EntityNamePartQualifier-IN\">IN</a></td><td style=\"color: #cccccc\">initial</td><td>Indicates that a name part is just an initial. Initials do not imply a trailing period since this would not work with non-Latin scripts. Initials may consist of more than one letter, e.g., &quot;Ph.&quot; could stand for &quot;Philippe&quot; or &quot;Th.&quot; for &quot;Thomas&quot;.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityNamePartQualifier.html#v3-EntityNamePartQualifier-TITLE\">TITLE</a></td><td style=\"color: #cccccc\">title</td><td>Indicates that a prefix or a suffix is a title that applies to the whole name, not just the adjacent name part.</td></tr></table></li></ul></div>"
+  ] ; # 
+  fhir:url [ fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAEntityNamePartQualifier"^^xsd:anyURI] ; # 
+  fhir:version [ fhir:v "2.0.0-sd-202406-matchbox-patch"] ; # 
+  fhir:name [ fhir:v "CDAEntityNamePartQualifier"] ; # 
+  fhir:title [ fhir:v "CDAEntityNamePartQualifier"] ; # 
+  fhir:status [ fhir:v "draft"] ; # 
+  fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
+  fhir:date [ fhir:v "2024-06-19T17:47:42+02:00"^^xsd:dateTime] ; # 
+  fhir:publisher [ fhir:v "Health Level 7"] ; # 
+  fhir:contact ( [
+     fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
+     fhir:telecom ( [
+       fhir:system [ fhir:v "url" ] ;
+       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structure" ]
+     ] [
+       fhir:system [ fhir:v "email" ] ;
+       fhir:value [ fhir:v "structdog@lists.HL7.org" ]
+     ] )
+  ] ) ; # 
+  fhir:description [ fhir:v "Qualifies parts of names"] ; # 
+  fhir:compose [
+     fhir:include ( [
+       fhir:system [ fhir:v "http://terminology.hl7.org/CodeSystem/v3-EntityNamePartQualifier"^^xsd:anyURI ] ;
+       fhir:concept ( [
+         fhir:code [ fhir:v "LS" ]
+       ] [
+         fhir:code [ fhir:v "AC" ]
+       ] [
+         fhir:code [ fhir:v "NB" ]
+       ] [
+         fhir:code [ fhir:v "PR" ]
+       ] [
+         fhir:code [ fhir:v "VV" ]
+       ] [
+         fhir:code [ fhir:v "AD" ]
+       ] [
+         fhir:code [ fhir:v "BR" ]
+       ] [
+         fhir:code [ fhir:v "SP" ]
+       ] [
+         fhir:code [ fhir:v "CL" ]
+       ] [
+         fhir:code [ fhir:v "IN" ]
+       ] [
+         fhir:code [ fhir:v "TITLE" ]
+       ] )
+     ] )
+  ] . # 
+
+# -------------------------------------------------------------------------------------
+

@@ -83,7 +83,7 @@ public class CdaMappingEngine extends MatchboxEngine {
 			engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r5.core.tgz"));
 			engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.4.0.tgz"));
 			engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions#1.0.0.tgz"));
-			engine.loadPackage(getClass().getResourceAsStream("/hl7.cda.uv.core#2.0.0-sd-202312-matchbox-patch.tgz"));
+			engine.loadPackage(getClass().getResourceAsStream("/hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch.tgz"));
 			engine.getContext().setCanRunWithoutTerminology(true);
 			engine.getContext().setNoTerminologyServer(true);
 			engine.getContext().setPackageTracker(engine);
@@ -110,7 +110,7 @@ public class CdaMappingEngine extends MatchboxEngine {
       engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r4.core.tgz"));
       engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.4.0.tgz"));
       engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions.r4#1.0.0.tgz"));
-      engine.loadPackage(getClass().getResourceAsStream("/hl7.cda.uv.core#2.0.0-sd-202312-matchbox-patch.tgz"));
+      engine.loadPackage(getClass().getResourceAsStream("/hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch.tgz"));
       engine.getContext().setCanRunWithoutTerminology(true);
       engine.getContext().setNoTerminologyServer(true);
       engine.getContext().setPackageTracker(engine);

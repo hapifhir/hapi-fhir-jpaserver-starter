@@ -1,0 +1,17 @@
+{
+  "resourceType" : "CodeSystem",
+  "id" : "3a08af46-1216-469f-987a-386bb9377b3f-2",
+  "url" : "http://hl7.org/fhir/comparison/CodeSystem/3a08af46-1216-469f-987a-386bb9377b3f-2",
+  "name" : "UnionBinaryDataEncodingAndBinaryDataEncoding",
+  "title" : "Union of Binary Data Encoding Code System And Binary Data Encoding Code System",
+  "status" : "draft",
+  "date" : "2024-06-19T17:47:55+02:00",
+  "concept" : [{
+    "code" : "B64",
+    "display" : "Base64-encoded text"
+  },
+  {
+    "code" : "TXT",
+    "display" : "Plain text"
+  }]
+}

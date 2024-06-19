@@ -1,6 +1,7 @@
 2024/06/xx Release 3.8.6
 
 - fhirpath date add/minus with variables in fml [#243](https://github.com/ahdis/matchbox/issues/243)
+- update to published CDA FHIR logical model with matcbhox patches 2.0.0-sd [#241](https://github.com/ahdis/matchbox/issues/241)
 
 2024/06/14 Release 3.8.5
 

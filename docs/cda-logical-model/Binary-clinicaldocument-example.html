@@ -3,7 +3,7 @@
 <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
-    <title>Example CDA document - Clinical Document Architecture v2.0.0-sd-202312-matchbox-patch</title>
+    <title>Example CDA document - Clinical Document Architecture v2.0.0-sd-202406-matchbox-patch</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="author" content="http://hl7.org/fhir"/>
@@ -41,8 +41,8 @@
 
 	  <script src="assets/js/prism.js"></script>
 
-    <style type="text/css">h2{--heading-prefix:"4.156"}
-    h3,h4,h5,h6{--heading-prefix:"4.156"}</style>
+    <style type="text/css">h2{--heading-prefix:"5.175"}
+    h3,h4,h5,h6{--heading-prefix:"5.175"}</style>
     <div id="segment-header" class="segment">  <!-- segment-header -->
       <div class="container">  <!-- container -->
         <!-- Placeholder for child template header declarations -->
@@ -63,7 +63,7 @@
         <div id="ig-status">
           <p><span style="font-size:12pt;font-weight:bold">Clinical Document Architecture</span>
             <br/>
-            <span style="display:inline-block;">2.0.0-sd-202312-matchbox-patch - ballot
+            <span style="display:inline-block;">2.0.0-sd-202406-matchbox-patch - release
 
 
             </span>
@@ -100,6 +100,7 @@
     </ul>
   </li>
   <li><a href="artifacts.html">Artifact Index</a></li>
+	<li><a href="terminology.html">Terminology</a></li>
   <li><a href="downloads.html">Downloads</a></li>
 </ul>
             </div>  <!-- /.nav-collapse -->
@@ -126,7 +127,7 @@
           <div class="inner-wrapper">
 
 <div class="col-12">
-  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture - Local Development build (v2.0.0-sd-202312-matchbox-patch) built by the FHIR (HL7® FHIR® Standard) Build Tools. See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
+  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture - Local Development build (v2.0.0-sd-202406-matchbox-patch) built by the FHIR (HL7® FHIR® Standard) Build Tools. See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
 
   
 
@@ -178,7 +179,7 @@
 ********************************************************
 --&gt;
 	&lt;typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/&gt;
-	&lt;templateId root="2.16.840.1.113883.3.27.1776"/&gt;
+	&lt;templateId root="2.16.840.1.113883.10.20.22.1.4" extension="2024-05-01"/&gt;
 	&lt;id extension="c266" root="2.16.840.1.113883.19.4"/&gt;
 	&lt;code code="11488-4" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="Consultation note"/&gt;
 	&lt;title&gt;Good Health Clinic Consultation Note&lt;/title&gt;
@@ -337,7 +338,7 @@
 							&lt;statusCode code="completed"/&gt;
 							&lt;effectiveTime value="1950"/&gt;
 							&lt;reference typeCode="XCRPT"&gt;
-								&lt;externalObservation&gt;
+								&lt;externalObservation classCode="OBS"&gt;
 									&lt;id root="2.16.840.1.113883.19.1.2765"/&gt;
 								&lt;/externalObservation&gt;
 							&lt;/reference&gt;
@@ -363,7 +364,7 @@
 								&lt;/externalDocument&gt;
 							&lt;/reference&gt;
 							&lt;reference typeCode="XCRPT"&gt;
-								&lt;externalObservation&gt;
+								&lt;externalObservation classCode="OBS"&gt;
 									&lt;id root="2.16.840.1.113883.19.1.2005"/&gt;
 								&lt;/externalObservation&gt;
 							&lt;/reference&gt;
@@ -387,7 +388,7 @@
 								&lt;/qualifier&gt;
 							&lt;/targetSiteCode&gt;
 							&lt;reference typeCode="XCRPT"&gt;
-								&lt;externalObservation&gt;
+								&lt;externalObservation classCode="OBS"&gt;
 									&lt;id root="2.16.840.1.113883.19.1.1805"/&gt;
 								&lt;/externalObservation&gt;
 							&lt;/reference&gt;
@@ -1170,7 +1171,7 @@
 --&gt;
 			&lt;component&gt;
 				&lt;section&gt;
-					&lt;templateId root="2.16.840.1.113883.3.27.354"/&gt;
+					&lt;templateId root="2.16.840.1.113883.10.20.22.2.10" extension="2014-06-09"/&gt;
 					&lt;code code="18776-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"/&gt;
 					&lt;title&gt;Plan&lt;/title&gt;
 					&lt;text&gt;
@@ -1286,20 +1287,14 @@
   <script type="text/javascript" src="assets/js/jquery.js"> </script>     <!-- note keep space here, otherwise it will be transformed to empty tag -> fails -->
   <script type="text/javascript" src="assets/js/jquery-ui.min.js"> </script>
 
-  <script type="text/javascript">
-    $(document).ready(function(){
-      if(window.location.hash != "") {
-          $('a[href="' + window.location.hash + '"]').click()
-      }
-    });
-  </script>
+  <script type="text/javascript" src="assets/js/window-hash.js"> </script>
   <a name="bottom"> </a>
   <div id="segment-footer" igtool="footer" class="segment">  <!-- segment-footer -->
     <div class="container">  <!-- container -->
 
       <div class="inner-wrapper">
         <p>
-          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structure">Health Level 7</a>.  Package hl7.cda.uv.core#2.0.0-sd-202312-matchbox-patch based on <a style="color: var(--footer-hyperlink-text-color)" href="http://hl7.org/fhir/R5/">FHIR 5.0.0</a>. Generated <span title="Tue, Mar 12, 2024 18:28+0100">2024-03-12</span>
+          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structure">Health Level 7</a>.  Package hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch based on <a style="color: var(--footer-hyperlink-text-color)" href="http://hl7.org/fhir/R5/">FHIR 5.0.0</a>. Generated <span title="Wed, Jun 19, 2024 17:47+0200">2024-06-19</span>
           <br/>
           <span style="color: var(--footer-highlight-text-color)">
                       Links: <a style="color: var(--footer-hyperlink-text-color)" href="toc.html">Table of Contents</a> |
@@ -1331,16 +1326,8 @@
   <script type="text/javascript" src="assets/js/anchor.min.js"> </script>
   <script type="text/javascript" src="assets/js/clipboard.min.js"> </script>
   <script type="text/javascript" src="assets/js/clipboard-btn.js"> </script>
-  <script>anchors.options.visible = 'hover'
-anchors.add()</script>
+  <script type="text/javascript" src="assets/js/anchor-hover.js"> </script>
   
-<!-- feedback form - Google forms -->
-<!-- v0.1, 2021-01-09 -->
-
-
-
-<!-- / feedback form  -->
-
   <!-- Analytics Below
   ================================================== -->
   </body>

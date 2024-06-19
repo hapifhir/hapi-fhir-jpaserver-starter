@@ -20,13 +20,13 @@
 "SubstanceAdministration.templateId","SubstanceAdministration.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
 "SubstanceAdministration.classCode","SubstanceAdministration.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SBADM""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClass|2.0.0","",,,,"SubstanceAdministration.classCode",1,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""SBADM""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAActClass","",,,,"SubstanceAdministration.classCode",1,1,"",""
 "SubstanceAdministration.moodCode","SubstanceAdministration.moodCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","","","","","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-xDocumentSubstanceMood|2.0.0","",,,,"SubstanceAdministration.moodCode",1,1,"",""
 "SubstanceAdministration.id","SubstanceAdministration.id","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.id",0,*,"",""
 "SubstanceAdministration.code","SubstanceAdministration.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}
-","","","","","","","","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-ActSubstanceAdministrationCode","",,,,"SubstanceAdministration.code",0,1,"",""
+","","","","","","","","","","","",,"example","","http://hl7.org/cda/stds/core/ValueSet/CDAActSubstanceAdministrationCode","",,,,"SubstanceAdministration.code",0,1,"",""
 "SubstanceAdministration.negationInd","SubstanceAdministration.negationInd","","","",0,1,"","","","boolean {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/bl-simple]]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.negationInd",0,1,"",""
 "SubstanceAdministration.text","SubstanceAdministration.text","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ED {[]} {[]}
@@ -72,7 +72,7 @@ http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS {[]} {[]}http://hl7.org/
 "SubstanceAdministration.consumable.templateId","SubstanceAdministration.consumable.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
 "SubstanceAdministration.consumable.typeCode","SubstanceAdministration.consumable.typeCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CSM""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationType","",,,,"SubstanceAdministration.consumable.typeCode",0,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""CSM""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAParticipationType","",,,,"SubstanceAdministration.consumable.typeCode",0,1,"",""
 "SubstanceAdministration.consumable.manufacturedProduct","SubstanceAdministration.consumable.manufacturedProduct","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ManufacturedProduct {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"SubstanceAdministration.consumable.manufacturedProduct",1,1,"",""
 "SubstanceAdministration.subject","SubstanceAdministration.subject","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/Subject {[]} {[]}

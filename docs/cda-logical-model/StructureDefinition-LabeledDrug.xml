@@ -27,12 +27,12 @@
     <valueUri value="cda"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/LabeledDrug"/>
-  <version value="2.0.0-sd-202312-matchbox-patch"/>
+  <version value="2.0.0-sd-202406-matchbox-patch"/>
   <name value="LabeledDrug"/>
   <title value="LabeledDrug (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2024-03-12T18:28:21+01:00"/>
+  <date value="2024-06-19T17:47:42+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
@@ -282,10 +282,6 @@
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
-      <binding>
-        <strength value="example"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-DrugEntity"/>
-      </binding>
     </element>
     <element id="LabeledDrug.name">
       <path value="LabeledDrug.name"/>
@@ -344,10 +340,6 @@
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CE"/>
       </type>
-      <binding>
-        <strength value="example"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-DrugEntity"/>
-      </binding>
     </element>
     <element id="LabeledDrug.name">
       <path value="LabeledDrug.name"/>

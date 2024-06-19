@@ -22,9 +22,9 @@
 "ObservationMedia.ID","ObservationMedia.ID","","","",0,1,"","","","id {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/xs-ID]]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ObservationMedia.ID",0,1,"",""
 "ObservationMedia.classCode","ObservationMedia.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OBS""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OBS""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActClassObservation","",,,,"ObservationMedia.classCode",1,1,"",""
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OBS""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""OBS""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAActClassObservation","",,,,"ObservationMedia.classCode",1,1,"",""
 "ObservationMedia.moodCode","ObservationMedia.moodCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ActMood","",,,,"ObservationMedia.moodCode",1,1,"",""
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","<valueCode xmlns=""http://hl7.org/fhir"" value=""EVN""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAActMood","",,,,"ObservationMedia.moodCode",1,1,"",""
 "ObservationMedia.id","ObservationMedia.id","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ObservationMedia.id",0,*,"",""
 "ObservationMedia.languageCode","ObservationMedia.languageCode","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}

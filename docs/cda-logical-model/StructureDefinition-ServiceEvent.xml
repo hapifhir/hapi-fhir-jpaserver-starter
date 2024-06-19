@@ -29,12 +29,12 @@
     <valueUri value="cda"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/ServiceEvent"/>
-  <version value="2.0.0-sd-202312-matchbox-patch"/>
+  <version value="2.0.0-sd-202406-matchbox-patch"/>
   <name value="ServiceEvent"/>
   <title value="ServiceEvent (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2024-03-12T18:28:21+01:00"/>
+  <date value="2024-06-19T17:47:42+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
@@ -47,7 +47,7 @@
       <value value="structdog@lists.HL7.org"/>
     </telecom>
   </contact>
-  <description value="This class represents the main Act, such as a colonoscopy or an appendectomy, being documented.&#xA;In some cases, the ServiceEvent is inherent in the ClinicalDocument.code, such as where ClinicalDocument.code is &quot;History and Physical Report&quot; and the procedure being documented is a &quot;History and Physical&quot; act. A ServiceEvent can further specialize the act inherent in the ClinicalDocument.code, such as where the ClinicalDocument.code is simply &quot;Procedure Report&quot; and the procedure was a &quot;colonoscopy&quot;. If ServiceEvent is included, it must be equivalent to or further specialize the value inherent in the ClinicalDocument.code, and shall not conflict with the value inherent in the ClinicalDocument.code, as such a conflict would constitute an ambiguous situation.&#xA;ServiceEvent.effectiveTime can be used to indicate the time the actual event (as opposed to the encounter surrounding the event) took place."/>
+  <description value="This class represents the main Act, such as a colonoscopy or an appendectomy, being documented.&#xA;&#xA;In some cases, the ServiceEvent is inherent in the ClinicalDocument.code, such as where ClinicalDocument.code is &quot;History and Physical Report&quot; and the procedure being documented is a &quot;History and Physical&quot; act. A ServiceEvent can further specialize the act inherent in the ClinicalDocument.code, such as where the ClinicalDocument.code is simply &quot;Procedure Report&quot; and the procedure was a &quot;colonoscopy&quot;. If ServiceEvent is included, it must be equivalent to or further specialize the value inherent in the ClinicalDocument.code, and shall not conflict with the value inherent in the ClinicalDocument.code, as such a conflict would constitute an ambiguous situation.&#xA;&#xA;ServiceEvent.effectiveTime can be used to indicate the time the actual event (as opposed to the encounter surrounding the event) took place."/>
   <fhirVersion value="5.0.0"/>
   <mapping>
     <identity value="rim"/>
@@ -235,11 +235,11 @@
     <element id="ServiceEvent.classCode">
       <path value="ServiceEvent.classCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <base>
         <path value="ServiceEvent.classCode"/>
-        <min value="1"/>
+        <min value="0"/>
         <max value="1"/>
       </base>
       <type>
@@ -249,7 +249,7 @@
       <defaultValueCode value="ACT"/>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActClass"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAActClass"/>
       </binding>
     </element>
     <element id="ServiceEvent.moodCode">
@@ -269,7 +269,7 @@
       <fixedCode value="EVN"/>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActMood"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAActMood"/>
       </binding>
     </element>
     <element id="ServiceEvent.id">
@@ -354,7 +354,7 @@
     <element id="ServiceEvent.classCode">
       <path value="ServiceEvent.classCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <type>
         <code value="code"/>
@@ -363,7 +363,7 @@
       <defaultValueCode value="ACT"/>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActClass"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAActClass"/>
       </binding>
     </element>
     <element id="ServiceEvent.moodCode">
@@ -378,7 +378,7 @@
       <fixedCode value="EVN"/>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActMood"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAActMood"/>
       </binding>
     </element>
     <element id="ServiceEvent.id">

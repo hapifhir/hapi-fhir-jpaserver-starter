@@ -19,8 +19,8 @@
 ","","A character string as a unique identifier within the scope of the identifier root.","","","","","","","","","",,,,,"",,,,"II.extension",0,1,"",""
 "RelatedSubject.templateId","RelatedSubject.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
-"RelatedSubject.classCode","RelatedSubject.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""PRS""/>","","","","","","",,,,,"",,,,"RelatedSubject.classCode",1,1,"",""
+"RelatedSubject.classCode","RelatedSubject.classCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""PRS""/>","","","","","","",,,,,"",,,,"RelatedSubject.classCode",0,1,"",""
 "RelatedSubject.sdtcId","RelatedSubject.sdtcId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","A CDA Document identifies each participant through the application of a role identifier. This identifier can be used to trace the participation of an entity in a given role, but cannot necessarily be used to determine that two entities are the same. While more role identities could be provided whose intended use is to unify the entities, this is better modeled through the use of an entity identifier. Therefore, to facilitate this capability, this guide defines an extension to CDA Release 2.0 that allows the person or organization playing the role to be uniquely identified, by the inclusion of an identifier on the entity.","","","","","","","","","",,,,,"",,,,"RelatedSubject.sdtcId",0,*,"",""
 "RelatedSubject.code","RelatedSubject.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}

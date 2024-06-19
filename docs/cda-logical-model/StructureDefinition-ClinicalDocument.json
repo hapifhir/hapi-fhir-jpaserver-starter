@@ -31,12 +31,12 @@
     "valueUri" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
   }],
   "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument",
-  "version" : "2.0.0-sd-202312-matchbox-patch",
+  "version" : "2.0.0-sd-202406-matchbox-patch",
   "name" : "ClinicalDocument",
   "title" : "ClinicalDocument (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2024-03-12T18:28:21+01:00",
+  "date" : "2024-06-19T17:47:42+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
@@ -120,7 +120,7 @@
       "fixedCode" : "DOCCLIN",
       "binding" : {
         "strength" : "example",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActClass"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAActClass"
       }
     },
     {
@@ -141,7 +141,7 @@
       "fixedCode" : "EVN",
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActMood"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAActMood"
       }
     },
     {
@@ -745,7 +745,7 @@
       "fixedCode" : "DOCCLIN",
       "binding" : {
         "strength" : "example",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActClass"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAActClass"
       }
     },
     {
@@ -761,7 +761,7 @@
       "fixedCode" : "EVN",
       "binding" : {
         "strength" : "required",
-        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActMood"
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAActMood"
       }
     },
     {

@@ -20,7 +20,7 @@
 "Authenticator.templateId","Authenticator.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
 "Authenticator.typeCode","Authenticator.typeCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""AUTHEN""/>","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-ParticipationType","",,,,"Authenticator.typeCode",0,1,"",""
+","","","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""AUTHEN""/>","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAParticipationType","",,,,"Authenticator.typeCode",0,1,"",""
 "Authenticator.time","Authenticator.time","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/TS {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"Authenticator.time",1,1,"",""
 "Authenticator.signatureCode","Authenticator.signatureCode","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}

@@ -20,14 +20,14 @@
 ","","A character string as a unique identifier within the scope of the identifier root.","","","","","","","","","",,,,,"",,,,"II.extension",0,1,"",""
 "ParticipantRole.templateId","ParticipantRole.templateId","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"InfrastructureRoot.templateId",0,*,"",""
-"ParticipantRole.classCode","ParticipantRole.classCode","","","",1,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
-","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ROL""/>","","","","","","",,"required","","http://terminology.hl7.org/ValueSet/v3-RoleClassRoot","",,,,"ParticipantRole.classCode",1,1,"",""
+"ParticipantRole.classCode","ParticipantRole.classCode","","","",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","","","","<valueCode xmlns=""http://hl7.org/fhir"" value=""ROL""/>","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDARoleClassRoot","",,,,"ParticipantRole.classCode",0,1,"",""
 "ParticipantRole.id","ParticipantRole.id","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ParticipantRole.id",0,*,"",""
 "ParticipantRole.sdtcIdentifiedBy","ParticipantRole.sdtcIdentifiedBy","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/IdentifiedBy {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ParticipantRole.sdtcIdentifiedBy",0,*,"",""
 "ParticipantRole.code","ParticipantRole.code","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
-","","","","","","","","","","","",,"example","","http://terminology.hl7.org/ValueSet/v3-RoleCode","",,,,"ParticipantRole.code",0,1,"",""
+","","","","","","","","","","","",,"example","","http://hl7.org/cda/stds/core/ValueSet/CDARoleCode","",,,,"ParticipantRole.code",0,1,"",""
 "ParticipantRole.addr","ParticipantRole.addr","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/AD {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ParticipantRole.addr",0,*,"",""
 "ParticipantRole.telecom","ParticipantRole.telecom","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/TEL {[]} {[]}

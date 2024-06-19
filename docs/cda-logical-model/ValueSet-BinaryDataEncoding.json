@@ -6,12 +6,12 @@
     "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><ul><li>Include all codes defined in <a href=\"CodeSystem-BinaryDataEncoding.html\"><code>http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding</code></a></li></ul></div>"
   },
   "url" : "http://hl7.org/cda/stds/core/ValueSet/BinaryDataEncoding",
-  "version" : "2.0.0-sd-202312-matchbox-patch",
+  "version" : "2.0.0-sd-202406-matchbox-patch",
   "name" : "BinaryDataEncoding",
-  "title" : "Binary Data Encoding Value Set",
+  "title" : "CDABinaryDataEncoding",
   "status" : "draft",
   "experimental" : false,
-  "date" : "2024-03-12T18:28:21+01:00",
+  "date" : "2024-06-19T17:47:42+02:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",

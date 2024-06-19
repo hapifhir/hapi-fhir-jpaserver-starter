@@ -1,11 +1,11 @@
 ClinicalDocumentArchitecture : Validation Results
 =========================================
 
-err = 3, warn = 9, info = 2
-IG Publisher Version: 1.6.1
-Generated Tue Mar 12 18:29:33 CET 2024. FHIR version 5.0.0 for hl7.cda.uv.core#2.0.0-sd-202312-matchbox-patch (canonical = http://hl7.org/cda/stds/core)
+err = 0, warn = 9, info = 0
+IG Publisher Version: 1.6.11
+Generated Wed Jun 19 17:48:57 CEST 2024. FHIR version 5.0.0 for hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch (canonical = http://hl7.org/cda/stds/core)
  Build Errors : 0 / 9 / 0
- /Users/oegger/Documents/github/CDA-core-sd/input/examples/clinicaldocument-example : 3 / 1 / 17
+ /Users/oegger/Documents/github/CDA-core-sd/input/examples/clinicaldocument-example : 0 / 1 / 17
  /Users/oegger/Documents/github/CDA-core-sd/input/hl7.cda.uv.core : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/AD : 0 / 108 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/ADXP : 0 / 2 / 1
@@ -156,10 +156,29 @@ Generated Tue Mar 12 18:29:33 CET 2024. FHIR version 5.0.0 for hl7.cda.uv.core#2
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/url : 0 / 1 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/uuid : 0 / 1 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/BinaryDataEncoding : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActClass : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActClassObservation : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActMood : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActMoodIntent : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActRelationshipType : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActSubstanceAdministrationCode : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDACompressionAlgorithm : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAContextControl : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAEntityCode : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAEntityNamePartQualifier : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAEntityNameUse : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAInformationRecipientRole : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAMaterialEntityClassType : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDANullFlavor : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAObservationInterpretation : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAParticipationType : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAPostalAddressUse : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDARoleClass : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDARoleClassAssociative : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDARoleClassMutualRelationship : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDARoleClassRoot : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDARoleCode : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDASetOperator : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDASignatureCode : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/xs-ID : 0 / 1 / 1
 </table>
@@ -174,11 +193,6 @@ WARNING: Unable to find ImplementationGuide.definition.resource.description for 
 WARNING: Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmSuperContent.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list.
 WARNING: The jira specification file appears to be out of date with the versions, artifacts and pages currently defined in the IG.  A proposed revised file to be reviewed and, if appropriate, submitted as a pull request against the XML folder in https://github.com/HL7/JIRA-Spec-Artifacts.  To see the differences, perform a file compare on 'template/jira-current.xml' (a normalized view of what is in Github) and 'template/jira-new.xml' (reflects current IG content)
 == input/examples/clinicaldocument-example.xml ==
-ERROR: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[1].section.entry[0].observation.reference[0].externalObservation: ExternalObservation.classCode: minimum required = 1, but only found 0 (from http://hl7.org/cda/stds/core/StructureDefinition/ExternalObservation|2.0.0-sd-202312-matchbox-patch)
-ERROR: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[1].section.entry[1].observation.reference[1].externalObservation: ExternalObservation.classCode: minimum required = 1, but only found 0 (from http://hl7.org/cda/stds/core/StructureDefinition/ExternalObservation|2.0.0-sd-202312-matchbox-patch)
-ERROR: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[1].section.entry[2].observation.reference[0].externalObservation: ExternalObservation.classCode: minimum required = 1, but only found 0 (from http://hl7.org/cda/stds/core/StructureDefinition/ExternalObservation|2.0.0-sd-202312-matchbox-patch)
-INFORMATION: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[10].section: The CDA Template 2.16.840.1.113883.3.27.354 is not known
-INFORMATION: Binary/clinicaldocument-example: ClinicalDocument: The CDA Template 2.16.840.1.113883.3.27.1776 is not known
 == input/hl7.cda.uv.core.xml ==
 == input/resources/AD.xml ==
 == input/resources/ADXP.xml ==
@@ -329,9 +343,28 @@ INFORMATION: Binary/clinicaldocument-example: ClinicalDocument: The CDA Template
 == input/resources/url.xml ==
 == input/resources/uuid.xml ==
 == input/resources/ValueSet/BinaryDataEncoding.xml ==
+== input/resources/ValueSet/CDAActClass.xml ==
+== input/resources/ValueSet/CDAActClassObservation.xml ==
+== input/resources/ValueSet/CDAActMood.xml ==
+== input/resources/ValueSet/CDAActMoodIntent.xml ==
+== input/resources/ValueSet/CDAActRelationshipType.xml ==
+== input/resources/ValueSet/CDAActSubstanceAdministrationCode.xml ==
 == input/resources/ValueSet/CDACompressionAlgorithm.xml ==
+== input/resources/ValueSet/CDAContextControl.xml ==
+== input/resources/ValueSet/CDAEntityCode.xml ==
+== input/resources/ValueSet/CDAEntityNamePartQualifier.xml ==
 == input/resources/ValueSet/CDAEntityNameUse.xml ==
+== input/resources/ValueSet/CDAInformationRecipientRole.xml ==
+== input/resources/ValueSet/CDAMaterialEntityClassType.xml ==
 == input/resources/ValueSet/CDANullFlavor.xml ==
+== input/resources/ValueSet/CDAObservationInterpretation.xml ==
+== input/resources/ValueSet/CDAParticipationType.xml ==
 == input/resources/ValueSet/CDAPostalAddressUse.xml ==
+== input/resources/ValueSet/CDARoleClass.xml ==
+== input/resources/ValueSet/CDARoleClassAssociative.xml ==
+== input/resources/ValueSet/CDARoleClassMutualRelationship.xml ==
+== input/resources/ValueSet/CDARoleClassRoot.xml ==
+== input/resources/ValueSet/CDARoleCode.xml ==
+== input/resources/ValueSet/CDASetOperator.xml ==
 == input/resources/ValueSet/CDASignatureCode.xml ==
 == input/resources/xs-ID.xml ==

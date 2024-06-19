@@ -1,0 +1,19 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "3a08af46-1216-469f-987a-386bb9377b3f-125",
+  "url" : "http://hl7.org/fhir/comparison/ValueSet/3a08af46-1216-469f-987a-386bb9377b3f-125",
+  "name" : "UnionCDASignatureCodeAndCDASignatureCode",
+  "title" : "Union of CDASignatureCode And CDASignatureCode",
+  "status" : "draft",
+  "date" : "2024-06-19T17:47:55+02:00",
+  "compose" : {
+    "include" : [{
+      "concept" : [{
+        "code" : "S"
+      },
+      {
+        "code" : "X"
+      }]
+    }]
+  }
+}

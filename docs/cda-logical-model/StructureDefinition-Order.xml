@@ -27,12 +27,12 @@
     <valueUri value="cda"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/Order"/>
-  <version value="2.0.0-sd-202312-matchbox-patch"/>
+  <version value="2.0.0-sd-202406-matchbox-patch"/>
   <name value="Order"/>
   <title value="Order (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2024-03-12T18:28:21+01:00"/>
+  <date value="2024-06-19T17:47:42+02:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
@@ -233,11 +233,11 @@
     <element id="Order.classCode">
       <path value="Order.classCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <base>
         <path value="Order.classCode"/>
-        <min value="1"/>
+        <min value="0"/>
         <max value="1"/>
       </base>
       <type>
@@ -247,7 +247,7 @@
       <defaultValueCode value="ACT"/>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActClass"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAActClass"/>
       </binding>
     </element>
     <element id="Order.moodCode">
@@ -267,7 +267,7 @@
       <fixedCode value="RQO"/>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActMoodIntent"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAActMoodIntent"/>
       </binding>
     </element>
     <element id="Order.id">
@@ -327,7 +327,7 @@
     <element id="Order.classCode">
       <path value="Order.classCode"/>
       <representation value="xmlAttr"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="1"/>
       <type>
         <code value="code"/>
@@ -336,7 +336,7 @@
       <defaultValueCode value="ACT"/>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActClass"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAActClass"/>
       </binding>
     </element>
     <element id="Order.moodCode">
@@ -351,7 +351,7 @@
       <fixedCode value="RQO"/>
       <binding>
         <strength value="required"/>
-        <valueSet value="http://terminology.hl7.org/ValueSet/v3-ActMoodIntent"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAActMoodIntent"/>
       </binding>
     </element>
     <element id="Order.id">

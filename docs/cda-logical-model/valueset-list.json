@@ -2,27 +2,115 @@
   "codeSystems" : [
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/BinaryDataEncoding",
-      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
       "status" : "draft",
       "name" : "BinaryDataEncoding",
-      "title" : "Binary Data Encoding Value Set",
+      "title" : "CDABinaryDataEncoding",
       "description" : "Identifies the representation of binary data in a text field",
       "systems" : ["http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding"]
     },
     {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAActClass",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAActClass",
+      "title" : "CDAActClass",
+      "description" : "A code specifying the major type of Act that this Act-instance represents.",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ActClass"]
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAActClassObservation",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAActClassObservation",
+      "title" : "CDAActClassObservation",
+      "description" : "An act that is intended to result in new information about a subject. The main difference between Observations and other Acts is that Observations have a value attribute.",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ActClass"]
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAActMood",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAActMood",
+      "title" : "CDAActMood",
+      "description" : "A code distinguishing whether an Act is conceived of as a factual statement or in some other manner as a command, possibility, goal, etc.",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ActMood"]
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAActMoodIntent",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAActMoodIntent",
+      "title" : "CDAActMoodIntent",
+      "description" : "An intention or plan to perform a service.",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ActMood"]
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAActRelationshipType",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAActRelationshipType",
+      "title" : "CDAActRelationshipType",
+      "description" : "A code specifying the meaning and purpose of every ActRelationship instance. Each of its values implies specific constraints to what kinds of Act objects can be related and in which way.",
+      "systems" : [
+        "http://terminology.hl7.org/CodeSystem/v3-ActRelationshipType"
+      ]
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAActSubstanceAdministrationCode",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAActSubstanceAdministrationCode",
+      "title" : "CDAActSubstanceAdministrationCode",
+      "description" : "Describes the type of substance administration being performed.",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ActCode"]
+    },
+    {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDACompressionAlgorithm",
-      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
       "status" : "draft",
       "name" : "CDACompressionAlgorithm",
-      "title" : "CompressionAlgorithm",
+      "title" : "CDACompressionAlgorithm",
       "description" : "Type of compression algorithm used - limited to 4 concepts from original CDA definition",
       "systems" : [
         "http://terminology.hl7.org/CodeSystem/v3-CompressionAlgorithm"
       ]
     },
     {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAContextControl",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAContextControl",
+      "title" : "CDAContextControl",
+      "description" : "A code that specifies how an ActRelationship or Participation contributes to the context of an Act, and whether it may be propagated to descendent Acts whose association allows such propagation.",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ContextControl"]
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityCode",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAEntityCode",
+      "title" : "CDAEntityCode",
+      "description" : "A value representing the specific kind of Entity the instance represents.",
+      "systems" : [
+        "http://terminology.hl7.org/CodeSystem/v3-EntityCode",
+        "http://terminology.hl7.org/CodeSystem/v3-SpecimenType"
+      ]
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityNamePartQualifier",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAEntityNamePartQualifier",
+      "title" : "CDAEntityNamePartQualifier",
+      "description" : "Qualifies parts of names",
+      "systems" : [
+        "http://terminology.hl7.org/CodeSystem/v3-EntityNamePartQualifier"
+      ]
+    },
+    {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityNameUse",
-      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
       "status" : "draft",
       "name" : "CDAEntityNameUse",
       "title" : "CDAEntityNameUse",
@@ -30,8 +118,29 @@
       "systems" : ["http://terminology.hl7.org/CodeSystem/v3-EntityNameUse"]
     },
     {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAInformationRecipientRole",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAInformationRecipientRole",
+      "title" : "CDAInformationRecipientRole",
+      "description" : "Used to represent the role(s) of those who should receive a copy of a document - limited to values allowed in original CDA definition",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-RoleClass"]
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAMaterialEntityClassType",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAMaterialEntityClassType",
+      "title" : "CDAMaterialEntityClassType",
+      "description" : "Types of Material for EntityClass “MAT”",
+      "systems" : [
+        "http://terminology.hl7.org/CodeSystem/v3-EntityCode",
+        "http://terminology.hl7.org/CodeSystem/v3-SpecimenType"
+      ]
+    },
+    {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor",
-      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
       "status" : "draft",
       "name" : "CDANullFlavor",
       "title" : "CDANullFlavor",
@@ -39,8 +148,28 @@
       "systems" : ["http://terminology.hl7.org/CodeSystem/v3-NullFlavor"]
     },
     {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAObservationInterpretation",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAObservationInterpretation",
+      "title" : "CDAObservationInterpretation",
+      "description" : "One or more codes providing a rough qualitative interpretation of the observation - limited to values available in original CDA",
+      "systems" : [
+        "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
+      ]
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAParticipationType",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDAParticipationType",
+      "title" : "CDAParticipationType",
+      "description" : "A code specifying the meaning and purpose of every Participation instance. Each of its values implies specific constraints on the Roles undertaking the participation. Limited to values allowed in original CDA definition",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-ParticipationType"]
+    },
+    {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse",
-      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
       "status" : "draft",
       "name" : "CDAPostalAddressUse",
       "title" : "CDAPostalAddressUse",
@@ -51,8 +180,62 @@
       ]
     },
     {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDARoleClass",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDARoleClass",
+      "title" : "CDARoleClass",
+      "description" : "Represent a Role which is an association or relationship between two entities - the entity that plays the role and the entity that scopes the role. Roles names are derived from the name of the playing entity in that role.",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-RoleClass"]
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDARoleClassAssociative",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDARoleClassAssociative",
+      "title" : "CDARoleClassAssociative",
+      "description" : "A general association between two entities that is neither partitive nor ontological.",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-RoleClass"]
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDARoleClassMutualRelationship",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDARoleClassMutualRelationship",
+      "title" : "CDARoleClassMutualRelationship",
+      "description" : "A relationship that is based on mutual behavior of the two Entities as being related. The basis of such relationship may be agreements (e.g., spouses, contract parties) or they may be de facto behavior (e.g. friends) or may be an incidental involvement with each other (e.g. parties over a dispute, siblings, children).",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-RoleClass"]
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDARoleClassRoot",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDARoleClassRoot",
+      "title" : "CDARoleClassRoot",
+      "description" : "Corresponds to the Role class",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-RoleClass"]
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDARoleCode",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDARoleCode",
+      "title" : "CDARoleCode",
+      "description" : "A set of codes further specifying the kind of Role; specific classification codes for further qualifying RoleClass codes.",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-RoleCode"]
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/ValueSet/CDASetOperator",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "status" : "draft",
+      "name" : "CDASetOperator",
+      "title" : "CDASetOperator",
+      "description" : "Determins the intersectionality of multiple sets",
+      "systems" : ["http://terminology.hl7.org/CodeSystem/v3-SetOperator"]
+    },
+    {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDASignatureCode",
-      "version" : "2.0.0-sd-202312-matchbox-patch",
+      "version" : "2.0.0-sd-202406-matchbox-patch",
       "status" : "draft",
       "name" : "CDASignatureCode",
       "title" : "CDASignatureCode",

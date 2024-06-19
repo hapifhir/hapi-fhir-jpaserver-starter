@@ -1,0 +1,370 @@
+ClinicalDocumentArchitecture : Validation Results
+=========================================
+
+err = 0, warn = 9, info = 0
+$--
+Generated $--. FHIR version $-- for hl7.cda.uv.core#$-- (canonical = http://hl7.org/cda/stds/core)
+ Build Errors : 0 / 9 / 0
+ /Users/oegger/Documents/github/CDA-core-sd/input/examples/clinicaldocument-example : 0 / 1 / 17
+ /Users/oegger/Documents/github/CDA-core-sd/input/hl7.cda.uv.core : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/AD : 0 / 108 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ADXP : 0 / 2 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ANY : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Act : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/AlternateIdentification : 0 / 2 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/AssignedAuthor : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/AssignedCustodian : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/AssignedEntity : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/AssociatedEntity : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Authenticator : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Author : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/AuthoringDevice : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Authorization : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/BL : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Birthplace : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/CD : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/CE : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/CO : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/CR : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/CS : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/CV : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ClinicalDocument : 0 / 8 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Component : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ComponentOf : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Consent : 0 / 7 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Criterion : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Custodian : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/CustodianOrganization : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/DataEnterer : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Device : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/DocumentationOf : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ED : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/EIVL-TS : 0 / 10 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/EN : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ENXP : 0 / 2 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/EncompassingEncounter : 0 / 11 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Encounter : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/EncounterParticipant : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Entity : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Entry : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/EntryRelationship : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ExternalAct : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ExternalDocument : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ExternalObservation : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ExternalProcedure : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Guardian : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/HealthCareFacility : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/II : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/INT : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/INT-POS : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/IVL-INT : 0 / 15 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/IVL-PQ : 0 / 16 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/IVL-TS : 0 / 13 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/IVXB-INT : 0 / 6 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/IVXB-PQ : 0 / 8 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/IVXB-TS : 0 / 6 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/IdentifiedBy : 0 / 2 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/InFulfillmentOf : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/InFulfillmentOf1 : 0 / 6 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Informant : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/InformationRecipient : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/InfrastructureRoot : 0 / 2 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/IntendedRecipient : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/LabCriterion : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/LabPrecondition : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/LabeledDrug : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/LanguageCommunication : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/LegalAuthenticator : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/MO : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/MaintainedEntity : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ManufacturedProduct : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Material : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/NonXMLBody : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ON : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Observation : 0 / 4 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ObservationMedia : 0 / 7 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ObservationRange : 0 / 6 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Order : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Organization : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/OrganizationPartOf : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Organizer : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/OrganizerComponent : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PIVL-TS : 0 / 14 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PN : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PQ : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PQR : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ParentDocument : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Participant1 : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Participant2 : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ParticipantRole : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Patient : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PatientRole : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Performer1 : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Performer2 : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Person : 0 / 10 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmContent : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmIngredient : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmMedicineClass : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmPackagedMedicine : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmSpecializedKind : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmSubstance : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmSuperContent : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Place : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PlayingEntity : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Precondition : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Precondition2 : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PreconditionBase : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Procedure : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/QTY : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/REAL : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/RTO-PQ-PQ : 0 / 7 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/RecordTarget : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Reference : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/RegionOfInterest : 0 / 7 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/RelatedDocument : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/RelatedEntity : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/RelatedSubject : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/SC : 0 / 2 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ST : 0 / 4 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/SXCM-TS : 0 / 6 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/SXPR-TS : 0 / 7 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Section : 0 / 12 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ServiceEvent : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Specimen : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/SpecimenRole : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/StructuredBody : 0 / 10 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Subject : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/SubjectPerson : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/SubstanceAdministration : 0 / 6 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Supply : 0 / 6 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/TEL : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/TN : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/TS : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/bin : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/bl-simple : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/bn : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/codesystem/BinaryDataEncoding : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/cs-simple : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/int-simple : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/oid : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/probability : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/real-simple : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ruid : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/st-simple : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ts-simple : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/uid : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/url : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/uuid : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/BinaryDataEncoding : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActClass : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActClassObservation : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActMood : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActMoodIntent : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActRelationshipType : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActSubstanceAdministrationCode : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDACompressionAlgorithm : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAContextControl : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAEntityCode : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAEntityNamePartQualifier : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAEntityNameUse : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAInformationRecipientRole : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAMaterialEntityClassType : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDANullFlavor : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAObservationInterpretation : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAParticipationType : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAPostalAddressUse : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDARoleClass : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDARoleClassAssociative : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDARoleClassMutualRelationship : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDARoleClassRoot : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDARoleCode : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDASetOperator : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDASignatureCode : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/xs-ID : 0 / 1 / 1
+</table>
+== n/a ==
+WARNING: Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/LabCriterion.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list.
+WARNING: Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmContent.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list.
+WARNING: Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmIngredient.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list.
+WARNING: Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmMedicineClass.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list.
+WARNING: Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmPackagedMedicine.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list.
+WARNING: Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmSpecializedKind.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list.
+WARNING: Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmSubstance.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list.
+WARNING: Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmSuperContent.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list.
+WARNING: The jira specification file appears to be out of date with the versions, artifacts and pages currently defined in the IG.  A proposed revised file to be reviewed and, if appropriate, submitted as a pull request against the XML folder in https://github.com/HL7/JIRA-Spec-Artifacts.  To see the differences, perform a file compare on 'template/jira-current.xml' (a normalized view of what is in Github) and 'template/jira-new.xml' (reflects current IG content)
+== input/examples/clinicaldocument-example.xml ==
+== input/hl7.cda.uv.core.xml ==
+== input/resources/AD.xml ==
+== input/resources/ADXP.xml ==
+== input/resources/ANY.xml ==
+== input/resources/Act.xml ==
+== input/resources/AlternateIdentification.xml ==
+== input/resources/AssignedAuthor.xml ==
+== input/resources/AssignedCustodian.xml ==
+== input/resources/AssignedEntity.xml ==
+== input/resources/AssociatedEntity.xml ==
+== input/resources/Authenticator.xml ==
+== input/resources/Author.xml ==
+== input/resources/AuthoringDevice.xml ==
+== input/resources/Authorization.xml ==
+== input/resources/BL.xml ==
+== input/resources/Birthplace.xml ==
+== input/resources/CD.xml ==
+== input/resources/CE.xml ==
+== input/resources/CO.xml ==
+== input/resources/CR.xml ==
+== input/resources/CS.xml ==
+== input/resources/CV.xml ==
+== input/resources/ClinicalDocument.xml ==
+== input/resources/Component.xml ==
+== input/resources/ComponentOf.xml ==
+== input/resources/Consent.xml ==
+== input/resources/Criterion.xml ==
+== input/resources/Custodian.xml ==
+== input/resources/CustodianOrganization.xml ==
+== input/resources/DataEnterer.xml ==
+== input/resources/Device.xml ==
+== input/resources/DocumentationOf.xml ==
+== input/resources/ED.xml ==
+== input/resources/EIVL-TS.xml ==
+== input/resources/EN.xml ==
+== input/resources/ENXP.xml ==
+== input/resources/EncompassingEncounter.xml ==
+== input/resources/Encounter.xml ==
+== input/resources/EncounterParticipant.xml ==
+== input/resources/Entity.xml ==
+== input/resources/Entry.xml ==
+== input/resources/EntryRelationship.xml ==
+== input/resources/ExternalAct.xml ==
+== input/resources/ExternalDocument.xml ==
+== input/resources/ExternalObservation.xml ==
+== input/resources/ExternalProcedure.xml ==
+== input/resources/Guardian.xml ==
+== input/resources/HealthCareFacility.xml ==
+== input/resources/II.xml ==
+== input/resources/INT.xml ==
+== input/resources/INT-POS.xml ==
+== input/resources/IVL-INT.xml ==
+== input/resources/IVL-PQ.xml ==
+== input/resources/IVL-TS.xml ==
+== input/resources/IVXB-INT.xml ==
+== input/resources/IVXB-PQ.xml ==
+== input/resources/IVXB-TS.xml ==
+== input/resources/IdentifiedBy.xml ==
+== input/resources/InFulfillmentOf.xml ==
+== input/resources/InFulfillmentOf1.xml ==
+== input/resources/Informant.xml ==
+== input/resources/InformationRecipient.xml ==
+== input/resources/InfrastructureRoot.xml ==
+== input/resources/IntendedRecipient.xml ==
+== input/resources/LabCriterion.xml ==
+== input/resources/LabPrecondition.xml ==
+== input/resources/LabeledDrug.xml ==
+== input/resources/LanguageCommunication.xml ==
+== input/resources/LegalAuthenticator.xml ==
+== input/resources/MO.xml ==
+== input/resources/MaintainedEntity.xml ==
+== input/resources/ManufacturedProduct.xml ==
+== input/resources/Material.xml ==
+== input/resources/NonXMLBody.xml ==
+== input/resources/ON.xml ==
+== input/resources/Observation.xml ==
+== input/resources/ObservationMedia.xml ==
+== input/resources/ObservationRange.xml ==
+== input/resources/Order.xml ==
+== input/resources/Organization.xml ==
+== input/resources/OrganizationPartOf.xml ==
+== input/resources/Organizer.xml ==
+== input/resources/OrganizerComponent.xml ==
+== input/resources/PIVL-TS.xml ==
+== input/resources/PN.xml ==
+== input/resources/PQ.xml ==
+== input/resources/PQR.xml ==
+== input/resources/ParentDocument.xml ==
+== input/resources/Participant1.xml ==
+== input/resources/Participant2.xml ==
+== input/resources/ParticipantRole.xml ==
+== input/resources/Patient.xml ==
+== input/resources/PatientRole.xml ==
+== input/resources/Performer1.xml ==
+== input/resources/Performer2.xml ==
+== input/resources/Person.xml ==
+== input/resources/PharmContent.xml ==
+== input/resources/PharmIngredient.xml ==
+== input/resources/PharmMedicineClass.xml ==
+== input/resources/PharmPackagedMedicine.xml ==
+== input/resources/PharmSpecializedKind.xml ==
+== input/resources/PharmSubstance.xml ==
+== input/resources/PharmSuperContent.xml ==
+== input/resources/Place.xml ==
+== input/resources/PlayingEntity.xml ==
+== input/resources/Precondition.xml ==
+== input/resources/Precondition2.xml ==
+== input/resources/PreconditionBase.xml ==
+== input/resources/Procedure.xml ==
+== input/resources/QTY.xml ==
+== input/resources/REAL.xml ==
+== input/resources/RTO-PQ-PQ.xml ==
+== input/resources/RecordTarget.xml ==
+== input/resources/Reference.xml ==
+== input/resources/RegionOfInterest.xml ==
+== input/resources/RelatedDocument.xml ==
+== input/resources/RelatedEntity.xml ==
+== input/resources/RelatedSubject.xml ==
+== input/resources/SC.xml ==
+== input/resources/ST.xml ==
+== input/resources/SXCM-TS.xml ==
+== input/resources/SXPR-TS.xml ==
+== input/resources/Section.xml ==
+== input/resources/ServiceEvent.xml ==
+== input/resources/Specimen.xml ==
+== input/resources/SpecimenRole.xml ==
+== input/resources/StructuredBody.xml ==
+== input/resources/Subject.xml ==
+== input/resources/SubjectPerson.xml ==
+== input/resources/SubstanceAdministration.xml ==
+== input/resources/Supply.xml ==
+== input/resources/TEL.xml ==
+== input/resources/TN.xml ==
+== input/resources/TS.xml ==
+== input/resources/bin.xml ==
+== input/resources/bl-simple.xml ==
+== input/resources/bn.xml ==
+== input/resources/CodeSystem/BinaryDataEncoding.xml ==
+== input/resources/cs-simple.xml ==
+== input/resources/int-simple.xml ==
+== input/resources/oid.xml ==
+== input/resources/probability.xml ==
+== input/resources/real-simple.xml ==
+== input/resources/ruid.xml ==
+== input/resources/st-simple.xml ==
+== input/resources/ts-simple.xml ==
+== input/resources/uid.xml ==
+== input/resources/url.xml ==
+== input/resources/uuid.xml ==
+== input/resources/ValueSet/BinaryDataEncoding.xml ==
+== input/resources/ValueSet/CDAActClass.xml ==
+== input/resources/ValueSet/CDAActClassObservation.xml ==
+== input/resources/ValueSet/CDAActMood.xml ==
+== input/resources/ValueSet/CDAActMoodIntent.xml ==
+== input/resources/ValueSet/CDAActRelationshipType.xml ==
+== input/resources/ValueSet/CDAActSubstanceAdministrationCode.xml ==
+== input/resources/ValueSet/CDACompressionAlgorithm.xml ==
+== input/resources/ValueSet/CDAContextControl.xml ==
+== input/resources/ValueSet/CDAEntityCode.xml ==
+== input/resources/ValueSet/CDAEntityNamePartQualifier.xml ==
+== input/resources/ValueSet/CDAEntityNameUse.xml ==
+== input/resources/ValueSet/CDAInformationRecipientRole.xml ==
+== input/resources/ValueSet/CDAMaterialEntityClassType.xml ==
+== input/resources/ValueSet/CDANullFlavor.xml ==
+== input/resources/ValueSet/CDAObservationInterpretation.xml ==
+== input/resources/ValueSet/CDAParticipationType.xml ==
+== input/resources/ValueSet/CDAPostalAddressUse.xml ==
+== input/resources/ValueSet/CDARoleClass.xml ==
+== input/resources/ValueSet/CDARoleClassAssociative.xml ==
+== input/resources/ValueSet/CDARoleClassMutualRelationship.xml ==
+== input/resources/ValueSet/CDARoleClassRoot.xml ==
+== input/resources/ValueSet/CDARoleCode.xml ==
+== input/resources/ValueSet/CDASetOperator.xml ==
+== input/resources/ValueSet/CDASignatureCode.xml ==
+== input/resources/xs-ID.xml ==
