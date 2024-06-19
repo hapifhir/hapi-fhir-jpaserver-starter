@@ -275,6 +275,7 @@ public class MatchboxEngine extends ValidationEngine {
 		@Override
 		public ValidationEngine fromNothing() throws MatchboxEngineCreationException {
 			try {
+//				return super.withTerminologyCachePath("").fromNothing();
 				return super.fromNothing();
 			} catch (final IOException e) {
 				throw new MatchboxEngineCreationException(e);
@@ -530,7 +531,7 @@ public class MatchboxEngine extends ValidationEngine {
 		final InstanceValidator validator = getValidator(format);
 		//validator.getBaseOptions().setCheckValueSetOnly();
 		//validator.getBaseOptions().setNoServer(true);
-		validator.validate(null, messages, stream, format, (sd != null) ? List.of(sd) : Collections.emptyList());
+		validator.validate(null, messages, stream, format, (sd != null) ? new ArrayList<>(List.of(sd)) :  new ArrayList<>());
 		return this.filterValidationMessages(messages);
 	}
 
