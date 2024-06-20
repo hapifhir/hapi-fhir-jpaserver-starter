@@ -137,7 +137,6 @@ export class ValidateComponent implements AfterViewInit {
       // We assume that the file is a FHIR resource
       let entry: ValidationEntry = null;
       try {
-        this.selectedProfile = null;
         this.selectedIg = this.AUTO_IG_SELECTION;
         const reader = new FileReader();
         reader.readAsText(droppedBlob.blob);
