@@ -5,6 +5,8 @@ import pako from 'pako';
 import untar from 'js-untar';
 import { IDroppedBlob } from '../upload/upload.component';
 import ace, { Ace } from 'ace-builds';
+import 'ace-builds/src-noconflict/mode-json';
+import 'ace-builds/src-noconflict/mode-xml';
 import { ValidationEntry } from './validation-entry';
 import { ValidationParameter } from './validation-parameter';
 import { ITarEntry } from './tar-entry';
@@ -12,7 +14,7 @@ import {Issue, IssueSeverity, OperationResult} from '../util/operation-result';
 import {FormControl, Validators} from "@angular/forms";
 import {StructureDefinition} from "./structure-definition";
 
-const INDENT_SPACES = 4;
+const INDENT_SPACES = 2;
 
 @Component({
   selector: 'app-validate',
@@ -21,6 +23,7 @@ const INDENT_SPACES = 4;
 })
 export class ValidateComponent implements AfterViewInit {
   readonly AUTO_IG_SELECTION = 'AUTOMATIC';
+  readonly CodeEditorContent = CodeEditorContent;
 
   // Validation history
   validationEntries: ValidationEntry[] = new Array<ValidationEntry>();
@@ -33,15 +36,18 @@ export class ValidateComponent implements AfterViewInit {
   supportedProfiles: Map<string, StructureDefinition> = new Map<string, StructureDefinition>();
   validatorSettings: ValidationParameter[] = new Array<ValidationParameter>();
 
-  // Form
+  // The input form
   filteredProfiles: Set<StructureDefinition> = new Set<StructureDefinition>();
   profileFilter: string = '';
   selectedIg: string = this.AUTO_IG_SELECTION;
   selectedProfile: string;
   profileControl: FormControl = new FormControl<string>(null, Validators.required);
 
-  // DOM
+  // Code editor
   editor: Ace.Editor;
+  editorContent: CodeEditorContent = CodeEditorContent.RESOURCE_CONTENT;
+
+  // DOM
   showSettings: boolean = false;
   currentResource: UploadedFile | null = null;
   errorMessage: string | null = null;
@@ -314,7 +320,7 @@ export class ValidateComponent implements AfterViewInit {
         entry.loading = false;
         entry.setOperationOutcome(response);
         if (entry === this.selectedEntry) {
-          this.updateEditorIssues();
+          this.updateCodeEditorContent();
         }
       })
       .catch((error) => {
@@ -328,20 +334,11 @@ export class ValidateComponent implements AfterViewInit {
   show(entry: ValidationEntry | null) {
     this.errorMessage = null;
     this.selectedEntry = entry;
-    if (!entry) {
-      this.editor.setValue('', -1);
-      this.updateEditorIssues();
-      return;
-    }
+    this.updateCodeEditorContent();
 
-    this.currentResource = new UploadedFile(entry.filename, entry.mimetype, entry.resource, entry.resourceType);
-    this.editor.setValue(entry.resource, -1);
-    if (entry.mimetype === 'application/fhir+json') {
-      this.editor.getSession().setMode('ace/mode/json');
-    } else if (entry.mimetype === 'application/fhir+xml') {
-      this.editor.getSession().setMode('ace/mode/xml');
+    if (entry != null) {
+      this.currentResource = new UploadedFile(entry.filename, entry.mimetype, entry.resource, entry.resourceType);
     }
-    this.updateEditorIssues();
   }
 
   removeEntryFromHistory(entry: ValidationEntry) {
@@ -402,8 +399,8 @@ export class ValidateComponent implements AfterViewInit {
     this.editor.session.setAnnotations(annotations);
   }
 
-  highlightIssue(issue: Issue) {
-    if (issue.line) {
+  highlightIssue(issue: Issue): void {
+    if (issue.line && this.editorContent == CodeEditorContent.RESOURCE_CONTENT) {
       this.editor.gotoLine(issue.line, issue.col, true);
       this.editor.scrollToLine(issue.line, false, true, () => {});
     }
@@ -438,8 +435,47 @@ export class ValidateComponent implements AfterViewInit {
     }
     return null;
   }
+
+  updateCodeEditorContent(): void {
+    if (!this.selectedEntry) {
+      this.editor.setValue('', -1);
+      this.editor.session.clearAnnotations();
+      return;
+    }
+
+    if (this.editorContent == CodeEditorContent.RESOURCE_CONTENT) {
+      this.editor.setValue(this.selectedEntry.resource, -1);
+      if (this.selectedEntry.mimetype === 'application/fhir+json') {
+        this.editor.getSession().setMode('ace/mode/json');
+      } else if (this.selectedEntry.mimetype === 'application/fhir+xml') {
+        this.editor.getSession().setMode('ace/mode/xml');
+      }
+      this.updateEditorIssues();
+    } else {
+      if (this.selectedEntry.result !== undefined && 'operationOutcome' in this.selectedEntry.result) {
+        this.editor.setValue(JSON.stringify(this.selectedEntry.result.operationOutcome, null, INDENT_SPACES), -1);
+        this.editor.getSession().setMode('ace/mode/json');
+      } else {
+        this.editor.setValue('', -1);
+      }
+      this.editor.session.clearAnnotations();
+    }
+  }
+
+  changeCodeEditorContent(newContent: CodeEditorContent): void {
+    if (this.editorContent === newContent) {
+      return;
+    }
+    this.editorContent = newContent;
+    this.updateCodeEditorContent();
+  }
 }
 
 class UploadedFile {
   constructor(public filename: string, public contentType: string, public content: string, public resourceType: string) {}
+}
+
+enum CodeEditorContent {
+  RESOURCE_CONTENT,
+  OPERATION_OUTCOME,
 }

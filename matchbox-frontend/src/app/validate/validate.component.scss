@@ -160,3 +160,19 @@ mat-option {
 ::ng-deep .mdc-list-item__primary-text {
   width: 100%;
 }
+
+.editor-content-selector {
+  display: inline-block;
+  font-size: 1.4em;
+  margin: 0.3em 1em .6em 0;
+  border-bottom: 3px solid $green-light;
+  cursor: pointer;
+  color: #5a5f5c;
+  padding-bottom: 2px;
+
+  &.active {
+    border-bottom: 3px solid $green-primary;
+    cursor: default;
+    color: #000;
+  }
+}

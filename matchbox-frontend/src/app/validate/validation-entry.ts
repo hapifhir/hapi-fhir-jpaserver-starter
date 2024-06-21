@@ -6,7 +6,7 @@ export class ValidationEntry {
   resourceType: string;
   resourceId: string;
   mimetype: string;
-  result: OperationResult;
+  result: OperationResult | undefined;
   profiles: string[] = [];
   selectedProfile: string;
   ig?: string;

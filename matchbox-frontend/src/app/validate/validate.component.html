@@ -23,7 +23,7 @@
                       name="selectProfile" placeholder="Validate against specific Profile">
             <mat-select-trigger *ngIf="supportedProfiles.get(selectedProfile) as profile">
               <span class="profile-select-option-line1">
-                <span class="ig">{{ profile.igId }}#{{profile.igVersion }}</span>
+                <span class="ig">{{ profile.igId }}#{{ profile.igVersion }}</span>
                 <span class="title" [title]="profile.title">{{ profile.title }}</span>
               </span>
               <span class="profile-select-option-line2">
@@ -38,7 +38,7 @@
             </mat-option>
             <mat-option *ngFor="let profile of filteredProfiles" [value]="profile.canonical">
               <span class="profile-select-option-line1">
-                <span class="ig">{{ profile.igId }}#{{profile.igVersion }}</span>
+                <span class="ig">{{ profile.igId }}#{{ profile.igVersion }}</span>
                 <span class="title" [title]="profile.title">{{ profile.title }}</span>
               </span>
               <span class="profile-select-option-line2">
@@ -67,7 +67,10 @@
 
       <button color="primary" mat-raised-button (click)="onValidate()">Validate</button>
 
-      <p *ngIf="errorMessage" class="error"><mat-icon>report</mat-icon> Error: {{ errorMessage }}</p>
+      <p *ngIf="errorMessage" class="error">
+        <mat-icon>report</mat-icon>
+        Error: {{ errorMessage }}
+      </p>
     </ng-container>
 
     <ng-container *ngIf="showSettings">
@@ -95,19 +98,23 @@
           [ngClass]="{selected: entry === selectedEntry}"
           (click)="show(entry)">
         <td class="mat-cell">
-          {{ entry.filename }}<br />
-          <time>{{ entry.date | date:'HH:mm:ss' }}</time><at></at>
+          {{ entry.filename }}<br/>
+          <time>{{ entry.date | date:'HH:mm:ss' }}</time>
+          <at></at>
         </td>
         <td class="mat-cell">
-          {{ entry.selectedProfile }}<br />
+          {{ entry.selectedProfile }}<br/>
           {{ entry.ig }}
         </td>
         <td class="issues mat-cell">
           <mat-spinner *ngIf="entry.loading" diameter="30"></mat-spinner>
           <ng-container *ngIf="!entry.loading">
-            <mat-icon inline class="error">error</mat-icon>{{ entry.result ? entry.getErrors() : '-' }}<br />
-            <mat-icon inline class="warning">warning</mat-icon>{{ entry.result ? entry.getWarnings() : '-' }}<br />
-            <mat-icon inline class="info">info</mat-icon>{{ entry.result ? entry.getInfos() : '-' }}
+            <mat-icon inline class="error">error</mat-icon>
+            {{ entry.result ? entry.getErrors() : '-' }}<br/>
+            <mat-icon inline class="warning">warning</mat-icon>
+            {{ entry.result ? entry.getWarnings() : '-' }}<br/>
+            <mat-icon inline class="info">info</mat-icon>
+            {{ entry.result ? entry.getInfos() : '-' }}
           </ng-container>
         </td>
         <td class="actions mat-cell">
@@ -137,12 +144,13 @@
     </dl>
 
     <app-operation-result *ngIf="selectedEntry && selectedEntry.result"
-                           [operationResult]="selectedEntry.result"
-                           (select)="highlightIssue($event)"></app-operation-result>
+                          [operationResult]="selectedEntry.result"
+                          (select)="highlightIssue($event)"></app-operation-result>
     <mat-spinner *ngIf="selectedEntry && selectedEntry.loading" diameter="30"></mat-spinner>
   </div>
   <div class="card-maps white-block">
-    <h2>Document content</h2>
+    <span (click)="changeCodeEditorContent(CodeEditorContent.RESOURCE_CONTENT)" class="editor-content-selector" [ngClass]="{active: this.editorContent == CodeEditorContent.RESOURCE_CONTENT}">Validated resource</span>
+    <span (click)="changeCodeEditorContent(CodeEditorContent.OPERATION_OUTCOME)" class="editor-content-selector" [ngClass]="{active: this.editorContent == CodeEditorContent.OPERATION_OUTCOME}">Operation outcome</span>
 
     <div id="editor"></div>
   </div>
