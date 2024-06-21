@@ -6,6 +6,7 @@
 - CH:IPS validation problem [#248](https://github.com/ahdis/matchbox/issues/#248)
 - improved the validation GUI [#242](https://github.com/ahdis/matchbox/issues/#242), upgraded to angular@18
 - update to hl7.fhir.core 6.3.11 [#254](https://github.com/ahdis/matchbox/issues/#254)
+- fixed validation problems #250 #251
 
 2024/06/14 Release 3.8.5
 
