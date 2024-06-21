@@ -197,7 +197,9 @@ public class MatchboxApiR5onR4Test {
     IBaseOperationOutcome operationOutcome = validationClient.validate(getContent("ehs-419.json"),
         "http://hl7.org/fhir/StructureDefinition/Patient|5.0.0");
     log.debug(this.context.newJsonParser().encodeResourceToString(operationOutcome));
-    assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
+
+    String responseInJson = new org.hl7.fhir.r4.formats.JsonParser().composeString((OperationOutcome) operationOutcome);
+    assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome), responseInJson);
   }
 
   private String getContent(String resourceName) throws IOException {

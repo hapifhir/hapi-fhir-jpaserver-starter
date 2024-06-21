@@ -175,7 +175,7 @@ public class ValidationProvider {
 		if (versionSeparator != -1) {
 			profile = profile.substring(0, versionSeparator);
 		}
-		if (engine.getStructureDefinitionR4(profile) == null) {
+		if (engine.getStructureDefinitionR5(profile) == null) {
 			return this.getOoForError(
 				"Engine configured, but validation for profile '%s' not found. ".formatted(
 					profile)+engine.toString());
@@ -222,17 +222,16 @@ public class ValidationProvider {
 			issue.setSeverity(OperationOutcome.IssueSeverity.INFORMATION);
 			issue.setCode(OperationOutcome.IssueType.INFORMATIONAL);
 
-			final StructureDefinition structDef = engine.getStructureDefinitionR4(profile);
-			final org.hl7.fhir.r5.model.StructureDefinition structDefR5 = (org.hl7.fhir.r5.model.StructureDefinition) VersionConvertorFactory_40_50.convertResource(structDef);
+			final org.hl7.fhir.r5.model.StructureDefinition structDefR5 = engine.getStructureDefinitionR5(profile);
 
-			final var profileDate = (structDef.getDateElement() != null)
-				? " (%s)".formatted(structDef.getDateElement().asStringValue())
+			final var profileDate = (structDefR5.getDateElement() != null)
+				? " (%s)".formatted(structDefR5.getDateElement().asStringValue())
 				: " ";
 
 			issue.setDiagnostics(
 				"Validation for profile %s|%s%s. Loaded packages: %s. Duration: %s. %s. Validation parameters: %s".formatted(
-					structDef.getUrl(),
-					structDef.getVersion(),
+					structDefR5.getUrl(),
+					structDefR5.getVersion(),
 					profileDate,
 					String.join(", ", engine.getContext().getLoadedPackages()),
 					ms/1000.0+ "s",
@@ -241,8 +240,8 @@ public class ValidationProvider {
 				));
 
 			var ext = issue.addExtension().setUrl("http://matchbox.health/validation");
-			addExtension(ext, "profile", new UriType(structDef.getUrl()));
-			addExtension(ext, "profileVersion", new UriType(structDef.getVersion()));
+			addExtension(ext, "profile", new UriType(structDefR5.getUrl()));
+			addExtension(ext, "profileVersion", new UriType(structDefR5.getVersion()));
 			addExtension(ext, "profileDate", structDefR5.getDateElement());
 
 			ext.addExtension("total", new Duration().setUnit("ms").setValue(ms));

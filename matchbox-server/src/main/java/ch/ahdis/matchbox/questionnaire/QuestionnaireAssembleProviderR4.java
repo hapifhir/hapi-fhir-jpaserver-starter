@@ -89,7 +89,7 @@ public class QuestionnaireAssembleProviderR4 {
   	
     MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(canonical, null, true, false);
     if (matchboxEngine !=null) {
-	    return (Questionnaire) matchboxEngine.getCanonicalResourceR4(canonical);
+	    return (Questionnaire) matchboxEngine.getCanonicalResource(canonical, "4.0.1");
     }
     return null;
   }

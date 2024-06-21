@@ -38,6 +38,7 @@ import org.hl7.fhir.r4.model.Questionnaire;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.StructureDefinition;
 import org.hl7.fhir.r4.model.StructureMap;
+import org.hl7.fhir.r4.model.Enumerations.FHIRVersion;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -120,7 +121,7 @@ class FhirMappingLanguageTests {
 		StructureMap sm = engine.parseMap(getFileAsStringFromResources("/conformstoneg.map"));
 		assertTrue(sm != null);
 		engine.addCanonicalResource(sm);
-		assertTrue(engine.getCanonicalResourceR4(sm.getUrl())!= null);
+		assertTrue(engine.getCanonicalResource(sm.getUrl(), "4.0.1")!= null);
 		assertTrue(engine.getContext().fetchResource( org.hl7.fhir.r5.model.StructureMap.class, sm.getUrl()) != null);
 
 
@@ -130,7 +131,7 @@ class FhirMappingLanguageTests {
         Questionnaire questionnaire = (Questionnaire) xml.parse(qr);
 
 		engine.addCanonicalResource(questionnaire);
-		assertTrue(engine.getCanonicalResourceR4(questionnaire.getUrl())!= null);
+		assertTrue(engine.getCanonicalResource(questionnaire.getUrl(),"4.0.1")!= null);
 		assertTrue(engine.getContext().fetchResource( org.hl7.fhir.r5.model.Questionnaire.class, questionnaire.getUrl()) != null);
 		assertTrue(engine.getCanonicalResourceById("Questionnaire", questionnaire.getId())!= null);
 	}

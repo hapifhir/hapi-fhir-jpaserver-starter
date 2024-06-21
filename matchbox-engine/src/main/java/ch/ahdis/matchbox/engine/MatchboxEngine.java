@@ -67,6 +67,7 @@ import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.hl7.fhir.validation.IgLoader;
 import org.hl7.fhir.validation.ValidationEngine;
+import org.hl7.fhir.validation.cli.services.StandAloneValidatorFetcher;
 import org.hl7.fhir.validation.instance.InstanceValidator;
 
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
@@ -194,13 +195,20 @@ public class MatchboxEngine extends ValidationEngine {
 				engine.getContext().setCanRunWithoutTerminology(false);
 				engine.getContext().setNoTerminologyServer(false);
 				try {
-					engine.setTerminologyServer(this.txServer, null, FhirPublication.R4);
+					engine.setTerminologyServer(this.txServer, null, FhirPublication.R4, true);
 				} catch (final Exception e) {
 					throw new TerminologyServerException(e);
 				}
 			}
 			engine.getContext().setPackageTracker(engine);
 			engine.setPcm(this.getFilesystemPackageCacheManager());
+
+			StandAloneValidatorFetcher fetcher = new StandAloneValidatorFetcher(engine.getPcm(), engine.getContext(), engine);
+			engine.setFetcher(fetcher);
+			engine.getContext().setLocator(fetcher);
+			engine.setPolicyAdvisor(fetcher);
+
+			engine.setPolicyAdvisor(engine);
 			return engine;
 		}
 
@@ -231,11 +239,18 @@ public class MatchboxEngine extends ValidationEngine {
 				engine.getContext().setCanRunWithoutTerminology(false);
 				engine.getContext().setNoTerminologyServer(false);
 				try {
-					engine.setTerminologyServer(this.txServer, null, FhirPublication.R5);
+					engine.setTerminologyServer(this.txServer, null, FhirPublication.R5, true);
 				} catch (final Exception e) {
 					throw new TerminologyServerException(e);
 				}
 			}
+
+			StandAloneValidatorFetcher fetcher = new StandAloneValidatorFetcher(engine.getPcm(), engine.getContext(), engine);
+			engine.setFetcher(fetcher);
+			engine.getContext().setLocator(fetcher);
+			engine.setPolicyAdvisor(fetcher);
+			engine.setPolicyAdvisor(engine);
+
 			engine.getContext().setPackageTracker(engine);
 			engine.setPcm(this.getFilesystemPackageCacheManager());
 			return engine;
@@ -262,7 +277,7 @@ public class MatchboxEngine extends ValidationEngine {
 				engine.getContext().setCanRunWithoutTerminology(false);
 				engine.getContext().setNoTerminologyServer(false);
 				try {
-					engine.setTerminologyServer(this.txServer, null, this.fhirVersion);
+					engine.setTerminologyServer(this.txServer, null, this.fhirVersion, true);
 				} catch (final Exception e) {
 					throw new TerminologyServerException(e);
 				}
@@ -536,20 +551,6 @@ public class MatchboxEngine extends ValidationEngine {
 	}
 
 	/**
-	 * Get the corresponding StructureDefinition (R4)
-	 * 
-	 * @param profile
-	 * @return
-	 */
-	public org.hl7.fhir.r4.model.StructureDefinition getStructureDefinitionR4(final String profile) {
-		final StructureDefinition sd = this.getStructureDefinitionR5(profile);
-		if (sd == null) {
-			return null;
-		}
-		return (org.hl7.fhir.r4.model.StructureDefinition) VersionConvertorFactory_40_50.convertResource(sd);
-	}
-
-	/**
 	 * Get the corresponding StructureDefinition (R5)
 	 *
 	 * @param profile
@@ -557,42 +558,6 @@ public class MatchboxEngine extends ValidationEngine {
 	 */
 	public StructureDefinition getStructureDefinitionR5(final String profile) {
 		return this.getContext().fetchResource(StructureDefinition.class, profile);
-	}
-
-	/**
-	 * Returns a canonical resource defined by its url
-	 * 
-	 * @param canonical
-	 * @return
-	 */
-	public org.hl7.fhir.r4.model.Resource getCanonicalResourceR4(String canonical) {
-		org.hl7.fhir.r5.model.Resource fetched = this.getContext().fetchResource(null, canonical);
-		// allResourcesById is not package aware (???) so we need to fetch it again
-		if (fetched!=null) {
-		 	org.hl7.fhir.r5.model.Resource fetched2  = this.getContext().fetchResource(fetched.getClass(), canonical);
-		 	if (fetched2 != null) {
-		 		return VersionConvertorFactory_40_50.convertResource(fetched2);
-		 	}
-		}
-		return null;
-	}
-
-	/**
-	 * Returns a canonical resource defined by its url
-	 * 
-	 * @param canonical
-	 * @return
-	 */
-	public org.hl7.fhir.r5.model.Resource getCanonicalResourceR5(String canonical) {
-		org.hl7.fhir.r5.model.Resource fetched = this.getContext().fetchResource(null, canonical);
-		// allResourcesById is not package aware (???) so we need to fetch it again
-		if (fetched!=null) {
-		 	org.hl7.fhir.r5.model.Resource fetched2  = this.getContext().fetchResource(fetched.getClass(), canonical);
-		 	if (fetched2 != null) {
-		 		return fetched2;
-		 	}
-		}
-		return null;
 	}
 
     /**
@@ -606,24 +571,16 @@ public class MatchboxEngine extends ValidationEngine {
 		org.hl7.fhir.r5.model.Resource fetched = this.getContext().fetchResource(null, canonical);
 		// allResourcesById is not package aware (???) so we need to fetch it again
 		if (fetched!=null) {
-			// org.hl7.fhir.r5.model.Resource fetched2  = this.getContext().fetchResource(fetched.getClass(), canonical);
-			// if (fetched2 != null) {
-			// 	switch(fhirVersion) {
-			// 		case "4.0.1":
-			// 			return VersionConvertorFactory_40_50.convertResource(fetched2);
-			// 		case "4.3.0":
-			// 			return VersionConvertorFactory_43_50.convertResource(fetched2);
-			// 		case "5.0.0":
-			// 			return fetched2;
-			// 	}
-			// }
-			switch(fhirVersion) {
-				case "4.0.1":
-					return VersionConvertorFactory_40_50.convertResource(fetched);
-				case "4.3.0":
-					return VersionConvertorFactory_43_50.convertResource(fetched);
-				case "5.0.0":
-					return fetched;
+			org.hl7.fhir.r5.model.Resource fetched2  = this.getContext().fetchResource(fetched.getClass(), canonical);
+			if (fetched2 != null) {
+				switch(fhirVersion) {
+					case "4.0.1":
+						return VersionConvertorFactory_40_50.convertResource(fetched2);
+					case "4.3.0":
+						return VersionConvertorFactory_43_50.convertResource(fetched2);
+					case "5.0.0":
+						return fetched2;
+				}
 			}
 		}
 		return null;
@@ -651,7 +608,7 @@ public class MatchboxEngine extends ValidationEngine {
 	public boolean fetchesCanonicalResource(IResourceValidator validator, String url) {
 		// don't use the fetcher, should we do this better in directly in StandAloneValidatorFetcher implmentation
 		// https://github.com/ahdis/matchbox/issues/67
-		return getCanonicalResourceR4(url) != null;
+		return getCanonicalResource(url,"5.0.0") != null;
 	}
 
 	/**

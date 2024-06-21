@@ -92,6 +92,23 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 			? request.getParameterBool("inferSystem")
 			: false;
 
+		final String code = request.hasParameter("code")
+			? request.getParameterValue("code").toString()	: null;
+
+		final boolean lenientDisplayValidation = request.hasParameter("lenient-display-validation")
+			? request.getParameterBool("lenient-display-validation")
+			: false;
+
+		final String mode = request.hasParameter("mode")
+			? request.getParameterValue("mode").toString()	: null;
+
+		// parameter default-to-lastest-version (Booelan)
+		// parameter profile-url "http://hl7.org/fhir/ExpansionProfile/dc8fd4bc-091a-424a-8a3b-6198ef146891"
+
+		if (code!=null && "lenient-display-validation".equals(mode)) {
+			return mapCodeToSuccessfulParameters(code);
+		}
+
 		if (!request.hasParameter("coding")) {
 			servletResponse.setStatus(422);
 			return mapErrorToOperationOutcome("Missing parameter 'coding' in the request");

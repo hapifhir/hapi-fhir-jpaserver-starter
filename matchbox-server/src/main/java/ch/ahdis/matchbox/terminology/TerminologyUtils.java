@@ -18,6 +18,15 @@ public class TerminologyUtils {
 	private TerminologyUtils() {
 	}
 
+	public static Parameters mapCodeToSuccessfulParameters(final String code) {
+		final var parameters = new Parameters();
+		parameters.setParameter("result", true);
+		if (code != null) {
+			parameters.setParameter("code", code);
+		}
+		return parameters;
+	}
+
 	public static Parameters mapCodingToSuccessfulParameters(final Coding coding) {
 		final var parameters = new Parameters();
 		parameters.setParameter("result", true);
