@@ -4,6 +4,8 @@
 - update to published CDA FHIR logical model with matcbhox patches 2.0.0-sd [#241](https://github.com/ahdis/matchbox/issues/241)
 - update frontend for high security vulnerabilities [#246](https://github.com/ahdis/matchbox/issues/#246)
 - CH:IPS validation problem [#248](https://github.com/ahdis/matchbox/issues/#248)
+- improved the validation GUI [#242](https://github.com/ahdis/matchbox/issues/#242)
+- upgraded to angular@18
 
 2024/06/14 Release 3.8.5
 
