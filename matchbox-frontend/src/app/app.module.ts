@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -53,49 +53,43 @@ export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    CapabilityStatementComponent,
-    SettingsComponent,
-    HomeComponent,
-    MappingLanguageComponent,
-    IgsComponent,
-    TransformComponent,
-    ValidateComponent,
-    OperationResultComponent,
-    UploadComponent,
-  ],
-  imports: [
-    SharedModule,
-    HttpClientModule,
-    HighlightModule,
-    RouterModule.forRoot(routes, {
-      useHash: true,
-    }),
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: createTranslateLoader,
-        deps: [HttpClient],
-      },
-    }),
-    OAuthModule.forRoot(),
-    NgxMatSelectSearchModule,
-  ],
-  providers: [
-    {
-      provide: HIGHLIGHT_OPTIONS,
-      useValue: {
-        coreLibraryLoader: () => import('highlight.js/lib/core'),
-        lineNumbersLoader: () => import('highlightjs-line-numbers.js'), // Optional, only if you want the line numbers
-        languages: {
-          json: () => import('highlight.js/lib/languages/json'),
-          xml: () => import('highlight.js/lib/languages/xml'),
+@NgModule({ declarations: [
+        AppComponent,
+        CapabilityStatementComponent,
+        SettingsComponent,
+        HomeComponent,
+        MappingLanguageComponent,
+        IgsComponent,
+        TransformComponent,
+        ValidateComponent,
+        OperationResultComponent,
+        UploadComponent,
+    ],
+    bootstrap: [AppComponent], imports: [SharedModule,
+        HighlightModule,
+        RouterModule.forRoot(routes, {
+            useHash: true,
+        }),
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: createTranslateLoader,
+                deps: [HttpClient],
+            },
+        }),
+        OAuthModule.forRoot(),
+        NgxMatSelectSearchModule], providers: [
+        {
+            provide: HIGHLIGHT_OPTIONS,
+            useValue: {
+                coreLibraryLoader: () => import('highlight.js/lib/core'),
+                lineNumbersLoader: () => import('highlightjs-line-numbers.js'), // Optional, only if you want the line numbers
+                languages: {
+                    json: () => import('highlight.js/lib/languages/json'),
+                    xml: () => import('highlight.js/lib/languages/xml'),
+                },
+            },
         },
-      },
-    },
-  ],
-  bootstrap: [AppComponent],
-})
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {}

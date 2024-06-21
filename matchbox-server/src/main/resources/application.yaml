@@ -26,6 +26,9 @@ spring:
       enabled: false
   jackson:
     default-property-inclusion: non_absent
+  web:
+    resources:
+      static-locations: classpath:/static/browser/
 server:
   servlet:
     context-path: /matchboxv3

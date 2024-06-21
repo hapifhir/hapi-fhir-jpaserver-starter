@@ -33,9 +33,9 @@ $md-mcgpalette0: (
   ),
 );
 
-$my-primary: mat.define-palette($md-mcgpalette0, 500, 50, 300);
-$my-accent: mat.define-palette($md-mcgpalette0, A400);
-$my-warn: mat.define-palette(mat.$red-palette);
+$my-primary: mat.m2-define-palette($md-mcgpalette0, 500, 50, 300);
+$my-accent: mat.m2-define-palette($md-mcgpalette0, A400);
+$my-warn: mat.m2-define-palette(mat.$m2-red-palette);
 
 $green-primary: #97d6ba;
 $green-dark: #3d5c73;
@@ -64,13 +64,13 @@ $issue-info: #4ca8de;
 }
 
 $theme: map-merge(
-  mat.define-light-theme((
+  mat.m2-define-light-theme((
     color: (
       primary: $my-primary,
       accent: $my-accent,
       warn: $my-warn
     ),
-    typography: mat.define-typography-config(),
+    typography: mat.m2-define-typography-config(),
     density: -1, // https://material.angular.io/guide/theming#customizing-density
   )),
   (

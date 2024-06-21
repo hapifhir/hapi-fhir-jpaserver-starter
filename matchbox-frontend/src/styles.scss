@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
 @import '_variables';
-@import '~highlight.js/styles/github.css';
+@import 'highlight.js/styles/github.css';
 
 @include mat.core();
 @include mat.core-theme($theme);
@@ -41,7 +41,7 @@ $outer-space: 1.5rem;
     }
 
     @media screen and (min-width: 1020px) {
-      background-color: mat.get-color-from-palette($primary);
+      background-color: mat.m2-get-color-from-palette($primary);
       color: white;
       border-radius: 4px 4px 0 0;
       padding-bottom: $outer-space;
