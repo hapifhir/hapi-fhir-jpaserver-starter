@@ -159,7 +159,8 @@ class R4ValidationTests {
 											error.getCode().name(),
 											error.getDetails().getText()));
 		}
-		assertEquals(0, errors.size());
+		String responseInJson = new org.hl7.fhir.r4.formats.JsonParser().composeString(response);
+		assertEquals(0, errors.size(),  "Validation Errors " + errors.size() + "\noutcome:\n" + responseInJson + "\nresource\n" + resource);
 	}
 
 	private List<OperationOutcome.OperationOutcomeIssueComponent> expectInvalid(final String resource,

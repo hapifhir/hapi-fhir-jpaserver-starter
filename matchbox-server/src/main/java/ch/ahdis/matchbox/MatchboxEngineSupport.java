@@ -343,7 +343,7 @@ public class MatchboxEngineSupport {
 		}
 
 		if (cliContext.getIg() == null) {
-			if ("default".equals(canonical) || canonical == null || mainEngine.getCanonicalResourceR4(canonical) != null) {
+			if ("default".equals(canonical) || canonical == null || mainEngine.getCanonicalResource(canonical, cliContext.getFhirVersion()) != null) {
 				cliContext.setIg(this.getFhirCorePackage(cliContext));
 			} else {
 				NpmPackageVersionResourceEntity npm = loadPackageAssetByUrl(canonical,
@@ -451,7 +451,7 @@ public class MatchboxEngineSupport {
 			validator.getContext().setNoTerminologyServer(false);
 
 			try {
-				final String txver = validator.setTerminologyServer(cli.getTxServer(), null, FhirPublication.R4);
+				final String txver = validator.setTerminologyServer(cli.getTxServer(), null, FhirPublication.R4, true);
 				log.debug("Version of the terminology server: {}", txver);
 			} catch (final Exception e) {
 				throw new TerminologyServerException("Error while setting the terminology server: " + e.getMessage(), e);

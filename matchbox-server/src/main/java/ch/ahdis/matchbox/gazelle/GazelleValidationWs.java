@@ -13,7 +13,7 @@ import ch.ahdis.matchbox.gazelle.models.metadata.Interface;
 import ch.ahdis.matchbox.gazelle.models.metadata.RestBinding;
 import ch.ahdis.matchbox.gazelle.models.metadata.Service;
 import ch.ahdis.matchbox.gazelle.models.validation.*;
-import org.hl7.fhir.r4.model.StructureDefinition;
+import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -153,7 +153,7 @@ public class GazelleValidationWs {
 			report.addValidationSubReport(unexpectedError(exception.getMessage()));
 			return updateReportFields(report);
 		}
-		final StructureDefinition structDef = engine.getStructureDefinitionR4(profileCanonical);
+		final StructureDefinition structDef = engine.getStructureDefinitionR5(profileCanonical);
 
 		// Response: update the validation method
 		method.setValidationProfileVersion(structDef.getVersion());
@@ -217,7 +217,7 @@ public class GazelleValidationWs {
 			log.error("Error while initializing the validation engine", e);
 			throw new MatchboxEngineCreationException("Error while initializing the validation engine: %s".formatted(e.getMessage()), e);
 		}
-		if (engine == null || engine.getStructureDefinitionR4(canonical) == null) {
+		if (engine == null || engine.getStructureDefinitionR5(canonical) == null) {
 			throw new MatchboxEngineCreationException(
 				"Validation for profile '%s' not supported by this validator instance".formatted(canonicalWithVersion));
 		}

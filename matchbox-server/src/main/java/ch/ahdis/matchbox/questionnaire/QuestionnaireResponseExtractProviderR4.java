@@ -77,7 +77,7 @@ public class QuestionnaireResponseExtractProviderR4  {
           "Could not get matcbox-enginge with questionnaire with canonical URL '" + questionnaireUri + "'");
 
    
-    Questionnaire questionnaire = (Questionnaire) matchboxEngine.getCanonicalResourceR4(questionnaireUri);
+    Questionnaire questionnaire = (Questionnaire) matchboxEngine.getCanonicalResource(questionnaireUri, "4.0.1");
     if (questionnaire == null)
       throw new UnprocessableEntityException(
           "Could not fetch questionnaire with canonical URL '" + questionnaireUri + "'");

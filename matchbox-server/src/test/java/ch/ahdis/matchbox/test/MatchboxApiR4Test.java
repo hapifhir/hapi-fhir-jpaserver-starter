@@ -103,9 +103,9 @@ class MatchboxApiR4Test {
 		// tests against matchbox r4 test ig
 		String profileMatchbox = "http://matchbox.health/ig/test/r4/StructureDefinition/practitioner-identifier-required";
 		operationOutcome = validationClient.validate(resource, profileMatchbox);
-		String sessionIdMatchbox = getSessionId(operationOutcome);
 		assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
 		assertEquals("matchbox.health.test.ig.r4#0.1.0", getIg(operationOutcome));
+		String sessionIdMatchbox = getSessionId(operationOutcome);
 
 		// verify that we have have different validation engine
 		assertNotEquals(sessionIdCore, sessionIdMatchbox);
