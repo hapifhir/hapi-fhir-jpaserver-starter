@@ -56,6 +56,7 @@ import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.hl7.fhir.r5.utils.OperationOutcomeUtilities;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
 import org.hl7.fhir.r5.utils.validation.IResourceValidator;
+import org.hl7.fhir.r5.utils.validation.constants.ReferenceValidationPolicy;
 import org.hl7.fhir.r5.fhirpath.FHIRPathEngine;
 import org.hl7.fhir.utilities.ByteProvider;
 import org.hl7.fhir.utilities.FhirPublication;
@@ -69,6 +70,8 @@ import org.hl7.fhir.validation.IgLoader;
 import org.hl7.fhir.validation.ValidationEngine;
 import org.hl7.fhir.validation.cli.services.StandAloneValidatorFetcher;
 import org.hl7.fhir.validation.instance.InstanceValidator;
+import org.hl7.fhir.validation.cli.services.IPackageInstaller;
+import org.hl7.fhir.validation.cli.services.StandAloneValidatorFetcher;
 
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import ch.ahdis.matchbox.mappinglanguage.MatchboxStructureMapUtilities;
@@ -202,13 +205,8 @@ public class MatchboxEngine extends ValidationEngine {
 			}
 			engine.getContext().setPackageTracker(engine);
 			engine.setPcm(this.getFilesystemPackageCacheManager());
-
-			StandAloneValidatorFetcher fetcher = new StandAloneValidatorFetcher(engine.getPcm(), engine.getContext(), engine);
-			engine.setFetcher(fetcher);
-			engine.getContext().setLocator(fetcher);
-			engine.setPolicyAdvisor(fetcher);
-
-			engine.setPolicyAdvisor(engine);
+			engine.setPolicyAdvisor(new ValidationPolicyAdvisor(ReferenceValidationPolicy.CHECK_VALID));
+			engine.setAllowExampleUrls(true);
 			return engine;
 		}
 
@@ -245,11 +243,8 @@ public class MatchboxEngine extends ValidationEngine {
 				}
 			}
 
-			StandAloneValidatorFetcher fetcher = new StandAloneValidatorFetcher(engine.getPcm(), engine.getContext(), engine);
-			engine.setFetcher(fetcher);
-			engine.getContext().setLocator(fetcher);
-			engine.setPolicyAdvisor(fetcher);
-			engine.setPolicyAdvisor(engine);
+			engine.setPolicyAdvisor(new ValidationPolicyAdvisor(ReferenceValidationPolicy.CHECK_VALID));
+			engine.setAllowExampleUrls(true);
 
 			engine.getContext().setPackageTracker(engine);
 			engine.setPcm(this.getFilesystemPackageCacheManager());
@@ -284,13 +279,14 @@ public class MatchboxEngine extends ValidationEngine {
 			}
 			engine.getContext().setPackageTracker(engine);
 			engine.setPcm(this.getFilesystemPackageCacheManager());
+			engine.setPolicyAdvisor(new ValidationPolicyAdvisor(ReferenceValidationPolicy.CHECK_VALID));
+			engine.setAllowExampleUrls(true);
 			return engine;
 		}
 
 		@Override
 		public ValidationEngine fromNothing() throws MatchboxEngineCreationException {
 			try {
-//				return super.withTerminologyCachePath("").fromNothing();
 				return super.fromNothing();
 			} catch (final IOException e) {
 				throw new MatchboxEngineCreationException(e);
@@ -542,10 +538,8 @@ public class MatchboxEngine extends ValidationEngine {
 						+ (sd.getDateElement() != null ? "(" + sd.getDateElement().asStringValue() + ")" : ""));
 		}
 		final List<ValidationMessage> messages = new ArrayList<>();
-//		this.getContext().getTxCache().clear();
 		final InstanceValidator validator = getValidator(format);
-		//validator.getBaseOptions().setCheckValueSetOnly();
-		//validator.getBaseOptions().setNoServer(true);
+		validator.setPolicyAdvisor(new ValidationPolicyAdvisor(ReferenceValidationPolicy.CHECK_VALID));
 		validator.validate(null, messages, stream, format, (sd != null) ? new ArrayList<>(List.of(sd)) :  new ArrayList<>());
 		return this.filterValidationMessages(messages);
 	}

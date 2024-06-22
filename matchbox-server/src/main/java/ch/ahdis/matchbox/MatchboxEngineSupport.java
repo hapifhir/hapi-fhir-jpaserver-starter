@@ -13,9 +13,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r5.conformance.R5ExtensionsLoader;
 import org.hl7.fhir.r5.terminologies.CodeSystemUtilities;
+import org.hl7.fhir.r5.utils.validation.constants.ReferenceValidationPolicy;
 import org.hl7.fhir.utilities.FhirPublication;
 import org.hl7.fhir.validation.cli.services.IPackageInstaller;
-import org.hl7.fhir.validation.cli.services.StandAloneValidatorFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -31,6 +31,7 @@ import ca.uhn.fhir.jpa.model.entity.NpmPackageVersionResourceEntity;
 import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ch.ahdis.matchbox.engine.MatchboxEngine.MatchboxEngineBuilder;
+import ch.ahdis.matchbox.engine.ValidationPolicyAdvisor;
 import ch.ahdis.matchbox.util.EngineSessionCache;
 
 
@@ -493,23 +494,7 @@ public class MatchboxEngineSupport {
 		validator.setShowTimes(true);
 		validator.setAllowExampleUrls(cli.isAllowExampleUrls());
 
-		final var fetcher = new StandAloneValidatorFetcher(
-			validator.getPcm(),
-			validator.getContext(),
-			new IPackageInstaller() {
-				// https://github.com/ahdis/matchbox/issues/67
-				@Override
-				public boolean packageExists(String id, String ver) {
-					return false;
-				}
-
-				@Override
-				public void loadPackage(String id, String ver) {
-				}
-			});
-		validator.setFetcher(fetcher);
-		validator.getContext().setLocator(fetcher);
-
+		validator.setPolicyAdvisor(new ValidationPolicyAdvisor(ReferenceValidationPolicy.CHECK_VALID));
 		// validator.getBundleValidationRules().addAll(cliContext.getBundleValidationRules());
 		validator.setJurisdiction(CodeSystemUtilities.readCoding(cli.getJurisdiction()));
 		// TerminologyCache.setNoCaching(cliContext.isNoInternalCaching());

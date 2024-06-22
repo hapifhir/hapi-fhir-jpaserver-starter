@@ -79,8 +79,8 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 	private static final Logger ourLog = LoggerFactory.getLogger(MatchboxPackageInstallerImpl.class);
 	// MODIFIED
 	public static List<String> DEFAULT_INSTALL_TYPES = Collections
-			.unmodifiableList(Lists.newArrayList("NamingSystem", "CodeSystem", "ValueSet", "StructureDefinition",
-					"ConceptMap", "SearchParameter", "StructureMap", "Questionnaire"));
+			.unmodifiableList(Lists.newArrayList("NamingSystem", "CapabilityStatement", "CodeSystem", "ValueSet", "StructureDefinition", "Measure", "Library",
+					"ConceptMap", "SearchParameter", "StructureMap", "Questionnaire", "OperationDefinition","ActorDefinition","Requirements"));
 
 	boolean enabled = true;
 	@Autowired

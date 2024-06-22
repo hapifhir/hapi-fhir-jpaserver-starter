@@ -105,7 +105,7 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 		// parameter default-to-lastest-version (Booelan)
 		// parameter profile-url "http://hl7.org/fhir/ExpansionProfile/dc8fd4bc-091a-424a-8a3b-6198ef146891"
 
-		if (code!=null && "lenient-display-validation".equals(mode)) {
+		if (code!=null) {
 			return mapCodeToSuccessfulParameters(code);
 		}
 

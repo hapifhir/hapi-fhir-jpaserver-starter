@@ -416,19 +416,8 @@ public class MatchboxService {
       validator.setForPublication(cliContext.isForPublication());
       validator.setShowTimes(cliContext.isShowTimes());
       validator.setAllowExampleUrls(cliContext.isAllowExampleUrls());
-      StandAloneValidatorFetcher fetcher = new StandAloneValidatorFetcher(validator.getPcm(), validator.getContext(), new IPackageInstaller()  {
-        // (https://github.com/ahdis/matchbox/issues/67)
-        @Override
-        public boolean packageExists(String id, String ver) throws IOException, FHIRException {
-          return false;
-        }
+      validator.setPolicyAdvisor(validator);
 
-        @Override
-        public void loadPackage(String id, String ver) throws IOException, FHIRException {
-        }}
-      );    
-      validator.setFetcher(fetcher);
-      validator.getContext().setLocator(fetcher);
       validator.getBundleValidationRules().addAll(cliContext.getBundleValidationRules());
       validator.setJurisdiction(CodeSystemUtilities.readCoding(cliContext.getJurisdiction()));
 //      TerminologyCache.setNoCaching(cliContext.isNoInternalCaching());
