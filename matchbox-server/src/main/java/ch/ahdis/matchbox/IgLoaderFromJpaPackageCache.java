@@ -260,8 +260,8 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 				NpmPackage pi = this.loadPackage(npmPackage.get());
 				getContext().getLoadedPackages().add(pi.name() + "#" + pi.version());
 				try {
-					for (String s : pi.listResources("CodeSystem", "ConceptMap", "ImplementationGuide", "CapabilityStatement",
-							"NamingSystem", "Questionnaire", "Conformance", "StructureMap", "ValueSet", "StructureDefinition")) {
+					for (String s : pi.listResources("NamingSystem", "CapabilityStatement", "CodeSystem", "ValueSet", "StructureDefinition", "Measure", "Library",
+					"ConceptMap", "SearchParameter", "StructureMap", "Questionnaire", "OperationDefinition","ActorDefinition","Requirements")) {
 						++count;
 						Resource r = null;
 						try {

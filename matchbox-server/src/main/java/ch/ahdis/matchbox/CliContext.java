@@ -140,7 +140,7 @@ public class CliContext {
   private boolean forPublication = false;
 
   @JsonProperty("allowExampleUrls")
-  private boolean allowExampleUrls = false;
+  private boolean allowExampleUrls = true;
 
   // @JsonProperty("showTimes")
   // private boolean showTimes = false;
