@@ -2,12 +2,16 @@ package ch.ahdis.matchbox;
 
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
+import java.io.File;
+import java.security.MessageDigest;
 import java.util.*;
 
 import ch.ahdis.matchbox.config.MatchboxFhirContextProperties;
 import ch.ahdis.matchbox.engine.exception.IgLoadException;
 import ch.ahdis.matchbox.engine.exception.MatchboxEngineCreationException;
 import ch.ahdis.matchbox.engine.exception.TerminologyServerException;
+
+import org.apache.commons.codec.digest.DigestUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -432,6 +436,14 @@ public class MatchboxEngineSupport {
 		this.initialized = initialized;
 	}
 
+	private String getTxCachePath(String txServer) {
+		String path = System.getProperty("home");
+		if (path == null || path.isEmpty()) {
+			path = System.getProperty("user.dir");
+		}
+		String md5Hex = DigestUtils.md5Hex(txServer).toLowerCase();
+		return path + File.separator +"txCache" +File.separator + md5Hex;
+	}
 
 	/**
 	 * Configures the validation engine with the cliContext parameters.
@@ -456,6 +468,11 @@ public class MatchboxEngineSupport {
 				log.debug("Version of the terminology server: {}", txver);
 			} catch (final Exception e) {
 				throw new TerminologyServerException("Error while setting the terminology server: " + e.getMessage(), e);
+			}
+			try {
+				validator.initTxCache(getTxCachePath(cli.getTxServer()));
+			} catch (final Exception e) {
+				throw new TerminologyServerException("Error while setting the terminology server cache: " + getTxCachePath(cli.getTxServer()), e);
 			}
 		}
 

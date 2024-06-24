@@ -21,6 +21,7 @@ package ch.ahdis.matchbox.engine;
  */
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -68,17 +69,14 @@ import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.hl7.fhir.validation.IgLoader;
 import org.hl7.fhir.validation.ValidationEngine;
-import org.hl7.fhir.validation.cli.services.StandAloneValidatorFetcher;
 import org.hl7.fhir.validation.instance.InstanceValidator;
-import org.hl7.fhir.validation.cli.services.IPackageInstaller;
-import org.hl7.fhir.validation.cli.services.StandAloneValidatorFetcher;
 
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import ch.ahdis.matchbox.mappinglanguage.MatchboxStructureMapUtilities;
 import ch.ahdis.matchbox.mappinglanguage.TransformSupportServices;
 
 /**
- * Base Engine providing functionality on top of the ValdiationEngine
+ * Base Engine providing functionality on top of the ValidationEngine
  * 
  * @author oliveregger
  *
@@ -98,8 +96,6 @@ public class MatchboxEngine extends ValidationEngine {
 		} catch (final IOException e) {
 			throw new MatchboxEngineCreationException(e);
 		}
-
-		this.getContext().setCachingAllowed(false); // Uncomment to improve debugging HAPI by disabling caching
 	}
 
 	/**
@@ -826,4 +822,18 @@ public class MatchboxEngine extends ValidationEngine {
 	public enum FilesystemPackageCacheMode {
 		USER, SYSTEM, TESTING, CUSTOM
 	}
+
+
+	/**
+	 * Initializes the terminology cache 
+	 * @param cacheDir
+	 * @throws FileNotFoundException
+	 * @throws FHIRException
+	 * @throws IOException
+	 */	
+    public void initTxCache(String cacheDir) throws FileNotFoundException, FHIRException, IOException {
+		getContext().initTxCache(cacheDir);
+		getContext().setCachingAllowed(true);
+	}
+
 }

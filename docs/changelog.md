@@ -7,6 +7,7 @@
 - improved the validation GUI [#242](https://github.com/ahdis/matchbox/issues/#242), upgraded to angular@18
 - update to hl7.fhir.core 6.3.11 [#254](https://github.com/ahdis/matchbox/issues/#254)
 - fixed validation problems [#250](https://github.com/ahdis/matchbox/issues/#250),[#251](https://github.com/ahdis/matchbox/issues/#251),[#252](https://github.com/ahdis/matchbox/issues/#252)
+- enable Terminology Caching [#257](https://github.com/ahdis/matchbox/issues/#257)
 
 2024/06/14 Release 3.8.5
 
