@@ -437,12 +437,18 @@ public class MatchboxEngineSupport {
 	}
 
 	private String getTxCachePath(String txServer) {
-		String path = System.getProperty("home");
+		String path = System.getenv("HOME");
 		if (path == null || path.isEmpty()) {
 			path = System.getProperty("user.dir");
 		}
 		String md5Hex = DigestUtils.md5Hex(txServer).toLowerCase();
-		return path + File.separator +"txCache" +File.separator + md5Hex;
+		if (path==null) {
+			path = "";
+		}
+		if (!path.endsWith(File.separator)) {
+			path += File.separator;
+		}
+		return path +"txCache" +File.separator + md5Hex;
 	}
 
 	/**

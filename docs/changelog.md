@@ -1,13 +1,17 @@
+2024/06/24 Release 3.8.7
+
+- docker image for v3.8.6 not starting up [#258](https://github.com/ahdis/matchbox/issues/258)
+
 2024/06/24 Release 3.8.6
 
 - fhirpath date add/minus with variables in fml [#243](https://github.com/ahdis/matchbox/issues/243)
 - update to published CDA FHIR logical model with matcbhox patches 2.0.0-sd [#241](https://github.com/ahdis/matchbox/issues/241)
-- update frontend for high security vulnerabilities [#246](https://github.com/ahdis/matchbox/issues/#246)
-- CH:IPS validation problem [#248](https://github.com/ahdis/matchbox/issues/#248)
-- improved the validation GUI [#242](https://github.com/ahdis/matchbox/issues/#242), upgraded to angular@18
-- update to hl7.fhir.core 6.3.11 [#254](https://github.com/ahdis/matchbox/issues/#254)
-- fixed validation problems [#250](https://github.com/ahdis/matchbox/issues/#250),[#251](https://github.com/ahdis/matchbox/issues/#251),[#252](https://github.com/ahdis/matchbox/issues/#252)
-- enable Terminology Caching [#257](https://github.com/ahdis/matchbox/issues/#257)
+- update frontend for high security vulnerabilities [#246](https://github.com/ahdis/matchbox/issues/246)
+- CH:IPS validation problem [#248](https://github.com/ahdis/matchbox/issues/248)
+- improved the validation GUI [#242](https://github.com/ahdis/matchbox/issues/242), upgraded to angular@18
+- update to hl7.fhir.core 6.3.11 [#254](https://github.com/ahdis/matchbox/issues/254)
+- fixed validation problems [#250](https://github.com/ahdis/matchbox/issues/250),[#251](https://github.com/ahdis/matchbox/issues/251),[#252](https://github.com/ahdis/matchbox/issues/252)
+- enable Terminology Caching [#257](https://github.com/ahdis/matchbox/issues/257)
 
 2024/06/14 Release 3.8.5
 
