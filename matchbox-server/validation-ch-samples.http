@@ -435,3 +435,34 @@ GET {{host}}/ImplementationGuide
 ###
 GET  {{host}}/ImplementationGuide/ch.fhir.ig.ch-vacd-3.0.0  HTTP/1.1
 Accept: application/gzip
+
+### CH-Core Franz Muster )
+POST {{host}}/$validate?profile=http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-patient HTTP/1.1
+Content-Type: application/fhir+xml; charset=UTF-8
+
+<Patient xmlns="http://hl7.org/fhir">
+  <id value="Pat-LillyLiechtenstein"/>
+  <identifier>
+    <system value="urn:oid:2.16.438.10.20.10.10.1.2.1"/>
+    <value value="1234567890123"/>
+  </identifier>
+  <name>
+    <family value="Liechtenstein"/>
+    <given value="Lilly"/>
+  </name>
+  <gender value="female"/>
+  <birthDate value="2000-09-14"/>
+  <address>
+    <use value="home"/>
+    <state value="FL"/>
+    <country value="LI">
+      <extension
+                 url="http://hl7.org/fhir/StructureDefinition/iso21090-SC-coding">
+        <valueCoding>
+          <system value="urn:iso:std:iso:3166"/>
+          <code value="LIE"/>
+        </valueCoding>
+      </extension>
+    </country>
+  </address>
+</Patient>

@@ -20,26 +20,38 @@ hapi:
       ch-emed:
         name: ch.fhir.ig.ch-emed
         version: 5.0.0-ballot 
-        url: https://fhir.ch/ig/ch-emed/package.tgz
       ch-ips:
         name: ch.fhir.ig.ch-ips
         version: 1.0.0-ballot 
-        url: https://fhir.ch/ig/ch-ips/package.tgz
       ch-vacd:
         name: ch.fhir.ig.ch-vacd
         version: 5.0.0-ballot 
-        url: https://fhir.ch/ig/ch-vacd/package.tgz
       ch-allergyintolerance:
         name: ch.fhir.ig.ch-allergyintolerance
         version: 3.0.0-ballot 
-        url: https://fhir.ch/ig/ch-allergyintolerance/package.tgz
       ch-lab-report:
         name: ch.fhir.ig.ch-lab-report
-        version: 1.0.0-ballot 
-        url: https://fhir.ch/ig/ch-lab-report/package.tgz
-    staticLocation: file:/apps/
+        version: 1.0.0-ballot
+      ch-lab-order:
+        name: ch.fhir.ig.ch-lab-order
+        version: 2.0.0
+      ch-rad-order:
+        name: ch.fhir.ig.ch-rad-order
+        version: 2.0.0-ballot
+      ch-etoc:
+        name: ch.fhir.ig.ch-etoc
+        version: 3.0.0-ballot
+      ch-epr-fhir:
+        name: ch.fhir.ig.ch-epr-fhir
+        version: 4.0.1-ballot 
+      ch-atc:
+        name: ch.fhir.ig.ch-atc
+        version: 3.3.0-ballot
 matchbox:
   fhir:
     context:
       fhirVersion: 4.0.1
       txServer: http://tx.fhir.org
+      suppressWarnInfo:
+        hl7.fhir.r4.core#4.0.1:
+          - "Constraint failed: dom-6:"

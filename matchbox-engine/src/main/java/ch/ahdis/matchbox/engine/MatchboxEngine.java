@@ -832,8 +832,12 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @throws IOException
 	 */	
     public void initTxCache(String cacheDir) throws FileNotFoundException, FHIRException, IOException {
-		getContext().initTxCache(cacheDir);
-		getContext().setCachingAllowed(true);
+		if (cacheDir !=null) {
+			getContext().initTxCache(cacheDir);
+			getContext().setCachingAllowed(true);
+		} else {
+			getContext().setCachingAllowed(false);
+		}
 	}
 
 }

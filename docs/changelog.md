@@ -1,3 +1,9 @@
+2024/06/25 Release 3.8.8
+
+- validation for 3 letter country codes [#259](https://github.com/ahdis/matchbox/issues/259)
+- making caching of txServer configurable
+- add support for dateTime [#243](https://github.com/ahdis/matchbox/issues/243)
+
 2024/06/24 Release 3.8.7
 
 - docker image for v3.8.6 not starting up [#258](https://github.com/ahdis/matchbox/issues/258)

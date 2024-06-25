@@ -235,7 +235,7 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 
 			for (final var filter : include.getFilter()) {
 				if ("regex".equals(filter.getOp().toCode())) {
-					final var pattern = Pattern.compile(filter.getOp().toCode());
+					final var pattern = Pattern.compile(filter.getValue());
 					// Try to match the full code with the regex
 					if (!pattern.matcher(coding.getCode()).matches()) {
 						return CodeMembership.EXCLUDED;

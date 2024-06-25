@@ -92,7 +92,11 @@ public class CliContext {
   // @JsonProperty("htmlOutput")
   // private String htmlOutput = null;
   @JsonProperty("txServer")
-  private String txServer = "http://tx.fhir.org";
+  private String txServer = null;
+
+  @JsonProperty("txServerCache")
+  private boolean txServerCache = true;
+
   // @JsonProperty("sv")
   // private String sv = null;
   // @JsonProperty("txLog")
@@ -287,6 +291,16 @@ public class CliContext {
   @JsonProperty("txServer")
   public void setTxServer(String txServer) {
     this.txServer = txServer;
+  }
+
+  @JsonProperty("txServerCache")
+  public boolean getTxServerCache() {
+    return txServerCache;
+  }
+
+  @JsonProperty("txServerCache")
+  public void setTxServerCache(boolean txServerCache) {
+    this.txServerCache = txServerCache;
   }
 
   @JsonProperty("doNative")
@@ -597,6 +611,7 @@ public class CliContext {
         && htmlInMarkdownCheck == that.htmlInMarkdownCheck
         && Objects.equals(extensions, that.extensions)
         && Objects.equals(txServer, that.txServer)
+        && txServerCache == that.txServerCache
         && Objects.equals(lang, that.lang)
         && Objects.equals(snomedCT, that.snomedCT)
         && Objects.equals(fhirVersion, that.fhirVersion)
@@ -633,6 +648,7 @@ public class CliContext {
         allowExampleUrls,
         htmlInMarkdownCheck,
         txServer,
+        txServerCache,
         lang,
         snomedCT,
         fhirVersion,
@@ -666,6 +682,7 @@ public class CliContext {
         ", doImplicitFHIRPathStringConversion=" + doImplicitFHIRPathStringConversion +
         ", htmlInMarkdownCheck=" + htmlInMarkdownCheck +
         ", txServer='" + txServer + '\'' +
+        ", txServerCache='" + txServerCache + '\'' +
         ", lang='" + lang + '\'' +
         ", snomedCT='" + snomedCT + '\'' +
         ", fhirVersion='" + fhirVersion + '\'' +
@@ -717,6 +734,7 @@ public class CliContext {
 	addExtension(ext, "httpReadOnly", new BooleanType(this.httpReadOnly));
 	addExtension(ext, "allowExampleUrls", new BooleanType(this.allowExampleUrls));
 	addExtension(ext, "txServer", new UriType(this.txServer));
+	addExtension(ext, "txServerCache", new BooleanType(this.txServerCache));
 	addExtension(ext, "lang", new StringType(this.lang));
 	addExtension(ext, "snomedCT", new StringType(this.snomedCT));
 	addExtension(ext, "fhirVersion", new StringType(this.fhirVersion));

@@ -461,6 +461,9 @@ public class MatchboxEngineSupport {
 	private void configureValidationEngine(final MatchboxEngine validator,
 														final CliContext cli) throws MatchboxEngineCreationException {
 		log.info("Terminology server {}", cli.getTxServer());
+		if (cli.getTxServer() == null) {
+			throw new MatchboxEngineCreationException("Terminology server is not set, you need to set it in the configuration file.");
+		}
 		if ("n/a".equals(cli.getTxServer())) {
 			validator.getContext().setCanRunWithoutTerminology(true);
 			validator.getContext().setNoTerminologyServer(true);
@@ -470,13 +473,14 @@ public class MatchboxEngineSupport {
 			validator.getContext().setNoTerminologyServer(false);
 
 			try {
+				// set "txLog" for second parameter to activate
 				final String txver = validator.setTerminologyServer(cli.getTxServer(), null, FhirPublication.R4, true);
 				log.debug("Version of the terminology server: {}", txver);
 			} catch (final Exception e) {
 				throw new TerminologyServerException("Error while setting the terminology server: " + e.getMessage(), e);
 			}
 			try {
-				validator.initTxCache(getTxCachePath(cli.getTxServer()));
+				validator.initTxCache(cli.getTxServerCache() ? getTxCachePath(cli.getTxServer()) : null);
 			} catch (final Exception e) {
 				throw new TerminologyServerException("Error while setting the terminology server cache: " + getTxCachePath(cli.getTxServer()), e);
 			}
