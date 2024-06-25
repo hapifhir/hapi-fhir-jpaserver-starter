@@ -98,3 +98,18 @@ jobs:
               see also https://github.com/ahdis/matchbox/releases/tag/${{ github.ref_name }}
               
               docker pull ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.ref_name }}
+
+      - name: Send a stream message to Zulip
+        uses: zulip/github-actions-zulip/send-message@v1
+        if: failure() 
+        with:
+          api-key: ${{ secrets.ZULIPAPIKEY }}
+          email: "ahdis-bot@chat.fhir.org"
+          organization-url: "https://chat.fhir.org"
+          to: "ahdis"
+          type: "stream"
+          topic: "failed publishing matchbox"
+          content: |
+              failure ${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.ref_name }} 
+              
+              see https://github.com/ahdis/matchbox-ch-elm/actions/runs/${{ github.run_id }}
