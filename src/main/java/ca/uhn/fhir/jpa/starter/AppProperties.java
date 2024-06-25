@@ -37,6 +37,7 @@ public class AppProperties {
   private Boolean allow_multiple_delete = false;
   private Boolean allow_override_default_search_params = true;
   private Boolean auto_create_placeholder_reference_targets = false;
+  private Boolean mass_ingestion_mode_enabled = false;
   private final Set<String> auto_version_reference_at_paths = new HashSet<>();
   private Boolean language_search_parameter_enabled = false;
   private Boolean dao_scheduling_enabled = true;
@@ -322,6 +323,14 @@ public Cors getCors() {
   public void setAllow_override_default_search_params(
     Boolean allow_override_default_search_params) {
     this.allow_override_default_search_params = allow_override_default_search_params;
+  }
+
+  public Boolean getMass_ingestion_mode_enabled() {
+    return mass_ingestion_mode_enabled;
+  }
+
+  public void setMass_ingestion_mode_enabled(Boolean mass_ingestion_mode_enabled) {
+    this.mass_ingestion_mode_enabled = mass_ingestion_mode_enabled;
   }
 
   public Boolean getAuto_create_placeholder_reference_targets() {
