@@ -11,9 +11,9 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-@Configuration
-@Conditional(OnDSTU2Condition.class)
-@Import({JpaDstu2Config.class, StarterJpaConfig.class})
+//@Configuration
+//@Conditional(OnDSTU2Condition.class)
+//@Import({JpaDstu2Config.class, StarterJpaConfig.class})
 public class FhirServerConfigDstu2 {
 	@Bean
 	public ITermLoaderSvc termLoaderService(

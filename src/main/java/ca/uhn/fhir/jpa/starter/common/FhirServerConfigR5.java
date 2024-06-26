@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-@Configuration
-@Conditional(OnR5Condition.class)
-@Import({StarterJpaConfig.class, JpaR5Config.class, SubscriptionTopicConfig.class, ElasticsearchConfig.class})
+//@Configuration
+//@Conditional(OnR5Condition.class)
+//@Import({StarterJpaConfig.class, JpaR5Config.class, SubscriptionTopicConfig.class, ElasticsearchConfig.class})
 public class FhirServerConfigR5 {}

@@ -1,25 +1,30 @@
-version: "3"
 services:
-  hapi-fhir-jpaserver-start:
+  hapi-fhir-au:
     build: .
-    container_name: hapi-fhir-jpaserver-start
+    container_name: hapi-fhir-au
     restart: on-failure
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://hapi-fhir-postgres:5432/hapi"
-      SPRING_DATASOURCE_USERNAME: "admin"
-      SPRING_DATASOURCE_PASSWORD: "admin"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://hapi-fhir-postgres:5432/hapi-fhir-au"
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_DATASOURCE_DRIVERCLASSNAME: "org.postgresql.Driver"
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: "ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect"
     ports:
       - "8080:8080"
+    depends_on:
+      - hapi-fhir-postgres
+
   hapi-fhir-postgres:
-    image: postgres:14-alpine
+    build:
+      context: .
+      dockerfile: Postgres.Dockerfile
+      args:
+        POSTGRES_DB: "hapi-fhir-au"
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     container_name: hapi-fhir-postgres
     restart: always
     environment:
-      POSTGRES_DB: "hapi"
-      POSTGRES_USER: "admin"
-      POSTGRES_PASSWORD: "admin"
-    volumes:
-      - hapi-fhir-postgres:/var/lib/postgresql/data
-volumes:
-  hapi-fhir-postgres:
+      POSTGRES_DB: "hapi-fhir-au"
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}

@@ -1,18 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <div th:fragment="banner">
-    <div class="row">
+    <div class="row" style="margin: 20px;padding-bottom: 20px;">
         <div class="col-md-8">
-            <img id="logo" src="img/sample-logo.jpg" width="383" alt="Sample Logo"/>
+            <img id="logo" src="img/Whitefox.logo.svg" height="74" alt="Whitefox Logo"/>
         </div>
-        <div class="col-md-4">
-            <img src="img/hapi_fhir_banner_right.png" align="right"/>
+        <div class="col-md-4" style="padding-top: 10px;">
+            <img src="img/hapi_fhir_banner_right.png" height="54" align="right"/>
         </div>
     </div>
 
     <script>
-        const customlogoImageUrl = "content/custom/logo.jpg"; // Custom logo
-        const defaultLogoImageUrl = "img/sample-logo.jpg"; // Default logo
+
+        document.title = "Whitefox Test FHIR Server";
+
+        const liElement = document.querySelector('.nav-item.dropdown');
+        if (liElement) {
+            liElement.remove();
+        }
+
+        const sidebarDiv = document.querySelector('.sidebar');
+        if (sidebarDiv) {
+            sidebarDiv.style.padding = '20px';
+        }
+
+        const customlogoImageUrl = "img/Whitefox.logo.svg"; // Custom logo
+        const defaultLogoImageUrl = "img/Whitefox.logo.svg"; // Default logo
         const logoImageElement = document.getElementById("logo");
 
         // Check if the logo image is available

@@ -16,39 +16,29 @@
 
                 <div th:replace="tmpl-banner :: banner"></div>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="panel panel-default" style="padding: 20px;">
+                    <div class="panel-heading" style="margin-bottom: 20px;">
                         <h3 class="panel-title">About This Server</h3>
                     </div>
                     <div class="panel-body">
                         <div id="replacementAbout">
+
                             <p>
-                                This server provides a complete implementation of the FHIR Specification
-                                using a 100% open source software stack.
-                            </p>
-                            <p>
-                                This server is built
-                                from a number of modules of the
-                                <a href="https://github.com/hapifhir/hapi-fhir/">HAPI FHIR</a>
-                                project, which is a 100% open-source (Apache 2.0 Licensed) Java based
-                                implementation of the FHIR specification.
+                                Our FHIR AU Core test server, based on the HAPI FHIR server, is designed to be comprehensive and user-friendly. It supports all AU Core profiles with full CRUD (Create, Read, Update, Delete) operations and advanced search functionalities. Users can experiment with creating, reading, updating, and deleting resources, and perform precise searches to retrieve specific data.
                             </p>
 
+                            <p>
+                                <strong>Validation</strong> is one of the key features of our server. It ensures that all resources conform to AU Core specifications through rigorous schema, profile, and constraint validation. Our validation mechanisms verify that the structure of the FHIR resources adheres to the FHIR AU Core schemas, check compliance with specific profiles defined in the AU Core implementation guide, and enforce all required constraints, such as mandatory fields and value sets. You can use it to test and validate your resources, ensuring they meet the AU Core standards.
+                            </p>
+
+                            <p>
+                                This is a <strong>test server</strong>, not intended for production use. Data on the server is purged every day and refilled with predefined sample data. <strong>Please do not store any credentials or personal data</strong> on this server, ensuring the security and privacy of your information.
+                            </p>
+
+                            <p>
+                                Compliance with the FHIR AU Core specifications is a cornerstone of our server, ensuring all resources adhere to Australian healthcare standards. Additionally, our server is secure, optimized for performance, and highly extensible, allowing for custom profiles and operations. Publicly deployed, it provides a sandbox environment for testing and validating FHIR resources, making it an invaluable tool for developers and organizations.
+                            </p>
                         </div>
-                    </div>
-
-
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Data On This Server</h3>
-                    </div>
-                    <div class="panel-body">
-                        <p>
-                            This UI can be customized!
-                            You might want to put rules on who can use this server here, or
-                            notices about privacy, or whatever else you want..
-                        </p>
                     </div>
                 </div>
 

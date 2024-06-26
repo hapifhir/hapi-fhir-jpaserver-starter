@@ -54,6 +54,7 @@ spring:
       #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
       #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
       hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+
   #      hibernate.hbm2ddl.auto: update
   #      hibernate.jdbc.batch_size: 20
   #      hibernate.cache.use_query_cache: false
@@ -102,23 +103,56 @@ hapi:
     #custom_content_path: ./custom
     ### enables the server host custom content. If e.g. the value ./configs/app is supplied then the content
     ### will be served under /web/app
-    #app_content_path: ./configs/app
+    app_content_path: ./configs/app
     ### enable to set the Server URL
     #    server_address: http://hapi.fhir.org/baseR4
     #    defer_indexing_for_codesystems_of_size: 101
-    #    install_transitive_ig_dependencies: true
+    #install_transitive_ig_dependencies: true
     #implementationguides:
-    ###    example from registry (packages.fhir.org)
-    #  swiss:
-    #    name: swiss.mednet.fhir
-    #    version: 0.8.0
+    #  hl7-fhir-r4-core:
+    #    name: hl7.fhir.r4.core
+    #    version: 4.0.1
     #    reloadExisting: false
     #    installMode: STORE_AND_INSTALL
-    #      example not from registry
-    #      ips_1_0_0:
-    #        packageUrl: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
-    #        name: hl7.fhir.uv.ips
-    #        version: 1.0.0
+    #    fetchDependencies: true
+    #  hl7-terminology-r4:
+    #    name: hl7.terminology.r4
+    #    version: 5.5.0
+    #    reloadExisting: false
+    #    installMode: STORE_AND_INSTALL
+    #    fetchDependencies: true
+    #  hl7-fhir-uv-extensions-r4:
+    #    name: hl7.fhir.uv.extensions.r4
+    #    version: 5.1.0
+    #    reloadExisting: false
+    #    installMode: STORE_AND_INSTALL
+    #    fetchDependencies: true
+    #  hl7-fhir-au-base:
+    #    name: hl7.fhir.au.base
+    #    version: 4.2.1-preview
+    #    reloadExisting: false
+    #    installMode: STORE_AND_INSTALL
+    #    fetchDependencies: true
+    #  hl7-fhir-uv-smart-app-launch:
+    #    name: hl7.fhir.uv.smart-app-launch
+    #    version: 2.2.0
+    #    reloadExisting: false
+    #    installMode: STORE_AND_INSTALL
+    #    fetchDependencies: false        
+    #  hl7-fhir-uv-ipa:
+    #    name: hl7.fhir.uv.ipa
+    #    version: 1.0.0
+    #    reloadExisting: false
+    #    installMode: STORE_AND_INSTALL
+    #    fetchDependencies: true
+    #  au-core:
+    #    name: hl7.fhir.au.core
+    #    version: 0.4.0-preview
+    #    reloadExisting: false
+    #    installMode: STORE_AND_INSTALL
+    #    packageUrl: https://hl7.org.au/fhir/core/0.4.0-preview/package.tgz
+    #    fetchDependencies: false     
+
     #    supported_resource_types:
     #      - Patient
     #      - Observation
@@ -128,7 +162,7 @@ hapi:
     #    allowed_bundle_types: COLLECTION,DOCUMENT,MESSAGE,TRANSACTION,TRANSACTIONRESPONSE,BATCH,BATCHRESPONSE,HISTORY,SEARCHSET
     #    allow_cascading_deletes: true
     #    allow_contains_searches: true
-    #    allow_external_references: true
+    allow_external_references: true
     #    allow_multiple_delete: true
     #    allow_override_default_search_params: true
     #    auto_create_placeholder_reference_targets: false
@@ -140,7 +174,7 @@ hapi:
     #    default_pretty_print: true
     #    default_page_size: 20
     #    delete_expunge_enabled: true
-    #    enable_repository_validating_interceptor: true
+    #enable_repository_validating_interceptor: true
     #    enable_index_missing_fields: false
     #    enable_index_of_type: true
     #    enable_index_contained_resource: false
@@ -176,6 +210,7 @@ hapi:
       - https://unitsofmeasure.org/*
       - http://loinc.org/*
       - https://loinc.org/*
+      - http://hl7.org.au/*
     #    partitioning:
     #      allow_references_across_partitions: false
     #      partitioning_include_in_search_hashes: false
