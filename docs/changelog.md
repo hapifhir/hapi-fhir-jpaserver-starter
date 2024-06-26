@@ -1,7 +1,7 @@
 2024/06/25 Release 3.8.x
 
 - add support for dateTime [#243](https://github.com/ahdis/matchbox/issues/243)
-
+- fix code editor high-jacking of the search keyboard shortcut (CTRL + f) [#260](https://github.com/ahdis/matchbox/issues/260)
 
 2024/06/25 Release 3.8.8
 

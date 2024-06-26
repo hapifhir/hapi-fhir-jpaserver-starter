@@ -123,6 +123,7 @@ export class ValidateComponent implements AfterViewInit {
     this.editor = ace.edit('editor');
     this.editor.setReadOnly(true);
     this.editor.setTheme('ace/theme/textmate');
+    this.editor.commands.removeCommand('find');
     this.editor.setOptions({
       tabSize: INDENT_SPACES,
       wrap: true,

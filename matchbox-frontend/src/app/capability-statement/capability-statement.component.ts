@@ -35,6 +35,7 @@ export class CapabilityStatementComponent implements AfterViewInit {
         this.editor.setValue(JSON.stringify(data, null, INDENT_SPACES), -1);
         this.editor.getSession().setMode('ace/mode/json');
         this.editor.setTheme('ace/theme/textmate');
+        this.editor.commands.removeCommand('find');
         this.editor.setOptions({
           maxLines: 10000,
           tabSize: INDENT_SPACES,
