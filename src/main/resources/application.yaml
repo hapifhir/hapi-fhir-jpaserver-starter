@@ -34,14 +34,12 @@ spring:
     enabled: false
     baselineOnMigrate: true
     fail-on-missing-locations: false
-  datasource:
-    #url: 'jdbc:h2:file:./target/database/h2'
-    url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driverClassName: org.h2.Driver
-    max-active: 15
 
+  datasource:
+    url: 'jdbc:postgresql://localhost:5432/ilumina?currentSchema=fhir'
+    username: fhiruser
+    password: fhir@123
+    driverClassName: org.postgresql.Driver
     # database connection pool size
     hikari:
       maximum-pool-size: 10
@@ -53,7 +51,7 @@ spring:
       #Hibernate dialect is automatically detected except Postgres and H2.
       #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
       #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+      #hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
   #      hibernate.hbm2ddl.auto: update
   #      hibernate.jdbc.batch_size: 20
   #      hibernate.cache.use_query_cache: false
