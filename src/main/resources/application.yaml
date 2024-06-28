@@ -268,3 +268,32 @@ hapi:
 #  protocol: 'http'
 #  schema_management_strategy: CREATE
 #  username: SomeUsername
+---
+
+spring:
+  config:
+    activate:
+      on-profile: LOCAL
+datasource:
+  url: jdbc:mysql://localhost/testserver
+jpa:
+  properties:
+    hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirMySQLDialect
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: DEV
+---
+spring:
+  config:
+    activate:
+      on-profile: PROD
+
+datasource:
+  url: jdbc:mysql://host.docker.internal/testserver
+jpa:
+  properties:
+    hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirMariaDBDialect
