@@ -36,10 +36,10 @@ spring:
     fail-on-missing-locations: false
   datasource:
     #url: 'jdbc:h2:file:./target/database/h2'
-    url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driverClassName: org.h2.Driver
+    url: jdbc:mysql://localhost/testserver
+    username: root
+    password: Ehealthsqlserver1
+    driverClassName: com.mysql.cj.jdbc.Driver
     max-active: 15
 
     # database connection pool size
@@ -53,7 +53,7 @@ spring:
       #Hibernate dialect is automatically detected except Postgres and H2.
       #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
       #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirMySQLDialect
   #      hibernate.hbm2ddl.auto: update
   #      hibernate.jdbc.batch_size: 20
   #      hibernate.cache.use_query_cache: false
@@ -88,7 +88,7 @@ hapi:
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
     fhir_version: R4
     ### Flag is false by default. This flag enables runtime installation of IG's.
-    ig_runtime_upload_enabled: false
+    ig_runtime_upload_enabled: true
     ### This flag when enabled to true, will avail evaluate measure operations from CR Module.
 
     ### enable to use the ApacheProxyAddressStrategy which uses X-Forwarded-* headers
@@ -268,3 +268,32 @@ hapi:
 #  protocol: 'http'
 #  schema_management_strategy: CREATE
 #  username: SomeUsername
+---
+
+spring:
+  config:
+    activate:
+      on-profile: LOCAL
+datasource:
+  url: jdbc:mysql://localhost/testserver
+jpa:
+  properties:
+    hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirMySQLDialect
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: DEV
+---
+spring:
+  config:
+    activate:
+      on-profile: PROD
+
+datasource:
+  url: jdbc:mysql://host.docker.internal/testserver
+jpa:
+  properties:
+    hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirMariaDBDialect
