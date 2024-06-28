@@ -51,15 +51,20 @@
     </dependencyManagement>
 
     <dependencies>
-
         <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.32</version>
+        </dependency>
+
+        <!--dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
         </dependency>
         <dependency>
           <groupId>com.microsoft.sqlserver</groupId>
           <artifactId>mssql-jdbc</artifactId>
-        </dependency>
+        </dependency -->
 
         <!-- Needed for Email subscriptions -->
         <dependency>
