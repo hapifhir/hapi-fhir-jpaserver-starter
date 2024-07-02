@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter;
 
+import be.fgov.ehealth.repository.TestServerConfig;
 import ca.uhn.fhir.batch2.jobs.config.Batch2JobsConfig;
 import ca.uhn.fhir.jpa.batch2.JpaBatch2Config;
 import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration;
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -37,8 +39,10 @@ import org.springframework.context.annotation.Import;
 	WebsocketDispatcherConfig.class,
 	MdmConfig.class,
 	JpaBatch2Config.class,
-	Batch2JobsConfig.class
+	Batch2JobsConfig.class,
+	TestServerConfig.class
 })
+@EntityScan("be.fgov.ehealth.entities")
 public class Application extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {

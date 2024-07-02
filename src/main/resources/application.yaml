@@ -34,6 +34,45 @@ spring:
     enabled: false
     baselineOnMigrate: true
     fail-on-missing-locations: false
+  testserver:
+    datasource:
+      #url: 'jdbc:h2:file:./target/database/h2'
+      url: jdbc:mysql://localhost/testserver
+      username: root
+      password: Ehealthsqlserver1
+      driverClassName: com.mysql.cj.jdbc.Driver
+      max-active: 15
+
+      # database connection pool size
+      hikari:
+        maximum-pool-size: 10
+      jpa:
+        properties:
+          hibernate.format_sql: true
+          hibernate.show_sql: true
+
+          #Hibernate dialect is automatically detected except Postgres and H2.
+          #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+          #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
+          hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+          #      hibernate.hbm2ddl.auto: update
+          #      hibernate.jdbc.batch_size: 20
+          #      hibernate.cache.use_query_cache: false
+          #      hibernate.cache.use_second_level_cache: false
+          #      hibernate.cache.use_structured_entries: false
+          #      hibernate.cache.use_minimal_puts: false
+
+          ###    These settings will enable fulltext search with lucene or elastic
+          hibernate.search.enabled: false
+      ### lucene parameters
+      #      hibernate.search.backend.type: lucene
+      #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
+      #      hibernate.search.backend.directory.type: local-filesystem
+      #      hibernate.search.backend.directory.root: target/lucenefiles
+      #      hibernate.search.backend.lucene_version: lucene_current
+      ### elastic parameters ===> see also elasticsearch section below <===
+    #      hibernate.search.backend.type: elasticsearch
+    #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticAnalysisConfigurer
   datasource:
     #url: 'jdbc:h2:file:./target/database/h2'
     url: jdbc:mysql://localhost/testserver
@@ -74,6 +113,12 @@ spring:
 #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticAnalysisConfigurer
 hapi:
   fhir:
+
+    custom-bean-packages: be.fgov.ehealth
+    custom-interceptor-classes: be.fgov.ehealth.ApiKeyInterceptor
+
+
+
     ### This flag when enabled to true, will avail evaluate measure operations from CR Module.
     ### Flag is false by default, can be passed as command line argument to override.
     cr:
