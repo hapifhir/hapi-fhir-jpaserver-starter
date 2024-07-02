@@ -7,7 +7,18 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "ca.uhn.fhir.jpa.starter.Application",
             "projectName": "hapi-fhir-jpaserver-starter",
-            "args": "",
+            "vmArgs": [
+				"-XX:TieredStopAtLevel=1",
+				// "-Ddebug=true",
+				// "-Dloader.debug=true",
+				"-Dhapi.fhir.bulk_export_enabled=false",
+				"-Dspring.batch.job.enabled=false",
+				"-Dspring.main.allow-bean-definition-overriding=true",
+                "-Dhapi.fhir.cdshooks.enabled=true",
+				"-Dhapi.fhir.cr.enabled=true",
+				"-Dspring.main.allow-bean-definition-overriding=true"
+
+			],
             "envFile": "${workspaceFolder}/.env"
         }
     ]

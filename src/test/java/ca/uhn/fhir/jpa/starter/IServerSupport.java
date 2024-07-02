@@ -3,8 +3,10 @@ package ca.uhn.fhir.jpa.starter;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
 import com.google.common.base.Charsets;
 import org.apache.commons.io.IOUtils;
+import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
@@ -26,6 +28,12 @@ public interface  IServerSupport {
       dao.update(resource);
       return resource;
     }
+  }
+
+  default IBaseBundle loadBundle(String theLocation, FhirContext theFhirContext, IGenericClient theClient) throws IOException {
+	  String json = stringFromResource(theLocation);
+	  IBaseBundle bundle = (IBaseBundle) theFhirContext.newJsonParser().parseResource(json);
+	  return theClient.transaction().withBundle(bundle).execute();
   }
 
   default String stringFromResource(String theLocation) throws IOException {
