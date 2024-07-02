@@ -30,6 +30,7 @@ import ca.uhn.fhir.jpa.graphql.GraphQLProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
 import ca.uhn.fhir.jpa.interceptor.validation.RepositoryValidatingInterceptor;
 import ca.uhn.fhir.jpa.ips.provider.IpsOperationProvider;
+import ca.uhn.fhir.jpa.model.config.SubscriptionSettings;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
 import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
@@ -252,6 +253,7 @@ public class StarterJpaConfig {
 			IJpaSystemProvider jpaSystemProvider,
 			ResourceProviderFactory resourceProviderFactory,
 			JpaStorageSettings jpaStorageSettings,
+			SubscriptionSettings subscriptionSettings,
 			ISearchParamRegistry searchParamRegistry,
 			IValidationSupport theValidationSupport,
 			DatabaseBackedPagingProvider databaseBackedPagingProvider,
@@ -378,7 +380,7 @@ public class StarterJpaConfig {
 
 		corsInterceptor.ifPresent(fhirServer::registerInterceptor);
 
-		if (jpaStorageSettings.getSupportedSubscriptionTypes().size() > 0) {
+		if (!subscriptionSettings.getSupportedSubscriptionTypes().isEmpty()) {
 			// Subscription debug logging
 			fhirServer.registerInterceptor(new SubscriptionDebugLogInterceptor());
 		}
