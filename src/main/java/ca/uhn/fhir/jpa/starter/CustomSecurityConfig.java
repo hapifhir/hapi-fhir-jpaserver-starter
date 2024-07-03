@@ -79,27 +79,40 @@ public class CustomSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
         http
-        .addFilter(new SignatureInterceptor(appProperties,fixNullReferenceInBundle))
+        .addFilter(new SignatureInterceptor(appProperties, fixNullReferenceInBundle))
         .cors()
         .and()
         .authorizeRequests()
-        .antMatchers("/actuator/health/**")
-        .permitAll()
-        .antMatchers("/**")
-        .authenticated()
-        .mvcMatchers("/logout.do")
-        .permitAll()
+        .anyRequest().permitAll()
         .and()
-        .csrf()
-        .ignoringAntMatchers("/fhir/**", "/iprd/**","/api/**")
-        .and()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        .logout()
-        .logoutRequestMatcher(new AntPathRequestMatcher("logout.do", "GET"));
-       }
+        .csrf().disable()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    }
+    
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        super.configure(http);
+//        http
+//        .addFilter(new SignatureInterceptor(appProperties,fixNullReferenceInBundle))
+//        .cors()
+//        .and()
+//        .authorizeRequests()
+//        .antMatchers("/actuator/health/**")
+//        .permitAll()
+//        .antMatchers("/**")
+//        .authenticated()
+//        .mvcMatchers("/logout.do")
+//        .permitAll()
+//        .and()
+//        .csrf()
+//        .ignoringAntMatchers("/fhir/**", "/iprd/**","/api/**")
+//        .and()
+//        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//        .and()
+//        .logout()
+//        .logoutRequestMatcher(new AntPathRequestMatcher("logout.do", "GET"));
+//       }
 
 
 
