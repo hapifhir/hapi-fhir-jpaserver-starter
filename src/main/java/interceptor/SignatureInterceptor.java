@@ -67,6 +67,13 @@ public class SignatureInterceptor extends FilterSecurityInterceptor {
 		// Get the signature from the header
 		String signatureHeader = httpServletRequest.getHeader("Signature");
 		logger.warn("SignatureHeader : " + signatureHeader);
+
+		if (signatureHeader == null || signatureHeader.isEmpty()) {
+			httpServletResponse.setHeader("error-message", "Missing Signature header");
+			httpServletResponse.setStatus(401);
+			return;
+		}
+
 		// Get the token from the header
 		String token = httpServletRequest.getHeader("Authorization");
 		logger.warn("Authorization Token : " + token);
@@ -85,6 +92,8 @@ public class SignatureInterceptor extends FilterSecurityInterceptor {
 		String practitionerRoleId = tokenPayload.getPractitionerRoleId();
 		logger.warn("practitionerRoleId : " + practitionerRoleId);
 		String dashboardKeyId = FhirUtils.KeyId.DASHBOARD.name();
+
+		/*
 		if (practitionerRoleId != null) {
 			// Get user role from the JWT token
 			List<String> userRole = tokenPayload.getClientRoles();
@@ -122,6 +131,7 @@ public class SignatureInterceptor extends FilterSecurityInterceptor {
 				}
 			}
 		}
+		 */
 
 		// Add a check to avoid DELETE and PUT API calls when keyId is "Dashboard"
 		if (dashboardKeyId.equals(keyId) && (httpServletRequest.getMethod().equals("DELETE")
