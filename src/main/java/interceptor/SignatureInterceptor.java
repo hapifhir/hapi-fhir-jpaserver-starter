@@ -15,10 +15,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.time.Instant;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -69,12 +66,23 @@ public class SignatureInterceptor extends FilterSecurityInterceptor {
 		}
 		// Get the signature from the header
 		String signatureHeader = httpServletRequest.getHeader("Signature");
+		logger.warn("SignatureHeader : " + signatureHeader);
+
+		if (signatureHeader == null || signatureHeader.isEmpty()) {
+			httpServletResponse.setHeader("error-message", "Missing Signature header");
+			httpServletResponse.setStatus(401);
+			return;
+		}
+
 		// Get the token from the header
 		String token = httpServletRequest.getHeader("Authorization");
+		logger.warn("Authorization Token : " + token);
 		// Get the timestamp from the header
 		String timeStampHeader = httpServletRequest.getHeader("Timestamp");
+		logger.warn("Timestamp : " + timeStampHeader);
 		// Get the Key I'd from the header
 		String keyId = httpServletRequest.getHeader("kid");
+		logger.warn("keyId : " + keyId);
 		JWTPayload tokenPayload = Validation.getJWTToken(token);
 		if (tokenPayload == null) {
 			httpServletResponse.setHeader("error-message", "Token parse failure");
@@ -82,7 +90,10 @@ public class SignatureInterceptor extends FilterSecurityInterceptor {
 			return;
 		}
 		String practitionerRoleId = tokenPayload.getPractitionerRoleId();
+		logger.warn("practitionerRoleId : " + practitionerRoleId);
 		String dashboardKeyId = FhirUtils.KeyId.DASHBOARD.name();
+
+		/*
 		if (practitionerRoleId != null) {
 			// Get user role from the JWT token
 			List<String> userRole = tokenPayload.getClientRoles();
@@ -106,6 +117,7 @@ public class SignatureInterceptor extends FilterSecurityInterceptor {
 				}
 				try {
 					boolean isVerified = getPublicKeyAndVerify(signatureHeader, token, timeStampHeader, keyId);
+					logger.warn("isVerified : " + isVerified);
 					if (!isVerified) {
 						httpServletResponse.setHeader("error-message", "Invalid Signature " + signatureHeader);
 						httpServletResponse.setStatus(401);
@@ -119,6 +131,7 @@ public class SignatureInterceptor extends FilterSecurityInterceptor {
 				}
 			}
 		}
+		 */
 
 		// Add a check to avoid DELETE and PUT API calls when keyId is "Dashboard"
 		if (dashboardKeyId.equals(keyId) && (httpServletRequest.getMethod().equals("DELETE")
@@ -168,12 +181,14 @@ public class SignatureInterceptor extends FilterSecurityInterceptor {
 		long currentTimestamp = Instant.now().getEpochSecond();
 		long receivedTimeStamp = Long.parseLong(timeStampHeader);
 		long timeDifference = Math.abs(currentTimestamp - receivedTimeStamp);
+		logger.warn("Timestamps : " + currentTimestamp + " " + receivedTimeStamp + " " + timeDifference);
 		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
 		// check if the timestamp is within 10 minutes of the current timestamp
 		try {
 			if (timeDifference <= appProperties.getApi_request_max_time()) {
 				String messageToVerify = practitionerRoleId.concat(timeStampHeader);
-				// get the decoded public key in bytes
+				logger.warn("MessageToVerify : " + messageToVerify);
+					// get the decoded public key in bytes
 				byte[] publicKeyByte = readPublicKeyFile(keyId);
 				// get the decoded signature key in bytes
 				String urlDecoded = java.net.URLDecoder.decode(signatureHeader, StandardCharsets.UTF_8.name());
