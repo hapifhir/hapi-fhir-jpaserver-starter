@@ -93,7 +93,6 @@ public class SignatureInterceptor extends FilterSecurityInterceptor {
 		logger.warn("practitionerRoleId : " + practitionerRoleId);
 		String dashboardKeyId = FhirUtils.KeyId.DASHBOARD.name();
 
-		/*
 		if (practitionerRoleId != null) {
 			// Get user role from the JWT token
 			List<String> userRole = tokenPayload.getClientRoles();
@@ -131,7 +130,6 @@ public class SignatureInterceptor extends FilterSecurityInterceptor {
 				}
 			}
 		}
-		 */
 
 		// Add a check to avoid DELETE and PUT API calls when keyId is "Dashboard"
 		if (dashboardKeyId.equals(keyId) && (httpServletRequest.getMethod().equals("DELETE")
