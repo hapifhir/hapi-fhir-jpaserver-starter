@@ -1,4 +1,4 @@
-FROM docker.io/library/maven:3.9.6-eclipse-temurin-17 AS build-hapi
+FROM docker.io/library/maven:3.9.7-eclipse-temurin-17 AS build-hapi
 WORKDIR /tmp/hapi-fhir-jpaserver-starter
 
 ARG OPENTELEMETRY_JAVA_AGENT_VERSION=1.33.3

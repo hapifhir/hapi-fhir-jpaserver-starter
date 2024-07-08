@@ -152,13 +152,6 @@ class ExampleServerDstu3IT implements IServerSupport {
     return count;
   }
 
-  private Bundle loadBundle(String theLocation, FhirContext theCtx, IGenericClient theClient) throws IOException {
-    String json = stringFromResource(theLocation);
-    Bundle bundle = (Bundle) theCtx.newJsonParser().parseResource(json);
-    Bundle result = theClient.transaction().withBundle(bundle).execute();
-    return result;
-  }
-
   @Test
   void testWebsocketSubscription() throws Exception {
     /*

@@ -13,7 +13,7 @@ In order to use this sample, you should have:
 - [This project](https://github.com/hapifhir/hapi-fhir-jpaserver-starter) checked out. You may wish to create a GitHub Fork of the project and check that out instead so that you can customize the project and save the results to GitHub.
 
 ### and either
- - Oracle Java (JDK) installed: Minimum JDK8 or newer.
+ - Oracle Java (JDK) installed: Minimum JDK17 or newer.
  - Apache Maven build tool (newest version)
 
 ### or
@@ -102,7 +102,7 @@ spring:
     driverClassName: org.postgresql.Driver
   jpa:
     properties:
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
       hibernate.search.enabled: false
 ```
 
@@ -155,7 +155,7 @@ spring:
     driverClassName: org.postgresql.Driver
   jpa:
     properties:
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
       hibernate.search.enabled: false
 hapi:
   fhir:
@@ -244,7 +244,7 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
 
 ### Using Spring Boot
 ```bash
-mvn clean package spring-boot:repackage -Pboot && java -jar target/ROOT.war
+mvn clean package spring-boot:repackage -DskipTests=true -Pboot && java -jar target/ROOT.war
 ```
 Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust your overlay configuration in the application.yaml to the following:
 
@@ -312,7 +312,7 @@ spring:
     driverClassName: org.postgresql.Driver
   jpa:
     properties:
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
       hibernate.search.enabled: false
 
       # Then comment all hibernate.search.backend.*
@@ -430,7 +430,7 @@ spring:
     driverClassName: org.postgresql.Driver
 jpa:
   properties:
-    hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+    hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
     hibernate.search.enabled: false
 
     # Then comment all hibernate.search.backend.*
@@ -483,7 +483,11 @@ The server may be configured with subscription support by enabling properties in
 
 ## Enabling Clinical Reasoning
 
-Set `hapi.fhir.cr_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable [Clinical Quality Language](https://cql.hl7.org/) on this server.
+Set `hapi.fhir.cr_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable [Clinical Quality Language](https://cql.hl7.org/) on this server.  An alternate settings file, [cds.application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/cds.application.yaml), exists with the Clinical Reasoning module enabled and default settings that have been found to work with most CDS and dQM test cases.
+
+## Enabling CDS Hooks
+
+Set `hapi.fhir.cdshooks.enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable [CDS Hooks](https://cds-hooks.org/) on this server.  The Clinical Reasoning module must also be enabled because this implementation of CDS Hooks includes [CDS on FHIR](https://build.fhir.org/clinicalreasoning-cds-on-fhir.html).  An example CDS Service using CDS on FHIR is available in the CdsHooksServletIT test class.
 
 ## Enabling MDM (EMPI)
 

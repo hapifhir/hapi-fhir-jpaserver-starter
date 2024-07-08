@@ -1,11 +1,21 @@
 package ca.uhn.fhir.jpa.starter.cdshooks;
 
+import ca.uhn.fhir.jpa.starter.cr.CrCommonConfig;
 import ca.uhn.fhir.jpa.starter.cr.CrConfigCondition;
 import ca.uhn.fhir.jpa.starter.cr.CrProperties;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsHooksDaoAuthorizationSvc;
 import ca.uhn.hapi.fhir.cdshooks.config.CdsHooksConfig;
 import ca.uhn.hapi.fhir.cdshooks.svc.CdsHooksContextBooter;
 import ca.uhn.hapi.fhir.cdshooks.svc.cr.CdsCrSettings;
+import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.hapi.fhir.cdshooks.svc.cr.CdsCrServiceRegistry;
+import ca.uhn.hapi.fhir.cdshooks.svc.cr.ICdsCrServiceRegistry;
+import ca.uhn.hapi.fhir.cdshooks.svc.cr.discovery.CdsCrDiscoveryServiceRegistry;
+import ca.uhn.hapi.fhir.cdshooks.svc.cr.discovery.ICdsCrDiscoveryServiceRegistry;
+import ca.uhn.hapi.fhir.cdshooks.svc.prefetch.CdsPrefetchDaoSvc;
+import ca.uhn.hapi.fhir.cdshooks.svc.prefetch.CdsPrefetchFhirClientSvc;
+import ca.uhn.hapi.fhir.cdshooks.svc.prefetch.CdsPrefetchSvc;
+import ca.uhn.hapi.fhir.cdshooks.svc.prefetch.CdsResolutionStrategySvc;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -16,8 +26,38 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Conditional({CdsHooksConfigCondition.class, CrConfigCondition.class})
-@Import(CdsHooksConfig.class)
+@Import({CdsHooksConfig.class, CrCommonConfig.class})
 public class StarterCdsHooksConfig {
+
+//	@Bean
+//	CdsPrefetchSvc cdsPrefetchSvc(
+//		CdsResolutionStrategySvc theCdsResolutionStrategySvc,
+//		CdsPrefetchDaoSvc theResourcePrefetchDao,
+//		CdsPrefetchFhirClientSvc theResourcePrefetchFhirClient,
+//		ICdsHooksDaoAuthorizationSvc theCdsHooksDaoAuthorizationSvc) {
+//		return new ModuleConfigurationPrefetchSvc(
+//			theCdsResolutionStrategySvc,
+//			theResourcePrefetchDao,
+//			theResourcePrefetchFhirClient,
+//			theCdsHooksDaoAuthorizationSvc);
+//	}
+
+	@Bean
+	public ICdsCrDiscoveryServiceRegistry cdsCrDiscoveryServiceRegistry() {
+		CdsCrDiscoveryServiceRegistry registry = new CdsCrDiscoveryServiceRegistry();
+		registry.unregister(FhirVersionEnum.R4);
+		registry.register(FhirVersionEnum.R4, UpdatedCrDiscoveryServiceR4.class);
+		return registry;
+	}
+
+	@Bean
+	public ICdsCrServiceRegistry cdsCrServiceRegistry() {
+		CdsCrServiceRegistry registry = new CdsCrServiceRegistry();
+		registry.unregister(FhirVersionEnum.R4);
+		registry.register(FhirVersionEnum.R4, UpdatedCdsCrServiceR4.class);
+		return registry;
+	}
+
 	@Bean
 	public CdsHooksProperties cdsHooksProperties() {
 		return new CdsHooksProperties();
