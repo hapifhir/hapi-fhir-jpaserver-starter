@@ -67,12 +67,6 @@ public class SignatureInterceptor extends FilterSecurityInterceptor {
 		// Get the signature from the header
 		String signatureHeader = httpServletRequest.getHeader("Signature");
 
-		if (signatureHeader == null || signatureHeader.isEmpty()) {
-			httpServletResponse.setHeader("error-message", "Missing Signature header");
-			httpServletResponse.setStatus(401);
-			return;
-		}
-
 		// Get the token from the header
 		String token = httpServletRequest.getHeader("Authorization");
 		// Get the timestamp from the header
@@ -105,6 +99,11 @@ public class SignatureInterceptor extends FilterSecurityInterceptor {
 				return;
 			}
 			if (!userRole.contains(devUserRole)) {
+				if (signatureHeader == null || signatureHeader.isEmpty()) {
+					httpServletResponse.setHeader("error-message", "Missing Signature header");
+					httpServletResponse.setStatus(401);
+					return;
+				}
 				try {
 					boolean isVerified = getPublicKeyAndVerify(signatureHeader, token, timeStampHeader, keyId);
 					if (!isVerified) {
@@ -169,13 +168,12 @@ public class SignatureInterceptor extends FilterSecurityInterceptor {
 		long currentTimestamp = Instant.now().getEpochSecond();
 		long receivedTimeStamp = Long.parseLong(timeStampHeader);
 		long timeDifference = Math.abs(currentTimestamp - receivedTimeStamp);
-		logger.warn("Timestamps : " + currentTimestamp + " " + receivedTimeStamp + " " + timeDifference);
+
 		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
 		// check if the timestamp is within 10 minutes of the current timestamp
 		try {
 			if (timeDifference <= appProperties.getApi_request_max_time()) {
 				String messageToVerify = practitionerRoleId.concat(timeStampHeader);
-				logger.warn("MessageToVerify : " + messageToVerify);
 					// get the decoded public key in bytes
 				byte[] publicKeyByte = readPublicKeyFile(keyId);
 				// get the decoded signature key in bytes
