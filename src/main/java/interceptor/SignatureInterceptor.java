@@ -66,7 +66,6 @@ public class SignatureInterceptor extends FilterSecurityInterceptor {
 		}
 		// Get the signature from the header
 		String signatureHeader = httpServletRequest.getHeader("Signature");
-		logger.warn("SignatureHeader : " + signatureHeader);
 
 		if (signatureHeader == null || signatureHeader.isEmpty()) {
 			httpServletResponse.setHeader("error-message", "Missing Signature header");
@@ -76,13 +75,10 @@ public class SignatureInterceptor extends FilterSecurityInterceptor {
 
 		// Get the token from the header
 		String token = httpServletRequest.getHeader("Authorization");
-		logger.warn("Authorization Token : " + token);
 		// Get the timestamp from the header
 		String timeStampHeader = httpServletRequest.getHeader("Timestamp");
-		logger.warn("Timestamp : " + timeStampHeader);
 		// Get the Key I'd from the header
 		String keyId = httpServletRequest.getHeader("kid");
-		logger.warn("keyId : " + keyId);
 		JWTPayload tokenPayload = Validation.getJWTToken(token);
 		if (tokenPayload == null) {
 			httpServletResponse.setHeader("error-message", "Token parse failure");
@@ -109,14 +105,8 @@ public class SignatureInterceptor extends FilterSecurityInterceptor {
 				return;
 			}
 			if (!userRole.contains(devUserRole)) {
-				if (signatureHeader == null || signatureHeader.isEmpty()) {
-					httpServletResponse.setHeader("error-message", "Missing Signature header");
-					httpServletResponse.setStatus(400);
-					return;
-				}
 				try {
 					boolean isVerified = getPublicKeyAndVerify(signatureHeader, token, timeStampHeader, keyId);
-					logger.warn("isVerified : " + isVerified);
 					if (!isVerified) {
 						httpServletResponse.setHeader("error-message", "Invalid Signature " + signatureHeader);
 						httpServletResponse.setStatus(401);
