@@ -2,6 +2,7 @@
 
 - add support for dateTime [#243](https://github.com/ahdis/matchbox/issues/243)
 - fix code editor high-jacking of the search keyboard shortcut (CTRL + f) [#260](https://github.com/ahdis/matchbox/issues/260)
+- upgrade Tomcat to fix [CVE-2024-34750](https://github.com/ahdis/matchbox/security/dependabot/115)
 
 2024/06/25 Release 3.8.8
 

@@ -102,7 +102,7 @@
         <stax2_api_version>3.1.4</stax2_api_version>
         <testcontainers_version>1.19.4</testcontainers_version>
         <thymeleaf-version>3.1.2.RELEASE</thymeleaf-version>
-        <tomcat_embed_version>10.1.19</tomcat_embed_version>
+        <tomcat_embed_version>10.1.25</tomcat_embed_version>
         <woodstox_core_asl_version>4.4.1</woodstox_core_asl_version>
         <jacoco_version>0.8.7</jacoco_version>
         <info_cqframework_version>1.5.1</info_cqframework_version>
