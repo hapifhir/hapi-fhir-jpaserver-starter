@@ -80,7 +80,6 @@ public class SignatureInterceptor extends FilterSecurityInterceptor {
 			return;
 		}
 		String practitionerRoleId = tokenPayload.getPractitionerRoleId();
-		logger.warn("practitionerRoleId : " + practitionerRoleId);
 		String dashboardKeyId = FhirUtils.KeyId.DASHBOARD.name();
 
 		if (practitionerRoleId != null) {
