@@ -1,5 +1,7 @@
 package ch.ahdis.matchbox.engine;
 
+import static org.apache.commons.lang3.StringUtils.substring;
+
 /*
  * #%L
  * Matchbox Engine
@@ -61,6 +63,7 @@ import org.hl7.fhir.r5.utils.validation.constants.ReferenceValidationPolicy;
 import org.hl7.fhir.r5.fhirpath.FHIRPathEngine;
 import org.hl7.fhir.utilities.ByteProvider;
 import org.hl7.fhir.utilities.FhirPublication;
+import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.utilities.json.model.JsonObject;
 import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager;
 import org.hl7.fhir.utilities.npm.NpmPackage;
@@ -378,6 +381,16 @@ public class MatchboxEngine extends ValidationEngine {
 	public org.hl7.fhir.r5.elementmodel.Element transform(ByteProvider source, FhirFormat cntType, String mapUri)
 			throws FHIRException, IOException {
 		SimpleWorkerContext context = this.getContext();
+
+		// usual case is that source and target are in the same FHIR version as in the context, however it could be that either source or target are in a different FHIR version
+		// if this is the case we do lazy loading of the additional FHIR version into the context
+
+		StructureMap map = context.fetchResource(StructureMap.class, mapUri);
+		String fhirVersion = getFhirVersion(getCanonicalFromStructureMap(map, StructureMap.StructureMapModelMode.SOURCE));
+		if (!fhirVersion.equals(this.getVersion())) {
+			log.info("Loading additional FHIR version for Source into context" + fhirVersion);
+			context.loadFromPackage("hl7.fhir.r5.core", fhirVersion);
+		}
 		org.hl7.fhir.r5.elementmodel.Element src = Manager.parseSingle(context, new ByteArrayInputStream(source.getBytes()),
 				cntType);
 		return transform(src, mapUri);
@@ -405,10 +418,39 @@ public class MatchboxEngine extends ValidationEngine {
 		}
 		log.info("Using map " + map.getUrl() + (map.getVersion()!=null ? "|" + map.getVersion() + " " : "" )
 				+ (map.getDateElement() != null && !map.getDateElement().isEmpty()  ? "(" + map.getDateElement().asStringValue() + ")" : ""));
+
 		org.hl7.fhir.r5.elementmodel.Element resource = getTargetResourceFromStructureMap(map);
 		scu.transform(null, src, map, resource);
 		resource.populatePaths(null);
 		return resource;
+	}
+
+	/**
+	 * returns the explication FHIR version of it the FHIR resource contains the version inside the url
+	 * http://hl7.org/fhir/3.0/StructureDefinition/Account
+	 * @param url
+	 * @return
+	 */
+	private String getFhirVersion(String url) {
+		return VersionUtilities.getMajMin(url);
+	}
+
+	/**
+	 * gets the canonical for either source or target, we assume currently that the fhir source or target is the default canonical for the source and target, this might not be true
+	 * however this approach is used in the getTargetResourceFromStructureMap below
+	 * @param map
+	 * @param mode
+	 * @return
+	 */
+	private String getCanonicalFromStructureMap(StructureMap map, StructureMap.StructureMapModelMode mode) {
+		String targetTypeUrl = null;
+		for (StructureMap.StructureMapStructureComponent component : map.getStructure()) {
+			if (component.getMode() == mode) {
+				targetTypeUrl = component.getUrl();
+				break;
+			}
+		}
+		return targetTypeUrl;
 	}
 
 	private org.hl7.fhir.r5.elementmodel.Element getTargetResourceFromStructureMap(StructureMap map) {
