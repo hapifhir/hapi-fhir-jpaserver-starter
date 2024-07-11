@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import ca.uhn.fhir.jpa.starter.anonymization.ISANONYMIZED;
 import ca.uhn.fhir.jpa.starter.model.*;
 import ca.uhn.fhir.jpa.starter.model.ComGenerator.MessageStatus;
 import com.iprd.fhir.utils.PatientIdentifierStatus;
@@ -396,8 +397,19 @@ public class NotificationDataSource {
 
 	public ArrayList<ApiAsyncTaskEntity> fetchStatus(String uuid) {
 		Session session = sf.openSession();
-		Query query = session.createQuery("FROM ApiAsyncTaskEntity WHERE uuid=:param1");
+		Query query = session.createQuery("FROM ApiAsyncTaskEntity WHERE uuid=:param1 AND isAnonymousEntry=:param2");
 		query.setParameter("param1", uuid);
+		query.setParameter("param2", ISANONYMIZED.NO.name());
+		ArrayList<ApiAsyncTaskEntity> resultList = (ArrayList<ApiAsyncTaskEntity>) query.getResultList();
+		session.close();
+		return resultList;
+	}
+
+	public ArrayList<ApiAsyncTaskEntity> fetchAnonymousData(String dateRangeUuid) {
+		Session session = sf.openSession();
+		Query query = session.createQuery("FROM ApiAsyncTaskEntity WHERE uuid LIKE :param1 AND isAnonymousEntry=:param2");
+		query.setParameter("param1", dateRangeUuid);
+		query.setParameter("param2",ISANONYMIZED.YES.name());
 		ArrayList<ApiAsyncTaskEntity> resultList = (ArrayList<ApiAsyncTaskEntity>) query.getResultList();
 		session.close();
 		return resultList;

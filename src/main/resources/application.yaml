@@ -70,6 +70,8 @@ tus-server:
    
 hapi:
    fhir:
+      minNoisePercentage: 20.0
+      maxNoisePercentage: 60.0
 #      hibernate.cache.use_structured_entries: false
       openapi_enabled: true
       fhir_version: R4

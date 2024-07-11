@@ -573,5 +573,4 @@ public class Utils {
 			.map(Date::toLocalDate)
 			.noneMatch(date -> date.equals(currentLocalDate));
 	}
-
 }

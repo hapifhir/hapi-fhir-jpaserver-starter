@@ -27,8 +27,8 @@ public class JWTPayload {
 	private String given_name;
 	private String family_name;
 	private String email;
+	private Boolean anonymization;
 	private List<String> clientRoles = new ArrayList<>();;
-
 	public  List<String> getClientRoles() {
 		return clientRoles;
 	}
@@ -205,4 +205,11 @@ public class JWTPayload {
 		return this.practitioner_role_id;
 	}
 
+	public void setAnonymization(Boolean anonymization){
+		this.anonymization = anonymization;
+	}
+
+	public Boolean getAnonymization() {
+		return anonymization;
+	}
 }

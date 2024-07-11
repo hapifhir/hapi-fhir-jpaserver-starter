@@ -3,16 +3,14 @@ package ca.uhn.fhir.jpa.starter.controller;
 import android.util.Pair;
 import ca.uhn.fhir.jpa.starter.ConfigDefinitionTypes;
 import ca.uhn.fhir.jpa.starter.DashboardEnvironmentConfig;
+import ca.uhn.fhir.jpa.starter.anonymization.AnonymizerContext;
 import ca.uhn.fhir.jpa.starter.model.AnalyticItem;
-import ca.uhn.fhir.jpa.starter.model.ApiAsyncTaskEntity;
 import ca.uhn.fhir.jpa.starter.model.ReportType;
 import ca.uhn.fhir.jpa.starter.service.BigQueryService;
 import ca.uhn.fhir.jpa.starter.service.HelperService;
 import ca.uhn.fhir.jpa.starter.service.NotificationDataSource;
 import com.iprd.fhir.utils.Validation;
 import com.iprd.report.OrgItem;
-import com.iprd.report.model.definition.ANCDailySummaryConfig;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hl7.fhir.r4.model.Organization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @CrossOrigin(origins = {"http://localhost:3000/", "http://testhost.dashboard:3000/", "https://oclink.io/", "https://opencampaignlink.org/"}, maxAge = 3600, allowCredentials = "true")
@@ -31,6 +28,7 @@ import java.util.*;
 @RequestMapping("/iprd/web")
 public class DashboardController {
 	NotificationDataSource datasource = NotificationDataSource.getInstance();
+	AnonymizerContext anonymizerContext = new AnonymizerContext();
 	@Autowired
 	HelperService helperService;
 	@Autowired
@@ -50,9 +48,11 @@ public class DashboardController {
 
 		@RequestMapping(method = RequestMethod.GET, value = "/details")
 	public ResponseEntity<?> getDetails(
+		@RequestHeader(name = "Authorization") String token,
 		@RequestParam("env") String env,
 		@RequestParam Map<String, String> allFilters
 	) throws SQLException, IOException {
+		Boolean isAnonymizationEnabled = anonymizerContext.isAnonymized(token);
 		String organizationId = allFilters.get("lga");
 		String startDate = allFilters.get("from");
 		String endDate = allFilters.get("to");
@@ -66,8 +66,8 @@ public class DashboardController {
 
 		Map<String,String> categoryWithHashCodes = helperService.processCategories(organizationId, startDate, endDate, env, filters,true);
 
-		if (helperService.getAsyncData(categoryWithHashCodes).getBody() == "Searching in Progress") return ResponseEntity.status(202).build();
-		return ResponseEntity.ok(helperService.getAsyncData(categoryWithHashCodes));
+		if (helperService.getAsyncData(categoryWithHashCodes, isAnonymizationEnabled).getBody() == "Searching in Progress") return ResponseEntity.status(202).build();
+		return ResponseEntity.ok(helperService.getAsyncData(categoryWithHashCodes, isAnonymizationEnabled));
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/lastSyncTime")
@@ -165,6 +165,7 @@ public class DashboardController {
  		String startDate = allFilters.get("from");
 		String endDate = allFilters.get("to");
 		ReportType type = ReportType.valueOf(allFilters.get("type"));
+		Boolean isAnonymizationEnabled = anonymizerContext.isAnonymized(token);
 		allFilters.remove("from");
 		allFilters.remove("to");
 		allFilters.remove("type");
@@ -176,7 +177,7 @@ public class DashboardController {
 		}
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
-		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type, filters, env);
+		return helperService.getDataByPractitionerRoleId(practitionerRoleId, startDate, endDate, type, filters, env, isAnonymizationEnabled);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/linechart")
@@ -189,6 +190,7 @@ public class DashboardController {
 		String startDate = allFilters.get("from");
 		String endDate = allFilters.get("to");
 		ReportType type = ReportType.valueOf(allFilters.get("type"));
+		Boolean isAnonymizationEnabled = anonymizerContext.isAnonymized(token);
 		allFilters.remove("from");
 		allFilters.remove("to");
 		allFilters.remove("type");
@@ -200,7 +202,7 @@ public class DashboardController {
 		}
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
-		return helperService.getLineChartByPractitionerRoleId(startDate,endDate,type,filters,env,lga);
+		return helperService.getLineChartByPractitionerRoleId(startDate,endDate,type,filters,env,lga,isAnonymizationEnabled);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/pieChartData")
@@ -210,6 +212,7 @@ public class DashboardController {
 		@RequestParam("lga") String lga,
 		@RequestParam Map<String, String> allFilters
 	){
+		Boolean isAnonymizationEnabled = anonymizerContext.isAnonymized(token);
 		String startDate = allFilters.get("from");
 		String endDate = allFilters.get("to");
 		allFilters.remove("from");
@@ -221,7 +224,7 @@ public class DashboardController {
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
 
-		return helperService.getPieChartDataByPractitionerRoleId(startDate, endDate,filters,env,lga);
+		return helperService.getPieChartDataByPractitionerRoleId(startDate, endDate,filters,env,lga,isAnonymizationEnabled);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/tabularData")
@@ -231,6 +234,7 @@ public class DashboardController {
 		@RequestParam("lga") String lga,
 		@RequestParam Map<String, String> allFilters
 	) {
+		Boolean isAnonymizationEnabled = anonymizerContext.isAnonymized(token);
 		String startDate = allFilters.get("from");
 		String endDate = allFilters.get("to");
 		allFilters.remove("from");
@@ -243,7 +247,7 @@ public class DashboardController {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
 		}
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>(allFilters);
-		return helperService.getTabularDataByPractitionerRoleId(startDate, endDate, filters,env,lga);
+		return helperService.getTabularDataByPractitionerRoleId(startDate, endDate, filters,env,lga,isAnonymizationEnabled);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/refreshMapToOrgId")
@@ -262,6 +266,7 @@ public class DashboardController {
 		@RequestParam("lga") String lga,
 		@RequestParam Map<String, String> allFilters
 	) {
+		Boolean isAnonymizationEnabled = anonymizerContext.isAnonymized(token);
 		String startDate = allFilters.get("from");
 		String endDate = allFilters.get("to");
 		allFilters.remove("from");
@@ -275,7 +280,7 @@ public class DashboardController {
 		}
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
 		filters.putAll(allFilters);
-		return helperService.getBarChartData(startDate, endDate,filters,env,lga);
+		return helperService.getBarChartData(startDate, endDate,filters,env,lga,isAnonymizationEnabled);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/analytics")
@@ -315,7 +320,8 @@ public class DashboardController {
 		@RequestParam("from") String from,
 		@RequestParam("to") String to
 	) {
-		return helperService.getEncounterForMap(orgId, from, to);
+		Boolean isAnonymizationEnabled = anonymizerContext.isAnonymized(token);
+		return helperService.getEncounterForMap(orgId, from, to, isAnonymizationEnabled);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/facilitySummaryData")
@@ -325,6 +331,7 @@ public class DashboardController {
 		@RequestParam("lga") String lga,
 		@RequestParam Map<String, String> allFilters
 	) {
+		Boolean isAnonymizationEnabled = anonymizerContext.isAnonymized(token);
 		String startDate = allFilters.get("from");
 		String endDate = allFilters.get("to");
 		ReportType type = ReportType.valueOf(allFilters.get("type"));
@@ -338,7 +345,7 @@ public class DashboardController {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
 		}
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>(allFilters);
-		return helperService.processDataForReport(startDate, endDate,type, filters, env, lga);
+		return helperService.processDataForReport(startDate, endDate,type, filters, env, lga, isAnonymizationEnabled);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/cacheDashboardDataSequential")

@@ -1,4 +1,5 @@
 package ca.uhn.fhir.jpa.starter.model;
+
 import javax.persistence.Column;
 
 import javax.persistence.*;
@@ -35,13 +36,17 @@ public class ApiAsyncTaskEntity {
 	@Column(name = "lastUpdated", nullable = true)
 	private Date lastUpdated;
 
+	@Column(name = "isAnonymousEntry", nullable = true)
+	private String isAnonymousEntry;
+
 	public ApiAsyncTaskEntity() {}
-	public ApiAsyncTaskEntity(String uuid, String status, java.sql.Clob  summaryResult,java.sql.Clob dailyResult, Date lastUpdated) {
+	public ApiAsyncTaskEntity(String uuid, String status, java.sql.Clob  summaryResult,java.sql.Clob dailyResult, Date lastUpdated, String isAnonymousEntry) {
 		this.uuid = uuid;
 		this.status = status;
 		this.summaryResult = summaryResult;
 		this.dailyResult = dailyResult;
 		this.lastUpdated = lastUpdated;
+		this.isAnonymousEntry = isAnonymousEntry;
 	}
 	public Long getId() {
 		return id;
@@ -85,5 +90,13 @@ public class ApiAsyncTaskEntity {
 
 	public void setLastUpdated(Date lastUpdated) {
 		this.lastUpdated = lastUpdated;
+	}
+
+	public String getAnonymousEntry() {
+		return isAnonymousEntry;
+	}
+
+	public void setAnonymousEntry(String anonymousEntry) {
+		isAnonymousEntry = anonymousEntry;
 	}
 }

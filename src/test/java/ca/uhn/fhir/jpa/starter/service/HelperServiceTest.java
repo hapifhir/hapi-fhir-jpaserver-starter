@@ -5,6 +5,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.AsyncConfiguration;
 import ca.uhn.fhir.jpa.starter.DashboardConfigContainer;
+import ca.uhn.fhir.jpa.starter.anonymization.ISANONYMIZED;
 import ca.uhn.fhir.jpa.starter.model.ApiAsyncTaskEntity;
 import ca.uhn.fhir.jpa.starter.model.CategoryItem;
 import ca.uhn.fhir.jpa.starter.model.PatientIdentifierEntity;
@@ -557,7 +558,8 @@ class HelperServiceTest {
 			"PROCESSING",
 			createClob(""),
 			createClob(emptyList.toString()),
-			Date.valueOf(LocalDate.now())
+			Date.valueOf(LocalDate.now()),
+			ISANONYMIZED.NO.name()
 		);
 		String dailyResultJsonString = new Gson().toJson(dailyResult);
 		ArrayList<ApiAsyncTaskEntity> apiAsyncTaskEntityList = new ArrayList<>();
@@ -800,8 +802,8 @@ class HelperServiceTest {
 		when(helperServiceMock.getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(anyString(),any(),any(),anyString(),anyList()
 		)).thenReturn(Double.valueOf("2.0"));
 		doNothing().when(helperServiceMock).performCachingIfNotPresentForBarChart(anyList(),anyList(),any(),any(),anyList());
-		doCallRealMethod().when(helperServiceMock).getBarChartData(anyString(),anyString(),any(),anyString(),anyString());
-		ResponseEntity<?> output = helperServiceMock.getBarChartData(testParameters.get("startDate"),testParameters.get("endDate"),filters,testParameters.get("env"),testParameters.get("lga"));
+		doCallRealMethod().when(helperServiceMock).getBarChartData(anyString(),anyString(),any(),anyString(),anyString(),false);
+		ResponseEntity<?> output = helperServiceMock.getBarChartData(testParameters.get("startDate"),testParameters.get("endDate"),filters,testParameters.get("env"),testParameters.get("lga"),false);
 		List<BarChartItemDataCollection> barChartItems =  (List<BarChartItemDataCollection>) output.getBody();
 		// Assertions for a successful scenario
 		assertEquals(HttpStatus.OK, output.getStatusCode());
@@ -822,29 +824,29 @@ class HelperServiceTest {
 		when(helperServiceMock.getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(anyString(),any(),any(),anyString(),anyList()
 		)).thenReturn(Double.valueOf("3.0"));
 		doNothing().when(helperServiceMock).performCachingForLineChartIfNotPresent(anyList(),anyList(),any(),any(),anyList());
-		doCallRealMethod().when(helperServiceMock).getLineChartByPractitionerRoleId(anyString(),anyString(),any(),any(),anyString(),anyString());
-		ResponseEntity<?> output = helperServiceMock.getLineChartByPractitionerRoleId(testParameters.get("startDate"),testParameters.get("endDate"), ReportType.valueOf("daily"),filters,testParameters.get("env"),testParameters.get("lga"));
+		doCallRealMethod().when(helperServiceMock).getLineChartByPractitionerRoleId(anyString(),anyString(),any(),any(),anyString(),anyString(),false);
+		ResponseEntity<?> output = helperServiceMock.getLineChartByPractitionerRoleId(testParameters.get("startDate"),testParameters.get("endDate"), ReportType.valueOf("daily"),filters,testParameters.get("env"),testParameters.get("lga"), false);
 		List<LineChartItemCollection> lineChartItems =  (List<LineChartItemCollection>) output.getBody();
 		assertEquals(HttpStatus.OK, output.getStatusCode());
 		assert lineChartItems != null;
 		assertEquals("3.0", lineChartItems.get(0).getValue().get(0).getValue());
 		when(helperServiceMock.getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(anyString(),any(),any(),anyString(),anyList()
 		)).thenReturn(Double.valueOf("4.0"));
-		ResponseEntity<?> weeklyOutput = helperServiceMock.getLineChartByPractitionerRoleId("2024-01-01","2024-01-07", ReportType.valueOf("weekly"),filters,testParameters.get("env"),testParameters.get("lga"));
+		ResponseEntity<?> weeklyOutput = helperServiceMock.getLineChartByPractitionerRoleId("2024-01-01","2024-01-07", ReportType.valueOf("weekly"),filters,testParameters.get("env"),testParameters.get("lga"),false);
 		List<LineChartItemCollection> lineChartItemsWeekly =  (List<LineChartItemCollection>) weeklyOutput.getBody();
 		assertEquals(HttpStatus.OK, weeklyOutput.getStatusCode());
 		assert lineChartItemsWeekly != null;
 		assertEquals("4.0", lineChartItemsWeekly.get(0).getValue().get(0).getValue());
 		when(helperServiceMock.getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(anyString(),any(),any(),anyString(),anyList()
 		)).thenReturn(Double.valueOf("6.0"));
-		ResponseEntity<?> monthlyOutput = helperServiceMock.getLineChartByPractitionerRoleId("2024-01-01","2024-01-07", ReportType.valueOf("monthly"),filters,testParameters.get("env"),testParameters.get("lga"));
+		ResponseEntity<?> monthlyOutput = helperServiceMock.getLineChartByPractitionerRoleId("2024-01-01","2024-01-07", ReportType.valueOf("monthly"),filters,testParameters.get("env"),testParameters.get("lga"),false);
 		List<LineChartItemCollection> lineChartItemsMonthly =  (List<LineChartItemCollection>) monthlyOutput.getBody();
 		assertEquals(HttpStatus.OK, monthlyOutput.getStatusCode());
 		assert lineChartItemsMonthly != null;
 		assertEquals("6.0", lineChartItemsMonthly.get(0).getValue().get(0).getValue());
 		when(helperServiceMock.getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(anyString(),any(),any(),anyString(),anyList()
 		)).thenReturn(Double.valueOf("26.0"));
-		ResponseEntity<?> quarterlyOutput = helperServiceMock.getLineChartByPractitionerRoleId("2024-01-01","2024-01-07", ReportType.valueOf("quarterly"),filters,testParameters.get("env"),testParameters.get("lga"));
+		ResponseEntity<?> quarterlyOutput = helperServiceMock.getLineChartByPractitionerRoleId("2024-01-01","2024-01-07", ReportType.valueOf("quarterly"),filters,testParameters.get("env"),testParameters.get("lga"),false);
 		List<LineChartItemCollection> lineChartItemsQuarterly =  (List<LineChartItemCollection>) quarterlyOutput.getBody();
 		assertEquals(HttpStatus.OK, quarterlyOutput.getStatusCode());
 		assert lineChartItemsQuarterly != null;
@@ -865,8 +867,8 @@ class HelperServiceTest {
 		when(helperServiceMock.getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(anyString(),any(),any(),anyString(),anyList()
 		)).thenReturn(Double.valueOf("7.2"));
 		doNothing().when(helperServiceMock).performCachingForPieChartData(anyList(),anyList(),any(),any(),anyList());
-		doCallRealMethod().when(helperServiceMock).getPieChartDataByPractitionerRoleId(anyString(),anyString(),any(),anyString(),anyString());
-		ResponseEntity<?> output = helperServiceMock.getPieChartDataByPractitionerRoleId("2024-01-01","2024-01-07", filters,testParameters.get("env"),testParameters.get("lga"));
+		doCallRealMethod().when(helperServiceMock).getPieChartDataByPractitionerRoleId(anyString(),anyString(),any(),anyString(),anyString(),false);
+		ResponseEntity<?> output = helperServiceMock.getPieChartDataByPractitionerRoleId("2024-01-01","2024-01-07", filters,testParameters.get("env"),testParameters.get("lga"),false);
 		List<PieChartItemDataCollection> pieChartItemDataCollection  =  (List<PieChartItemDataCollection>) output.getBody();
 		assertEquals(HttpStatus.OK, output.getStatusCode());
 		assert pieChartItemDataCollection != null;
@@ -892,8 +894,8 @@ class HelperServiceTest {
 		PowerMockito.when(notificationDataSourceMock.getCacheValueSumByDateRangeIndicatorAndOrgId(any(),any(),anyString(),anyString())).thenReturn(Double.valueOf("42.0"));
 		Whitebox.setInternalState(NotificationDataSource.class, notificationDataSourceMock);
 		doNothing().when(helperServiceMock).performCachingForTabularData(anyList(),anyList(),any(),any(),anyList());
-		doCallRealMethod().when(helperServiceMock).getTabularDataByPractitionerRoleId(anyString(),anyString(),any(),anyString(),anyString());
-		ResponseEntity<?> output = helperServiceMock.getTabularDataByPractitionerRoleId("2024-01-01","2024-01-07", filters,testParameters.get("env"),testParameters.get("lga"));
+		doCallRealMethod().when(helperServiceMock).getTabularDataByPractitionerRoleId(anyString(),anyString(),any(),anyString(),anyString(),false);
+		ResponseEntity<?> output = helperServiceMock.getTabularDataByPractitionerRoleId("2024-01-01","2024-01-07", filters,testParameters.get("env"),testParameters.get("lga"),false);
 		List<ScoreCardItem> scoreCardItems  =  (List<ScoreCardItem>) output.getBody();
 		assertEquals(HttpStatus.OK, output.getStatusCode());
 		assert scoreCardItems != null;
@@ -904,7 +906,7 @@ class HelperServiceTest {
 		when(helperServiceMock.getTabularItemListFromFile(anyString()
 		)).thenReturn(tabularItemsWithReflection);
 		PowerMockito.when(notificationDataSourceMock.getCacheValueSumByDateRangeIndicatorAndOrgId(any(),any(),anyString(),anyString())).thenReturn(Double.valueOf("22.7"));
-		ResponseEntity<?> result = helperServiceMock.getTabularDataByPractitionerRoleId("2024-01-01","2024-01-07", filters,testParameters.get("env"),testParameters.get("lga"));
+		ResponseEntity<?> result = helperServiceMock.getTabularDataByPractitionerRoleId("2024-01-01","2024-01-07", filters,testParameters.get("env"),testParameters.get("lga"),false);
 		List<ScoreCardItem> scoreCardItemsWithReflection  =  (List<ScoreCardItem>) result.getBody();
 		assertEquals(HttpStatus.OK, result.getStatusCode());
 		assert scoreCardItemsWithReflection != null;
@@ -943,14 +945,14 @@ class HelperServiceTest {
 		AppProperties appPropertiesMock =  new AppProperties();
 		appPropertiesMock.setFacility_batch_size(50);
 		Whitebox.setInternalState(helperServiceMock, appPropertiesMock);
-		doCallRealMethod().when(helperServiceMock).getDataByPractitionerRoleId(anyString(),anyString(),anyString(),any(),any(),anyString());
+		doCallRealMethod().when(helperServiceMock).getDataByPractitionerRoleId(anyString(),anyString(),anyString(),any(),any(),anyString(), false);
 		doCallRealMethod().when(helperServiceMock).getFacilitiesForOrganization(any(),anyList());
 		doCallRealMethod().when(helperServiceMock).calculateAverage(anyList(),anyList(),anyString());
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.initialize();
 		when(helperServiceMock.getAsyncExecutor(
 		)).thenReturn(executor);
-		ResponseEntity<?> output = helperServiceMock.getDataByPractitionerRoleId(practitionerRoleId,"2024-01-01","2024-01-07",type,filters,"V2");
+		ResponseEntity<?> output = helperServiceMock.getDataByPractitionerRoleId(practitionerRoleId,"2024-01-01","2024-01-07",type,filters,"V2", false);
 		List<ScoreCardResponseItem> scoreCardResponseItems  =  (List<ScoreCardResponseItem>) output.getBody();
 		assertEquals(HttpStatus.OK, output.getStatusCode());
 		assert scoreCardResponseItems != null;

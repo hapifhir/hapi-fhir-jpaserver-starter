@@ -117,10 +117,27 @@ public class AppProperties {
 	private Integer executor_queue_capacity = 100;
 	private String executor_thread_name_prefix = "AsyncThread-";
 	private String dev_user_role = "dev";
-
+	private Double maxNoisePercentage = 30.0;
+	private Double minNoisePercentage = 10.0;
 	private List<String> organization_ids_for_caching = null;
 
 	private List<String> envs_for_caching = null;
+
+	public Double getMinNoisePercentage() {
+		return minNoisePercentage;
+	}
+
+	public void setMinNoisePercentage(Double minNoisePercentage) {
+		this.minNoisePercentage = minNoisePercentage;
+	}
+
+	public Double getMaxNoisePercentage() {
+		return maxNoisePercentage;
+	}
+
+	public void setMaxNoisePercentage(Double maxNoisePercentage) {
+		this.maxNoisePercentage = maxNoisePercentage;
+	}
 
 	public void setAws_access_key(String aws_access_key) {
 		this.aws_access_key = aws_access_key;
