@@ -24,6 +24,7 @@ import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
+import ca.uhn.fhir.rest.gclient.ReferenceClientParam;
 import ca.uhn.fhir.rest.gclient.TokenClientParam;
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
@@ -79,6 +80,7 @@ import org.hl7.fhir.r4.model.Bundle.BundleLinkComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.hl7.fhir.r4.model.Bundle.HTTPVerb;
 import org.hl7.fhir.r4.model.ContactPoint;
+import org.hl7.fhir.r4.model.Encounter;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Identifier;
@@ -86,7 +88,6 @@ import org.hl7.fhir.r4.model.Location;
 import org.hl7.fhir.r4.model.Location.LocationPositionComponent;
 import org.hl7.fhir.r4.model.Organization;
 import org.hl7.fhir.r4.model.Patient;
-import org.hl7.fhir.r4.model.Encounter;
 import org.hl7.fhir.r4.model.Practitioner;
 import org.hl7.fhir.r4.model.PractitionerRole;
 import org.hl7.fhir.r4.model.Resource;
@@ -342,8 +343,7 @@ public class HelperService {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 		String singleLine;
 		int iteration = 0;
-		String countryId = "", stateId = "", lgaId = "", wardId = "", facilityOrganizationId = "",
-			facilityLocationId = "";
+		String countryId = "", stateId = "", lgaId = "", wardId = "", facilityOrganizationId = "", facilityLocationId = "";
 		String countryGroupId = "", stateGroupId = "", lgaGroupId = "", wardGroupId = "", facilityGroupId = "";
 		while ((singleLine = bufferedReader.readLine()) != null) {
 			if (iteration == 0) { // skip header of CSV file
@@ -351,7 +351,6 @@ public class HelperService {
 				continue;
 			}
 			String[] csvData = singleLine.split(",");
-			// State(0), LGA(1), Ward(2), FacilityUID(3), FacilityCode(4), CountryCode(5), PhoneNumber(6), FacilityName(7), FacilityLevel(8), Ownership(9), Argusoft Identifier(10), Longitude(11), Latitude(12), Pluscode(13)
 			iteration++;
 
 			if (!Validation.validateClinicAndStateCsvLine(csvData)) {
@@ -379,109 +378,198 @@ public class HelperService {
 			String countryName = clinicData.getCountryName();
 
 			if (facilityUID.isEmpty()) {
-				invalidClinics
-					.add("Invalid facilityUID: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
+				invalidClinics.add("Invalid facilityUID: " + facilityName + "," + stateName + "," + lgaName + "," + wardName);
 				continue;
 			}
 
-			String group_id = null; // Initializing to "no-value"
+			String groupId = null;
 			GroupRepresentation keycloakGroup = getKeycloakGroup(facilityUID);
 			if (null != keycloakGroup) {
-				group_id = keycloakGroup.getId();
+				groupId = keycloakGroup.getId();
 			}
 
-			if (null != group_id) {
-				updateKeycloakGroupAndResource(clinicData, group_id, 0);
+			if (null != groupId) {
+				logger.warn("facility UUID = "+ facilityUID );
+				 updateKeycloakGroupAndResource(clinicData, groupId, 0);
 			} else {
-				Organization country = FhirResourceTemplateHelper.country(countryName);
-				GroupRepresentation countryGroupRep = KeycloakTemplateHelper.countryGroup(country.getName(),
-					country.getIdElement().getIdPart());
-				countryGroupId = createKeycloakGroup(countryGroupRep);
-				if (countryGroupId == null) {
-					invalidClinics.add("Group creation failed for state: " + facilityName + "," + countryName + ","
-						+ stateName + "," + lgaName + "," + wardName);
-					continue;
+				Organization existingCountry = getExistingOrganizationFromFHIRServer(countryName);
+				if (existingCountry != null) {
+					countryId = existingCountry.getIdElement().getIdPart();
+					countryGroupId = getExistingKeycloakGroup(countryName);
+					if (countryGroupId == null) {
+						GroupRepresentation countryGroupRep = KeycloakTemplateHelper.countryGroup(existingCountry.getName(), countryId);
+						countryGroupId = createKeycloakGroup(countryGroupRep);
+						if (countryGroupId == null) {
+							invalidClinics.add("Group creation failed for country: " + countryName);
+							continue;
+						}
+					}
+					if (!updateOrganizationWithKeycloakGroupId(existingCountry, countryGroupId, invalidClinics, countryName)) {
+						invalidClinics.add("Group creation failed for country: " + countryName);
+						continue;
+					}
+
+
+					uniqueOrgHierarchySet.add(new OrgHierarchy(countryId, "country", null, null, null, null));
+				} else {
+					Organization country = FhirResourceTemplateHelper.country(countryName);
+					GroupRepresentation countryGroupRep = KeycloakTemplateHelper.countryGroup(country.getName(), country.getIdElement().getIdPart());
+					countryGroupId = createKeycloakGroup(countryGroupRep);
+					if (countryGroupId == null) {
+						invalidClinics.add("Group creation failed for country: " + countryName);
+						continue;
+					}
+					countryId = createResource(countryGroupId, country, Organization.class);
+					if (countryId == null) {
+						invalidClinics.add("Resource creation failed for country: " + countryName);
+						continue;
+					}
+					uniqueOrgHierarchySet.add(new OrgHierarchy(countryId, "country", null, null, null, null));
 				}
-				countryId = createResource(countryGroupId, country, Organization.class);
-				if (countryId == null) {
-					invalidClinics.add("Resource creation failed for state: " + facilityName + "," + countryName + ","
-						+ stateName + "," + lgaName + "," + wardName);
-					continue;
+
+				Organization existingState = getExistingOrganizationFromFHIRServer(stateName);
+				if (existingState != null) {
+					stateId = existingState.getIdElement().getIdPart();
+					stateGroupId = getExistingKeycloakGroup(stateName);
+					if (stateGroupId == null) {
+						GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup(existingState.getName(), countryGroupId, stateId);
+						stateGroupId = createKeycloakGroup(stateGroupRep);
+						if (stateGroupId == null) {
+							invalidClinics.add("Group creation failed for state: " + stateName);
+							continue;
+						}
+					}
+
+					if (!updateOrganizationWithKeycloakGroupId(existingState, stateGroupId, invalidClinics, stateName)) {
+						invalidClinics.add("Group creation failed for state: " + stateName);
+						continue;
+					}
+					uniqueOrgHierarchySet.add(new OrgHierarchy(stateId, "state", countryId, null, null, null));
+				} else {
+					Organization state = FhirResourceTemplateHelper.state(stateName, countryName, countryId);
+					GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup(state.getName(), countryGroupId, state.getIdElement().getIdPart());
+					stateGroupId = createKeycloakGroup(stateGroupRep);
+					if (stateGroupId == null) {
+						invalidClinics.add("Group creation failed for state: " + stateName);
+						continue;
+					}
+					stateId = createResource(stateGroupId, state, Organization.class);
+					if (stateId == null) {
+						invalidClinics.add("Resource creation failed for state: " + stateName);
+						continue;
+					}
+					uniqueOrgHierarchySet.add(new OrgHierarchy(stateId, "state", countryId, null, null, null));
 				}
-				uniqueOrgHierarchySet.add(new OrgHierarchy(countryId, "country", null, null, null, null));
-				Organization state = FhirResourceTemplateHelper.state(stateName, countryName, countryId);
-				GroupRepresentation stateGroupRep = KeycloakTemplateHelper.stateGroup(state.getName(), countryGroupId,
-					state.getIdElement().getIdPart());
-				stateGroupId = createKeycloakGroup(stateGroupRep);
-				if (stateGroupId == null) {
-					invalidClinics.add("Group creation failed for state: " + facilityName + "," + stateName + ","
-						+ lgaName + "," + wardName);
-					continue;
+
+				Organization existingLGA = getExistingOrganizationFromFHIRServer(lgaName);
+				if (existingLGA != null) {
+					lgaId = existingLGA.getIdElement().getIdPart();
+					lgaGroupId = getExistingKeycloakGroup(lgaName);
+					if (lgaGroupId == null) {
+						GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup(existingLGA.getName(), stateGroupId, lgaId);
+						lgaGroupId = createKeycloakGroup(lgaGroupRep);
+						if (lgaGroupId == null) {
+							invalidClinics.add("Group creation failed for LGA: " + lgaName);
+							continue;
+						}
+					}
+					if (!updateOrganizationWithKeycloakGroupId(existingLGA, lgaGroupId, invalidClinics, lgaName)) {
+						invalidClinics.add("Group creation failed for LGA: " + lgaName);
+						continue;
+					}
+				} else {
+					Organization lga = FhirResourceTemplateHelper.lga(lgaName, stateName, stateId);
+					GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup(lga.getName(), stateGroupId, lga.getIdElement().getIdPart());
+					lgaGroupId = createKeycloakGroup(lgaGroupRep);
+					if (lgaGroupId == null) {
+						invalidClinics.add("Group creation failed for LGA: " + lgaName);
+						continue;
+					}
+					lgaId = createResource(lgaGroupId, lga, Organization.class);
+					if (lgaId == null) {
+						invalidClinics.add("Resource creation failed for LGA: " + lgaName);
+						continue;
+					}
 				}
-				stateId = createResource(stateGroupId, state, Organization.class);
-				if (stateId == null) {
-					invalidClinics.add("Resource creation failed for state: " + facilityName + "," + stateName + ","
-						+ lgaName + "," + wardName);
-					continue;
-				}
-				uniqueOrgHierarchySet.add(new OrgHierarchy(stateId, "state", countryId, null, null, null));
-				Organization lga = FhirResourceTemplateHelper.lga(lgaName, stateName, stateId);
-				GroupRepresentation lgaGroupRep = KeycloakTemplateHelper.lgaGroup(lga.getName(), stateGroupId,
-					lga.getIdElement().getIdPart());
-				lgaGroupId = createKeycloakGroup(lgaGroupRep);
-				if (lgaGroupId == null) {
-					invalidClinics.add("Group creation failed for LGA: " + facilityName + "," + stateName + ","
-						+ lgaName + "," + wardName);
-					continue;
-				}
-				lgaId = createResource(lgaGroupId, lga, Organization.class);
-				if (lgaId == null) {
-					invalidClinics.add("Resource creation failed for LGA: " + facilityName + "," + stateName + ","
-						+ lgaName + "," + wardName);
-					continue;
-				}
-				if (!wardName.isEmpty()) {
+
+				Organization existingWard = getExistingOrganizationFromFHIRServer(wardName);
+				if (existingWard != null) {
+					wardId = existingWard.getIdElement().getIdPart();
+					wardGroupId = getExistingKeycloakGroup(wardName);
+					if (wardGroupId == null) {
+						GroupRepresentation wardGroupRep = KeycloakTemplateHelper.wardGroup(existingWard.getName(), lgaGroupId, wardId);
+						wardGroupId = createKeycloakGroup(wardGroupRep);
+						if (wardGroupId == null) {
+							invalidClinics.add("Group creation failed for Ward: " + wardName);
+							continue;
+						}
+					}
+					if (!updateOrganizationWithKeycloakGroupId(existingWard, wardGroupId, invalidClinics, wardName)) {
+						invalidClinics.add("Group creation failed for Ward: " + wardName);
+						continue;
+					}
+				} else {
 					Organization ward = FhirResourceTemplateHelper.ward(stateName, lgaName, wardName, lgaId);
-					GroupRepresentation wardGroupRep = KeycloakTemplateHelper.wardGroup(ward.getName(), lgaGroupId,
-						ward.getIdElement().getIdPart());
+					GroupRepresentation wardGroupRep = KeycloakTemplateHelper.wardGroup(ward.getName(), lgaGroupId, ward.getIdElement().getIdPart());
 					wardGroupId = createKeycloakGroup(wardGroupRep);
 					if (wardGroupId == null) {
-						invalidClinics.add("Group creation failed for Ward: " + facilityName + "," + stateName + ","
-							+ lgaName + "," + wardName);
+						invalidClinics.add("Group creation failed for Ward: " + wardName);
 						continue;
 					}
 					wardId = createResource(wardGroupId, ward, Organization.class);
 					if (wardId == null) {
-						invalidClinics.add("Resource creation failed for Ward: " + facilityName + "," + stateName + ","
-							+ lgaName + "," + wardName);
+						invalidClinics.add("Resource creation failed for Ward: " + wardName);
+						continue;
+					}
+				}
+
+				Organization existingFacility = getExistingOrganizationFromFHIRServer(facilityName);
+				if (existingFacility != null) {
+					facilityOrganizationId = existingFacility.getIdElement().getIdPart();
+					facilityGroupId = getExistingKeycloakGroup(facilityUID);
+					Location existingLocation =  getExistingLocationFromFHIRServer(facilityOrganizationId);
+					if(existingLocation != null){
+						facilityLocationId = existingLocation.getIdElement().getIdPart();
+					} else {
+						logger.warn("Not found Location Id for Organization = " + facilityOrganizationId );
+						logger.warn("Facility Id = "+ facilityUID );
+						logger.warn("Facility name = "+ facilityName);
+						continue;
+					}
+					if (facilityGroupId == null) {
+						GroupRepresentation facilityGroupRep = KeycloakTemplateHelper.facilityGroup(existingFacility.getName(), wardGroupId, facilityOrganizationId, facilityLocationId, type, ownership, facilityUID, facilityCode, argusoftIdentifier);
+						facilityGroupId = createKeycloakGroup(facilityGroupRep);
+						if (facilityGroupId == null) {
+							invalidClinics.add("Group creation failed for facility: " + facilityName);
+							continue;
+						}
+					}
+
+					if (!updateOrganizationWithKeycloakGroupId(existingFacility, facilityGroupId, invalidClinics, facilityName)) {
+						invalidClinics.add("Group creation failed for facility: " + facilityName);
 						continue;
 					}
 
+					if (!updateLocationWithKeycloakGroupId(existingLocation, facilityGroupId, invalidClinics, facilityName)) {
+						invalidClinics.add("Group creation failed for facility: " + facilityName);
+						continue;
+					}
+
+
 				} else {
-					// Handle Clinics that are at a LGA level eg: mobile clinics
-					wardGroupId = lgaGroupId;
-					wardId = lgaId;
-				}
-				Organization clinicOrganization = FhirResourceTemplateHelper.clinic(facilityName, facilityUID,
-					facilityCode, countryCode, phoneNumber, stateName, lgaName, wardName, type, wardId,
-					csvData[10]);
-				Location clinicLocation = FhirResourceTemplateHelper.clinic(stateName, lgaName, wardName, facilityName,
-					longitude, latitude, pluscode, clinicOrganization.getIdElement().getIdPart());
-				GroupRepresentation facilityGroupRep = KeycloakTemplateHelper.facilityGroup(
-					clinicOrganization.getName(), wardGroupId, clinicOrganization.getIdElement().getIdPart(),
-					clinicLocation.getIdElement().getIdPart(), type, ownership, facilityUID, facilityCode,
-					argusoftIdentifier);
-				facilityGroupId = createKeycloakGroup(facilityGroupRep);
-				if (facilityGroupId == null) {
-					invalidClinics.add("Group creation failed for facility: " + facilityName + "," + stateName + ","
-						+ lgaName + "," + wardName);
-					continue;
-				}
-				facilityOrganizationId = createResource(facilityGroupId, clinicOrganization, Organization.class);
-				facilityLocationId = createResource(facilityGroupId, clinicLocation, Location.class);
-				if (facilityOrganizationId == null || facilityLocationId == null) {
-					invalidClinics.add("Resource creation failed for Facility: " + facilityName + "," + stateName + ","
-						+ lgaName + "," + wardName);
+					Organization clinicOrganization = FhirResourceTemplateHelper.clinic(facilityName, facilityUID, facilityCode, countryCode, phoneNumber, stateName, lgaName, wardName, type, wardId, csvData[10]);
+					Location clinicLocation = FhirResourceTemplateHelper.clinic(stateName, lgaName, wardName, facilityName, longitude, latitude, pluscode, clinicOrganization.getIdElement().getIdPart());
+					GroupRepresentation facilityGroupRep = KeycloakTemplateHelper.facilityGroup(clinicOrganization.getName(), wardGroupId, clinicOrganization.getIdElement().getIdPart(), clinicLocation.getIdElement().getIdPart(), type, ownership, facilityUID, facilityCode, argusoftIdentifier);
+					facilityGroupId = createKeycloakGroup(facilityGroupRep);
+					if (facilityGroupId == null) {
+						invalidClinics.add("Group creation failed for facility: " + facilityName);
+						continue;
+					}
+					facilityOrganizationId = createResource(facilityGroupId, clinicOrganization, Organization.class);
+					facilityLocationId = createResource(facilityGroupId, clinicLocation, Location.class);
+					if (facilityOrganizationId == null || facilityLocationId == null) {
+						invalidClinics.add("Resource creation failed for facility: " + facilityName);
+					}
 				}
 			}
 		}
@@ -504,8 +592,113 @@ public class HelperService {
 			map.put("issues", invalidClinics);
 		}
 		map.put("uploadTaskStatus", "Completed");
-		return new ResponseEntity<LinkedHashMap<String, Object>>(map, HttpStatus.OK);
+		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
+
+	private Organization getExistingOrganizationFromFHIRServer(String name) {
+		Bundle bundle = fhirClientAuthenticatorService.getFhirClient().search()
+			.forResource(Organization.class)
+			.where(Organization.NAME.matchesExactly().value(name))
+			.returnBundle(Bundle.class)
+			.execute();
+
+		if (bundle != null && !bundle.getEntry().isEmpty()) {
+			return (Organization) bundle.getEntry().get(0).getResource();
+		}
+		return null;
+	}
+
+
+	private String getExistingKeycloakGroup(String groupName) {
+		RealmResource realmResource = fhirClientAuthenticatorService.getKeycloak()
+			.realm(appProperties.getKeycloak_Client_Realm());
+		try {
+			List<GroupRepresentation> groups = realmResource.groups().groups(groupName, true, 0, 1, false);
+			if (groups.size() == 0) {
+				return null;
+			}
+			return groups.get(0).getName().equals(groupName) ? groups.get(0).getId() : null;
+		} catch (Exception e) {
+			logger.warn(ExceptionUtils.getStackTrace(e));
+		}
+		return null;
+	}
+
+	private Location getExistingLocationFromFHIRServer(String organizationId) {
+		Bundle bundle = fhirClientAuthenticatorService.getFhirClient().search()
+			.forResource(Location.class)
+			.where(new ReferenceClientParam("organization").hasId(organizationId))
+			.returnBundle(Bundle.class)
+			.execute();
+
+		if (bundle != null && !bundle.getEntry().isEmpty()) {
+			 return (Location) bundle.getEntry().get(0).getResource();
+
+		}
+		return null;
+	}
+
+
+	private boolean updateOrganizationWithKeycloakGroupId(Organization organization, String keycloakGroupId, List<String> invalidClinics, String countryName) {
+		boolean identifierFound = false;
+		String identifierSystem = "http://www.iprdgroup.com/Identifier/System/KeycloakId";
+
+		// Check if the identifier exists and update it
+		for (Identifier identifier : organization.getIdentifier()) {
+			if (identifierSystem.equals(identifier.getSystem())) {
+				identifier.setValue(keycloakGroupId);
+				identifierFound = true;
+				break;
+			}
+		}
+
+		// If the identifier doesn't exist, add a new one
+		if (!identifierFound) {
+			organization.addIdentifier()
+				.setSystem(identifierSystem)
+				.setValue(keycloakGroupId);
+		}
+
+		// Update the organization resource on the FHIR server
+		MethodOutcome outcome = fhirClientAuthenticatorService.getFhirClient().update().resource(organization).execute();
+		if (outcome == null || outcome.getResource() == null) {
+			invalidClinics.add("Failed to update the organization resource with Keycloak group ID for country: " + countryName);
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean updateLocationWithKeycloakGroupId(Location location, String keycloakGroupId, List<String> invalidClinics, String facilityName) {
+		boolean identifierFound = false;
+		String identifierSystem = "http://www.iprdgroup.com/Identifier/System/KeycloakId"; // Replace with your actual URL
+
+		// Check if the identifier exists and update it
+		for (Identifier identifier : location.getIdentifier()) {
+			if (identifierSystem.equals(identifier.getSystem())) {
+				identifier.setValue(keycloakGroupId);
+				identifierFound = true;
+				break;
+			}
+		}
+
+		// If the identifier doesn't exist, add a new one
+		if (!identifierFound) {
+			location.addIdentifier()
+				.setSystem(identifierSystem)
+				.setValue(keycloakGroupId);
+		}
+
+		// Update the location resource on the FHIR server
+		MethodOutcome outcome = fhirClientAuthenticatorService.getFhirClient().update().resource(location).execute();
+		if (outcome == null || outcome.getResource() == null) {
+			invalidClinics.add("Failed to update the location resource with Keycloak group ID for facility: " + facilityName);
+			return false;
+		}
+
+		return true;
+	}
+
 
 	public ResponseEntity<LinkedHashMap<String, Object>> createUsers(@RequestParam("file") MultipartFile file)
 		throws Exception {
