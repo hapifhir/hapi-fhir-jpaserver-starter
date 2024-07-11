@@ -25,6 +25,7 @@ import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import ca.uhn.fhir.rest.gclient.TokenClientParam;
+import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.Gson;
@@ -647,45 +648,86 @@ public class HelperService {
 
 			if (!(practitioners.contains(firstName) && practitioners.contains(lastName)
 				&& practitioners.contains(phoneNumber + countryCode))) {
-				Practitioner practitioner = FhirResourceTemplateHelper.hcw(firstName, lastName, phoneNumber,
-					countryCode, gender, birthDate, state, lga, ward, facilityUID, role, qualification,
-					stateIdentifier, argusoftIdentifier);
-//				practitionerId = createResource(hcw,
-//					Practitioner.class,
-//					Practitioner.GIVEN.matches().value(hcw.getName().get(0).getGivenAsSingleString()),
-//					Practitioner.FAMILY.matches().value(hcw.getName().get(0).getFamily()),
-//					Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(), Arrays.asList(phoneNumber + countryCode))
-//				); // Catch index out of bound
-				practitioners.add(practitioner.getName().get(0).getFamily());
-				practitioners.add(practitioner.getName().get(0).getGivenAsSingleString());
-				practitioners.add(practitioner.getTelecom().get(0).getValue());
-				PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(role, qualification,
-					practitioner.getIdElement().getIdPart(), organizationId);
-//				practitionerRoleId = createResource(practitionerRole, PractitionerRole.class, PractitionerRole.PRACTITIONER.hasId(practitionerId));
-				UserRepresentation user = KeycloakTemplateHelper.user(firstName, lastName, email, keycloakUserName,
-					initialPassword, phoneNumber, countryCode, practitioner.getIdElement().getIdPart(),
-					practitionerRole.getIdElement().getIdPart(), role, state, lga, ward, facilityUID,
-					argusoftIdentifier, countryName);
-				String keycloakUserId = createKeycloakUser(user);
-				if (keycloakUserId == null) {
-					map.put("User not created", s);
+				IBaseResource existingPractitionerResource = fetchExistingFhirResource(Practitioner.class,
+					Practitioner.GIVEN.matchesExactly().value(firstName),
+					Practitioner.FAMILY.matchesExactly().value(lastName),
+					Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(),
+						Arrays.asList(countryCode + phoneNumber)));
+				if (existingPractitionerResource != null ){
+					IBaseResource existingPractitionerRoleResource = fetchExistingFhirResource(PractitionerRole.class,
+						PractitionerRole.PRACTITIONER.hasId(Practitioner.class.getName() + existingPractitionerResource.getIdElement().getIdPart()));
+					String practitionerRoleIdToBeUpdated;
+					PractitionerRole newPractitionerRole = null;
+					// Check if PractitionerRole resource exists; otherwise create a new one
+					if (existingPractitionerRoleResource == null){
+						newPractitionerRole = FhirResourceTemplateHelper.practitionerRole(role, qualification,
+							existingPractitionerResource.getIdElement().getIdPart(), organizationId);
+						practitionerRoleIdToBeUpdated = newPractitionerRole.getIdElement().getIdPart();
+					} else {
+						practitionerRoleIdToBeUpdated = existingPractitionerRoleResource.getIdElement().getIdPart();
+					}
+					// Create Keycloak user representation
+					UserRepresentation user = KeycloakTemplateHelper.user(firstName, lastName, email, keycloakUserName,
+						initialPassword, phoneNumber, countryCode, existingPractitionerResource.getIdElement().getIdPart(),
+						practitionerRoleIdToBeUpdated, role, state, lga, ward, facilityUID,
+						argusoftIdentifier, countryName);
+					String keycloakUserId = createKeycloakUser(user);
+					if (keycloakUserId == null) {
+						map.put("User not created", s);
+						continue;
+					}
+					// Create or update Keycloak role representation
+					createAndAssignKeycloakRole(role, keycloakUserId);
+					// Update Keycloak identifier in existing Practitioner resource
+					if (existingPractitionerResource instanceof Practitioner) {
+						Boolean updatedPractitionerResource = updateKeycloakIdentifier(Practitioner.class, existingPractitionerResource, keycloakUserId);
+						if (!updatedPractitionerResource) {
+							invalidUsers.add(existingPractitionerResource.getClass().getSimpleName() + " resource update failed for user: " + s);
+							continue;
+						}
+					}
+					// Update Keycloak identifier in existing PractitionerRole resource
+					if (existingPractitionerRoleResource instanceof PractitionerRole) {
+						Boolean updatedPractitionerRoleResource = updateKeycloakIdentifier(PractitionerRole.class, existingPractitionerRoleResource, keycloakUserId);
+						if (!updatedPractitionerRoleResource) {
+							invalidUsers.add(existingPractitionerRoleResource.getClass().getSimpleName() + " resource update failed for user: " + s);
+						}
+					} else if (newPractitionerRole != null) {
+						// If new PractitionerRole was created, handle its creation
+						practitionerRoleId = createResource(keycloakUserId, newPractitionerRole);
+						if (practitionerRoleId == null) {
+							invalidUsers.add("Resource creation failed for user: " + s);
+						}
+					}
 				} else {
-					RoleRepresentation KeycloakRoleRepresentation = KeycloakTemplateHelper.role(role);
-					createRoleIfNotExists(KeycloakRoleRepresentation);
-					assignRole(keycloakUserId, KeycloakRoleRepresentation.getName());
-					practitionerId = createResource(keycloakUserId, practitioner, Practitioner.class,
-						Practitioner.GIVEN.matchesExactly()
-							.value(practitioner.getName().get(0).getGivenAsSingleString()),
-						Practitioner.FAMILY.matchesExactly().value(practitioner.getName().get(0).getFamily()),
-						Practitioner.TELECOM.exactly().systemAndValues(
-							ContactPoint.ContactPointSystem.PHONE.toCode(),
-							Arrays.asList(countryCode + phoneNumber)));
+					// Create Practitioner resource
+					Practitioner practitioner = FhirResourceTemplateHelper.hcw(firstName, lastName, phoneNumber,
+						countryCode, gender, birthDate, state, lga, ward, facilityUID, role, qualification,
+						stateIdentifier, argusoftIdentifier);
+					practitioners.add(practitioner.getName().get(0).getFamily());
+					practitioners.add(practitioner.getName().get(0).getGivenAsSingleString());
+					practitioners.add(practitioner.getTelecom().get(0).getValue());
+					// Create PractitionerRole resource
+					PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(role, qualification,
+						practitioner.getIdElement().getIdPart(), organizationId);
+					// Create Keycloak user representation
+					UserRepresentation user = KeycloakTemplateHelper.user(firstName, lastName, email, keycloakUserName,
+						initialPassword, phoneNumber, countryCode, practitioner.getIdElement().getIdPart(),
+						practitionerRole.getIdElement().getIdPart(), role, state, lga, ward, facilityUID,
+						argusoftIdentifier, countryName);
+					String keycloakUserId = createKeycloakUser(user);
+					if (keycloakUserId == null) {
+						map.put("User not created", s);
+						continue;
+					}
+					// Create or update Keycloak role representation
+					createAndAssignKeycloakRole(role, keycloakUserId);
+					practitionerId = createResource(keycloakUserId, practitioner);
 					if (practitionerId == null) {
 						invalidUsers.add("Resource creation failed for user: " + s);
 						continue;
 					}
-					practitionerRoleId = createResource(keycloakUserId, practitionerRole, PractitionerRole.class,
-						PractitionerRole.PRACTITIONER.hasId("Practitioner/" + practitionerId));
+					practitionerRoleId = createResource(keycloakUserId, practitionerRole);
 					if (practitionerRoleId == null) {
 						invalidUsers.add("Resource creation failed for user: " + s);
 					}
@@ -755,47 +797,91 @@ public class HelperService {
 					"Practitioner already exists: " + firstName + "," + lastName + "," + userName + "," + email);
 				continue;
 			}
-			Practitioner practitioner = FhirResourceTemplateHelper.user(firstName, lastName, phoneNumber, countryCode,
-				gender, birthDate, organizationName, facilityUID, type.toLowerCase());
-			practitioners.add(practitioner.getName().get(0).getFamily());
-			practitioners.add(practitioner.getName().get(0).getGivenAsSingleString());
-			practitioners.add(email);
-			PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(role, "NA",
-				practitioner.getIdElement().getIdPart(), organizationId);
-
-			UserRepresentation user = KeycloakTemplateHelper.dashboardUser(firstName, lastName, email, userName,
-				initialPassword, phoneNumber, countryCode, practitioner.getIdElement().getIdPart(),
-				practitionerRole.getIdElement().getIdPart(), facilityUID, role, organizationName,
-				type.toLowerCase());
-			String keycloakUserId = createKeycloakUser(user);
-			if (keycloakUserId == null) {
-				invalidUsers.add("Failed to create user: " + firstName + " " + lastName + "," + userName + "," + email);
-				continue;
-			}
-			RoleRepresentation KeycloakRoleRepresentation = KeycloakTemplateHelper.role(role);
-			createRoleIfNotExists(KeycloakRoleRepresentation);
-			assignRole(keycloakUserId, KeycloakRoleRepresentation.getName());
-			practitionerId = createResource(keycloakUserId, practitioner, Practitioner.class,
-				Practitioner.GIVEN.matchesExactly().value(practitioner.getName().get(0).getGivenAsSingleString()),
-				Practitioner.FAMILY.matchesExactly().value(practitioner.getName().get(0).getFamily()),
+			IBaseResource existingPractitionerResource = fetchExistingFhirResource(Practitioner.class,
+				Practitioner.GIVEN.matchesExactly().value(firstName),
+				Practitioner.FAMILY.matchesExactly().value(lastName),
 				Practitioner.TELECOM.exactly().systemAndValues(ContactPoint.ContactPointSystem.PHONE.toCode(),
 					Arrays.asList(countryCode + phoneNumber)));
-			if (practitionerId == null) {
-				invalidUsers.add("Failed to create resource for user: " + firstName + " " + lastName + "," + userName
-					+ "," + email);
-				continue;
-			}
-			if (!practitionerId.equals(practitioner.getIdElement().getIdPart())) {
-				// If the practitioner already exists we need to change the reference.
-				// Because in while creating PractitionerRole old previous practitioner id used
-				// as reference.
-				practitionerRole.setId(new IdType("Practitioner", practitionerId));
-			}
-			practitionerRoleId = createResource(keycloakUserId, practitionerRole, PractitionerRole.class,
-				PractitionerRole.PRACTITIONER.hasId("Practitioner/" + practitionerId));
-			if (practitionerRoleId == null) {
-				invalidUsers.add("Failed to create resource for user: " + firstName + " " + lastName + "," + userName
-					+ "," + email);
+
+			if (existingPractitionerResource != null) {
+				IBaseResource existingPractitionerRoleResource = fetchExistingFhirResource(PractitionerRole.class,
+					PractitionerRole.PRACTITIONER.hasId(Practitioner.class.getName() + existingPractitionerResource.getIdElement().getIdPart()));
+				String practitionerRoleIdToBeUpdated;
+				PractitionerRole newPractitionerRole = null;
+				// Check if PractitionerRole resource exists; otherwise create a new one
+				if (existingPractitionerRoleResource == null) {
+					newPractitionerRole = FhirResourceTemplateHelper.practitionerRole(role, "NA",
+						existingPractitionerResource.getIdElement().getIdPart(), organizationId);
+					practitionerRoleIdToBeUpdated = newPractitionerRole.getIdElement().getIdPart();
+				} else {
+					practitionerRoleIdToBeUpdated = existingPractitionerRoleResource.getIdElement().getIdPart();
+				}
+				// Create Keycloak user representation
+				UserRepresentation user = KeycloakTemplateHelper.dashboardUser(firstName, lastName, email, userName,
+					initialPassword, phoneNumber, countryCode, existingPractitionerResource.getIdElement().getIdPart(),
+					practitionerRoleIdToBeUpdated, facilityUID, role, organizationName,
+					type.toLowerCase());
+				String keycloakUserId = createKeycloakUser(user);
+				if (keycloakUserId == null) {
+					invalidUsers.add("Failed to create user: " + firstName + " " + lastName + "," + userName + "," + email);
+					continue;
+				}
+				// Create or update Keycloak role representation
+				createAndAssignKeycloakRole(role, keycloakUserId);
+				// Update Keycloak identifier in existing Practitioner resource
+				if (existingPractitionerResource instanceof Practitioner) {
+					Boolean updatedPractitionerResource = updateKeycloakIdentifier(Practitioner.class, existingPractitionerResource, keycloakUserId);
+					if (!updatedPractitionerResource) {
+						invalidUsers.add("Practitioner resource update failed for user: " + firstName + " " + lastName + "," + userName + "," + email);
+						continue;
+					}
+				}
+				// Update Keycloak identifier in existing PractitionerRole resource
+				if (existingPractitionerRoleResource instanceof PractitionerRole) {
+					Boolean updatedPractitionerRoleResource = updateKeycloakIdentifier(PractitionerRole.class, existingPractitionerRoleResource, keycloakUserId);
+					if (!updatedPractitionerRoleResource) {
+						invalidUsers.add("PractitionerRole resource update failed for user: " + firstName + " " + lastName + "," + userName + "," + email);
+					}
+				} else if (newPractitionerRole != null) {
+					// If new PractitionerRole was created, handle its creation
+					practitionerRoleId = createResource(keycloakUserId, newPractitionerRole);
+					if (practitionerRoleId == null) {
+						invalidUsers.add("Failed to create resource for user: " + firstName + " " + lastName + "," + userName + "," + email);
+					}
+				}
+
+			} else {
+				// Create Practitioner resource
+				Practitioner practitioner = FhirResourceTemplateHelper.user(firstName, lastName, phoneNumber, countryCode,
+					gender, birthDate, organizationName, facilityUID, type.toLowerCase());
+				practitioners.add(practitioner.getName().get(0).getFamily());
+				practitioners.add(practitioner.getName().get(0).getGivenAsSingleString());
+				practitioners.add(email);
+				// Create PractitionerRole resource
+				PractitionerRole practitionerRole = FhirResourceTemplateHelper.practitionerRole(role, "NA",
+					practitioner.getIdElement().getIdPart(), organizationId);
+				// Create Keycloak user representation
+				UserRepresentation user = KeycloakTemplateHelper.dashboardUser(firstName, lastName, email, userName,
+					initialPassword, phoneNumber, countryCode, practitioner.getIdElement().getIdPart(),
+					practitionerRole.getIdElement().getIdPart(), facilityUID, role, organizationName,
+					type.toLowerCase());
+				String keycloakUserId = createKeycloakUser(user);
+				if (keycloakUserId == null) {
+					invalidUsers.add("Failed to create user: " + firstName + " " + lastName + "," + userName + "," + email);
+					continue;
+				}
+				createAndAssignKeycloakRole(role, keycloakUserId);
+				practitionerId = createResource(keycloakUserId, practitioner);
+				if (practitionerId == null) {
+					invalidUsers.add("Failed to create resource for user: " + firstName + " " + lastName + "," + userName
+						+ "," + email);
+					continue;
+				}
+				practitionerRoleId = createResource(keycloakUserId, practitionerRole);
+				if (practitionerRoleId == null) {
+					invalidUsers.add("Failed to create resource for user: " + firstName + " " + lastName + "," + userName
+						+ "," + email);
+				}
 			}
 		}
 		if (invalidUsers.size() > 0) {
@@ -2578,8 +2664,7 @@ public class HelperService {
 //		return bundle.getEntry().get(0).getFullUrl().split("/")[5];
 //	}
 
-	private <R extends IBaseResource> String createResource(String keycloakId, IBaseResource resource,
-																			  Class<R> resourceClass, ICriterion<?>... theCriterion) {
+	private <R extends IBaseResource> IBaseResource fetchExistingFhirResource(Class<R> resourceClass, ICriterion<?>... theCriterion) {
 		IQuery<IBaseBundle> query = fhirClientAuthenticatorService.getFhirClient().search().forResource(resourceClass)
 			.where(theCriterion[0]);
 		for (int i = 1; i < theCriterion.length; i++)
@@ -2587,31 +2672,71 @@ public class HelperService {
 		try {
 			Bundle bundle = query.returnBundle(Bundle.class).execute();
 			if (bundle.hasEntry() && bundle.getEntry().size() > 0) {
-				Resource existingResource = bundle.getEntry().get(0).getResource();
-				Method getIdentifier = resource.getClass().getMethod("getIdentifier");
-				List<Identifier> identifierList = (List<Identifier>) getIdentifier.invoke(existingResource);
-				for (Identifier identifier : identifierList) {
-					if (identifier.getSystem().equals(IDENTIFIER_SYSTEM + "/KeycloakId")
-						&& identifier.getValue().equals(keycloakId)) {
-						return existingResource.getIdElement().getIdPart();
-					}
-				}
+				return bundle.getEntry().get(0).getResource();
 			}
-			Method addIdentifier = resource.getClass().getMethod("addIdentifier");
-			Identifier obj = (Identifier) addIdentifier.invoke(resource);
-			obj.setSystem(IDENTIFIER_SYSTEM + "/KeycloakId");
-			obj.setValue(keycloakId);
-			MethodOutcome outcome = fhirClientAuthenticatorService.getFhirClient().update().resource(resource)
-				.execute();
-			return outcome.getId().getIdPart();
-		} catch (SecurityException | NoSuchMethodException | InvocationTargetException e) {
-			logger.warn(ExceptionUtils.getStackTrace(e));
-		} catch (IllegalAccessException e) {
+		}  catch (Exception e) {
 			logger.warn(ExceptionUtils.getStackTrace(e));
 		}
 		return null;
 	}
 
+	private <R extends IBaseResource> String createResource(String keycloakId, IBaseResource resource){
+		try {
+			Method addIdentifier = resource.getClass().getMethod("addIdentifier");
+			Identifier obj = (Identifier) addIdentifier.invoke(resource);
+			obj.setSystem(IDENTIFIER_SYSTEM + "/KeycloakId");
+			obj.setValue(keycloakId);
+			return updateResourceAndGetId(resource);
+		} catch (SecurityException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+			logger.warn(ExceptionUtils.getStackTrace(e));
+		}
+		return null;
+	}
+
+	private void createAndAssignKeycloakRole(String role, String keycloakUserId) {
+		RoleRepresentation keycloakRoleRepresentation = KeycloakTemplateHelper.role(role);
+		createRoleIfNotExists(keycloakRoleRepresentation);
+		assignRole(keycloakUserId, keycloakRoleRepresentation.getName());
+	}
+
+	private <R extends IBaseResource> Boolean updateKeycloakIdentifier(Class<R> resourceClass, IBaseResource resource, String keycloakUserId) {
+		if (resourceClass.isInstance(resource)) {
+			R castedResource = resourceClass.cast(resource);
+			try {
+				Method getIdentifierMethod = resourceClass.getMethod("getIdentifier");
+				List<Identifier> identifiers = (List<Identifier>) getIdentifierMethod.invoke(castedResource);
+				for (Identifier identifier : identifiers) {
+					if (identifier.getSystem().equals(IDENTIFIER_SYSTEM + "/KeycloakId") &&
+						!identifier.getValue().equals(keycloakUserId)) {
+						identifier.setValue(keycloakUserId);
+						String resourceId = updateResourceAndGetId(castedResource);
+						if (resourceId == null) {
+							return false;
+						}
+					}
+				}
+			} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+				logger.warn(ExceptionUtils.getStackTrace(e));
+			}
+		}
+		return true;
+	}
+
+	private String updateResourceAndGetId(IBaseResource resource) {
+		try {
+			MethodOutcome outcome = fhirClientAuthenticatorService.getFhirClient().update().resource(resource)
+				.execute();
+			// Ensure that outcome and its ID are not null
+			if (outcome == null || outcome.getId() == null) {
+				logger.warn("Update operation returned a null outcome or outcome ID for resource: " + resource.getIdElement().getIdPart());
+				return null;
+			}
+			return outcome.getId().getIdPart();
+		} catch (ResourceNotFoundException | InternalErrorException e) {
+			logger.warn(ExceptionUtils.getStackTrace(e));
+		}
+		return null;
+	}
 	private <R extends IBaseResource> String createResource(String keycloakId, IBaseResource resource,
 																			  Class<R> resourceClass) {
 
