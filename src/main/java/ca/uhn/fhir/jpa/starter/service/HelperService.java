@@ -92,6 +92,7 @@ import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Practitioner;
 import org.hl7.fhir.r4.model.PractitionerRole;
 import org.hl7.fhir.r4.model.Resource;
+import org.hl7.fhir.r4.model.ResourceType;
 import org.hl7.fhir.r4.model.StringType;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.resource.GroupResource;
@@ -854,7 +855,7 @@ public class HelperService {
 						Arrays.asList(countryCode + phoneNumber)));
 				if (existingPractitionerResource != null ){
 					IBaseResource existingPractitionerRoleResource = fetchExistingFhirResource(PractitionerRole.class,
-						PractitionerRole.PRACTITIONER.hasId(Practitioner.class.getName() + existingPractitionerResource.getIdElement().getIdPart()));
+						PractitionerRole.PRACTITIONER.hasId(ResourceType.Practitioner.name().concat("/") + existingPractitionerResource.getIdElement().getIdPart()));
 					String practitionerRoleIdToBeUpdated;
 					PractitionerRole newPractitionerRole = null;
 					// Check if PractitionerRole resource exists; otherwise create a new one
@@ -1004,7 +1005,7 @@ public class HelperService {
 
 			if (existingPractitionerResource != null) {
 				IBaseResource existingPractitionerRoleResource = fetchExistingFhirResource(PractitionerRole.class,
-					PractitionerRole.PRACTITIONER.hasId(Practitioner.class.getName() + existingPractitionerResource.getIdElement().getIdPart()));
+					PractitionerRole.PRACTITIONER.hasId(ResourceType.Practitioner.name().concat("/") + existingPractitionerResource.getIdElement().getIdPart()));
 				String practitionerRoleIdToBeUpdated;
 				PractitionerRole newPractitionerRole = null;
 				// Check if PractitionerRole resource exists; otherwise create a new one
