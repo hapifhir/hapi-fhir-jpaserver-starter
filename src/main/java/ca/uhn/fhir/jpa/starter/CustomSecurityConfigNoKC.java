@@ -15,8 +15,10 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
@@ -66,9 +68,37 @@ public class CustomSecurityConfigNoKC extends WebSecurityConfigurerAdapter {
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
+	public void configure(WebSecurity web) throws Exception {
+		/* @formatter:off */
+		web.ignoring()
+			.mvcMatchers("/js/**")
+			.and()
+			.ignoring()
+			.mvcMatchers("/css/**")
+			.and()
+			.ignoring()
+			.mvcMatchers("/images/**")
+			.and()
+			.ignoring()
+			.mvcMatchers("/html/**")
+			.and()
+			.ignoring()
+			.antMatchers(HttpMethod.OPTIONS, "/**")
+			.and()
+			.ignoring()
+			.antMatchers("/home")
+			.and()
+			.ignoring()
+			.antMatchers("/fhir/**", "/iprd/**")
+			.and()
+			.ignoring()
+			.antMatchers("/*")
+			.and()
+			.ignoring()
+			.antMatchers("/fhir/metadata");
+	}
 
-
-    @Bean
+	@Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(opensrpAllowedSources.split(",")));

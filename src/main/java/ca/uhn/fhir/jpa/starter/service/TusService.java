@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter.service;
 
 import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.jpa.starter.TUSFileTypes;
 import ca.uhn.fhir.jpa.starter.TusServerProperties;
 import me.desair.tus.server.TusFileUploadService;
 import me.desair.tus.server.exception.TusException;
@@ -36,11 +37,21 @@ public class TusService {
 	TusServerProperties tusServerProperties;
 	@Autowired
 	private TusFileUploadService tusFileUploadService;
-	public void getBytesAndSaveImage(TusFileUploadService tusFileUploadService, String uploadUrl) throws TusException, IOException {
-		List<String> subDirectories = getSubDirectories(appProperties.getImage_path() + File.separator + "uploads");
+	public void getBytesAndSaveImage(TusFileUploadService tusFileUploadService, String uploadUrl, String fileType) throws TusException, IOException {
+		String basePath;
+
+		if (fileType.equals(TUSFileTypes.IMAGE.name())) {
+			basePath = appProperties.getImage_path();
+		} else if (fileType.equals(TUSFileTypes.LOFILE.name())) {
+			basePath = appProperties.getHyper_spectral_files_path();
+		} else {
+			return;
+		}
+
+		List<String> subDirectories = getSubDirectories(basePath + File.separator + "uploads");
 		if (!subDirectories.isEmpty()) {
 			for (String subDirectory : subDirectories) {
-				transferImagesToFinalStorage(uploadUrl);
+				transferImagesToFinalStorage(uploadUrl, basePath);
 			}
 		}
 	}
@@ -57,7 +68,9 @@ public class TusService {
 				String uploadUrl = tusServerProperties.getContextPath() + "/" + subDirectory;
 				String fileName = new String(Base64.decodeBase64(tusFileUploadService.getUploadInfo(uploadUrl).getEncodedMetadata().split(" ")[1]), Charsets.UTF_8);
 				if (fileName.contains(".jpeg") || fileName.contains(".jpg"))
-					transferImagesToFinalStorage(uploadUrl);
+					transferImagesToFinalStorage(uploadUrl, appProperties.getImage_path());
+				else if (fileName.contains(".lo"))
+					transferImagesToFinalStorage(uploadUrl, appProperties.getHyper_spectral_files_path());
 				else if (fileName.contains(".wav"))
 					transferAudioRecordingsToFinalStorage(uploadUrl);
 				else
@@ -83,7 +96,7 @@ public class TusService {
 				tusFileUploadService.deleteUpload(uploadUrl);
 	}
 
-	private void transferImagesToFinalStorage(String uploadUrl) throws TusException, IOException{
+	private void transferImagesToFinalStorage(String uploadUrl, String outputPath) throws TusException, IOException{
 		try{
 			InputStream inputStream = tusFileUploadService.getUploadedBytes(uploadUrl);
 			String fileName = new String(Base64.decodeBase64(tusFileUploadService.getUploadInfo(uploadUrl).getEncodedMetadata().split(" ")[1]), Charsets.UTF_8);
@@ -107,7 +120,7 @@ public class TusService {
 			// Get the complete byte array from the ByteArrayOutputStream.
 			byte[] completeByteArray = byteArrayOutputStream.toByteArray();
 			BufferedImage image = byteArrayToBufferedImage(completeByteArray);
-			boolean isImageSaved = saveImageToFile(tusFileUploadService, image, appProperties.getImage_path(), fileName, uploadUrl);
+			boolean isImageSaved = saveImageToFile(tusFileUploadService, image, outputPath, fileName, uploadUrl);
 			if (isImageSaved)
 				tusFileUploadService.deleteUpload(uploadUrl);
 		} catch (FileNotFoundException e){

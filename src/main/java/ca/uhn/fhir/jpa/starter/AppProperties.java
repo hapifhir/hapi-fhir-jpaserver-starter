@@ -120,8 +120,17 @@ public class AppProperties {
 	private Double maxNoisePercentage = 30.0;
 	private Double minNoisePercentage = 10.0;
 	private List<String> organization_ids_for_caching = null;
-
 	private List<String> envs_for_caching = null;
+
+	public String getHyper_spectral_files_path() {
+		return hyper_spectral_files_path;
+	}
+
+	public void setHyper_spectral_files_path(String hyper_spectral_files_path) {
+		this.hyper_spectral_files_path = hyper_spectral_files_path;
+	}
+
+	private String hyper_spectral_files_path = null;
 
 	public Double getMinNoisePercentage() {
 		return minNoisePercentage;

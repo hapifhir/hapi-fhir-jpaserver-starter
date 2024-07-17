@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import ca.uhn.fhir.jpa.starter.TUSFileTypes;
 import ca.uhn.fhir.jpa.starter.service.TusService;
 import me.desair.tus.server.TusFileUploadService;
 import me.desair.tus.server.exception.TusException;
@@ -42,7 +43,7 @@ public class TusController {
 	@RequestMapping(method = RequestMethod.POST, value = "/transferImage")
 	public ResponseEntity<String> getBytesAndSaveImages(@RequestParam("uploadUrl") String uploadUrl) {
 		try {
-			tusService.getBytesAndSaveImage(tusFileUploadService, uploadUrl);
+			tusService.getBytesAndSaveImage(tusFileUploadService, uploadUrl, TUSFileTypes.IMAGE.name());
 			return ResponseEntity.ok("Images uploaded and saved successfully.");
 		} catch (TusException | IOException e) {
 			e.printStackTrace();
@@ -52,15 +53,25 @@ public class TusController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/transferFile")
 	public ResponseEntity<String> getBytesAndSaveFile(@RequestParam("uploadUrl") String uploadUrl, @RequestParam("fileType") String fileType) {
-		if (Objects.equals(fileType, "IMAGE")){
+		if (Objects.equals(fileType, TUSFileTypes.IMAGE.name())){
 			try {
-				tusService.getBytesAndSaveImage(tusFileUploadService, uploadUrl);
+				tusService.getBytesAndSaveImage(tusFileUploadService, uploadUrl, TUSFileTypes.IMAGE.name());
 				return ResponseEntity.ok("Images uploaded and saved successfully.");
 			} catch (TusException | IOException e) {
 				e.printStackTrace();
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the images.");
 			}
-		} else if (Objects.equals(fileType, "AUDIO")){
+		}
+		else if (Objects.equals(fileType, TUSFileTypes.LOFILE.name())){
+			try {
+				tusService.getBytesAndSaveImage(tusFileUploadService, uploadUrl, TUSFileTypes.LOFILE.name());
+				return ResponseEntity.ok("Images uploaded and saved successfully.");
+			} catch (TusException | IOException e) {
+				e.printStackTrace();
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the images.");
+			}
+		}
+		else if (Objects.equals(fileType, TUSFileTypes.AUDIO.name())){
 			try{
 				tusService.getAudioFileAndSave(tusFileUploadService, uploadUrl);
 				return ResponseEntity.ok("Audio File uploaded and saved successfully.");
