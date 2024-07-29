@@ -5,6 +5,7 @@ import android.util.Pair;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -173,14 +175,16 @@ public class DateUtilityHelper {
 
 	public static Pair<Date, Date> getCurrentWeekDates() {
 		LocalDate current = getCurrentSqlDate().toLocalDate();
-		LocalDate prev = current.minusDays(6);
-		return new Pair<>(Date.valueOf(prev),Date.valueOf(current));
+		LocalDate startOfWeek = current.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+		LocalDate endOfWeek = startOfWeek.plusDays(6);
+		return new Pair<>(Date.valueOf(startOfWeek), Date.valueOf(endOfWeek));
 	}
 
 	public static Pair<Date, Date> getPrevWeekDates() {
-		LocalDate current = getCurrentSqlDate().toLocalDate().minusDays(7);
-		LocalDate prev = current.minusDays(6);
-		return new Pair<>(Date.valueOf(prev),Date.valueOf(current));
+		LocalDate current = getCurrentSqlDate().toLocalDate();
+		LocalDate startOfPrevWeek = current.minusWeeks(1).with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+		LocalDate endOfPrevWeek = startOfPrevWeek.plusDays(6);
+		return new Pair<>(Date.valueOf(startOfPrevWeek), Date.valueOf(endOfPrevWeek));
 	}
 
 	public static long calculateMillisecondsRelativeToCurrentTime(long days) {
