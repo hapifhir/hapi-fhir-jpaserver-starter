@@ -50,7 +50,7 @@ public class CachingService {
 		notificationDataSource = NotificationDataSource.getInstance();
 		LinkedHashMap<Integer, String> mapOfIdToMd5 = new LinkedHashMap<>();
 		for (IndicatorItem item : indicators) {
-			mapOfIdToMd5.put(item.getId(),Utils.md5Bytes((item.getFhirPath().getExpression()+filterString).getBytes(StandardCharsets.UTF_8)));
+			mapOfIdToMd5.put(item.getId(),Utils.md5Bytes((item.getFhirPath().getExpression()+item.getId()+filterString).getBytes(StandardCharsets.UTF_8)));
 		}
 			List<ScoreCardItem> data = map.get(startDate.toLocalDate().toString());
 			final Date date = (Date) startDate.clone();
@@ -329,7 +329,7 @@ public class CachingService {
 		notificationDataSource = NotificationDataSource.getInstance();
 		LinkedHashMap<Integer, String> mapOfIdToMd5 = new LinkedHashMap<>();
 		for (IndicatorItem item : indicators) {
-			mapOfIdToMd5.put(item.getId(),Utils.md5Bytes((item.getFhirPath().getExpression()+filterString).getBytes(StandardCharsets.UTF_8)));
+			mapOfIdToMd5.put(item.getId(),Utils.md5Bytes((item.getFhirPath().getExpression()+item.getId()+filterString).getBytes(StandardCharsets.UTF_8)));
 		}
 		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
 		List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), indicators, Collections.emptyList()).get(date.toLocalDate().toString());

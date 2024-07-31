@@ -1733,12 +1733,12 @@ public class HelperService {
 		for (IndicatorItem indicator : analyticsItemListFromFile) {
 			Double currentWeekCacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(
 				indicator.getFhirPath().getTransformServer(), currentWeek.first, currentWeek.second,
-				Utils.md5Bytes(indicator.getFhirPath().getExpression().getBytes(StandardCharsets.UTF_8)),
+				Utils.md5Bytes((indicator.getFhirPath().getExpression()+indicator.getId()).getBytes(StandardCharsets.UTF_8)),
 				idsAndOrgIdToChildrenMapPair.first);
 
 			Double prevWeekCacheValueSum = getCacheValueForDateRangeIndicatorAndMultipleOrgIdByReflection(
 				indicator.getFhirPath().getTransformServer(), prevWeek.first, prevWeek.second,
-				Utils.md5Bytes(indicator.getFhirPath().getExpression().getBytes(StandardCharsets.UTF_8)),
+				Utils.md5Bytes((indicator.getFhirPath().getExpression()+indicator.getId()).getBytes(StandardCharsets.UTF_8)),
 				idsAndOrgIdToChildrenMapPair.first);
 
 			AnalyticComparison comparisonValue = (currentWeekCacheValueSum > prevWeekCacheValueSum)
@@ -2161,7 +2161,7 @@ public class HelperService {
 			List<String> indicatorIds = new ArrayList<>();
 
 			indicators.forEach(indicatorItem -> {
-				String keyBuilder = new StringBuilder().append(indicatorItem.getFhirPath().getExpression())
+				String keyBuilder = new StringBuilder().append(indicatorItem.getFhirPath().getExpression()+indicatorItem.getId())
 					.append(String.join(",", fhirSearchList)).toString();
 				indicatorIds.add(Utils.md5Bytes(keyBuilder.getBytes(StandardCharsets.UTF_8)));
 			});
@@ -2236,7 +2236,7 @@ public class HelperService {
 							List<String> facility = getFacilitiesForOrganization(orgHierarchyItem, orgHierarchyList);
 							for (IndicatorItem indicator : scoreCardIndicatorItem.getIndicators()) {
 								String transformServer = indicator.getFhirPath().getTransformServer();
-								String keyBuilder = new StringBuilder().append(indicator.getFhirPath().getExpression())
+								String keyBuilder = new StringBuilder().append(indicator.getFhirPath().getExpression()+indicator.getId())
 									.append(String.join(",", fhirSearchList)).toString();
 								String hashedId = Utils.md5Bytes(keyBuilder.getBytes(StandardCharsets.UTF_8));
 								Double value = 0.0;
@@ -2267,7 +2267,7 @@ public class HelperService {
 			if (indicatorItem.getFhirPath().getTransformServer() != null) {
 				if (indicatorItem.getFhirPath().getTransformServer().equals(transformServer)) {
 					String keyBuilder = new StringBuilder()
-						.append(indicatorItem.getFhirPath().getExpression())
+						.append(indicatorItem.getFhirPath().getExpression()+indicatorItem.getId())
 						.append(String.join(",", fhirSearchList))
 						.toString();
 					indicatorIds.add(Utils.md5Bytes(keyBuilder.getBytes(StandardCharsets.UTF_8)));
