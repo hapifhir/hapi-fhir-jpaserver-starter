@@ -2321,7 +2321,7 @@ public class HelperService {
 		logger.warn("**** " + filterString);
 		List<String> currentIndicatorMD5List = indicators.stream()
 			.map(indicatorItem -> Utils.md5Bytes(
-				(indicatorItem.getFhirPath().getExpression() + filterString).getBytes(StandardCharsets.UTF_8)))
+				(indicatorItem.getFhirPath().getExpression() +indicatorItem.getId()+ filterString).getBytes(StandardCharsets.UTF_8)))
 			.collect(Collectors.toList());
 
 		List<Date> dates = new ArrayList<>();
