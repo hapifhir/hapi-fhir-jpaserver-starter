@@ -4,6 +4,13 @@ This project is a complete starter project you can use to deploy a FHIR server u
 
 Note that this project is specifically intended for end users of the HAPI FHIR JPA server module (in other words, it helps you implement HAPI FHIR, it is not the source of the library itself). If you are looking for the main HAPI FHIR project, see here: https://github.com/hapifhir/hapi-fhir
 
+While this project shows how you can use many parts of the HAPI FHIR framework there are a set of features which you should be aware of are missing or something you need to supply yourself or get professional support ahead of using it directly in production:
+
+1) The service comes with no security implementation. See how it can be done at https://hapifhir.io/hapi-fhir/docs/security/introduction.html
+2) The service comes with no enterprise logging. See how it can be done at https://hapifhir.io/hapi-fhir/docs/security/balp_interceptor.html
+3) The internal topic cache used by subscriptions in HAPI FHIR are not shared across multiple instances as the [default supplied implementation is in-mem only](https://github.com/hapifhir/hapi-fhir/blob/master/hapi-fhir-jpaserver-subscription/src/main/java/ca/uhn/fhir/jpa/topic/ActiveSubscriptionTopicCache.java).
+4) The internal message bus used to communicate between instances in HAPI FHIR are not shared across multiple instances as the [default supplied implementation is in-mem only](https://github.com/hapifhir/hapi-fhir/blob/master/hapi-fhir-storage/src/main/java/ca/uhn/fhir/jpa/subscription/channel/api/IChannelFactory.java).  
+
 Need Help? Please see: https://github.com/hapifhir/hapi-fhir/wiki/Getting-Help
 
 ## Prerequisites
