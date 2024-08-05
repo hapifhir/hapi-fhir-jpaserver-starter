@@ -6,10 +6,10 @@ Note that this project is specifically intended for end users of the HAPI FHIR J
 
 While this project shows how you can use many parts of the HAPI FHIR framework there are a set of features which you should be aware of are missing or something you need to supply yourself or get professional support ahead of using it directly in production:
 
-1) The service comes with no security implementation. See how it can be done at https://hapifhir.io/hapi-fhir/docs/security/introduction.html
-2) The service comes with no enterprise logging. See how it can be done at https://hapifhir.io/hapi-fhir/docs/security/balp_interceptor.html
-3) The internal topic cache used by subscriptions in HAPI FHIR are not shared across multiple instances as the [default supplied implementation is in-mem](https://github.com/hapifhir/hapi-fhir/blob/master/hapi-fhir-jpaserver-subscription/src/main/java/ca/uhn/fhir/jpa/topic/ActiveSubscriptionTopicCache.java).
-4) The internal message broker channel in HAPI FHIR is not shared across multiple instances as the [default supplied implementation is in-mem](https://github.com/hapifhir/hapi-fhir/blob/master/hapi-fhir-storage/src/main/java/ca/uhn/fhir/jpa/subscription/channel/api/IChannelFactory.java). This impacts the use of modules listed [here](https://smilecdr.com/docs/installation/message_broker.html#modules-dependent-on-message-brokers).
+1) The service comes with no security implementation. See how it can be done [here](https://hapifhir.io/hapi-fhir/docs/security/introduction.html)
+2) The service comes with no enterprise logging. See how it can be done [here](https://hapifhir.io/hapi-fhir/docs/security/balp_interceptor.html)
+3) The internal topic cache used by subscriptions in HAPI FHIR are not shared across multiple instances as the [default supplied implementation is in-mem](https://github.com/hapifhir/hapi-fhir/blob/master/hapi-fhir-jpaserver-subscription/src/main/java/ca/uhn/fhir/jpa/topic/ActiveSubscriptionTopicCache.java)
+4) The internal message broker channel in HAPI FHIR is not shared across multiple instances as the [default supplied implementation is in-mem](https://github.com/hapifhir/hapi-fhir/blob/master/hapi-fhir-storage/src/main/java/ca/uhn/fhir/jpa/subscription/channel/api/IChannelFactory.java). This impacts the use of modules listed [here](https://smilecdr.com/docs/installation/message_broker.html#modules-dependent-on-message-brokers)
 
 Need Help? Please see: https://github.com/hapifhir/hapi-fhir/wiki/Getting-Help
 
