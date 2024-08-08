@@ -1,4 +1,4 @@
 #!/bin/sh
 
-docker build -t hapi-fhir/hapi-fhir-jpaserver-starter .
+docker build -t aarogya/hapi-fhir-jpa .
 
