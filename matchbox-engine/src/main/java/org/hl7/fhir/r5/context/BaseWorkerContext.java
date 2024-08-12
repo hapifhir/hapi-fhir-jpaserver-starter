@@ -2109,7 +2109,14 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     if (class_ == StructureDefinition.class) {
       uri = ProfileUtilities.sdNs(uri, null);
     }
-    synchronized (lock) {
+    // matchbox patch for #265, fhirVersioned URL's eg (return urls with fhirVersion)
+    if (Utilities.isAbsoluteUrl(uri)) {
+      int index = uri.indexOf("/"+this.version.substring(0,3)+"/");
+      if (index >= 0) {
+        uri = uri.substring(0, index)+uri.substring(index+4);
+      }
+    }
+  synchronized (lock) {
 
       if (version == null) {
         if (uri.contains("|")) {

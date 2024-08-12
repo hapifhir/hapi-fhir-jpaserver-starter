@@ -53,6 +53,7 @@ import org.hl7.fhir.r5.model.Base;
 import org.hl7.fhir.r5.model.Narrative.NarrativeStatus;
 import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.model.StructureMap;
+import org.hl7.fhir.r5.model.UriType;
 import org.hl7.fhir.r5.renderers.RendererFactory;
 import org.hl7.fhir.r5.renderers.utils.RenderingContext;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
@@ -63,6 +64,7 @@ import org.hl7.fhir.r5.utils.validation.constants.ReferenceValidationPolicy;
 import org.hl7.fhir.r5.fhirpath.FHIRPathEngine;
 import org.hl7.fhir.utilities.ByteProvider;
 import org.hl7.fhir.utilities.FhirPublication;
+import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.utilities.json.model.JsonObject;
 import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager;
@@ -74,6 +76,7 @@ import org.hl7.fhir.validation.IgLoader;
 import org.hl7.fhir.validation.ValidationEngine;
 import org.hl7.fhir.validation.instance.InstanceValidator;
 
+import ch.ahdis.matchbox.engine.MatchboxEngine.FilesystemPackageCacheMode;
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import ch.ahdis.matchbox.mappinglanguage.MatchboxStructureMapUtilities;
 import ch.ahdis.matchbox.mappinglanguage.TransformSupportServices;
@@ -187,6 +190,8 @@ public class MatchboxEngine extends ValidationEngine {
 				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r4.core.tgz"));
 				engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.4.0.tgz"));
 				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions.r4#1.0.0.tgz"));
+				removeStructureMaps(engine);
+				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.xver#0.1.0@bp.tgz"));
 			} catch (final IOException e) {
 				throw new IgLoadException(e);
 			}
@@ -210,6 +215,16 @@ public class MatchboxEngine extends ValidationEngine {
 		}
 
 		/**
+		 * remove old StructureMaps from the context, especially from hl7.fhir.uv.extensions.r4#1.0.0 which are replaced by newer versions
+		 * @param engine
+		 */
+		public void removeStructureMaps(MatchboxEngine engine) {
+			for (StructureMap map : engine.getContext().fetchResourcesByType(StructureMap.class)) {
+				engine.getContext().dropResource(map);
+			}
+		}
+
+		/**
 		 * Returns a FHIR R5 engine configured with hl7 terminology
 		 *
 		 * @return
@@ -226,6 +241,8 @@ public class MatchboxEngine extends ValidationEngine {
 				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r5.core.tgz"));
 				engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.4.0.tgz"));
 				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions#1.0.0.tgz"));
+				removeStructureMaps(engine);
+				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.xver#0.1.0@bp.tgz"));
 			} catch (final IOException e) {
 				throw new IgLoadException(e);
 			}
@@ -357,15 +374,25 @@ public class MatchboxEngine extends ValidationEngine {
 	public String transform(String input, boolean inputJson, String mapUri, boolean outputJson)
 			throws FHIRException, IOException {
 		log.info("Start transform: " + mapUri);
+
+		SimpleWorkerContext context = this.getContext();
+		StructureMap map = context.fetchResource(StructureMap.class, mapUri);
+		
+		String fhirVersionTarget = getFhirVersion(getCanonicalFromStructureMap(map, StructureMap.StructureMapModelMode.TARGET));
+		if (fhirVersionTarget !=null && !fhirVersionTarget.equals(this.getVersion())) {
+			log.info("Loading additional FHIR version for Target into context" + fhirVersionTarget);
+			context = getContextForFhirVersion(fhirVersionTarget);
+		}
+
 		Element transformed = transform(ByteProvider.forBytes(input.getBytes("UTF-8")), (inputJson ? FhirFormat.JSON : FhirFormat.XML),
-												  mapUri);
+												  mapUri, context);
 		ByteArrayOutputStream boas = new ByteArrayOutputStream();
 		if (outputJson)
-			new org.hl7.fhir.r5.elementmodel.JsonParser(getContext()).compose(transformed, boas,
+			new org.hl7.fhir.r5.elementmodel.JsonParser(context).compose(transformed, boas,
 					IParser.OutputStyle.PRETTY,
 					null);
 		else
-			new org.hl7.fhir.r5.elementmodel.XmlParser(getContext()).compose(transformed, boas,
+			new org.hl7.fhir.r5.elementmodel.XmlParser(context).compose(transformed, boas,
 					IParser.OutputStyle.PRETTY,
 					null);
 		String result = new String(boas.toByteArray());
@@ -378,7 +405,7 @@ public class MatchboxEngine extends ValidationEngine {
 	 * Adapted transform operation from Validation Engine to use patched
 	 * MatchboxStructureMapUtilities
 	 */
-	public org.hl7.fhir.r5.elementmodel.Element transform(ByteProvider source, FhirFormat cntType, String mapUri)
+	public org.hl7.fhir.r5.elementmodel.Element transform(ByteProvider source, FhirFormat cntType, String mapUri, SimpleWorkerContext targetContext)
 			throws FHIRException, IOException {
 		SimpleWorkerContext context = this.getContext();
 
@@ -386,14 +413,46 @@ public class MatchboxEngine extends ValidationEngine {
 		// if this is the case we do lazy loading of the additional FHIR version into the context
 
 		StructureMap map = context.fetchResource(StructureMap.class, mapUri);
-		String fhirVersion = getFhirVersion(getCanonicalFromStructureMap(map, StructureMap.StructureMapModelMode.SOURCE));
-		if (!fhirVersion.equals(this.getVersion())) {
-			log.info("Loading additional FHIR version for Source into context" + fhirVersion);
-			context.loadFromPackage("hl7.fhir.r5.core", fhirVersion);
+		String fhirVersionSource = getFhirVersion(getCanonicalFromStructureMap(map, StructureMap.StructureMapModelMode.SOURCE));
+		if (fhirVersionSource !=null && !fhirVersionSource.equals(this.getVersion())) {
+			log.info("Loading additional FHIR version for Source into context" + fhirVersionSource);
+			context = getContextForFhirVersion(fhirVersionSource);
 		}
 		org.hl7.fhir.r5.elementmodel.Element src = Manager.parseSingle(context, new ByteArrayInputStream(source.getBytes()),
 				cntType);
-		return transform(src, mapUri);
+		return transform(src, mapUri, targetContext);
+	}
+
+	/**
+	 * Adapted transform operation from Validation Engine to use patched
+	 * MatchboxStructureMapUtilities
+	 */
+	public SimpleWorkerContext getContextForFhirVersion(String fhirVersion)
+			throws FHIRException, IOException {
+		SimpleWorkerContext contextForFhirVersion = null;
+		if (fhirVersion.startsWith("4.0")) {
+			MatchboxEngine engine = new MatchboxEngineBuilder().getEngineR4();
+			contextForFhirVersion = engine.getContext();
+		}
+		if (fhirVersion.startsWith("5.0")) {
+			MatchboxEngine engine = new MatchboxEngineBuilder().getEngineR5();
+			contextForFhirVersion = engine.getContext();
+		}
+		if (contextForFhirVersion != null ) {
+			// we need to copy now all StructureDefinitions from this Version to the new context
+			for (StructureDefinition sd : contextForFhirVersion.listStructures()) {
+				StructureDefinition sdn = sd.copy();
+				if (sdn.getKind()!=null  && sdn.getKind() != StructureDefinition.StructureDefinitionKind.LOGICAL && !"Extensions".equals(sdn.getType())) {
+					sdn.setUrl(sdn.getUrl().replace("http://hl7.org/fhir/", "http://hl7.org/fhir/"+fhirVersion+"/"));
+					sdn.addExtension().setUrl("http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace")
+					  .setValue(new UriType("http://hl7.org/fhir"));
+					this.getContext().cacheResource(sdn);
+				}
+				contextForFhirVersion.cacheResource(sd);
+			}
+		}
+
+		return contextForFhirVersion;
 	}
 
 	/**
@@ -405,12 +464,12 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @throws FHIRException
 	 * @throws IOException
 	 */
-	public org.hl7.fhir.r5.elementmodel.Element transform(org.hl7.fhir.r5.elementmodel.Element src,  String mapUri)
+	public org.hl7.fhir.r5.elementmodel.Element transform(org.hl7.fhir.r5.elementmodel.Element src,  String mapUri, SimpleWorkerContext targetContext)
 			throws FHIRException, IOException {
 		SimpleWorkerContext context = this.getContext();
 		List<Base> outputs = new ArrayList<>();
 		StructureMapUtilities scu = new MatchboxStructureMapUtilities(context,
-				new TransformSupportServices(context, outputs), this);
+				new TransformSupportServices(targetContext!=null ? targetContext : context, outputs), this);
 		StructureMap map = context.fetchResource(StructureMap.class, mapUri);
 		if (map == null) {
 			log.error("Unable to find map " + mapUri + " (Known Maps = " + context.listMapUrls() + ")");
@@ -420,6 +479,7 @@ public class MatchboxEngine extends ValidationEngine {
 				+ (map.getDateElement() != null && !map.getDateElement().isEmpty()  ? "(" + map.getDateElement().asStringValue() + ")" : ""));
 
 		org.hl7.fhir.r5.elementmodel.Element resource = getTargetResourceFromStructureMap(map);
+
 		scu.transform(null, src, map, resource);
 		resource.populatePaths(null);
 		return resource;
@@ -466,6 +526,13 @@ public class MatchboxEngine extends ValidationEngine {
 		if (targetTypeUrl == null) {
 			log.error("Unable to determine resource URL for target type");
 			throw new FHIRException("Unable to determine resource URL for target type");
+		}
+
+		if (Utilities.isAbsoluteUrl(targetTypeUrl)) {
+			int index = targetTypeUrl.indexOf("/"+this.getVersion().substring(0,3)+"/");
+			if (index >= 0) {
+				targetTypeUrl = targetTypeUrl.substring(0, index)+targetTypeUrl.substring(index+4);
+			}
 		}
 
 		StructureDefinition structureDefinition = null;

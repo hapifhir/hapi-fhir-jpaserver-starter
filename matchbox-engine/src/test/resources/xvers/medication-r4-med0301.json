@@ -1,0 +1,16 @@
+{
+    "resourceType": "Medication",
+    "ingredient": [
+        {
+            "itemCodeableConcept": {
+                "coding": [
+                    {
+                        "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                        "code": "66955",
+                        "display": "Vancomycin Hydrochloride"
+                    }
+                ]
+            }
+        }
+    ]
+}

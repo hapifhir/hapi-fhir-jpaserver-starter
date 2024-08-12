@@ -93,7 +93,7 @@ public class QuestionnaireResponseExtractProviderR5  {
         throw new UnprocessableEntityException("Map not available with canonical url "+mapUrl);
     }
 
-    org.hl7.fhir.r5.elementmodel.Element r = matchboxEngine.transform(src, map.getUrl());
+    org.hl7.fhir.r5.elementmodel.Element r = matchboxEngine.transform(src, map.getUrl(), null);
      
     theServletResponse.setContentType(responseContentType);
     theServletResponse.setCharacterEncoding("UTF-8");

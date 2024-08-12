@@ -73,9 +73,11 @@ import org.hl7.fhir.r5.utils.ToolingExtensions;
 import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
 import org.hl7.fhir.utilities.FhirPublication;
 import org.hl7.fhir.utilities.Utilities;
+import org.hl7.fhir.utilities.i18n.I18nConstants;
 import org.hl7.fhir.utilities.validation.ValidationOptions;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
+import org.hl7.fhir.validation.instance.type.StructureMapValidator.VariableDefn;
 
 import java.io.IOException;
 import java.util.*;
@@ -1329,11 +1331,11 @@ public class StructureMapUtilities {
           for (StructureMapGroupRuleComponent childrule : rule.getRule()) {
             executeRule(indent + "  ", context, map, v, group, childrule, false);
           }
-        } else if (rule.hasDependent()) {
+        } else if (rule.hasDependent() && !checkisSimple(rule)) {
           for (StructureMapGroupRuleDependentComponent dependent : rule.getDependent()) {
             executeDependency(indent + "  ", context, map, v, group, dependent);
           }
-        } else if (rule.getSource().size() == 1 && rule.getSourceFirstRep().hasVariable() && rule.getTarget().size() == 1 && rule.getTargetFirstRep().hasVariable() && rule.getTargetFirstRep().getTransform() == StructureMapTransform.CREATE && !rule.getTargetFirstRep().hasParameter()) {
+        } else if (checkisSimple(rule) || (rule.getSource().size() == 1 && rule.getSourceFirstRep().hasVariable() && rule.getTarget().size() == 1 && rule.getTargetFirstRep().hasVariable() && rule.getTargetFirstRep().getTransform() == StructureMapTransform.CREATE && !rule.getTargetFirstRep().hasParameter())) {
           // simple inferred, map by type
           if (debug) {
             log(v.summary());

@@ -29,6 +29,7 @@ import org.hl7.fhir.r5.model.Base;
 import org.hl7.fhir.r5.model.Coding;
 import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.utils.structuremap.ITransformerServices;
+import org.hl7.fhir.utilities.Utilities;
 
 public class TransformSupportServices implements ITransformerServices {
 
@@ -44,6 +45,14 @@ public class TransformSupportServices implements ITransformerServices {
   @Override
   public Base createType(Object appInfo, String name) throws FHIRException {
     StructureDefinition sd = context.fetchResource(StructureDefinition.class, name);
+    if (sd == null) {
+      if (Utilities.existsInList(name, "http://hl7.org/fhirpath/System.String")) {
+        sd = context.fetchTypeDefinition("string"); 
+      }
+    }
+    if (sd == null) {
+      throw new FHIRException("Unable to create type "+name);
+    } 
     return Manager.build(context, sd);
   }
 
