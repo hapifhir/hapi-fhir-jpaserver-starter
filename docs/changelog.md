@@ -1,3 +1,7 @@
+2024/08/13 Release 3.8.10
+
+- upgrade graphql to fix [CVE-2024-40094](https://github.com/ahdis/matchbox/security/code-scanning/83)
+
 2024/07/10 Release 3.8.9
 
 - add support for dateTime [#243](https://github.com/ahdis/matchbox/issues/243)
