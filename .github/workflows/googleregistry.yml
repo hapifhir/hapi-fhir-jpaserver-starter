@@ -112,4 +112,4 @@ jobs:
           content: |
               failure ${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.ref_name }} 
               
-              see https://github.com/ahdis/matchbox-ch-elm/actions/runs/${{ github.run_id }}
+              see https://github.com/ahdis/matchbox/actions/runs/${{ github.run_id }}
