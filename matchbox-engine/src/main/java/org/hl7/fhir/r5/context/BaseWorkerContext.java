@@ -517,7 +517,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
 					// matchbox patch for duplicate resources, see https://github.com/ahdis/matchbox/issues/227
 					// org.hl7.fhir.r5.conformance.R5ExtensionsLoader.loadR5SpecialTypes(R5ExtensionsLoader.java:141)
 					CanonicalResource ex = fetchResourceWithException(m.fhirType(), url);
-					if (laterVersion(m.getVersion(), ex.getVersion())) {
+					if (ex.getVersion()!=null && m.getVersion()!=null && laterVersion(m.getVersion(), ex.getVersion())) {
 						logger.logMessage("Note replacing old version: " + formatMessage(I18nConstants.DUPLICATE_RESOURCE_, url, m.getVersion(), ex.getVersion(), ex.fhirType()));
 						dropResource(ex);
 					} else {

@@ -1,7 +1,5 @@
 package ch.ahdis.matchbox.engine;
 
-import static org.apache.commons.lang3.StringUtils.substring;
-
 /*
  * #%L
  * Matchbox Engine
@@ -27,13 +25,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import ch.ahdis.matchbox.engine.exception.IgLoadException;
-import ch.ahdis.matchbox.engine.exception.MatchboxEngineCreationException;
-import ch.ahdis.matchbox.engine.exception.TerminologyServerException;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
@@ -44,9 +41,11 @@ import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r5.context.ContextUtilities;
 import org.hl7.fhir.r5.context.SimpleWorkerContext;
+import org.hl7.fhir.r5.context.SimpleWorkerContext.SimpleWorkerContextBuilder;
 import org.hl7.fhir.r5.elementmodel.Element;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
+import org.hl7.fhir.r5.fhirpath.FHIRPathEngine;
 import org.hl7.fhir.r5.formats.IParser;
 import org.hl7.fhir.r5.formats.IParser.OutputStyle;
 import org.hl7.fhir.r5.model.Base;
@@ -61,7 +60,6 @@ import org.hl7.fhir.r5.utils.OperationOutcomeUtilities;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
 import org.hl7.fhir.r5.utils.validation.IResourceValidator;
 import org.hl7.fhir.r5.utils.validation.constants.ReferenceValidationPolicy;
-import org.hl7.fhir.r5.fhirpath.FHIRPathEngine;
 import org.hl7.fhir.utilities.ByteProvider;
 import org.hl7.fhir.utilities.FhirPublication;
 import org.hl7.fhir.utilities.Utilities;
@@ -76,8 +74,10 @@ import org.hl7.fhir.validation.IgLoader;
 import org.hl7.fhir.validation.ValidationEngine;
 import org.hl7.fhir.validation.instance.InstanceValidator;
 
-import ch.ahdis.matchbox.engine.MatchboxEngine.FilesystemPackageCacheMode;
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
+import ch.ahdis.matchbox.engine.exception.IgLoadException;
+import ch.ahdis.matchbox.engine.exception.MatchboxEngineCreationException;
+import ch.ahdis.matchbox.engine.exception.TerminologyServerException;
 import ch.ahdis.matchbox.mappinglanguage.MatchboxStructureMapUtilities;
 import ch.ahdis.matchbox.mappinglanguage.TransformSupportServices;
 
@@ -379,7 +379,7 @@ public class MatchboxEngine extends ValidationEngine {
 		StructureMap map = context.fetchResource(StructureMap.class, mapUri);
 		
 		String fhirVersionTarget = getFhirVersion(getCanonicalFromStructureMap(map, StructureMap.StructureMapModelMode.TARGET));
-		if (fhirVersionTarget !=null && !fhirVersionTarget.equals(this.getVersion())) {
+		if (fhirVersionTarget !=null && !fhirVersionTarget.equals(this.getVersion().substring(0, 3))) {
 			log.info("Loading additional FHIR version for Target into context" + fhirVersionTarget);
 			context = getContextForFhirVersion(fhirVersionTarget);
 		}
@@ -414,7 +414,7 @@ public class MatchboxEngine extends ValidationEngine {
 
 		StructureMap map = context.fetchResource(StructureMap.class, mapUri);
 		String fhirVersionSource = getFhirVersion(getCanonicalFromStructureMap(map, StructureMap.StructureMapModelMode.SOURCE));
-		if (fhirVersionSource !=null && !fhirVersionSource.equals(this.getVersion())) {
+		if (fhirVersionSource !=null && !fhirVersionSource.equals(this.getVersion().substring(0,3))) {
 			log.info("Loading additional FHIR version for Source into context" + fhirVersionSource);
 			context = getContextForFhirVersion(fhirVersionSource);
 		}
@@ -431,14 +431,12 @@ public class MatchboxEngine extends ValidationEngine {
 			throws FHIRException, IOException {
 		SimpleWorkerContext contextForFhirVersion = null;
 		if (fhirVersion.startsWith("4.0")) {
-			MatchboxEngine engine = new MatchboxEngineBuilder().getEngineR4();
-			contextForFhirVersion = engine.getContext();
+				contextForFhirVersion = new SimpleWorkerContextBuilder().fromPackage(NpmPackage.fromPackage(getClass().getResourceAsStream("/hl7.fhir.r4.core.tgz")));
 		}
 		if (fhirVersion.startsWith("5.0")) {
-			MatchboxEngine engine = new MatchboxEngineBuilder().getEngineR5();
-			contextForFhirVersion = engine.getContext();
+				contextForFhirVersion = new SimpleWorkerContextBuilder().fromPackage(NpmPackage.fromPackage(getClass().getResourceAsStream("/hl7.fhir.r5.core.tgz")));
 		}
-		if (contextForFhirVersion != null ) {
+		if (contextForFhirVersion != null) {
 			// we need to copy now all StructureDefinitions from this Version to the new context
 			for (StructureDefinition sd : contextForFhirVersion.listStructures()) {
 				StructureDefinition sdn = sd.copy();
@@ -448,7 +446,6 @@ public class MatchboxEngine extends ValidationEngine {
 					  .setValue(new UriType("http://hl7.org/fhir"));
 					this.getContext().cacheResource(sdn);
 				}
-				contextForFhirVersion.cacheResource(sd);
 			}
 		}
 
@@ -478,7 +475,7 @@ public class MatchboxEngine extends ValidationEngine {
 		log.info("Using map " + map.getUrl() + (map.getVersion()!=null ? "|" + map.getVersion() + " " : "" )
 				+ (map.getDateElement() != null && !map.getDateElement().isEmpty()  ? "(" + map.getDateElement().asStringValue() + ")" : ""));
 
-		org.hl7.fhir.r5.elementmodel.Element resource = getTargetResourceFromStructureMap(map);
+		org.hl7.fhir.r5.elementmodel.Element resource = getTargetResourceFromStructureMap(map, targetContext);
 
 		scu.transform(null, src, map, resource);
 		resource.populatePaths(null);
@@ -513,9 +510,9 @@ public class MatchboxEngine extends ValidationEngine {
 		return targetTypeUrl;
 	}
 
-	private org.hl7.fhir.r5.elementmodel.Element getTargetResourceFromStructureMap(StructureMap map) {
+	private org.hl7.fhir.r5.elementmodel.Element getTargetResourceFromStructureMap(StructureMap map, SimpleWorkerContext targetContext) {
 		String targetTypeUrl = null;
-		SimpleWorkerContext context = this.getContext();
+		SimpleWorkerContext context = (targetContext!=null ? targetContext : this.getContext());
 		for (StructureMap.StructureMapStructureComponent component : map.getStructure()) {
 			if (component.getMode() == StructureMap.StructureMapModelMode.TARGET) {
 				targetTypeUrl = component.getUrl();
@@ -529,7 +526,7 @@ public class MatchboxEngine extends ValidationEngine {
 		}
 
 		if (Utilities.isAbsoluteUrl(targetTypeUrl)) {
-			int index = targetTypeUrl.indexOf("/"+this.getVersion().substring(0,3)+"/");
+			int index = targetTypeUrl.indexOf("/"+context.getVersion().substring(0,3)+"/");
 			if (index >= 0) {
 				targetTypeUrl = targetTypeUrl.substring(0, index)+targetTypeUrl.substring(index+4);
 			}
@@ -548,7 +545,7 @@ public class MatchboxEngine extends ValidationEngine {
 			throw new FHIRException("Unable to find StructureDefinition for target type ('" + targetTypeUrl + "')");
 		}
 
-		return Manager.build(getContext(), structureDefinition);
+		return Manager.build(context, structureDefinition);
 	}
 
 	/**
