@@ -48,7 +48,9 @@ jobs:
         timeout-minutes: 90 # We need a long timeout here
         run: mvn --batch-mode --no-transfer-progress --update-snapshots -Dmatchbox.version="${{ env.MATCHBOX_VERSION }}" verify site
         working-directory: matchbox-int-tests
-
+        env:
+          MAVEN_OPTS: -Xmx2g
+          
       - uses: actions/upload-artifact@v4
         if: always()
         with:
