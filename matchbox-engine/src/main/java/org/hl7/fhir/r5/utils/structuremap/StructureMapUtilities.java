@@ -1331,10 +1331,12 @@ public class StructureMapUtilities {
           for (StructureMapGroupRuleComponent childrule : rule.getRule()) {
             executeRule(indent + "  ", context, map, v, group, childrule, false);
           }
+        // matchbox patch #265 for simple rules
         } else if (rule.hasDependent() && !checkisSimple(rule)) {
           for (StructureMapGroupRuleDependentComponent dependent : rule.getDependent()) {
             executeDependency(indent + "  ", context, map, v, group, dependent);
           }
+        // matchbox patch #265 for simple rules
         } else if (checkisSimple(rule) || (rule.getSource().size() == 1 && rule.getSourceFirstRep().hasVariable() && rule.getTarget().size() == 1 && rule.getTargetFirstRep().hasVariable() && rule.getTargetFirstRep().getTransform() == StructureMapTransform.CREATE && !rule.getTargetFirstRep().hasParameter())) {
           // simple inferred, map by type
           if (debug) {
