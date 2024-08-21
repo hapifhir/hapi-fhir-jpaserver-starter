@@ -165,7 +165,7 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 			case R5:
 				return new org.hl7.fhir.r5.formats.JsonParser().parse(resourceContents);
 			default:
-				log.error("FHIR version not support for loading form matchbox case ");
+				log.error("FHIR version not support for loading from matchbox case ");
 				throw new RuntimeException(Msg.code(1305) + "Failed to load package resource " + contents);
 			}
 		} catch (Exception e) {

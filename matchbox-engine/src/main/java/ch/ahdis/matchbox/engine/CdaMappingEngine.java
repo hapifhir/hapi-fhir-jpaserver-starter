@@ -77,11 +77,10 @@ public class CdaMappingEngine extends MatchboxEngine {
 		public CdaMappingEngine getEngineR5() throws FHIRException, IOException, URISyntaxException {
 			log.info("Initializing CDA Mapping Engine");
 			log.info(VersionUtil.getPoweredBy());
-			CdaMappingEngine engine = new CdaMappingEngine(super.fromNothing());
+			CdaMappingEngine engine = new CdaMappingEngine(this.fromSource("hl7.fhir.r5.core#5.0.0"));
 			// if the version would have been set before (constructor) the package is loaded
 			// from the package cache, we don't want this
 			engine.setVersion("5.0.0");
-			engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r5.core.tgz"));
 			engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.4.0.tgz"));
 			engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions#1.0.0.tgz"));
 			engine.loadPackage(getClass().getResourceAsStream("/hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch.tgz"));

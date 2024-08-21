@@ -1,0 +1,68 @@
+{
+  "resourceType": "Medication",
+  "id": "med0301",
+  "contained": [
+    {
+      "resourceType": "Organization",
+      "id": "mmanu",
+      "name": "Medication Manufacturer"
+    }
+  ],
+  "identifier": [
+    {
+      "id": "123456789"
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/sid/ndc",
+        "code": "0409-6531-02",
+        "display": "Vancomycin Hydrochloride (VANCOMYCIN HYDROCHLORIDE)"
+      }
+    ]
+  },
+  "status": "active",
+  "manufacturer": {
+    "reference": "#mmanu"
+  },
+  "form": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "385219001",
+        "display": "Injection Solution (qualifier value)"
+      }
+    ]
+  },
+  "ingredient": [
+    {
+      "itemCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+            "code": "66955",
+            "display": "Vancomycin Hydrochloride"
+          }
+        ]
+      },
+      "isActive": true,
+      "strength": {
+        "numerator": {
+          "value": 500,
+          "system": "http://unitsofmeasure.org",
+          "code": "mg"
+        },
+        "denominator": {
+          "value": 10,
+          "system": "http://unitsofmeasure.org",
+          "code": "mL"
+        }
+      }
+    }
+  ],
+  "batch": {
+    "lotNumber": "9494788",
+    "expirationDate": "2017-05-22"
+  }
+}

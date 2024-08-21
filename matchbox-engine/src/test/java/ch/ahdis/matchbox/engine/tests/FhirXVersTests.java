@@ -51,13 +51,22 @@ import ch.ahdis.matchbox.engine.MatchboxEngine.MatchboxEngineBuilder;
  */
 class FhirXVersTests {
 
-	static private MatchboxEngine engine;
+	static private MatchboxEngine engineR4B, engineR4, engineR5;
 
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FhirMappingLanguageTests.class);
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
-		engine = new MatchboxEngineBuilder().getEngineR4();
+		engineR4 = new MatchboxEngineBuilder().getEngineR4();
+		engineR4B = new MatchboxEngineBuilder().getEngineR4B();
+		engineR5 = new MatchboxEngineBuilder().getEngineR5();
+		// optional, just for peformance reason
+		engineR4.cacheXVersionEngine(engineR4B);
+		engineR4.cacheXVersionEngine(engineR5);
+		engineR4B.cacheXVersionEngine(engineR4);
+		engineR4B.cacheXVersionEngine(engineR5);
+		engineR5.cacheXVersionEngine(engineR4);
+		engineR5.cacheXVersionEngine(engineR4B);
 	}
 
 	@BeforeEach
@@ -76,7 +85,7 @@ class FhirXVersTests {
 
 	@Test
 	void testMedication5to4inR4() throws FHIRException, IOException {
-		MatchboxEngine engine = new MatchboxEngine(FhirXVersTests.engine);
+		MatchboxEngine engine = FhirXVersTests.engineR4;
 		String result = engine.transform(getFileAsStringFromResources("/medication-r5-med0301.json"), true,
 				"http://hl7.org/fhir/uv/xver/StructureMap/Medication5to4", true);
 		log.info(result);
@@ -84,11 +93,80 @@ class FhirXVersTests {
 	}
 
 	@Test
+	void testMedication5to4inR4B() throws FHIRException, IOException {
+		MatchboxEngine engine =FhirXVersTests.engineR4B;
+		String result = engine.transform(getFileAsStringFromResources("/medication-r5-med0301.json"), true,
+				"http://hl7.org/fhir/uv/xver/StructureMap/Medication5to4", true);
+		log.info(result);
+		CompareUtil.compare(getFileAsStringFromResources("/medication-r4-med0301.json"), result, false);
+	}
+
+	@Test
+	void testMedication5to4BinR4B() throws FHIRException, IOException {
+		MatchboxEngine engine =FhirXVersTests.engineR4B;
+		String result = engine.transform(getFileAsStringFromResources("/medication-r5-med0301.json"), true,
+				"http://hl7.org/fhir/uv/xver/StructureMap/Medication5to4b", true);
+		log.info(result);
+		CompareUtil.compare(getFileAsStringFromResources("/medication-r4b-med0301.json"), result, false);
+	}
+
+	@Test
+	void testMedication5to4inR5() throws FHIRException, IOException {
+		MatchboxEngine engine =FhirXVersTests.engineR5;
+		String result = engine.transform(getFileAsStringFromResources("/medication-r5-med0301.json"), true,
+				"http://hl7.org/fhir/uv/xver/StructureMap/Medication5to4", true);
+		log.info(result);
+		CompareUtil.compare(getFileAsStringFromResources("/medication-r4-med0301.json"), result, false);
+	}
+
+	@Test
+	void testMedication5to4BinR5() throws FHIRException, IOException {
+		MatchboxEngine engine =FhirXVersTests.engineR5;
+		String result = engine.transform(getFileAsStringFromResources("/medication-r5-med0301.json"), true,
+				"http://hl7.org/fhir/uv/xver/StructureMap/Medication5to4b", true);
+		log.info(result);
+		CompareUtil.compare(getFileAsStringFromResources("/medication-r4b-med0301.json"), result, false);
+	}
+
+	@Test
 	void testMedication4to5inR4() throws FHIRException, IOException {
-		MatchboxEngine engine = new MatchboxEngine(FhirXVersTests.engine);
+		MatchboxEngine engine =FhirXVersTests.engineR4;
 		String result = engine.transform(getFileAsStringFromResources("/medication-r4-med0301.json"), true,
 				"http://hl7.org/fhir/uv/xver/StructureMap/Medication4to5", true);
 		log.info(result);
+		CompareUtil.compare(getFileAsStringFromResources("/medication-r5-med0301.json"), result, false);
+	}
+
+	@Test
+	void testMedication4to5inR4B() throws FHIRException, IOException {
+		MatchboxEngine engine =FhirXVersTests.engineR4B;
+		String result = engine.transform(getFileAsStringFromResources("/medication-r4-med0301.json"), true,
+				"http://hl7.org/fhir/uv/xver/StructureMap/Medication4to5", true);
+		CompareUtil.compare(getFileAsStringFromResources("/medication-r5-med0301.json"), result, false);
+	}
+	
+	@Test
+	void testMedication4Bto5inR4B() throws FHIRException, IOException {
+		MatchboxEngine engine =FhirXVersTests.engineR4B;
+		String result = engine.transform(getFileAsStringFromResources("/medication-r4b-med0301.json"), true,
+				"http://hl7.org/fhir/uv/xver/StructureMap/Medication4Bto5", true);
+		CompareUtil.compare(getFileAsStringFromResources("/medication-r5-med0301.json"), result, false);
+	}
+
+	@Test
+	void testMedication4to5inR5() throws FHIRException, IOException {
+		MatchboxEngine engine =FhirXVersTests.engineR5;
+		String result = engine.transform(getFileAsStringFromResources("/medication-r4-med0301.json"), true,
+				"http://hl7.org/fhir/uv/xver/StructureMap/Medication4to5", true);
+		log.info(result);
+		CompareUtil.compare(getFileAsStringFromResources("/medication-r5-med0301.json"), result, false);
+	}
+
+	@Test
+	void testMedication4Bto5inR5() throws FHIRException, IOException {
+		MatchboxEngine engine =FhirXVersTests.engineR5;
+		String result = engine.transform(getFileAsStringFromResources("/medication-r4b-med0301.json"), true,
+				"http://hl7.org/fhir/uv/xver/StructureMap/Medication4Bto5", true);
 		CompareUtil.compare(getFileAsStringFromResources("/medication-r5-med0301.json"), result, false);
 	}
 

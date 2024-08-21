@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,6 @@ import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r5.context.ContextUtilities;
 import org.hl7.fhir.r5.context.SimpleWorkerContext;
-import org.hl7.fhir.r5.context.SimpleWorkerContext.SimpleWorkerContextBuilder;
 import org.hl7.fhir.r5.elementmodel.Element;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
@@ -72,6 +72,7 @@ import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.hl7.fhir.validation.IgLoader;
 import org.hl7.fhir.validation.ValidationEngine;
+import org.hl7.fhir.validation.cli.services.PassiveExpiringSessionCache;
 import org.hl7.fhir.validation.instance.InstanceValidator;
 
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
@@ -91,10 +92,16 @@ public class MatchboxEngine extends ValidationEngine {
 
 	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MatchboxEngine.class);
 
-	protected final List<String> suppressedWarnInfoPatterns = new ArrayList<>();
+	protected List<String> suppressedWarnInfoPatterns = new ArrayList<>();
+	protected PassiveExpiringSessionCache sessionCache = new PassiveExpiringSessionCache();
 
 	public MatchboxEngine(final @NonNull ValidationEngine other) throws FHIRException, IOException {
 		super(other);
+		if (other instanceof MatchboxEngine) {
+				MatchboxEngine otherMatchboxEgine = (MatchboxEngine) other;
+				this.sessionCache = otherMatchboxEgine.sessionCache;
+				this.suppressedWarnInfoPatterns = otherMatchboxEgine.suppressedWarnInfoPatterns;
+		}
 		// Create a new IgLoader, otherwise the context is desynchronized between the loader and the engine
 		this.setIgLoader(new IgLoader(this.getPcm(), this.getContext(), this.getVersion(), this.isDebug()));
 		try {
@@ -102,6 +109,10 @@ public class MatchboxEngine extends ValidationEngine {
 		} catch (final IOException e) {
 			throw new MatchboxEngineCreationException(e);
 		}
+	}
+	
+	public void cacheXVersionEngine(MatchboxEngine engine) {
+			sessionCache.cacheSession(engine.getVersion().substring(0,3), engine);
 	}
 
 	/**
@@ -182,16 +193,15 @@ public class MatchboxEngine extends ValidationEngine {
 		public MatchboxEngine getEngineR4() throws MatchboxEngineCreationException {
 			log.info("Initializing Matchbox Engine (FHIR R4 with terminology provided in classpath)");
 			log.info(VersionUtil.getPoweredBy());
-			final MatchboxEngine engine;
-			try { engine = new MatchboxEngine(this.fromNothing()); }
-			catch (final IOException e) { throw new MatchboxEngineCreationException(e); }
+			final MatchboxEngine engine ;
+			try { engine = new MatchboxEngine(this.fromSource("hl7.fhir.r4.core#4.0.1")); }
+			catch (final Exception e) { throw new MatchboxEngineCreationException(e); } 
 			engine.setVersion(FhirPublication.R4.toCode());
 			try {
-				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r4.core.tgz"));
 				engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.4.0.tgz"));
 				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions.r4#1.0.0.tgz"));
 				removeStructureMaps(engine);
-				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.xver#0.1.0@bp.tgz"));
+				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.xver#0.1.0@mb.tgz"));
 			} catch (final IOException e) {
 				throw new IgLoadException(e);
 			}
@@ -215,6 +225,46 @@ public class MatchboxEngine extends ValidationEngine {
 		}
 
 		/**
+		 * Returns a FHIR R4B engine configured with hl7 terminology
+		 * 
+		 * @return
+		 * @throws MatchboxEngineCreationException
+		 */
+		public MatchboxEngine getEngineR4B() throws MatchboxEngineCreationException {
+			log.info("Initializing Matchbox Engine (FHIR R4B with terminology provided in classpath)");
+			log.info(VersionUtil.getPoweredBy());
+			final MatchboxEngine engine ;
+			try { engine = new MatchboxEngine(this.fromSource("hl7.fhir.r4b.core#4.3.0")); }
+			catch (final Exception e) { throw new MatchboxEngineCreationException(e); } 
+			engine.setVersion(FhirPublication.R4B.toCode());
+			try {
+				engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.4.0.tgz"));
+				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions.r4#1.0.0.tgz"));
+				removeStructureMaps(engine);
+				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.xver#0.1.0@mb.tgz"));
+			} catch (final IOException e) {
+				throw new IgLoadException(e);
+			}
+			if (this.txServer == null) {
+				engine.getContext().setCanRunWithoutTerminology(true);
+				engine.getContext().setNoTerminologyServer(true);
+			} else {
+				engine.getContext().setCanRunWithoutTerminology(false);
+				engine.getContext().setNoTerminologyServer(false);
+				try {
+					engine.setTerminologyServer(this.txServer, null, FhirPublication.R4, true);
+				} catch (final Exception e) {
+					throw new TerminologyServerException(e);
+				}
+			}
+			engine.getContext().setPackageTracker(engine);
+			engine.setPcm(this.getFilesystemPackageCacheManager());
+			engine.setPolicyAdvisor(new ValidationPolicyAdvisor(ReferenceValidationPolicy.CHECK_VALID));
+			engine.setAllowExampleUrls(true);
+			return engine;
+		}
+		
+		/**
 		 * remove old StructureMaps from the context, especially from hl7.fhir.uv.extensions.r4#1.0.0 which are replaced by newer versions
 		 * @param engine
 		 */
@@ -234,15 +284,14 @@ public class MatchboxEngine extends ValidationEngine {
 			log.info("Initializing Matchbox Engine (FHIR R5 with terminology provided in classpath)");
 			log.info(VersionUtil.getPoweredBy());
 			final MatchboxEngine engine;
-			try { engine = new MatchboxEngine(this.fromNothing()); }
-			catch (final IOException e) { throw new MatchboxEngineCreationException(e); }
+			try { engine = new MatchboxEngine(this.fromSource("hl7.fhir.r5.core#5.0.0")); }
+			catch (final Exception e) { throw new MatchboxEngineCreationException(e); } 
 			engine.setVersion(FhirPublication.R5.toCode());
 			try {
-				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r5.core.tgz"));
 				engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.4.0.tgz"));
 				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions#1.0.0.tgz"));
 				removeStructureMaps(engine);
-				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.xver#0.1.0@bp.tgz"));
+				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.xver#0.1.0@mb.tgz"));
 			} catch (final IOException e) {
 				throw new IgLoadException(e);
 			}
@@ -303,11 +352,20 @@ public class MatchboxEngine extends ValidationEngine {
 		@Override
 		public ValidationEngine fromNothing() throws MatchboxEngineCreationException {
 			try {
-				return super.fromNothing();
+				return super.fromNothing();				
 			} catch (final IOException e) {
 				throw new MatchboxEngineCreationException(e);
 			}
 		}
+
+		@Override
+		public ValidationEngine fromSource(String src) throws IOException, URISyntaxException {
+			try {
+				return super.fromSource(src);				
+			} catch (final IOException e) {
+				throw new MatchboxEngineCreationException(e);
+			}
+	    }
 
 		public MatchboxEngineBuilder withVersion(final String version) {
 			super.withVersion(version);
@@ -379,8 +437,8 @@ public class MatchboxEngine extends ValidationEngine {
 		StructureMap map = context.fetchResource(StructureMap.class, mapUri);
 		
 		String fhirVersionTarget = getFhirVersion(getCanonicalFromStructureMap(map, StructureMap.StructureMapModelMode.TARGET));
-		if (fhirVersionTarget !=null && !fhirVersionTarget.equals(this.getVersion().substring(0, 3))) {
-			log.info("Loading additional FHIR version for Target into context" + fhirVersionTarget);
+		if (fhirVersionTarget !=null && (fhirVersionTarget.startsWith("4.0") || fhirVersionTarget.startsWith("4.3") || fhirVersionTarget.startsWith("5.0"))  && !fhirVersionTarget.equals(this.getVersion().substring(0, 3))) {
+			log.info("Loading additional FHIR version for Target into context " + fhirVersionTarget);
 			context = getContextForFhirVersion(fhirVersionTarget);
 		}
 
@@ -414,8 +472,8 @@ public class MatchboxEngine extends ValidationEngine {
 
 		StructureMap map = context.fetchResource(StructureMap.class, mapUri);
 		String fhirVersionSource = getFhirVersion(getCanonicalFromStructureMap(map, StructureMap.StructureMapModelMode.SOURCE));
-		if (fhirVersionSource !=null && !fhirVersionSource.equals(this.getVersion().substring(0,3))) {
-			log.info("Loading additional FHIR version for Source into context" + fhirVersionSource);
+		if (fhirVersionSource !=null &&  (fhirVersionSource.startsWith("4.0") || fhirVersionSource.startsWith("4.3") || fhirVersionSource.startsWith("5.0")) && !fhirVersionSource.equals(this.getVersion().substring(0,3))) {
+			log.info("Loading additional FHIR version for Source into context " + fhirVersionSource);
 			context = getContextForFhirVersion(fhirVersionSource);
 		}
 		org.hl7.fhir.r5.elementmodel.Element src = Manager.parseSingle(context, new ByteArrayInputStream(source.getBytes()),
@@ -431,24 +489,47 @@ public class MatchboxEngine extends ValidationEngine {
 			throws FHIRException, IOException {
 		SimpleWorkerContext contextForFhirVersion = null;
 		if (fhirVersion.startsWith("4.0")) {
-				contextForFhirVersion = new SimpleWorkerContextBuilder().fromPackage(NpmPackage.fromPackage(getClass().getResourceAsStream("/hl7.fhir.r4.core.tgz")));
+			ValidationEngine engine = sessionCache.fetchSessionValidatorEngine(fhirVersion.substring(0,3));
+			if (engine == null) {
+				engine = new MatchboxEngineBuilder().getEngineR4();
+				sessionCache.cacheSession(fhirVersion.substring(0,3), engine);
+			} 
+			contextForFhirVersion = engine.getContext();
+			}
+		if (fhirVersion.startsWith("4.3")) {
+			ValidationEngine engine = sessionCache.fetchSessionValidatorEngine(fhirVersion.substring(0,3));
+			if (engine == null) {
+				engine = new MatchboxEngineBuilder().getEngineR4B();
+				sessionCache.cacheSession(fhirVersion.substring(0,3), engine);
+			} 
+			contextForFhirVersion = engine.getContext();
 		}
 		if (fhirVersion.startsWith("5.0")) {
-				contextForFhirVersion = new SimpleWorkerContextBuilder().fromPackage(NpmPackage.fromPackage(getClass().getResourceAsStream("/hl7.fhir.r5.core.tgz")));
-		}
+			ValidationEngine engine = sessionCache.fetchSessionValidatorEngine(fhirVersion.substring(0,3));
+			if (engine == null) {
+				engine = new MatchboxEngineBuilder().getEngineR5();
+				sessionCache.cacheSession(fhirVersion.substring(0,3), engine);
+			} 
+			contextForFhirVersion = engine.getContext();
+			}
 		if (contextForFhirVersion != null) {
 			// we need to copy now all StructureDefinitions from this Version to the new context
-			for (StructureDefinition sd : contextForFhirVersion.listStructures()) {
-				StructureDefinition sdn = sd.copy();
-				if (sdn.getKind()!=null  && sdn.getKind() != StructureDefinition.StructureDefinitionKind.LOGICAL && !"Extensions".equals(sdn.getType())) {
-					sdn.setUrl(sdn.getUrl().replace("http://hl7.org/fhir/", "http://hl7.org/fhir/"+fhirVersion+"/"));
-					sdn.addExtension().setUrl("http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace")
-					  .setValue(new UriType("http://hl7.org/fhir"));
-					this.getContext().cacheResource(sdn);
-				}
-			}
+			// check first if they are not already defined
+			if (this.getContext().fetchResource(StructureDefinition.class, "http://hl7.org/fhir/"+fhirVersion.substring(0,3)+"/StructureDefinition/StructureDefinition") == null) {
+				int len = "http://hl7.org/fhir/".length();
+				for (StructureDefinition sd : contextForFhirVersion.listStructures()) {
+					if (sd.getKind()!=null  && sd.getKind() != StructureDefinition.StructureDefinitionKind.LOGICAL && !"Extensions".equals(sd.getType())) {
+						if (!Character.isDigit(sd.getUrl().charAt(len))) {
+  						StructureDefinition sdn = sd.copy();
+  						sdn.setUrl(sdn.getUrl().replace("http://hl7.org/fhir/", "http://hl7.org/fhir/"+fhirVersion.substring(0,3)+"/"));
+  						sdn.addExtension().setUrl("http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace")
+  						  .setValue(new UriType("http://hl7.org/fhir"));
+  						this.getContext().cacheResource(sdn);
+						}
+					}
+				}	
+			} 
 		}
-
 		return contextForFhirVersion;
 	}
 

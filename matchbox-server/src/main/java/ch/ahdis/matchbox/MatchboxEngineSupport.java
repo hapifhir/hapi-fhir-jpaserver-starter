@@ -19,7 +19,6 @@ import org.hl7.fhir.r5.conformance.R5ExtensionsLoader;
 import org.hl7.fhir.r5.terminologies.CodeSystemUtilities;
 import org.hl7.fhir.r5.utils.validation.constants.ReferenceValidationPolicy;
 import org.hl7.fhir.utilities.FhirPublication;
-import org.hl7.fhir.validation.cli.services.IPackageInstaller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -266,22 +265,19 @@ public class MatchboxEngineSupport {
 		}
 		if (mainEngine == null) {
 			cliContext = new CliContext(this.cliContext);
-			mainEngine = new MatchboxEngineBuilder().withVersion(this.cliContext.getFhirVersion()).getEngine();
-			mainEngine.setIgLoader(new IgLoaderFromJpaPackageCache(mainEngine.getPcm(),
-																		 mainEngine.getContext(),
-																		 mainEngine.getVersion(),
-																		 mainEngine.isDebug(),
-																		 this.myPackageCacheManager,
-																		 this.myNpmPackageVersionDao,
-																		 this.myDaoRegistry,
-																		 this.myBinaryStorageSvc,
-																		 this.myTxManager));
 			if (cliContext.getFhirVersion().equals("4.0.1")) {
 				log.debug("Preconfigure FHIR R4");
+			    mainEngine = new MatchboxEngineBuilder().getEngineR4();
 				try {
-					mainEngine.getIgLoader().loadIg(mainEngine.getIgs(), mainEngine.getBinaries(), "hl7.terminology#5.4.0", true);
-					mainEngine.loadPackage("hl7.terminology", "5.4.0");
-					mainEngine.loadPackage("hl7.fhir.r4.core", "4.0.1");
+					mainEngine.setIgLoader(new IgLoaderFromJpaPackageCache(mainEngine.getPcm(),
+																			mainEngine.getContext(),
+																			mainEngine.getVersion(),
+																			mainEngine.isDebug(),
+																			this.myPackageCacheManager,
+																			this.myNpmPackageVersionDao,
+																			this.myDaoRegistry,
+																			this.myBinaryStorageSvc,
+																			this.myTxManager));
 					log.debug("Load R5 Specials");
 					final var r5e = new R5ExtensionsLoader(mainEngine.getPcm(), mainEngine.getContext());
 					r5e.load();
@@ -295,16 +291,31 @@ public class MatchboxEngineSupport {
 				}
 				log.debug("Load R5 Specials types");
 				this.configureValidationEngine(mainEngine, cliContext);
+			} else if (cliContext.getFhirVersion().equals("4.3.0")) {
+				log.debug("Preconfigure FHIR R4B");
+			    mainEngine = new MatchboxEngineBuilder().getEngineR4B();
+				mainEngine.setIgLoader(new IgLoaderFromJpaPackageCache(mainEngine.getPcm(),
+				mainEngine.getContext(),
+				mainEngine.getVersion(),
+				mainEngine.isDebug(),
+				this.myPackageCacheManager,
+				this.myNpmPackageVersionDao,
+				this.myDaoRegistry,
+				this.myBinaryStorageSvc,
+				this.myTxManager));
+				this.configureValidationEngine(mainEngine, cliContext);
 			} else if (cliContext.getFhirVersion().equals("5.0.0")) {
 				log.debug("Preconfigure FHIR R5");
-				try {
-					mainEngine.setVersion("5.0.0");
-					mainEngine.getIgLoader().loadIg(mainEngine.getIgs(), mainEngine.getBinaries(), "hl7.fhir.r5.core#5.0.0", true);
-					mainEngine.loadPackage("hl7.terminology", "5.4.0");
-					mainEngine.loadPackage("hl7.fhir.uv.extensions", "1.0.0");
-				} catch (final Exception e) {
-					throw new IgLoadException("Failed to load R5", e);
-				}
+			    mainEngine = new MatchboxEngineBuilder().getEngineR5();
+				mainEngine.setIgLoader(new IgLoaderFromJpaPackageCache(mainEngine.getPcm(),
+				mainEngine.getContext(),
+				mainEngine.getVersion(),
+				mainEngine.isDebug(),
+				this.myPackageCacheManager,
+				this.myNpmPackageVersionDao,
+				this.myDaoRegistry,
+				this.myBinaryStorageSvc,
+				this.myTxManager));
 				this.configureValidationEngine(mainEngine, cliContext);
 			}
 			cliContext.setIg(this.getFhirCorePackage(cliContext));
@@ -403,6 +414,9 @@ public class MatchboxEngineSupport {
 					switch (cliContext.getFhirVersion()) {
 						case "5.0.0":
 							baseEngine = new MatchboxEngineBuilder().getEngineR5();
+							break;
+						case "4.3.0":
+							baseEngine = new MatchboxEngineBuilder().getEngineR4B();
 							break;
 						case "4.0.1":
 							baseEngine = new MatchboxEngineBuilder().getEngineR4();

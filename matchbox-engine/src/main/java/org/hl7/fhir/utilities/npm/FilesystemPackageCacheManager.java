@@ -332,7 +332,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 
   		// matchbox-engine PATCH, we do not want to load from a package server for hl7.fhir.xver-extension :
   		if (CommonPackages.ID_XVER.equals(id)) {
-			ourLog.info("loading " +id+ " form classpath");
+			ourLog.info("loading " +id+ " from classpath");
 		    version = VER_XVER_PROVIDED;
 			InputStream stream = getClass().getResourceAsStream("/"+id+"#"+version+".tgz");
 			if (stream==null) {
@@ -342,8 +342,8 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 			return new InputStreamWithSrc(stream, "http://fhir.org/packages/hl7.fhir.xver-extensions", version);
   		}
 
-	  	if ("hl7.fhir.r5.core".equals(id)) {
-			ourLog.info("loading hl7.fhir.r5.core form classpath");
+	  	if (id.startsWith("hl7.fhir") && id.endsWith("core")) {
+			ourLog.info("loading from classpath "+id);
 			InputStream stream = getClass().getResourceAsStream("/"+id+".tgz");
 			if (stream==null) {
 				ourLog.error("Unable to find/resolve/read from classpath (we dont' want go to the package server) for :" + id+"#"+version+".tgz");
