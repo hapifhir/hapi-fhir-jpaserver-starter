@@ -1,3 +1,8 @@
+2024/08/xx Release 3.9.0
+
+- initial support for FML transforms between different FHIR versions (R4, R4B, R5) [#265](https://github.com/ahdis/matchbox/issues/265)
+- support for FHIR R4B in engine and server [#65](https://github.com/ahdis/matchbox/issues/65)
+
 2024/08/13 Release 3.8.10
 
 - upgrade graphql to fix [CVE-2024-40094](https://github.com/ahdis/matchbox/security/code-scanning/83)
