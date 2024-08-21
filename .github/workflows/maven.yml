@@ -25,5 +25,5 @@ jobs:
         timeout-minutes: 15
         # We need a timeout here
         env:
-          MAVEN_OPTS: -Xmx4g
+          MAVEN_OPTS: -Xmx12g
         run: mvn --batch-mode --no-transfer-progress --update-snapshots verify
