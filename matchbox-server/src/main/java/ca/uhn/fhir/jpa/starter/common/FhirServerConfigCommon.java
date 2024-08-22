@@ -2,7 +2,7 @@ package ca.uhn.fhir.jpa.starter.common;
 
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
-import ca.uhn.fhir.jpa.binstore.DatabaseBlobBinaryStorageSvcImpl;
+import ca.uhn.fhir.jpa.binstore.DatabaseBinaryContentStorageSvcImpl;
 import ca.uhn.fhir.jpa.config.HibernatePropertiesProvider;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings.CrossPartitionReferenceMode;
@@ -94,8 +94,6 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setSchedulingDisabled(!appProperties.getDao_scheduling_enabled());
 		jpaStorageSettings.setDeleteExpungeEnabled(appProperties.getDelete_expunge_enabled());
 		jpaStorageSettings.setExpungeEnabled(appProperties.getExpunge_enabled());
-		if(appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null)
-			jpaStorageSettings.setEmailFromAddress(appProperties.getSubscription().getEmail().getFrom());
 
 		Integer maxFetchSize =  appProperties.getMax_page_size();
 		jpaStorageSettings.setFetchSizeDefaultMaximum(maxFetchSize);
@@ -108,23 +106,6 @@ public class FhirServerConfigCommon {
 
 		Long retainCachedSearchesMinutes = appProperties.getRetain_cached_searches_mins();
 		jpaStorageSettings.setExpireSearchResultsAfterMillis(retainCachedSearchesMinutes * 60 * 1000);
-
-		if(appProperties.getSubscription() != null) {
-			// Subscriptions are enabled by channel type
-			if (appProperties.getSubscription().getResthook_enabled()) {
-				ourLog.info("Enabling REST-hook subscriptions");
-				jpaStorageSettings.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.RESTHOOK);
-			}
-			if (appProperties.getSubscription().getEmail() != null) {
-				ourLog.info("Enabling email subscriptions");
-				jpaStorageSettings.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.EMAIL);
-			}
-			if (appProperties.getSubscription().getWebsocket_enabled()) {
-				ourLog.info("Enabling websocket subscriptions");
-				jpaStorageSettings.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
-			}
-		}
-
 		jpaStorageSettings.setFilterParameterEnabled(appProperties.getFilter_search_enabled());
 		jpaStorageSettings.setAdvancedHSearchIndexing(appProperties.getAdvanced_lucene_indexing());
 		jpaStorageSettings.setTreatBaseUrlsAsLocal(new HashSet<>(appProperties.getLocal_base_urls()));
@@ -197,8 +178,6 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setAllowContainsSearches(appProperties.getAllow_contains_searches());
 		jpaStorageSettings.setAllowExternalReferences(appProperties.getAllow_external_references());
 		jpaStorageSettings.setDefaultSearchParamsCanBeOverridden(appProperties.getAllow_override_default_search_params());
-		if(appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null)
-			jpaStorageSettings.setEmailFromAddress(appProperties.getSubscription().getEmail().getFrom());
 
 		jpaStorageSettings.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
 
@@ -210,12 +189,10 @@ public class FhirServerConfigCommon {
 	@Lazy
 	@Bean
 	public IBinaryStorageSvc binaryStorageSvc(AppProperties appProperties) {
-		DatabaseBlobBinaryStorageSvcImpl binaryStorageSvc = new DatabaseBlobBinaryStorageSvcImpl();
-
+		DatabaseBinaryContentStorageSvcImpl binaryStorageSvc = new DatabaseBinaryContentStorageSvcImpl();
 		if (appProperties.getMax_binary_size() != null) {
 			binaryStorageSvc.setMaximumBinarySize(appProperties.getMax_binary_size());
 		}
-
 		return binaryStorageSvc;
 	}
 

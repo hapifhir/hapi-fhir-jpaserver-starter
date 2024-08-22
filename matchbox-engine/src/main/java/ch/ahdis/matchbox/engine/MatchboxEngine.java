@@ -55,6 +55,7 @@ import org.hl7.fhir.r5.model.StructureMap;
 import org.hl7.fhir.r5.model.UriType;
 import org.hl7.fhir.r5.renderers.RendererFactory;
 import org.hl7.fhir.r5.renderers.utils.RenderingContext;
+import org.hl7.fhir.r5.renderers.utils.ResourceWrapper;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.hl7.fhir.r5.utils.OperationOutcomeUtilities;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
@@ -1002,7 +1003,7 @@ public class MatchboxEngine extends ValidationEngine {
 			.forEach(op.getIssue()::add);
 		final var rc = new RenderingContext(context, null, null, "http://hl7.org/fhir", "", null,
 											 RenderingContext.ResourceRendererMode.END_USER, RenderingContext.GenerationRules.VALID_RESOURCE);
-		RendererFactory.factory(op, rc).render(op);
+ 		RendererFactory.factory(op, rc).renderResource(ResourceWrapper.forResource(rc.getContextUtilities(), op));
 		return (OperationOutcome) (VersionConvertorFactory_40_50.convertResource(op));
 	}
 

@@ -38,8 +38,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <fhir.core.version>6.3.11</fhir.core.version>
-        <hapi.fhir.version>7.0.2</hapi.fhir.version>
+        <fhir.core.version>6.3.20</fhir.core.version>
+        <hapi.fhir.version>7.4.0</hapi.fhir.version>
         <!-- Dependency Versions -->
         <validator_test_case_version>1.5.5</validator_test_case_version>
         <activation_api_version>1.2.0</activation_api_version>

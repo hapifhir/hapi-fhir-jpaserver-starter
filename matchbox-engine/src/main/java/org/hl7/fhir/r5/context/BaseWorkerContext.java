@@ -383,12 +383,10 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
 
       String url = r.getUrl();
       if (!allowLoadingDuplicates && hasResourceVersion(r.getType(), url, r.getVersion()) && !packageInfo.isHTO()) {
-        // spcial workaround for known problems with existing packages
+        // special workaround for known problems with existing packages
         if (Utilities.existsInList(url, "http://hl7.org/fhir/SearchParameter/example")) {
           return;
         }
-				// matchbox patch for duplicate resources, see https://github.com/ahdis/matchbox/issues/227
-				// org.hl7.fhir.r5.conformance.R5ExtensionsLoader.loadR5SpecialTypes(R5ExtensionsLoader.java:141)
         CanonicalResource ex = fetchResourceWithException(r.getType(), url);
         throw new DefinitionException(formatMessage(I18nConstants.DUPLICATE_RESOURCE_, url, r.getVersion(), ex.getVersion(),
             ex.fhirType()));
@@ -573,6 +571,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
   public Map<String, NamingSystem> getNSUrlMap() {
     if (systemUrlMap == null) {
       systemUrlMap = new HashMap<>();
+      try {
       List<NamingSystem> nsl = systems.getList();
       for (NamingSystem ns : nsl) {
         for (NamingSystemUniqueIdComponent uid : ns.getUniqueId()) {
@@ -580,6 +579,12 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
             systemUrlMap.put(uid.getValue(), ns) ;
           }
         }        
+      }
+      } catch (Exception e) {
+        if (!nsFailHasFailed) {
+          e.printStackTrace();
+          nsFailHasFailed  = true;
+        }
       }
     }
     return systemUrlMap;
@@ -1812,10 +1817,11 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     if (cs != null && !hasCanonicalResource(pin, "tx-resource", cs.getVUrl()) && (cs.getContent() == CodeSystemContentMode.COMPLETE || cs.getContent() == CodeSystemContentMode.FRAGMENT)) {
       cache = checkAddToParams(tc, pin, cs) || cache;
     }
-    for (CodeSystem supp : fetchResourcesByType(CodeSystem.class)) {
-      if (supp.getContent() == CodeSystemContentMode.SUPPLEMENT && supp.getSupplements().equals(inc.getSystem())) {
+    for (CodeSystem supp : codeSystems.getSupplements(cs)) {
+      //if (supp.getContent() == CodeSystemContentMode.SUPPLEMENT && supp.getSupplements().equals(inc.getSystem())) {
+      assert supp.getContent() == CodeSystemContentMode.SUPPLEMENT && supp.getSupplements().equals(inc.getSystem());
         cache = checkAddToParams(tc, pin, supp) || cache;
-      }
+      //}
     }
     return cache;
   }
@@ -1887,8 +1893,15 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
         } else if (p.getName().equals("status")) {
           status = ((PrimitiveType<?>) p.getValue()).asStringValue();
         } else if (p.getName().equals("x-caused-by-unknown-system")) {
-          err = TerminologyServiceErrorClass.CODESYSTEM_UNSUPPORTED;
-          unknownSystems.add(((PrimitiveType<?>) p.getValue()).asStringValue());      
+          String unkSystem = ((PrimitiveType<?>) p.getValue()).asStringValue();
+          if (unkSystem != null && unkSystem.contains("|")) {
+            err = TerminologyServiceErrorClass.CODESYSTEM_UNSUPPORTED_VERSION; 
+            system = unkSystem.substring(0, unkSystem.indexOf("|"));
+            version = unkSystem.substring(unkSystem.indexOf("|")+1);
+          } else {
+            err = TerminologyServiceErrorClass.CODESYSTEM_UNSUPPORTED;            
+            unknownSystems.add(unkSystem);      
+          }
         } else if (p.getName().equals("x-unknown-system")) {
           unknownSystems.add(((PrimitiveType<?>) p.getValue()).asStringValue());      
         } else if (p.getName().equals("warning-withdrawn")) {
@@ -1949,6 +1962,12 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       if (code != null) {
         res.setDefinition(new ConceptDefinitionComponent().setDisplay(display).setCode(code));
         res.setDisplay(display);
+      }
+      if (system != null) {
+        res.setSystem(system);
+      }
+      if (version != null) {
+        res.setVersion(version);
       }
     } else if (message != null && !message.equals("No Message returned")) { 
       res = new ValidationResult(IssueSeverity.WARNING, message, system, version, new ConceptDefinitionComponent().setDisplay(display).setCode(code), display, null).setTxLink(txLog.getLastId());
@@ -2116,7 +2135,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
         uri = uri.substring(0, index)+uri.substring(index+4);
       }
     }
-  synchronized (lock) {
+    synchronized (lock) {
 
       if (version == null) {
         if (uri.contains("|")) {
@@ -2546,6 +2565,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
   protected IWorkerContextManager.IPackageLoadingTracker packageTracker;
   private boolean forPublication;
   private boolean cachingAllowed = true;
+  private static boolean nsFailHasFailed;
 
   public Resource fetchResourceById(String type, String uri, FhirPublication fhirVersion) {
     return fetchResourceById(type, uri);
@@ -2557,9 +2577,8 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       String[] parts = uri.split("\\/");
       if (!Utilities.noString(type) && parts.length == 1) {
         if (allResourcesById.containsKey(type)) {
-          // matchbox prevent NP
-					ResourceProxy proxy = allResourcesById.get(type).get(parts[0]);
-					return proxy != null ? proxy.getResource() : null;
+          ResourceProxy res = allResourcesById.get(type).get(parts[0]);
+          return res == null ? null : res.getResource();
         } else {
           return null;
         }

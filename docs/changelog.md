@@ -2,6 +2,7 @@
 
 - initial support for FML transforms between different FHIR versions (R4, R4B, R5) [#265](https://github.com/ahdis/matchbox/issues/265)
 - support for FHIR R4B in engine and server [#65](https://github.com/ahdis/matchbox/issues/65)
+- upgrade to hapi-fhir 7.4.0 and org.hl7.fhir.core 6.3.20 [#267](https://github.com/ahdis/matchbox/issues/267)
 
 2024/08/13 Release 3.8.10
 

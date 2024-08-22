@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import jakarta.servlet.http.HttpServletRequest;
-
+import jakarta.servlet.http.HttpServletResponse;
 import ca.uhn.fhir.jpa.rp.r4.ImplementationGuideResourceProvider;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.ImplementationGuide;
@@ -43,6 +43,7 @@ import ca.uhn.fhir.rest.api.SearchContainedModeEnum;
 import ca.uhn.fhir.rest.api.SearchTotalModeEnum;
 import ca.uhn.fhir.rest.api.SortSpec;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ca.uhn.fhir.rest.api.server.IBundleProvider;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.param.CompositeAndListParam;
 import ca.uhn.fhir.rest.param.DateRangeParam;
@@ -264,84 +265,187 @@ public class ImplementationGuideProviderR4 extends ImplementationGuideResourcePr
 	}
 
 	@Override
-	@Search(allowUnknownParams = true)
+	@Search(allowUnknownParams=true)
 	public ca.uhn.fhir.rest.api.server.IBundleProvider search(
 			jakarta.servlet.http.HttpServletRequest theServletRequest,
 			jakarta.servlet.http.HttpServletResponse theServletResponse,
 
 			ca.uhn.fhir.rest.api.server.RequestDetails theRequestDetails,
 
-			@Description(shortDefinition = "Search the contents of the resource's data using a filter") @OptionalParam(name = ca.uhn.fhir.rest.api.Constants.PARAM_FILTER) StringAndListParam theFtFilter,
+			@Description(shortDefinition="Search the contents of the resource's data using a filter")
+			@OptionalParam(name=ca.uhn.fhir.rest.api.Constants.PARAM_FILTER)
+			StringAndListParam theFtFilter,
 
-			@Description(shortDefinition = "Search the contents of the resource's data using a fulltext search") @OptionalParam(name = ca.uhn.fhir.rest.api.Constants.PARAM_CONTENT) StringAndListParam theFtContent,
+			@Description(shortDefinition="Search the contents of the resource's data using a fulltext search")
+			@OptionalParam(name=ca.uhn.fhir.rest.api.Constants.PARAM_CONTENT)
+			StringAndListParam theFtContent, 
 
-			@Description(shortDefinition = "Search the contents of the resource's narrative using a fulltext search") @OptionalParam(name = ca.uhn.fhir.rest.api.Constants.PARAM_TEXT) StringAndListParam theFtText,
+			@Description(shortDefinition="Search the contents of the resource's narrative using a fulltext search")
+			@OptionalParam(name=ca.uhn.fhir.rest.api.Constants.PARAM_TEXT)
+			StringAndListParam theFtText, 
 
-			@Description(shortDefinition = "Search for resources which have the given tag") @OptionalParam(name = ca.uhn.fhir.rest.api.Constants.PARAM_TAG) TokenAndListParam theSearchForTag,
+			@Description(shortDefinition="Search for resources which have the given tag")
+			@OptionalParam(name=ca.uhn.fhir.rest.api.Constants.PARAM_TAG)
+			TokenAndListParam theSearchForTag, 
 
-			@Description(shortDefinition = "Search for resources which have the given security labels") @OptionalParam(name = ca.uhn.fhir.rest.api.Constants.PARAM_SECURITY) TokenAndListParam theSearchForSecurity,
+			@Description(shortDefinition="Search for resources which have the given security labels")
+			@OptionalParam(name=ca.uhn.fhir.rest.api.Constants.PARAM_SECURITY)
+			TokenAndListParam theSearchForSecurity, 
+  
+			@Description(shortDefinition="Search for resources which have the given profile")
+			@OptionalParam(name=ca.uhn.fhir.rest.api.Constants.PARAM_PROFILE)
+			UriAndListParam theSearchForProfile,
 
-			@Description(shortDefinition = "Search for resources which have the given profile") @OptionalParam(name = ca.uhn.fhir.rest.api.Constants.PARAM_PROFILE) UriAndListParam theSearchForProfile,
+			@Description(shortDefinition="Search the contents of the resource's data using a list")
+			@OptionalParam(name=ca.uhn.fhir.rest.api.Constants.PARAM_LIST)
+			StringAndListParam theList,
 
-			@Description(shortDefinition = "Search for resources which have the given source value (Resource.meta.source)") @OptionalParam(name = ca.uhn.fhir.rest.api.Constants.PARAM_SOURCE) UriAndListParam theSearchForSource,
+			@Description(shortDefinition="The language of the resource")
+			@OptionalParam(name=ca.uhn.fhir.rest.api.Constants.PARAM_LANGUAGE)
+			TokenAndListParam theResourceLanguage,
 
-			@Description(shortDefinition = "Return resources linked to by the given target") @OptionalParam(name = "_has") HasAndListParam theHas,
+			@Description(shortDefinition="Search for resources which have the given source value (Resource.meta.source)")
+			@OptionalParam(name=ca.uhn.fhir.rest.api.Constants.PARAM_SOURCE)
+			UriAndListParam theSearchForSource,
 
-			@Description(shortDefinition = "The ID of the resource") @OptionalParam(name = "_id") TokenAndListParam the_id,
+			@Description(shortDefinition="Return resources linked to by the given target")
+			@OptionalParam(name="_has")
+			HasAndListParam theHas, 
 
-			@Description(shortDefinition = "A use context assigned to the implementation guide") @OptionalParam(name = "context") TokenAndListParam theContext,
+   
 
-			@Description(shortDefinition = "A quantity- or range-valued use context assigned to the implementation guide") @OptionalParam(name = "context-quantity") QuantityAndListParam theContext_quantity,
+			@Description(shortDefinition="The ID of the resource")
+			@OptionalParam(name="_id")
+			TokenAndListParam the_id,
+   
 
-			@Description(shortDefinition = "A type of use context assigned to the implementation guide") @OptionalParam(name = "context-type") TokenAndListParam theContext_type,
+			@Description(shortDefinition="Only return resources which were last updated as specified by the given range")
+			@OptionalParam(name="_lastUpdated")
+			DateRangeParam the_lastUpdated, 
+   
 
-			@Description(shortDefinition = "A use context type and quantity- or range-based value assigned to the implementation guide") @OptionalParam(name = "context-type-quantity", compositeTypes = {
-					TokenParam.class,
-					QuantityParam.class }) CompositeAndListParam<TokenParam, QuantityParam> theContext_type_quantity,
+			@Description(shortDefinition="The profile of the resource")
+			@OptionalParam(name="_profile")
+			UriAndListParam the_profile, 
+   
 
-			@Description(shortDefinition = "A use context type and value assigned to the implementation guide") @OptionalParam(name = "context-type-value", compositeTypes = {
-					TokenParam.class,
-					TokenParam.class }) CompositeAndListParam<TokenParam, TokenParam> theContext_type_value,
+			@Description(shortDefinition="The security of the resource")
+			@OptionalParam(name="_security")
+			TokenAndListParam the_security,
+   
 
-			@Description(shortDefinition = "The implementation guide publication date") @OptionalParam(name = "date") DateRangeParam theDate,
+			@Description(shortDefinition="The tag of the resource")
+			@OptionalParam(name="_tag")
+			TokenAndListParam the_tag,
+   
 
-			@Description(shortDefinition = "Identity of the IG that this depends on") @OptionalParam(name = "depends-on", targetTypes = {}) ReferenceAndListParam theDepends_on,
+			@Description(shortDefinition="A use context assigned to the implementation guide")
+			@OptionalParam(name="context")
+			TokenAndListParam theContext,
+   
 
-			@Description(shortDefinition = "The description of the implementation guide") @OptionalParam(name = "description") StringAndListParam theDescription,
+			@Description(shortDefinition="A quantity- or range-valued use context assigned to the implementation guide")
+			@OptionalParam(name="context-quantity")
+			QuantityAndListParam theContext_quantity, 
+   
 
-			@Description(shortDefinition = "For testing purposes, not real usage") @OptionalParam(name = "experimental") TokenAndListParam theExperimental,
+			@Description(shortDefinition="A type of use context assigned to the implementation guide")
+			@OptionalParam(name="context-type")
+			TokenAndListParam theContext_type,
+   
 
-			@Description(shortDefinition = "Profile that all resources must conform to") @OptionalParam(name = "global", targetTypes = {}) ReferenceAndListParam theGlobal,
+			@Description(shortDefinition="A use context type and quantity- or range-based value assigned to the implementation guide")
+			@OptionalParam(name="context-type-quantity", compositeTypes= { TokenParam.class, QuantityParam.class })
+			CompositeAndListParam<TokenParam, QuantityParam> theContext_type_quantity,
+   
 
-			@Description(shortDefinition = "Intended jurisdiction for the implementation guide") @OptionalParam(name = "jurisdiction") TokenAndListParam theJurisdiction,
+			@Description(shortDefinition="A use context type and value assigned to the implementation guide")
+			@OptionalParam(name="context-type-value", compositeTypes= { TokenParam.class, TokenParam.class })
+			CompositeAndListParam<TokenParam, TokenParam> theContext_type_value,
+   
 
-			@Description(shortDefinition = "Computationally friendly name of the implementation guide") @OptionalParam(name = "name") StringAndListParam theName,
+			@Description(shortDefinition="The implementation guide publication date")
+			@OptionalParam(name="date")
+			DateRangeParam theDate, 
+   
 
-			@Description(shortDefinition = "Name of the publisher of the implementation guide") @OptionalParam(name = "publisher") StringAndListParam thePublisher,
+			@Description(shortDefinition="Identity of the IG that this depends on")
+			@OptionalParam(name="depends-on", targetTypes={  } )
+			ReferenceAndListParam theDepends_on, 
+   
 
-			@Description(shortDefinition = "Location of the resource") @OptionalParam(name = "resource", targetTypes = {}) ReferenceAndListParam theResource,
+			@Description(shortDefinition="The description of the implementation guide")
+			@OptionalParam(name="description")
+			StringAndListParam theDescription, 
+   
 
-			@Description(shortDefinition = "The current status of the implementation guide") @OptionalParam(name = "status") TokenAndListParam theStatus,
+			@Description(shortDefinition="For testing purposes, not real usage")
+			@OptionalParam(name="experimental")
+			TokenAndListParam theExperimental,
+   
 
-			@Description(shortDefinition = "The human-friendly name of the implementation guide") @OptionalParam(name = "title") StringAndListParam theTitle,
+			@Description(shortDefinition="Profile that all resources must conform to")
+			@OptionalParam(name="global", targetTypes={  } )
+			ReferenceAndListParam theGlobal, 
+   
 
-			@Description(shortDefinition = "The uri that identifies the implementation guide") @OptionalParam(name = "url") UriAndListParam theUrl,
+			@Description(shortDefinition="Intended jurisdiction for the implementation guide")
+			@OptionalParam(name="jurisdiction")
+			TokenAndListParam theJurisdiction,
+   
 
-			@Description(shortDefinition = "The business version of the implementation guide") @OptionalParam(name = "version") TokenAndListParam theVersion,
+			@Description(shortDefinition="Computationally friendly name of the implementation guide")
+			@OptionalParam(name="name")
+			StringAndListParam theName, 
+   
 
-			@RawParam Map<String, List<String>> theAdditionalRawParams,
+			@Description(shortDefinition="Name of the publisher of the implementation guide")
+			@OptionalParam(name="publisher")
+			StringAndListParam thePublisher, 
+   
 
-			@Description(shortDefinition = "Only return resources which were last updated as specified by the given range") @OptionalParam(name = "_lastUpdated") DateRangeParam theLastUpdated,
+			@Description(shortDefinition="Location of the resource")
+			@OptionalParam(name="resource", targetTypes={  } )
+			ReferenceAndListParam theResource, 
+   
 
-			@IncludeParam Set<Include> theIncludes,
+			@Description(shortDefinition="The current status of the implementation guide")
+			@OptionalParam(name="status")
+			TokenAndListParam theStatus,
+   
 
-			@IncludeParam(reverse = true) Set<Include> theRevIncludes,
+			@Description(shortDefinition="The human-friendly name of the implementation guide")
+			@OptionalParam(name="title")
+			StringAndListParam theTitle, 
+   
 
-			@Sort SortSpec theSort,
+			@Description(shortDefinition="The uri that identifies the implementation guide")
+			@OptionalParam(name="url")
+			UriAndListParam theUrl, 
+   
 
-			@ca.uhn.fhir.rest.annotation.Count Integer theCount,
+			@Description(shortDefinition="The business version of the implementation guide")
+			@OptionalParam(name="version")
+			TokenAndListParam theVersion,
 
-			@ca.uhn.fhir.rest.annotation.Offset Integer theOffset,
+			@RawParam
+			Map<String, List<String>> theAdditionalRawParams,
+
+	
+			@IncludeParam
+			Set<Include> theIncludes,
+
+			@IncludeParam(reverse=true)
+			Set<Include> theRevIncludes,
+
+			@Sort
+			SortSpec theSort,
+			
+			@ca.uhn.fhir.rest.annotation.Count
+			Integer theCount,
+
+			@ca.uhn.fhir.rest.annotation.Offset
+			Integer theOffset,
 
 			SummaryEnum theSummaryMode,
 
@@ -349,7 +453,8 @@ public class ImplementationGuideProviderR4 extends ImplementationGuideResourcePr
 
 			SearchContainedModeEnum theSearchContainedMode
 
-	) {
+			) {
+
 		startRequest(theServletRequest);
 		try {
 			List<NpmPackageVersionEntity> packages = myPackageVersionDao

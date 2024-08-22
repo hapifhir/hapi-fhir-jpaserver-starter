@@ -28,8 +28,10 @@ import org.springframework.core.env.Environment;
 
 import ca.uhn.fhir.batch2.model.StatusEnum;
 import ca.uhn.fhir.batch2.api.IJobCoordinator;
+import ca.uhn.fhir.batch2.api.IJobPartitionProvider;
 import ca.uhn.fhir.batch2.api.IJobPersistence;
 import ca.uhn.fhir.batch2.api.JobOperationResultJson;
+import ca.uhn.fhir.batch2.coordinator.DefaultJobPartitionProvider;
 import ca.uhn.fhir.batch2.jobs.parameters.UrlPartitioner;
 import ca.uhn.fhir.batch2.model.JobInstance;
 import ca.uhn.fhir.batch2.model.JobInstanceStartRequest;
@@ -47,15 +49,18 @@ import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
 import ca.uhn.fhir.jpa.bulk.export.api.IBulkExportProcessor;
 import ca.uhn.fhir.jpa.config.util.ValidationSupportConfigUtil;
 import ca.uhn.fhir.jpa.dao.data.IBatch2JobInstanceRepository;
+import ca.uhn.fhir.jpa.dao.data.IBatch2WorkChunkMetadataViewRepository;
 import ca.uhn.fhir.jpa.dao.data.IBatch2WorkChunkRepository;
 import ca.uhn.fhir.jpa.dao.mdm.MdmExpansionCacheSvc;
 import ca.uhn.fhir.jpa.delete.ThreadSafeResourceDeleterSvc;
 import ca.uhn.fhir.jpa.model.sched.ISchedulerService;
 import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
+import ca.uhn.fhir.jpa.partition.IRequestPartitionHelperSvc;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
 import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
+import ca.uhn.fhir.jpa.searchparam.MatchUrlService;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.common.StarterJpaConfig;
 import ca.uhn.fhir.jpa.validation.JpaValidationSupportChain;
@@ -348,13 +353,28 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	}
 
 	@Bean
-	public IJobPersistence batch2JobInstancePersister(IBatch2JobInstanceRepository theJobInstanceRepository,
-																	  IBatch2WorkChunkRepository theWorkChunkRepository,
-																	  IHapiTransactionService theTransactionService,
-																	  EntityManager theEntityManager,
-																	  final IInterceptorBroadcaster theInterceptorBroadcaster) {
-		return new JpaJobPersistenceImpl(theJobInstanceRepository, theWorkChunkRepository, theTransactionService,
-													theEntityManager, theInterceptorBroadcaster);
+	public IJobPartitionProvider jobPartitionProvider(
+			FhirContext theFhirContext,
+			IRequestPartitionHelperSvc theRequestPartitionHelperSvc,
+			MatchUrlService theMatchUrlService) {
+		return new DefaultJobPartitionProvider(theFhirContext, theRequestPartitionHelperSvc, theMatchUrlService);
+	}
+
+	@Bean
+	public IJobPersistence batch2JobInstancePersister(
+			IBatch2JobInstanceRepository theJobInstanceRepository,
+			IBatch2WorkChunkRepository theWorkChunkRepository,
+			IBatch2WorkChunkMetadataViewRepository theWorkChunkMetadataViewRepo,
+			IHapiTransactionService theTransactionService,
+			EntityManager theEntityManager,
+			IInterceptorBroadcaster theInterceptorBroadcaster) {
+		return new JpaJobPersistenceImpl(
+				theJobInstanceRepository,
+				theWorkChunkRepository,
+				theWorkChunkMetadataViewRepo,
+				theTransactionService,
+				theEntityManager,
+				theInterceptorBroadcaster);
 	}
 
 
