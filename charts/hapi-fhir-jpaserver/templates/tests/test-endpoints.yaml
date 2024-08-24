@@ -9,6 +9,7 @@ metadata:
     "helm.sh/hook": test
 spec:
   restartPolicy: Never
+  automountServiceAccountToken: {{ .Values.tests.automountServiceAccountToken }}
   containers:
     - name: test-metadata-endpoint
       image: "{{ .Values.curl.image.registry }}/{{ .Values.curl.image.repository }}:{{ .Values.curl.image.tag }}"
