@@ -6,6 +6,39 @@ entries:
         # When using the list of objects option the valid supported kinds are
         # added, changed, deprecated, removed, fixed, and security.
         - kind: changed
+          description: updated curlimages/curl to 8.9.1
+        - kind: changed
+          description: "updated postgresql sub-chart to 15.5.22."
+      artifacthub.io/containsSecurityUpdates: "false"
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/operator: "false"
+      artifacthub.io/prerelease: "false"
+      artifacthub.io/recommendations: |
+        - url: https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack
+        - url: https://artifacthub.io/packages/helm/bitnami/postgresql
+    apiVersion: v2
+    appVersion: 7.2.0
+    created: "2024-08-24T20:31:55.038432071Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 15.5.22
+    description: A Helm chart for deploying the HAPI FHIR JPA server starter on Kubernetes.
+    digest: aa0086c4847240525d2fbc0efd347d3b18040c73394db5cdc289899fe849be81
+    home: https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    name: hapi-fhir-jpaserver
+    sources:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    type: application
+    urls:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.17.1/hapi-fhir-jpaserver-0.17.1.tgz
+    version: 0.17.1
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
+        - kind: changed
           description: updated starter image to v7.2.0
         - kind: changed
           description: updated curlimages/curl to 8.6.0
@@ -464,4 +497,4 @@ entries:
     urls:
     - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.6.0/hapi-fhir-jpaserver-0.6.0.tgz
     version: 0.6.0
-generated: "2024-06-14T19:33:19.405752962Z"
+generated: "2024-08-24T20:31:55.038521248Z"
