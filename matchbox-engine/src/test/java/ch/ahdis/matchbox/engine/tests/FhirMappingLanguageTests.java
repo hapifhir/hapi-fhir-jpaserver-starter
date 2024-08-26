@@ -39,6 +39,7 @@ import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.StructureDefinition;
 import org.hl7.fhir.r4.model.StructureMap;
 import org.hl7.fhir.r4.model.Enumerations.FHIRVersion;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -57,6 +58,13 @@ class FhirMappingLanguageTests {
 	static void setUpBeforeClass() throws Exception {
 		engine = new MatchboxEngineBuilder().getEngineR4();
 	}
+	
+	@AfterAll
+	static void teardownClass() throws Exception {
+		engine = null;
+		CompareUtil.logMemory();
+	}
+
 
 	@BeforeEach
 	void setUp() throws Exception {

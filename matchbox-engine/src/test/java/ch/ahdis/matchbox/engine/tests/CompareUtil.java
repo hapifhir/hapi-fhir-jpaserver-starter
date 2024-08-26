@@ -136,5 +136,23 @@ public class CompareUtil {
 
 		compare(jsonLeft, jsonRight, onlyDiffering, bundleLeftIds, bundleRightIds);
 	}
+	
+	
+	static public void logMemory() {
+  	Runtime runtime = Runtime.getRuntime();
+  	long beforeGcTotalMemory = runtime.totalMemory() / 1024 / 1024;
+    long beforeGcFreeMemory = runtime.freeMemory() / 1024 / 1024;
+    long beforeGcUsedMemory = beforeGcTotalMemory - beforeGcFreeMemory;
+    // Run the garbage collector
+    runtime.gc();
+    // Calculate the used memory
+    long totalMemory = runtime.totalMemory() / 1024 / 1024;
+    long freeMemory = runtime.freeMemory() / 1024 / 1024;
+    long usedMemory = totalMemory - freeMemory;
+    // Print the memory usage
+    log.info("Total Memory: " + totalMemory + " MB"  + " beforeGc: " + beforeGcTotalMemory + " MB");
+    log.info("Free Memory: " + freeMemory + " MB" + " beforeGc: " + beforeGcFreeMemory + " MB");
+    log.info("Used Memory: " + usedMemory + " MB" + " beforeGc: " + beforeGcUsedMemory + " MB");
+	}
 
 }

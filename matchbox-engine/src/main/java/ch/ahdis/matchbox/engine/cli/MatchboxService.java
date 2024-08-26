@@ -380,7 +380,7 @@ public class MatchboxService {
       }
       System.out.println("  Initializing CdaMappingEngine for FHIR Version " + cliContext.getSv());
       
-      CdaMappingEngine validator = new CdaMappingEngine.CdaMappingEngineBuilder().getEngineR4();
+      CdaMappingEngine validator = new CdaMappingEngine.CdaMappingEngineBuilder().getCdaEngineR4();
       sessionId = sessionCache.cacheSession(validator);
 
       validator.setDebug(cliContext.isDoDebug());

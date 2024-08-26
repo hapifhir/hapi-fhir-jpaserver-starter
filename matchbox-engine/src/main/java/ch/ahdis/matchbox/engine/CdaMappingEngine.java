@@ -57,37 +57,33 @@ public class CdaMappingEngine extends MatchboxEngine {
    * @author oliveregger, ahdis ag
    *
    */
-	public static class CdaMappingEngineBuilder extends ValidationEngineBuilder {
+	public static class CdaMappingEngineBuilder extends MatchboxEngineBuilder {
 		
 		
 		/**
 		 * Creates an empty builder instance
 		 */
-		public CdaMappingEngineBuilder() {
+		public CdaMappingEngineBuilder()  {
 		}
 
 		/**
 		 * Create a CDA mapping engine based on the forked CDA Model (see https://github.com/ahdis/cda-core-2.0/tree/lab)
 		 * 
-		 * @return MappingEngine which allows to convert between CDA and FHIR R4
+		 * @return MappingEngine which allows to convert between CDA and FHIR
 		 * @throws FHIRException FHIR Exception
 		 * @throws IOException IO Exception
 		 * @throws URISyntaxException
 		 */
-		public CdaMappingEngine getEngineR5() throws FHIRException, IOException, URISyntaxException {
+		public CdaMappingEngine getCdaEngineR5() throws FHIRException, IOException, URISyntaxException {
 			log.info("Initializing CDA Mapping Engine");
 			log.info(VersionUtil.getPoweredBy());
-			CdaMappingEngine engine = new CdaMappingEngine(this.fromSource("hl7.fhir.r5.core#5.0.0"));
+			CdaMappingEngine engine = new CdaMappingEngine(this.getEngineR5());
 			// if the version would have been set before (constructor) the package is loaded
 			// from the package cache, we don't want this
-			engine.setVersion("5.0.0");
-			engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.4.0.tgz"));
-			engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions#1.0.0.tgz"));
 			engine.loadPackage(getClass().getResourceAsStream("/hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch.tgz"));
 			engine.getContext().setCanRunWithoutTerminology(true);
 			engine.getContext().setNoTerminologyServer(true);
 			engine.getContext().setPackageTracker(engine);
-
 			return engine;
 		}
 		
@@ -100,16 +96,12 @@ public class CdaMappingEngine extends MatchboxEngine {
      * @throws IOException IO Exception
      * @throws URISyntaxException
      */
-    public CdaMappingEngine getEngineR4() throws FHIRException, IOException, URISyntaxException {
+    public CdaMappingEngine getCdaEngineR4() throws FHIRException, IOException, URISyntaxException {
       log.info("Initializing CDA Mapping Engine");
       log.info(VersionUtil.getPoweredBy());
-      CdaMappingEngine engine = new CdaMappingEngine(super.fromNothing());
+      CdaMappingEngine engine = new CdaMappingEngine(this.getEngineR4());
       // if the version would have been set before (constructor) the package is loaded
       // from the package cache, we don't want this
-      engine.setVersion("5.0.0");
-      engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.r4.core.tgz"));
-      engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.4.0.tgz"));
-      engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions.r4#1.0.0.tgz"));
       engine.loadPackage(getClass().getResourceAsStream("/hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch.tgz"));
       engine.getContext().setCanRunWithoutTerminology(true);
       engine.getContext().setNoTerminologyServer(true);

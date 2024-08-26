@@ -35,6 +35,7 @@ import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.StructureMap;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,11 +65,18 @@ class CdaToFhirTransformTests {
 		InputStream in = getResourceAsStream("cda-it.xml");
 		cdaLabItaly = IOUtils.toString(in, StandardCharsets.UTF_8);
 	}
+	
+	@AfterAll
+	static void teardownClass() throws Exception {
+		engine = null;
+		CompareUtil.logMemory();
+	}
+
 
 	private CdaMappingEngine getEngine() {
 		if (engine == null) {
 			try {
-				engine = new CdaMappingEngine.CdaMappingEngineBuilder().getEngineR4();
+				engine = new CdaMappingEngine.CdaMappingEngineBuilder().getCdaEngineR4();
 				StructureMap sm = engine.parseMap(getFileAsStringFromResources("datatypes.map"));
 				assertTrue(sm != null);
 				engine.addCanonicalResource(sm);
@@ -285,7 +293,7 @@ class CdaToFhirTransformTests {
 
 	@Test
 	void TestValidateCdaIt() throws FHIRException, IOException, EOperationOutcome, URISyntaxException {
-	  ch.ahdis.matchbox.engine.CdaMappingEngine  engine = new CdaMappingEngine.CdaMappingEngineBuilder().getEngineR5();
+	  ch.ahdis.matchbox.engine.CdaMappingEngine  engine = new CdaMappingEngine.CdaMappingEngineBuilder().getCdaEngineR4();
 		String fhirBundle = getEngine().transform(cdaLabItaly,
 				false,
 				"http://salute.gov.it/ig/cda-fhir-maps/StructureMap/RefertodilaboratorioFULLBODY",

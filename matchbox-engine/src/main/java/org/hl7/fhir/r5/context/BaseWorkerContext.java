@@ -2188,11 +2188,13 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
         if (transforms.has(uri)) {
           return (T) transforms.get(uri, version, pvlist);
         } 
+  			// matchbox patch for duplicate resources, see https://github.com/ahdis/matchbox/issues/227
         if (actors.has(uri)) {
-          return (T) transforms.get(uri, version, pvlist);
+          return (T) actors.get(uri, version, pvlist);
         } 
+  			// matchbox patch for duplicate resources, see https://github.com/ahdis/matchbox/issues/227
         if (requirements.has(uri)) {
-          return (T) transforms.get(uri, version, pvlist);
+          return (T) requirements.get(uri, version, pvlist);
         } 
         if (questionnaires.has(uri)) {
           return (T) questionnaires.get(uri, version, pvlist);
@@ -2451,16 +2453,22 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
         return (T) valueSets.get(uri, version);
       } else if ("CodeSystem".equals(cls)) {
         return (T) codeSystems.get(uri, version);
-      } else if ("ConceptMap".equals(cls)) {
+      } 
+			// matchbox patch for duplicate resources, see https://github.com/ahdis/matchbox/issues/227
+      else if ("NamingSystem".equals(cls)) {
+        return (T) systems.get(uri, version);
+      }else if ("ConceptMap".equals(cls)) {
         return (T) maps.get(uri, version);
       } else if ("PlanDefinition".equals(cls)) {
         return (T) plans.get(uri, version);
       } else if ("OperationDefinition".equals(cls)) {
         OperationDefinition od = operations.get(uri, version);
         return (T) od;
-      } else if ("Questionnaire.class".equals(cls)) {
+  			// matchbox patch for duplicate resources, see https://github.com/ahdis/matchbox/issues/227
+      } else if ("Questionnaire".equals(cls)) {
         return (T) questionnaires.get(uri, version);
-      } else if ("SearchParameter.class".equals(cls)) {
+  			// matchbox patch for duplicate resources, see https://github.com/ahdis/matchbox/issues/227
+      } else if ("SearchParameter".equals(cls)) {
         SearchParameter res = searchParameters.get(uri, version);
         return (T) res;
       }
