@@ -124,6 +124,9 @@ public class MatchboxEngine extends ValidationEngine {
 			setContext(context);
 			this.setVersion(context.getVersion());
 	    context.setCanNoTS(true);
+	    
+	    NpmPackage npmX = getPcm().loadPackage(CommonPackages.ID_XVER, CommonPackages.VER_XVER);
+	    context.loadFromPackage(npmX, null);
 
 	    this.setIgLoader(new IgLoader(this.getPcm(), this.getContext(), this.getVersion(), this.isDebug()));
 	    try {

@@ -182,6 +182,12 @@ public class CliContext {
     return this.httpReadOnly;
   }
 
+  private boolean xVersion = false;
+  
+  public boolean getXVersion() {
+    return xVersion;
+  }
+
   @Autowired
   public CliContext(Environment environment) {
     // get al list of all JsonProperty of cliContext with return values property
@@ -209,6 +215,7 @@ public class CliContext {
     this.onlyOneEngine = environment.getProperty("matchbox.fhir.context.onlyOneEngine", Boolean.class, false);
     this.httpReadOnly = environment.getProperty("matchbox.fhir.context.httpReadOnly", Boolean.class, false);
     this.extensions = Arrays.asList(environment.getProperty("matchbox.fhir.context.extensions", String[].class, new String[]{"any"}));
+    this.xVersion = environment.getProperty("matchbox.fhir.context.xVersion", Boolean.class, false);
   }
 
   public CliContext(CliContext other) {
@@ -228,6 +235,7 @@ public class CliContext {
     this.onlyOneEngine = other.onlyOneEngine;
     this.httpReadOnly = other.httpReadOnly;
     this.extensions = other.extensions;
+    this.xVersion = other.xVersion;
   }
 
   @JsonProperty("ig")
@@ -607,6 +615,7 @@ public class CliContext {
         && forPublication == that.forPublication
         && allowExampleUrls == that.allowExampleUrls
         && onlyOneEngine == that.onlyOneEngine
+        && xVersion == that.xVersion
         && httpReadOnly == that.httpReadOnly
         && htmlInMarkdownCheck == that.htmlInMarkdownCheck
         && Objects.equals(extensions, that.extensions)
@@ -658,7 +667,9 @@ public class CliContext {
         mode,
         locale,
         locations,
-        jurisdiction);
+        jurisdiction,
+        onlyOneEngine,
+        xVersion);
     result = 31 * result + Arrays.hashCode(igsPreloaded);
     return result;
   }
@@ -699,6 +710,7 @@ public class CliContext {
         ", jurisdiction='" + jurisdiction + '\'' +
         ", igsPreloaded=" + Arrays.toString(igsPreloaded) +
         ", onlyOneEngine=" + onlyOneEngine +
+        ", xVersion=" + xVersion +
         ", httpReadOnly=" + httpReadOnly +
         '}';
   }
@@ -738,6 +750,8 @@ public class CliContext {
 	addExtension(ext, "lang", new StringType(this.lang));
 	addExtension(ext, "snomedCT", new StringType(this.snomedCT));
 	addExtension(ext, "fhirVersion", new StringType(this.fhirVersion));
+	addExtension(ext, "xVersion", new BooleanType(this.xVersion));
+	addExtension(ext, "onlyOneEngine", new BooleanType(this.onlyOneEngine));
 	addExtension(ext, "ig", new StringType(this.ig));
 	// addExtension(ext, "questionnaireMode", new BooleanType(this.questionnaireMode));
 	// addExtension(ext, "level", new BooleanType(this.level));

@@ -267,7 +267,7 @@ public class MatchboxEngineSupport {
 			cliContext = new CliContext(this.cliContext);
 			if (cliContext.getFhirVersion().equals("4.0.1")) {
 				log.debug("Preconfigure FHIR R4");
-			    mainEngine = new MatchboxEngineBuilder().getEngineR4();
+			    mainEngine = new MatchboxEngineBuilder().withXVersion(cliContext.getXVersion()).getEngineR4();
 				try {
 					mainEngine.setIgLoader(new IgLoaderFromJpaPackageCache(mainEngine.getPcm(),
 																			mainEngine.getContext(),
@@ -293,7 +293,7 @@ public class MatchboxEngineSupport {
 				this.configureValidationEngine(mainEngine, cliContext);
 			} else if (cliContext.getFhirVersion().equals("4.3.0")) {
 				log.debug("Preconfigure FHIR R4B");
-			    mainEngine = new MatchboxEngineBuilder().getEngineR4B();
+			    mainEngine = new MatchboxEngineBuilder().withXVersion(cliContext.getXVersion()).getEngineR4B();
 				mainEngine.setIgLoader(new IgLoaderFromJpaPackageCache(mainEngine.getPcm(),
 				mainEngine.getContext(),
 				mainEngine.getVersion(),
@@ -306,7 +306,7 @@ public class MatchboxEngineSupport {
 				this.configureValidationEngine(mainEngine, cliContext);
 			} else if (cliContext.getFhirVersion().equals("5.0.0")) {
 				log.debug("Preconfigure FHIR R5");
-			    mainEngine = new MatchboxEngineBuilder().getEngineR5();
+			    mainEngine = new MatchboxEngineBuilder().withXVersion(cliContext.getXVersion()).getEngineR5();
 				mainEngine.setIgLoader(new IgLoaderFromJpaPackageCache(mainEngine.getPcm(),
 				mainEngine.getContext(),
 				mainEngine.getVersion(),
@@ -413,13 +413,13 @@ public class MatchboxEngineSupport {
 				try {
 					switch (cliContext.getFhirVersion()) {
 						case "5.0.0":
-							baseEngine = new MatchboxEngineBuilder().getEngineR5();
+							baseEngine = new MatchboxEngineBuilder().withXVersion(cliContext.getXVersion()).getEngineR5();
 							break;
 						case "4.3.0":
-							baseEngine = new MatchboxEngineBuilder().getEngineR4B();
+							baseEngine = new MatchboxEngineBuilder().withXVersion(cliContext.getXVersion()).getEngineR4B();
 							break;
 						case "4.0.1":
-							baseEngine = new MatchboxEngineBuilder().getEngineR4();
+							baseEngine = new MatchboxEngineBuilder().withXVersion(cliContext.getXVersion()).getEngineR4();
 							break;
 						default:
 							log.error("FHIR version not yet supported in mixed mode, needs to be added for version "

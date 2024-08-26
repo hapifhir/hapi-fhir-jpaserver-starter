@@ -100,7 +100,7 @@
       "request": "launch",
       "mainClass": "ca.uhn.fhir.jpa.starter.Application",
       "projectName": "matchbox-server",
-      "vmArgs": "-Dspring.config.additional-location=file:../../matchbox-int-tests/src/test/resources/application-validate-r4-ch.yaml",
+      "vmArgs": "-Dspring.config.additional-location=file:../../matchbox-int-tests/src/test/resources/application-validate-r4-ch-exchange.yaml",
       "cwd": "${workspaceFolder}/matchbox-server"
     },
     {

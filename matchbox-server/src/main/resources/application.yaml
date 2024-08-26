@@ -75,6 +75,7 @@ matchbox:
     context:
       fhirVersion: 4.0.1
       txServer: n/a
+#      xVersion: true      
 #      onlyOneEngine: true
 #      igsPreloaded: ch.fhir.ig.ch-core#4.0.0-ballot
       suppressWarnInfo:
