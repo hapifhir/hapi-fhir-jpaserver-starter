@@ -87,7 +87,7 @@ Content-Type: application/json
     });
     const batch_patient_location = response.body.entry[0].response.location;
     const indexOfHistory = batch_patient_location.lastIndexOf("/_history");
-    trimmed_location = batch_patient_location.substring(0, indexOfHistory);
+    var trimmed_location = batch_patient_location.substring(0, indexOfHistory);
     trimmed_location = trimmed_location.replace("Patient/", "")
     client.global.set("batch_patient_id", trimmed_location);
 %}
