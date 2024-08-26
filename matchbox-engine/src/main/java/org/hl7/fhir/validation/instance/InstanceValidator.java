@@ -4369,7 +4369,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         StructureDefinition sd = context.fetchResource(StructureDefinition.class, p.getValue(), profile);
         // PATCH: https://github.com/ahdis/matchbox/issues/138 try to check if it is a cross version extension
         if (sd == null) {
-          sd = getXverExt(new ArrayList<ValidationMessage>(), "", null, p.getValue());
+          sd = getXverExt(new ArrayList<ValidationMessage>(), path, new Element("profile"), p.getValue());
         }
         if (sd == null)
           throw new DefinitionException(context.formatMessage(I18nConstants.SD_ED_TYPE_PROFILE_UNKNOWN, p));
