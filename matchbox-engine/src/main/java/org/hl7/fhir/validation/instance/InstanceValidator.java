@@ -3328,11 +3328,12 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         } else if (href.contains(":") && Utilities.isAbsoluteUrl(href)) {
           String scheme = href.substring(0, href.indexOf(":"));
           if (rule(errors, "2024-07-20", IssueType.INVALID, e.line(), e.col(), path, !isActiveScheme(scheme), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_XHTML_ACTIVE_HREF, href, xpath, Utilities.stripEoln(node.allText()).trim(), scheme)) {
-            if (rule(errors, "2024-07-20", IssueType.INVALID, e.line(), e.col(), path, isLiteralScheme(scheme), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_XHTML_LITERAL_HREF, href, xpath, Utilities.stripEoln(node.allText()).trim(), scheme)) {
+          	// matchbox patch https://github.com/ahdis/matchbox/issues/268
+            // if (rule(errors, "2024-07-20", IssueType.INVALID, e.line(), e.col(), path, isLiteralScheme(scheme), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_XHTML_LITERAL_HREF, href, xpath, Utilities.stripEoln(node.allText()).trim(), scheme)) {
               hint(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, isKnownScheme(scheme), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_XHTML_UNKNOWN_HREF, href, xpath, node.allText().trim(), scheme);
-            } else {
-              ok = false;
-            }
+            // } else {
+            //   ok = false;
+            //}
           } else {
             ok = false;
           }

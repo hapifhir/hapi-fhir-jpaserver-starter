@@ -12,7 +12,6 @@ default fhir package configuration:
 
 - cda-core-2.0#2.1.0-cibuild.tgz(\*patched)
 - hl7.fhir.r4.core.tgz
-- hl7.fhir.r4.core.tgz
 - hl7.fhir.xver-extensions#0.0.13.tgz
 - hl7.terminology#5.4.0.tgz
 - hl7.fhir.uv.extensions.r4#1.0.0.tgz
