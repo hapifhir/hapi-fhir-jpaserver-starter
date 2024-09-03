@@ -38,6 +38,11 @@ ENV ALLOW_EMPTY_PASSWORD=yes
 
 ########### distroless brings focus on security and runs on plain spring boot - this is the default image
 FROM gcr.io/distroless/java17-debian12:nonroot AS default
+
+# add /bin/sh
+COPY --from=busybox:1.35.0-uclibc /bin/sh /bin/sh
+COPY --from=busybox:1.35.0-uclibc /bin/chmod /bin/chmod
+
 # 65532 is the nonroot user's uid
 # used here instead of the name to allow Kubernetes to easily detect that the container
 # is running as a non-root (uid != 0) user.
@@ -47,4 +52,8 @@ WORKDIR /app
 COPY --chown=nonroot:nonroot --from=build-distroless /app /app
 COPY --chown=nonroot:nonroot --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/opentelemetry-javaagent.jar /app
 
-ENTRYPOINT ["java", "--class-path", "/app/main.war", "-Dloader.path=main.war!/WEB-INF/classes/,main.war!/WEB-INF/,/app/extra-classes", "org.springframework.boot.loader.PropertiesLauncher"]
+COPY --chown=nonroot:nonroot entrypoint.sh entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+
+ENTRYPOINT ["/app/entrypoint.sh"]

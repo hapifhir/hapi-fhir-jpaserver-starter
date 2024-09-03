@@ -1,6 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <!-- one-liner to take you to the cloud with settings form the application.yaml file: -->
@@ -41,22 +40,22 @@
     </repositories>
 
     <dependencyManagement>
-       <dependencies>
+        <dependencies>
 
             <!-- Temporarily override CR depedencies for debugging -->
-<!--            <dependency>-->
-<!--                <groupId>org.opencds.cqf.fhir</groupId>-->
-<!--                <artifactId>cqf-fhir-bom</artifactId>-->
-<!--                <version>3.4.0</version>-->
-<!--                <type>pom</type>-->
-<!--                <scope>import</scope>-->
-<!--            </dependency>-->
-           <dependency>
-               <groupId>org.glassfish.jaxb</groupId>
-               <artifactId>jaxb-runtime</artifactId>
-               <version>2.3.8</version>
-           </dependency>
-       </dependencies>
+            <!--            <dependency>-->
+            <!--                <groupId>org.opencds.cqf.fhir</groupId>-->
+            <!--                <artifactId>cqf-fhir-bom</artifactId>-->
+            <!--                <version>3.4.0</version>-->
+            <!--                <type>pom</type>-->
+            <!--                <scope>import</scope>-->
+            <!--            </dependency>-->
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>2.3.8</version>
+            </dependency>
+        </dependencies>
     </dependencyManagement>
 
     <dependencies>
@@ -66,8 +65,8 @@
             <artifactId>postgresql</artifactId>
         </dependency>
         <dependency>
-          <groupId>com.microsoft.sqlserver</groupId>
-          <artifactId>mssql-jdbc</artifactId>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
         </dependency>
 
         <!-- Needed for Email subscriptions -->
@@ -135,9 +134,9 @@
         </dependency>
         <!-- This dependency includes the CDS Hooks Server -->
         <dependency>
-          <groupId>ca.uhn.hapi.fhir</groupId>
-          <artifactId>hapi-fhir-server-cds-hooks</artifactId>
-          <version>${project.parent.version}</version>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-server-cds-hooks</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
         <!-- This dependency includes the OpenAPI Server -->
         <dependency>
@@ -709,6 +708,6 @@
                     <version>1.17.0</version>
                 </dependency>
             </dependencies>
-        </profile>       
+        </profile>
     </profiles>
 </project>

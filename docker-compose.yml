@@ -1,8 +1,7 @@
 version: "3"
 services:
   hapi-fhir-jpaserver-start:
-    build: .
-    container_name: hapi-fhir-jpaserver-start
+    image: phillezi/fhir-test:latest
     restart: on-failure
     environment:
       SPRING_DATASOURCE_URL: "jdbc:postgresql://hapi-fhir-postgres:5432/hapi"
