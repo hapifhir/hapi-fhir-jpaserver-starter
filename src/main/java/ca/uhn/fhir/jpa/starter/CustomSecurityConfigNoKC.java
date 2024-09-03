@@ -15,10 +15,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
@@ -39,46 +37,48 @@ import static org.springframework.http.HttpMethod.*;
 @Configuration
 public class CustomSecurityConfigNoKC extends WebSecurityConfigurerAdapter {
 	private static final String CORS_ALLOWED_HEADERS =
-            "origin,content-type,accept,x-requested-with,Authorization,Access-Control-Allow-Credentials,kid";
+		"origin,content-type,accept,x-requested-with,Authorization,Access-Control-Allow-Credentials,kid";
 
-    private String opensrpAllowedSources = "http://testhost.dashboard:3000/,http://localhost:3000/,https://oclink.io/,https://opencampaignlink.org/";
+	private String opensrpAllowedSources = "http://testhost.dashboard:3000/,http://localhost:3000/,https://oclink.io/,https://opencampaignlink.org/";
 
-    private long corsMaxAge = 60;
+	private long corsMaxAge = 60;
 
-    private static final org.jboss.logging.Logger logger = LoggerFactory.logger(CustomSecurityConfigNoKC.class);
+	private static final org.jboss.logging.Logger logger = LoggerFactory.logger(CustomSecurityConfigNoKC.class);
 
 
-    @Autowired
-    AppProperties appProperties;
+	@Autowired
+	AppProperties appProperties;
 
 	@Autowired
 	private FixNullReferenceInBundle fixNullReferenceInBundle;
 
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-        .addFilter(new SignatureInterceptor(appProperties, fixNullReferenceInBundle))
-        .cors()
-        .and()
-        .authorizeRequests()
-        .anyRequest().permitAll()
-        .and()
-        .csrf().disable()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    }
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http
+			.addFilter(new SignatureInterceptor(appProperties, fixNullReferenceInBundle))
+			.cors()
+			.and()
+			.authorizeRequests()
+			.anyRequest().permitAll()
+			.and()
+			.csrf().disable()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+	}
+
+
 
 	@Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList(opensrpAllowedSources.split(",")));
-        configuration.setAllowedMethods(
-                Arrays.asList(GET.name(), POST.name(), PUT.name(), DELETE.name(),OPTIONS.name()));
-        configuration.setAllowedHeaders(Arrays.asList(CORS_ALLOWED_HEADERS.split(",")));
-        configuration.setMaxAge(corsMaxAge);
-        configuration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(Arrays.asList(opensrpAllowedSources.split(",")));
+		configuration.setAllowedMethods(
+			Arrays.asList(GET.name(), POST.name(), PUT.name(), DELETE.name(),OPTIONS.name()));
+		configuration.setAllowedHeaders(Arrays.asList(CORS_ALLOWED_HEADERS.split(",")));
+		configuration.setMaxAge(corsMaxAge);
+		configuration.setAllowCredentials(true);
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
+	}
 }
