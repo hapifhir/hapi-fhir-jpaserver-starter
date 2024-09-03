@@ -5,6 +5,7 @@ import ca.uhn.fhir.jpa.starter.TUSFileTypes;
 import ca.uhn.fhir.jpa.starter.TusServerProperties;
 import me.desair.tus.server.TusFileUploadService;
 import me.desair.tus.server.exception.TusException;
+import me.desair.tus.server.upload.UploadInfo;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -42,8 +43,6 @@ public class TusService {
 
 		if (fileType.equals(TUSFileTypes.IMAGE.name())) {
 			basePath = appProperties.getImage_path();
-		} else if (fileType.equals(TUSFileTypes.LOFILE.name())) {
-			basePath = appProperties.getHyper_spectral_files_path();
 		} else {
 			return;
 		}
@@ -56,8 +55,8 @@ public class TusService {
 		}
 	}
 
-	public void getAudioFileAndSave(TusFileUploadService tusFileUploadService, String uploadUrl) throws TusException, IOException, UnsupportedAudioFileException {
-		transferAudioRecordingsToFinalStorage(uploadUrl);
+	public void saveBytesToFile(TusFileUploadService tusFileUploadService, String uploadUrl, String fileType) throws TusException, IOException, UnsupportedAudioFileException {
+		transferFileToFinalStorage(uploadUrl, fileType);
 	}
 
 	@Scheduled(initialDelay = INITIAl_DELAY, fixedDelay = FIXED_DELAY)
@@ -66,34 +65,62 @@ public class TusService {
 		if(!subDirectories.isEmpty()){
 			for (String subDirectory: subDirectories){
 				String uploadUrl = tusServerProperties.getContextPath() + "/" + subDirectory;
+
+				//check if the file is locked
+				if (isFileLocked(uploadUrl)){
+					logger.warn("File is locked, skipping transfer for:" + uploadUrl);
+					return;
+				}
+
 				String fileName = new String(Base64.decodeBase64(tusFileUploadService.getUploadInfo(uploadUrl).getEncodedMetadata().split(" ")[1]), Charsets.UTF_8);
 				if (fileName.contains(".jpeg") || fileName.contains(".jpg"))
 					transferImagesToFinalStorage(uploadUrl, appProperties.getImage_path());
 				else if (fileName.contains(".lo"))
-					transferImagesToFinalStorage(uploadUrl, appProperties.getHyper_spectral_files_path());
+					transferFileToFinalStorage(uploadUrl, TUSFileTypes.LOFILE.name());
 				else if (fileName.contains(".wav"))
-					transferAudioRecordingsToFinalStorage(uploadUrl);
+					transferFileToFinalStorage(uploadUrl, TUSFileTypes.AUDIO.name());
 				else
 					logger.warn("Wrong File format for the file:" + fileName);
 			}
 		}
 	}
 
-	private void transferAudioRecordingsToFinalStorage(String uploadUrl) throws TusException, IOException, UnsupportedAudioFileException {
-			InputStream inputStream = tusFileUploadService.getUploadedBytes(uploadUrl);
-			String fileName = new String(Base64.decodeBase64(tusFileUploadService.getUploadInfo(uploadUrl).getEncodedMetadata().split(" ")[1]), Charsets.UTF_8);
-			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-			byte[] buffer = new byte[1024];
-			int bytesRead;
-			while ((bytesRead = inputStream.read(buffer)) != -1) {
-				byteArrayOutputStream.write(buffer, 0, bytesRead);
-			}
-			inputStream.close();
-			byteArrayOutputStream.close();
-			byte[] completeByteArray = byteArrayOutputStream.toByteArray();
-			boolean isAudioFileSaved = saveAudioToFile(tusFileUploadService, completeByteArray, appProperties.getAudio_recordings_path(), fileName, uploadUrl);
-			if (isAudioFileSaved)
-				tusFileUploadService.deleteUpload(uploadUrl);
+	private void transferFileToFinalStorage(String uploadUrl, String fileType) throws TusException, IOException, UnsupportedAudioFileException {
+		InputStream inputStream = tusFileUploadService.getUploadedBytes(uploadUrl);
+		String fileName = new String(Base64.decodeBase64(tusFileUploadService.getUploadInfo(uploadUrl).getEncodedMetadata().split(" ")[1]), Charsets.UTF_8);
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		byte[] buffer = new byte[1024];
+		int bytesRead;
+		while ((bytesRead = inputStream.read(buffer)) != -1) {
+			byteArrayOutputStream.write(buffer, 0, bytesRead);
+		}
+		inputStream.close();
+		byteArrayOutputStream.close();
+		byte[] completeByteArray = byteArrayOutputStream.toByteArray();
+		String folderPath = "";
+		if (fileType.equals(TUSFileTypes.AUDIO.name()))
+			folderPath = appProperties.getAudio_recordings_path();
+		else if (fileType.equals(TUSFileTypes.LOFILE.name()))
+			folderPath = appProperties.getHyper_spectral_files_path();
+		boolean isFileSaved = saveByteArrayDataToFile(tusFileUploadService, completeByteArray, folderPath, fileName, uploadUrl);
+		if (isFileSaved){
+			tusFileUploadService.deleteUpload(uploadUrl);
+		}
+	}
+
+	private boolean isFileLocked(String uploadUrl) throws IOException, TusException {
+		UploadInfo uploadInfo = tusFileUploadService.getUploadInfo(uploadUrl);
+
+		if (uploadInfo == null){
+			logger.warn("No upload Information found for: " + uploadUrl);
+			return true;
+		}
+
+		long uploadedBytes = uploadInfo.getOffset();
+		long totalBytes = uploadInfo.getLength();
+
+		//If the file is not fully uploaded, it's considered locked
+		return uploadedBytes < totalBytes;
 	}
 
 	private void transferImagesToFinalStorage(String uploadUrl, String outputPath) throws TusException, IOException{
@@ -166,7 +193,7 @@ public class TusService {
 		return false;
 	}
 
-	private static boolean saveAudioToFile(TusFileUploadService tusFileUploadService, byte[] byteArrayData, String folderPath, String fileName, String uploadUrl) throws IOException, TusException, UnsupportedAudioFileException {
+	private static boolean saveByteArrayDataToFile(TusFileUploadService tusFileUploadService, byte[] byteArrayData, String folderPath, String fileName, String uploadUrl) throws IOException, TusException, UnsupportedAudioFileException {
 		Path outputPath = Paths.get(folderPath, fileName);
 		File outputFile = outputPath.toFile();
 		Files.createDirectories(outputPath.getParent());

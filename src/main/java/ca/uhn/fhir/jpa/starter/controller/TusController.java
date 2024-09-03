@@ -38,7 +38,7 @@ public class TusController {
 		//access response header Location,Upload-Offset,Upload-length
 		servletResponse.addHeader("Access-Control-Expose-Headers","Location,Upload-Offset,Upload-Length");
 	}
-	
+
 	// Need this API for app backward compatibility
 	@RequestMapping(method = RequestMethod.POST, value = "/transferImage")
 	public ResponseEntity<String> getBytesAndSaveImages(@RequestParam("uploadUrl") String uploadUrl) {
@@ -64,16 +64,16 @@ public class TusController {
 		}
 		else if (Objects.equals(fileType, TUSFileTypes.LOFILE.name())){
 			try {
-				tusService.getBytesAndSaveImage(tusFileUploadService, uploadUrl, TUSFileTypes.LOFILE.name());
+				tusService.saveBytesToFile(tusFileUploadService, uploadUrl, fileType);
 				return ResponseEntity.ok("Images uploaded and saved successfully.");
-			} catch (TusException | IOException e) {
+			} catch (TusException | IOException | UnsupportedAudioFileException e) {
 				e.printStackTrace();
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the images.");
 			}
 		}
 		else if (Objects.equals(fileType, TUSFileTypes.AUDIO.name())){
 			try{
-				tusService.getAudioFileAndSave(tusFileUploadService, uploadUrl);
+				tusService.saveBytesToFile(tusFileUploadService, uploadUrl, fileType);
 				return ResponseEntity.ok("Audio File uploaded and saved successfully.");
 			} catch (TusException | IOException | UnsupportedAudioFileException e){
 				e.printStackTrace();
