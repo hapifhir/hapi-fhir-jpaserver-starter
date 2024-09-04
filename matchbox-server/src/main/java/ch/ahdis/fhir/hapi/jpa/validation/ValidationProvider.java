@@ -270,16 +270,20 @@ public class ValidationProvider {
 
 			// Add slice info to diagnostics
 			if (message.sliceText != null) {
-				final var newDiagnostics = new StringBuilder();
-				newDiagnostics.append(issue.getDiagnostics());
-				newDiagnostics.append(" Slice info:");
-				for (int i = 0; i < message.sliceText.length; ++i) {
-					newDiagnostics.append(" ");
-					newDiagnostics.append(i + 1);
-					newDiagnostics.append(".) ");
-					newDiagnostics.append(message.sliceText[i]);
+				List<String> sliceInfo = engine.filterSlicingMessages(message.sliceText);
+				if (sliceInfo.size() >	0) {
+					final var newDiagnostics = new StringBuilder();
+					newDiagnostics.append(issue.getDiagnostics());
+					newDiagnostics.append(" Slice info:");
+
+					for (int i = 0; i < sliceInfo.size(); ++i) {
+						newDiagnostics.append(" ");
+						newDiagnostics.append(i + 1);
+						newDiagnostics.append(".) ");
+						newDiagnostics.append(sliceInfo.get(i));
+					}
+					issue.setDiagnostics(newDiagnostics.toString());
 				}
-				issue.setDiagnostics(newDiagnostics.toString());
 			}
 
 			oo.addIssue(issue);

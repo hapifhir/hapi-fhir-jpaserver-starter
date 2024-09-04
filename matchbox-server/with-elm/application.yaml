@@ -33,6 +33,12 @@ matchbox:
           - "regex:Entry '(.+)' isn't reachable by traversing forwards from the Composition"
         ch.fhir.ig.ch-elm:
           - "regex:Binding for path (.+) has no source, so can't be checked"
+          - "regex:None of the codings provided are in the value set 'Observation Interpretation Codes'(.*)"
+          - "regex:This element does not match any known slice defined in the profile http://hl7.eu/fhir/laboratory/StructureDefinition/Patient-eu-lab(.+)"    
+          - "regex:This element does not match any known slice defined in the profile http://hl7.eu/fhir/laboratory/StructureDefinition/HumanName-eu(.+)"
+          - "regex:Does not match slice '(.+)' (.+)"
+          - "regex:(.+)Unable to find a match for profile(.+)"
+          - "regex:(.+): Specified profile type was '(.+)' in profile '(.+)', but found type '(.+)"
 spring:
   datasource:
     url: "jdbc:h2:mem:test"

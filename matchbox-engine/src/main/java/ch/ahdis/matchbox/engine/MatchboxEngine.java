@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -1035,6 +1036,21 @@ public class MatchboxEngine extends ValidationEngine {
 				}
 				// We keep the warning only if it matches no
 				return ignoredPatterns.parallelStream().noneMatch(pattern -> pattern.matcher(message.getMessage()).find());
+			})
+			.collect(Collectors.toList());
+	}
+
+	/**
+	 * Filters the given list of slices messages by removing those that match the suppressed warning/information patterns.
+	 *
+	 * @param messages The list of messages to filter.
+	 * @return The filtered list of messages.
+	 */
+	public List<String> filterSlicingMessages(final String[] messages) {
+		final List<Pattern> ignoredPatterns = this.compileSuppressedWarnInfoPatterns();
+		return Arrays.asList(messages).stream()
+			.filter(message -> {
+				return ignoredPatterns.parallelStream().noneMatch(pattern -> pattern.matcher(message).find());
 			})
 			.collect(Collectors.toList());
 	}
