@@ -8,6 +8,7 @@ import jakarta.persistence.EntityManager;
 import ca.uhn.fhir.jpa.dao.tx.IHapiTransactionService;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR4;
+import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR4B;
 import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR5;
 import ch.ahdis.matchbox.config.MatchboxFhirContextProperties;
 import ch.ahdis.matchbox.interceptor.HttpReadOnlyInterceptor;
@@ -75,10 +76,11 @@ import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.interceptor.ImplementationGuidePackageInterceptor;
 import ch.ahdis.matchbox.interceptor.MappingLanguageInterceptor;
-import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProviderR4;
-import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProviderR5;
+import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR4;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR4B;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR4;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR4B;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR5;
 
 import org.springframework.data.domain.Page;
@@ -101,6 +103,9 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	QuestionnaireAssembleProviderR4 assembleProviderR4;
 
 	@Autowired(required = false)
+	QuestionnaireAssembleProviderR4B assembleProviderR4B;
+
+	@Autowired(required = false)
 	QuestionnaireAssembleProviderR5 assembleProviderR5;
 
 	@Autowired
@@ -108,6 +113,9 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 
 	@Autowired(required = false)
 	QuestionnaireResponseExtractProviderR4 questionnaireResponseProviderR4;
+
+	@Autowired(required = false)
+	QuestionnaireResponseExtractProviderR4B questionnaireResponseProviderR4B;
 
 	@Autowired(required = false)
 	QuestionnaireResponseExtractProviderR5 questionnaireResponseProviderR5;
@@ -140,16 +148,16 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	protected StructureDefinitionResourceProvider structureDefinitionProvider;
 
 	@Autowired(required = false)
-	protected StructureMapTransformProviderR4 structureMapTransformProviderR4;
-
-	@Autowired(required = false)
-	protected StructureMapTransformProviderR5 structureMapTransformProviderR5;
+	protected StructureMapTransformProvider structureMapTransformProvider;
 
 	@Autowired
 	private ApplicationContext context;
 
 	@Autowired(required = false)
 	private ImplementationGuideProviderR4 implementationGuideResourceProviderR4;
+
+	@Autowired(required = false)
+	private ImplementationGuideProviderR4B implementationGuideResourceProviderR4B;
 
 	@Autowired(required = false)
 	private ImplementationGuideProviderR5 implementationGuideResourceProviderR5;
@@ -192,12 +200,11 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 		fhirServer.registerProviders(validationProvider, questionnaireProvider,
 											  conceptMapProvider, codeSystemProvider, valueSetProvider, structureDefinitionProvider,
 											codeSystemCodeValidationProvider,
-											  valueSetCodeValidationProvider);
-
+											  valueSetCodeValidationProvider, this.structureMapTransformProvider);
+									  
 		switch (this.myFhirContext.getVersion().getVersion()) {
 			case R4 -> {
-				fhirServer.registerProviders(this.implementationGuideResourceProviderR4, this.assembleProviderR4,
-													  this.questionnaireResponseProviderR4, this.structureMapTransformProviderR4);
+				fhirServer.registerProviders(this.implementationGuideResourceProviderR4, this.assembleProviderR4, this.questionnaireResponseProviderR4);
 
 				if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages()
 					&& appProperties.getImplementationGuides() != null) {
@@ -206,8 +213,18 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 					System.exit(exitCode);
 				}
 			}
+			case R4B -> {
+				fhirServer.registerProviders(this.implementationGuideResourceProviderR4B, this.assembleProviderR4B, this.questionnaireResponseProviderR4B);
+
+				if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages()
+					&& appProperties.getImplementationGuides() != null) {
+					this.implementationGuideResourceProviderR4B.loadAll(true);
+					int exitCode = SpringApplication.exit(this.context, ()->0);
+					System.exit(exitCode);
+				}
+			}
 			case R5 -> {
-				fhirServer.registerProviders(this.implementationGuideResourceProviderR5, this.assembleProviderR5, this.questionnaireResponseProviderR5, this.structureMapTransformProviderR5);
+				fhirServer.registerProviders(this.implementationGuideResourceProviderR5, this.assembleProviderR5, this.questionnaireResponseProviderR5);
 
 				if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages()
 					&& appProperties.getImplementationGuides() != null) {

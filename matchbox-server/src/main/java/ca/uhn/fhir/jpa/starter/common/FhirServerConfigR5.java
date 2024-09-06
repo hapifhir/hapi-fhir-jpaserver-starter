@@ -12,8 +12,9 @@ import ca.uhn.fhir.jpa.validation.ValidatorResourceFetcher;
 import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR5;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.*;
-import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProviderR5;
+import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR5;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR5;
 import ch.ahdis.matchbox.terminology.CodeSystemCodeValidationProvider;
 import ch.ahdis.matchbox.terminology.ValueSetCodeValidationProvider;
@@ -126,9 +127,9 @@ public class FhirServerConfigR5 {
 
 	@Bean(name = "myStructureMapRpR5")
 	@Primary
-	public StructureMapTransformProviderR5 rpStructureMapR5() {
-		StructureMapTransformProviderR5 retVal;
-		retVal = new StructureMapTransformProviderR5();
+	public StructureMapTransformProvider rpStructureMapR5() {
+		StructureMapTransformProvider retVal;
+		retVal = new StructureMapTransformProvider();
 //    retVal.setContext(fhirContext);
 //    retVal.setDao(daoStructureMapR5());
 		return retVal;

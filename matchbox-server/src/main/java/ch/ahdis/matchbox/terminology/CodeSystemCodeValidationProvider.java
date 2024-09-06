@@ -6,6 +6,7 @@ import ca.uhn.fhir.rest.annotation.ResourceParam;
 import ca.uhn.fhir.rest.server.IResourceProvider;
 import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
 import org.hl7.fhir.instance.model.api.IAnyResource;
 import org.hl7.fhir.instance.model.api.IBaseParameters;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -48,6 +49,8 @@ public class CodeSystemCodeValidationProvider implements IResourceProvider {
 			request = parametersR5;
 		} else if (baseParameters instanceof final org.hl7.fhir.r4.model.Parameters parametersR4) {
 			request = (Parameters) VersionConvertorFactory_40_50.convertResource(parametersR4);
+		} else if (baseParameters instanceof final org.hl7.fhir.r4b.model.Parameters parametersR4B) {
+			request = (Parameters) VersionConvertorFactory_43_50.convertResource(parametersR4B);
 		} else {
 			throw new MatchboxUnsupportedFhirVersionException("CodeSystemCodeValidationProvider",
 																			  this.fhirContext.getVersion().getVersion());
@@ -58,6 +61,7 @@ public class CodeSystemCodeValidationProvider implements IResourceProvider {
 			final var outputParams = TerminologyUtils.mapCodingToSuccessfulParameters(coding);
 			return switch (this.fhirContext.getVersion().getVersion()) {
 				case R4 -> VersionConvertorFactory_40_50.convertResource(outputParams);
+				case R4B -> VersionConvertorFactory_43_50.convertResource(outputParams);
 				case R5 -> outputParams;
 				default -> throw new MatchboxUnsupportedFhirVersionException("CodeSystemCodeValidationProvider",
 																								 this.fhirContext.getVersion().getVersion());
@@ -74,6 +78,7 @@ public class CodeSystemCodeValidationProvider implements IResourceProvider {
 	public Class<? extends IBaseResource> getResourceType() {
 		return switch (this.fhirContext.getVersion().getVersion()) {
 			case R4 -> org.hl7.fhir.r4.model.CodeSystem.class;
+			case R4B -> org.hl7.fhir.r4b.model.CodeSystem.class;
 			case R5 -> org.hl7.fhir.r5.model.CodeSystem.class;
 			default -> throw new MatchboxUnsupportedFhirVersionException("CodeSystemCodeValidationProvider",
 																							 this.fhirContext.getVersion().getVersion());

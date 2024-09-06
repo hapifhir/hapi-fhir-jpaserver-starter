@@ -488,6 +488,7 @@ public class MatchboxEngineSupport {
 
 			try {
 				// set "txLog" for second parameter to activate
+				// Currently all terminology clients are to R4 for versin greater than R4
 				final String txver = validator.setTerminologyServer(cli.getTxServer(), null, FhirPublication.R4, true);
 				log.debug("Version of the terminology server: {}", txver);
 			} catch (final Exception e) {

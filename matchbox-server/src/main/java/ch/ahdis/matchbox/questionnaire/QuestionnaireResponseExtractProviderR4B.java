@@ -4,7 +4,7 @@ import java.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.hl7.fhir.r4.model.QuestionnaireResponse;
+import org.hl7.fhir.r4b.model.QuestionnaireResponse;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 
@@ -15,7 +15,7 @@ import ch.ahdis.matchbox.engine.MatchboxEngine;
  * $extract Operation for QuestionnaireResponse Resource
  *s
  */
-public class QuestionnaireResponseExtractProviderR4 extends QuestionnaireResponseExtractProvider {
+public class QuestionnaireResponseExtractProviderR4B extends QuestionnaireResponseExtractProvider {
 	  
 
   @Operation(name = "$extract", type = QuestionnaireResponse.class, manualResponse = true, manualRequest = true)

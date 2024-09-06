@@ -34,7 +34,9 @@ import java.util.StringTokenizer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_30_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.elementmodel.Manager.FhirFormat;
@@ -132,6 +134,10 @@ public class MappingLanguageInterceptor extends InterceptorAdapter {
 					case _4_0_1:
 						org.hl7.fhir.r4.model.StructureMap sm4 =  (org.hl7.fhir.r4.model.StructureMap) VersionConvertorFactory_40_50.convertResource(structureMap);
 						json = new org.hl7.fhir.r4.formats.JsonParser().composeString(sm4);				
+						break;
+					case _4_3_0:
+						org.hl7.fhir.r4b.model.StructureMap sm4b =  (org.hl7.fhir.r4b.model.StructureMap) VersionConvertorFactory_43_50.convertResource(structureMap);
+						json = new org.hl7.fhir.r4b.formats.JsonParser().composeString(sm4b);				
 						break;
 					case _5_0_0:
 						json = new org.hl7.fhir.r5.formats.JsonParser().composeString(structureMap);				

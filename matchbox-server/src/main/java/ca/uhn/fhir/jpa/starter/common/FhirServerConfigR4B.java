@@ -1,9 +1,8 @@
 package ca.uhn.fhir.jpa.starter.common;
 
-import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR4;
+import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR4B;
 import ch.ahdis.matchbox.terminology.CodeSystemCodeValidationProvider;
 import ch.ahdis.matchbox.terminology.ValueSetCodeValidationProvider;
-import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -13,9 +12,9 @@ import org.springframework.context.annotation.Primary;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
-import ca.uhn.fhir.jpa.config.r4.JpaR4Config;
+import ca.uhn.fhir.jpa.config.r4b.JpaR4BConfig;
 import ca.uhn.fhir.jpa.starter.AppProperties;
-import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
+import ca.uhn.fhir.jpa.starter.annotations.OnR4BCondition;
 import ca.uhn.fhir.jpa.validation.ValidatorPolicyAdvisor;
 import ca.uhn.fhir.jpa.validation.ValidatorResourceFetcher;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
@@ -27,14 +26,15 @@ import ch.ahdis.matchbox.StructureDefinitionResourceProvider;
 import ch.ahdis.matchbox.ValueSetResourceProvider;
 import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR4;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR4B;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
-import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR4;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR4B;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 
 @Configuration
-@Conditional(OnR4Condition.class)
-@Import({ MatchboxJpaConfig.class, JpaR4Config.class})
-public class FhirServerConfigR4 {
+@Conditional(OnR4BCondition.class)
+@Import({ MatchboxJpaConfig.class, JpaR4BConfig.class})
+public class FhirServerConfigR4B {
 
   /**
    * We override the paging provider definition so that we can customize the
@@ -48,17 +48,6 @@ public class FhirServerConfigR4 {
   FhirContext fhirContext;
 
 
-  
-//  @Bean
-//  public ITermCodeSystemStorageSvc termCodeSystemStorageSvc() {
-//    return new NullTermCodeSystemStorageSvcImpl();
-//  }
-  
-//  @Bean
-//  public ITermConceptMappingSvc termConceptMappingSvc() {
-//    return new NullTermConceptMappingSvcImpl();
-//  }
-
   @Bean
   public ValidationProvider validationProvider() {
     return new ValidationProvider();
@@ -66,83 +55,83 @@ public class FhirServerConfigR4 {
 
 
   @Bean
-  public QuestionnaireAssembleProviderR4 assembleProvider() {
-    return new QuestionnaireAssembleProviderR4();
+  public QuestionnaireAssembleProviderR4B assembleProvider() {
+    return new QuestionnaireAssembleProviderR4B();
   }
 
   @Bean
-  public QuestionnaireResponseExtractProviderR4 questionnaireResponseProvider() {
-    return new QuestionnaireResponseExtractProviderR4();
+  public QuestionnaireResponseExtractProviderR4B questionnaireResponseProvider() {
+    return new QuestionnaireResponseExtractProviderR4B();
   }
 
-  @Bean(name = "myImplementationGuideDaoR4")
-  public IFhirResourceDao<org.hl7.fhir.r4.model.ImplementationGuide> daoImplementationGuideR4() {
+  @Bean(name = "myImplementationGuideDaoR4B")
+  public IFhirResourceDao<org.hl7.fhir.r4b.model.ImplementationGuide> daoImplementationGuideR4B() {
 
-    ca.uhn.fhir.jpa.dao.BaseHapiFhirResourceDao<org.hl7.fhir.r4.model.ImplementationGuide> retVal;
-    retVal = new ca.uhn.fhir.jpa.dao.JpaResourceDao<org.hl7.fhir.r4.model.ImplementationGuide>();
-    retVal.setResourceType(org.hl7.fhir.r4.model.ImplementationGuide.class);
+    ca.uhn.fhir.jpa.dao.BaseHapiFhirResourceDao<org.hl7.fhir.r4b.model.ImplementationGuide> retVal;
+    retVal = new ca.uhn.fhir.jpa.dao.JpaResourceDao<org.hl7.fhir.r4b.model.ImplementationGuide>();
+    retVal.setResourceType(org.hl7.fhir.r4b.model.ImplementationGuide.class);
     retVal.setContext(fhirContext);
     return retVal;
   }
 
-  @Bean(name = "myImplementationGuideRpR4")
+  @Bean(name = "myImplementationGuideRpR4V")
   @Primary
-  public ImplementationGuideProviderR4 rpImplementationGuideR4() {
-	  ImplementationGuideProviderR4 retVal = new ImplementationGuideProviderR4();
+  public ImplementationGuideProviderR4B rpImplementationGuideR4() {
+	  ImplementationGuideProviderR4B retVal = new ImplementationGuideProviderR4B();
 	  retVal.setContext(fhirContext);
 //     retVal.setDao(daoImplementationGuideR4());
      return retVal;
   }
   
-  @Bean(name = "myQuestionnaireRpR4")
+  @Bean(name = "myQuestionnaireRpR4B")
   @Primary
-  public QuestionnaireResourceProvider rpQuestionnaireR4() {
+  public QuestionnaireResourceProvider rpQuestionnaireR4B() {
     QuestionnaireResourceProvider retVal;
     retVal = new  ch.ahdis.matchbox.QuestionnaireResourceProvider();
     return retVal;
   }
   
-  @Bean(name = "myValueSetRpR4")
+  @Bean(name = "myValueSetRpR4B")
   @Primary
-  public ch.ahdis.matchbox.ValueSetResourceProvider rpValueSetR4() {
+  public ch.ahdis.matchbox.ValueSetResourceProvider rpValueSetR4B() {
   	ValueSetResourceProvider retVal = new ch.ahdis.matchbox.ValueSetResourceProvider();
     return retVal;
   }
 
-  @Bean(name = "myCodeSystemRpR4")
+  @Bean(name = "myCodeSystemRpR4B")
   @Primary
-  public ch.ahdis.matchbox.CodeSystemResourceProvider rpCodeSystem4() {
+  public ch.ahdis.matchbox.CodeSystemResourceProvider rpCodeSystem4B() {
   	CodeSystemResourceProvider retVal = new ch.ahdis.matchbox.CodeSystemResourceProvider();
     return retVal;
   }
   
-  @Bean(name = "myConceptMapRpR4")
+  @Bean(name = "myConceptMapRpR4B")
   @Primary
-  public ch.ahdis.matchbox.ConceptMapResourceProvider rpConceptMap4() {
+  public ch.ahdis.matchbox.ConceptMapResourceProvider rpConceptMap4B() {
   	ConceptMapResourceProvider retVal = new ch.ahdis.matchbox.ConceptMapResourceProvider();
     return retVal;
   }
 
-  @Bean(name = "myStructureDefintionRpR4")
+  @Bean(name = "myStructureDefintionRpR4B")
   @Primary
-  public StructureDefinitionResourceProvider rpStructureDefintion4() {
+  public StructureDefinitionResourceProvider rpStructureDefintion4B() {
   	StructureDefinitionResourceProvider retVal = new StructureDefinitionResourceProvider();
     return retVal;
   }
 
-  @Bean(name = "myStructureMapDaoR4")
-  public IFhirResourceDao<org.hl7.fhir.r4.model.StructureMap> daoStructureMapR4() {
+  @Bean(name = "myStructureMapDaoR4B")
+  public IFhirResourceDao<org.hl7.fhir.r4b.model.StructureMap> daoStructureMapR4() {
 
-    ca.uhn.fhir.jpa.dao.BaseHapiFhirResourceDao<org.hl7.fhir.r4.model.StructureMap> retVal;
-    retVal = new ca.uhn.fhir.jpa.dao.JpaResourceDao<org.hl7.fhir.r4.model.StructureMap>();
-    retVal.setResourceType(org.hl7.fhir.r4.model.StructureMap.class);
+    ca.uhn.fhir.jpa.dao.BaseHapiFhirResourceDao<org.hl7.fhir.r4b.model.StructureMap> retVal;
+    retVal = new ca.uhn.fhir.jpa.dao.JpaResourceDao<org.hl7.fhir.r4b.model.StructureMap>();
+    retVal.setResourceType(org.hl7.fhir.r4b.model.StructureMap.class);
     retVal.setContext(fhirContext);
     return retVal;
   }
 
-  @Bean(name = "myStructureMapRpR4")
+  @Bean(name = "myStructureMapRpR4B")
   @Primary
-  public ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider rpStructureMapR4() {
+  public ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider rpStructureMapR4B() {
   	StructureMapTransformProvider retVal;
     retVal = new StructureMapTransformProvider();
 //    retVal.setContext(fhirContext);

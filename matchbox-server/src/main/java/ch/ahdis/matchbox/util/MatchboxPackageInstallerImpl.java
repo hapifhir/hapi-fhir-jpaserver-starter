@@ -113,6 +113,7 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 		switch (myFhirContext.getVersion().getVersion()) {
 		case R5:
 		case R4:
+		case R4B:
 		case DSTU3:
 			break;
 
@@ -215,6 +216,7 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 			// We have installed at least one new package, let's save the StructureDefinition titles in the database
 			ourLog.debug("Updating StructureDefinition titles...");
 			final var parserR4 = new org.hl7.fhir.r4.formats.JsonParser();
+			final var parserR4B = new org.hl7.fhir.r4b.formats.JsonParser();
 			final var parserR5 = new org.hl7.fhir.r5.formats.JsonParser();
 			new TransactionTemplate(this.myTxManager).execute(tx -> {
 				final var page = PageRequest.of(0, 2147483646);
@@ -237,6 +239,22 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 							final var title = switch (npmPackageVersionResourceEntity.getFhirVersion()) {
 								case R4 -> {
 									final var sd = (org.hl7.fhir.r4.model.StructureDefinition) parserR4.parse(resourceContents);
+
+									final String sdTitle;
+									if (sd.getTitle() != null) {
+										sdTitle = sd.getTitle();
+									} else {
+										sdTitle = sd.getName();
+									}
+
+									if ("Extension".equals(sd.getType())) {
+										yield SD_EXTENSION_TITLE_PREFIX + sdTitle;
+									} else {
+										yield sdTitle;
+									}
+								}
+								case R4B -> {
+									final var sd = (org.hl7.fhir.r4b.model.StructureDefinition) parserR4B.parse(resourceContents);
 
 									final String sdTitle;
 									if (sd.getTitle() != null) {

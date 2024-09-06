@@ -50,7 +50,7 @@ public class MatchboxApiR5onR4Test {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MatchboxApiR5onR4Test.class);
 
-  private String targetServer = "http://localhost:8083/matchboxv3/fhir";
+  private String targetServer = "http://localhost:8084/matchboxv3/fhir";
 
   private final FhirContext context = FhirVersionEnum.R4.newContext();
 

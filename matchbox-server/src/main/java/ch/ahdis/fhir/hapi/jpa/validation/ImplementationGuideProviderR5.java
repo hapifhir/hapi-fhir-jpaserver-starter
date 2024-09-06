@@ -11,7 +11,6 @@ import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.rest.annotation.*;
 import ca.uhn.fhir.rest.api.*;
-import ca.uhn.fhir.rest.api.server.IBundleProvider;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.param.*;
 import ca.uhn.fhir.rest.server.SimpleBundleProvider;
@@ -20,6 +19,8 @@ import ch.ahdis.matchbox.MatchboxEngineSupport;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r5.model.ImplementationGuide;
 import org.hl7.fhir.r5.model.OperationOutcome;
@@ -35,8 +36,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
@@ -143,6 +142,8 @@ public class ImplementationGuideProviderR5 extends ImplementationGuideResourcePr
 		return new PackageInstallationSpec()
 				.addInstallResourceTypes(MatchboxPackageInstallerImpl.DEFAULT_INSTALL_TYPES.toArray(new String[0]))
 				.setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_ONLY)
+				.addDependencyExclude("hl7.fhir.r4.core")
+				.addDependencyExclude("hl7.fhir.r4b.core")
 				.addDependencyExclude("hl7.fhir.r5.core")
 				.addDependencyExclude("hl7.terminology")
 				.addDependencyExclude("hl7.terminology.r5")

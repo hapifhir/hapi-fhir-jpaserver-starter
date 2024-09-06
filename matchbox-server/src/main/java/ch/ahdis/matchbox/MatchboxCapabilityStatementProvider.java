@@ -13,11 +13,11 @@ import ca.uhn.fhir.util.TerserUtil;
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IIdType;
-import org.hl7.fhir.r4.model.Enumeration;
 import org.hl7.fhir.r5.model.CapabilityStatement;
 import org.hl7.fhir.r5.model.Enumerations;
 import org.hl7.fhir.r5.model.OperationDefinition;
@@ -91,11 +91,17 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 			} else if (baseType instanceof final org.hl7.fhir.r4.model.StringType stringTypeR4) {
 				type = stringTypeR4.getValueNotNull();
 				interaction =
-					new org.hl7.fhir.r4.model.CapabilityStatement.ResourceInteractionComponent(new Enumeration<>(new org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteractionEnumFactory(),
+					new org.hl7.fhir.r4.model.CapabilityStatement.ResourceInteractionComponent(new org.hl7.fhir.r4.model.Enumeration<>(new org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteractionEnumFactory(),
 																																				org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteraction.READ));
 				interactionSearch =
-					new org.hl7.fhir.r4.model.CapabilityStatement.ResourceInteractionComponent(new Enumeration<>(new org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteractionEnumFactory(),
+					new org.hl7.fhir.r4.model.CapabilityStatement.ResourceInteractionComponent(new org.hl7.fhir.r4.model.Enumeration<>(new org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteractionEnumFactory(),
 																																				org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteraction.SEARCHTYPE));
+			} else if (baseType instanceof final org.hl7.fhir.r4b.model.StringType stringTypeR4B) {
+				type = stringTypeR4B.getValueNotNull();
+				interaction =
+					new org.hl7.fhir.r4b.model.CapabilityStatement.ResourceInteractionComponent(org.hl7.fhir.r4b.model.CapabilityStatement.TypeRestfulInteraction.READ);
+				interactionSearch =
+					new org.hl7.fhir.r4b.model.CapabilityStatement.ResourceInteractionComponent(org.hl7.fhir.r4b.model.CapabilityStatement.TypeRestfulInteraction.SEARCHTYPE);
 			} else {
 				throw new MatchboxUnsupportedFhirVersionException("MatchboxCapabilityStatementProvider",
 																				  this.myFhirContext.getVersion().getVersion());
@@ -128,6 +134,12 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 			// In R5 mode
 			this.updateOperationDefinition(opDefR5);
 			return baseResource;
+		} else if (baseResource instanceof final org.hl7.fhir.r4b.model.OperationDefinition opDefR4B && "Validate".equals(
+			opDefR4B.getName())) {
+			// In R4B mode: convert to R5, update, and convert back to R4B
+			final var opDefR5 = (OperationDefinition) VersionConvertorFactory_43_50.convertResource(opDefR4B);
+			this.updateOperationDefinition(opDefR5);
+			return VersionConvertorFactory_43_50.convertResource(opDefR5);
 		} else if (baseResource instanceof final org.hl7.fhir.r4.model.OperationDefinition opDefR4 && "Validate".equals(
 			opDefR4.getName())) {
 			// In R4 mode: convert to R5, update, and convert back to R4

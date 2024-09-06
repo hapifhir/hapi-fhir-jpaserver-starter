@@ -61,7 +61,7 @@ import ch.ahdis.matchbox.engine.MatchboxEngine;
 
  *
  */
-public class StructureMapTransformProviderR4 extends StructureMapResourceProvider {
+public class StructureMapTransformProvider extends StructureMapResourceProvider {
 	
 	@Autowired
 	protected MatchboxEngineSupport matchboxEngineSupport;
@@ -105,7 +105,7 @@ public class StructureMapTransformProviderR4 extends StructureMapResourceProvide
     return super.update(theRequest, theResource, theId, theConditional, theRequestDetails);
   }
 
-  protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StructureMapTransformProviderR4.class);
+  protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StructureMapTransformProvider.class);
 
   @Operation(name = "$transform", type = StructureMap.class, manualResponse = true, manualRequest = true)
   public void manualInputAndOutput(HttpServletRequest theServletRequest, HttpServletResponse theServletResponse)

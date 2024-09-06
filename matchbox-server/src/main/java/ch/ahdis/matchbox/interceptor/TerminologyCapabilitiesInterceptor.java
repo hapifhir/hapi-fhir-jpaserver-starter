@@ -7,6 +7,7 @@ import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.api.server.ResponseDetails;
 import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
 import org.hl7.fhir.r5.model.CapabilityStatement;
 import org.hl7.fhir.r5.model.TerminologyCapabilities;
 import org.slf4j.Logger;
@@ -37,6 +38,9 @@ public class TerminologyCapabilitiesInterceptor {
 			} else if (baseResource instanceof final org.hl7.fhir.r4.model.CapabilityStatement csR4) {
 				final var csR5 = (CapabilityStatement) VersionConvertorFactory_40_50.convertResource(csR4);
 				theResponseDetails.setResponseResource(VersionConvertorFactory_40_50.convertResource(this.getTerminologyCapabilities(csR5)));
+			} else if (baseResource instanceof final org.hl7.fhir.r4b.model.CapabilityStatement csR4B) {
+				final var csR5 = (CapabilityStatement) VersionConvertorFactory_43_50.convertResource(csR4B);
+				theResponseDetails.setResponseResource(VersionConvertorFactory_43_50.convertResource(this.getTerminologyCapabilities(csR5)));
 			} else {
 				throw new MatchboxUnsupportedFhirVersionException("TerminologyCapabilitiesInterceptor",
 																				  theRequestDetails.getFhirContext().getVersion().getVersion());

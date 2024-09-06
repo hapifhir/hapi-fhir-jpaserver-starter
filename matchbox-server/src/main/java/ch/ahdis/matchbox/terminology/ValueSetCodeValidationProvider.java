@@ -11,6 +11,7 @@ import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.hl7.fhir.common.hapi.validation.support.InMemoryTerminologyServerValidationSupport;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
 import org.hl7.fhir.instance.model.api.IAnyResource;
 import org.hl7.fhir.instance.model.api.IBaseParameters;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -75,6 +76,8 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 			request = parametersR5;
 		} else if (baseParameters instanceof final org.hl7.fhir.r4.model.Parameters parametersR4) {
 			request = (Parameters) VersionConvertorFactory_40_50.convertResource(parametersR4);
+		} else if (baseParameters instanceof final org.hl7.fhir.r4b.model.Parameters parametersR4B) {
+			request = (Parameters) VersionConvertorFactory_43_50.convertResource(parametersR4B);
 		} else {
 			throw new MatchboxUnsupportedFhirVersionException("CodeSystemCodeValidationProvider",
 																			  this.fhirContext.getVersion().getVersion());
@@ -175,6 +178,8 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 					valueSet = valueSetR5;
 				} else if (baseValueSet instanceof final org.hl7.fhir.r4.model.ValueSet valueSetR4) {
 					valueSet = (ValueSet) VersionConvertorFactory_40_50.convertResource(valueSetR4);
+				} else if (baseValueSet instanceof final org.hl7.fhir.r4b.model.ValueSet valueSetR4B) {
+					valueSet = (ValueSet) VersionConvertorFactory_43_50.convertResource(valueSetR4B);
 				} else {
 					throw new MatchboxUnsupportedFhirVersionException("ValueSetCodeValidationProvider",
 																					  this.fhirContext.getVersion().getVersion());
@@ -287,6 +292,7 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 	public Class<? extends IBaseResource> getResourceType() {
 		return switch (this.fhirContext.getVersion().getVersion()) {
 			case R4 -> org.hl7.fhir.r4.model.ValueSet.class;
+			case R4B -> org.hl7.fhir.r4b.model.ValueSet.class;
 			case R5 -> org.hl7.fhir.r5.model.ValueSet.class;
 			default -> throw new MatchboxUnsupportedFhirVersionException("ValueSetCodeValidationProvider",
 																							 this.fhirContext.getVersion().getVersion());

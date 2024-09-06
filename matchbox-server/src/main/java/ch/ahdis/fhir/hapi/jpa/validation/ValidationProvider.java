@@ -35,6 +35,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.StructureDefinition;
@@ -299,6 +300,7 @@ public class ValidationProvider {
 
 		return switch (this.myContext.getVersion().getVersion()) {
 			case R4 -> VersionConvertorFactory_40_50.convertResource(oo);
+			case R4B -> VersionConvertorFactory_43_50.convertResource(oo);
 			case R5 -> oo;
 			default -> throw new MatchboxUnsupportedFhirVersionException("ValidationProvider",
 																							 this.myContext.getVersion().getVersion());
