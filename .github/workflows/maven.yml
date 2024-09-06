@@ -33,6 +33,6 @@ jobs:
         with:
           name: testresults
           path: |
-            ./matchbox/matchbox-server/target/surefire-reports
-            ./matchbox/matchbox-engine/target/surefire-reports
+            ./matchbox-server/target/surefire-reports
+            ./matchbox-engine/target/surefire-reports
           retention-days: 2
