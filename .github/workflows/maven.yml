@@ -27,3 +27,12 @@ jobs:
         env:
           MAVEN_OPTS: -Xmx12g
         run: mvn --batch-mode --no-transfer-progress --update-snapshots verify
+    
+      - uses: actions/upload-artifact@v4
+        if: failure() 
+        with:
+          name: testresults
+          path: |
+            ./matchbox/matchbox-server/target/surefire-reports
+            ./matchbox/matchbox-engine/target/surefire-reports
+          retention-days: 2
