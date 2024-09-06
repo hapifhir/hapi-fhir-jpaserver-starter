@@ -5,6 +5,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.RuntimeResourceDefinition;
 import ca.uhn.fhir.jpa.starter.Application;
+import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import ch.ahdis.matchbox.gazelle.models.validation.ValidationItem;
 import ch.ahdis.matchbox.gazelle.models.validation.ValidationReport;
 import ch.ahdis.matchbox.gazelle.models.validation.ValidationRequest;
@@ -22,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -41,6 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 @ContextConfiguration(classes = {Application.class})
 @ActiveProfiles("test-r4")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class MatchboxApiR4Test {
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MatchboxApiR4Test.class);
 	private static final String TARGET_SERVER = "http://localhost:8081/matchboxv3";
@@ -54,6 +57,7 @@ class MatchboxApiR4Test {
 	void waitUntilStartup() throws Exception {
 		Thread.sleep(10000); // give the server some time to start up
 		this.validationClient.capabilities();
+		CompareUtil.logMemory();
 	}
 
 	@Test

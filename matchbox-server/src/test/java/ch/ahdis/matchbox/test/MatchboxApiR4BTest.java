@@ -5,6 +5,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.RuntimeResourceDefinition;
 import ca.uhn.fhir.jpa.starter.Application;
+
 import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.instance.model.api.*;
 import org.hl7.fhir.r4b.model.OperationOutcome;
@@ -17,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -35,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ContextConfiguration(classes = {Application.class})
 @ActiveProfiles("test-r4b")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class MatchboxApiR4BTest {
 
 	static public int getValidationFailures(OperationOutcome outcome) {
@@ -63,6 +66,7 @@ public class MatchboxApiR4BTest {
 		Thread.sleep(10000); // give the server some time to start up
 		ValidationClient validationClient = new ValidationClient(this.context, this.targetServer);
 		validationClient.capabilities();
+		CompareUtil.logMemory();
 	}
 
 	private static IBaseExtension<?, ?> getMatchboxValidationExtension(FhirContext theCtx,
