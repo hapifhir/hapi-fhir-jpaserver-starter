@@ -1,6 +1,6 @@
 server:
 #  port: 8084 port is blocked on github actions
-  port: 8085 port is blocked on github actions
+  port: 8085
   servlet:
     context-path: /matchboxv3
 hapi:
