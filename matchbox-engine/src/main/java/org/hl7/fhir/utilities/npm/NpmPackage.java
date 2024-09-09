@@ -357,9 +357,15 @@ public class NpmPackage {
    * Factory method that parses a package from an extracted folder
    */
   public static NpmPackage fromFolder(String path) throws IOException {
+    return fromFolder(path, true);
+  }
+
+  public static NpmPackage fromFolder(String path, boolean checkIndexed) throws IOException {
     NpmPackage res = new NpmPackage();
     res.loadFiles(path, ManagedFileAccess.file(path));
-    res.checkIndexed(path);
+    if (checkIndexed) {
+     res.checkIndexed(path);
+    }
     return res;
   }
 
@@ -367,10 +373,15 @@ public class NpmPackage {
    * Factory method that parses a package from an extracted folder
    */
   public static NpmPackage fromFolderMinimal(String path) throws IOException {
+    return fromFolderMinimal(path, true);
+  }
+
+  public static NpmPackage fromFolderMinimal(String path, boolean checkIndexed) throws IOException {
     NpmPackage res = new NpmPackage();
     res.minimalMemory = true;
     res.loadFiles(path, ManagedFileAccess.file(path));
-    res.checkIndexed(path);
+    if (checkIndexed) {
+    res.checkIndexed(path);}
     return res;
   }
 
@@ -616,7 +627,18 @@ public class NpmPackage {
     index.content.put(n, data);
   }
 
-  private void checkIndexed(String desc) throws IOException {
+  public boolean isIndexed() throws IOException {
+    for (NpmPackageFolder folder : folders.values()) {
+      JsonObject index = folder.index();
+      if (folder.index() == null || index.forceArray("files").size() == 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+
+  public void checkIndexed(String desc) throws IOException {
     for (NpmPackageFolder folder : folders.values()) {
       JsonObject index = folder.index();
       if (index == null || index.forceArray("files").size() == 0) {
@@ -624,6 +646,7 @@ public class NpmPackage {
       }  
     }
   }
+
 
 
   public void indexFolder(String desc, NpmPackageFolder folder) throws FileNotFoundException, IOException {

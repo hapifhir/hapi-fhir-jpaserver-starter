@@ -941,10 +941,14 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       throw new Error(formatMessage(I18nConstants.NO_VALUE_SET_IN_URL));
     }
     for (ConceptSetComponent inc : vs.getCompose().getInclude()) {
-      codeSystemsUsed.add(inc.getSystem());
+      if (inc.hasSystem()) {
+        codeSystemsUsed.add(inc.getSystem());
+      }
     }
     for (ConceptSetComponent inc : vs.getCompose().getExclude()) {
-      codeSystemsUsed.add(inc.getSystem());
+      if (inc.hasSystem()) {
+        codeSystemsUsed.add(inc.getSystem());
+      }
     }
 
     CacheToken cacheToken = txCache.generateExpandToken(vs, hierarchical);

@@ -261,15 +261,16 @@ public class XmlParser extends ParserBase {
       return "sdtc:";
     if (ns.equals("urn:ihe:pharm"))
       return "pharm:";
+    if (ns.equals("http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0"))
+      return "ext:";
     if (ns.equals("urn:oid:1.3.6.1.4.1.19376.1.3.2")) {
-          // MATCHBOX
-          return "lab:";
-        }
-     if (ns.equals("urn:hl7-at:v3")) {
-          // MATCHBOX
-          return "hl7at:";
-        }
-
+        // MATCHBOX
+        return "lab:";
+      }
+   if (ns.equals("urn:hl7-at:v3")) {
+        // MATCHBOX
+        return "hl7at:";
+      }
     return "?:";
   }
 
