@@ -1,4 +1,4 @@
-2024/09/xx Release 3.9.0
+2024/09/10 Release 3.9.0
 
 - initial support for FML transforms between different FHIR versions (R4, R4B, R5) [#265](https://github.com/ahdis/matchbox/issues/265), set flag xVersion
 - support for FHIR R4B in engine and server [#65](https://github.com/ahdis/matchbox/issues/65)
