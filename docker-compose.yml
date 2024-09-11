@@ -1,6 +1,8 @@
 version: "3"
 services:
   hapi-fhir-jpaserver-start:
+    #build:
+    #  context: .
     image: phillezi/fhir-test:latest
     restart: on-failure
     environment:
@@ -8,6 +10,8 @@ services:
       SPRING_DATASOURCE_USERNAME: "admin"
       SPRING_DATASOURCE_PASSWORD: "admin"
       SPRING_DATASOURCE_DRIVERCLASSNAME: "org.postgresql.Driver"
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: "ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect"
+      HAPI_FHIR_BULK_IMPORT_ENABLED: true
     ports:
       - "8080:8080"
   hapi-fhir-postgres:
@@ -20,5 +24,10 @@ services:
       POSTGRES_PASSWORD: "admin"
     volumes:
       - hapi-fhir-postgres:/var/lib/postgresql/data
+
+  fileserver:
+    image: hapi-fileserver
+    restart: always
+
 volumes:
   hapi-fhir-postgres:
