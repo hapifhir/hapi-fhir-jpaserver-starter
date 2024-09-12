@@ -26,6 +26,7 @@ import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 import ca.uhn.fhir.validation.IValidatorModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -218,7 +219,7 @@ public class StarterJpaConfig {
 
 
 	@Bean
-//	@ConditionalOnProperty(prefix = "hapi.fhir", name = "cors")
+	@ConditionalOnProperty(prefix = "hapi.fhir", name = "cors")
 	public CorsInterceptor corsInterceptor(AppProperties appProperties) {
 		// Define your CORS configuration. This is an example
 		// showing a typical setup. You should customize this
