@@ -5,7 +5,6 @@
 ### returns metadata configuration for server, verify that you have in implementation description "Development Mode"
 GET {{host}}/metadata HTTP/1.1
 Accept: application/fhir+xml;fhirVersion=4.0
-Origin: http://localhost
 
 
 ### Convert Textual representation of a FHIR Mapping Language to StructureMap resource

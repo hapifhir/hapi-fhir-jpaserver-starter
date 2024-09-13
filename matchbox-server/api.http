@@ -1,4 +1,4 @@
-@host = http://localhost:8082/matchboxv3
+@host = http://localhost:8080/matchboxv3
 ### @host = https://test.ahdis.ch/matchbox
 ### @host = https://test.ahdis.ch/matchboxv3
 
@@ -22,7 +22,6 @@ Accept: application/fhir+json
 ### $validate OperationDefinition
 GET {{host}}/fhir/OperationDefinition/-s-validate HTTP/1.1
 Accept: application/fhir+json
-
 
 ### $validate OperationDefinition 
 GET {{host}}/tx-reg/resolve HTTP/1.1

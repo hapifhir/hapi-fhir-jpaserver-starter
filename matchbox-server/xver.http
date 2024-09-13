@@ -1,0 +1,21 @@
+@host = http://localhost:8081/matchboxv3/fhir
+### @host = https://test.ahdis.ch/matchbox/fhir
+
+### returns metadata configuration for server, verify that you have in implementation description "Development Mode"
+GET {{host}}/metadata HTTP/1.1
+Accept: application/fhir+xml;fhirVersion=4.0
+
+### transform the r4 provided medication to r5 medication
+POST {{host}}/StructureMap/$transform?source=http://hl7.org/fhir/uv/xver/StructureMap/Medication4to5
+Accept: application/fhir+json
+Content-Type: application/fhir+json
+
+< ./matchbox-engine/src/test/resources/xvers/medication-r4-med0301.json
+
+
+### ### transform the r5 medication to r4 medication
+POST {{host}}/StructureMap/$transform?source=http://hl7.org/fhir/uv/xver/StructureMap/Medication5to4
+Accept: application/fhir+json
+Content-Type: application/fhir+json
+
+< ./matchbox-engine/src/test/resources/xvers/medication-r5-med0301.json

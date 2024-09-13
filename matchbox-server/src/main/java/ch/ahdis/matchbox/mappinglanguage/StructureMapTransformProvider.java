@@ -122,11 +122,6 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
       if (map == null) {
           throw new UnprocessableEntityException("Map not available with canonical url "+source[0]);
       }
-      for (StructureMapStructureComponent component  : map.getStructure()) {
-        if (component.getUrl() != null && matchboxEngine.getStructureDefinitionR5(component.getUrl()) == null) {
-          throw new UnprocessableEntityException("matchbox engine could not be initialized with canonical url required for transform for "+source[0]+ " component "+component.getUrl());
-        }
-      }
       transform(map, theServletRequest, theServletResponse, matchboxEngine);
     } else {
       throw new UnprocessableEntityException("No source parameter provided");
@@ -147,24 +142,13 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
     if (highestRankedAcceptValues.contains(Constants.CT_FHIR_JSON)) {
       responseContentType = Constants.CT_FHIR_JSON_NEW;
     }
+    String result = matchboxEngine.transform(new String(theServletRequest.getInputStream().readAllBytes()), contentType.contains("json"), map.getUrl(), responseContentType.contains("json"));
 
-    org.hl7.fhir.r5.elementmodel.Element r = matchboxEngine.transform(ByteProvider.forBytes(theServletRequest.getInputStream().readAllBytes()), contentType.contains("xml") ? FhirFormat.XML : FhirFormat.JSON, map.getUrl());
-    
     theServletResponse.setContentType(responseContentType);
     theServletResponse.setCharacterEncoding("UTF-8");
     
     ServletOutputStream output = theServletResponse.getOutputStream();
-    try {
-      if (output != null) {
-        if (responseContentType.equals(Constants.CT_FHIR_JSON_NEW))
-          new org.hl7.fhir.r5.elementmodel.JsonParser(matchboxEngine.getContext()).compose(r, output, OutputStyle.PRETTY, null);
-        else
-          new org.hl7.fhir.r5.elementmodel.XmlParser(matchboxEngine.getContext()).compose(r, output, OutputStyle.PRETTY, null);
-      }
-    } catch(org.hl7.fhir.exceptions.FHIRException e) {
-      log.error("Transform exception", e);
-      output.write("Exception during Transform".getBytes());
-    }
+    output.write(result.getBytes("UTF-8"));
     theServletResponse.getOutputStream().close();
   }
   
