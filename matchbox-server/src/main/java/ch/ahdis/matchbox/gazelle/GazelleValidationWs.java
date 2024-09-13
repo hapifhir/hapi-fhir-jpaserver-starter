@@ -231,8 +231,8 @@ public class GazelleValidationWs {
 	 * Performs the validation of the given item with the given engine.
 	 */
 	ValidationSubReport validateItem(final MatchboxEngine engine,
-									 final ValidationItem item,
-									 final String profile) {
+									         final ValidationItem item,
+												final String profile) {
 		final String content = new String(item.getContent(), StandardCharsets.UTF_8);
 		final var encoding = EncodingEnum.detectEncoding(content);
 
@@ -240,7 +240,9 @@ public class GazelleValidationWs {
 		subReport.setName("Validation of item #%s".formatted(item.getItemId()));
 		try {
 			final var messages = ValidationProvider.doValidate(engine, content, encoding, profile);
-			messages.stream().map(this::convertMessageToReport).forEach(subReport::addAssertionReport);
+			messages.stream()
+				.map(message -> this.convertMessageToReport(message, engine))
+				.forEach(subReport::addAssertionReport);
 		} catch (final Exception e) {
 			log.error("Error during validation", e);
 			subReport.addUnexpectedError(new UnexpectedError().setMessage("Error during validation: %s".formatted(e.getMessage())));
@@ -252,7 +254,8 @@ public class GazelleValidationWs {
 	/**
 	 * Converts a validation message (HAPI) to an assertion report (Gazelle).
 	 */
-	AssertionReport convertMessageToReport(final ValidationMessage message) {
+	AssertionReport convertMessageToReport(final ValidationMessage message,
+														final MatchboxEngine engine) {
 		final var assertionReport = new AssertionReport();
 		switch (message.getLevel()) {
 			case FATAL, ERROR:
@@ -293,11 +296,14 @@ public class GazelleValidationWs {
 		var description = new StringBuilder();
 		description.append(message.getMessage());
 		if (message.sliceText != null && message.sliceText.length > 0) {
-			description.append("<br/><br/>Slice information:<br/><ul>");
-			for (final var slice : message.sliceText) {
-				description.append("<li>").append(slice).append("</li>");
+			final var slices = engine.filterSlicingMessages(message.sliceText);
+			if (!slices.isEmpty()) {
+				description.append("<br/><br/>Slice information:<br/><ul>");
+				for (final var slice : slices) {
+					description.append("<li>").append(slice).append("</li>");
+				}
+				description.append("</ul>");
 			}
-			description.append("</ul>");
 		}
 		assertionReport.setDescription(description.toString());
 		return assertionReport;

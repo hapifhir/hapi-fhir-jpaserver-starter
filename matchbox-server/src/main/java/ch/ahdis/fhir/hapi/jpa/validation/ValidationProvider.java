@@ -272,7 +272,7 @@ public class ValidationProvider {
 			// Add slice info to diagnostics
 			if (message.sliceText != null) {
 				List<String> sliceInfo = engine.filterSlicingMessages(message.sliceText);
-				if (sliceInfo.size() >	0) {
+				if (!sliceInfo.isEmpty()) {
 					final var newDiagnostics = new StringBuilder();
 					newDiagnostics.append(issue.getDiagnostics());
 					newDiagnostics.append(" Slice info:");
