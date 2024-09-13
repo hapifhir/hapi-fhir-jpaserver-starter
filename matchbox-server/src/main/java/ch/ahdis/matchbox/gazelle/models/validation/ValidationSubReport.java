@@ -172,8 +172,9 @@ public class ValidationSubReport {
 			.map(this::getAssertionResultBySeverity)
 			.filter(Objects::nonNull)
 			.max(ValidationSubReport::keepHeaviestResult)
-			.orElse(ValidationTestResult.UNDEFINED)
-			: ValidationTestResult.UNDEFINED;
+			.orElse(ValidationTestResult.PASSED)
+			: ValidationTestResult.PASSED;
+		// If no assertion report is present, the result is PASSED
 		ValidationTestResult subReportsResult = this.subReports != null
 			? (ValidationTestResult)this.subReports
 			.stream()
