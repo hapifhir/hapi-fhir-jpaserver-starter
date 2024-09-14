@@ -1,0 +1,18 @@
+dependency-tree: true
+debug: true
+scan:
+  include-dev-deps: true
+  scanners:
+    - vuln
+    - misconfig
+  skip-dirs:
+    - /matchbox-frontend/node_modules
+  sbom-sources:
+    - oci
+    - rekor
+  rekor-url: https://rekor.sigstore.dev
+vulnerability:
+  type:
+    - os
+    - library
+  ignore-unfixed: false
