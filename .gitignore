@@ -1,6 +1,7 @@
 database
 **/with-postgres/data
 **/with-preload/data
+txCache/
 
 gha-creds-*.json
 fhir.logdir
