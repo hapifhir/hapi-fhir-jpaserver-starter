@@ -17,6 +17,7 @@ import { OperationResultComponent } from './operation-result/operation-result.co
 import { UploadComponent } from './upload/upload.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import {HighlightLineNumbers} from "ngx-highlightjs/line-numbers";
 
 const routes: Routes = [
   {
@@ -53,43 +54,50 @@ export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
-@NgModule({ declarations: [
-        AppComponent,
-        CapabilityStatementComponent,
-        SettingsComponent,
-        HomeComponent,
-        MappingLanguageComponent,
-        IgsComponent,
-        TransformComponent,
-        ValidateComponent,
-        OperationResultComponent,
-        UploadComponent,
-    ],
-    bootstrap: [AppComponent], imports: [SharedModule,
-        HighlightModule,
-        RouterModule.forRoot(routes, {
-            useHash: true,
-        }),
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: createTranslateLoader,
-                deps: [HttpClient],
-            },
-        }),
-        OAuthModule.forRoot(),
-        NgxMatSelectSearchModule], providers: [
-        {
-            provide: HIGHLIGHT_OPTIONS,
-            useValue: {
-                coreLibraryLoader: () => import('highlight.js/lib/core'),
-                lineNumbersLoader: () => import('highlightjs-line-numbers.js'), // Optional, only if you want the line numbers
-                languages: {
-                    json: () => import('highlight.js/lib/languages/json'),
-                    xml: () => import('highlight.js/lib/languages/xml'),
-                },
-            },
+@NgModule({
+  declarations: [
+    AppComponent,
+    CapabilityStatementComponent,
+    SettingsComponent,
+    HomeComponent,
+    MappingLanguageComponent,
+    IgsComponent,
+    TransformComponent,
+    ValidateComponent,
+    OperationResultComponent,
+    UploadComponent,
+  ],
+  bootstrap: [AppComponent],
+  imports: [
+    SharedModule,
+    HighlightModule,
+    RouterModule.forRoot(routes, {
+      useHash: true,
+    }),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: createTranslateLoader,
+        deps: [HttpClient],
+      },
+    }),
+    OAuthModule.forRoot(),
+    NgxMatSelectSearchModule,
+    HighlightLineNumbers,
+  ],
+  providers: [
+    {
+      provide: HIGHLIGHT_OPTIONS,
+      useValue: {
+        coreLibraryLoader: () => import('highlight.js/lib/core'),
+        lineNumbersLoader: () => import('ngx-highlightjs/line-numbers'), // Optional, only if you want the line numbers
+        languages: {
+          json: () => import('highlight.js/lib/languages/json'),
+          xml: () => import('highlight.js/lib/languages/xml'),
         },
-        provideHttpClient(withInterceptorsFromDi()),
-    ] })
+      },
+    },
+    provideHttpClient(withInterceptorsFromDi()),
+  ],
+})
 export class AppModule {}

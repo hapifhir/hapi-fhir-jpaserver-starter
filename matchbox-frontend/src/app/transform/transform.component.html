@@ -8,7 +8,7 @@
 
     <app-upload (addFiles)="addFile($event)"></app-upload>
 
-    <pre><code [highlight]="getSource()" [lineNumbers]="true"></code></pre>
+    <pre><code [highlight]="getSource()" lineNumbers language="json"></code></pre>
   </mat-card-content>
 </mat-card>
 
@@ -38,6 +38,6 @@
         </li>
       </ul>
     </mat-error>
-    <pre><code [highlight]="getMapped()" [lineNumbers]="true"></code></pre>
+    <pre><code [highlight]="getMapped()" lineNumbers language="json"></code></pre>
   </mat-card-content>
 </mat-card>
