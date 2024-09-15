@@ -18,6 +18,8 @@ import { UploadComponent } from './upload/upload.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import {HighlightLineNumbers} from "ngx-highlightjs/line-numbers";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {ToastrModule} from "ngx-toastr";
 
 const routes: Routes = [
   {
@@ -84,6 +86,8 @@ export function createTranslateLoader(http: HttpClient) {
     OAuthModule.forRoot(),
     NgxMatSelectSearchModule,
     HighlightLineNumbers,
+    BrowserAnimationsModule, // Required for toastr
+    ToastrModule.forRoot(),
   ],
   providers: [
     {

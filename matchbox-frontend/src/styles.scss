@@ -1,6 +1,7 @@
 @use '@angular/material' as mat;
 @import '_variables';
 @import 'highlight.js/styles/github.css';
+@import 'ngx-toastr/toastr';
 
 @include mat.core();
 @include mat.core-theme($theme);

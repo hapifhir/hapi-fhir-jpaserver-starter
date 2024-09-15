@@ -13,6 +13,7 @@ import { ITarEntry } from './tar-entry';
 import {Issue, IssueSeverity, OperationResult} from '../util/operation-result';
 import {FormControl, Validators} from "@angular/forms";
 import {StructureDefinition} from "./structure-definition";
+import {ToastrService} from "ngx-toastr";
 
 const INDENT_SPACES = 2;
 
@@ -56,7 +57,8 @@ export class ValidateComponent implements AfterViewInit {
 
   constructor(
     data: FhirConfigService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private toastr: ToastrService,
   ) {
     this.client = data.getFhirClient();
 
@@ -148,37 +150,44 @@ export class ValidateComponent implements AfterViewInit {
         const reader = new FileReader();
         reader.readAsText(droppedBlob.blob);
         reader.onload = () => {
-          // need to run CD since file load runs outside of zone
-          this.cd.markForCheck();
-          entry = new ValidationEntry(droppedBlob.blob.name, <string>reader.result, droppedBlob.contentType, null);
-          this.currentResource = new UploadedFile(droppedBlob.name, droppedBlob.contentType, <string>reader.result, entry.resourceType);
-          if (entry.selectedProfile) {
-            // Auto-select the right profile in the form select
-            if (this.supportedProfiles.has(entry.selectedProfile)) {
-              // The canonical exists as-is in the list of supported profiles
-              this.selectedProfile = entry.selectedProfile;
-            } else {
-              // The canonical doesn't exist as-is in the list of supported profiles, but it may be present with its
-              // version as suffix
-              const versionedCanonical = `${entry.selectedProfile}|`;
-              for (let [key, value] of this.supportedProfiles) {
-                if (key.startsWith(versionedCanonical)) {
-                  this.selectedProfile = key;
-                  break;
+          try {
+            // need to run CD since file load runs outside of zone
+            this.cd.markForCheck();
+            // Try to parse the resource to extract information
+            entry = new ValidationEntry(droppedBlob.blob.name, <string>reader.result, droppedBlob.contentType, null);
+            this.currentResource = new UploadedFile(droppedBlob.name, droppedBlob.contentType, <string>reader.result, entry.resourceType);
+            if (entry.selectedProfile) {
+              // Auto-select the right profile in the form select
+              if (this.supportedProfiles.has(entry.selectedProfile)) {
+                // The canonical exists as-is in the list of supported profiles
+                this.selectedProfile = entry.selectedProfile;
+              } else {
+                // The canonical doesn't exist as-is in the list of supported profiles, but it may be present with its
+                // version as suffix
+                const versionedCanonical = `${entry.selectedProfile}|`;
+                for (let [key, value] of this.supportedProfiles) {
+                  if (key.startsWith(versionedCanonical)) {
+                    this.selectedProfile = key;
+                    break;
+                  }
                 }
               }
             }
+            this.validationEntries.unshift(entry);
+            this.show(entry);
+            this.validate(entry);
+          } catch (error) {
+            this.showErrorToast('Error parsing the file', error.message);
+            if (entry) {
+              entry.result = OperationResult.fromMatchboxError("Error while processing the resource for" +
+                " validation: " + error.message);
+            }
+            return;
           }
-          this.validationEntries.unshift(entry);
-          this.show(entry);
-          this.validate(entry);
         };
       } catch (error) {
+        this.showErrorToast('Unexpected error', error.message);
         console.error(error);
-        if (entry) {
-          entry.result = OperationResult.fromMatchboxError("Error while processing the resource for" +
-            " validation: " + error.message);
-        }
       }
     }
   }
@@ -233,6 +242,8 @@ export class ValidateComponent implements AfterViewInit {
           },
           function (err) {
             // onError
+            this.showErrorToast('Unexpected error', err);
+            console.error(err);
           },
           function (extractedFile: ITarEntry) {
             // onProgress
@@ -287,6 +298,7 @@ export class ValidateComponent implements AfterViewInit {
     }
 
     if (!entry.selectedProfile) {
+      this.showErrorToast('Validation failed', 'No profile was selected');
       console.error("No profile selected, won't run validation");
       return;
     }
@@ -327,6 +339,7 @@ export class ValidateComponent implements AfterViewInit {
       .catch((error) => {
         // fhir-kit-client throws an error when return in not json
         entry.loading = false;
+        this.showErrorToast('Unexpected error', error.message);
         entry.result = OperationResult.fromMatchboxError("Error while sending the validation request: " +error.message);
         console.error(error);
       });
@@ -469,6 +482,13 @@ export class ValidateComponent implements AfterViewInit {
     }
     this.editorContent = newContent;
     this.updateCodeEditorContent();
+  }
+
+  showErrorToast(title: string, message: string) {
+    this.toastr.error(message, title, {
+      closeButton: true,
+      timeOut: 5000,
+    });
   }
 }
 
