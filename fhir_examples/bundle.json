@@ -1,0 +1,231 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Organization",
+        "identifier": [
+          {
+            "use": "official",
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "PRN",
+                  "display": "Provider number"
+                }
+              ]
+            },
+            "system": "http://www.hospital-directory.example.org",
+            "value": "H12345678"
+          }
+        ],
+        "active": true,
+        "type": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+                "code": "prov",
+                "display": "Healthcare Provider"
+              }
+            ]
+          }
+        ],
+        "name": "Royal Haven Hospital",
+        "contact": [
+          {
+            "purpose": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/contactentity-type",
+                  "code": "BILL",
+                  "display": "Billing"
+                }
+              ]
+            },
+            "name": [
+              {
+                "family": "De Vries",
+                "given": [
+                  "Linda"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "POST",
+        "url": "Organization"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Practitioner",
+        "identifier": [
+          {
+            "use": "official",
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "MD",
+                  "display": "Medical License Number"
+                }
+              ]
+            },
+            "system": "http://www.medical-registry.example.org",
+            "value": "MD123456"
+          }
+        ],
+        "active": true,
+        "name": [
+          {
+            "use": "official",
+            "family": "Bakker",
+            "given": [
+              "Johannes"
+            ],
+            "prefix": [
+              "Dr."
+            ]
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+31-30-123-4567",
+            "use": "work"
+          },
+          {
+            "system": "email",
+            "value": "johannes.bakker@example.org",
+            "use": "work"
+          }
+        ],
+        "address": [
+          {
+            "use": "work",
+            "type": "both",
+            "text": "Kliniekweg 12",
+            "line": [
+              "Kliniekweg 12",
+              "3452 JK Utrecht"
+            ],
+            "city": "Utrecht",
+            "state": "Utrecht",
+            "postalCode": "3452 JK",
+            "country": "NLD"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1975-05-15"
+      },
+      "request": {
+        "method": "POST",
+        "url": "Practitioner"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "identifier": [
+          {
+            "system": "http://hospital.org/patients",
+            "value": "12345"
+          }
+        ],
+        "name": [
+          {
+            "use": "official",
+            "family": "Doe",
+            "given": [
+              "John"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1980-01-01"
+      },
+      "request": {
+        "method": "POST",
+        "url": "Patient"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ImagingStudy",
+        "status": "available",
+        "subject": {
+          "reference": "Patient/3"
+        },
+        "started": "2011-01-01T11:01:20+03:00",
+        "series": [
+          {
+            "uid": "series1",
+            "started": "2011-01-01T11:01:20+03:00",
+            "modality": {
+              "coding": [
+                {
+                  "system": "https://dicom.nema.org/resources/ontology/DCM",
+                  "code": "CT"
+                }
+              ]
+            },
+            "performer": [
+              {
+                "actor": {
+                  "reference": "Organization/1",
+                  "type": "Organization"
+                }
+              },
+              {
+                "actor": {
+                  "reference": "Practitioner/2",
+                  "type": "Practitioner"
+                }
+              }
+            ],
+            "bodySite": {
+              "concept": {
+                "coding": [
+                  {
+                    "system": "https://snomed.info/sct",
+                    "code": "51185008",
+                    "display": "CT of Head"
+                  }
+                ]
+              }
+            },
+            "instance": [
+              {
+                "uid": "instance201",
+                "sopClass": {
+                  "system": "https://dicom.nema.org/resources/ontology/DCM",
+                  "code": "CT01",
+                  "display": "CT Head"
+                },
+                "title": "CT Head Image 1"
+              },
+              {
+                "uid": "instance202",
+                "sopClass": {
+                  "system": "https://dicom.nema.org/resources/ontology/DCM",
+                  "code": "CT02",
+                  "display": "CT Head"
+                },
+                "title": "CT Head Image 2"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "POST",
+        "url": "ImagingStudy"
+      }
+    }
+  ]
+}

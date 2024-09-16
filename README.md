@@ -1,591 +1,153 @@
-# HAPI-FHIR Starter Project
+# Documentation HAPI FHIR JPA Server
 
-This project is a complete starter project you can use to deploy a FHIR server using HAPI FHIR JPA.
+## Introduction
+The purpose of this HAPI FHIR JPA Server is to provide a Proof of Concept where
+it functions like a metadata register. It is part of the [GFModules project](https://github.com/minvws/gfmodules-coordination) which is currently under development.
+The information in this repository is subject to change. The GFModules project is a collection of applications that
+have the purpose to improve the data exchange between healthcare providers. [HAPI FHIR](https://hapifhir.io/) is a complete implementation 
+of the [HL7 FHIR](https://www.hl7.org/fhir/) standard for healthcare interoperability in Java. It is an open 
+source software licensed under the business-friendly [Apache Software License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
-Note that this project is specifically intended for end users of the HAPI FHIR JPA server module (in other words, it helps you implement HAPI FHIR, it is not the source of the library itself). If you are looking for the main HAPI FHIR project, see here: https://github.com/hapifhir/hapi-fhir
 
-While this project shows how you can use many parts of the HAPI FHIR framework there are a set of features which you should be aware of are missing or something you need to supply yourself or get professional support ahead of using it directly in production:
+### JPA server
+The HAPI FHIR JPA server offers a complete RESTful FHIR server implementation using JPA 2.0 for database persistence. This project is build up from a [starter repository](https://github.com/hapifhir/hapi-fhir-jpaserver-starter) to deploy an FHIR server, the full source can be found [here](https://github.com/hapifhir/hapi-fhir).
+In the extensive [DOCS](https://hapifhir.io/hapi-fhir/docs/getting_started/introduction.html) much is explained about the JPA server, how it works and how it can be extended for particular use-cases. The project does not provide any security or enterprise audit logging.
 
-1) The service comes with no security implementation. See how it can be done [here](https://hapifhir.io/hapi-fhir/docs/security/introduction.html)
-2) The service comes with no enterprise logging. See how it can be done [here](https://hapifhir.io/hapi-fhir/docs/security/balp_interceptor.html)
-3) The internal topic cache used by subscriptions in HAPI FHIR are not shared across multiple instances as the [default supplied implementation is in-mem](https://github.com/hapifhir/hapi-fhir/blob/master/hapi-fhir-jpaserver-subscription/src/main/java/ca/uhn/fhir/jpa/topic/ActiveSubscriptionTopicCache.java)
-4) The internal message broker channel in HAPI FHIR is not shared across multiple instances as the [default supplied implementation is in-mem](https://github.com/hapifhir/hapi-fhir/blob/master/hapi-fhir-storage/src/main/java/ca/uhn/fhir/jpa/subscription/channel/api/IChannelFactory.java). This impacts the use of modules listed [here](https://smilecdr.com/docs/installation/message_broker.html#modules-dependent-on-message-brokers)
+**[HAPI JPA Server](https://hapifhir.io/hapi-fhir/docs/server_jpa/architecture.html) has the following components:** ![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdL7rKrfOpq7myofkaXeSW-Pv1i7pHQe53rX1v61pa_ls7IC6UL2JIKZ5Xtd8OEB31l3NRfjLBQvSW0qinkDcz-Jw500DjTRkHicwuIv3GzNl6Y3Ldz3mtII8FA-Arq2v1VLKxPWk_HKutRQL6C6j7AU41G?key=flRIJ62mIRWJ10ofPwigtw)
+- **[Resource Providers](https://hapifhir.io/hapi-fhir/docs/server_plain/resource_providers.html):** A RESTful server Resource Provider is provided for each resource type in a given release of FHIR. Each resource provider implements all the FHIR methods, such as Search, Read, Create, Delete, etc.
+- **[HAPI DAOs](https://hapifhir.io/hapi-fhir/apidocs/hapi-fhir-storage/ca/uhn/fhir/jpa/api/dao/IFhirResourceDao.html):** The Data Access Objects (_DAO_) implement all the database business logic relating to the storage, indexing, and retrieval of FHIR resources, using the underlying JPA API.
+- **[Database](https://hapifhir.io/hapi-fhir/docs/server_jpa/database_support.html):** The RESTful server uses an embedded database but can be configured to communicate with any database supported by [Hibernate](https://hibernate.org/orm/). The JPA Server maintains active support for several databases such as: [MS SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads), [PostgreSQL](https://www.postgresql.org/), [ORACLE](https://www.oracle.com/database/).
+- **[Interceptors](https://hapifhir.io/hapi-fhir/docs/interceptors/interceptors.html):** Interceptor classes may "hook into" various points in the processing chain in both the client and the server. The interceptor framework has been designed to be flexible enough to hook into almost every part of the library. When trying to figure out "how would I make HAPI FHIR do X", the answer is very often to create an interceptor.
+- **[Server Security](https://hapifhir.io/hapi-fhir/docs/security/introduction.html):** Every system and architecture operates in a different set of rules, and has different security requirements. As such, HAPI FHIR does not provide a single one-size-fits-all security layer. Instead, it provides a number of useful tools and building blocks that can be built around as a part of your overall security architecture.
 
-Need Help? Please see: https://github.com/hapifhir/hapi-fhir/wiki/Getting-Help
-
-## Prerequisites
-
-In order to use this sample, you should have:
-
-- [This project](https://github.com/hapifhir/hapi-fhir-jpaserver-starter) checked out. You may wish to create a GitHub Fork of the project and check that out instead so that you can customize the project and save the results to GitHub.
-
-### and either
- - Oracle Java (JDK) installed: Minimum JDK17 or newer.
- - Apache Maven build tool (newest version)
-
-### or
- - Docker, as the entire project can be built using multistage docker (with both JDK and maven wrapped in docker) or used directly from [Docker Hub](https://hub.docker.com/r/hapiproject/hapi)
-
-## Running via [Docker Hub](https://hub.docker.com/r/hapiproject/hapi)
-
-Each tagged/released version of `hapi-fhir-jpaserver` is built as a Docker image and published to Docker hub. To run the published Docker image from DockerHub:
-
+### Basic FHIR model Hints
+**[Extensions:](https://hapifhir.io/hapi-fhir/docs/model/profiles_and_extensions.html)** are a [FHIR standarized](https://www.hl7.org/fhir/extensibility.html) way of adding addional information to a resource. Extensions do not necessarily point to other resources but only act as an extra information holder.
 ```
-docker pull hapiproject/hapi:latest
-docker run -p 8080:8080 hapiproject/hapi:latest
-```
-
-This will run the docker image with the default configuration, mapping port 8080 from the container to port 8080 in the host. Once running, you can access `http://localhost:8080/` in the browser to access the HAPI FHIR server's UI or use `http://localhost:8080/fhir/` as the base URL for your REST requests.
-
-If you change the mapped port, you need to change the configuration used by HAPI to have the correct `hapi.fhir.tester` property/value.
-
-### Configuration via environment variables
-
-You can customize HAPI directly from the `run` command using environment variables. For example:
-
-```
-docker run -p 8080:8080 -e hapi.fhir.default_encoding=xml hapiproject/hapi:latest
-```
-
-HAPI looks in the environment variables for properties in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file for defaults.
-
-### Configuration via overridden application.yaml file and using Docker
-
-You can customize HAPI by telling HAPI to look for the configuration file in a different location, eg.:
-
-```
-docker run -p 8090:8080 -v $(pwd)/yourLocalFolder:/configs -e "--spring.config.location=file:///configs/another.application.yaml" hapiproject/hapi:latest
-```
-Here, the configuration file (*another.application.yaml*) is placed locally in the folder *yourLocalFolder*.
-
-
-
-```
-docker run -p 8090:8080 -e "--spring.config.location=classpath:/another.application.yaml" hapiproject/hapi:latest
-```
-Here, the configuration file (*another.application.yaml*) is part of the compiled set of resources.
-
-### Example using ``docker-compose.yml`` for docker-compose
-
-```yaml
-version: '3.7'
-
-services:
-  fhir:
-    container_name: fhir
-    image: "hapiproject/hapi:latest"
-    ports:
-      - "8080:8080"
-    configs:
-      - source: hapi
-        target: /app/config/application.yaml
-    depends_on:
-      - db
-
-
-  db:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: admin
-      POSTGRES_USER: admin
-      POSTGRES_DB: hapi
-    volumes:
-      - ./hapi.postgress.data:/var/lib/postgresql/data
-
-configs:
-  hapi:
-     file: ./hapi.application.yaml
-```
-
-Provide the following content in ``./hapi.application.yaml``:
-
-```yaml
-spring:
-  datasource:
-    url: 'jdbc:postgresql://db:5432/hapi'
-    username: admin
-    password: admin
-    driverClassName: org.postgresql.Driver
-  jpa:
-    properties:
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
-      hibernate.search.enabled: false
-```
-
-### Example running custom interceptor using docker-compose
-
-This example is an extension of the above one, now adding a custom interceptor.
-
-```yaml
-version: '3.7'
-
-services:
-  fhir:
-    container_name: fhir
-    image: "hapiproject/hapi:latest"
-    ports:
-      - "8080:8080"
-    configs:
-      - source: hapi
-        target: /app/config/application.yaml
-      - source: hapi-extra-classes
-        target: /app/extra-classes
-    depends_on:
-      - db
-
-  db:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: admin
-      POSTGRES_USER: admin
-      POSTGRES_DB: hapi
-    volumes:
-      - ./hapi.postgress.data:/var/lib/postgresql/data
-
-configs:
-  hapi:
-     file: ./hapi.application.yaml
-  hapi-extra-classes:
-     file: ./hapi-extra-classes
-```
-
-Provide the following content in ``./hapi.application.yaml``:
-
-```yaml
-spring:
-  datasource:
-    url: 'jdbc:postgresql://db:5432/hapi'
-    username: admin
-    password: admin
-    driverClassName: org.postgresql.Driver
-  jpa:
-    properties:
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
-      hibernate.search.enabled: false
-hapi:
-  fhir:
-    custom-bean-packages: the.package.containing.your.interceptor
-    custom-interceptor-classes: the.package.containing.your.interceptor.YourInterceptor
-```
-
-The basic interceptor structure would be like this:
-
-```java
-package the.package.containing.your.interceptor;
-
-import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.springframework.stereotype.Component;
-
-import ca.uhn.fhir.interceptor.api.Hook;
-import ca.uhn.fhir.interceptor.api.Interceptor;
-import ca.uhn.fhir.interceptor.api.Pointcut;
-
-@Component
-@Interceptor
-public class YourInterceptor
 {
-    @Hook(Pointcut.STORAGE_PRECOMMIT_RESOURCE_CREATED)
-    public void resourceCreated(IBaseResource newResource)
+  "extension": [
     {
-        System.out.println("YourInterceptor.resourceCreated");
+      "url": "http://someserver/some-path",
+      "valueCode": "I"
     }
+  ],
+  "text": "Chief Red Cloud"
 }
 ```
-
-## Running locally
-
-The easiest way to run this server entirely depends on your environment requirements. The following ways are supported:
-
-### Using jetty
-```bash
-mvn -Pjetty spring-boot:run
+**[Resource references](https://hapifhir.io/hapi-fhir/docs/model/working_with_resources.html)** are a [FHIR standard](https://www.hl7.org/fhir/references.html) to reference to a different resource. I.e. an ImagingStudy can have a resource reference to a Practioner, an Organization, Patient. This way the resources are linked with each other.
+```
+ "subject": {
+   "reference" : "http://someserver/some-path",
+   "type" : "Patient"
+ }
 ```
 
-The Server will then be accessible at http://localhost:8080/fhir and the CapabilityStatement will be found at http://localhost:8080/fhir/metadata.
+## JPA Server setup as Metadata register
+This set-up is only created for Linux, however, Windows would work as well.
+To get started:
+1. Clone or fork the JPA server starter GitHub repository: https://github.com/minvws/hapi-fhir-jpaserver-starter
+2. Install a JDK: Minimum JDK17 or newer. A good [OpenJDK](https://openjdk.org/) is Azul Zulu: https://www.azul.com/downloads/?package=jdk#zulu
+3. If your editor has no Maven support, install Maven with the following link: https://maven.apache.org/download.cgi
+4. Install Docker: https://docs.docker.com/engine/install/
+5. To start a PostgreSQL database container run: \
+   `docker compose up -d`
+6. start the basic JPA server by running: \
+   `mvn spring-boot:run`
+7. When the JPA server is up and running view the endpoint documentation at: http://localhost:8080/fhir
 
-### Using Spring Boot
-```bash
-mvn spring-boot:run
+
+_To test the HAPI with the [Timeline](https://github.com/minvws/nl-irealisatie-zmodules-pgo-demo) service,
+add at least an ImagingStudy to the HAPI fhir database._
+
+**To easily set up sample FHIR entries use the following steps:**
+1. Run JPA server
+2. Open new terminal in project directory
+3. Run the following command to get a bundle with sample data loaded in:
+
+```curl
+   curl -X POST http://localhost:8080/fhir \
+   -H "Content-Type: application/json" \
+   --data @fhir_examples/bundle.json
 ```
 
-The Server will then be accessible at http://localhost:8080/fhir and the CapabilityStatement will be found at http://localhost:8080/fhir/metadata.
+4. Test whether the HAPI has successfully gotten the data:
 
-If you want to run this server on a different port, you can change the port in the `src/main/resources/application.yaml` file as follows:
-
-```yaml
-server:
-#  servlet:
-#    context-path: /example/path
-  port: 8888
+```curl 
+curl -X GET http://localhost:8080/fhir/Patient/3
 ```
 
-The Server will then be accessible at http://localhost:8888/fhir and the CapabilityStatement will be found at http://localhost:8888/fhir/metadata. Remember to adjust your overlay configuration in the `application.yaml` file to the following:
-
-```yaml
-    tester:
-      -
-          id: home
-          name: Local Tester
-          server_address: 'http://localhost:8888/fhir'
-          refuse_to_fetch_third_party_urls: false
-          fhir_version: R4
-```
-
-### Using Spring Boot with :run
-```bash
-mvn clean spring-boot:run -Pboot
-```
-Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to the following:
-
-```yaml
-    tester:
-      -
-          id: home
-          name: Local Tester
-          server_address: 'http://localhost:8080/fhir'
-          refuse_to_fetch_third_party_urls: false
-          fhir_version: R4
-```
-
-### Using Spring Boot
-```bash
-mvn clean package spring-boot:repackage -DskipTests=true -Pboot && java -jar target/ROOT.war
-```
-Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust your overlay configuration in the application.yaml to the following:
-
-```yaml
-    tester:
-      -
-          id: home
-          name: Local Tester
-          server_address: 'http://localhost:8080/fhir'
-          refuse_to_fetch_third_party_urls: false
-          fhir_version: R4
-```
-### Using Spring Boot and Google distroless
-```bash
-mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=distroless-hapi && docker run -p 8080:8080 distroless-hapi
-```
-Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust your overlay configuration in the application.yaml to the following:
-
-```yaml
-    tester:
-      -
-          id: home
-          name: Local Tester
-          server_address: 'http://localhost:8080/fhir'
-          refuse_to_fetch_third_party_urls: false
-          fhir_version: R4
-```
-
-### Using the Dockerfile and multistage build
-```bash
-./build-docker-image.sh && docker run -p 8080:8080 hapi-fhir/hapi-fhir-jpaserver-starter:latest
-```
-Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust your overlay configuration in the application.yaml to the following:
-
-```yaml
-    tester:
-      -
-          id: home
-          name: Local Tester
-          server_address: 'http://localhost:8080/fhir'
-          refuse_to_fetch_third_party_urls: false
-          fhir_version: R4
-```
-
-## Configurations
-
-Much of this HAPI starter project can be configured using the yaml file in _src/main/resources/application.yaml_. By default, this starter project is configured to use H2 as the database.
-
-### MySQL configuration
-
-HAPI FHIR JPA Server does not support MySQL as it is deprecated.
-
-See more at https://hapifhir.io/hapi-fhir/docs/server_jpa/database_support.html
-
-### PostgreSQL configuration
-
-To configure the starter app to use PostgreSQL, instead of the default H2, update the application.yaml file to have the following:
-
-```yaml
-spring:
-  datasource:
-    url: 'jdbc:postgresql://localhost:5432/hapi'
-    username: admin
-    password: admin
-    driverClassName: org.postgresql.Driver
-  jpa:
-    properties:
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
-      hibernate.search.enabled: false
-
-      # Then comment all hibernate.search.backend.*
-```
-
-Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicitly skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
-
-### Microsoft SQL Server configuration
-
-To configure the starter app to use MS SQL Server, instead of the default H2, update the application.yaml file to have the following:
-
-```yaml
-spring:
-  datasource:
-    url: 'jdbc:sqlserver://<server>:<port>;databaseName=<databasename>'
-    username: admin
-    password: admin
-    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
-```
-
-Also, make sure you are not setting the Hibernate dialect explicitly, in other words, remove any lines similar to:
-
-```
-hibernate.dialect: {some none Microsoft SQL dialect}
-```
-
-
-Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicitly skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure.
-
-
-NOTE: MS SQL Server by default uses a case-insensitive codepage. This will cause errors with some operations - such as when expanding case-sensitive valuesets (UCUM) as there are unique indexes defined on the terminology tables for codes.
-It is recommended to deploy a case-sensitive database prior to running HAPI FHIR when using MS SQL Server to avoid these and potentially other issues.
-
-## Adding custom interceptors
-Custom interceptors can be registered with the server by including the property `hapi.fhir.custom-interceptor-classes`. This will take a comma separated list of fully-qualified class names which will be registered with the server.
-Interceptors will be discovered in one of two ways:
-
-1) discovered from the Spring application context as existing Beans (can be used in conjunction with `hapi.fhir.custom-bean-packages`) or registered with Spring via other methods
-
-or
-
-2) classes will be instantiated via reflection if no matching Bean is found
-
-## Adding custom operations(providers)
-Custom operations(providers) can be registered with the server by including the property `hapi.fhir.custom-provider-classes`. This will take a comma separated list of fully-qualified class names which will be registered with the server.
-Providers will be discovered in one of two ways:
-
-1) discovered from the Spring application context as existing Beans (can be used in conjunction with `hapi.fhir.custom-bean-packages`) or registered with Spring via other methods
-
-or
-
-2) classes will be instantiated via reflection if no matching Bean is found
-
-## Customizing The Web Testpage UI
-
-The UI that comes with this server is an exact clone of the server available at [http://hapi.fhir.org](http://hapi.fhir.org). You may skin this UI if you'd like. For example, you might change the introductory text or replace the logo with your own.
-
-The UI is customized using [Thymeleaf](https://www.thymeleaf.org/) template files. You might want to learn more about Thymeleaf, but you don't necessarily need to: they are quite easy to figure out.
-
-Several template files that can be customized are found in the following directory: [https://github.com/hapifhir/hapi-fhir-jpaserver-starter/tree/master/src/main/webapp/WEB-INF/templates](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/tree/master/src/main/webapp/WEB-INF/templates)
-
-## Deploying to an Application Server
-
-Using the Maven-Embedded Jetty method above is convenient, but it is not a good solution if you want to leave the server running in the background.
-
-Most people who are using HAPI FHIR JPA as a server that is accessible to other people (whether internally on your network or publically hosted) will do so using an Application Server, such as [Apache Tomcat](http://tomcat.apache.org/) or [Jetty](https://www.eclipse.org/jetty/). Note that any Servlet 3.0+ compatible Web Container will work (e.g Wildfly, Websphere, etc.).
-
-Tomcat is very popular, so it is a good choice simply because you will be able to find many tutorials online. Jetty is a great alternative due to its fast startup time and good overall performance.
-
-To deploy to a container, you should first build the project:
-
-```bash
-mvn clean install
-```
-
-This will create a file called `ROOT.war` in your `target` directory. This should be installed in your Web Container according to the instructions for your particular container. For example, if you are using Tomcat, you will want to copy this file to the `webapps/` directory.
-
-Again, browse to the following link to use the server (note that the port 8080 may not be correct depending on how your server is configured).
-
-[http://localhost:8080/](http://localhost:8080/)
-
-You will then be able to access the JPA server e.g. using http://localhost:8080/fhir/metadata.
-
-If you would like it to be hosted at eg. hapi-fhir-jpaserver, eg. http://localhost:8080/hapi-fhir-jpaserver/ or http://localhost:8080/hapi-fhir-jpaserver/fhir/metadata - then rename the WAR file to ```hapi-fhir-jpaserver.war``` and adjust the overlay configuration accordingly e.g.
-
-```yaml
-    tester:
-      -
-          id: home
-          name: Local Tester
-          server_address: 'http://localhost:8080/hapi-fhir-jpaserver/fhir'
-          refuse_to_fetch_third_party_urls: false
-          fhir_version: R4
-```
-
-
-## Deploy with docker compose
-
-Docker compose is a simple option to build and deploy containers. To deploy with docker compose, you should build the project
-with `mvn clean install` and then bring up the containers with `docker-compose up -d --build`. The server can be
-reached at http://localhost:8080/.
-
-In order to use another port, change the `ports` parameter
-inside `docker-compose.yml` to `8888:8080`, where 8888 is a port of your choice.
-
-The docker compose set also includes PostgreSQL database, if you choose to use PostgreSQL instead of H2, change the following
-properties in `src/main/resources/application.yaml`:
-
-```yaml
-spring:
-  datasource:
-    url: 'jdbc:postgresql://hapi-fhir-postgres:5432/hapi'
-    username: admin
-    password: admin
-    driverClassName: org.postgresql.Driver
-jpa:
-  properties:
-    hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
-    hibernate.search.enabled: false
-
-    # Then comment all hibernate.search.backend.*
-```
-
-## Running hapi-fhir-jpaserver directly from IntelliJ as Spring Boot
-Make sure you run with the maven profile called ```boot``` and NOT also ```jetty```. Then you are ready to press debug the project directly without any extra Application Servers.
-
-## Running hapi-fhir-jpaserver-example in Tomcat from IntelliJ
-
-Install Tomcat.
-
-Make sure you have Tomcat set up in IntelliJ.
-
-- File->Settings->Build, Execution, Deployment->Application Servers
-- Click +
-- Select "Tomcat Server"
-- Enter the path to your tomcat deployment for both Tomcat Home (IntelliJ will fill in base directory for you)
-
-Add a Run Configuration for running hapi-fhir-jpaserver-example under Tomcat
-
-- Run->Edit Configurations
-- Click the green +
-- Select Tomcat Server, Local
-- Change the name to whatever you wish
-- Uncheck the "After launch" checkbox
-- On the "Deployment" tab, click the green +
-- Select "Artifact"
-- Select "hapi-fhir-jpaserver-example:war"
-- In "Application context" type /hapi
-
-Run the configuration.
-
-- You should now have an "Application Servers" in the list of windows at the bottom.
-- Click it.
-- Select your server, and click the green triangle (or the bug if you want to debug)
-- Wait for the console output to stop
-
-Point your browser (or fiddler, or what have you) to `http://localhost:8080/hapi/baseDstu3/Patient`
-
-## Enabling Subscriptions
-
-The server may be configured with subscription support by enabling properties in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file:
-
-- `hapi.fhir.subscription.resthook_enabled` - Enables REST Hook subscriptions, where the server will make an outgoing connection to a remote REST server
-
-- `hapi.fhir.subscription.email.*` - Enables email subscriptions. Note that you must also provide the connection details for a usable SMTP server.
-
-- `hapi.fhir.subscription.websocket_enabled` - Enables websocket subscriptions. With this enabled, your server will accept incoming websocket connections on the following URL (this example uses the default context path and port, you may need to tweak depending on your deployment environment): [ws://localhost:8080/websocket](ws://localhost:8080/websocket)
-
-## Enabling Clinical Reasoning
-
-Set `hapi.fhir.cr.enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable [Clinical Quality Language](https://cql.hl7.org/) on this server.  An alternate settings file, [cds.application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/cds.application.yaml), exists with the Clinical Reasoning module enabled and default settings that have been found to work with most CDS and dQM test cases.
-
-## Enabling CDS Hooks
-
-Set `hapi.fhir.cdshooks.enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable [CDS Hooks](https://cds-hooks.org/) on this server.  The Clinical Reasoning module must also be enabled because this implementation of CDS Hooks includes [CDS on FHIR](https://build.fhir.org/clinicalreasoning-cds-on-fhir.html).  An example CDS Service using CDS on FHIR is available in the CdsHooksServletIT test class.
-
-## Enabling MDM (EMPI)
-
-Set `hapi.fhir.mdm_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable MDM on this server.  The MDM matching rules are configured in [mdm-rules.json](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/mdm-rules.json).  The rules in this example file should be replaced with actual matching rules appropriate to your data. Note that MDM relies on subscriptions, so for MDM to work, subscriptions must be enabled.
-
-## Using Elasticsearch
-
-By default, the server will use embedded lucene indexes for terminology and fulltext indexing purposes. You can switch this to using lucene by editing the properties in [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml)
-
-For example:
-
-```properties
-elasticsearch.enabled=true
-elasticsearch.rest_url=localhost:9200
-elasticsearch.username=SomeUsername
-elasticsearch.password=SomePassword
-elasticsearch.protocol=http
-elasticsearch.required_index_status=YELLOW
-elasticsearch.schema_management_strategy=CREATE
-```
-
-## Enabling LastN
-
-Set `hapi.fhir.lastn_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable the $lastn operation on this server.  Note that the $lastn operation relies on Elasticsearch, so for $lastn to work, indexing must be enabled using Elasticsearch.
-
-## Enabling Resource to be stored in Lucene Index
-
-Set `hapi.fhir.store_resource_in_lucene_index_enabled` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable storing of resource json along with Lucene/Elasticsearch index mappings.
-
-## Changing cached search results time
-
-It is possible to change the cached search results time. The option `reuse_cached_search_results_millis` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) is 6000 miliseconds by default.
-Set `reuse_cached_search_results_millis: -1` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to ignore the cache time every search.
-
-## Build the distroless variant of the image (for lower footprint and improved security)
-
-The default Dockerfile contains a `release-distroless` stage to build a variant of the image
-using the `gcr.io/distroless/java-debian10:11` base image:
-
-```sh
-docker build --target=release-distroless -t hapi-fhir:distroless .
-```
-
-Note that distroless images are also automatically built and pushed to the container registry,
-see the `-distroless` suffix in the image tags.
-
-## Adding custom operations
-
-To add a custom operation, refer to the documentation in the core hapi-fhir libraries [here](https://hapifhir.io/hapi-fhir/docs/server_plain/rest_operations_operations.html).
-
-Within `hapi-fhir-jpaserver-starter`, create a generic class (that does not extend or implement any classes or interfaces), add the `@Operation` as a method within the generic class, and then register the class as a provider using `RestfulServer.registerProvider()`.
-
-## Runtime package install
-
-It's possible to install a FHIR Implementation Guide package (`package.tgz`) either from a published package or from a local package with the `$install` operation, without having to restart the server. This is available for R4 and R5.
-
-This feature must be enabled in the application.yaml (or docker command line):
-
-```yaml
-hapi:
-  fhir:
-    ig_runtime_upload_enabled: true
-```
-
-The `$install` operation is triggered with a POST to `[server]/ImplementationGuide/$install`, with the payload below:
-
+5. It should return something like:
 ```json
 {
-  "resourceType": "Parameters",
-  "parameter": [
-    {
-      "name": "npmContent",
-      "valueBase64Binary": "[BASE64_ENCODED_NPM_PACKAGE_DATA]"
-    }
-  ]
+   "resourceType": "Patient",
+   "id": "3",
+   "meta": {
+      "versionId": "1",
+      "lastUpdated": "2024-09-06T09:41:59.937+02:00",
+      "source": "#GdSt18FL7qntkzYu"
+   },
+   "identifier": [ {
+      "system": "http://hospital.org/patients",
+      "value": "12345"
+   } ],
+   "name": [ {
+      "use": "official",
+      "family": "Doe",
+      "given": [ "John" ]
+   } ],
+   "gender": "male",
+   "birthDate": "1980-01-01"
 }
 ```
 
-## Enable OpenTelemetry auto-instrumentation
+Before you request the timeline service ensure your endpoint is registered in the [address](https://github.com/minvws/nl-irealisatie-zmodules-addressing-register) and
+the [pseudonym-exchange-service](https://github.com/minvws/nl-irealisatie-zmodules-pseudonym-service) knows your provider-id.
+To find your provider-id, look in the [settings file](src/main/resources/application.yaml).
 
-The container image includes the [OpenTelemetry Java auto-instrumentation](https://github.com/open-telemetry/opentelemetry-java-instrumentation)
-Java agent JAR which can be used to export telemetry data for the HAPI FHIR JPA Server. You can enable it by specifying the `-javaagent` flag,
-for example by overriding the `JAVA_TOOL_OPTIONS` environment variable:
-
-```sh
-docker run --rm -it -p 8080:8080 \
-  -e JAVA_TOOL_OPTIONS="-javaagent:/app/opentelemetry-javaagent.jar" \
-  -e OTEL_TRACES_EXPORTER="jaeger" \
-  -e OTEL_SERVICE_NAME="hapi-fhir-server" \
-  -e OTEL_EXPORTER_JAEGER_ENDPOINT="http://jaeger:14250" \
-  docker.io/hapiproject/hapi:latest
+In the address DB you should have a entry that sets the address endpoint to: http://host.docker.internal:8080/fhir
+and to set up the provider in the pseudonym service with the following steps:
+1. do the following curl request in the terminal
+```curl
+curl -X 'POST' \
+  'http://localhost:8504/register' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "provider_id": "MY_HAPI",
+  "bsn_hash": "2b826afa1c71f571a007dad61ce9fb9b63a24a328aa4ac009484a198ff565c51"
+}'
 ```
+2. Copy generated pseudonym, it would look like the following:
+```{"pseudonym":"79693551-2195-464f-9e8f-b5a7b90ec854"}```
+3. Open database editor to the `hapi` database
+4. Go to table `hfj_res_ver`
+5. Edit the extension in the `patient` resource entry
+![assets/img.png](assets/img.png)
+6. Replace the patient's extensions UUID with the copied pseudonym
 
-You can configure the agent using environment variables or Java system properties, see <https://opentelemetry.io/docs/instrumentation/java/automatic/agent-config/> for details.
+Finally test whether the pseudonym service and the right pseudonym are all setup correctly:
+1. Do curl request, this same pseudonym is used by the timeline service as a sample pseudonym and it is coupled to the same bsn_hash that was used with setting the provider ID:
+```curl
+curl 'http://localhost:8080/fhir/ImagingStudy/_search?pseudonym=677b33c7-30e0-4fe1-a740-87fd73c4dfaf'
+```
+If you do not get any imaging studies back in the response then the HAPI is not set up correctly. 
+
+2. If you do get imaging studies back then try if [timeline service](http://localhost:8500/) works as well
+
+### Setting properties
+In the [application.yaml](src/main/resources/application.yaml) file, you can configure most server and HAPI settings, enable or disable components, and set custom resource providers and interceptors.  
+The endpoint of the Pseudonym service and the target provider ID are both defined in this file as well.
+
+**Custom Resource Providers:**
+- **[PatientResourceProvider](src/main/java/ca/uhn/fhir/jpa/starter/ResourceProvider/PatientResourceProvider.java)**: Adds an extension with a pseudonym at a create Patient request.
+- **[BundlePlainProvider](src/main/java/ca/uhn/fhir/jpa/starter/ResourceProvider/BundlePlainProvider.java)**: Adds extension to Patient when patient is added through a bundle upload.
+- **[ImagingStudyResourceProvider](src/main/java/ca/uhn/fhir/jpa/starter/ResourceProvider/ImagingStudyResourceProvider.java)**: Modifies the search method to handle pseudonyms, which are processed through a pseudonym exchange service to match patients and retrieve related imaging studies.
+
+**Custom Interceptor**
+- [RemovePatientExtensionsInterceptor](src/main/java/ca/uhn/fhir/jpa/starter/Interceptors/RemovePatientExtensionsInterceptor.java): Removes the pseudonym extension from Patients before giving a response. This is important since the pseudonym should only be used internally.
+
+![](https://public.images.stashpad.live/wuSV7B9TYtAjBQB0Woh2v03a)
+
+## TODO's
+- [ ] Instead of an Interceptor an separate database can be used to store the patient id with pseudonym to ensure the pseudonym is never shown in any response, but it can still be used to query for patients.
+- [ ] Add parts...
+- [ ] Optimize code
