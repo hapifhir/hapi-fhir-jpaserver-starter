@@ -34,12 +34,10 @@ spring:
     baselineOnMigrate: true
     fail-on-missing-locations: false
   datasource:
-    #url: 'jdbc:h2:file:./target/database/h2'
-    url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driverClassName: org.h2.Driver
-    max-active: 15
+    url: 'jdbc:postgresql://localhost:8432/hapi'
+    username: admin
+    password: admin
+    driverClassName: org.postgresql.Driver
 
     # database connection pool size
     hikari:
@@ -52,7 +50,7 @@ spring:
       #Hibernate dialect is automatically detected except Postgres and H2.
       #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
       #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
   #      hibernate.hbm2ddl.auto: update
   #      hibernate.jdbc.batch_size: 20
   #      hibernate.cache.use_query_cache: false
@@ -73,6 +71,9 @@ spring:
 #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticAnalysisConfigurer
 hapi:
   fhir:
+    pseudonym-exchange-service:
+      endpoint: 'http://localhost:8504/exchange'
+      target-provider-id: 'MY_HAPI'
     ### This flag when enabled to true, will avail evaluate measure operations from CR Module.
     ### Flag is false by default, can be passed as command line argument to override.
     cr:
@@ -126,7 +127,7 @@ hapi:
     ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
     openapi_enabled: true
     ### This is the FHIR version. Choose between, DSTU2, DSTU3, R4 or R5
-    fhir_version: R4
+    fhir_version: R5
     ### Flag is false by default. This flag enables runtime installation of IG's.
     ig_runtime_upload_enabled: false
     ### This flag when enabled to true, will avail evaluate measure operations from CR Module.
@@ -236,12 +237,12 @@ hapi:
     # comma-separated list of fully qualified interceptor classes. 
     # classes listed here will be fetched from the Spring context when combined with 'custom-bean-packages', 
     # or will be instantiated via reflection using an no-arg contructor; then registered with the server  
-    #custom-interceptor-classes:  
+    custom-interceptor-classes: ca.uhn.fhir.jpa.starter.Interceptors.RemovePatientExtensionsInterceptor
 
     # comma-separated list of fully qualified provider classes. 
     # classes listed here will be fetched from the Spring context when combined with 'custom-bean-packages', 
     # or will be instantiated via reflection using an no-arg contructor; then registered with the server  
-    #custom-provider-classes:  
+    custom-provider-classes: ca.uhn.fhir.jpa.starter.ResourceProvider.BundlePlainProvider, ca.uhn.fhir.jpa.starter.ResourceProvider.PatientResourceProvider, ca.uhn.fhir.jpa.starter.ResourceProvider.ImagingStudyResourceProvider
     
     # Threadpool size for BATCH'ed GETs in a bundle.
     #    bundle_batch_pool_size: 10

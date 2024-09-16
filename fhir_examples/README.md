@@ -1,0 +1,2 @@
+This directory contains some example FHIR json files that can be used for uploading to the service. 
+To more quickly add the resources to the database POST the bundle in the body of a request to: localhost:8080/fhir

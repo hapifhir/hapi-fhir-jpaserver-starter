@@ -420,6 +420,7 @@
                     probably solved in 3.2.1 https://github.com/spring-projects/spring-boot/issues/38585
                     (at the moment only tomcat works)
                     -->
+                    <fork>false</fork>
                     <loaderImplementation>CLASSIC</loaderImplementation>
                 </configuration>
                 <executions>
