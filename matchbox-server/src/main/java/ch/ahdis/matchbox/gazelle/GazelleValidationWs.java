@@ -1,5 +1,6 @@
 package ch.ahdis.matchbox.gazelle;
 
+import ca.uhn.fhir.jpa.model.entity.NpmPackageVersionResourceEntity;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.util.StopWatch;
 import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
@@ -96,17 +97,32 @@ public class GazelleValidationWs {
 	@GetMapping(path = PROFILES_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<ValidationProfile> getProfiles() {
 		// Filter the extensions, because they won't be validated directly
-		return this.structureDefinitionProvider.getPackageResources().stream()
+		final List<NpmPackageVersionResourceEntity> entities =
+			this.structureDefinitionProvider.getPackageResources().stream()
 			.filter(packageVersionResource -> !packageVersionResource.getFilename().startsWith(SD_EXTENSION_TITLE_PREFIX))
-			.map(packageVersionResource -> {
+			.toList();
+
+		final var profiles = new ArrayList<ValidationProfile>(entities.size()*2);
+		entities.forEach(packageVersionResource -> {
 				final var profile = new ValidationProfile();
 				final var version = packageVersionResource.getCanonicalVersion();
 				profile.setProfileID("%s|%s".formatted(packageVersionResource.getCanonicalUrl(), version));
 				// PATCHed: filename contains the StructureDefinition title.
 				profile.setProfileName("%s (%s)".formatted(packageVersionResource.getFilename(), version));
 				profile.setDomain(packageVersionResource.getPackageVersion().getPackageId());
-				return profile;
-			}).toList();
+				profiles.add(profile);
+
+				// If the package is current, we also add it version-less
+				if (packageVersionResource.getPackageVersion().isCurrentVersion()) {
+					final var profile2 = new ValidationProfile();
+					profile2.setProfileID(packageVersionResource.getCanonicalUrl());
+					// PATCHed: filename contains the StructureDefinition title.
+					profile2.setProfileName(packageVersionResource.getFilename());
+					profile2.setDomain(packageVersionResource.getPackageVersion().getPackageId());
+					profiles.add(profile2);
+				}
+			});
+		return profiles;
 	}
 
 	/**

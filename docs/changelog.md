@@ -1,10 +1,11 @@
-2024/09/ Release 3.9.1
+2024/09/16 Release 3.9.1
 - Make CORS configurable, default not activated make cors configurable (now activated) [#271](https://github.com/ahdis/matchbox/issues/271)
 - server API FML transforms between different FHIR versions (R4, R4B, R5) [#265](https://github.com/ahdis/matchbox/issues/265), set flag xVersion
 - show a notification on errors in the validation GUI [#272](https://github.com/ahdis/matchbox/issues/272)
 - ignore info/warnings also in slicing info [#273](https://github.com/ahdis/matchbox/issues/273)
 - Gazelle validation reports with no issues should pass [#274](https://github.com/ahdis/matchbox/issues/274)
 - update frontend dependencies
+- provide version-less Gazelle profiles for current packages [#276](https://github.com/ahdis/matchbox/issues/276)
 
 2024/09/10 Release 3.9.0
 
