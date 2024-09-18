@@ -43,9 +43,9 @@ public class TusController {
 	@RequestMapping(method = RequestMethod.POST, value = "/transferImage")
 	public ResponseEntity<String> getBytesAndSaveImages(@RequestParam("uploadUrl") String uploadUrl) {
 		try {
-			tusService.getBytesAndSaveImage(tusFileUploadService, uploadUrl, TUSFileTypes.IMAGE.name());
+			tusService.transferToFinalStorage(uploadUrl, TUSFileTypes.IMAGE.name());
 			return ResponseEntity.ok("Images uploaded and saved successfully.");
-		} catch (TusException | IOException e) {
+		} catch (TusException | IOException | UnsupportedAudioFileException e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the images.");
 		}
@@ -55,16 +55,16 @@ public class TusController {
 	public ResponseEntity<String> getBytesAndSaveFile(@RequestParam("uploadUrl") String uploadUrl, @RequestParam("fileType") String fileType) {
 		if (Objects.equals(fileType, TUSFileTypes.IMAGE.name())){
 			try {
-				tusService.getBytesAndSaveImage(tusFileUploadService, uploadUrl, TUSFileTypes.IMAGE.name());
+				tusService.transferToFinalStorage(uploadUrl, TUSFileTypes.IMAGE.name());
 				return ResponseEntity.ok("Images uploaded and saved successfully.");
-			} catch (TusException | IOException e) {
+			} catch (TusException | IOException | UnsupportedAudioFileException e) {
 				e.printStackTrace();
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the images.");
 			}
 		}
 		else if (Objects.equals(fileType, TUSFileTypes.LOFILE.name())){
 			try {
-				tusService.saveBytesToFile(tusFileUploadService, uploadUrl, fileType);
+				tusService.transferToFinalStorage(uploadUrl, fileType);
 				return ResponseEntity.ok("Images uploaded and saved successfully.");
 			} catch (TusException | IOException | UnsupportedAudioFileException e) {
 				e.printStackTrace();
@@ -73,7 +73,7 @@ public class TusController {
 		}
 		else if (Objects.equals(fileType, TUSFileTypes.AUDIO.name())){
 			try{
-				tusService.saveBytesToFile(tusFileUploadService, uploadUrl, fileType);
+				tusService.transferToFinalStorage(uploadUrl, fileType);
 				return ResponseEntity.ok("Audio File uploaded and saved successfully.");
 			} catch (TusException | IOException | UnsupportedAudioFileException e){
 				e.printStackTrace();
@@ -81,6 +81,17 @@ public class TusController {
 			}
 		} else{
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unsupported file type.");
+		}
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/transferCalibFile")
+	public ResponseEntity<String> transferCalibFile(@RequestParam("uploadUrl") String uploadUrl, @RequestParam("fileType") String fileType){
+		try{
+			tusService.transferToFinalStorage(uploadUrl, fileType);
+			return ResponseEntity.ok("Field Calibration File Uploaded Successfully");
+		} catch (TusException | IOException | UnsupportedAudioFileException e){
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while uploading the field calibration file");
 		}
 	}
 }

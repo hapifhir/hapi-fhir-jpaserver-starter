@@ -78,6 +78,7 @@ hapi:
       #      hibernate.cache.use_minimal_puts: false
       image_path: image
       hyper_spectral_files_path: hyperSpectralFiles
+      calib_path: hyperSpectralFiles/calibration
       audio_recordings_path: audio
       country_org_id: nigeria
 ###    These settings will enable fulltext search with lucene

@@ -107,6 +107,7 @@ public class AppProperties {
 	private Integer bundle_batch_pool_max_size = 100;
 	private List<String> local_base_urls = new ArrayList<>();
 	private String image_path = null;
+	private String calib_path = null;
 	private String audio_recordings_path = null;
 	private String notification_datasource_config_path = null;
 	private String gcp_credential_file_path = null;
@@ -121,6 +122,14 @@ public class AppProperties {
 	private Double minNoisePercentage = 10.0;
 	private List<String> organization_ids_for_caching = null;
 	private List<String> envs_for_caching = null;
+
+	public String getCalib_path() {
+		return calib_path;
+	}
+
+	public void setCalib_path(String calib_path) {
+		this.calib_path = calib_path;
+	}
 
 	public String getHyper_spectral_files_path() {
 		return hyper_spectral_files_path;
