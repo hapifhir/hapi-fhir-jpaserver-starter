@@ -109,9 +109,6 @@ postgresql:
   # see <https://github.com/bitnami/charts/tree/master/bitnami/postgresql> for details
   # if set to `false`, the values under `externalDatabase` are used
   enabled: true
-  primary:
-    containerSecurityContext:
-      readOnlyRootFilesystem: true
   auth:
     # -- name for a custom database to create
     database: "fhir"
@@ -234,9 +231,11 @@ curl:
   image:
     registry: docker.io
     repository: curlimages/curl
-    tag: 8.6.0@sha256:c3b8bee303c6c6beed656cfc921218c529d65aa61114eb9e27c62047a1271b9b
+    tag: 8.9.1@sha256:8addc281f0ea517409209f76832b6ddc2cabc3264feb1ebbec2a2521ffad24e4
 
 tests:
+  # -- whether the service account token should be auto-mounted for the test pods
+  automountServiceAccountToken: false
   # -- configure the test pods resource requests and limits
   resources: {}
   # limits:
