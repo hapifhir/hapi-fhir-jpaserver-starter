@@ -1,7 +1,7 @@
 spring:
   main:
     allow-circular-references: true
-    #allow-bean-definition-overriding: true
+    allow-bean-definition-overriding: true
   flyway:
     enabled: false
     check-location: false
@@ -20,11 +20,20 @@ spring:
     properties:
       hibernate.format_sql: false
       hibernate.show_sql: false
-      #Hibernate dialect is automatically detected except Postgres and H2.
-      #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
-      #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
 
+      #########################################
+      # Hibernate Dialect Setting
+      #########################################
+      # Use one of the following values:
+      # ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+      # ca.uhn.fhir.jpa.model.dialect.HapiFhirDerbyDialect
+      # ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
+      # ca.uhn.fhir.jpa.model.dialect.HapiFhirOracleDialect
+      # ca.uhn.fhir.jpa.model.dialect.HapiFhirSQLServerDialect
+      # ca.uhn.fhir.jpa.model.dialect.HapiFhirMySQLDialect (Deprecated!)
+      #########################################
       hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+      #########################################
       #      hibernate.hbm2ddl.auto: update
       #      hibernate.jdbc.batch_size: 20
       #      hibernate.cache.use_query_cache: false
@@ -64,9 +73,10 @@ hapi:
     #      swiss:
     #        name: swiss.mednet.fhir
     #        version: 0.8.0
+    #        reloadExisting : false
     #      example not from registry
     #      ips_1_0_0:
-    #        url: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
+    #        packageUrl: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
     #        name: hl7.fhir.uv.ips
     #        version: 1.0.0
     #    supported_resource_types:

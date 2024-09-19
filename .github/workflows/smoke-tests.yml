@@ -1,0 +1,41 @@
+# This workflow will build the Java project with Maven and peform IntelliJ smoke tests
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Smoke Tests
+
+on:
+  push:
+    branches:
+      - '**'
+    paths-ignore:
+      - "charts/**"
+  pull_request:
+    branches: [ master ]
+    paths-ignore:
+      - "charts/**"
+
+jobs:
+  build_and_smoke_test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout project
+      uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: 17
+        distribution: zulu
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml -Dmaven.test.skip=true
+    - name: Docker Pull HTTP client
+      run: docker pull jetbrains/intellij-http-client
+    - name: Start server with jetty
+      run: |
+        mvn -P jetty spring-boot:run & export JPA_PROCESS=$!
+        sleep 80
+    - name: Execute smoke tests
+      run: docker run --rm -v $PWD:/workdir --add-host host.docker.internal:host-gateway jetbrains/intellij-http-client -D src/test/smoketest/plain_server.http --env-file src/test/smoketest/http-client.env.json --env default
+
+    

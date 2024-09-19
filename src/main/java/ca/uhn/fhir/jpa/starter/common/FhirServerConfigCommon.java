@@ -1,23 +1,21 @@
 package ca.uhn.fhir.jpa.starter.common;
 
-import ca.uhn.fhir.jpa.api.config.DaoConfig;
+import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
-import ca.uhn.fhir.jpa.binstore.DatabaseBlobBinaryStorageSvcImpl;
+import ca.uhn.fhir.jpa.binstore.DatabaseBinaryContentStorageSvcImpl;
 import ca.uhn.fhir.jpa.config.HibernatePropertiesProvider;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings.CrossPartitionReferenceMode;
-import ca.uhn.fhir.jpa.model.entity.ModelConfig;
+import ca.uhn.fhir.jpa.model.config.SubscriptionSettings;
+import ca.uhn.fhir.jpa.model.entity.StorageSettings;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.util.JpaHibernatePropertiesProvider;
-import ca.uhn.fhir.jpa.subscription.channel.subscription.SubscriptionDeliveryHandlerFactory;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.EmailSenderImpl;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.IEmailSender;
-import ca.uhn.fhir.rest.server.mail.IMailSvc;
 import ca.uhn.fhir.rest.server.mail.MailConfig;
 import ca.uhn.fhir.rest.server.mail.MailSvc;
 import com.google.common.base.Strings;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
-import org.hl7.fhir.dstu2.model.Subscription;
 import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +25,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -37,209 +34,273 @@ import java.util.stream.Collectors;
 @EnableTransactionManagement
 public class FhirServerConfigCommon {
 
-  private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(FhirServerConfigCommon.class);
+	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(FhirServerConfigCommon.class);
+
+	public FhirServerConfigCommon(AppProperties appProperties) {
+		ourLog.info("Server configured to " + (appProperties.getAllow_contains_searches() ? "allow" : "deny")
+				+ " contains searches");
+		ourLog.info("Server configured to " + (appProperties.getAllow_multiple_delete() ? "allow" : "deny")
+				+ " multiple deletes");
+		ourLog.info("Server configured to " + (appProperties.getAllow_external_references() ? "allow" : "deny")
+				+ " external references");
+		ourLog.info("Server configured to " + (appProperties.getDao_scheduling_enabled() ? "enable" : "disable")
+				+ " DAO scheduling");
+		ourLog.info("Server configured to " + (appProperties.getDelete_expunge_enabled() ? "enable" : "disable")
+				+ " delete expunges");
+		ourLog.info(
+				"Server configured to " + (appProperties.getExpunge_enabled() ? "enable" : "disable") + " expunges");
+		ourLog.info(
+				"Server configured to " + (appProperties.getAllow_override_default_search_params() ? "allow" : "deny")
+						+ " overriding default search params");
+		ourLog.info("Server configured to "
+				+ (appProperties.getAuto_create_placeholder_reference_targets() ? "allow" : "disable")
+				+ " auto-creating placeholder references");
+		ourLog.info(
+				"Server configured to auto-version references at paths {}",
+				appProperties.getAuto_version_reference_at_paths());
+
+		if (appProperties.getSubscription().getEmail() != null) {
+			AppProperties.Subscription.Email email =
+					appProperties.getSubscription().getEmail();
+			ourLog.info("Server is configured to enable email with host '" + email.getHost() + "' and port "
+					+ email.getPort());
+			ourLog.info("Server will use '" + email.getFrom() + "' as the from email address");
+
+			if (!Strings.isNullOrEmpty(email.getUsername())) {
+				ourLog.info("Server is configured to use username '" + email.getUsername() + "' for email");
+			}
+
+			if (!Strings.isNullOrEmpty(email.getPassword())) {
+				ourLog.info("Server is configured to use a password for email");
+			}
+		}
+
+		if (appProperties.getSubscription().getResthook_enabled()) {
+			ourLog.info("REST-hook subscriptions enabled");
+		}
+
+		if (appProperties.getSubscription().getEmail() != null) {
+			ourLog.info("Email subscriptions enabled");
+		}
+
+		if (appProperties.getEnable_index_contained_resource() == Boolean.TRUE) {
+			ourLog.info("Indexed on contained resource enabled");
+		}
+	}
+
+	@Bean
+	public SubscriptionSettings subscriptionSettings(AppProperties appProperties) {
+		SubscriptionSettings subscriptionSettings = new SubscriptionSettings();
+		if (appProperties.getSubscription() != null) {
+			if (appProperties.getSubscription().getEmail() != null)
+				subscriptionSettings.setEmailFromAddress(
+					appProperties.getSubscription().getEmail().getFrom());
+
+			// Subscriptions are enabled by channel type
+			if (appProperties.getSubscription().getResthook_enabled()) {
+				ourLog.info("Enabling REST-hook subscriptions");
+				subscriptionSettings.addSupportedSubscriptionType(
+					org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.RESTHOOK);
+			}
+			if (appProperties.getSubscription().getEmail() != null) {
+				ourLog.info("Enabling email subscriptions");
+				subscriptionSettings.addSupportedSubscriptionType(
+					org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.EMAIL);
+			}
+			if (appProperties.getSubscription().getWebsocket_enabled()) {
+				ourLog.info("Enabling websocket subscriptions");
+				subscriptionSettings.addSupportedSubscriptionType(
+					org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
+			}
+
+		}
+		if (appProperties.getMdm_enabled()) {
+			// MDM requires the subscription of type message
+			ourLog.info("Enabling message subscriptions");
+			subscriptionSettings.addSupportedSubscriptionType(
+				org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.MESSAGE);
+		}
+		return subscriptionSettings;
+	}
+	/**
+	 * Configure FHIR properties around the JPA server via this bean
+	 */
+	@Bean
+	public JpaStorageSettings jpaStorageSettings(AppProperties appProperties) {
+		JpaStorageSettings jpaStorageSettings = new JpaStorageSettings();
+
+		jpaStorageSettings.setIndexMissingFields(
+				appProperties.getEnable_index_missing_fields()
+						? StorageSettings.IndexEnabledEnum.ENABLED
+						: StorageSettings.IndexEnabledEnum.DISABLED);
+		jpaStorageSettings.setAutoCreatePlaceholderReferenceTargets(
+				appProperties.getAuto_create_placeholder_reference_targets());
+		jpaStorageSettings.setMassIngestionMode(
+				appProperties.getMass_ingestion_mode_enabled());
+		jpaStorageSettings.setAutoVersionReferenceAtPaths(appProperties.getAuto_version_reference_at_paths());
+		jpaStorageSettings.setEnforceReferentialIntegrityOnWrite(
+				appProperties.getEnforce_referential_integrity_on_write());
+		jpaStorageSettings.setEnforceReferentialIntegrityOnDelete(
+				appProperties.getEnforce_referential_integrity_on_delete());
+		jpaStorageSettings.setAllowContainsSearches(appProperties.getAllow_contains_searches());
+		jpaStorageSettings.setAllowMultipleDelete(appProperties.getAllow_multiple_delete());
+		jpaStorageSettings.setAllowExternalReferences(appProperties.getAllow_external_references());
+		jpaStorageSettings.setSchedulingDisabled(!appProperties.getDao_scheduling_enabled());
+		jpaStorageSettings.setDeleteExpungeEnabled(appProperties.getDelete_expunge_enabled());
+		jpaStorageSettings.setExpungeEnabled(appProperties.getExpunge_enabled());
+		jpaStorageSettings.setLanguageSearchParameterEnabled(appProperties.getLanguage_search_parameter_enabled());
 
 
-  public FhirServerConfigCommon(AppProperties appProperties) {
-    ourLog.info("Server configured to " + (appProperties.getAllow_contains_searches() ? "allow" : "deny") + " contains searches");
-    ourLog.info("Server configured to " + (appProperties.getAllow_multiple_delete() ? "allow" : "deny") + " multiple deletes");
-    ourLog.info("Server configured to " + (appProperties.getAllow_external_references() ? "allow" : "deny") + " external references");
-    ourLog.info("Server configured to " + (appProperties.getDao_scheduling_enabled() ? "enable" : "disable") + " DAO scheduling");
-    ourLog.info("Server configured to " + (appProperties.getDelete_expunge_enabled() ? "enable" : "disable") + " delete expunges");
-    ourLog.info("Server configured to " + (appProperties.getExpunge_enabled() ? "enable" : "disable") + " expunges");
-    ourLog.info("Server configured to " + (appProperties.getAllow_override_default_search_params() ? "allow" : "deny") + " overriding default search params");
-    ourLog.info("Server configured to " + (appProperties.getAuto_create_placeholder_reference_targets() ? "allow" : "disable") + " auto-creating placeholder references");
+		Integer maxFetchSize = appProperties.getMax_page_size();
+		jpaStorageSettings.setFetchSizeDefaultMaximum(maxFetchSize);
+		ourLog.info("Server configured to have a maximum fetch size of "
+				+ (maxFetchSize == Integer.MAX_VALUE ? "'unlimited'" : maxFetchSize));
 
-    if (appProperties.getSubscription().getEmail() != null) {
-      AppProperties.Subscription.Email email = appProperties.getSubscription().getEmail();
-      ourLog.info("Server is configured to enable email with host '" + email.getHost() + "' and port " + email.getPort());
-      ourLog.info("Server will use '" + email.getFrom() + "' as the from email address");
+		Long reuseCachedSearchResultsMillis = appProperties.getReuse_cached_search_results_millis();
+		jpaStorageSettings.setReuseCachedSearchResultsForMillis(reuseCachedSearchResultsMillis);
+		ourLog.info("Server configured to cache search results for {} milliseconds", reuseCachedSearchResultsMillis);
 
-      if (!Strings.isNullOrEmpty(email.getUsername())) {
-        ourLog.info("Server is configured to use username '" + email.getUsername() + "' for email");
-      }
-
-      if (!Strings.isNullOrEmpty(email.getPassword())) {
-        ourLog.info("Server is configured to use a password for email");
-      }
-    }
-
-    if (appProperties.getSubscription().getResthook_enabled()) {
-      ourLog.info("REST-hook subscriptions enabled");
-    }
-
-    if (appProperties.getSubscription().getEmail() != null) {
-      ourLog.info("Email subscriptions enabled");
-    }
-
-    if (appProperties.getEnable_index_contained_resource() == Boolean.TRUE) {
-        ourLog.info("Indexed on contained resource enabled");
-      }
-  }
-
-  /**
-   * Configure FHIR properties around the the JPA server via this bean
-   */
-  @Bean
-  public DaoConfig daoConfig(AppProperties appProperties) {
-    DaoConfig daoConfig = new DaoConfig();
-
-    daoConfig.setIndexMissingFields(appProperties.getEnable_index_missing_fields() ? DaoConfig.IndexEnabledEnum.ENABLED : DaoConfig.IndexEnabledEnum.DISABLED);
-    daoConfig.setAutoCreatePlaceholderReferenceTargets(appProperties.getAuto_create_placeholder_reference_targets());
-    daoConfig.setEnforceReferentialIntegrityOnWrite(appProperties.getEnforce_referential_integrity_on_write());
-    daoConfig.setEnforceReferentialIntegrityOnDelete(appProperties.getEnforce_referential_integrity_on_delete());
-    daoConfig.setAllowContainsSearches(appProperties.getAllow_contains_searches());
-    daoConfig.setAllowMultipleDelete(appProperties.getAllow_multiple_delete());
-    daoConfig.setAllowExternalReferences(appProperties.getAllow_external_references());
-    daoConfig.setSchedulingDisabled(!appProperties.getDao_scheduling_enabled());
-    daoConfig.setDeleteExpungeEnabled(appProperties.getDelete_expunge_enabled());
-    daoConfig.setExpungeEnabled(appProperties.getExpunge_enabled());
-    if(appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null)
-      daoConfig.setEmailFromAddress(appProperties.getSubscription().getEmail().getFrom());
-
-    Integer maxFetchSize =  appProperties.getMax_page_size();
-    daoConfig.setFetchSizeDefaultMaximum(maxFetchSize);
-    ourLog.info("Server configured to have a maximum fetch size of " + (maxFetchSize == Integer.MAX_VALUE ? "'unlimited'" : maxFetchSize));
-
-    Long reuseCachedSearchResultsMillis = appProperties.getReuse_cached_search_results_millis();
-    daoConfig.setReuseCachedSearchResultsForMillis(reuseCachedSearchResultsMillis);
-    ourLog.info("Server configured to cache search results for {} milliseconds", reuseCachedSearchResultsMillis);
-
-
-    Long retainCachedSearchesMinutes = appProperties.getRetain_cached_searches_mins();
-    daoConfig.setExpireSearchResultsAfterMillis(retainCachedSearchesMinutes * 60 * 1000);
-
-    if(appProperties.getSubscription() != null) {
-      // Subscriptions are enabled by channel type
-      if (appProperties.getSubscription().getResthook_enabled()) {
-        ourLog.info("Enabling REST-hook subscriptions");
-        daoConfig.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.RESTHOOK);
-      }
-      if (appProperties.getSubscription().getEmail() != null) {
-        ourLog.info("Enabling email subscriptions");
-        daoConfig.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.EMAIL);
-      }
-      if (appProperties.getSubscription().getWebsocket_enabled()) {
-        ourLog.info("Enabling websocket subscriptions");
-        daoConfig.addSupportedSubscriptionType(org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
-      }
-    }
-
-    daoConfig.setFilterParameterEnabled(appProperties.getFilter_search_enabled());
-	 daoConfig.setAdvancedHSearchIndexing(appProperties.getAdvanced_lucene_indexing());
-	 daoConfig.setTreatBaseUrlsAsLocal(new HashSet<>(appProperties.getLocal_base_urls()));
-
-	      if (appProperties.getLastn_enabled()) {
-      daoConfig.setLastNEnabled(true);
-    }
-
-	  if(appProperties.getInline_resource_storage_below_size() != 0){
-		  daoConfig.setInlineResourceTextBelowSize(appProperties.getInline_resource_storage_below_size());
-	  }
-
-	  daoConfig.setStoreResourceInHSearchIndex(appProperties.getStore_resource_in_lucene_index_enabled());
-	  daoConfig.getModelConfig().setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
-	  daoConfig.getModelConfig().setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
+		Long retainCachedSearchesMinutes = appProperties.getRetain_cached_searches_mins();
+		jpaStorageSettings.setExpireSearchResultsAfterMillis(retainCachedSearchesMinutes * 60 * 1000);
 
 
 
-    if (appProperties.getAllowed_bundle_types() != null) {
-      daoConfig.setBundleTypesAllowedForStorage(appProperties.getAllowed_bundle_types().stream().map(BundleType::toCode).collect(Collectors.toSet()));
-    }
+		jpaStorageSettings.setFilterParameterEnabled(appProperties.getFilter_search_enabled());
+		jpaStorageSettings.setAdvancedHSearchIndexing(appProperties.getAdvanced_lucene_indexing());
+		jpaStorageSettings.setTreatBaseUrlsAsLocal(new HashSet<>(appProperties.getLocal_base_urls()));
+		jpaStorageSettings.setTreatReferencesAsLogical(new HashSet<>(appProperties.getLogical_urls()));
 
-	  daoConfig.setDeferIndexingForCodesystemsOfSize(appProperties.getDefer_indexing_for_codesystems_of_size());
+		if (appProperties.getLastn_enabled()) {
+			jpaStorageSettings.setLastNEnabled(true);
+		}
 
+		if (appProperties.getInline_resource_storage_below_size() != 0) {
+			jpaStorageSettings.setInlineResourceTextBelowSize(appProperties.getInline_resource_storage_below_size());
+		}
 
-    if (appProperties.getClient_id_strategy() == DaoConfig.ClientIdStrategyEnum.ANY) {
-		 daoConfig.setResourceServerIdStrategy(DaoConfig.IdStrategyEnum.UUID);
-		 daoConfig.setResourceClientIdStrategy(appProperties.getClient_id_strategy());
-    }
-    //Parallel Batch GET execution settings
-	  daoConfig.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_size());
-	  daoConfig.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_max_size());
+		jpaStorageSettings.setStoreResourceInHSearchIndex(appProperties.getStore_resource_in_lucene_index_enabled());
+		jpaStorageSettings.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
+		jpaStorageSettings.setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
 
+		if (appProperties.getAllowed_bundle_types() != null) {
+			jpaStorageSettings.setBundleTypesAllowedForStorage(appProperties.getAllowed_bundle_types().stream()
+					.map(BundleType::toCode)
+					.collect(Collectors.toSet()));
+		}
 
-    return daoConfig;
-  }
+		jpaStorageSettings.setDeferIndexingForCodesystemsOfSize(
+				appProperties.getDefer_indexing_for_codesystems_of_size());
 
-  @Bean
-  public YamlPropertySourceLoader yamlPropertySourceLoader() {
-    return new YamlPropertySourceLoader();
-  }
+		jpaStorageSettings.setResourceClientIdStrategy(appProperties.getClient_id_strategy());
+		ourLog.info("Server configured to use '" + appProperties.getClient_id_strategy() + "' Client ID Strategy");
 
-  @Bean
-  public PartitionSettings partitionSettings(AppProperties appProperties) {
-    PartitionSettings retVal = new PartitionSettings();
+		// Set and/or recommend default Server ID Strategy of UUID when using the ANY Client ID Strategy
+		if (appProperties.getClient_id_strategy() == JpaStorageSettings.ClientIdStrategyEnum.ANY) {
+			if (appProperties.getServer_id_strategy() == null) {
+				ourLog.info("Defaulting server to use '" + JpaStorageSettings.IdStrategyEnum.UUID
+						+ "' Server ID Strategy when using the '" + JpaStorageSettings.ClientIdStrategyEnum.ANY
+						+ "' Client ID Strategy");
+				appProperties.setServer_id_strategy(JpaStorageSettings.IdStrategyEnum.UUID);
+			} else if (appProperties.getServer_id_strategy() != JpaStorageSettings.IdStrategyEnum.UUID) {
+				ourLog.warn("WARNING: '" + JpaStorageSettings.IdStrategyEnum.UUID
+						+ "' Server ID Strategy is highly recommended when using the '"
+						+ JpaStorageSettings.ClientIdStrategyEnum.ANY + "' Client ID Strategy");
+			}
+		}
+		if (appProperties.getServer_id_strategy() != null) {
+			jpaStorageSettings.setResourceServerIdStrategy(appProperties.getServer_id_strategy());
+			ourLog.info("Server configured to use '" + appProperties.getServer_id_strategy() + "' Server ID Strategy");
+		}
+		
+		//to Disable the Resource History
+		jpaStorageSettings.setResourceDbHistoryEnabled(appProperties.getResource_dbhistory_enabled());
 
-    // Partitioning
-    if (appProperties.getPartitioning() != null) {
-      retVal.setPartitioningEnabled(true);
-      retVal.setIncludePartitionInSearchHashes(appProperties.getPartitioning().getPartitioning_include_in_search_hashes());
-      if(appProperties.getPartitioning().getAllow_references_across_partitions()) {
-        retVal.setAllowReferencesAcrossPartitions(CrossPartitionReferenceMode.ALLOWED_UNQUALIFIED);
-      } else {
-        retVal.setAllowReferencesAcrossPartitions(CrossPartitionReferenceMode.NOT_ALLOWED);
-      }
-    }
+		// Parallel Batch GET execution settings
+		jpaStorageSettings.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_size());
+		jpaStorageSettings.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_max_size());
 
-    return retVal;
-  }
+		storageSettings(appProperties, jpaStorageSettings);
+		return jpaStorageSettings;
+	}
 
+	@Bean
+	public YamlPropertySourceLoader yamlPropertySourceLoader() {
+		return new YamlPropertySourceLoader();
+	}
 
-  @Primary
-  @Bean
-  public HibernatePropertiesProvider jpaStarterDialectProvider(LocalContainerEntityManagerFactoryBean myEntityManagerFactory) {
-    return new JpaHibernatePropertiesProvider(myEntityManagerFactory);
-  }
+	@Bean
+	public PartitionSettings partitionSettings(AppProperties appProperties) {
+		PartitionSettings retVal = new PartitionSettings();
 
-  @Bean
-  public ModelConfig modelConfig(AppProperties appProperties, DaoConfig daoConfig) {
-    ModelConfig modelConfig = daoConfig.getModelConfig();
-    modelConfig.setAllowContainsSearches(appProperties.getAllow_contains_searches());
-    modelConfig.setAllowExternalReferences(appProperties.getAllow_external_references());
-    modelConfig.setDefaultSearchParamsCanBeOverridden(appProperties.getAllow_override_default_search_params());
-    if(appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null)
-      modelConfig.setEmailFromAddress(appProperties.getSubscription().getEmail().getFrom());
+		// Partitioning
+		if (appProperties.getPartitioning() != null) {
+			retVal.setPartitioningEnabled(true);
+			retVal.setIncludePartitionInSearchHashes(
+					appProperties.getPartitioning().getPartitioning_include_in_search_hashes());
+			if (appProperties.getPartitioning().getAllow_references_across_partitions()) {
+				retVal.setAllowReferencesAcrossPartitions(CrossPartitionReferenceMode.ALLOWED_UNQUALIFIED);
+			} else {
+				retVal.setAllowReferencesAcrossPartitions(CrossPartitionReferenceMode.NOT_ALLOWED);
+			}
+		}
 
-    modelConfig.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
+		return retVal;
+	}
 
-    modelConfig.setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
-    modelConfig.setIndexIdentifierOfType(appProperties.getEnable_index_of_type());
-    return modelConfig;
-  }
+	@Primary
+	@Bean
+	public HibernatePropertiesProvider jpaStarterDialectProvider(
+			LocalContainerEntityManagerFactoryBean myEntityManagerFactory) {
+		return new JpaHibernatePropertiesProvider(myEntityManagerFactory);
+	}
 
-  @Lazy
-  @Bean
-  public IBinaryStorageSvc binaryStorageSvc(AppProperties appProperties) {
-    DatabaseBlobBinaryStorageSvcImpl binaryStorageSvc = new DatabaseBlobBinaryStorageSvcImpl();
+	protected StorageSettings storageSettings(AppProperties appProperties, JpaStorageSettings jpaStorageSettings) {
+		jpaStorageSettings.setAllowContainsSearches(appProperties.getAllow_contains_searches());
+		jpaStorageSettings.setAllowExternalReferences(appProperties.getAllow_external_references());
+		jpaStorageSettings.setDefaultSearchParamsCanBeOverridden(
+				appProperties.getAllow_override_default_search_params());
 
-    if (appProperties.getMax_binary_size() != null) {
-      binaryStorageSvc.setMaximumBinarySize(appProperties.getMax_binary_size());
-    }
+		jpaStorageSettings.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
 
-    return binaryStorageSvc;
-  }
+		jpaStorageSettings.setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
+		jpaStorageSettings.setIndexIdentifierOfType(appProperties.getEnable_index_of_type());
+		return jpaStorageSettings;
+	}
 
-  @Bean
-  public IEmailSender emailSender(AppProperties appProperties, Optional<SubscriptionDeliveryHandlerFactory> subscriptionDeliveryHandlerFactory) {
-    if (appProperties.getSubscription() != null && appProperties.getSubscription().getEmail() != null) {
-		 MailConfig mailConfig = new MailConfig();
+	@Lazy
+	@Bean
+	public IBinaryStorageSvc binaryStorageSvc(AppProperties appProperties) {
+		DatabaseBinaryContentStorageSvcImpl binaryStorageSvc = new DatabaseBinaryContentStorageSvcImpl();
 
-      AppProperties.Subscription.Email email = appProperties.getSubscription().getEmail();
-      mailConfig.setSmtpHostname(email.getHost());
-      mailConfig.setSmtpPort(email.getPort());
-      mailConfig.setSmtpUsername(email.getUsername());
-      mailConfig.setSmtpPassword(email.getPassword());
-      mailConfig.setSmtpUseStartTLS(email.getStartTlsEnable());
+		if (appProperties.getMax_binary_size() != null) {
+			binaryStorageSvc.setMaximumBinarySize(appProperties.getMax_binary_size());
+		}
 
-		 IMailSvc mailSvc = new MailSvc(mailConfig);
-		 IEmailSender emailSender = new EmailSenderImpl(mailSvc);
+		return binaryStorageSvc;
+	}
 
-		subscriptionDeliveryHandlerFactory.ifPresent(theSubscriptionDeliveryHandlerFactory -> theSubscriptionDeliveryHandlerFactory.setEmailSender(emailSender));
+	@Bean
+	public IEmailSender emailSender(AppProperties appProperties) {
+		if (appProperties.getSubscription() != null
+				&& appProperties.getSubscription().getEmail() != null) {
 
-      return emailSender;
-    }
+			return buildEmailSender(appProperties.getSubscription().getEmail());
+		}
 
-    return null;
-  }
+		// Return a dummy anonymous function instead of null. Spring does not like null beans.
+		// TODO Get the signature of
+		// ca.uhn.fhir.jpa.subscription.channel.subscription.SubscriptionDeliveryHandlerFactory
+		//  changed so it does not require an instance of an IEmailSender
+		return theDetails -> {};
+	}
+
+	private static IEmailSender buildEmailSender(AppProperties.Subscription.Email email) {
+
+		return new EmailSenderImpl(new MailSvc(new MailConfig()
+				.setSmtpHostname(email.getHost())
+				.setSmtpPort(email.getPort())
+				.setSmtpUsername(email.getUsername())
+				.setSmtpPassword(email.getPassword())
+				.setSmtpUseStartTLS(email.getStartTlsEnable())));
+	}
 }

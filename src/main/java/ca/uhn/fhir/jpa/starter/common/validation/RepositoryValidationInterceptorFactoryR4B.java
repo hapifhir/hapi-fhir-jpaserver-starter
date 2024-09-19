@@ -37,25 +37,29 @@ public class RepositoryValidationInterceptorFactoryR4B implements IRepositoryVal
 	private final RepositoryValidatingRuleBuilder repositoryValidatingRuleBuilder;
 	private final IFhirResourceDao structureDefinitionResourceProvider;
 
-	public RepositoryValidationInterceptorFactoryR4B(RepositoryValidatingRuleBuilder repositoryValidatingRuleBuilder, DaoRegistry daoRegistry) {
+	public RepositoryValidationInterceptorFactoryR4B(
+			RepositoryValidatingRuleBuilder repositoryValidatingRuleBuilder, DaoRegistry daoRegistry) {
 		this.repositoryValidatingRuleBuilder = repositoryValidatingRuleBuilder;
 		this.fhirContext = daoRegistry.getSystemDao().getContext();
 		structureDefinitionResourceProvider = daoRegistry.getResourceDao("StructureDefinition");
-
 	}
 
 	@Override
 	public RepositoryValidatingInterceptor buildUsingStoredStructureDefinitions() {
 
-		IBundleProvider results = structureDefinitionResourceProvider.search(new SearchParameterMap().add(StructureDefinition.SP_KIND, new TokenParam("resource")));
-		Map<String, List<StructureDefinition>> structureDefintions = results.getResources(0, results.size())
-			.stream()
-			.map(StructureDefinition.class::cast)
-			.collect(Collectors.groupingBy(StructureDefinition::getType));
+		IBundleProvider results = structureDefinitionResourceProvider.search(
+				new SearchParameterMap().setLoadSynchronous(true).add(StructureDefinition.SP_KIND, new TokenParam("resource")));
+		Map<String, List<StructureDefinition>> structureDefintions = results.getResources(0, results.size()).stream()
+				.map(StructureDefinition.class::cast)
+				.collect(Collectors.groupingBy(StructureDefinition::getType));
 
 		structureDefintions.forEach((key, value) -> {
 			String[] urls = value.stream().map(StructureDefinition::getUrl).toArray(String[]::new);
-			repositoryValidatingRuleBuilder.forResourcesOfType(key).requireAtLeastOneProfileOf(urls).and().requireValidationToDeclaredProfiles();
+			repositoryValidatingRuleBuilder
+					.forResourcesOfType(key)
+					.requireAtLeastOneProfileOf(urls)
+					.and()
+					.requireValidationToDeclaredProfiles();
 		});
 
 		List<IRepositoryValidatingRule> rules = repositoryValidatingRuleBuilder.build();
@@ -67,11 +71,14 @@ public class RepositoryValidationInterceptorFactoryR4B implements IRepositoryVal
 
 		// Customize the ruleBuilder here to have the rules you want! We will give a simple example
 		// of enabling validation for all Patient resources
-		repositoryValidatingRuleBuilder.forResourcesOfType("Patient").requireAtLeastProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient").and().requireValidationToDeclaredProfiles();
+		repositoryValidatingRuleBuilder
+				.forResourcesOfType("Patient")
+				.requireAtLeastProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient")
+				.and()
+				.requireValidationToDeclaredProfiles();
 
 		// Do not customize below this line
 		List<IRepositoryValidatingRule> rules = repositoryValidatingRuleBuilder.build();
 		return new RepositoryValidatingInterceptor(fhirContext, rules);
 	}
-
 }

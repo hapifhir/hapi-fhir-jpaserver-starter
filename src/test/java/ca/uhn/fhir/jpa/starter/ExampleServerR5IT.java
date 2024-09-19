@@ -1,9 +1,5 @@
 package ca.uhn.fhir.jpa.starter;
 
-import static ca.uhn.fhir.util.TestUtil.waitForSize;
-import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.api.CacheControlDirective;
 import ca.uhn.fhir.rest.api.EncodingEnum;
@@ -11,12 +7,9 @@ import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
-import java.net.URI;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
-import org.eclipse.jetty.websocket.client.WebSocketClient;
+import jakarta.websocket.ContainerProvider;
+import jakarta.websocket.Session;
+import jakarta.websocket.WebSocketContainer;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r5.model.Bundle;
 import org.hl7.fhir.r5.model.Enumerations;
@@ -28,16 +21,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.net.URI;
+
+import static ca.uhn.fhir.util.TestUtil.waitForSize;
+import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, JpaStarterWebsocketDispatcherConfig.class}, properties =
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class}, properties =
   {
      "spring.datasource.url=jdbc:h2:mem:dbr5",
      "hapi.fhir.fhir_version=r5",
-     "hapi.fhir.subscription.websocket_enabled=true",
-	  "hapi.fhir.subscription.websocket_enabled=true",
+	  "hapi.fhir.cr_enabled=false",
+	  "hapi.fhir.subscription.websocket_enabled=true"
   })
 public class ExampleServerR5IT {
 
@@ -45,12 +44,15 @@ public class ExampleServerR5IT {
   private IGenericClient ourClient;
   private FhirContext ourCtx;
 
+  public static final String SUBSCRIPTION_TOPIC_TEST_URL = "http://example.com/topic/test";
+
+
   @LocalServerPort
   private int port;
 
 
   @Test
-  public void testCreateAndRead() {
+  void testCreateAndRead() {
 
     String methodName = "testCreateResourceConditional";
 
@@ -63,49 +65,78 @@ public class ExampleServerR5IT {
   }
 
   @Test
-  public void testWebsocketSubscription() throws Exception {
-
+  void testWebsocketSubscription() throws Exception {
+	  String endpoint = "ws://localhost:" + port + "/websocket";
     /*
-     * Create topic (will be contained in subscription)
+     * Create topic
      */
     SubscriptionTopic topic = new SubscriptionTopic();
-    topic.setId("#1");
-    topic.getResourceTriggerFirstRep().getQueryCriteria().setCurrent("Observation?status=final");
 
-    /*
+	 topic.setUrl(SUBSCRIPTION_TOPIC_TEST_URL);
+	  topic.setStatus(Enumerations.PublicationStatus.ACTIVE);
+	  SubscriptionTopic.SubscriptionTopicResourceTriggerComponent trigger = topic.addResourceTrigger();
+	  trigger.setResource("Observation");
+	  trigger.addSupportedInteraction(SubscriptionTopic.InteractionTrigger.CREATE);
+	  trigger.addSupportedInteraction(SubscriptionTopic.InteractionTrigger.UPDATE);
+
+	 ourClient.create().resource(topic).execute();
+
+	  waitForSize(1, () -> ourClient
+		  .search()
+		  .forResource(SubscriptionTopic.class)
+		  .where(Subscription.STATUS.exactly().code("active"))
+		  .cacheControl(
+			  new CacheControlDirective()
+				  .setNoCache(true))
+		  .returnBundle(Bundle.class)
+		  .execute()
+		  .getEntry()
+		  .size());
+
+	  /*
      * Create subscription
      */
     Subscription subscription = new Subscription();
-    subscription.getContained().add(topic);
-    subscription.setTopic("#1");
+
+    subscription.setTopic(SUBSCRIPTION_TOPIC_TEST_URL);
     subscription.setReason("Monitor new neonatal function (note, age will be determined by the monitor)");
     subscription.setStatus(Enumerations.SubscriptionStatusCodes.REQUESTED);
     subscription.getChannelType()
       .setSystem("http://terminology.hl7.org/CodeSystem/subscription-channel-type")
       .setCode("websocket");
-    subscription.setContentType("application/json");
+    subscription.setContentType("application/fhir+json");
+	 subscription.setEndpoint(endpoint);
 
     MethodOutcome methodOutcome = ourClient.create().resource(subscription).execute();
     IIdType mySubscriptionId = methodOutcome.getId();
 
     // Wait for the subscription to be activated
-    waitForSize(1, () -> ourClient.search().forResource(Subscription.class).where(Subscription.STATUS.exactly().code("active")).cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute().getEntry().size());
+    waitForSize(1, () -> ourClient
+		 .search()
+		 .forResource(Subscription.class)
+		 .where(Subscription.STATUS.exactly().code("active"))
+		 .cacheControl(
+			 new CacheControlDirective()
+				 .setNoCache(true))
+		 .returnBundle(Bundle.class)
+		 .execute()
+		 .getEntry()
+		 .size());
 
     /*
      * Attach websocket
      */
 
-    WebSocketClient myWebSocketClient = new WebSocketClient();
-    SocketImplementation mySocketImplementation = new SocketImplementation(mySubscriptionId.getIdPart(), EncodingEnum.JSON);
+	  SocketImplementation mySocketImplementation = new SocketImplementation(mySubscriptionId.getIdPart(),
+		  EncodingEnum.JSON);
 
-    myWebSocketClient.start();
-    URI echoUri = new URI("ws://localhost:" + port + "/websocket");
-    ClientUpgradeRequest request = new ClientUpgradeRequest();
-    ourLog.info("Connecting to : {}", echoUri);
-    Future<Session> connection = myWebSocketClient.connect(mySocketImplementation, echoUri, request);
-    Session session = connection.get(2, TimeUnit.SECONDS);
+	  URI echoUri = new URI(endpoint);
 
-    ourLog.info("Connected to WS: {}", session.isOpen());
+	  WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+
+	  ourLog.info("Connecting to : {}", echoUri);
+	  Session session = container.connectToServer(mySocketImplementation, echoUri);
+	  ourLog.info("Connected to WS: {}", session.isOpen());
 
     /*
      * Create a matching resource

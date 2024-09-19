@@ -10,16 +10,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, JpaStarterWebsocketDispatcherConfig.class}, properties = {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+	classes = {Application.class},
+	properties = {
 	"spring.datasource.url=jdbc:h2:mem:dbr4b",
 	"hapi.fhir.enable_repository_validating_interceptor=true",
 	"hapi.fhir.fhir_version=r4b",
 	"hapi.fhir.subscription.websocket_enabled=false",
 	"hapi.fhir.mdm_enabled=false",
+	"hapi.fhir.cr_enabled=false",
 	// Override is currently required when using MDM as the construction of the MDM
 	// beans are ambiguous as they are constructed multiple places. This is evident
 	// when running in a spring boot environment
@@ -52,7 +55,7 @@ class ExampleServerR4BIT {
 
 
 	@Test
-	public void testBatchPutWithIdenticalTags() {
+	void testBatchPutWithIdenticalTags() {
 		String batchPuts = "{\n" +
 			"\t\"resourceType\": \"Bundle\",\n" +
 			"\t\"id\": \"patients\",\n" +

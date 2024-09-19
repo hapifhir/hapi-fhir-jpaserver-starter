@@ -7,7 +7,7 @@ image:
   # -- the path inside the repository
   repository: hapiproject/hapi
   # -- the image tag. As of v5.7.0, this is the `distroless` flavor by default, add `-tomcat` to use the Tomcat-based image.
-  tag: "v6.2.2@sha256:9c4e8af94d81ac0049dbb589e4cd855bf78c9c13be6f6844e814c63d63545b44"
+  tag: "v7.2.0@sha256:9bcafa8342b572eee248cb7c48c496863d352bbd0347e1d98ea238d09620e89b"
   # -- image pullPolicy to use
   pullPolicy: IfNotPresent
 
@@ -121,34 +121,40 @@ postgresql:
     # picked from this secret in this case.
     # The value is evaluated as a template.
     existingSecret: ""
-  primary:
-    containerSecurityContext:
-      allowPrivilegeEscalation: false
-      capabilities:
-        drop:
-          - ALL
-      runAsNonRoot: true
-      seccompProfile:
-        type: RuntimeDefault
 
+# -- readiness probe
+# @ignored
 readinessProbe:
+  httpGet:
+    path: /readyz
+    port: http
   failureThreshold: 5
   initialDelaySeconds: 30
   periodSeconds: 20
   successThreshold: 1
   timeoutSeconds: 20
 
-startupProbe:
-  failureThreshold: 10
-  initialDelaySeconds: 30
-  periodSeconds: 30
-  successThreshold: 1
-  timeoutSeconds: 30
-
+# -- liveness probe
+# @ignored
 livenessProbe:
+  httpGet:
+    path: /livez
+    port: http
   failureThreshold: 5
   initialDelaySeconds: 30
   periodSeconds: 20
+  successThreshold: 1
+  timeoutSeconds: 30
+
+# -- startup probe
+# @ignored
+startupProbe:
+  httpGet:
+    path: /readyz
+    port: http
+  failureThreshold: 10
+  initialDelaySeconds: 30
+  periodSeconds: 30
   successThreshold: 1
   timeoutSeconds: 30
 
@@ -183,6 +189,17 @@ podDisruptionBudget:
   # -- maximum unavailable instances
   maxUnavailable: ""
 
+serviceAccount:
+  # -- Specifies whether a service account should be created.
+  create: false
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+  # -- Automatically mount a ServiceAccount's API credentials?
+  automount: true
+
 metrics:
   serviceMonitor:
     # -- if enabled, creates a ServiceMonitor instance for Prometheus Operator-based monitoring
@@ -208,3 +225,35 @@ restrictedContainerSecurityContext:
   runAsGroup: 65534
   seccompProfile:
     type: RuntimeDefault
+
+# @ignored
+curl:
+  image:
+    registry: docker.io
+    repository: curlimages/curl
+    tag: 8.9.1@sha256:8addc281f0ea517409209f76832b6ddc2cabc3264feb1ebbec2a2521ffad24e4
+
+tests:
+  # -- whether the service account token should be auto-mounted for the test pods
+  automountServiceAccountToken: false
+  # -- configure the test pods resource requests and limits
+  resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# -- additional Spring Boot application config. Mounted as a file and automatically loaded by the application.
+extraConfig:
+  ""
+  # # For example:
+  # |
+  # hapi:
+  #   fhir:
+  #     implementationguides:
+  #       gh_0_1_0:
+  #         url: https://build.fhir.org/ig/hl7-eu/gravitate-health/package.tgz
+  #         name: hl7.eu.fhir.gh
+  #         version: 0.1.0

@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.cr.config.RepositoryConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.CacheControlDirective;
@@ -9,10 +10,10 @@ import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
+import jakarta.websocket.ContainerProvider;
+import jakarta.websocket.Session;
+import jakarta.websocket.WebSocketContainer;
 import org.apache.commons.io.FileUtils;
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
-import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -29,8 +30,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import static ca.uhn.fhir.util.TestUtil.waitForSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,20 +37,25 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, JpaStarterWebsocketDispatcherConfig.class}, properties =
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+	classes = {
+		Application.class,
+		RepositoryConfig.class
+	}, properties =
   {
      "spring.datasource.url=jdbc:h2:mem:dbr3",
-     "hapi.fhir.cr_enabled=true",
      "hapi.fhir.fhir_version=dstu3",
+	  "hapi.fhir.cr_enabled=true",
      "hapi.fhir.subscription.websocket_enabled=true",
      "hapi.fhir.allow_external_references=true",
      "hapi.fhir.allow_placeholder_references=true",
+	  "spring.main.allow-bean-definition-overriding=true"
   })
 
 
-public class ExampleServerDstu3IT implements IServerSupport {
+class ExampleServerDstu3IT implements IServerSupport {
 
-  private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
+  private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu3IT.class);
   private IGenericClient ourClient;
   private FhirContext ourCtx;
 
@@ -71,8 +75,8 @@ public class ExampleServerDstu3IT implements IServerSupport {
     ourClient.registerInterceptor(new LoggingInterceptor(true));
   }
 
-    @Test
-  public void testCreateAndRead() {
+  @Test
+  void testCreateAndRead() {
 
     String methodName = "testCreateResourceConditional";
 
@@ -86,21 +90,22 @@ public class ExampleServerDstu3IT implements IServerSupport {
 
   // Currently fails with:
   // ca.uhn.fhir.rest.server.exceptions.InternalErrorException: HTTP 500 : Failed to call access method: java.lang.IllegalArgumentException: Could not load library source for libraries referenced in Measure/Measure/measure-EXM104-FHIR3-8.1.000/_history/1.
-  //@Test
+  //@Test Bad test data
   public void testCQLEvaluateMeasureEXM104() throws IOException {
     String measureId = "measure-EXM104-FHIR3-8.1.000";
 
-    int numFilesLoaded = loadDataFromDirectory("dstu3/EXM104/EXM104_FHIR3-8.1.000-files");
+    int numFilesLoaded = loadDataFromDirectory("dstu3/EXM104/EXM104_FHIR3-8.1.000-bundle.json");
     //assertEquals(numFilesLoaded, 3);
     ourLog.info("{} files imported successfully!", numFilesLoaded);
-    //loadBundle("dstu3/EXM104/EXM104_FHIR3-8.1.000-bundle.json", ourCtx, ourClient);
+   // loadBundle("dstu3/EXM104/EXM104_FHIR3-8.1.000-bundle.json", ourCtx, ourClient);
 
     // http://localhost:8080/fhir/Measure/measure-EXM104-FHIR3-8.1.000/$evaluate-measure?periodStart=2019-01-01&periodEnd=2019-12-31
     Parameters inParams = new Parameters();
 //    inParams.addParameter().setName("measure").setValue(new StringType("Measure/measure-EXM104-8.2.000"));
-//    inParams.addParameter().setName("patient").setValue(new StringType("Patient/numer-EXM104-FHIR3"));
-//    inParams.addParameter().setName("periodStart").setValue(new StringType("2019-01-01"));
-//    inParams.addParameter().setName("periodEnd").setValue(new StringType("2019-12-31"));
+    inParams.addParameter().setName("patient").setValue(new StringType("Patient/numer-EXM104-FHIR3"));
+    inParams.addParameter().setName("periodStart").setValue(new StringType("2019-01-01"));
+    inParams.addParameter().setName("periodEnd").setValue(new StringType("2019-12-31"));
+	  inParams.addParameter().setName("reportType").setValue(new StringType("individual"));
 
     Parameters outParams = ourClient
       .operation()
@@ -146,15 +151,8 @@ public class ExampleServerDstu3IT implements IServerSupport {
     return count;
   }
 
-  private Bundle loadBundle(String theLocation, FhirContext theCtx, IGenericClient theClient) throws IOException {
-    String json = stringFromResource(theLocation);
-    Bundle bundle = (Bundle) theCtx.newJsonParser().parseResource(json);
-    Bundle result = theClient.transaction().withBundle(bundle).execute();
-    return result;
-  }
-
   @Test
-  public void testWebsocketSubscription() throws Exception {
+  void testWebsocketSubscription() throws Exception {
     /*
      * Create subscription
      */
@@ -178,17 +176,16 @@ public class ExampleServerDstu3IT implements IServerSupport {
      * Attach websocket
      */
 
-    WebSocketClient myWebSocketClient = new WebSocketClient();
-    SocketImplementation mySocketImplementation = new SocketImplementation(mySubscriptionId.getIdPart(), EncodingEnum.JSON);
+	  SocketImplementation mySocketImplementation = new SocketImplementation(mySubscriptionId.getIdPart(),
+		  EncodingEnum.JSON);
 
-    myWebSocketClient.start();
-    URI echoUri = new URI("ws://localhost:" + port + "/websocket");
-    ClientUpgradeRequest request = new ClientUpgradeRequest();
-    ourLog.info("Connecting to : {}", echoUri);
-    Future<Session> connection = myWebSocketClient.connect(mySocketImplementation, echoUri, request);
-    Session session = connection.get(2, TimeUnit.SECONDS);
+	  URI echoUri = new URI("ws://localhost:" + port + "/websocket");
 
-    ourLog.info("Connected to WS: {}", session.isOpen());
+	  WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+
+	  ourLog.info("Connecting to : {}", echoUri);
+	  Session session = container.connectToServer(mySocketImplementation, echoUri);
+	  ourLog.info("Connected to WS: {}", session.isOpen());
 
     /*
      * Create a matching resource
