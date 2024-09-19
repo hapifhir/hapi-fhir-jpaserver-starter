@@ -1,0 +1,15 @@
+map "http://ahdis.ch/matchbox/fml/whereclause" = "whereclause"
+uses "http://hl7.org/fhir/StructureDefinition/CapabilityStatement" alias CapabilityStatement as source
+uses "http://hl7.org/fhir/StructureDefinition/CapabilityStatement" alias CapabilityStatement as target
+
+//             srcres.interaction as srcint where (srcint.code != 'read') log(srcint.code) -> tgtres.interaction as tgtint then {
+
+group CapabilityStatement(source src: CapabilityStatement, target tgt : CapabilityStatement) {
+    src.rest as srcrest -> tgt.rest as tgtrest then {
+        srcrest.resource as srcres -> tgtrest.resource as tgtres then {
+            srcres.interaction as srcint where (srcint.code != 'read') log(srcint.code) -> tgtres.interaction as tgtint then {
+                srcint.code  as code -> tgtint.code = code;
+            } "interaction";
+        } "resource";
+    } "rest";
+}

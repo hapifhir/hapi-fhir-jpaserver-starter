@@ -37,9 +37,20 @@ group item(source src, target tgt: Patient) {
   src.item as item where linkId.value in ('patient.sex') -> tgt.gender = (item.answer.valueString);
 }
 
+### Convert Textual representation of a FHIR Mapping Language to StructureMap resource
+POST {{host}}/StructureMap/$convert HTTP/1.1
+Accept: application/fhir+json
+Content-Type: text/fhir-mapping
+
+< ./matchbox-engine/src/test/resources/mapping-language/whereclause.map
+
 ### Verify that StructureMap is created
-GET {{host}}/StructureMap/qr2patgender HTTP/1.1
-Accept: application/fhir+JSON
+### transform the provided questionnaire response to patient resource with using above created StructureMap
+POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/matchbox/fml/whereclause
+Accept: application/fhir+json
+Content-Type: application/fhir+json
+
+< ./matchbox-engine/src/test/resources/mapping-language/capabilitystatement-example.json
 
 ### transform the provided questionnaire response to patient resource with using above created StructureMap
 POST {{host}}/StructureMap/$transform?source=http://ahdis.ch/matchbox/fml/qr2patgender
