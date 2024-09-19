@@ -65,6 +65,7 @@ import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import org.apache.commons.lang3.EnumUtils;
 import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -417,17 +418,9 @@ public class StarterJpaConfig {
 			fhirServer.registerProvider(theIpsOperationProvider.get());
 		}
 
-		// set history_count_mode
-		switch (appProperties.getHistory_count_mode()) {
-			// Ignore case 0 since default is HistoryCountModeEnum.CACHED_ONLY_WITHOUT_OFFSET
-			case 1: {
-				daoConfig.setHistoryCountMode(HistoryCountModeEnum.COUNT_ACCURATE);
-			}
-			case 2: {
-				daoConfig.setHistoryCountMode(HistoryCountModeEnum.COUNT_DISABLED);
-			}
+		if(EnumUtils.isValidEnum(HistoryCountModeEnum.class, appProperties.getHistory_count_mode())){
+			daoConfig.setHistoryCountMode(HistoryCountModeEnum.valueOf(appProperties.getHistory_count_mode()));
 		}
-
 
 		return fhirServer;
 	}
