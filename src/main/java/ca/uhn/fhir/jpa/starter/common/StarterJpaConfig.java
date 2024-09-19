@@ -12,6 +12,7 @@ import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.jpa.api.IDaoRegistry;
+import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.config.ThreadPoolFactoryConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
@@ -64,7 +65,6 @@ import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.EnumUtils;
 import jakarta.persistence.EntityManagerFactory;
 import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
@@ -252,6 +252,7 @@ public class StarterJpaConfig {
 			IFhirSystemDao<?, ?> fhirSystemDao,
 			AppProperties appProperties,
 			DaoRegistry daoRegistry,
+			DaoConfig daoConfig,
 			Optional<MdmProviderLoader> mdmProviderProvider,
 			IJpaSystemProvider jpaSystemProvider,
 			ResourceProviderFactory resourceProviderFactory,
