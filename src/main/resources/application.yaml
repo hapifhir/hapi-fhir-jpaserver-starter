@@ -135,7 +135,7 @@ hapi:
       # history_count_mode = CACHED_ONLY_WITHOUT_OFFSET (default within hapi-fhir DAOConfig)
       # history_count_mode = COUNT_ACCURATE (ignores cache and always gets correct count)
       # history_count_mode = COUNT_DISABLED (does not return count at all)
-    history_count_mode: CACHED_ONLY_WITHOUT_OFFSET
+    history_count_mode: COUNT_ACCURATE
 
     # Search coordinator thread pool sizes
     search-coord-core-pool-size: 20
