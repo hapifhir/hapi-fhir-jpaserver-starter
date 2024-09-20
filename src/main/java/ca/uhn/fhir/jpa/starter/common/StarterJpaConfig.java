@@ -12,7 +12,6 @@ import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.jpa.api.IDaoRegistry;
-import ca.uhn.fhir.jpa.api.config.DaoConfig;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.config.ThreadPoolFactoryConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
@@ -252,7 +251,6 @@ public class StarterJpaConfig {
 			IFhirSystemDao<?, ?> fhirSystemDao,
 			AppProperties appProperties,
 			DaoRegistry daoRegistry,
-			DaoConfig daoConfig,
 			Optional<MdmProviderLoader> mdmProviderProvider,
 			IJpaSystemProvider jpaSystemProvider,
 			ResourceProviderFactory resourceProviderFactory,
@@ -462,7 +460,7 @@ public class StarterJpaConfig {
 		}
 
 		if(EnumUtils.isValidEnum(HistoryCountModeEnum.class, appProperties.getHistory_count_mode())){
-			daoConfig.setHistoryCountMode(HistoryCountModeEnum.valueOf(appProperties.getHistory_count_mode()));
+			jpaStorageSettings.setHistoryCountMode(HistoryCountModeEnum.valueOf(appProperties.getHistory_count_mode()));
 		}
 
 		// register custom providers
