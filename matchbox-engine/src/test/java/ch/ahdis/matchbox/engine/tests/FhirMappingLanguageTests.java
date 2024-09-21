@@ -109,6 +109,20 @@ class FhirMappingLanguageTests {
 	}
 
 	@Test
+	void testNarrative() throws FHIRException, IOException {
+		MatchboxEngine engine = new MatchboxEngine(FhirMappingLanguageTests.engine);
+		StructureMap sm = engine.parseMap(getFileAsStringFromResources("/narrative.map"));
+		assertTrue(sm != null);
+		engine.addCanonicalResource(sm);
+		Resource res = engine.transformToFhir(getFileAsStringFromResources("/pat.json"), true,
+				"http://ahdis.ch/matchbox/fml/narrative");
+		assertTrue(res != null);
+		assertEquals("Patient", res.getResourceType().name());
+		Patient patient = (Patient) res;
+		assertEquals("<div xmlns=\"http://www.w3.org/1999/xhtml\">text</div>", patient.getText().getDivAsString());
+	}
+
+	@Test
 	void testConformsTo() throws FHIRException, IOException {
 		MatchboxEngine engine = new MatchboxEngine(FhirMappingLanguageTests.engine);
 		StructureMap sm = engine.parseMap(getFileAsStringFromResources("/conformsto.map"));
