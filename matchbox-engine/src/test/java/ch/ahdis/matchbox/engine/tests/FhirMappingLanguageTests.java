@@ -31,6 +31,7 @@ import org.apache.commons.io.IOUtils;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r4.formats.XmlParser;
 import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.CapabilityStatement;
 import org.hl7.fhir.r4.model.ExplanationOfBenefit;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
@@ -237,6 +238,18 @@ class FhirMappingLanguageTests {
 	}
 
 	@Test
+	void testWhereClause() throws FHIRException, IOException {
+		MatchboxEngine engine = new MatchboxEngine(FhirMappingLanguageTests.engine);
+		StructureMap sm = engine.parseMap(getFileAsStringFromResources("/whereclause.map"));
+		assertTrue(sm != null);
+		engine.addCanonicalResource(sm);
+		CapabilityStatement result = (CapabilityStatement) engine.transformToFhir(getFileAsStringFromResources("/capabilitystatement-example.json"), true,
+				"http://ahdis.ch/matchbox/fml/whereclause");
+		assertTrue(result != null);
+		assertEquals(5,result.getRest().get(0).getResource().get(0).getInteraction().size());
+	}
+
+	@Test
   void testDateManipulation() throws FHIRException, IOException {
     MatchboxEngine engine = new MatchboxEngine(FhirMappingLanguageTests.engine);
     StructureMap sm = engine.parseMap(getFileAsStringFromResources("/qr2patfordates.map"));
@@ -250,7 +263,7 @@ class FhirMappingLanguageTests {
     assertEquals("2023-10-26", patient.getBirthDateElement().getValueAsString());
     assertEquals("2023-09-20T13:19:13.502Z", patient.getDeceasedDateTimeType().getValueAsString());
   }
-	
+  	
 	
 
 	@Test
