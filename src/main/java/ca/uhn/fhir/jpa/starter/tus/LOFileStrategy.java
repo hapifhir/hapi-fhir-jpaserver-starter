@@ -90,9 +90,9 @@ public class LOFileStrategy implements FileStrategy {
 		Path configFilePath = directoryPath.resolve("configurations.txt");
 		String latestFieldCalibFile = getLatestCalibrationFile();
 		String configContent = "CAMERA NAME: " + loCamName + "\n";
-		configContent += "CAMERA LENGTH:" + loCamLength + "\n";
+		configContent += "CAMERA LENGTH: " + loCamLength + "\n";
 		if (latestFieldCalibFile != null)
-			configContent += "FIELD CALIBRATION FILE" + latestFieldCalibFile;
+			configContent += "FIELD CALIBRATION FILE: " + latestFieldCalibFile;
 		Files.write(configFilePath, configContent.getBytes());
 		logger.info("Configurations file created at: " + configFilePath.toString());
 	}

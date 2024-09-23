@@ -45,7 +45,7 @@ public class TusController {
 		try {
 			tusService.transferToFinalStorage(uploadUrl, TUSFileTypes.IMAGE.name());
 			return ResponseEntity.ok("Images uploaded and saved successfully.");
-		} catch (TusException | IOException | UnsupportedAudioFileException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the images.");
 		}
@@ -60,6 +60,8 @@ public class TusController {
 			} catch (TusException | IOException | UnsupportedAudioFileException e) {
 				e.printStackTrace();
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the images.");
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
 		}
 		else if (Objects.equals(fileType, TUSFileTypes.LOFILE.name())){
@@ -69,6 +71,8 @@ public class TusController {
 			} catch (TusException | IOException | UnsupportedAudioFileException e) {
 				e.printStackTrace();
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the images.");
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
 		}
 		else if (Objects.equals(fileType, TUSFileTypes.AUDIO.name())){
@@ -78,6 +82,8 @@ public class TusController {
 			} catch (TusException | IOException | UnsupportedAudioFileException e){
 				e.printStackTrace();
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing the audio files.");
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
 		} else{
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unsupported file type.");
@@ -89,7 +95,7 @@ public class TusController {
 		try{
 			tusService.transferToFinalStorage(uploadUrl, fileType);
 			return ResponseEntity.ok("Field Calibration File Uploaded Successfully");
-		} catch (TusException | IOException | UnsupportedAudioFileException e){
+		} catch (Exception e){
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while uploading the field calibration file");
 		}
