@@ -1,5 +1,4 @@
 FROM bellsoft/liberica-openjdk-alpine:latest
-MAINTAINER oliver egger <oliver.egger@ahdis.ch>
 EXPOSE 8080
 
 COPY ./target/matchbox.jar /matchbox.jar

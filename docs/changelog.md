@@ -1,3 +1,6 @@
+2024/09/16 Release 3.9.2
+- Fix security issues [#279](https://github.com/ahdis/matchbox/issues/279)
+
 2024/09/16 Release 3.9.1
 - Make CORS configurable, default not activated make cors configurable (now activated) [#271](https://github.com/ahdis/matchbox/issues/271)
 - server API FML transforms between different FHIR versions (R4, R4B, R5) [#265](https://github.com/ahdis/matchbox/issues/265), set flag xVersion
