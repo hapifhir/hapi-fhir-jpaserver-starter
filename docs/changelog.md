@@ -1,3 +1,7 @@
+Unreleased
+
+- Gazelle reports: add an information message if there are no other messages [#274](https://github.com/ahdis/matchbox/issues/274)
+
 2024/09/16 Release 3.9.2
 
 - Fix security issues [#279](https://github.com/ahdis/matchbox/issues/279)

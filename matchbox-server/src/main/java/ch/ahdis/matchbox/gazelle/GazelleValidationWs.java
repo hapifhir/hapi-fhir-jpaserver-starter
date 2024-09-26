@@ -264,6 +264,18 @@ public class GazelleValidationWs {
 			subReport.addUnexpectedError(new UnexpectedError().setMessage("Error during validation: %s".formatted(e.getMessage())));
 		}
 
+		// The EVSClient expects at lest one assertion report, otherwise it will show it as DONE_UNDEFINED
+		// https://github.com/ahdis/matchbox/issues/274
+		if (subReport.getAssertionReports() == null || subReport.getAssertionReports().isEmpty()) {
+			subReport.addAssertionReport(
+				new AssertionReport()
+					.setResult(ValidationTestResult.PASSED)
+					.setSeverity(SeverityLevel.INFO)
+					.setPriority(RequirementPriority.MANDATORY)
+					.setDescription("No fatal or error issues detected, the validation has passed")
+			);
+		}
+
 		return subReport;
 	}
 
