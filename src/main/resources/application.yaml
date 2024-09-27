@@ -239,7 +239,7 @@ hapi:
     # The system will progressively work through these thresholds.
     # A threshold of -1 means to load all results. Note that if the final threshold is a
     # number other than -1, the system will never prefetch more than the given number.
-    search_prefetch_thresholds: 13,503,2003
+    search_prefetch_thresholds: 13,503,2003,-1
 
     # comma-separated package names, will be @ComponentScan'ed by Spring to allow for creating custom Spring beans
     #custom-bean-packages:
