@@ -104,7 +104,7 @@ public class AppProperties {
 
 	private final List<String> custom_provider_classes = new ArrayList<>();
 
-	private List<Integer> search_prefetch_thresholds = new ArrayList<>();
+	private List<Integer> search_prefetch_thresholds = List.of(13, 503, 2003, -1);
 
 
 	public List<String> getCustomInterceptorClasses() {
