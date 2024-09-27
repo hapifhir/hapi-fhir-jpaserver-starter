@@ -1,5 +1,5 @@
-@host = http://localhost:8081/matchboxv3/fhir
-### @host = https://test.ahdis.ch/matchbox/fhir
+### @host = http://localhost:8081/matchboxv3/fhir
+@host = https://test.ahdis.ch/matchbox/fhir
 
 ### returns metadata configuration for server, verify that you have in implementation description "Development Mode"
 GET {{host}}/metadata HTTP/1.1
