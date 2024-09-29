@@ -11,7 +11,7 @@ management:
     web:
       exposure:
         #include: 'health,info,prometheus' # or '* for all'
-        include: '*'
+        include: 'health,info,prometheus,metrics'
   endpoint:
     metrics:
       enabled: true
