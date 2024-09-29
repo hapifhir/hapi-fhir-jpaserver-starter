@@ -1,31 +1,35 @@
 #Uncomment the "servlet" and "context-path" lines below to make the fhir endpoint available at /example/path/fhir instead of the default value of /fhir
 server:
-#  servlet:
-#    context-path: /example/path
+  #  servlet:
+  #    context-path: /example/path
   port: 8080
 #Adds the option to go to eg. http://localhost:8080/actuator/health for seeing the running configuration
 #see https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
 management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        #include: 'health,info,prometheus' # or '* for all'
+        include: '*'
   endpoint:
-    endpoints:
-      enabled-by-default: false
-      web:
-        exposure:
-          include: health,prometheus
+    metrics:
+      enabled: true
     health:
       enabled: true
       probes:
         enabled: true
-      livenessState:
-        enabled: true
-      readinessState:
-        enabled: true
+      group:
+        liveness:
+          include:
+            - livenessState
+            - readinessState
     prometheus:
       enabled: true
-      metrics:
-        export:
-          enabled: true
-
+  prometheus:
+    metrics:
+      export:
+        enabled: true
 spring:
   main:
     allow-circular-references: true
