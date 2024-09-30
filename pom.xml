@@ -21,7 +21,7 @@
 
     <properties>
         <java.version>17</java.version>
-         <spring.boot.version>3.2.6</spring.boot.version>
+        <spring.boot.version>3.2.6</spring.boot.version>
     </properties>
 
     <prerequisites>
@@ -79,6 +79,15 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
             <version>3.3.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
         </dependency>
 
         <dependency>
