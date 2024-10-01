@@ -313,7 +313,7 @@ class ExampleServerR4IT implements IServerSupport {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {"prometheus", "health", "metrics"})
+	@ValueSource(strings = {"prometheus", "health", "metrics", "info"})
 	void testActuatorEndpointExists(String endpoint) throws IOException {
 
 		CloseableHttpClient httpclient = HttpClients.createDefault();
