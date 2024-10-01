@@ -33,6 +33,8 @@ import org.hl7.fhir.r4.model.Subscription;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -310,11 +312,12 @@ class ExampleServerR4IT implements IServerSupport {
 			.size();
 	}
 
-	@Test
-	void testPrometheusEndpoint() throws IOException {
+	@ParameterizedTest
+	@ValueSource(strings = {"prometheus", "health", "metrics"})
+	void testActuatorEndpointExists(String endpoint) throws IOException {
 
 		CloseableHttpClient httpclient = HttpClients.createDefault();
-		CloseableHttpResponse response = httpclient.execute(new HttpGet("http://localhost:" + port + "/actuator/prometheus"));
+		CloseableHttpResponse response = httpclient.execute(new HttpGet("http://localhost:" + port + "/actuator/" + endpoint));
 		int statusCode = response.getStatusLine().getStatusCode();
 		assertEquals(200, statusCode);
 
