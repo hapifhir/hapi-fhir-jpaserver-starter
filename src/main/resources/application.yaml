@@ -146,6 +146,8 @@ hapi:
     ### enable to set the Server URL
     #    server_address: http://hapi.fhir.org/baseR4
     #    defer_indexing_for_codesystems_of_size: 101
+    ### Flag is true by default. This flag filters resources during package installation, allowing only those resources with a valid status (e.g. active) to be installed.
+    #    validate_resource_status_for_package_upload: false 
     #    install_transitive_ig_dependencies: true
     #implementationguides:
     ###    example from registry (packages.fhir.org)
