@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import ca.uhn.fhir.jpa.starter.ResourceProvider.BundlePlainProvider;
+import ca.uhn.fhir.jpa.starter.services.CommonServices;
 import ca.uhn.fhir.rest.server.IResourceProvider;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import org.hl7.fhir.r5.model.*;
@@ -13,9 +14,10 @@ public class EnablePlainProvider extends RestfulServer {
 	public EnablePlainProvider(IFhirResourceDao<Patient> patientDao,
 								 IFhirResourceDao<Organization> orgDao,
 								 IFhirResourceDao<Practitioner> pracDao,
-								 IFhirResourceDao<ImagingStudy> imageDao
+								 IFhirResourceDao<ImagingStudy> imageDao,
+										CommonServices commonServices
 	) {
-		registerProvider(new BundlePlainProvider(patientDao, orgDao, pracDao, imageDao));
+		registerProvider(new BundlePlainProvider(patientDao, orgDao, pracDao, imageDao, commonServices));
 
 		List<IResourceProvider> resourceProviders = new ArrayList<>();
 		registerProviders(resourceProviders);
