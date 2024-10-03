@@ -80,6 +80,7 @@ public class AppProperties {
   private Subscription subscription = new Subscription();
   private Cors cors = null;
   private PseudonymExchangeService pseudonymExchangeService = null;
+  private AddReferralService addReferralService	= null;
   private Partitioning partitioning = null;
   private Boolean validate_resource_status_for_package_upload = true;
   private Boolean install_transitive_ig_dependencies = true;
@@ -215,6 +216,13 @@ public Cors getCors() {
 
   public void setPseudonymExchangeService(PseudonymExchangeService pseudonymExchangeService) {
 		this.pseudonymExchangeService = pseudonymExchangeService;
+  }
+
+  public AddReferralService addReferralService() {
+		return addReferralService;
+  }
+  public void setAddReferralService(AddReferralService addReferralService) {
+		this.addReferralService = addReferralService;
   }
 
   public List<Bundle.BundleType> getAllowed_bundle_types() {
@@ -706,6 +714,18 @@ public Cors getCors() {
 		}
 		public void setTargetProviderId(String targetProviderId) {
 			this.targetProviderId = targetProviderId;
+		}
+	}
+
+	public static class AddReferralService {
+		private String endpoint = "";
+
+		public String getEndpoint() {
+			return endpoint;
+		}
+
+		public void setEndpoint(String endpoint) {
+			this.endpoint = endpoint;
 		}
 	}
 

@@ -12,8 +12,7 @@ source software licensed under the business-friendly [Apache Software License 2.
 ### JPA server
 The HAPI FHIR JPA server offers a complete RESTful FHIR server implementation using JPA 2.0 for database persistence. This project is build up from a [starter repository](https://github.com/hapifhir/hapi-fhir-jpaserver-starter) to deploy an FHIR server, the full source can be found [here](https://github.com/hapifhir/hapi-fhir).
 In the extensive [DOCS](https://hapifhir.io/hapi-fhir/docs/getting_started/introduction.html) much is explained about the JPA server, how it works and how it can be extended for particular use-cases. The project does not provide any security or enterprise audit logging.
-
-**[HAPI JPA Server](https://hapifhir.io/hapi-fhir/docs/server_jpa/architecture.html) has the following components:** ![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdL7rKrfOpq7myofkaXeSW-Pv1i7pHQe53rX1v61pa_ls7IC6UL2JIKZ5Xtd8OEB31l3NRfjLBQvSW0qinkDcz-Jw500DjTRkHicwuIv3GzNl6Y3Ldz3mtII8FA-Arq2v1VLKxPWk_HKutRQL6C6j7AU41G?key=flRIJ62mIRWJ10ofPwigtw)
+**[HAPI JPA Server](https://hapifhir.io/hapi-fhir/docs/server_jpa/architecture.html) has the following components:** !
 - **[Resource Providers](https://hapifhir.io/hapi-fhir/docs/server_plain/resource_providers.html):** A RESTful server Resource Provider is provided for each resource type in a given release of FHIR. Each resource provider implements all the FHIR methods, such as Search, Read, Create, Delete, etc.
 - **[HAPI DAOs](https://hapifhir.io/hapi-fhir/apidocs/hapi-fhir-storage/ca/uhn/fhir/jpa/api/dao/IFhirResourceDao.html):** The Data Access Objects (_DAO_) implement all the database business logic relating to the storage, indexing, and retrieval of FHIR resources, using the underlying JPA API.
 - **[Database](https://hapifhir.io/hapi-fhir/docs/server_jpa/database_support.html):** The RESTful server uses an embedded database but can be configured to communicate with any database supported by [Hibernate](https://hibernate.org/orm/). The JPA Server maintains active support for several databases such as: [MS SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads), [PostgreSQL](https://www.postgresql.org/), [ORACLE](https://www.oracle.com/database/).
@@ -56,26 +55,25 @@ To get started:
 
 
 _To test the HAPI with the [Timeline](https://github.com/minvws/nl-irealisatie-zmodules-pgo-demo) service,
-add at least an ImagingStudy to the HAPI fhir database._
+at least one ImagingStudy has to be added to the HAPI database._
 
 **To easily set up sample FHIR entries use the following steps:**
-1. Run JPA server
-2. Open new terminal in project directory
-3. Run the following command to get a bundle with sample data loaded in:
+1. Start the JPA server as shown above
+2. Start all the needed modules as shown in [GFModules project](https://github.com/minvws/gfmodules-coordination)
+3. Open new terminal in project directory
+4. Run the following command to get a bundle with sample data loaded in:
 
-```curl
-   curl -X POST http://localhost:8080/fhir \
-   -H "Content-Type: application/json" \
-   --data @fhir_examples/bundle.json
+```bash
+   sh create_patient.sh
 ```
 
-4. Test whether the HAPI has successfully gotten the data:
+5. Test whether the HAPI has successfully gotten the data:
 
 ```curl 
 curl -X GET http://localhost:8080/fhir/Patient/3
 ```
 
-5. It should return something like:
+6. It should return something like:
 ```json
 {
    "resourceType": "Patient",
@@ -99,39 +97,13 @@ curl -X GET http://localhost:8080/fhir/Patient/3
 }
 ```
 
-Before you request the timeline service ensure your endpoint is registered in the [address](https://github.com/minvws/nl-irealisatie-zmodules-addressing-register) and
-the [pseudonym-exchange-service](https://github.com/minvws/nl-irealisatie-zmodules-pseudonym-service) knows your provider-id.
-To find your provider-id, look in the [settings file](src/main/resources/application.yaml).
+7. If you do get a correct result back then try if [timeline service](http://localhost:8500/) works as well
+8. Use for the BSN the input: `123456789` This will load the created patient
 
-In the address DB you should have a entry that sets the address endpoint to: http://host.docker.internal:8080/fhir
-and to set up the provider in the pseudonym service with the following steps:
-1. do the following curl request in the terminal
-```curl
-curl -X 'POST' \
-  'http://localhost:8504/register' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "provider_id": "MY_HAPI",
-  "bsn_hash": "2b826afa1c71f571a007dad61ce9fb9b63a24a328aa4ac009484a198ff565c51"
-}'
-```
-2. Copy generated pseudonym, it would look like the following:
-```{"pseudonym":"79693551-2195-464f-9e8f-b5a7b90ec854"}```
-3. Open database editor to the `hapi` database
-4. Go to table `hfj_res_ver`
-5. Edit the extension in the `patient` resource entry
-![assets/img.png](assets/img.png)
-6. Replace the patient's extensions UUID with the copied pseudonym
-
-Finally test whether the pseudonym service and the right pseudonym are all setup correctly:
-1. Do curl request, this same pseudonym is used by the timeline service as a sample pseudonym and it is coupled to the same bsn_hash that was used with setting the provider ID:
-```curl
-curl 'http://localhost:8080/fhir/ImagingStudy/_search?pseudonym=677b33c7-30e0-4fe1-a740-87fd73c4dfaf'
-```
-If you do not get any imaging studies back in the response then the HAPI is not set up correctly. 
-
-2. If you do get imaging studies back then try if [timeline service](http://localhost:8500/) works as well
+### Review
+* Addresses database received a new endpoint, pointing to this HAPI.
+* The pseudonyms  database contains three extra pseudonyms from three providers, Timeline service, HAPI, referral service.
+* In the referrals database, a row is added with a pseudonym, URA that corresponds with the addresses DB and with data domain set to beeldbank.
 
 ### Setting properties
 In the [application.yaml](src/main/resources/application.yaml) file, you can configure most server and HAPI settings, enable or disable components, and set custom resource providers and interceptors.  

@@ -78,8 +78,11 @@ spring:
 hapi:
   fhir:
     pseudonym-exchange-service:
-      endpoint: 'http://localhost:8504/exchange'
+      endpoint: 'http://localhost:8504'
       target-provider-id: 'MY_HAPI'
+    add-referral-service:
+      endpoint: 'http://localhost:8501/registrations/'
+
     ### This flag when enabled to true, will avail evaluate measure operations from CR Module.
     ### Flag is false by default, can be passed as command line argument to override.
     cr:
