@@ -151,6 +151,10 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setLanguageSearchParameterEnabled(appProperties.getLanguage_search_parameter_enabled());
 
 
+		if (!appProperties.getSearch_prefetch_thresholds().isEmpty()) {
+			jpaStorageSettings.setSearchPreFetchThresholds(appProperties.getSearch_prefetch_thresholds());
+		}
+
 		Integer maxFetchSize = appProperties.getMax_page_size();
 		jpaStorageSettings.setFetchSizeDefaultMaximum(maxFetchSize);
 		ourLog.info("Server configured to have a maximum fetch size of "

@@ -104,6 +104,8 @@ public class AppProperties {
 
 	private final List<String> custom_provider_classes = new ArrayList<>();
 
+	private List<Integer> search_prefetch_thresholds = new ArrayList<>();
+
 
 	public List<String> getCustomInterceptorClasses() {
     return custom_interceptor_classes;
@@ -643,7 +645,16 @@ public Cors getCors() {
 		this.language_search_parameter_enabled = language_search_parameter_enabled;
 	}
 
-	public static class Cors {
+	public List<Integer> getSearch_prefetch_thresholds() {
+		return this.search_prefetch_thresholds;
+	}
+
+	public void  setSearch_prefetch_thresholds(List<Integer> thePrefetchThresholds) {
+		this.search_prefetch_thresholds = thePrefetchThresholds;
+	}
+
+
+    public static class Cors {
     private Boolean allow_Credentials = true;
     private List<String> allowed_origin = List.of("*");
 
