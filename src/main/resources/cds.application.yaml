@@ -6,10 +6,32 @@ server:
 #Adds the option to go to eg. http://localhost:8080/actuator/health for seeing the running configuration
 #see https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
 management:
+  #The following configuration will enable the actuator endpoints at /actuator/health, /actuator/info, /actuator/prometheus, /actuator/metrics. For security purposes, only /actuator/health is enabled by default.
   endpoints:
+    enabled-by-default: false
     web:
       exposure:
-        include: "health,prometheus"
+        include: 'health' # or e.g. 'info,health,prometheus,metrics' or '*' for all'
+  endpoint:
+    info:
+      enabled: true
+    metrics:
+      enabled: true
+    health:
+      enabled: true
+      probes:
+        enabled: true
+      group:
+        liveness:
+          include:
+            - livenessState
+            - readinessState
+    prometheus:
+      enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
 spring:
   main:
     allow-circular-references: true

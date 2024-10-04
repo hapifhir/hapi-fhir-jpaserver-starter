@@ -7,11 +7,11 @@ sources:
   - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
 dependencies:
   - name: postgresql
-    version: 14.3.1
+    version: 15.5.22
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
 appVersion: 7.2.0
-version: 0.17.0
+version: 0.17.1
 annotations:
   artifacthub.io/license: Apache-2.0
   artifacthub.io/containsSecurityUpdates: "false"
@@ -24,8 +24,6 @@ annotations:
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
     - kind: changed
-      description: updated starter image to v7.2.0
+      description: updated curlimages/curl to 8.9.1
     - kind: changed
-      description: updated curlimages/curl to 8.6.0
-    - kind: changed
-      description: "updated postgresql sub-chart to 14.3.1."
+      description: "updated postgresql sub-chart to 15.5.22."
