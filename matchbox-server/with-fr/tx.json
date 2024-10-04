@@ -1,0 +1,37 @@
+{
+    "resourceType": "Parameters",
+    "parameter": [
+        {
+            "name": "coding",
+            "valueCoding": {
+                "system": "https://mos.esante.gouv.fr/NOS/TRE_R357-StatutPersonnePriseCharge/FHIR/TRE-R357-StatutPersonnePriseCharge",
+                "code": "48",
+                "display": "Usager ssssorti"
+            }
+        },
+        {
+            "name": "displayLanguage",
+            "valueString": "en"
+        },
+        {
+            "name": "lenient-display-validation",
+            "valueBoolean": true
+        },
+        {
+            "name": "default-to-latest-version",
+            "valueBoolean": true
+        },
+        {
+            "name": "cache-id",
+            "valueId": "ddb1a430-b44c-4530-b979-005f49d96fa4"
+        },
+        {
+            "name": "profile-url",
+            "valueString": "http://hl7.org/fhir/ExpansionProfile/dc8fd4bc-091a-424a-8a3b-6198ef146891"
+        },
+        {
+            "name": "mode",
+            "valueString": "lenient-display-validation"
+        }
+    ]
+}

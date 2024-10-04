@@ -228,3 +228,4 @@ database/h2.trace.db
 **/charts/*.tgz
 
 .apt_generated_tests
+matchbox-server/tx.html

@@ -487,9 +487,8 @@ public class MatchboxEngineSupport {
 			validator.getContext().setNoTerminologyServer(false);
 
 			try {
-				// set "txLog" for second parameter to activate
 				// Currently all terminology clients are to R4 for versin greater than R4
-				final String txver = validator.setTerminologyServer(cli.getTxServer(), null, FhirPublication.R4, true);
+				final String txver = validator.setTerminologyServer(cli.getTxServer(), cli.getTxLog(), FhirPublication.R4, cli.isTxUseEcosystem());
 				log.debug("Version of the terminology server: {}", txver);
 			} catch (final Exception e) {
 				throw new TerminologyServerException("Error while setting the terminology server: " + e.getMessage(), e);

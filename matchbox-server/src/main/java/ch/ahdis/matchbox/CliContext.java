@@ -97,12 +97,14 @@ public class CliContext {
   @JsonProperty("txServerCache")
   private boolean txServerCache = true;
 
+  @JsonProperty("txLog")
+  private String txLog = null;
+
+  @JsonProperty("txUseEcosystem")
+  private boolean txUseEcosystem = true;
+
   // @JsonProperty("sv")
   // private String sv = null;
-  // @JsonProperty("txLog")
-  // private String txLog = null;
-  // @JsonProperty("txCache")
-  // private String txCache = null;
   // @JsonProperty("mapLog")
   // private String mapLog = null;
   @JsonProperty("lang")
@@ -309,6 +311,26 @@ public class CliContext {
   @JsonProperty("txServerCache")
   public void setTxServerCache(boolean txServerCache) {
     this.txServerCache = txServerCache;
+  }
+
+  @JsonProperty("txLog")
+  public String getTxLog() {
+    return txLog;
+  }
+
+  @JsonProperty("txLog")
+  public void setTxLog(String txLog) {
+    this.txLog = txLog;
+  }
+
+  @JsonProperty("txUseEcosystem")
+  public void setTxUseEcosystem(boolean txUseEcosystem) {
+    this.txUseEcosystem = txUseEcosystem;
+  }
+
+  @JsonProperty("txUseEcosystem")
+  public boolean isTxUseEcosystem() {
+    return txUseEcosystem;
   }
 
   @JsonProperty("doNative")
@@ -621,6 +643,8 @@ public class CliContext {
         && Objects.equals(extensions, that.extensions)
         && Objects.equals(txServer, that.txServer)
         && txServerCache == that.txServerCache
+        && Objects.equals(txLog, that.txLog)
+        && txUseEcosystem == that.txUseEcosystem
         && Objects.equals(lang, that.lang)
         && Objects.equals(snomedCT, that.snomedCT)
         && Objects.equals(fhirVersion, that.fhirVersion)
@@ -658,6 +682,8 @@ public class CliContext {
         htmlInMarkdownCheck,
         txServer,
         txServerCache,
+        txLog,
+        txUseEcosystem,
         lang,
         snomedCT,
         fhirVersion,
@@ -694,6 +720,8 @@ public class CliContext {
         ", htmlInMarkdownCheck=" + htmlInMarkdownCheck +
         ", txServer='" + txServer + '\'' +
         ", txServerCache='" + txServerCache + '\'' +
+        ", txLog='" + txLog + '\'' +
+        ", txUseEcosystem=" + txUseEcosystem +
         ", lang='" + lang + '\'' +
         ", snomedCT='" + snomedCT + '\'' +
         ", fhirVersion='" + fhirVersion + '\'' +
@@ -747,6 +775,8 @@ public class CliContext {
 	addExtension(ext, "allowExampleUrls", new BooleanType(this.allowExampleUrls));
 	addExtension(ext, "txServer", new UriType(this.txServer));
 	addExtension(ext, "txServerCache", new BooleanType(this.txServerCache));
+  addExtension(ext, "txLog", new StringType(this.txLog));
+  addExtension(ext, "txUseEcosystem", new BooleanType(this.txUseEcosystem));
 	addExtension(ext, "lang", new StringType(this.lang));
 	addExtension(ext, "snomedCT", new StringType(this.snomedCT));
 	addExtension(ext, "fhirVersion", new StringType(this.fhirVersion));

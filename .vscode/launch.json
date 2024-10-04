@@ -79,6 +79,15 @@
     },
     {
       "type": "java",
+      "name": "Launch Matchbox-Server (fr)",
+      "request": "launch",
+      "mainClass": "ca.uhn.fhir.jpa.starter.Application",
+      "projectName": "matchbox-server",
+      "vmArgs": "-Dspring.config.additional-location=file:with-fr/application.yaml",
+      "cwd": "${workspaceFolder}/matchbox-server"
+    },
+    {
+      "type": "java",
       "name": "Launch Matchbox-Server (int-tests epr-fhir)",
       "request": "launch",
       "mainClass": "ca.uhn.fhir.jpa.starter.Application",
