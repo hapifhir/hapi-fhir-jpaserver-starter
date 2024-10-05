@@ -149,7 +149,7 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setDeleteExpungeEnabled(appProperties.getDelete_expunge_enabled());
 		jpaStorageSettings.setExpungeEnabled(appProperties.getExpunge_enabled());
 		jpaStorageSettings.setLanguageSearchParameterEnabled(appProperties.getLanguage_search_parameter_enabled());
-
+		jpaStorageSettings.setValidateResourceStatusForPackageUpload(appProperties.getValidate_resource_status_for_package_upload());
 
 		Integer maxFetchSize = appProperties.getMax_page_size();
 		jpaStorageSettings.setFetchSizeDefaultMaximum(maxFetchSize);
