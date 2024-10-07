@@ -565,8 +565,9 @@ public class MatchboxEngine extends ValidationEngine {
 		
 		org.hl7.fhir.r5.elementmodel.ParserBase parser = Manager.makeParser(context, cntType);
 		StructureDefinition sd = context.fetchResource(StructureDefinition.class, canonicalSource);
-		if (sd.getKind() == StructureDefinitionKind.LOGICAL) {
-				parser.setLogical(sd);
+		// The QName 'urn:hl7-org:v3::Observation' does not match the expected QName 'urn:hl7-org:v3::observation' at line 0 col 0
+		if (sd.getKind() == StructureDefinitionKind.LOGICAL && sd.getUrl()!=null && !sd.getUrl().startsWith("http://hl7.org/cda/stds/core")) {
+			parser.setLogical(sd);
 		}
 		org.hl7.fhir.r5.elementmodel.Element src = parser.parseSingle(new ByteArrayInputStream(source.getBytes()), null);
 		return transform(src, mapUri, targetContext);
