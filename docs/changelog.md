@@ -1,7 +1,9 @@
-2024/10/04 Release 3.9.3
+2024/10/07 Release 3.9.3
 
 - Gazelle reports: add an information message if there are no other messages [#274](https://github.com/ahdis/matchbox/issues/274)
 - Additional tx Parameters txLog and txUseEcosystem [#281](https://github.com/ahdis/matchbox/issues/281)
+- FML: updates to work with fhir-mapping-tutorial [#283](https://github.com/ahdis/matchbox/issues/283)
+- Container: Create config directory already in base image [#284](https://github.com/ahdis/matchbox/issues/284)
 
 2024/09/16 Release 3.9.2
 

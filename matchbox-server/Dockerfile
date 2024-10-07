@@ -11,6 +11,8 @@ RUN apk --purge del
 RUN adduser -D matchbox --disabled-password --gecos '' matchbox
 ENV HOME=/home/matchbox
 RUN mkdir -p /database && chown matchbox:matchbox /database
+RUN mkdir -p /config && chown matchbox:matchbox /config
+RUN chown matchbox:matchbox /
 
 USER matchbox
 
