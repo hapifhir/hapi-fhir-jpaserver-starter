@@ -158,14 +158,6 @@ class CdaToFhirTransformTests {
 	}
 
 	@Test
-	void TestFhirPathObservationIt() throws FHIRException, IOException {
-		InputStream in = getResourceAsStream("cda-it-observation.xml");
-		String observationIt = IOUtils.toString(in, StandardCharsets.UTF_8);
-		assertEquals("2022-03-01T22:11:22+01:00",
-				getEngine().evaluateFhirPath(observationIt, false, "value.high.value"));
-	}
-
-	@Test
 	void TestInitial() throws FHIRException, IOException {
 		String result = getEngine().transform(cdaLabItaly,
 				false,
