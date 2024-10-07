@@ -1,0 +1,11 @@
+/// url = 'http://hl7.org/fhir/StructureMap/tutorial-step5'
+/// name = 'tutorial-step5'
+/// title = 'Tutorial Step 5'
+
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-left-5" alias TLeft as source
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-right-5" alias TRight as target
+
+group tutorial(source src : TLeft, target tgt : TRight) {
+  src.a22 as a -> tgt.a22 = a "rule_a22";
+}
+

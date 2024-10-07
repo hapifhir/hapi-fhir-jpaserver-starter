@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<StructureMap xmlns="http://hl7.org/fhir">
+  <id value="tutorial"/>
+  <url value="http://hl7.org/fhir/StructureMap/tutorial9check"/>
+  <name value="tutorial"/>
+  <status value="draft"/>
+  <structure>
+    <url value="http://hl7.org/fhir/StructureDefinition/tutorial-left-9"/>
+    <mode value="source"/>
+    <alias value="TLeft"/>
+  </structure>
+  <structure>
+    <url value="http://hl7.org/fhir/StructureDefinition/tutorial-right-9"/>
+    <mode value="target"/>
+    <alias value="TRight"/>
+  </structure>
+  <group>
+    <name value="tutorial"/>
+    <typeMode value="none"/>
+    <input>
+      <name value="src"/>
+      <type value="TLeft"/>
+      <mode value="source"/>
+    </input>
+    <input>
+      <name value="tgt"/>
+      <type value="TRight"/>
+      <mode value="target"/>
+    </input>
+    <rule>
+      <name value="i"/>
+      <source>
+        <context value="src"/>
+        <element value="i"/>
+        <variable value="i"/>
+        <check value="src.m &lt; 2"/>
+      </source>
+      <target>
+        <context value="tgt"/>
+        <contextType value="variable"/>
+        <element value="j"/>
+        <transform value="copy"/>
+        <parameter>
+          <valueId value="i"/>
+        </parameter>
+      </target>
+    </rule>
+  </group>
+</StructureMap>

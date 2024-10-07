@@ -1,0 +1,7 @@
+<OperationOutcome xmlns="http://hl7.org/fhir/tutorial">
+  <issue>
+    <severity value='error' />
+    <code value='processing' />
+    <diagnostics value='Rule &apos;rule_a20c&apos;, Check condition failed, a2.length() &lt;= 20' />
+  </issue>
+</OperationOutcome>

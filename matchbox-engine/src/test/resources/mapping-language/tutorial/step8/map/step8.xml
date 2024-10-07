@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<StructureMap xmlns="http://hl7.org/fhir">
+  <id value="tutorial"/>
+  <contained>
+    <ConceptMap xmlns="http://hl7.org/fhir">
+      <id value="tutorialmap"/>
+      <status value="draft"/>
+      <group>
+        <source value="http://hl7.org/fhir/tutorial8/codeleft"/>
+        <target value="http://hl7.org/fhir/tutorial8/coderight"/>
+        <element>
+          <code value="vonhier"/>
+          <target>
+            <code value="nach-da"/>
+            <equivalence value="equivalent"/>
+          </target>
+        </element>
+        <element>
+          <code value="test"/>
+          <target>
+            <code value="test"/>
+            <equivalence value="equivalent"/>
+          </target>
+        </element>
+      </group>
+    </ConceptMap>
+  </contained>
+  <url value="http://hl7.org/fhir/StructureMap/tutorial-step8"/>
+  <name value="tutorial"/>
+  <status value="draft"/>
+  <structure>
+    <url value="http://hl7.org/fhir/StructureDefinition/tutorial-left-8"/>
+    <mode value="source"/>
+    <alias value="TLeft"/>
+  </structure>
+  <structure>
+    <url value="http://hl7.org/fhir/StructureDefinition/tutorial-right-8"/>
+    <mode value="target"/>
+    <alias value="TRight"/>
+  </structure>
+  <group>
+    <name value="tutorial"/>
+    <typeMode value="none"/>
+    <input>
+      <name value="src"/>
+      <type value="TLeft"/>
+      <mode value="source"/>
+    </input>
+    <input>
+      <name value="tgt"/>
+      <type value="TRight"/>
+      <mode value="target"/>
+    </input>
+    <rule>
+      <name value="rule_d"/>
+      <source>
+        <context value="src"/>
+        <element value="d"/>
+        <variable value="d"/>
+      </source>
+      <target>
+        <context value="tgt"/>
+        <contextType value="variable"/>
+        <element value="d"/>
+        <transform value="translate"/>
+        <parameter>
+          <valueId value="d"/>
+        </parameter>
+        <parameter>
+          <valueString value="#tutorialmap"/>
+        </parameter>
+        <parameter>
+          <valueString value="code"/>
+        </parameter>
+      </target>
+    </rule>
+  </group>
+</StructureMap>

@@ -1,0 +1,19 @@
+server:
+  servlet:
+    context-path: /matchbox
+spring:
+  datasource:
+    url: "jdbc:h2:mem:validate-r4"
+    username: sa
+    password: null
+    driverClassName: org.h2.Driver
+    max-active: 15
+    hikari:
+      maximum-pool-size: 10
+matchbox:
+  fhir:
+    context:
+      fhirVersion: 4.0.1
+      xVersion: true      
+      onlyOneEngine: true
+      txServer: http://tx.fhir.org

@@ -1,0 +1,10 @@
+{
+  "resourceType": "OperationOutcome",
+  "issue": [
+    {
+      "severity": "error",
+      "code": "processing",
+      "diagnostics": "Rule 'rule_a21a': Failed to cast 'notanumber' to type 'integer'. Rule 'rule_a21a': Failed to cast 'notanumber' to type 'integer'. Invalid number format."
+    }
+  ]
+}

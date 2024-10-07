@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<StructureMap xmlns="http://hl7.org/fhir">
+  <id value="tutorial"/>
+  <url value="http://hl7.org/fhir/StructureMap/tutorial-step7b"/>
+  <name value="tutorial"/>
+  <status value="draft"/>
+  <structure>
+    <url value="http://hl7.org/fhir/StructureDefinition/tutorial-left-7"/>
+    <mode value="source"/>
+    <alias value="TLeft"/>
+  </structure>
+  <structure>
+    <url value="http://hl7.org/fhir/StructureDefinition/tutorial-right-7"/>
+    <mode value="target"/>
+    <alias value="TRight"/>
+  </structure>
+  <group>
+    <name value="tutorial"/>
+    <typeMode value="none"/>
+    <input>
+      <name value="src"/>
+      <type value="TLeft"/>
+      <mode value="source"/>
+    </input>
+    <input>
+      <name value="tgt"/>
+      <type value="TRight"/>
+      <mode value="target"/>
+    </input>
+    <rule>
+      <name value="rule_aa"/>
+      <source>
+        <context value="src"/>
+        <element value="aa"/>
+        <variable value="s_aa"/>
+      </source>
+      <target>
+        <context value="tgt"/>
+        <contextType value="variable"/>
+        <element value="aa"/>
+        <variable value="t_aa"/>
+      </target>
+      <dependent>
+        <name value="ab_content"/>
+        <variable value="s_aa"/>
+        <variable value="t_aa"/>
+      </dependent>
+    </rule>
+  </group>
+  <group>
+    <name value="ab_content"/>
+    <typeMode value="none"/>
+    <input>
+      <name value="src"/>
+      <mode value="source"/>
+    </input>
+    <input>
+      <name value="tgt"/>
+      <mode value="target"/>
+    </input>
+    <rule>
+      <name value="rule_ab"/>
+      <source>
+        <context value="src"/>
+        <element value="ab"/>
+        <variable value="ab"/>
+      </source>
+      <target>
+        <context value="tgt"/>
+        <contextType value="variable"/>
+        <element value="ab"/>
+        <transform value="copy"/>
+        <parameter>
+          <valueId value="ab"/>
+        </parameter>
+      </target>
+      <documentation value="copy ab inside aa"/>
+    </rule>
+  </group>
+</StructureMap>

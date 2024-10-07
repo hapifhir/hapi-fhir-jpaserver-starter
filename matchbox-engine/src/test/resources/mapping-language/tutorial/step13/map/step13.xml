@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<StructureMap xmlns="http://hl7.org/fhir">
+  <id value="tutorial"/>
+  <url value="http://hl7.org/fhir/StructureMap/tutorial-step13"/>
+  <name value="tutorial"/>
+  <status value="draft"/>
+  <structure>
+    <url value="http://hl7.org/fhir/StructureDefinition/tutorial-left-13"/>
+    <mode value="source"/>
+    <alias value="TLeft"/>
+  </structure>
+  <structure>
+    <url value="http://hl7.org/fhir/StructureDefinition/tutorial-right-13"/>
+    <mode value="target"/>
+    <alias value="TRight"/>
+  </structure>
+  <structure>
+    <url value="http://hl7.org/fhir/StructureDefinition/Basic"/>
+    <mode value="target"/>
+    <alias value="Basic"/>
+  </structure>
+  <group>
+    <name value="tutorial"/>
+    <typeMode value="none"/>
+    <input>
+      <name value="src"/>
+      <type value="TLeft"/>
+      <mode value="source"/>
+    </input>
+    <input>
+      <name value="tgt"/>
+      <type value="TRight"/>
+      <mode value="target"/>
+    </input>
+    <rule>
+      <name value="rule_ptr"/>
+      <source>
+        <context value="src"/>
+        <element value="f1"/>
+        <variable value="s_f1"/>
+      </source>
+      <target>
+        <context value="tgt"/>
+        <contextType value="variable"/>
+        <element value="f2"/>
+        <variable value="rr"/>
+        <transform value="create"/>
+        <parameter>
+          <valueString value="Basic"/>
+        </parameter>
+      </target>
+      <target>
+        <context value="tgt"/>
+        <contextType value="variable"/>
+        <element value="ptr"/>
+        <transform value="reference"/>
+        <parameter>
+          <valueId value="rr"/>
+        </parameter>
+      </target>
+      <rule>
+        <name value="rule_s_f1"/>
+        <source>
+          <context value="s_f1"/>
+        </source>
+        <target>
+          <context value="rr"/>
+          <contextType value="variable"/>
+          <element value="code"/>
+          <variable value="code"/>
+        </target>
+        <target>
+          <context value="code"/>
+          <contextType value="variable"/>
+          <element value="text"/>
+          <transform value="copy"/>
+          <parameter>
+            <valueId value="s_f1"/>
+          </parameter>
+        </target>
+      </rule>
+    </rule>
+  </group>
+</StructureMap>

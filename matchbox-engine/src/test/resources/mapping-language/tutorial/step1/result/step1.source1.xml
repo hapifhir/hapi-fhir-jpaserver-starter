@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<TRight xmlns="http://hl7.org/fhir/tutorial">
+  <a value="step1-demo"/>
+</TRight>

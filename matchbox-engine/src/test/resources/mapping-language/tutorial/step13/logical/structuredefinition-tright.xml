@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <id value="TRight"/>
+  <extension url="http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace">
+    <valueUri value="http://hl7.org/fhir/tutorial"/>
+  </extension>
+  <url value="http://hl7.org/fhir/StructureDefinition/tutorial-right-13"/>
+  <name value="TRight"/>
+  <status value="draft"/>
+  <fhirVersion value="4.0.1"/>
+  <kind value="logical"/>
+  <abstract value="true"/>
+  <type value="TRight"/>
+  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Base"/>
+  <derivation value="specialization"/>
+  <differential>
+    <element id="TRight">
+      <path value="TRight"/>
+      <definition value="TLeft definition"/>
+      <min value="1"/>
+      <max value="1"/>
+    </element>
+    <element id="TRight.ptr">
+      <path value="TRight.ptr"/>
+      <definition value="TRight definition"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="string"/>
+      </type>
+    </element>
+    <element id="TRight.f2">
+      <path value="TRight.f2"/>
+      <definition value="TRight2 definition"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="Basic"/>
+        <profile value="http://hl7.org/fhir/StructureDefinition/Basic" />
+      </type>
+    </element>
+  </differential>
+</StructureDefinition>

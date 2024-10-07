@@ -1,0 +1,11 @@
+/// url = 'http://hl7.org/fhir/StructureMap/tutorial-step6c'
+/// name = 'tutorial-step6c'
+/// title = 'Tutorial Step 6c'
+
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-left-6" alias TLeft as source
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-right-6" alias TRight as target
+
+group tutorial(source src : TLeft, target tgt : TRight) {
+  src.a23 first as a -> tgt.a23 = a "rule_a23c_1"; // only use the first item in the list
+}
+

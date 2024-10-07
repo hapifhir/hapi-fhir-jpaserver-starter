@@ -1,0 +1,10 @@
+<TRight xmlns="http://hl7.org/fhir/tutorial">
+  <e>
+    <f value="12345" />
+    <g value="g1" />
+  </e>
+  <e>
+    <f value="67890" />
+    <g value="g2" />
+  </e>
+</TRight>

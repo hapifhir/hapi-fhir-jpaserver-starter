@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<TLeft xmlns="http://hl7.org/fhir/tutorial">
+  <a23 value="12345"/>
+</TLeft>

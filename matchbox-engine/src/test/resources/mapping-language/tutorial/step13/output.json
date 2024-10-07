@@ -1,0 +1,11 @@
+{
+  "resourceType" : "TRight",
+  "ptr" : ["Basic/8ba2d798-18b1-4a9f-ab31-5894b36e5e74"],
+  "f2" : [{
+    "resourceType" : "Basic",
+    "id" : "8ba2d798-18b1-4a9f-ab31-5894b36e5e74",
+    "code" : {
+      "text" : "test"
+    }
+  }]
+}

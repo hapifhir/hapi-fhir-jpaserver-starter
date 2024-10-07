@@ -1,0 +1,62 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "TRight",
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/elementdefinition-namespace",
+      "valueUri": "http://hl7.org/fhir/tutorial"
+    }
+  ],
+  "url": "http://hl7.org/fhir/StructureDefinition/tutorial-right-11",
+  "name": "TRight",
+  "status": "draft",
+  "fhirVersion": "4.0.1",
+  "kind": "logical",
+  "abstract": true,
+  "type": "TRight",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Base",
+  "derivation": "specialization",
+  "differential": {
+    "element": [
+      {
+        "id": "TRight",
+        "path": "TRight",
+        "min": 1,
+        "max": "1"
+      },
+      {
+        "id": "TRight.e",
+        "path": "TRight.e",
+        "min": 0,
+        "max": "*",
+        "type": [
+          {
+            "code": "BackboneElement"
+          }
+        ]
+      },
+      {
+        "id": "TRight.e.f",
+        "path": "TRight.e.f",
+        "min": 1,
+        "max": "1",
+        "type": [
+          {
+            "code": "string"
+          }
+        ]
+      },
+      {
+        "id": "TRight.e.g",
+        "path": "TRight.e.g",
+        "min": 1,
+        "max": "1",
+        "type": [
+          {
+            "code": "code"
+          }
+        ]
+      }
+    ]
+  }
+}

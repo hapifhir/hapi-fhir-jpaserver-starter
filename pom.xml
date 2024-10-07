@@ -9,7 +9,7 @@
 
     <groupId>health.matchbox</groupId>
     <artifactId>matchbox</artifactId>
-    <version>3.9.2</version>
+    <version>3.9.3</version>
     <packaging>pom</packaging>
     <name>matchbox</name>
     <description>An open-source implementation to support testing and implementation of FHIR based solutions and map or
@@ -466,6 +466,20 @@
                 <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>okhttp</artifactId>
                 <version>${okhttp_version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.xmlunit</groupId>
+                <artifactId>xmlunit-core</artifactId>
+                <version>2.10.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.xmlunit</groupId>
+                <artifactId>xmlunit-matchers</artifactId>
+                <version>2.10.0</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

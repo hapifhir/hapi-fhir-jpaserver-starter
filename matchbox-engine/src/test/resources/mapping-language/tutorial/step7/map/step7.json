@@ -1,0 +1,83 @@
+{
+  "resourceType": "StructureMap",
+  "id": "tutorial",
+  "url": "http://hl7.org/fhir/StructureMap/tutorial-step7",
+  "name": "tutorial",
+  "status": "draft",
+  "structure": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/tutorial-left-7",
+      "mode": "source",
+      "alias": "TLeft"
+    },
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/tutorial-right-7",
+      "mode": "target",
+      "alias": "TRight"
+    }
+  ],
+  "group": [
+    {
+      "name": "tutorial",
+      "typeMode": "none",
+      "input": [
+        {
+          "name": "src",
+          "type": "TLeft",
+          "mode": "source"
+        },
+        {
+          "name": "tgt",
+          "type": "TRight",
+          "mode": "target"
+        }
+      ],
+      "rule": [
+        {
+          "name": "rule_aa",
+          "source": [
+            {
+              "context": "src",
+              "element": "aa",
+              "variable": "s_aa"
+            }
+          ],
+          "target": [
+            {
+              "context": "tgt",
+              "contextType": "variable",
+              "element": "aa",
+              "variable": "t_aa"
+            }
+          ],
+          "rule": [
+            {
+              "name": "rule_ab",
+              "source": [
+                {
+                  "context": "s_aa",
+                  "element": "ab",
+                  "variable": "ab"
+                }
+              ],
+              "target": [
+                {
+                  "context": "t_aa",
+                  "contextType": "variable",
+                  "element": "ab",
+                  "transform": "copy",
+                  "parameter": [
+                    {
+                      "valueId": "ab"
+                    }
+                  ]
+                }
+              ],
+              "documentation": "copy ab inside aa"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

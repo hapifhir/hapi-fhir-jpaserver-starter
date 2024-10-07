@@ -1,0 +1,13 @@
+map "http://hl7.org/fhir/StructureMap/tutorial-step13" = "tutorial"
+
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-left-13" alias TLeft as source
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-right-13" alias TRight as target
+uses "http://hl7.org/fhir/StructureDefinition/Basic" alias Basic as target
+
+group tutorial(source src : TLeft, target tgt : TRight) {
+// setting id to one is not necessary, this is just to compare the output
+  src.f1 as s_f1 -> tgt.f2 = create("Basic") as rr, rr.id = "1", tgt.ptr = reference(rr) then {
+    s_f1 -> rr.code as code, code.text = s_f1 "rule_s_f1";
+  } "rule_ptr";
+
+}

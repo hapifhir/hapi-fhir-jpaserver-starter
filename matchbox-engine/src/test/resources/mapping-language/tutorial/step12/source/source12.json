@@ -1,0 +1,10 @@
+{
+    "resourceType": "TLeft",
+    "az1": {
+        "az2": "FHIR",
+        "az3": [
+            "Fast",
+            "Resource"
+        ]
+    }
+}

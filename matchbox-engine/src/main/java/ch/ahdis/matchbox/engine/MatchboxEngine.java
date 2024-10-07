@@ -55,6 +55,7 @@ import org.hl7.fhir.r5.model.Base;
 import org.hl7.fhir.r5.model.Narrative.NarrativeStatus;
 import org.hl7.fhir.r5.model.Parameters;
 import org.hl7.fhir.r5.model.StructureDefinition;
+import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionKind;
 import org.hl7.fhir.r5.model.StructureMap;
 import org.hl7.fhir.r5.model.UriType;
 import org.hl7.fhir.r5.renderers.RendererFactory;
@@ -554,13 +555,20 @@ public class MatchboxEngine extends ValidationEngine {
 		// if this is the case we do lazy loading of the additional FHIR version into the context
 
 		StructureMap map = context.fetchResource(StructureMap.class, mapUri);
-		String fhirVersionSource = getFhirVersion(getCanonicalFromStructureMap(map, StructureMap.StructureMapModelMode.SOURCE));
+		String canonicalSource = getCanonicalFromStructureMap(map, StructureMap.StructureMapModelMode.SOURCE);
+
+		String fhirVersionSource = getFhirVersion(canonicalSource);
 		if (fhirVersionSource !=null &&  (fhirVersionSource.startsWith("4.0") || fhirVersionSource.startsWith("4.3") || fhirVersionSource.startsWith("5.0")) && !fhirVersionSource.equals(this.getVersion().substring(0,3))) {
 			log.info("Loading additional FHIR version for Source into context " + fhirVersionSource);
 			context = getContextForFhirVersion(fhirVersionSource);
 		}
-		org.hl7.fhir.r5.elementmodel.Element src = Manager.parseSingle(context, new ByteArrayInputStream(source.getBytes()),
-				cntType);
+		
+		org.hl7.fhir.r5.elementmodel.ParserBase parser = Manager.makeParser(context, cntType);
+		StructureDefinition sd = context.fetchResource(StructureDefinition.class, canonicalSource);
+		if (sd.getKind() == StructureDefinitionKind.LOGICAL) {
+				parser.setLogical(sd);
+		}
+		org.hl7.fhir.r5.elementmodel.Element src = parser.parseSingle(new ByteArrayInputStream(source.getBytes()), null);
 		return transform(src, mapUri, targetContext);
 	}
 
@@ -671,6 +679,7 @@ public class MatchboxEngine extends ValidationEngine {
 				break;
 			}
 		}
+		
 		return targetTypeUrl;
 	}
 

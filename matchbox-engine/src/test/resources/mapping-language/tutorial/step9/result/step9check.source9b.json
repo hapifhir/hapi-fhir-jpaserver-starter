@@ -1,0 +1,10 @@
+{
+  "resourceType": "OperationOutcome",
+  "issue": [
+    {
+      "severity": "error",
+      "code": "processing",
+      "diagnostics": "Rule \"i\", Check condition failed, src.m < 2"
+    }
+  ]
+}

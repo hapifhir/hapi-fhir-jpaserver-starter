@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<TLeft xmlns="http://hl7.org/fhir/tutorial">
+  <az1>
+    <az2 value="FHIR"/>
+    <az3 value="Fast"/>
+    <az3 value="Resource"/>
+  </az1>
+</TLeft>

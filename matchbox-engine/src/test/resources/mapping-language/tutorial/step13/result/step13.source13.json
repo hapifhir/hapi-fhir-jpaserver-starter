@@ -1,0 +1,15 @@
+{
+  "resourceType": "TRight",
+  "ptr": [
+    "Basic/1"
+  ],
+  "f2": [
+    {
+      "resourceType": "Basic",
+      "id": "1",
+      "code": {
+        "text": "test"
+      }
+    }
+  ]
+}

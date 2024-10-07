@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<StructureMap xmlns="http://hl7.org/fhir">
+  <id value="tutorial-step6b"/>
+  <url value="http://hl7.org/fhir/StructureMap/tutorial-step6b"/>
+  <name value="tutorial-step6b"/>
+  <title value="Tutorial Step 6b"/>
+  <status value="draft"/>
+  <description value="Tutorial Step 6b"/>
+  <structure>
+    <url value="http://hl7.org/fhir/StructureDefinition/tutorial-left-6"/>
+    <mode value="source"/>
+    <alias value="TLeft"/>
+  </structure>
+  <structure>
+    <url value="http://hl7.org/fhir/StructureDefinition/tutorial-right-6"/>
+    <mode value="target"/>
+    <alias value="TRight"/>
+  </structure>
+  <group>
+    <name value="tutorial"/>
+    <typeMode value="none"/>
+    <input>
+      <name value="src"/>
+      <type value="TLeft"/>
+      <mode value="source"/>
+    </input>
+    <input>
+      <name value="tgt"/>
+      <type value="TRight"/>
+      <mode value="target"/>
+    </input>
+    <rule>
+      <name value="rule_a23b"/>
+      <source>
+        <context value="src"/>
+        <element value="a23"/>
+        <listMode value="only_one"/>
+        <variable value="a"/>
+      </source>
+      <target>
+        <context value="tgt"/>
+        <contextType value="variable"/>
+        <element value="a23"/>
+        <transform value="copy"/>
+        <parameter>
+          <valueId value="a"/>
+        </parameter>
+      </target>
+      <documentation value="leave error to lower layer; less informative"/>
+    </rule>
+  </group>
+</StructureMap>

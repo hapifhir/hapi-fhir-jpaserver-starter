@@ -1658,10 +1658,10 @@ public class StructureMapUtilities {
             varsForSource.add(VariableMode.INPUT, src.getVariable(), item);
         }
         if (!fpe.evaluateToBoolean(varsForSource, null, null, item, expr)) {
-          log(indent + "  condition [" + src.getCondition() + "] for " + item.toString() + " : false");
+          log(indent + "  condition [" + src.getCondition() + "] for " + item.toString() + (src.hasVariable() ? " with variable "+ src.getVariable(): "" ) + " : false");
           remove.add(item);
         } else
-          log(indent + "  condition [" + src.getCondition() + "] for " + item.toString() + " : true");
+          log(indent + "  condition [" + src.getCondition() + "] for " + item.toString() + (src.hasVariable() ? " with variable "+ src.getVariable(): "" ) + " : true");
       }
       items.removeAll(remove);
     }

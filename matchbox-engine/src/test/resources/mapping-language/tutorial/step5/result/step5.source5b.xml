@@ -1,0 +1,4 @@
+<TRight xmlns="http://hl7.org/fhir/tutorial">
+  <a22 value="12345" />
+  <a22 value="67890" />
+</TRight>

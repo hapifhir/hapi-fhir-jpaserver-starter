@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<StructureMap xmlns="http://hl7.org/fhir">
+  <id value="tutorial"/>
+  <url value="http://hl7.org/fhir/StructureMap/tutorial-step12"/>
+  <name value="tutorial"/>
+  <status value="draft"/>
+  <structure>
+    <url value="http://hl7.org/fhir/StructureDefinition/tutorial-left-12"/>
+    <mode value="source"/>
+    <alias value="TLeft"/>
+  </structure>
+  <structure>
+    <url value="http://hl7.org/fhir/StructureDefinition/tutorial-right-12"/>
+    <mode value="target"/>
+    <alias value="TRight"/>
+  </structure>
+  <group>
+    <name value="tutorial"/>
+    <typeMode value="none"/>
+    <input>
+      <name value="src"/>
+      <type value="TLeft"/>
+      <mode value="source"/>
+    </input>
+    <input>
+      <name value="tgt"/>
+      <type value="TRight"/>
+      <mode value="target"/>
+    </input>
+    <rule>
+      <name value="rule_saz1"/>
+      <source>
+        <context value="src"/>
+        <element value="az1"/>
+        <variable value="s_az1"/>
+      </source>
+      <rule>
+        <name value="rule_taz1"/>
+        <source>
+          <context value="s_az1"/>
+          <element value="az3"/>
+          <variable value="s_az3"/>
+        </source>
+        <target>
+          <context value="tgt"/>
+          <contextType value="variable"/>
+          <element value="az1"/>
+          <variable value="t_az1"/>
+        </target>
+        <rule>
+          <name value="rule_az2"/>
+          <source>
+            <context value="s_az1"/>
+            <element value="az2"/>
+            <variable value="az2"/>
+          </source>
+          <target>
+            <context value="t_az1"/>
+            <contextType value="variable"/>
+            <element value="az2"/>
+            <transform value="copy"/>
+            <parameter>
+              <valueId value="az2"/>
+            </parameter>
+          </target>
+        </rule>
+        <rule>
+          <name value="rule_az3"/>
+          <source>
+            <context value="s_az3"/>
+          </source>
+          <target>
+            <context value="t_az1"/>
+            <contextType value="variable"/>
+            <element value="az3"/>
+            <transform value="copy"/>
+            <parameter>
+              <valueId value="s_az3"/>
+            </parameter>
+          </target>
+        </rule>
+      </rule>
+    </rule>
+  </group>
+</StructureMap>

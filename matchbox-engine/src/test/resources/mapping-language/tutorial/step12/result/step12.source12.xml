@@ -1,0 +1,10 @@
+<TRight xmlns="http://hl7.org/fhir/tutorial">
+  <az1>
+    <az2 value="FHIR" />
+    <az3 value="Fast" />
+  </az1>
+  <az1>
+    <az2 value="FHIR" />
+    <az3 value="Resource" />
+  </az1>
+</TRight>

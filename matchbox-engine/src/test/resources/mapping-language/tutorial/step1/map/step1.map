@@ -2,9 +2,9 @@
 /// name = 'tutorial-step1'
 /// title = 'Tutorial Step 1'
 
-uses "http://hl7.org/fhir/StructureDefinition/tutorial-left1" alias TLeft1 as source
-uses "http://hl7.org/fhir/StructureDefinition/tutorial-right1" alias TRight1 as target
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-left-1" alias TLeft as source
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-right-1" alias TRight as target
 
-group tutorial(source src : TLeft1, target tgt : TRight1) {
+group tutorial(source src : TLeft, target tgt : TRight) {
     src.a as a -> tgt.a = a "rule_a";
 }

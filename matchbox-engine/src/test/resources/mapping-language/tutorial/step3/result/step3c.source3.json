@@ -1,0 +1,10 @@
+{
+  "resourceType": "OperationOutcome",
+  "issue": [
+    {
+      "severity": "error",
+      "code": "processing",
+      "diagnostics": "Rule 'rule_a20c', Check condition failed, a2.length() <= 20"
+    }
+  ]
+}

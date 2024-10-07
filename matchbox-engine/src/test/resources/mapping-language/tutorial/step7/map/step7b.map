@@ -1,0 +1,12 @@
+map "http://hl7.org/fhir/StructureMap/tutorial-step7b" = "tutorial"
+
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-left-7" alias TLeft as source
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-right-7" alias TRight as target
+
+group tutorial(source src : TLeft, target tgt : TRight) {
+  src.aa as s_aa -> tgt.aa as t_aa then ab_content(s_aa, t_aa) "rule_aa";
+}
+
+group ab_content(source src, target tgt) {
+  src.ab as ab -> tgt.ab = ab "rule_ab"; // copy ab inside aa
+}

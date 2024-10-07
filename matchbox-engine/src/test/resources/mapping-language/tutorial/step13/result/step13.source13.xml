@@ -1,0 +1,13 @@
+<TRight 
+  xmlns="http://hl7.org/fhir/tutorial" 
+  xmlns:f="http://hl7.org/fhir">
+  <ptr value="Basic/1"/>
+  <f:f2>
+    <f:Basic>
+      <id value="1"/>
+      <f:code>
+        <text value="test"/>
+      </f:code>
+    </f:Basic>
+  </f:f2>
+</TRight>

@@ -1,0 +1,15 @@
+map "http://hl7.org/fhir/StructureMap/tutorial-step11" = "tutorial"
+
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-left-11" alias TLeft as source
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-right-11" alias TRight as target
+
+group tutorial(source src : TLeft, target tgt : TRight) {
+
+  src.e as s_e -> tgt.e as t_e then {
+    s_e -> t_e.f = s_e, t_e.g = 'g1' "rule_se_teg";
+  } "rule_se";
+  
+  src.f as s_f -> tgt.e as t_e first then {
+    s_f -> t_e.f = s_f, t_e.g = 'g2' "rule_sf_teg";
+  } "rule_sf";
+}

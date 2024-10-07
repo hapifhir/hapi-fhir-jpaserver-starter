@@ -27,6 +27,9 @@ import java.util.Map;
 
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.DifferenceEvaluators;
 
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
@@ -34,6 +37,7 @@ import com.google.common.collect.MapDifference.ValueDifference;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CompareUtil {
@@ -93,6 +97,18 @@ public class CompareUtil {
 	static public void compare(String jsonLeft, String jsonRight, boolean onlyDiffering) throws IOException {
 		compare(jsonLeft, jsonRight, onlyDiffering, new HashMap<String, String>(), new HashMap<String, String>());
 	}
+
+
+	  // Method to compare two XML files
+	  static public void compareXml(String expectedXml, String actualXml) throws IOException {
+        Diff diff = DiffBuilder.compare(expectedXml)
+                .withTest(actualXml)
+                .withDifferenceEvaluator(DifferenceEvaluators.Default)
+                .ignoreWhitespace()
+                .checkForSimilar()
+                .build();
+        assertFalse(diff.hasDifferences(), () -> "XML files are different: " + diff.toString());
+    }
 
 	static public void compare(String jsonLeft, String jsonRight, boolean onlyDiffering,
 			Map<String, String> bundleLeftIds, Map<String, String> bundleRightIds) throws IOException {

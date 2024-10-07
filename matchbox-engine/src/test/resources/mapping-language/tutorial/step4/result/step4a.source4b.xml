@@ -1,0 +1,8 @@
+<OperationOutcome xmlns="http://hl7.org/fhir/tutorial">
+    <issue>
+        <severity value='error' />
+        <code value='processing' />
+        <diagnostics
+            value='Rule &apos;rule_a21a&apos;: Failed to cast &apos;notanumber&apos; to type &apos;integer&apos;. Rule &apos;rule_a21a&apos;: Failed to cast &apos;notanumber&apos; to type &apos;integer&apos;. Invalid number format.' />
+    </issue>
+</OperationOutcome>

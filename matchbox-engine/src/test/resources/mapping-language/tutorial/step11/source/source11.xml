@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<TLeft xmlns="http://hl7.org/fhir/tutorial">
+  <e value="12345"/>
+  <f value="67890"/>
+</TLeft>

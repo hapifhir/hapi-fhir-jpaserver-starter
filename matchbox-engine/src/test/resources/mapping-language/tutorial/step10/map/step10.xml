@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<StructureMap xmlns="http://hl7.org/fhir">
+  <id value="tutorial-step10"/>
+  <url value="http://hl7.org/fhir/StructureMap/tutorial-step10"/>
+  <name value="tutorial-step10"/>
+  <status value="draft"/>
+  <structure>
+    <url value="http://hl7.org/fhir/StructureDefinition/tutorial-left-10"/>
+    <mode value="source"/>
+    <alias value="TLeft"/>
+  </structure>
+  <structure>
+    <url value="http://hl7.org/fhir/StructureDefinition/tutorial-leftinner-10"/>
+    <mode value="source"/>
+    <alias value="TLeftInner"/>
+  </structure>
+  <structure>
+    <url value="http://hl7.org/fhir/StructureDefinition/tutorial-right-10"/>
+    <mode value="target"/>
+    <alias value="TRight"/>
+  </structure>
+  <structure>
+    <url value="http://hl7.org/fhir/StructureDefinition/tutorial-rightinner-10"/>
+    <mode value="target"/>
+    <alias value="TRightInner"/>
+  </structure>
+  <group>
+    <name value="tutorial"/>
+    <typeMode value="none"/>
+    <input>
+      <name value="src"/>
+      <type value="TLeft"/>
+      <mode value="source"/>
+    </input>
+    <input>
+      <name value="tgt"/>
+      <type value="TRight"/>
+      <mode value="target"/>
+    </input>
+    <rule>
+      <name value="aa"/>
+      <source>
+        <context value="src"/>
+        <element value="aa"/>
+        <variable value="a"/>
+      </source>
+      <target>
+        <context value="tgt"/>
+        <contextType value="variable"/>
+        <element value="aa"/>
+        <transform value="copy"/>
+        <parameter>
+          <valueId value="a"/>
+        </parameter>
+      </target>
+    </rule>
+  </group>
+  <group>
+    <name value="ab_content"/>
+    <typeMode value="types"/>
+    <input>
+      <name value="src"/>
+      <type value="TLeftInner"/>
+      <mode value="source"/>
+    </input>
+    <input>
+      <name value="tgt"/>
+      <type value="TRightInner"/>
+      <mode value="target"/>
+    </input>
+    <rule>
+      <name value="ab"/>
+      <source>
+        <context value="src"/>
+        <element value="ab"/>
+        <variable value="b"/>
+      </source>
+      <target>
+        <context value="tgt"/>
+        <contextType value="variable"/>
+        <element value="ab"/>
+        <transform value="copy"/>
+        <parameter>
+          <valueId value="b"/>
+        </parameter>
+      </target>
+    </rule>
+  </group>
+</StructureMap>

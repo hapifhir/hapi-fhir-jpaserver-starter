@@ -1,0 +1,17 @@
+map "http://hl7.org/fhir/StructureMap/tutorial-step8" = "tutorial"
+
+conceptmap "tutorialmap" {
+  prefix s = "http://hl7.org/fhir/tutorial8/codeleft"
+  prefix t = "http://hl7.org/fhir/tutorial8/coderight"
+
+  s:vonhier == t:"nach-da"
+  s:test == t:test
+}
+
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-left-8"  alias TLeft as source
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-right-8"  alias TRight as target
+
+group tutorial(source src : TLeft, target tgt : TRight) {
+  src.d as d -> tgt.d = translate(d, '#tutorialmap', 'code') "rule_d";
+}
+

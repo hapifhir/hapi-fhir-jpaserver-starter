@@ -1,0 +1,11 @@
+/// url = 'http://hl7.org/fhir/StructureMap/tutorial-step3a'
+/// name = 'tutorial-step3a'
+/// title = 'Tutorial Step 3s'
+
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-left-3" alias TLeft as source
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-right-3" alias TRight as target
+
+group tutorial(source src : TLeft, target tgt : TRight) {
+  src.a2 as a -> tgt.a2 = truncate(a, 20) "rule_a20a";
+}
+

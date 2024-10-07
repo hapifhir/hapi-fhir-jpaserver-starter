@@ -1,0 +1,9 @@
+map "http://hl7.org/fhir/StructureMap/tutorial9check" = "tutorial"
+
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-left-9" alias TLeft as source
+uses "http://hl7.org/fhir/StructureDefinition/tutorial-right-9" alias TRight as target
+
+group tutorial(source src : TLeft, target tgt : TRight) {
+  src.i as i check src.m < 2 -> tgt.j = i;
+}
+
