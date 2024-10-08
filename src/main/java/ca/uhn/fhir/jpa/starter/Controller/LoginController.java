@@ -37,7 +37,7 @@ public class LoginController {
 
     @GetMapping("/login")
     public String login(Model model) {
-        return "login";
+        return "/login";
     }
 
     @RequestMapping("/logout")
@@ -59,6 +59,7 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Invalid credentials. Please try again."));
         }
+
         return ResponseEntity.ok(keycloakToken);
     }
 

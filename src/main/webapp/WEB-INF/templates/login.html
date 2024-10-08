@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -84,13 +84,8 @@
       <div class="login-box">
         <img src="https://via.placeholder.com/80" alt="User Icon" />
         <h2>User Login</h2>
-        <form
-          id="loginForm"
-          action="http://localhost:8080/performlogin"
-          method="POST"
-        >
-          <div id="errorMessage" class="error" th:text="${error}"></div>
-
+        <form id="loginForm">
+          <div id="errorMessage" class="error"></div>
           <input
             type="text"
             id="username"
@@ -98,7 +93,6 @@
             placeholder="username"
             required
           />
-
           <input
             type="password"
             id="password"
@@ -106,52 +100,66 @@
             placeholder="password"
             required
           />
-
           <button type="submit">Login</button>
         </form>
-        <a href="#">Forgot your password?</a>
       </div>
     </div>
 
     <script>
-      const form = document.getElementById("loginForm");
-      const errorMessageDiv = document.getElementById("errorMessage");
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
 
-      const params = new URLSearchParams(window.location.search);
-      const redirectTo = params.get("redirectTo") || "/";
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
 
-      form.addEventListener("submit", async (event) => {
-        event.preventDefault();
-
-        const formData = new FormData(form);
-        const response = await fetch(form.action, {
-          method: "POST",
-          body: formData,
-        });
-
-        if (response.ok) {
-          const tokenData = await response.text();
-          console.log("Received Token: " + tokenData);
-          localStorage.setItem("authToken", tokenData);
-
-          const dashboardResponse = await fetch(redirectTo, {
-            method: "GET",
+          fetch("http://localhost:8080/performlogin", {
+            method: "POST",
             headers: {
-              Authorization: "Bearer " + tokenData,
+              "Content-Type": "application/x-www-form-urlencoded",
             },
-          });
+            body: new URLSearchParams({
+              username: username,
+              password: password,
+            }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                return response.json().then((errorData) => {
+                  throw new Error(
+                    errorData.error || "An unknown error occurred."
+                  );
+                });
+              }
+              return response.text();
+            })
+            .then((data) => {
+              const token = data;
+              console.log("TOKEN: " + token);
 
-          if (dashboardResponse.ok) {
-            window.location.href = redirectTo;
-          } else {
-            const errorDetails = await dashboardResponse.text(); // Log response details
-            errorMessageDiv.innerText = `Failed to access the dashboard: ${dashboardResponse.status} - ${errorDetails}`;
-          }
-        } else {
-          const errorText = await response.text();
-          errorMessageDiv.innerText = `Invalid credentials. Response: ${response.status} - ${errorText}`;
-        }
-      });
+              return fetch("http://localhost:8080/", {
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+            })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Authentication failed.");
+              }
+              return response.text();
+            })
+            .then((result) => {
+              console.log("Response from /:", result);
+              document.body.innerHTML = result;
+            })
+            .catch((error) => {
+              document.getElementById("errorMessage").textContent =
+                error.message;
+            });
+        });
     </script>
   </body>
 </html>

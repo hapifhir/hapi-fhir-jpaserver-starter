@@ -12,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimNames;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.stereotype.Component;
@@ -21,21 +22,32 @@ public class JwtConverter implements Converter<Jwt, AbstractAuthenticationToken>
 
     private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
     private final JwtConverterProperties properties;
+    private final JwtDecoder jwtDecoder;
 
-    public JwtConverter(JwtConverterProperties properties) {
+    public JwtConverter(JwtConverterProperties properties, JwtDecoder jwtDecoder) {
         this.properties = properties;
+        this.jwtDecoder = jwtDecoder;
     }
 
     @Override
-    public AbstractAuthenticationToken convert(Jwt jwt) {
+    public JwtAuthenticationToken convert(Jwt jwt) {
         Collection<GrantedAuthority> authorities = Stream.concat(
                 jwtGrantedAuthoritiesConverter.convert(jwt).stream(),
-                extractResourceRoles(jwt).stream()).collect(Collectors.toSet());
+                extractResourceRoles(jwt).stream())
+                .collect(Collectors.toSet());
+
+        System.out.println("Granted Authorities: " + authorities);
 
         return new JwtAuthenticationToken(jwt, authorities, getPrincipalClaimName(jwt));
     }
 
+    public Jwt parseToken(String token) {
+
+        return jwtDecoder.decode(token);
+    }
+
     private String getPrincipalClaimName(Jwt jwt) {
+
         String claimName = JwtClaimNames.SUB;
         if (properties.getPrincipalAttribute() != null && !properties.getPrincipalAttribute().isEmpty()) {
             claimName = properties.getPrincipalAttribute();
