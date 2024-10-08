@@ -104,7 +104,6 @@
         </form>
       </div>
     </div>
-
     <script>
       document
         .getElementById("loginForm")
@@ -138,6 +137,9 @@
               const token = data;
               console.log("TOKEN: " + token);
 
+              // Store the token in localStorage
+              localStorage.setItem("jwtToken", token);
+
               return fetch("http://localhost:8080/", {
                 method: "GET",
                 headers: {
@@ -153,7 +155,12 @@
             })
             .then((result) => {
               console.log("Response from /:", result);
-              document.body.innerHTML = result;
+
+              // Create a new tab to display the full HTML page
+              const newWindow = window.open();
+              newWindow.document.open();
+              newWindow.document.write(result);
+              newWindow.document.close();
             })
             .catch((error) => {
               document.getElementById("errorMessage").textContent =
