@@ -3,6 +3,8 @@
 matchbox can validate FHIR resources if they are conform to the FHIR R4/R4B or R5 specification
 and conform to the requirements of specific implementation guides.
 
+a tutorial how to validate FHIR resources and to what error message you have to look out for is availabe [here](validation-tutorial.md).
+
 Validation is based on the official [HL7 Java reference validator](https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator) in accordance with the provided terminologies. An external terminology server can also be configured, and you can validate your implementation through the $validate operation with the FHIR API or through a simple GUI.
 
 ## matchbox engine
