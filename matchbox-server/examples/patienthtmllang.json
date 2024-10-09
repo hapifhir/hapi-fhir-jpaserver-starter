@@ -1,9 +1,0 @@
-{
-	"resourceType": "Patient",
-	"id": "example",
-	"language": "de",
-	"text": {
-		"status": "generated",
-		"div": "<div xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"de\" lang=\"de\">42\n        </div>"
-	}
-}

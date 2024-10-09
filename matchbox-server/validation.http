@@ -1,0 +1,99 @@
+@host = https://test.ahdis.ch/matchboxv3/fhir
+### @host = http://localhost:8083/matchboxv3/fhir
+### @host = http://hapi.fhir.org/baseR4
+### @host = http://localhost:18002/eprik-fhir/camel/matchbox/matchboxv3/fhir
+
+
+### Check that validation service is up
+GET {{host}}/metadata HTTP/1.1
+Accept: application/fhir+json
+Content-Type: application/fhir+json
+
+### OK Testcase Validate Patient ok
+POST {{host}}/$validate?profile=http://hl7.org/fhir/StructureDefinition/Patient HTTP/1.1
+Content-Type: application/fhir+xml
+
+<Patient xmlns="http://hl7.org/fhir">
+  <name>
+    <family value="Test"/>
+  </name>
+</Patient>
+
+### STRUCTURE TESTS XML
+
+### -> Invalid Content
+### <- error/invalid: The XML encoding is invalid (must be UTF-8), fatal/invalid: Content is not allowed in prolog. 
+POST {{host}}/$validate?profile=http://hl7.org/fhir/StructureDefinition/Patient HTTP/1.1
+Accept: application/fhir+json
+Content-Type: application/fhir+xml
+
+Hello validator
+
+### -> Wrong format: Missing namespace
+### <- fatal / structure : This content cannot be parsed (unknown or unrecognized XML Root element namespace/name 'noNamespace::Patient)'
+POST {{host}}/$validate?profile=http://hl7.org/fhir/StructureDefinition/Patient HTTP/1.1
+Accept: application/fhir+json
+Content-Type: application/fhir+xml
+
+<Patient>
+  <name>
+    <family value="Test"/>
+  </name>
+</Patient>
+
+### -> Wrong format: Text in element tag
+### <- error / structure : "Text should not be present ('Test')"
+### <- error / invariant : ""Constraint failed: ele-1: 'All FHIR elements must have a @value or children' (defined in http://hl7.org/fhir/StructureDefinition/Element)""
+### <- error / invalid: "Primitive types must have a value or must have child extensions"
+POST {{host}}/$validate?profile=http://hl7.org/fhir/StructureDefinition/Patient HTTP/1.1
+Content-Type: application/fhir+xml
+
+<Patient xmlns="http://hl7.org/fhir">
+  <name>
+    <family>Test</family>
+  </name>
+</Patient>
+
+### -> Wrong element: test not allowed
+### error / structure : Undefined element 'test' at /f:Patient
+POST {{host}}/$validate?profile=http://hl7.org/fhir/StructureDefinition/Patient HTTP/1.1
+Content-Type: application/fhir+xml
+
+<Patient xmlns="http://hl7.org/fhir">
+  <test value="true" />
+</Patient>
+
+### -> Wrong element: test not allowed
+### error / structure : Undefined element 'test' at /f:Patient
+POST {{host}}/$validate?profile=http://hl7.org/fhir/StructureDefinition/Patient HTTP/1.1
+Content-Type: application/fhir+xml
+
+<Patient xmlns="http://hl7.org/fhir">
+  <test value="true" />
+</Patient>
+
+### -> Wrong element order: g
+### <- error / invalid: "Primitive types must have a value or must have child extensions"
+POST {{host}}/$validate?profile=http://hl7.org/fhir/StructureDefinition/Patient HTTP/1.1
+Content-Type: application/fhir+xml
+
+<Patient xmlns="http://hl7.org/fhir">
+  <gender value="male" />
+  <name>
+    <family value="Test" />
+  </name>
+</Patient>
+
+
+### IPS minimal
+POST {{host}}/$validate?profile=http://hl7.org/fhir/uv/ips/StructureDefinition/Bundle-uv-ips HTTP/1.1
+Content-Type: application/fhir+json
+
+< .≈ips-minimal.json
+
+
+### IPS not birthdate
+POST {{host}}/$validate?profile=http://hl7.org/fhir/uv/ips/StructureDefinition/Bundle-uv-ips HTTP/1.1
+Content-Type: application/fhir+json
+
+< ./examples/ips-minimal-err-patnobirthdate.json
