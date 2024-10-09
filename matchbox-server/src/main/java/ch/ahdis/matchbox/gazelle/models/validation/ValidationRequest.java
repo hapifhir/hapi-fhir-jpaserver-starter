@@ -1,5 +1,6 @@
 package ch.ahdis.matchbox.gazelle.models.validation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
@@ -74,23 +75,28 @@ public class ValidationRequest {
 		return this;
 	}
 
+	@JsonIgnore
 	public boolean isValidationProfileIdValid(){
 		return validationProfileId != null && !validationProfileId.isBlank();
 	}
 
+	@JsonIgnore
 	public boolean isValidationServiceNameValid(){
 		return validationServiceName != null && !validationServiceName.isBlank();
 	}
 
+	@JsonIgnore
 	public boolean isValidationItemsValid(){
 		return validationItems != null && !validationItems.isEmpty();
 	}
 
+	@JsonIgnore
 	public boolean isValidationItemsRolesValid(){
 		return validationItems == null || validationItems.size()<2
 			|| validationItems.stream().allMatch(item ->item.getRole() !=null && !item.getRole().isBlank());
 	}
 
+	@JsonIgnore
 	public boolean isValid(){
 		return isValidationItemsValid() && isValidationProfileIdValid() && isValidationServiceNameValid();
 	}
