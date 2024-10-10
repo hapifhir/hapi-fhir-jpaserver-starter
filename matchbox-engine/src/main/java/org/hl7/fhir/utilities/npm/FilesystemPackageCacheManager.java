@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -76,6 +77,8 @@ import org.slf4j.LoggerFactory;
 public class FilesystemPackageCacheManager extends BasePackageCacheManager implements IPackageCacheManager {
 
   private final FilesystemPackageCacheManagerLocks locks;
+  private final FilesystemPackageCacheManagerLocks.LockParameters lockParameters;
+
   private final static String VER_XVER_PROVIDED = "0.0.13";
 
   // When running in testing mode, some packages are provided from the test case repository rather than by the normal means
@@ -83,7 +86,6 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
   // then the normal means will be used
   public interface IPackageProvider {
     boolean handlesPackage(String id, String version);
-
     InputStreamWithSrc provide(String id, String version) throws IOException;
   }
 
@@ -93,6 +95,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
   public static final String PACKAGE_VERSION_REGEX_OPT = "^[A-Za-z][A-Za-z0-9\\_\\-]*(\\.[A-Za-z0-9\\_\\-]+)+(\\#[A-Za-z0-9\\-\\_]+(\\.[A-Za-z0-9\\-\\_]+)*)?$";
   private static final Logger ourLog = LoggerFactory.getLogger(FilesystemPackageCacheManager.class);
   private static final String CACHE_VERSION = "3"; // second version - see wiki page
+
   @Nonnull
   private final File cacheFolder;
 
@@ -101,6 +104,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
   private final Map<String, String> ciList = new HashMap<>();
   private JsonArray buildInfo;
   private boolean suppressErrors;
+
   @Setter
   @Getter
   private boolean minimalMemory;
@@ -114,9 +118,20 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
     @Getter
     private final List<PackageServer> packageServers;
 
+    @With
+    @Getter
+    private final FilesystemPackageCacheManagerLocks.LockParameters lockParameters;
+
     public Builder() throws IOException {
       this.cacheFolder = getUserCacheFolder();
       this.packageServers = getPackageServersFromFHIRSettings();
+      this.lockParameters = null;
+    }
+
+    private Builder(File cacheFolder, List<PackageServer> packageServers, FilesystemPackageCacheManagerLocks.LockParameters lockParameters) {
+      this.cacheFolder = cacheFolder;
+      this.packageServers = packageServers;
+      this.lockParameters = lockParameters;
     }
 
     private File getUserCacheFolder() throws IOException {
@@ -144,17 +159,12 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
       return PackageServer.getConfiguredServers();
     }
 
-    private Builder(File cacheFolder, List<PackageServer> packageServers) {
-      this.cacheFolder = cacheFolder;
-      this.packageServers = packageServers;
-    }
-
     public Builder withCacheFolder(String cacheFolderPath) throws IOException {
       File cacheFolder = ManagedFileAccess.file(cacheFolderPath);
       if (!cacheFolder.exists()) {
         throw new FHIRException("The folder '" + cacheFolder + "' could not be found");
       }
-      return new Builder(cacheFolder, this.packageServers);
+      return new Builder(cacheFolder, this.packageServers, this.lockParameters);
     }
 
     public Builder withSystemCacheFolder() throws IOException {
@@ -164,32 +174,33 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
       } else {
         systemCacheFolder = ManagedFileAccess.file(Utilities.path("/var", "lib", ".fhir", "packages"));
       }
-      return new Builder(systemCacheFolder, this.packageServers);
+      return new Builder(systemCacheFolder, this.packageServers, this.lockParameters);
     }
 
     public Builder withTestingCacheFolder() throws IOException {
-      return new Builder(ManagedFileAccess.file(Utilities.path("[tmp]", ".fhir", "packages")), this.packageServers);
+      return new Builder(ManagedFileAccess.file(Utilities.path("[tmp]", ".fhir", "packages")), this.packageServers, this.lockParameters);
     }
 
     public FilesystemPackageCacheManager build() throws IOException {
-      return new FilesystemPackageCacheManager(cacheFolder, packageServers);
+      final FilesystemPackageCacheManagerLocks locks;
+      try {
+        locks = FilesystemPackageCacheManagerLocks.getFilesystemPackageCacheManagerLocks(cacheFolder);
+      } catch (RuntimeException e) {
+        if (e.getCause() instanceof IOException) {
+          throw (IOException) e.getCause();
+        } else {
+          throw e;
+        }
+      }
+      return new FilesystemPackageCacheManager(cacheFolder, packageServers, locks, lockParameters);
     }
   }
 
-  private FilesystemPackageCacheManager(@Nonnull File cacheFolder, @Nonnull List<PackageServer> packageServers) throws IOException {
+  private FilesystemPackageCacheManager(@Nonnull File cacheFolder, @Nonnull List<PackageServer> packageServers, @Nonnull FilesystemPackageCacheManagerLocks locks, @Nullable FilesystemPackageCacheManagerLocks.LockParameters lockParameters) throws IOException {
     super(packageServers);
     this.cacheFolder = cacheFolder;
-
-    try {
-      this.locks = FilesystemPackageCacheManagerLocks.getFilesystemPackageCacheManagerLocks(cacheFolder);
-    } catch (RuntimeException e) {
-      if (e.getCause() instanceof IOException) {
-        throw (IOException) e.getCause();
-      } else {
-        throw e;
-      }
-    }
-
+    this.locks = locks;
+    this.lockParameters = lockParameters;
     prepareCacheFolder();
   }
 
@@ -211,26 +222,54 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
         Utilities.createDirectory(cacheFolder.getAbsolutePath());
         createIniFile();
       } else {
-        if (!isCacheFolderValid()) {
+        if (!iniFileExists()) {
+          createIniFile();
+        }
+        if (!isIniFileCurrentVersion()) {
           clearCache();
           createIniFile();
-        } else {
-          deleteOldTempDirectories();
         }
+        deleteOldTempDirectories();
+        cleanUpCorruptPackages();
       }
       return null;
     });
   }
 
-  private boolean isCacheFolderValid() throws IOException {
+  /*
+    Look for .lock files that are not actively held by a process. If found, delete the lock file, and the package
+    referenced.
+   */
+  protected void cleanUpCorruptPackages() throws IOException {
+    for (File file : Objects.requireNonNull(cacheFolder.listFiles())) {
+      if (file.getName().endsWith(".lock")) {
+        if (locks.getCacheLock().canLockFileBeHeldByThisProcess(file)) {
+          String packageDirectoryName = file.getName().substring(0, file.getName().length() - 5);
+          log("Detected potential incomplete package installed in cache: " + packageDirectoryName + ". Attempting to delete");
+
+          File packageDirectory = ManagedFileAccess.file(Utilities.path(cacheFolder, packageDirectoryName));
+          if (packageDirectory.exists()) {
+            Utilities.clearDirectory(packageDirectory.getAbsolutePath());
+            packageDirectory.delete();
+          }
+          file.delete();
+          log("Deleted potential incomplete package: " + packageDirectoryName);
+        }
+      }
+    }
+  }
+
+  private boolean iniFileExists() throws IOException {
     String iniPath = getPackagesIniPath();
     File iniFile = ManagedFileAccess.file(iniPath);
-    if (!(iniFile.exists())) {
-      return false;
-    }
+    return iniFile.exists();
+  }
+
+  private boolean isIniFileCurrentVersion() throws IOException {
+    String iniPath = getPackagesIniPath();
     IniFile ini = new IniFile(iniPath);
-    String v = ini.getStringProperty("cache", "version");
-    return CACHE_VERSION.equals(v);
+    String version = ini.getStringProperty("cache", "version");
+    return CACHE_VERSION.equals(version);
   }
 
   private void deleteOldTempDirectories() throws IOException {
@@ -441,7 +480,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
       }
 
       return null;
-    });
+    }, lockParameters);
   }
 
   /**
@@ -457,7 +496,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
    * @throws IOException If the package cannot be loaded
    */
   @Override
-  public NpmPackage loadPackageFromCacheOnly(String id, String version) throws IOException {
+  public NpmPackage loadPackageFromCacheOnly(String id, @Nullable String version) throws IOException {
 
     if (!Utilities.noString(version) && version.startsWith("file:")) {
       return loadPackageFromFile(id, version.substring(5));
@@ -485,7 +524,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
           return null;
         }
         return loadPackageInfo(path);
-      });
+      }, lockParameters);
       if (foundPackage != null) {
         if (foundPackage.isIndexed()){
           return foundPackage;
@@ -508,7 +547,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
             String path = Utilities.path(cacheFolder, foundPackageFolder);
             output.checkIndexed(path);
             return output;
-          });
+          }, lockParameters);
           }
       }
     }
@@ -620,7 +659,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
         throw e;
       }
       return npmPackage;
-    });
+    }, lockParameters);
   }
 
   private void log(String s) {

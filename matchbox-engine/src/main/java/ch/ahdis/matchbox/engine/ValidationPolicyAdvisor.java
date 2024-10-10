@@ -3,7 +3,7 @@ package ch.ahdis.matchbox.engine;
 
 import org.hl7.fhir.r5.utils.validation.IResourceValidator;
 import org.hl7.fhir.r5.utils.validation.constants.ReferenceValidationPolicy;
-import org.hl7.fhir.validation.instance.BasePolicyAdvisorForFullValidation;
+import org.hl7.fhir.validation.instance.advisor.BasePolicyAdvisorForFullValidation;
 import org.hl7.fhir.validation.instance.InstanceValidator;
 
 public class ValidationPolicyAdvisor extends BasePolicyAdvisorForFullValidation {
