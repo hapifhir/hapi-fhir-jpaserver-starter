@@ -1,0 +1,12 @@
+{
+  "/proxy/localhost": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "pathRewrite": {"^/proxy/localhost" : ""}
+  },
+  "/proxy/testahdisch": {
+    "target": "https://test.ahdis.ch",
+    "secure": false,
+    "pathRewrite": {"^/proxy/testahdisch" : ""}
+  }
+}
