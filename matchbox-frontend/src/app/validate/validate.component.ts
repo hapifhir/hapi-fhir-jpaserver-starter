@@ -60,63 +60,35 @@ export class ValidateComponent implements AfterViewInit {
   ) {
     this.client = data.getFhirClient();
 
-    // Read the server CapabilityStatement.
-    // This will allow us to create the list of supported (installed) profiles, and supported validation parameters.
-    this.client
-      .capabilityStatement()
-      .then((data: fhir.r4.CapabilityStatement) => {
-        this.capabilityStatement = data;
-        // TODO read operation definition id out of capability statement
-        this.client
-          .read({ resourceType: 'OperationDefinition', id: '-s-validate' })
-          .then((od: fhir.r4.OperationDefinition) => {
-            od.parameter?.forEach((parameter: fhir.r4.OperationDefinitionParameter) => {
-              if (parameter.name == 'profile') {
-                parameter._targetProfile.forEach((item) => {
-                  const sd = new StructureDefinition();
-                  sd.canonical = this.getExtensionStringValue(item, 'sd-canonical');
-                  sd.title = this.getExtensionStringValue(item, 'sd-title');
-                  sd.igId = this.getExtensionStringValue(item, 'ig-id');
-                  sd.igVersion = this.getExtensionStringValue(item, 'ig-version');
-                  sd.isCurrent = false;
+    const validateOperationDefinitionPromise = this.client
+          .read({ resourceType: 'OperationDefinition', id: '-s-validate' });
 
-                  if (this.getExtensionBoolValue(item, 'ig-current')) {
-                    sd.isCurrent = true;
-                  } else {
-                    sd.canonical += `|${sd.igVersion}`;
-                  }
-
-                  this.supportedProfiles.set(sd.canonical, sd);
-                });
-                this.updateProfileFilter();
-              }
-            });
-            od.parameter
-              .filter((f) => f.use == 'in' && f.name != 'resource' && f.name != 'profile' && f.name != 'ig')
-              .forEach((parameter: fhir.r4.OperationDefinitionParameter) => {
-                this.validatorSettings.set(parameter.name, new ValidationParameter(parameter));
-              });
-          });
-      })
-      .catch((error) => {
-        this.errorMessage = 'Error accessing FHIR server';
-      });
-
-    // Read the list of installed ImplementationGuides
-    this.client
+    const implementationGuidesPromise = this.client
       .search({
         resourceType: 'ImplementationGuide',
         searchParams: {
           _sort: 'title',
           _count: 1000, // Load all IGs
         },
-      })
-      .then((bundle: fhir.r4.Bundle) => {
-        bundle.entry
+      });
+
+    // Wait for the two requests to complete
+    Promise.all([validateOperationDefinitionPromise, implementationGuidesPromise])
+      .then((values: [fhir.r4.OperationDefinition, fhir.r4.Bundle]) => {
+        // Read the server -s-validate OperationDefinition.
+        // This will allow us to create the list of supported (installed) profiles, and supported validation parameters.
+        this.analyzeValidateOperationDefinition(values[0]);
+
+        // Read the list of installed ImplementationGuides
+        values[1].entry
           .map((entry: fhir.r4.BundleEntry) => entry.resource as fhir.r4.ImplementationGuide)
           .map((ig: fhir.r4.ImplementationGuide) => `${ig.packageId}#${ig.version}`)
           .sort()
           .forEach((ig) => this.installedIgs.add(ig));
+
+        // Check for query string parameters in the current URL.
+        // They may contain a validation request
+        this.analyzeUrlForValidation();
       })
       .catch((error) => {
         this.showErrorToast('Network error', error.message);
@@ -184,7 +156,7 @@ export class ValidateComponent implements AfterViewInit {
           // The canonical doesn't exist as-is in the list of supported profiles, but it may be present with its
           // version as suffix
           const versionedCanonical = `${entry.selectedProfile}|`;
-          for (let [key, value] of this.supportedProfiles) {
+          for (let [key, _] of this.supportedProfiles) {
             if (key.startsWith(versionedCanonical)) {
               this.selectedProfile = key;
               break;
@@ -463,6 +435,80 @@ export class ValidateComponent implements AfterViewInit {
       closeButton: true,
       timeOut: 5000,
     });
+  }
+
+  /**
+   * Extracts supported validation parameters from the -s-validate OperationDefinition.
+   * @param od the -s-validate OperationDefinition.
+   * @private
+   */
+  private analyzeValidateOperationDefinition(od: fhir.r4.OperationDefinition): void {
+    od.parameter?.forEach((parameter: fhir.r4.OperationDefinitionParameter) => {
+      if (parameter.name == 'profile') {
+        parameter._targetProfile.forEach((item) => {
+          const sd = new StructureDefinition();
+          sd.canonical = this.getExtensionStringValue(item, 'sd-canonical');
+          sd.title = this.getExtensionStringValue(item, 'sd-title');
+          sd.igId = this.getExtensionStringValue(item, 'ig-id');
+          sd.igVersion = this.getExtensionStringValue(item, 'ig-version');
+          sd.isCurrent = false;
+
+          if (this.getExtensionBoolValue(item, 'ig-current')) {
+            sd.isCurrent = true;
+          } else {
+            sd.canonical += `|${sd.igVersion}`;
+          }
+
+          this.supportedProfiles.set(sd.canonical, sd);
+        });
+        this.updateProfileFilter();
+      }
+    });
+    od.parameter
+      .filter((f) => f.use == 'in' && f.name != 'resource' && f.name != 'profile' && f.name != 'ig')
+      .forEach((parameter: fhir.r4.OperationDefinitionParameter) => {
+        this.validatorSettings.set(parameter.name, new ValidationParameter(parameter));
+      });
+  }
+
+  /**
+   * Analyzes the current URL to detect if there is a validation request in the search parameters ('resource',
+   * 'profile', others).
+   * @private
+   */
+  private analyzeUrlForValidation(): void {
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.has('resource')) {
+      let hasSetProfile = false;
+      if (searchParams.has('profile')) {
+        const profile = <string>searchParams.get('profile');
+        if (this.supportedProfiles.has(profile)) {
+          // The canonical exists as-is in the list of supported profiles
+          this.selectedProfile = profile;
+          hasSetProfile = true;
+        } else {
+          this.showErrorToast('Unknown profile', `The profile '${profile}' is unknown to this server`);
+        }
+      }
+
+      const resource = atob(searchParams.get('resource'));
+      let contentType = 'application/fhir+json';
+      if (resource.startsWith('<')) {
+        contentType = 'application/fhir+xml';
+      }
+      const extension = contentType.split('+')[1];
+
+      for (const [key, value] of searchParams) {
+        if (key === 'resource' || key === 'profile') {
+          continue;
+        }
+        if (this.validatorSettings.has(key)) {
+          this.validatorSettings.get(key).formControl.setValue(value);
+        }
+      }
+
+      this.validateResource(`provided.${extension}`, resource, contentType, !hasSetProfile);
+    }
   }
 }
 

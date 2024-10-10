@@ -161,3 +161,21 @@ Its use case is simple:
 Please be aware that if you have unbound code/coding/codeableConcepts, or the binding is not 'required', the 
 code/coding/codeableConcept will be considered valid if the code system is not defined locally (e.g. SNOMED CT, 
 LOINC, etc).
+
+### GUI
+
+You can run a validation through the GUI by using search parameters in the URL.
+
+| Parameter        | Description                                    |
+|------------------|------------------------------------------------|
+| `resource`       | The resource to validate, encoded as base64url |
+| `profile`        | The profile to use for validation              |
+| Other parameters | Any parameter supported by the FHIR API        |
+
+The only required parameter is `resource`.
+If `profile` is not provided, it will default to `http://hl7.org/fhir/StructureDefinition/{resourceType}`.
+
+E.g.
+```http
+GET https://test.ahdis.ch/matchboxv3/?profile=http%3A%2F%2Fhl7.org%2Ffhir%2FStructureDefinition%2FBundle&txServer=http://tx.fhir.org/r4&resource=PFBhdGllbnQgeG1sbnM9Imh0dHA6Ly9obDcub3JnL2ZoaXIiPgogIDxuYW1lPgogICAgPGZhbWlseSB2YWx1ZT0iVGVzdCIvPgogIDwvbmFtZT4KPC9QYXRpZW50Pg#/validate HTTP/1
+```
