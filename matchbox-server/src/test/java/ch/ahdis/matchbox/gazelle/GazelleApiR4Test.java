@@ -145,4 +145,13 @@ public class GazelleApiR4Test extends AbstractGazelleTest {
 																	  "http://hl7.org/fhir/StructureDefinition/Patient");
 		assertEquals(0, countValidationFailures(report));
 	}
+
+	@Test
+	// https://gazelle.ihe.net/jira/browse/EHS-831
+	void validateEhs831() throws Exception {
+		final ValidationReport report = this.client.validate(getContent("ehs-831.json"),
+																			  "http://hl7.org/fhir/StructureDefinition/Parameters");
+		assertEquals(ValidationTestResult.PASSED, report.getOverallResult());
+		assertEquals(0, countValidationFailures(report));
+	}
 }

@@ -1,5 +1,6 @@
 Unreleased
 - Tutorial for validation FHIR resources with [matchbox](https://ahdis.github.io/matchbox/validation-tutorial/)
+- Gazelle reports: add test to ensure https://gazelle.ihe.net/jira/browse/EHS-831 is fixed
 
 2024/10/07 Release 3.9.3
 
