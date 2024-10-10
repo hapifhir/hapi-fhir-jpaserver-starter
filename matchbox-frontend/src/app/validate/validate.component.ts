@@ -4,16 +4,15 @@ import FhirClient from 'fhir-kit-client';
 import pako from 'pako';
 import untar from 'js-untar';
 import { IDroppedBlob } from '../upload/upload.component';
-import ace, { Ace } from 'ace-builds';
-import 'ace-builds/src-noconflict/mode-json';
-import 'ace-builds/src-noconflict/mode-xml';
+import ace from 'ace-builds';
 import { ValidationEntry } from './validation-entry';
 import { ValidationParameter } from './validation-parameter';
 import { ITarEntry } from './tar-entry';
-import {Issue, IssueSeverity, OperationResult} from '../util/operation-result';
-import {FormControl, Validators} from "@angular/forms";
-import {StructureDefinition} from "./structure-definition";
-import {ToastrService} from "ngx-toastr";
+import { Issue, OperationResult } from '../util/operation-result';
+import { FormControl, Validators } from '@angular/forms';
+import { StructureDefinition } from './structure-definition';
+import { ToastrService } from 'ngx-toastr';
+import {ValidationCodeEditor} from "./validation-code-editor";
 
 const INDENT_SPACES = 2;
 
@@ -35,7 +34,7 @@ export class ValidateComponent implements AfterViewInit {
   capabilityStatement: fhir.r4.CapabilityStatement | null = null;
   installedIgs: Set<string> = new Set<string>();
   supportedProfiles: Map<string, StructureDefinition> = new Map<string, StructureDefinition>();
-  validatorSettings: ValidationParameter[] = new Array<ValidationParameter>();
+  validatorSettings: Map<string, ValidationParameter> = new Map<string, ValidationParameter>();
 
   // The input form
   filteredProfiles: Set<StructureDefinition> = new Set<StructureDefinition>();
@@ -45,13 +44,12 @@ export class ValidateComponent implements AfterViewInit {
   profileControl: FormControl = new FormControl<string>(null, Validators.required);
 
   // Code editor
-  editor: Ace.Editor;
+  editor: ValidationCodeEditor;
   editorContent: CodeEditorContent = CodeEditorContent.RESOURCE_CONTENT;
 
   // DOM
   showSettings: boolean = false;
   currentResource: UploadedFile | null = null;
-  errorMessage: string | null = null;
 
   package: ArrayBuffer;
 
@@ -62,6 +60,8 @@ export class ValidateComponent implements AfterViewInit {
   ) {
     this.client = data.getFhirClient();
 
+    // Read the server CapabilityStatement.
+    // This will allow us to create the list of supported (installed) profiles, and supported validation parameters.
     this.client
       .capabilityStatement()
       .then((data: fhir.r4.CapabilityStatement) => {
@@ -72,7 +72,7 @@ export class ValidateComponent implements AfterViewInit {
           .then((od: fhir.r4.OperationDefinition) => {
             od.parameter?.forEach((parameter: fhir.r4.OperationDefinitionParameter) => {
               if (parameter.name == 'profile') {
-                parameter._targetProfile.forEach(item => {
+                parameter._targetProfile.forEach((item) => {
                   const sd = new StructureDefinition();
                   sd.canonical = this.getExtensionStringValue(item, 'sd-canonical');
                   sd.title = this.getExtensionStringValue(item, 'sd-title');
@@ -94,7 +94,7 @@ export class ValidateComponent implements AfterViewInit {
             od.parameter
               .filter((f) => f.use == 'in' && f.name != 'resource' && f.name != 'profile' && f.name != 'ig')
               .forEach((parameter: fhir.r4.OperationDefinitionParameter) => {
-                this.validatorSettings.push(new ValidationParameter(parameter));
+                this.validatorSettings.set(parameter.name, new ValidationParameter(parameter));
               });
           });
       })
@@ -102,6 +102,7 @@ export class ValidateComponent implements AfterViewInit {
         this.errorMessage = 'Error accessing FHIR server';
       });
 
+    // Read the list of installed ImplementationGuides
     this.client
       .search({
         resourceType: 'ImplementationGuide',
@@ -111,113 +112,105 @@ export class ValidateComponent implements AfterViewInit {
         },
       })
       .then((bundle: fhir.r4.Bundle) => {
-        bundle.entry.map((entry: fhir.r4.BundleEntry) => entry.resource as fhir.r4.ImplementationGuide)
+        bundle.entry
+          .map((entry: fhir.r4.BundleEntry) => entry.resource as fhir.r4.ImplementationGuide)
           .map((ig: fhir.r4.ImplementationGuide) => `${ig.packageId}#${ig.version}`)
           .sort()
-          .forEach(ig => this.installedIgs.add(ig));
+          .forEach((ig) => this.installedIgs.add(ig));
       })
       .catch((error) => {
-        this.errorMessage = 'Error accessing FHIR server';
+        this.showErrorToast('Network error', error.message);
+        console.error(error);
       });
   }
 
   ngAfterViewInit() {
-    this.editor = ace.edit('editor');
-    this.editor.setReadOnly(true);
-    this.editor.setTheme('ace/theme/textmate');
-    this.editor.commands.removeCommand('find');
-    this.editor.setOptions({
-      tabSize: INDENT_SPACES,
-      wrap: true,
-      useWorker: false,
-      useSvgGutterIcons: false,
-    });
+    // Initializes the code editor, after the DOM is ready
+    this.editor = new ValidationCodeEditor(ace.edit('editor'), INDENT_SPACES);
   }
 
-  addFile(droppedBlob: IDroppedBlob): void {
+  /**
+   * Loads a selected/dropped file in the file selector in Matchbox.
+   * @param droppedBlob the selected/dropped file.
+   */
+  onFileSelected(droppedBlob: IDroppedBlob): void {
     if (droppedBlob.name.endsWith('.tgz')) {
       // Load an IG package
       try {
-        this.addPackage(droppedBlob.blob);
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      // We assume that the file is a FHIR resource
-      let entry: ValidationEntry = null;
-      try {
-        this.selectedIg = this.AUTO_IG_SELECTION;
-        const reader = new FileReader();
-        reader.readAsText(droppedBlob.blob);
-        reader.onload = () => {
-          try {
-            // need to run CD since file load runs outside of zone
-            this.cd.markForCheck();
-            // Try to parse the resource to extract information
-            entry = new ValidationEntry(droppedBlob.blob.name, <string>reader.result, droppedBlob.contentType, null);
-            this.currentResource = new UploadedFile(droppedBlob.name, droppedBlob.contentType, <string>reader.result, entry.resourceType);
-            if (entry.selectedProfile) {
-              // Auto-select the right profile in the form select
-              if (this.supportedProfiles.has(entry.selectedProfile)) {
-                // The canonical exists as-is in the list of supported profiles
-                this.selectedProfile = entry.selectedProfile;
-              } else {
-                // The canonical doesn't exist as-is in the list of supported profiles, but it may be present with its
-                // version as suffix
-                const versionedCanonical = `${entry.selectedProfile}|`;
-                for (let [key, value] of this.supportedProfiles) {
-                  if (key.startsWith(versionedCanonical)) {
-                    this.selectedProfile = key;
-                    break;
-                  }
-                }
-              }
-            }
-            this.validationEntries.unshift(entry);
-            this.show(entry);
-            this.validate(entry);
-          } catch (error) {
-            this.showErrorToast('Error parsing the file', error.message);
-            if (entry) {
-              entry.result = OperationResult.fromMatchboxError("Error while processing the resource for" +
-                " validation: " + error.message);
-            }
-            return;
-          }
-        };
+        this.validateExamplesInPackage(droppedBlob.blob);
       } catch (error) {
         this.showErrorToast('Unexpected error', error.message);
         console.error(error);
       }
+      return;
+    }
+
+    // We assume that the file is a FHIR resource
+    try {
+      this.selectedIg = this.AUTO_IG_SELECTION;
+      const reader = new FileReader();
+      reader.readAsText(droppedBlob.blob);
+      reader.onload = () => {
+        // need to run CD since file load runs outside of zone
+        this.cd.markForCheck();
+        this.validateResource(droppedBlob.blob.name, <string>reader.result, droppedBlob.contentType, true);
+      };
+    } catch (error) {
+      this.showErrorToast('Unexpected error', error.message);
+      console.error(error);
     }
   }
 
-  onValidateIg() {
-    let igid: string = '';
-
-    if (this.selectedIg != this.AUTO_IG_SELECTION) {
-      if (this.selectedIg.endsWith(' (last)')) {
-        igid = this.selectedIg.substring(0, this.selectedIg.length - 7);
-      } else {
-        igid = this.selectedIg;
+  validateResource(filename: string,
+                   content: string,
+                   contentType: string,
+                   selectBestProfile: boolean): void {
+    let entry: ValidationEntry;
+    try {
+      // Try to parse the resource to extract information
+      entry = new ValidationEntry(filename, content, contentType, null);
+      this.currentResource = new UploadedFile(
+        filename,
+        contentType,
+        content,
+        entry.resourceType
+      );
+      if (selectBestProfile && entry.selectedProfile) {
+        // Auto-select the right profile in the form select
+        if (this.supportedProfiles.has(entry.selectedProfile)) {
+          // The canonical exists as-is in the list of supported profiles
+          this.selectedProfile = entry.selectedProfile;
+        } else {
+          // The canonical doesn't exist as-is in the list of supported profiles, but it may be present with its
+          // version as suffix
+          const versionedCanonical = `${entry.selectedProfile}|`;
+          for (let [key, value] of this.supportedProfiles) {
+            if (key.startsWith(versionedCanonical)) {
+              this.selectedProfile = key;
+              break;
+            }
+          }
+        }
       }
-      igid = igid.replace('#', '-');
-      this.fetchData(this.client.baseUrl + '/ImplementationGuide/' + igid);
+      this.validationEntries.unshift(entry);
+      this.show(entry);
+      this.runValidation(entry);
+    } catch (error) {
+      this.showErrorToast('Error parsing the file', error.message);
+      if (entry) {
+        entry.result = OperationResult.fromMatchboxError(
+          'Error while processing the resource for' + ' validation: ' + error.message
+        );
+      }
+      return;
     }
   }
 
-  async fetchData(url: string) {
-    const res = await fetch(url, {
-      cache: 'no-store',
-      headers: {
-        Accept: 'application/gzip',
-      },
-    });
-    const blob = await res.blob();
-    this.addPackage(blob);
-  }
-
-  addPackage(file) {
+  /**
+   * Analyzes a package file and runs validation for all examples, with the right IG set.
+   * @param file the package file to load.
+   */
+  validateExamplesInPackage(file: File): void {
     this.selectedProfile = null;
     this.selectedIg = this.AUTO_IG_SELECTION;
     const reader = new FileReader();
@@ -237,7 +230,7 @@ export class ValidateComponent implements AfterViewInit {
             // onSuccess
             dataSource.forEach((entry) => {
               pointer.validationEntries.unshift(entry);
-              pointer.validate(entry);
+              pointer.runValidation(entry);
             });
           },
           function (err) {
@@ -274,14 +267,21 @@ export class ValidateComponent implements AfterViewInit {
     };
   }
 
-  onClear() {
+  /**
+   * Clear all history of validation.
+   */
+  clearAllEntries() {
     this.selectedProfile = null;
     this.selectedIg = this.AUTO_IG_SELECTION;
     this.show(undefined);
     this.validationEntries.splice(0, this.validationEntries.length);
   }
 
-  validate(entry: ValidationEntry) {
+  /**
+   * Starts the actual validation of an entry.
+   * @param entry the entry to validate.
+   */
+  runValidation(entry: ValidationEntry) {
     if (this.selectedProfile != null) {
       if (!entry.profiles.includes(this.selectedProfile)) {
         entry.profiles.push(this.selectedProfile);
@@ -310,7 +310,7 @@ export class ValidateComponent implements AfterViewInit {
     }
 
     // Validation options
-    for (const setting of this.validatorSettings) {
+    for (const [_, setting] of this.validatorSettings) {
       if (setting.formControl.value != null && setting.formControl.value.length > 0) {
         searchParams.set(setting.param.name, setting.formControl.value);
       }
@@ -333,28 +333,38 @@ export class ValidateComponent implements AfterViewInit {
         entry.loading = false;
         entry.setOperationOutcome(response);
         if (entry === this.selectedEntry) {
-          this.updateCodeEditorContent();
+          this.editor.updateCodeEditorContent(this.selectedEntry, this.editorContent);
         }
       })
       .catch((error) => {
         // fhir-kit-client throws an error when return in not json
         entry.loading = false;
         this.showErrorToast('Unexpected error', error.message);
-        entry.result = OperationResult.fromMatchboxError("Error while sending the validation request: " +error.message);
+        entry.result = OperationResult.fromMatchboxError(
+          'Error while sending the validation request: ' + error.message
+        );
         console.error(error);
       });
   }
 
+  /**
+   * Select a validation entry to show in the detail pane.
+   * @param entry the validation entry to show, or null to deselect the current one.
+   */
   show(entry: ValidationEntry | null) {
-    this.errorMessage = null;
     this.selectedEntry = entry;
-    this.updateCodeEditorContent();
+    this.editor.updateCodeEditorContent(this.selectedEntry, this.editorContent);
 
     if (entry != null) {
+      // Set the resource as currently selected in the form, to facilitate re-validation with a different profile/IG
       this.currentResource = new UploadedFile(entry.filename, entry.mimetype, entry.resource, entry.resourceType);
     }
   }
 
+  /**
+   * Remove an entry from the history list.
+   * @param entry the entry to remove.
+   */
   removeEntryFromHistory(entry: ValidationEntry) {
     if (entry === this.selectedEntry) {
       this.show(null);
@@ -363,60 +373,40 @@ export class ValidateComponent implements AfterViewInit {
     this.validationEntries.splice(index, 1); //remove element from array
   }
 
-  onValidate() {
-    let entry = new ValidationEntry(this.currentResource.filename, this.currentResource.content, this.currentResource.contentType, [
-      this.selectedProfile,
-    ]);
+  /**
+   * Event handler for the click on the "validation" button
+   */
+  onValidationButtonClick() {
+    let entry = new ValidationEntry(
+      this.currentResource.filename,
+      this.currentResource.content,
+      this.currentResource.contentType,
+      [this.selectedProfile]
+    );
     if (this.selectedIg != this.AUTO_IG_SELECTION) {
       entry.ig = this.selectedIg;
     }
     this.validationEntries.unshift(entry);
     this.show(entry);
-    this.validate(entry);
+    this.runValidation(entry);
   }
 
+  /**
+   * Toggle the display of the settings pane.
+   */
   toggleSettings() {
     this.showSettings = !this.showSettings;
   }
 
-  updateEditorIssues(): void {
-    // Remove old markers
-    this.editor.session.clearAnnotations();
-
-    if (!this.selectedEntry?.result) {
-      return;
-    }
-    // Add new markers
-    const annotations = this.selectedEntry.result.issues
-      .filter(issue => issue.line)
-      .map(issue => {
-        let type;
-        switch (issue.severity) {
-          case IssueSeverity.Fatal:
-          case IssueSeverity.Error:
-            type = 'error';
-            break;
-          case IssueSeverity.Warning:
-            type = 'warning';
-            break;
-          case IssueSeverity.Information:
-            type = 'info';
-            break;
-        }
-        return {
-          row: issue.line - 1,
-          column: issue.col,
-          text: issue.text,
-          type
-        };
-      });
-    this.editor.session.setAnnotations(annotations);
-  }
-
-  highlightIssue(issue: Issue): void {
+  /**
+   * Scrolls the code editor to the location of an issue.
+   * @param issue the FHIR Issue from an OperationOutcome.
+   */
+  scrollToIssueLocation(issue: Issue): void {
     if (issue.line && this.editorContent == CodeEditorContent.RESOURCE_CONTENT) {
-      this.editor.gotoLine(issue.line, issue.col, true);
-      this.editor.scrollToLine(issue.line, false, true, () => {});
+      // Scroll to the clicked issue, but only if the issue has a location and the  resource is shown in the code editor
+      // (scrolling in the OperationOutcome would be nonsense).
+      this.editor.scrollToIssueLocation(issue);
     }
   }
 
@@ -427,9 +417,13 @@ export class ValidateComponent implements AfterViewInit {
   updateProfileFilter() {
     const searchTerm = this.profileFilter.toLowerCase();
     this.filteredProfiles = new Set<StructureDefinition>(
-      [...this.supportedProfiles.values()].filter((sd) => {
-        return sd.title.toLocaleLowerCase().includes(searchTerm) || sd.canonical.toLocaleLowerCase().includes(searchTerm);
-      }).values()
+      [...this.supportedProfiles.values()]
+        .filter((sd) => {
+          return (
+            sd.title.toLocaleLowerCase().includes(searchTerm) || sd.canonical.toLocaleLowerCase().includes(searchTerm)
+          );
+        })
+        .values()
     );
   }
 
@@ -450,41 +444,21 @@ export class ValidateComponent implements AfterViewInit {
     return null;
   }
 
-  updateCodeEditorContent(): void {
-    if (!this.selectedEntry) {
-      this.editor.setValue('', -1);
-      this.editor.session.clearAnnotations();
-      return;
-    }
-
-    if (this.editorContent == CodeEditorContent.RESOURCE_CONTENT) {
-      this.editor.setValue(this.selectedEntry.resource, -1);
-      if (this.selectedEntry.mimetype === 'application/fhir+json') {
-        this.editor.getSession().setMode('ace/mode/json');
-      } else if (this.selectedEntry.mimetype === 'application/fhir+xml') {
-        this.editor.getSession().setMode('ace/mode/xml');
-      }
-      this.updateEditorIssues();
-    } else {
-      if (this.selectedEntry.result !== undefined && 'operationOutcome' in this.selectedEntry.result) {
-        this.editor.setValue(JSON.stringify(this.selectedEntry.result.operationOutcome, null, INDENT_SPACES), -1);
-        this.editor.getSession().setMode('ace/mode/json');
-      } else {
-        this.editor.setValue('', -1);
-      }
-      this.editor.session.clearAnnotations();
-    }
-  }
-
   changeCodeEditorContent(newContent: CodeEditorContent): void {
     if (this.editorContent === newContent) {
       return;
     }
     this.editorContent = newContent;
-    this.updateCodeEditorContent();
+    this.editor.updateCodeEditorContent(this.selectedEntry, this.editorContent);
   }
 
-  showErrorToast(title: string, message: string) {
+  /**
+   * Show an error toast message.
+   * @param title the toast title.
+   * @param message the toast message.
+   * @private
+   */
+  private showErrorToast(title: string, message: string) {
     this.toastr.error(message, title, {
       closeButton: true,
       timeOut: 5000,
@@ -492,11 +466,22 @@ export class ValidateComponent implements AfterViewInit {
   }
 }
 
+/**
+ * Struct of an uploaded file.
+ */
 class UploadedFile {
-  constructor(public filename: string, public contentType: string, public content: string, public resourceType: string) {}
+  constructor(
+    public filename: string,
+    public contentType: string,
+    public content: string,
+    public resourceType: string
+  ) {}
 }
 
-enum CodeEditorContent {
+/**
+ * Enum of the different tabs in the code editor.
+ */
+export enum CodeEditorContent {
   RESOURCE_CONTENT,
   OPERATION_OUTCOME,
 }

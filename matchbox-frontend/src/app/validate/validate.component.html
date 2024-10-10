@@ -6,7 +6,7 @@
     <h2>Validate FHIR Resource</h2>
 
     <ng-container *ngIf="!showSettings">
-      <app-upload (addFiles)="addFile($event)"></app-upload>
+      <app-upload (addFiles)="onFileSelected($event)"></app-upload>
 
       <p class="current">
         Current resource loaded:
@@ -65,16 +65,11 @@
         </mat-form-field>
       </div>
 
-      <button color="primary" mat-raised-button (click)="onValidate()">Validate</button>
-
-      <p *ngIf="errorMessage" class="error">
-        <mat-icon>report</mat-icon>
-        Error: {{ errorMessage }}
-      </p>
+      <button color="primary" mat-raised-button (click)="onValidationButtonClick()">Validate</button>
     </ng-container>
 
     <ng-container *ngIf="showSettings">
-      <div *ngFor="let setting of validatorSettings" class="form-field-group">
+      <div *ngFor="let setting of validatorSettings.values()" class="form-field-group">
         <mat-form-field class="column50">
           <mat-label>{{ setting.param.name }}</mat-label>
           <input [formControl]="setting.formControl" matInput/>
@@ -124,7 +119,7 @@
     </table>
 
     <mat-card-actions>
-      <button (click)="onClear()" mat-raised-button type="submit">Clear history</button>
+      <button (click)="clearAllEntries()" mat-raised-button type="submit">Clear history</button>
     </mat-card-actions>
   </div>
 </div>
@@ -145,7 +140,7 @@
 
     <app-operation-result *ngIf="selectedEntry && selectedEntry.result"
                           [operationResult]="selectedEntry.result"
-                          (select)="highlightIssue($event)"></app-operation-result>
+                          (select)="scrollToIssueLocation($event)"></app-operation-result>
     <mat-spinner *ngIf="selectedEntry && selectedEntry.loading" diameter="30"></mat-spinner>
   </div>
   <div class="card-maps white-block">
