@@ -1,6 +1,36 @@
-<?xml version="1.0"?>
-<StructureMap xmlns="http://hl7.org/fhir">
+<StructureMap 
+  xmlns="http://hl7.org/fhir">
   <id value="tutorial-step1b"/>
+  <meta>
+    <lastUpdated value="2024-10-10T11:44:21.716+00:00"/>
+  </meta>
+  <text>
+    <status value="generated"/>
+    <div 
+      xmlns="http://www.w3.org/1999/xhtml">
+      <pre>/// url = &quot;http://hl7.org/fhir/StructureMap/tutorial-step1b&quot;
+/// name = &quot;tutorial-step1b&quot;
+/// title = &quot;Tutorial Step 1b&quot;
+/// status = &quot;draft&quot;
+
+// Tutorial Step 1b
+
+uses &quot;http://hl7.org/fhir/StructureDefinition/tutorial-left-1&quot; alias TLeft as source
+uses &quot;http://hl7.org/fhir/StructureDefinition/tutorial-right-1&quot; alias TRight as target
+
+// uses &quot;http://hl7.org/fhir/StructureDefinition/string&quot; alias string as source
+// uses &quot;http://hl7.org/fhir/StructureDefinition/string&quot; alias string as target
+group tutorial(source src : TLeft, target tgt : TRight) &lt;&lt;type+&gt;&gt; {
+  src.a -&gt; tgt.a &quot;rule_a_short&quot;;
+}
+
+group string(source src : string, target tgt : string) &lt;&lt;type+&gt;&gt; {
+  src.value as v -&gt; tgt.value = v &quot;stringValue&quot;;
+}
+
+</pre>
+    </div>
+  </text>
   <url value="http://hl7.org/fhir/StructureMap/tutorial-step1b"/>
   <name value="tutorial-step1b"/>
   <title value="Tutorial Step 1b"/>
@@ -18,7 +48,8 @@
   </structure>
   <group>
     <name value="tutorial"/>
-    <typeMode value="none"/>
+    <typeMode value="type-and-types"/>
+    <documentation value="uses &quot;http://hl7.org/fhir/StructureDefinition/string&quot; alias string as source&#xd;&#xa;uses &quot;http://hl7.org/fhir/StructureDefinition/string&quot; alias string as target"/>
     <input>
       <name value="src"/>
       <type value="TLeft"/>
@@ -42,6 +73,38 @@
         <element value="a"/>
         <variable value="vvv"/>
         <transform value="create"/>
+      </target>
+    </rule>
+  </group>
+  <!-- this group should be created on demand if we have to equivalent types -->
+  <group>
+    <name value="string"/>
+    <typeMode value="type-and-types"/>
+    <input>
+      <name value="src"/>
+      <type value="string"/>
+      <mode value="source"/>
+    </input>
+    <input>
+      <name value="tgt"/>
+      <type value="string"/>
+      <mode value="target"/>
+    </input>
+    <rule>
+      <name value="stringValue"/>
+      <source>
+        <context value="src"/>
+        <element value="value"/>
+        <variable value="v"/>
+      </source>
+      <target>
+        <context value="tgt"/>
+        <contextType value="variable"/>
+        <element value="value"/>
+        <transform value="copy"/>
+        <parameter>
+          <valueId value="v"/>
+        </parameter>
       </target>
     </rule>
   </group>

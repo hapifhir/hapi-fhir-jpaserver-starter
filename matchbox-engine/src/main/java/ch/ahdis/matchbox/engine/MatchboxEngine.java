@@ -911,7 +911,16 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @throws FHIRException FHIR Exception
 	 */
 	public org.hl7.fhir.r5.model.StructureMap parseMapR5(String content) throws FHIRException {
-		SimpleWorkerContext context = this.getContext();
+		SimpleWorkerContext context = null;
+		try {
+				context = this.getContextForFhirVersion("5.0.0");
+		} catch (FHIRException e) {
+				log.error("error creating context",e);
+				return null;
+		} catch (IOException e) {
+				log.error("error creating context",e);
+				return null;
+		}
 		List<Base> outputs = new ArrayList<>();
 		StructureMapUtilities scu = new MatchboxStructureMapUtilities(context,
 				new TransformSupportServices(context, outputs), this);

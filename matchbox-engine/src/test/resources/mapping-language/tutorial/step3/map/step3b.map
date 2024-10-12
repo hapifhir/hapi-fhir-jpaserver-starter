@@ -7,6 +7,6 @@ uses "http://hl7.org/fhir/StructureDefinition/tutorial-right-3" alias TRight as 
 
 group tutorial(source src : TLeft, target tgt : TRight) {
 //  src.a2 as a where a2.length <= 20 -> tgt.a2 = a "rule_a20b"; see https://github.com/hapifhir/org.hl7.fhir.core/issues/1748
-  src.a2 as a where a.length() <= 20 -> tgt.a2 = a "rule_a20b";
+  src.a2 as a where (a.length() <= 20) -> tgt.a2 = a "rule_a20b";
 }
 

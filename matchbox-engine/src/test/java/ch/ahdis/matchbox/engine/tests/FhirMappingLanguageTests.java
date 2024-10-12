@@ -321,7 +321,6 @@ class FhirMappingLanguageTests {
 	}
 
 	@Test
-	@Disabled
 	void testTutorialStep1bJson() throws FHIRException, IOException {
 		// from rule 'rule_a_short'
 		// 1b org.hl7.fhir.exceptions.FHIRException: No matches found for rule for
