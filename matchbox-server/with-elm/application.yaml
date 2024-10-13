@@ -26,7 +26,11 @@ matchbox:
   fhir:
     context:
       fhirVersion: 4.0.1
+#      txServer: http://tx.fhir.org
       txServer: http://localhost:${server.port}/matchboxv3/fhir
+      txUseEcosystem: false
+      txLog: test.html
+      txServerCache: false
       suppressWarnInfo:
         hl7.fhir.r4.core#4.0.1:
           - "Constraint failed: dom-6:"

@@ -229,3 +229,5 @@ database/h2.trace.db
 
 .apt_generated_tests
 matchbox-server/tx.html
+
+matchbox-server/test.html
