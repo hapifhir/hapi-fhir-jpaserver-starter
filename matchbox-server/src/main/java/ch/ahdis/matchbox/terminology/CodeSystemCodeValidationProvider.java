@@ -15,11 +15,7 @@ import org.hl7.fhir.r5.model.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 import static ch.ahdis.matchbox.terminology.TerminologyUtils.mapErrorToOperationOutcome;
 import static java.util.Objects.requireNonNull;
@@ -58,7 +54,7 @@ public class CodeSystemCodeValidationProvider implements IResourceProvider {
 
 		if (request.hasParameter("coding") && request.getParameterValue("coding") instanceof final Coding coding) {
 			log.debug("Validating code in CS: {}|{}", coding.getCode(), coding.getSystem());
-			final var outputParams = TerminologyUtils.mapCodingToSuccessfulParameters(coding);
+			final var outputParams = TerminologyUtils.createSuccessfulResponseParameters(coding, null);
 			return switch (this.fhirContext.getVersion().getVersion()) {
 				case R4 -> VersionConvertorFactory_40_50.convertResource(outputParams);
 				case R4B -> VersionConvertorFactory_43_50.convertResource(outputParams);

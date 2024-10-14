@@ -5,6 +5,8 @@ import org.hl7.fhir.r5.model.Coding;
 import org.hl7.fhir.r5.model.OperationOutcome;
 import org.hl7.fhir.r5.model.Parameters;
 
+import javax.annotation.Nullable;
+
 /**
  * Some utilities for the internal terminology server.
  *
@@ -27,7 +29,8 @@ public class TerminologyUtils {
 		return parameters;
 	}
 
-	public static Parameters mapCodingToSuccessfulParameters(final Coding coding) {
+	public static Parameters createSuccessfulResponseParameters(@Nullable final Coding coding,
+																					@Nullable final CodeableConcept codeableConcept) {
 		final var parameters = new Parameters();
 		parameters.setParameter("result", true);
 		if (coding.hasVersion()) {
@@ -41,6 +44,9 @@ public class TerminologyUtils {
 		}
 		if (coding.hasDisplay()) {
 			parameters.setParameter("display", coding.getDisplayElement());
+		}
+		if (codeableConcept != null) {
+			parameters.setParameter("codeableConcept", codeableConcept);
 		}
 		return parameters;
 	}
