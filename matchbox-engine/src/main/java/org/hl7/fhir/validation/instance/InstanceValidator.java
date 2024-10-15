@@ -574,7 +574,6 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
   private boolean noBindingMsgSuppressed;
   private Map<String, Element> fetchCache = new HashMap<>();
   private HashMap<Element, ResourceValidationTracker> resourceTracker = new HashMap<>();
-  private IValidationPolicyAdvisor policyAdvisor = new BasePolicyAdvisorForFullValidation(ReferenceValidationPolicy.CHECK_VALID);
   long time = 0;
   long start = 0;
   long lastlog = 0;
@@ -661,21 +660,6 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
   @Override
   public IResourceValidator setWantInvariantInMessage(boolean wantInvariantInMessage) {
     this.wantInvariantInMessage = wantInvariantInMessage;
-    return this;
-  }
-
-
-  @Override
-  public IValidationPolicyAdvisor getPolicyAdvisor() {
-    return policyAdvisor;
-  }
-
-  @Override
-  public IResourceValidator setPolicyAdvisor(IValidationPolicyAdvisor advisor) {
-    if (advisor == null) {
-      throw new Error("Cannot set advisor to null");
-    }
-    this.policyAdvisor = advisor;
     return this;
   }
 
