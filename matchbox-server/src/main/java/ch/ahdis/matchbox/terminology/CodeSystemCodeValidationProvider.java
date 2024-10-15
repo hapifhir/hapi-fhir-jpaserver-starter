@@ -54,7 +54,7 @@ public class CodeSystemCodeValidationProvider implements IResourceProvider {
 
 		if (request.hasParameter("coding") && request.getParameterValue("coding") instanceof final Coding coding) {
 			log.debug("Validating code in CS: {}|{}", coding.getCode(), coding.getSystem());
-			final var outputParams = TerminologyUtils.createSuccessfulResponseParameters(coding, null);
+			final var outputParams = TerminologyUtils.createSuccessfulResponseParameters(coding);
 			return switch (this.fhirContext.getVersion().getVersion()) {
 				case R4 -> VersionConvertorFactory_40_50.convertResource(outputParams);
 				case R4B -> VersionConvertorFactory_43_50.convertResource(outputParams);

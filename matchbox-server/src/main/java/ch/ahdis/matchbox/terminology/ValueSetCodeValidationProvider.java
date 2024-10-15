@@ -16,6 +16,7 @@ import org.hl7.fhir.instance.model.api.IAnyResource;
 import org.hl7.fhir.instance.model.api.IBaseParameters;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IDomainResource;
+import org.hl7.fhir.r5.model.CodeableConcept;
 import org.hl7.fhir.r5.model.Coding;
 import org.hl7.fhir.r5.model.Parameters;
 import org.hl7.fhir.r5.model.ValueSet;
@@ -23,9 +24,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.w3._1999.xhtml.B;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -111,21 +112,41 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 		// parameter default-to-lastest-version (Boolean)
 		// parameter profile-url "http://hl7.org/fhir/ExpansionProfile/dc8fd4bc-091a-424a-8a3b-6198ef146891"
 
-		if (!request.hasParameter("coding")) {
+		if (!request.hasParameter("coding") && !request.hasParameter("codeableConcept")) {
 			servletResponse.setStatus(422);
-			return mapErrorToOperationOutcome("Missing parameter 'coding' in the request");
+			return mapErrorToOperationOutcome("Missing parameter 'coding' or 'codeableConcept' in the request");
 		}
 
-		if (!(request.getParameterValue("coding") instanceof Coding)) {
+		if (!(request.getParameterValue("coding") instanceof Coding)
+			&& !(request.getParameterValue("codeableConcept") instanceof CodeableConcept)) {
 			servletResponse.setStatus(422);
 			// The original error message is:
 			//    Unable to find code to validate (looked for coding | codeableConcept | code)
-			return mapErrorToOperationOutcome("Unable to find code to validate (looked for 'coding')");
+			return mapErrorToOperationOutcome("Unable to find code to validate (looked for 'coding' and 'codeableConcept')");
 		}
 
-		final Coding coding = (Coding) request.getParameterValue("coding");
+		final Coding coding;
+		if (request.hasParameter("coding")) {
+			coding = (Coding) request.getParameterValue("coding");
+		} else {
+			coding = null;
+		}
+		final CodeableConcept codeableConcept;
+		if (request.hasParameter("codeableConcept")) {
+			codeableConcept = (CodeableConcept) request.getParameterValue("codeableConcept");
+		} else {
+			codeableConcept = null;
+		}
+
+		final List<Coding> codings;
+		if (coding != null) {
+			codings = List.of(coding);
+		} else {
+			codings = codeableConcept.getCoding();
+		}
+
 		if ("NO_MEMBERSHIP_CHECK".equals(valueSetMode)) {
-			return createSuccessfulResponseParameters(coding, null);
+			return createSuccessfulResponseParameters(codings.getFirst());
 		}
 
 		String url = null;
@@ -143,9 +164,13 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 		if (valueSet == null) {
 			// That value set is not cached
 			log.debug("OK - cache miss, value set is null");
-			return createSuccessfulResponseParameters(coding, null);
+			return createSuccessfulResponseParameters(codings.getFirst());
 		}
-		log.debug("Validating code '{}|{}' in ValueSet '{}'", coding.getCode(), coding.getSystem(), url);
+		if (coding != null) {
+			log.debug("Validating code '{}|{}' in ValueSet '{}'", coding.getCode(), coding.getSystem(), url);
+		} else {
+			log.debug("Validating codeableConcept '{}' in ValueSet '{}'", codeableConcept, url);
+		}
 
 		if (!cachedValueSet) {
 			// We have to expand the value set
@@ -156,23 +181,27 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 			if (result == null || result.getValueSet() == null) {
 				// The value set expansion has failed; this means it may be too complex for the current implementation
 				// We try to infer the code membership from the value set definition as a last resort
-				log.debug("OK - expansion failed");
-				final var membership = this.evaluateCodeInComposition(coding, valueSet.getCompose());
-				if (membership == CodeMembership.EXCLUDED) {
-					log.debug("OK - code is excluded from value set composition");
-					return mapCodeErrorToParameters(
-						"The code '%s' is excluded from the value set '%s' composition".formatted(
-							coding.getCode(),
-							url
-						),
-						coding
-					);
-				} else if (membership == CodeMembership.INCLUDED) {
-					log.debug("OK - code is included in value set composition");
-				} else {
-					log.debug("OK - code is not included/excluded from value set composition, inferring inclusion");
+				log.debug(" - expansion failed");
+
+				for (final var validatedCoding : codings) {
+					final var membership = this.evaluateCodeInComposition(validatedCoding, valueSet.getCompose());
+					if (membership == CodeMembership.EXCLUDED) {
+						log.debug(" - code '{}' is excluded from value set composition", validatedCoding.getCode());
+					} else if (membership == CodeMembership.INCLUDED) {
+						log.debug(" - code '{}' is included in value set composition", validatedCoding.getCode());
+						// We can stop here, we've found a Coding explicitly included
+						return createSuccessfulResponseParameters(validatedCoding);
+					} else {
+						log.debug(" - code '{}' is not included/excluded from value set composition", validatedCoding.getCode());
+						// We can stop here, we've found a Coding explicitly included
+						return createSuccessfulResponseParameters(validatedCoding);
+					}
 				}
-				return createSuccessfulResponseParameters(coding, null);
+				return createErrorResponseParameters(
+					"The provided Coding/CodeableConcept is excluded from the value set '%s' composition".formatted(url),
+					coding,
+					codeableConcept
+				);
 			}
 
 			// Value set is expanded, convert it to R5 for internal use
@@ -191,7 +220,7 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 			if (valueSet.getExpansion().getContains().isEmpty()) {
 				// The value set expansion is successful but empty
 				log.debug("OK - expansion failed without reporting errors (empty value set)");
-				return createSuccessfulResponseParameters(coding, null);
+				return createSuccessfulResponseParameters(codings.getFirst());
 			}
 
 			if (cacheId != null) {
@@ -199,16 +228,18 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 			}
 		}
 
-		if (this.evaluateCodingInExpandedValueSet(coding, valueSet, inferSystem)) {
-			return createSuccessfulResponseParameters(coding, null);
+		for (final var validatedCoding : codings) {
+			if (this.evaluateCodingInExpandedValueSet(validatedCoding, valueSet, inferSystem)) {
+				return createSuccessfulResponseParameters(validatedCoding);
+			}
 		}
-		return mapCodeErrorToParameters(
-			"The code '%s' is not in the value set '%s' (expansion contains %d codes)".formatted(
-				coding.getCode(),
+		return createErrorResponseParameters(
+			"The provided Coding/CodeableConcept is not in the value set '%s' (expansion contains %d codes)".formatted(
 				url,
 				valueSet.getExpansion().getContains().size()
 			),
-			coding
+			coding,
+			codeableConcept
 		);
 	}
 
