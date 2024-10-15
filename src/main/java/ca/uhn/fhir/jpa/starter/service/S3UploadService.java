@@ -25,8 +25,6 @@ import java.util.stream.Stream;
 @Import(AppProperties.class)
 @Service
 public class S3UploadService {
-
-	private final String bucketName = "iprd-hyperspectral";
 	private static final Logger logger = LoggerFactory.getLogger(S3UploadService.class);
 
 	@Autowired
@@ -61,7 +59,7 @@ public class S3UploadService {
 				for (File file : filesInDirectory) {
 					String keyName = baseS3Key + "/" + directory.toPath().relativize(file.toPath()).toString().replace("\\", "/");
 
-					if (!uploadFile(appProperties.getAws_access_key(), appProperties.getAws_secret_key(), bucketName, keyName, file)) {
+					if (!uploadFile(appProperties.getAws_access_key(), appProperties.getAws_secret_key(), appProperties.getHyperSpectral_bucket_name(), keyName, file)) {
 						uploadSuccessful = false; // Mark as failed if any upload fails
 						logger.error("Failed to upload file: " + file.getName());
 					}
