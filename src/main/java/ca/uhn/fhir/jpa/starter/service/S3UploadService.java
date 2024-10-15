@@ -6,6 +6,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,7 @@ public class S3UploadService {
 				for (File file : filesInDirectory) {
 					String keyName = baseS3Key + "/" + directory.toPath().relativize(file.toPath()).toString().replace("\\", "/");
 
-					if (!uploadFile(appProperties.getAws_access_key(), appProperties.getAws_secret_key(), appProperties.getHyperSpectral_bucket_name(), keyName, file)) {
+					if (!uploadFile(appProperties.getHyperSpectral_bucket_name(), keyName, file)) {
 						uploadSuccessful = false; // Mark as failed if any upload fails
 						logger.error("Failed to upload file: " + file.getName());
 					}
@@ -80,13 +81,10 @@ public class S3UploadService {
 		}
 	}
 
-	private boolean uploadFile(String accessKey, String secretKey, String bucketName, String keyName, File file) {
-		BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+	private boolean uploadFile(String bucketName, String keyName, File file) {
+//		BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
 
-		AmazonS3 s3Client = AmazonS3Client.builder()
-			.withRegion(Regions.EU_NORTH_1)
-			.withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-			.build();
+		AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withRegion(Regions.EU_NORTH_1).build();
 
 		try {
 			if (!s3Client.doesObjectExist(bucketName, keyName))
