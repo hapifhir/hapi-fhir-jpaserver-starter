@@ -1242,5 +1242,64 @@ class FhirMappingLanguageTests {
 		CompareUtil.compare(getFileAsStringFromResources("/tutorial/step13/result/step13.source13.json"), result, false);
 	}
 
+	@Test
+	void testBundleJson() throws FHIRException, IOException {
+		StringBuilder bundleBuilder =  new StringBuilder();
+		bundleBuilder.append(" {\n")
+		.append("\t\t\t\"resourceType\": \"Bundle\",\n")
+		.append("\t\t\t\"type\": \"collection\",\n")
+		.append("\t\t\t\"entry\": [");
+
+		for (int i=0; i < 10000; i++) {
+			if (i>0) {
+				bundleBuilder.append(",");
+			}
+			bundleBuilder.append("  {\n" + 
+								"      \"resource\": {\n" + 
+								"        \"resourceType\": \"Observation\",\n" + 
+								"        \"id\": \""+i+"\"\n" + 
+								"        \"component\": [\n" + 
+								"          {\n" + 
+								"            \"code\": {\n" + 
+								"              \"coding\": [\n" + 
+								"                {\n" + 
+								"                  \"system\": \"http://loinc.org\",\n" + 
+								"                  \"code\": \"8480-6\"\n" + 
+								"                }\n" + 
+								"              ]\n" + 
+								"            },\n" + 
+								"            \"valueQuantity\": {\n" + 
+								"              \"value\": " +i +"\n" + 
+								"            }\n" + //
+								"          },\n" + //
+								"          {\n" + //
+								"            \"code\": {\n" + //
+								"              \"coding\": [\n" + //
+								"                {\n" + //
+								"                  \"system\": \"http://loinc.org\",\n" + //
+								"                  \"code\": \"8462-4\"\n" + //
+								"                }\n" + //
+								"              ]\n" + //
+								"            },\n" + //
+								"            \"valueQuantity\": {\n" + //
+								"              \"value\": "+(i-1)+"\n" + //
+								"            }\n" + //
+								"          }\n" + //
+								"        ]\n" + //
+								"      }\n" + //
+								"    }");
+		}
+		bundleBuilder.append("]\n}");
+		String bundle = bundleBuilder.toString();		  
+
+		StructureMap sm = engine.parseMap(getFileAsStringFromResources("/bundleobs.map"));
+		assertTrue(sm != null);
+		engine.addCanonicalResource(sm);
+
+		String result = engine.transform(bundle, true,
+				"http://test.ch/DummyBundleToBundle", true);
+		assertTrue(result != null);
+
+	}
 
 }

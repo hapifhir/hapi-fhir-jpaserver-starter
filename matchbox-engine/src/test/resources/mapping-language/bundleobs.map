@@ -1,0 +1,13 @@
+map "http://test.ch/DummyBundleToBundle" = "DummyBundleToBundle"
+
+uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as source
+uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as target
+
+group bundleToBundle(source src : Bundle, target tgt: Bundle) {
+	src.entry as entry then {
+        entry.resource as obs where $this.ofType(FHIR.Observation) -> tgt.entry as e,
+		e.resource = create('Observation') as o, o.id = uuid() then {
+			obs.component as c -> o.component = c;
+		};
+    };
+}
