@@ -6,7 +6,7 @@ import untar from 'js-untar';
 import { IDroppedBlob } from '../upload/upload.component';
 import ace from 'ace-builds';
 import { ValidationEntry } from './validation-entry';
-import { ValidationParameter } from './validation-parameter';
+import {ValidationParameter, ValidationParameterDefinition} from './validation-parameter';
 import { ITarEntry } from './tar-entry';
 import { Issue, OperationResult } from '../util/operation-result';
 import { FormControl, Validators } from '@angular/forms';
@@ -34,7 +34,7 @@ export class ValidateComponent implements AfterViewInit {
   capabilityStatement: fhir.r4.CapabilityStatement | null = null;
   installedIgs: Set<string> = new Set<string>();
   supportedProfiles: Map<string, StructureDefinition> = new Map<string, StructureDefinition>();
-  validatorSettings: Map<string, ValidationParameter> = new Map<string, ValidationParameter>();
+  validatorSettings: Map<string, ValidationParameterDefinition> = new Map<string, ValidationParameterDefinition>();
 
   // The input form
   filteredProfiles: Set<StructureDefinition> = new Set<StructureDefinition>();
@@ -140,7 +140,7 @@ export class ValidateComponent implements AfterViewInit {
     let entry: ValidationEntry;
     try {
       // Try to parse the resource to extract information
-      entry = new ValidationEntry(filename, content, contentType, null);
+      entry = new ValidationEntry(filename, content, contentType, null, this.getCurrentValidationSettings());
       this.currentResource = new UploadedFile(
         filename,
         contentType,
@@ -230,7 +230,7 @@ export class ValidateComponent implements AfterViewInit {
               let res = JSON.parse(decoder.decode(extractedFile.buffer)) as fhir.r4.Resource;
               let profiles = res.meta?.profile;
               // maybe better add ig as a parmeter, we assume now that ig version is equal to canonical version
-              let entry = new ValidationEntry(name, JSON.stringify(res, null, 2), 'application/fhir+json', profiles);
+              let entry = new ValidationEntry(name, JSON.stringify(res, null, 2), 'application/fhir+json', profiles, this.getCurrentValidationSettings());
               dataSource.push(entry);
             }
           }
@@ -282,10 +282,8 @@ export class ValidateComponent implements AfterViewInit {
     }
 
     // Validation options
-    for (const [_, setting] of this.validatorSettings) {
-      if (setting.formControl.value != null && setting.formControl.value.length > 0) {
-        searchParams.set(setting.param.name, setting.formControl.value);
-      }
+    for (const param of entry.validationParameters) {
+      searchParams.set(param.name, param.value);
     }
     entry.loading = true;
     this.client
@@ -353,7 +351,8 @@ export class ValidateComponent implements AfterViewInit {
       this.currentResource.filename,
       this.currentResource.content,
       this.currentResource.contentType,
-      [this.selectedProfile]
+      [this.selectedProfile],
+      this.getCurrentValidationSettings()
     );
     if (this.selectedIg != this.AUTO_IG_SELECTION) {
       entry.ig = this.selectedIg;
@@ -376,7 +375,7 @@ export class ValidateComponent implements AfterViewInit {
    */
   scrollToIssueLocation(issue: Issue): void {
     if (issue.line && this.editorContent == CodeEditorContent.RESOURCE_CONTENT) {
-      // Scroll to the clicked issue, but only if the issue has a location and the  resource is shown in the code editor
+      // Scroll to the clicked issue, but only if the issue has a location and the resource is shown in the code editor
       // (scrolling in the OperationOutcome would be nonsense).
       this.editor.scrollToIssueLocation(issue);
     }
@@ -397,6 +396,33 @@ export class ValidateComponent implements AfterViewInit {
         })
         .values()
     );
+  }
+
+  getDirectLink(entry: ValidationEntry): string {
+    const url = new URL(document.location.href);
+    url.searchParams.forEach((name: string) => {
+      url.searchParams.delete(name);
+    });
+
+    url.searchParams.set('resource', btoa(entry.resource));
+    url.searchParams.set('profile', entry.selectedProfile);
+    if (entry.ig) {
+      url.searchParams.set('ig', entry.ig);
+    }
+
+    for (const param of entry.validationParameters) {
+      url.searchParams.set(param.name, param.value);
+    }
+
+    return url.toString();
+  }
+
+  copyDirectLink(event: MouseEvent,entry: ValidationEntry) {
+    if ('clipboard' in navigator) {
+      event.preventDefault();
+      const url = this.getDirectLink(entry);
+      navigator.clipboard.writeText(url).then(() => {});
+    }
   }
 
   getExtensionStringValue(element: fhir.r4.Element, url: string): string {
@@ -422,6 +448,16 @@ export class ValidateComponent implements AfterViewInit {
     }
     this.editorContent = newContent;
     this.editor.updateCodeEditorContent(this.selectedEntry, this.editorContent);
+  }
+
+  private getCurrentValidationSettings(): ValidationParameter[] {
+    const parameters: ValidationParameter[] = [];
+    for (const [_, setting] of this.validatorSettings) {
+      if (setting.formControl.value != null && setting.formControl.value.length > 0) {
+        parameters.push(new ValidationParameter(setting.param.name, setting.formControl.value));
+      }
+    }
+    return parameters;
   }
 
   /**
@@ -467,7 +503,7 @@ export class ValidateComponent implements AfterViewInit {
     od.parameter
       .filter((f) => f.use == 'in' && f.name != 'resource' && f.name != 'profile' && f.name != 'ig')
       .forEach((parameter: fhir.r4.OperationDefinitionParameter) => {
-        this.validatorSettings.set(parameter.name, new ValidationParameter(parameter));
+        this.validatorSettings.set(parameter.name, new ValidationParameterDefinition(parameter));
       });
   }
 

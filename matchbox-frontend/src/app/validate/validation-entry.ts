@@ -1,21 +1,24 @@
 import { IssueSeverity, OperationResult } from '../util/operation-result';
+import {ValidationParameter, ValidationParameterDefinition} from "./validation-parameter";
 
 export class ValidationEntry {
-  filename: string; // "package/package.json",
-  resource: string;
+  readonly filename: string; // "package/package.json",
+  readonly resource: string;
   resourceType: string;
   resourceId: string;
-  mimetype: string;
+  readonly mimetype: string;
   result: OperationResult | undefined;
-  profiles: string[] = [];
+  readonly profiles: string[] = [];
   selectedProfile: string;
   ig?: string;
-  date: Date;
+  readonly date: Date;
+  readonly validationParameters: ValidationParameter[] = [];
   public loading: boolean = false;
 
-  constructor(filename: string, resource: string, mimetype: string | null, profiles: string[] | null) {
+  constructor(filename: string, resource: string, mimetype: string | null, profiles: string[] | null, settings: ValidationParameter[] = []) {
     this.filename = filename;
     this.resource = resource;
+    this.validationParameters = settings;
 
     if (mimetype) {
       this.mimetype = mimetype;

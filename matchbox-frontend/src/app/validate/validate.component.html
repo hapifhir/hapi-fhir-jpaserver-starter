@@ -113,7 +113,11 @@
           </ng-container>
         </td>
         <td class="actions mat-cell">
-          <mat-icon (click)="removeEntryFromHistory(entry)" aria-label="Remove" title="Remove from history">delete</mat-icon>
+          <mat-icon (click)="removeEntryFromHistory(entry)" aria-label="Remove" title="Remove from history" class="delete">delete</mat-icon>
+          <a [href]="getDirectLink(entry)" (click)="copyDirectLink($event, entry)" target="_blank" title="Copy a direct link to this validation">
+            <mat-icon aria-label="Copy" class="copy">content_copy</mat-icon>
+          </a>
+
         </td>
       </tr>
     </table>

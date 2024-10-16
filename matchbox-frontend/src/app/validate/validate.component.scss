@@ -82,7 +82,13 @@ table {
   td.actions {
     mat-icon {
       font-size: 24px;
-      color: $issue-error;
+      &.delete {
+        color: $issue-error;
+        margin-right: .2em;
+      }
+      &.copy {
+        color: #4ab183;
+      }
     }
   }
 }

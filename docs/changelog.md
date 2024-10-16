@@ -7,6 +7,7 @@ Unreleased
 - Upgrade hapifhir org.hl7.fhir.core to 6.3.32
 - FML: Use FMLParser in StructureMapUtilities and support for identity transform [#289](https://github.com/ahdis/matchbox/issues/289)
 - FML: FML transform performance tuning #264 (via @mrunibe)
+- Validation: add button to copy a direct link to the validation [#296](https://github.com/ahdis/matchbox/issues/296)
 
 2024/10/07 Release 3.9.3
 
