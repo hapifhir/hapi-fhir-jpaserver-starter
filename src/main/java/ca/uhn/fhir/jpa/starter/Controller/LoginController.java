@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter.Controller;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -8,7 +9,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,7 +41,7 @@ public class LoginController {
 
     @GetMapping("/login")
     public String login(Model model) {
-        return "/login";
+        return "login";
     }
 
     @RequestMapping("/logout")
@@ -51,19 +55,28 @@ public class LoginController {
     @PostMapping("/performlogin")
     public ResponseEntity<?> performLogin(
             @RequestParam("username") String username,
-            @RequestParam("password") String password) {
+            @RequestParam("password") String password,
+            HttpServletRequest request) {
 
         String keycloakToken = authenticateWithKeycloak(username, password);
 
         if (keycloakToken == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "Invalid credentials. Please try again."));
+                    .body("Invalid credentials. Please try again.");
         }
 
-        return ResponseEntity.ok(keycloakToken);
+        Authentication authentication = createAuthentication(username, keycloakToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        request.getSession().setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+        return ResponseEntity.ok("Login successful");
     }
 
-    @SuppressWarnings("unchecked")
+    private Authentication createAuthentication(String username, String token) {
+
+        return new UsernamePasswordAuthenticationToken(username, token, new ArrayList<>());
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private String authenticateWithKeycloak(String username, String password) {
 
         RestTemplate restTemplate = new RestTemplate();
