@@ -81,7 +81,7 @@ export class ValidateComponent implements AfterViewInit {
 
         // Read the list of installed ImplementationGuides
         values[1].entry
-          .map((entry: fhir.r4.BundleEntry) => entry.resource as fhir.r4.ImplementationGuide)
+          ?.map((entry: fhir.r4.BundleEntry) => entry.resource as fhir.r4.ImplementationGuide)
           .map((ig: fhir.r4.ImplementationGuide) => `${ig.packageId}#${ig.version}`)
           .sort()
           .forEach((ig) => this.installedIgs.add(ig));
@@ -445,7 +445,7 @@ export class ValidateComponent implements AfterViewInit {
   private analyzeValidateOperationDefinition(od: fhir.r4.OperationDefinition): void {
     od.parameter?.forEach((parameter: fhir.r4.OperationDefinitionParameter) => {
       if (parameter.name == 'profile') {
-        parameter._targetProfile.forEach((item) => {
+        parameter._targetProfile?.forEach((item) => {
           const sd = new StructureDefinition();
           sd.canonical = this.getExtensionStringValue(item, 'sd-canonical');
           sd.title = this.getExtensionStringValue(item, 'sd-title');
