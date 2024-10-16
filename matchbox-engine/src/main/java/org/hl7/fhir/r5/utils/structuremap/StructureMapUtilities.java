@@ -345,7 +345,7 @@ public class StructureMapUtilities {
   }
 
   private static void renderRule(StringBuilder b, StructureMapGroupRuleComponent r, int indent) {
-      // matchbox pr https://github.com/hapifhir/org.hl7.fhir.core/issues/1777
+    // matchbox pr https://github.com/hapifhir/org.hl7.fhir.core/issues/1777
     if (r.hasDocumentation()) {
       renderMultilineDoco(b, r.getDocumentation(), indent, true);
     }
@@ -1249,7 +1249,8 @@ public class StructureMapUtilities {
               }
             }
           }
-          Base res = services != null ? services.createType(context.getAppInfo(), tn) : typeFactory(tn);
+          // matchbox patch https://github.com/ahdis/matchbox/issues/264
+          Base res = services != null ? services.createType(context.getAppInfo(), tn, profileUtilities) : typeFactory(tn);
           if (res.isResource() && !res.fhirType().equals("Parameters")) {
 //	        res.setIdBase(tgt.getParameter().size() > 1 ? getParamString(vars, tgt.getParameter().get(0)) : UUID.randomUUID().toString().toLowerCase());
             if (services != null)
@@ -1390,7 +1391,8 @@ public class StructureMapUtilities {
       if (sd == null) {
         throw new FHIRException("Unable to create type "+tn);
       } else {
-        return Manager.build(worker, sd);
+        // matchbox pr https://github.com/hapifhir/org.hl7.fhir.core/issues/1777
+        return Manager.build(worker, sd, profileUtilities);
       }
     } else {
       return ResourceFactory.createResourceOrType(tn);

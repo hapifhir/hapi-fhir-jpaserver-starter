@@ -23,6 +23,7 @@ package ch.ahdis.matchbox.mappinglanguage;
 import java.util.List;
 
 import org.hl7.fhir.exceptions.FHIRException;
+import org.hl7.fhir.r5.conformance.profile.ProfileUtilities;
 import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.model.Base;
@@ -42,8 +43,9 @@ public class TransformSupportServices implements ITransformerServices {
     this.outputs = outputs;
   }
 
+  // matchbox patch https://github.com/ahdis/matchbox/issues/264
   @Override
-  public Base createType(Object appInfo, String name) throws FHIRException {
+  public Base createType(Object appInfo, String name, ProfileUtilities profileUtilities) throws FHIRException {
     StructureDefinition sd = context.fetchResource(StructureDefinition.class, name);
     if (sd == null) {
       if (Utilities.existsInList(name, "http://hl7.org/fhirpath/System.String")) {
@@ -53,7 +55,7 @@ public class TransformSupportServices implements ITransformerServices {
     if (sd == null) {
       throw new FHIRException("Unable to create type "+name);
     } 
-    return Manager.build(context, sd);
+    return Manager.build(context, sd, profileUtilities);
   }
 
   @Override

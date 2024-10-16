@@ -6,6 +6,7 @@ Unreleased
 - Terminology: support CodeableConcept in ValueSet/$validate operation [#291](https://github.com/ahdis/matchbox/issues/291)
 - Upgrade hapifhir org.hl7.fhir.core to 6.3.32
 - FML: Use FMLParser in StructureMapUtilities and support for identity transform [#289](https://github.com/ahdis/matchbox/issues/289)
+- FML: FML transform performance tuning #264 (via @mrunibe)
 
 2024/10/07 Release 3.9.3
 
