@@ -30,6 +30,7 @@ import org.hl7.fhir.r5.renderers.spreadsheets.ConceptMapSpreadsheetGenerator;
 import org.hl7.fhir.r5.renderers.spreadsheets.StructureDefinitionSpreadsheetGenerator;
 import org.hl7.fhir.r5.renderers.spreadsheets.ValueSetSpreadsheetGenerator;
 import org.hl7.fhir.r5.terminologies.CodeSystemUtilities;
+import org.hl7.fhir.r5.terminologies.client.TerminologyClientManager.InternalLogEvent;
 import org.hl7.fhir.utilities.TextFile;
 import org.hl7.fhir.utilities.TimeTracker;
 import org.hl7.fhir.utilities.Utilities;
@@ -148,7 +149,8 @@ public class MatchboxService {
     ValidationOutputRenderer renderer = makeValidationOutputRenderer(cliContext);
     renderer.setOutput(dst);
     renderer.setCrumbTrails(validator.isCrumbTrails());
-    
+    renderer.setShowMessageIds(validator.isShowMessageIds());
+
     int ec = 0;
     
     if (r instanceof Bundle) {
@@ -183,6 +185,20 @@ public class MatchboxService {
       TextFile.stringToFile(html, cliContext.getHtmlOutput());
       System.out.println("HTML Summary in " + cliContext.getHtmlOutput());
     }
+
+    if (cliContext.isShowTerminologyRouting()) {
+      System.out.println("");
+      System.out.println("Terminology Routing Dump ---------------------------------------");
+      if (validator.getContext().getTxClientManager().getInternalLog().isEmpty()) {
+        System.out.println("(nothing happened)");            
+      } else {
+        for (InternalLogEvent log : validator.getContext().getTxClientManager().getInternalLog()) {
+          System.out.println(log.getMessage()+" -> "+log.getServer()+" (for VS "+log.getVs()+" with systems '"+log.getSystems()+"', choices = '"+log.getChoices()+"')");
+        }
+      }
+      validator.getContext().getTxClientManager().getInternalLog().clear();
+    }    
+
     System.exit(ec > 0 ? 1 : 0);
   }
 

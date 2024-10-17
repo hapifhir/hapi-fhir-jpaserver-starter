@@ -145,6 +145,15 @@ public class CliContext {
   @JsonProperty("forPublication")
   private boolean forPublication = false;
 
+  @JsonProperty("showMessageIds")
+  private boolean showMessageIds = false;
+
+  @JsonProperty("showTerminologyRouting")
+  private boolean showTerminologyRouting = false;
+
+  @JsonProperty("clearTxCache")
+  private boolean clearTxCache = false;
+
   @JsonProperty("allowExampleUrls")
   private boolean allowExampleUrls = true;
 
@@ -586,6 +595,30 @@ public class CliContext {
     this.forPublication = forPublication;
   }
 
+  public boolean isShowMessageIds() {
+    return showMessageIds;
+  }
+
+  public void setShowMessageIds(boolean showMessageIds) {
+    this.showMessageIds = showMessageIds;
+  }
+
+  public boolean isShowTerminologyRouting() {
+    return showTerminologyRouting;
+  }
+
+  public void setShowTerminologyRouting(boolean showTerminologyRouting) {
+    this.showTerminologyRouting = showTerminologyRouting;
+  }
+
+  public boolean isClearTxCache() {
+    return clearTxCache;
+  }
+
+  public void setClearTxCache(boolean clearTxCache) {
+    this.clearTxCache = clearTxCache;
+  }
+
   public boolean isAllowExampleUrls() {
     return allowExampleUrls;
   }
@@ -635,6 +668,9 @@ public class CliContext {
         && securityChecks == that.securityChecks
         && crumbTrails == that.crumbTrails
         && forPublication == that.forPublication
+        && showMessageIds == that.showMessageIds
+        && showTerminologyRouting == that.showTerminologyRouting
+        && clearTxCache == that.clearTxCache
         && allowExampleUrls == that.allowExampleUrls
         && onlyOneEngine == that.onlyOneEngine
         && xVersion == that.xVersion
@@ -677,6 +713,9 @@ public class CliContext {
         securityChecks,
         crumbTrails,
         forPublication,
+        showMessageIds,
+        showTerminologyRouting,
+        clearTxCache,
         httpReadOnly,
         allowExampleUrls,
         htmlInMarkdownCheck,
@@ -732,6 +771,9 @@ public class CliContext {
         ", securityChecks=" + securityChecks +
         ", crumbTrails=" + crumbTrails +
         ", forPublication=" + forPublication +
+        ", showMessageIds=" + showMessageIds +
+        ", showTerminologyRouting=" + showTerminologyRouting +
+        ", clearTxCache=" + clearTxCache +
         ", allowExampleUrls=" + allowExampleUrls +
         ", locale='" + locale + '\'' +
         ", locations=" + locations +
@@ -771,6 +813,9 @@ public class CliContext {
 	addExtension(ext, "securityChecks", new BooleanType(this.securityChecks));
 	addExtension(ext, "crumbTrails", new BooleanType(this.crumbTrails));
 	addExtension(ext, "forPublication", new BooleanType(this.forPublication));
+	addExtension(ext, "showMessageIds", new BooleanType(this.showMessageIds));
+	addExtension(ext, "showTerminologyRouting", new BooleanType(this.showTerminologyRouting));
+	addExtension(ext, "clearTxCache", new BooleanType(this.clearTxCache));
 	addExtension(ext, "httpReadOnly", new BooleanType(this.httpReadOnly));
 	addExtension(ext, "allowExampleUrls", new BooleanType(this.allowExampleUrls));
 	addExtension(ext, "txServer", new UriType(this.txServer));

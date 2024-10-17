@@ -498,6 +498,15 @@ public class MatchboxEngineSupport {
 			} catch (final Exception e) {
 				throw new TerminologyServerException("Error while setting the terminology server cache: " + getTxCachePath(cli.getTxServer()), e);
 			}
+
+			try {
+				if (cli.isClearTxCache()) {
+					validator.getContext().getTxCache().clear();
+			  	}
+			} catch (final Exception e) {
+				throw new TerminologyServerException("Error while setting while trying to clear the terminology cache", e);
+			}
+		
 		}
 
 		validator.setDebug(cli.isDoDebug());
@@ -531,6 +540,7 @@ public class MatchboxEngineSupport {
 		validator.setWantInvariantInMessage(cli.isWantInvariantsInMessages());
 		validator.setSecurityChecks(cli.isSecurityChecks());
 		validator.setCrumbTrails(cli.isCrumbTrails());
+		validator.setShowMessageIds(cliContext.isShowMessageIds());
 		validator.setForPublication(cli.isForPublication());
 		validator.setShowTimes(true);
 		validator.setAllowExampleUrls(cli.isAllowExampleUrls());

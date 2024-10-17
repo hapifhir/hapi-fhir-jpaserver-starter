@@ -1,13 +1,14 @@
 2024/10/17 Release 3.9.4
 
-- Tutorial for validation FHIR resources with [matchbox](https://ahdis.github.io/matchbox/validation-tutorial/)
-- Gazelle reports: add test to ensure https://gazelle.ihe.net/jira/browse/EHS-831 is fixed
-- Allow validating a resource through the GUI with URL search parameters [#288](https://github.com/ahdis/matchbox/issues/288)
-- Terminology: support CodeableConcept in ValueSet/$validate operation [#291](https://github.com/ahdis/matchbox/issues/291)
-- Upgrade hapifhir org.hl7.fhir.core to 6.3.32
+- Validation: Tutorial for validating FHIR resources with [matchbox](https://ahdis.github.io/matchbox/validation-tutorial/)
+- Validation: add button to copy a direct link to the validation [#296](https://github.com/ahdis/matchbox/issues/296)
+- Validation: support additional validation parameters [#299](https://github.com/ahdis/matchbox/issues/299)
+- Validation: Allow validating a resource through the GUI with URL search parameters [#288](https://github.com/ahdis/matchbox/issues/288)
+- Validation: Terminology: support CodeableConcept in ValueSet/$validate operation [#291](https://github.com/ahdis/matchbox/issues/291)
 - FML: Use FMLParser in StructureMapUtilities and support for identity transform [#289](https://github.com/ahdis/matchbox/issues/289)
 - FML: FML transform performance tuning #264 (via @mrunibe)
-- Validation: add button to copy a direct link to the validation [#296](https://github.com/ahdis/matchbox/issues/296)
+- Gazelle reports: add test to ensure https://gazelle.ihe.net/jira/browse/EHS-831 is fixed
+- Upgrade hapifhir org.hl7.fhir.core to 6.3.32
 
 2024/10/07 Release 3.9.3
 
