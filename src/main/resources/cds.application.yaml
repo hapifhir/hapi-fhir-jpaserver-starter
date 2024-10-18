@@ -175,7 +175,7 @@ hapi:
     #    allowed_bundle_types: COLLECTION,DOCUMENT,MESSAGE,TRANSACTION,TRANSACTIONRESPONSE,BATCH,BATCHRESPONSE,HISTORY,SEARCHSET
     #    allow_cascading_deletes: true
     #    allow_contains_searches: true
-    #    allow_external_references: true
+    allow_external_references: true
     #    allow_multiple_delete: true
     #    allow_override_default_search_params: true
     #    auto_create_placeholder_reference_targets: false

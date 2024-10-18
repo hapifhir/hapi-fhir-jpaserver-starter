@@ -16,6 +16,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch.indices.IndexSettings;
 import co.elastic.clients.json.JsonData;
 import jakarta.annotation.PreDestroy;
 import org.elasticsearch.client.RequestOptions;
@@ -91,7 +92,7 @@ public class ElasticsearchLastNR4IT {
 	  elasticsearchHighLevelRestClient.indices().putTemplate(t->{
 		  t.name("hapi_fhir_template");
 		  t.indexPatterns("*");
-		  t.settings("index.max_result_window", JsonData.of(50000));
+		  t.settings(new IndexSettings.Builder().maxResultWindow(50000).build());
 		  return t;
 	  });
 
