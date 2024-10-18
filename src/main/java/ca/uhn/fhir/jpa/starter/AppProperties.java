@@ -103,6 +103,7 @@ public class AppProperties {
   private final List<String> custom_interceptor_classes = new ArrayList<>();
 
 	private final List<String> custom_provider_classes = new ArrayList<>();
+	private Boolean upliftedRefchains_enabled = false;
 
 
 	public List<String> getCustomInterceptorClasses() {
@@ -641,6 +642,14 @@ public Cors getCors() {
 
 	public void setLanguage_search_parameter_enabled(Boolean language_search_parameter_enabled) {
 		this.language_search_parameter_enabled = language_search_parameter_enabled;
+	}
+
+	public boolean getUpliftedRefchains_enabled() {
+		return upliftedRefchains_enabled;
+	}
+
+	public void setUpliftedRefchains_enabled(boolean upliftedRefchains_enabled) {
+		this.upliftedRefchains_enabled = upliftedRefchains_enabled;
 	}
 
 	public static class Cors {
