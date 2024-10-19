@@ -16,6 +16,7 @@ import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.config.ThreadPoolFactoryConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
+import ca.uhn.fhir.jpa.api.model.HistoryCountModeEnum;
 import ca.uhn.fhir.jpa.binary.interceptor.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
 import ca.uhn.fhir.jpa.config.util.HapiEntityManagerFactoryUtil;
@@ -63,6 +64,7 @@ import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
+import org.apache.commons.lang3.EnumUtils;
 import jakarta.persistence.EntityManagerFactory;
 import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -455,6 +457,10 @@ public class StarterJpaConfig {
 		// register the IPS Provider
 		if (!theIpsOperationProvider.isEmpty()) {
 			fhirServer.registerProvider(theIpsOperationProvider.get());
+		}
+
+		if(EnumUtils.isValidEnum(HistoryCountModeEnum.class, appProperties.getHistory_count_mode())){
+			jpaStorageSettings.setHistoryCountMode(HistoryCountModeEnum.valueOf(appProperties.getHistory_count_mode()));
 		}
 
 		// register custom providers

@@ -71,6 +71,7 @@ public class AppProperties {
   private List<String> supported_resource_types = new ArrayList<>();
   private List<Bundle.BundleType> allowed_bundle_types = null;
   private Boolean narrative_enabled = true;
+  private String history_count_mode = "CACHED_ONLY_WITHOUT_OFFSET";
 
   private Boolean ig_runtime_upload_enabled = false;
 
@@ -553,6 +554,16 @@ public Cors getCors() {
   public void setNarrative_enabled(Boolean narrative_enabled)
   {
     this.narrative_enabled = narrative_enabled;
+  }
+
+  public String getHistory_count_mode()
+  {
+    return history_count_mode;
+  }
+
+  public void setHistory_count_mode(String history_count_mode)
+  {
+    this.history_count_mode = history_count_mode;
   }
 
   public Boolean getLastn_enabled() {
