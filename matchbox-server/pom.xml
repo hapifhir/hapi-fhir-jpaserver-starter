@@ -226,15 +226,6 @@
 
         <plugins>
  
-            <!-- Tell Maven which Java source version you want to use -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <release>21</release>
-                </configuration>
-            </plugin>
-
             <!-- The configuration here tells the WAR plugin to include the FHIR Tester overlay. You can omit it if you are not using that feature. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
