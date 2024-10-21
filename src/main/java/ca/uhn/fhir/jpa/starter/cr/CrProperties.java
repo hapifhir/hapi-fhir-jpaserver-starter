@@ -1,9 +1,5 @@
 package ca.uhn.fhir.jpa.starter.cr;
 
-import org.cqframework.cql.cql2elm.CqlCompilerException;
-import org.cqframework.cql.cql2elm.CqlTranslator;
-import org.cqframework.cql.cql2elm.LibraryBuilder;
-
 public class CrProperties {
 	private Boolean enabled;
 
