@@ -9,7 +9,7 @@
 
     <groupId>health.matchbox</groupId>
     <artifactId>matchbox</artifactId>
-    <version>3.9.5</version>
+    <version>3.9.6</version>
     <packaging>pom</packaging>
     <name>matchbox</name>
     <description>An open-source implementation to support testing and implementation of FHIR based solutions and map or
@@ -251,6 +251,14 @@
                     <exclusion>
                         <groupId>co.elastic.clients</groupId>
                         <artifactId>*</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.hibernate.search</groupId>
+                        <artifactId>hibernate-search-backend-lucene</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.lucene</groupId>
+                        <artifactId>lucene-analysis-phonetic</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>

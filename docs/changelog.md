@@ -1,4 +1,4 @@
-2024/10/24 Release 3.9.5
+2024/10/24 Release 3.9.5 & Release 3.9.6
 
 - Updated dependencies [#301](https://github.com/ahdis/matchbox/issues/301)
 

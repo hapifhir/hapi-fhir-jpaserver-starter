@@ -5,7 +5,7 @@
     <parent>
         <artifactId>matchbox</artifactId>
         <groupId>health.matchbox</groupId>
-        <version>3.9.5</version>
+        <version>3.9.6</version>
     </parent>
 
     <artifactId>matchbox-server</artifactId>
@@ -40,7 +40,7 @@
                     <groupId>org.slf4j</groupId>
                     <artifactId>jcl-over-slf4j</artifactId>
                 </exclusion>
-            </exclusions>
+        </exclusions>
         </dependency>
 
         <!-- This dependency includes the JPA server itself, which is packaged separately from the rest of HAPI FHIR -->
@@ -51,24 +51,6 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-jpaserver-base</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-jcl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-io</groupId>
-                    <artifactId>commons-io</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.zaxxer</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
