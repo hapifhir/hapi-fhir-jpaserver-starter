@@ -1,3 +1,7 @@
+2024/10/24 Release 3.9.5
+
+- Updated dependencies [#301](https://github.com/ahdis/matchbox/issues/301)
+
 2024/10/17 Release 3.9.4
 
 - Validation: Tutorial for validating FHIR resources with [matchbox](https://ahdis.github.io/matchbox/validation-tutorial/)

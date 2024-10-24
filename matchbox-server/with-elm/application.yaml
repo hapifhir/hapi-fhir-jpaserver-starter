@@ -20,7 +20,8 @@ hapi:
         url: classpath:/hl7.fhir.uv.extensions.r4#1.0.0.tgz
       ch_elm:
         name: ch.fhir.ig.ch-elm
-        version: 1.4.0
+        version: 1.6.0-cibuild
+        url: https://build.fhir.org/ig/ahdis/ch-elm/package.tgz
     staticLocation: file:/apps/
 matchbox:
   fhir:
