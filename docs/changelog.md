@@ -1,4 +1,8 @@
-2024/10/24 Release 3.9.5 & Release 3.9.6
+2024/10/24 Release 3.9.6
+
+- Remove lucene dependencies [#301](https://github.com/ahdis/matchbox/issues/301)
+
+2024/10/24 Release 3.9.5
 
 - Updated dependencies [#301](https://github.com/ahdis/matchbox/issues/301)
 
