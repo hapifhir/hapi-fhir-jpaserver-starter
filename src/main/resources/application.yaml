@@ -236,7 +236,18 @@ hapi:
     search-coord-core-pool-size: 20
     search-coord-max-pool-size: 100
     search-coord-queue-capacity: 200
-    
+
+    # Search Prefetch Thresholds.
+
+    # This setting sets the number of search results to prefetch. For example, if this list
+    # is set to [100, 1000, -1] then the server will initially load 100 results and not
+    # attempt to load more. If the user requests subsequent page(s) of results and goes
+    # past 100 results, the system will load the next 900 (up to the following threshold of 1000).
+    # The system will progressively work through these thresholds.
+    # A threshold of -1 means to load all results. Note that if the final threshold is a
+    # number other than -1, the system will never prefetch more than the given number.
+    search_prefetch_thresholds: 13,503,2003,-1
+
     # comma-separated package names, will be @ComponentScan'ed by Spring to allow for creating custom Spring beans
     #custom-bean-packages:
     
