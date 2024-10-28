@@ -1,4 +1,5 @@
 server:
+  port: 8080
   servlet:
     context-path: /matchboxv3
 hapi:
@@ -52,6 +53,7 @@ matchbox:
     context:
       fhirVersion: 4.0.1
       txServer: http://tx.fhir.org
+#      txServer: http://localhost:${server.port}/matchboxv3/fhir
       suppressWarnInfo:
         hl7.fhir.r4.core#4.0.1:
           - "Constraint failed: dom-6:"
