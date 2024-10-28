@@ -13,6 +13,10 @@ import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import jakarta.websocket.ContainerProvider;
 import jakarta.websocket.Session;
 import jakarta.websocket.WebSocketContainer;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Bundle;
@@ -29,6 +33,8 @@ import org.hl7.fhir.r4.model.Subscription;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -304,6 +310,17 @@ class ExampleServerR4IT implements IServerSupport {
 		return ourClient.search().forResource(Subscription.class).where(Subscription.STATUS.exactly().code("active"))
 			.cacheControl(new CacheControlDirective().setNoCache(true)).returnBundle(Bundle.class).execute().getEntry()
 			.size();
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {"prometheus", "health", "metrics", "info"})
+	void testActuatorEndpointExists(String endpoint) throws IOException {
+
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		CloseableHttpResponse response = httpclient.execute(new HttpGet("http://localhost:" + port + "/actuator/" + endpoint));
+		int statusCode = response.getStatusLine().getStatusCode();
+		assertEquals(200, statusCode);
+
 	}
 
 	@BeforeEach

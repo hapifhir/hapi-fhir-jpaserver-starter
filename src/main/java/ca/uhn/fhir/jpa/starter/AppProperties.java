@@ -103,6 +103,7 @@ public class AppProperties {
   private final List<String> custom_interceptor_classes = new ArrayList<>();
 
 	private final List<String> custom_provider_classes = new ArrayList<>();
+	private Boolean upliftedRefchains_enabled = false;
 
 	private List<Integer> search_prefetch_thresholds = new ArrayList<>();
 
@@ -653,8 +654,15 @@ public Cors getCors() {
 		this.search_prefetch_thresholds = thePrefetchThresholds;
 	}
 
+	public boolean getUpliftedRefchains_enabled() {
+		return upliftedRefchains_enabled;
+	}
 
-    public static class Cors {
+	public void setUpliftedRefchains_enabled(boolean upliftedRefchains_enabled) {
+		this.upliftedRefchains_enabled = upliftedRefchains_enabled;
+	}
+
+	public static class Cors {
     private Boolean allow_Credentials = true;
     private List<String> allowed_origin = List.of("*");
 

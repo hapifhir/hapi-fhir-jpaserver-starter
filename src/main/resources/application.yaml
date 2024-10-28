@@ -1,31 +1,37 @@
 #Uncomment the "servlet" and "context-path" lines below to make the fhir endpoint available at /example/path/fhir instead of the default value of /fhir
 server:
-#  servlet:
-#    context-path: /example/path
+  #  servlet:
+  #    context-path: /example/path
   port: 8080
 #Adds the option to go to eg. http://localhost:8080/actuator/health for seeing the running configuration
 #see https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
 management:
+  #The following configuration will enable the actuator endpoints at /actuator/health, /actuator/info, /actuator/prometheus, /actuator/metrics. For security purposes, only /actuator/health is enabled by default.
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: 'health' # or e.g. 'info,health,prometheus,metrics' or '*' for all'
   endpoint:
-    endpoints:
-      enabled-by-default: false
-      web:
-        exposure:
-          include: health,prometheus
+    info:
+      enabled: true
+    metrics:
+      enabled: true
     health:
       enabled: true
       probes:
         enabled: true
-      livenessState:
-        enabled: true
-      readinessState:
-        enabled: true
+      group:
+        liveness:
+          include:
+            - livenessState
+            - readinessState
     prometheus:
       enabled: true
-      metrics:
-        export:
-          enabled: true
-
+  prometheus:
+    metrics:
+      export:
+        enabled: true
 spring:
   main:
     allow-circular-references: true
@@ -184,6 +190,7 @@ hapi:
     #    enable_index_missing_fields: false
     #    enable_index_of_type: true
     #    enable_index_contained_resource: false
+    #    upliftedRefchains_enabled: true
     #    resource_dbhistory_enabled: false
     ###  !!Extended Lucene/Elasticsearch Indexing is still a experimental feature, expect some features (e.g. _total=accurate) to not work as expected!!
     ###  more information here: https://hapifhir.io/hapi-fhir/docs/server_jpa/elastic.html
