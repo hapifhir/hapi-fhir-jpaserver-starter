@@ -88,7 +88,7 @@ class CdsHooksServletIT implements IServerSupport {
 
 	private Boolean hasCdsServices() throws IOException {
 		var response = callCdsServicesDiscovery();
-		return response.getEntity().getContentLength() > 21 || response.getEntity().isChunked();
+		return response.getEntity().getContentLength() > 25 || response.getEntity().isChunked();
 	}
 
 	private CloseableHttpResponse callCdsServicesDiscovery() {
