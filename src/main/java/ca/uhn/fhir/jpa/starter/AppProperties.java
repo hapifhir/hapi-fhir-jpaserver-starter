@@ -105,6 +105,8 @@ public class AppProperties {
 	private final List<String> custom_provider_classes = new ArrayList<>();
 	private Boolean upliftedRefchains_enabled = false;
 
+	private List<Integer> search_prefetch_thresholds = new ArrayList<>();
+
 
 	public List<String> getCustomInterceptorClasses() {
     return custom_interceptor_classes;
@@ -642,6 +644,14 @@ public Cors getCors() {
 
 	public void setLanguage_search_parameter_enabled(Boolean language_search_parameter_enabled) {
 		this.language_search_parameter_enabled = language_search_parameter_enabled;
+	}
+
+	public List<Integer> getSearch_prefetch_thresholds() {
+		return this.search_prefetch_thresholds;
+	}
+
+	public void  setSearch_prefetch_thresholds(List<Integer> thePrefetchThresholds) {
+		this.search_prefetch_thresholds = thePrefetchThresholds;
 	}
 
 	public boolean getUpliftedRefchains_enabled() {
