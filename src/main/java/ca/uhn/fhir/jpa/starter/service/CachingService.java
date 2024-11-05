@@ -625,13 +625,13 @@ public class CachingService {
 		notificationDataSource.updateObjects(resultToUpdateCache);
 	}
 
-	public void processMapDataForCache(List<String> orgIdList, String startDate, String endDate, ArrayList<MapCacheEntity> resultToCache, ArrayList<MapCacheEntity> resultToUpdateCache){
+	public void processMapDataForCache(List<String> orgIdList, String startDate, String endDate, ArrayList<MapCacheEntity> resultToCache, ArrayList<MapCacheEntity> resultToUpdateCache, List<MapCodes> mapCodes){
 		notificationDataSource = NotificationDataSource.getInstance();
 		List<List<String>> orgIDListBatch = Lists.partition(orgIdList, 50);
 		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) FhirClientAuthenticatorService.getFhirClient());
 		List<DateWiseMapData> dateWiseMapDataList = new ArrayList<DateWiseMapData>();
 		for (List<String> orgIds: orgIDListBatch){
-			dateWiseMapDataList.addAll(ReportGeneratorFactory.INSTANCE.reportGenerator().getMapData(fhirClientProvider, String.join(",", orgIds), new DateRange(startDate, endDate)));
+			dateWiseMapDataList.addAll(ReportGeneratorFactory.INSTANCE.reportGenerator().getMapData(fhirClientProvider, String.join(",", orgIds), new DateRange(startDate, endDate), mapCodes));
 		}
 		for(DateWiseMapData item: dateWiseMapDataList){
 			resultToCache.clear();

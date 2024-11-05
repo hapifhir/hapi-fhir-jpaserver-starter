@@ -16,6 +16,7 @@ import com.iprd.report.model.definition.LineChart;
 import com.iprd.report.model.definition.TabularItem;
 import com.iprd.report.model.definition.PieChartDefinition;
 import com.iprd.report.model.definition.ANCDailySummaryConfig;
+import com.iprd.report.model.definition.MapCodes;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -118,6 +119,11 @@ public class DashboardEnvironmentConfig {
 						}
 						case REPORT_DEFINITIONS: {
 							envConfigContainer.setReportItems(new Gson().fromJson(reader, new TypeToken<List<TabularItem>>() {
+							}.getType()));
+							break;
+						}
+						case MAP_DEFINITIONS: {
+							envConfigContainer.setMapCodes(new Gson().fromJson(reader, new TypeToken<List<MapCodes>>() {
 							}.getType()));
 							break;
 						}

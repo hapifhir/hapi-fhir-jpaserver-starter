@@ -11,6 +11,7 @@ import com.iprd.report.model.definition.TabularItem;
 import com.iprd.report.model.definition.BarChartDefinition;
 import com.iprd.report.model.definition.PieChartDefinition;
 import com.iprd.report.model.definition.ANCDailySummaryConfig;
+import com.iprd.report.model.definition.MapCodes;
 
 
 public class DashboardConfigContainer {
@@ -79,6 +80,15 @@ public class DashboardConfigContainer {
 	public void setAncDailySummaryConfig(List<ANCDailySummaryConfig> ancDailySummaryConfig) {
 		this.ancDailySummaryConfig = ancDailySummaryConfig;
 	}
+
+	public List<MapCodes> getMapCodes() {
+		return mapCodes;
+	}
+
+	public void setMapCodes(List<MapCodes> mapCodes) {
+		this.mapCodes = mapCodes;
+	}
+
 	private List<FilterItem> filterItems;
 	private List<BarChartDefinition> barChartDefinitions;
 	private List<PieChartDefinition> pieChartDefinitions;
@@ -89,4 +99,5 @@ public class DashboardConfigContainer {
 	private List<IndicatorItem> analyticsIndicatorItems;
 	private List<ANCDailySummaryConfig> ancDailySummaryConfig;
 	private CategoryItem categoryItem;
+	private List<MapCodes> mapCodes;
 }

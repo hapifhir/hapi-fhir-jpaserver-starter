@@ -61,7 +61,7 @@
         <dependency>
             <groupId>org.opencampaignlink.</groupId>
             <artifactId>report-generator-jvm</artifactId>
-            <version>1.0.48</version>
+            <version>1.0.49</version>
         </dependency>
         <dependency>
             <groupId>org.keycloak</groupId>

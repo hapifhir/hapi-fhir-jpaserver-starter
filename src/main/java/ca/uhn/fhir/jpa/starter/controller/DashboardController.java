@@ -109,6 +109,11 @@ public class DashboardController {
 		return helperService.getBarChartDefinition(env);
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value = "/mapCodeDefinition")
+	public ResponseEntity<?> mapCodeDefinition(@RequestParam("env") String env) {
+		return helperService.getMapCodeDefinition(env);
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "/indicator")
 	public ResponseEntity<?> indicator(@RequestParam("env") String env) {
 		return helperService.getIndicators(env);

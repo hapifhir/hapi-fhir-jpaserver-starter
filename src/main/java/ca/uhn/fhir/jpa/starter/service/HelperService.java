@@ -65,6 +65,7 @@ import com.iprd.report.model.definition.LineChartItemDefinition;
 import com.iprd.report.model.definition.PieChartCategoryDefinition;
 import com.iprd.report.model.definition.PieChartDefinition;
 import com.iprd.report.model.definition.TabularItem;
+import com.iprd.report.model.definition.MapCodes;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.io.IOUtils;
@@ -1612,6 +1613,16 @@ public class HelperService {
 		}
 	}
 
+	public ResponseEntity<?> getMapCodeDefinition(String env) {
+		try{
+			List<MapCodes> mapCodes = getMapCodesFromFile(env);
+			return ResponseEntity.ok(mapCodes);
+		} catch (NullPointerException e){
+			logger.warn(ExceptionUtils.getStackTrace(e));
+			return ResponseEntity.ok("Error :Map Config File Not Found");
+		}
+	}
+
 	public ResponseEntity<?> getLineChartDefinitions(String env) {
 		try {
 			List<LineChart> lineCharts = getLineChartDefinitionsItemListFromFile(env);
@@ -2577,6 +2588,7 @@ public class HelperService {
 	}
 
 	public void cacheDashboardData(List<String> facilities, String start, String end, String env) {
+		List<MapCodes> mapCodes = getMapCodesFromFile(env);
 		List<ScoreCardIndicatorItem> scoreCardIndicatorItemsList = getIndicatorItemListFromFile(env);
 		List<IndicatorItem> analyticsItemListFromFile = getAnalyticsItemListFromFile(env);
 		List<IndicatorItem> indicators = new ArrayList<>();
@@ -2606,7 +2618,7 @@ public class HelperService {
 				public void run() {
 					ArrayList<MapCacheEntity> resultToAddInMapCache = new ArrayList<>();
 					ArrayList<MapCacheEntity> resultToUpdateinMapCache = new ArrayList<>();
-					cachingService.processMapDataForCache(facilityBatch, start, end, resultToAddInMapCache, resultToUpdateinMapCache);
+					cachingService.processMapDataForCache(facilityBatch, start, end, resultToAddInMapCache, resultToUpdateinMapCache, mapCodes);
 					for (String facilityId : facilityBatch) {
 						Date endDate = Date.valueOf(Date.valueOf(end).toLocalDate().plusDays(1));
 						Date startDate = Date.valueOf(start);
@@ -2722,6 +2734,10 @@ public class HelperService {
 
 	public List<BarChartDefinition> getBarChartItemListFromFile(String env) throws NullPointerException {
 		return dashboardEnvToConfigMap.get(env).getBarChartDefinitions();
+	}
+
+	public List<MapCodes> getMapCodesFromFile(String env) throws NullPointerException {
+		return dashboardEnvToConfigMap.get(env).getMapCodes();
 	}
 
 	List<PieChartDefinition> getPieChartItemDefinitionFromFile(String env) throws NullPointerException {
