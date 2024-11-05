@@ -793,6 +793,7 @@ public Cors getCors() {
 
     private Boolean partitioning_include_in_search_hashes = false;
     private Boolean allow_references_across_partitions = false;
+    private Boolean conditional_create_duplicate_identifiers_enabled = false;
 
     public Boolean getPartitioning_include_in_search_hashes() {
       return partitioning_include_in_search_hashes;
@@ -807,6 +808,14 @@ public Cors getCors() {
 
     public void setAllow_references_across_partitions(Boolean allow_references_across_partitions) {
       this.allow_references_across_partitions = allow_references_across_partitions;
+    }
+
+    public Boolean getConditional_create_duplicate_identifiers_enabled() {
+      return conditional_create_duplicate_identifiers_enabled;
+    }
+
+    public void setConditional_create_duplicate_identifiers_enabled(Boolean conditional_create_duplicate_identifiers_enabled) {
+      this.conditional_create_duplicate_identifiers_enabled = conditional_create_duplicate_identifiers_enabled;
     }
   }
 
