@@ -1,3 +1,30 @@
+management:
+  #The following configuration will enable the actuator endpoints at /actuator/health, /actuator/info, /actuator/prometheus
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: 'info,health,prometheus,metrics' # or '*' for all'
+  endpoint:
+    info:
+      enabled: true
+    metrics:
+      enabled: true
+    health:
+      enabled: true
+      probes:
+        enabled: true
+      group:
+        liveness:
+          include:
+            - livenessState
+            - readinessState
+    prometheus:
+      enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
 spring:
   main:
     allow-circular-references: true
