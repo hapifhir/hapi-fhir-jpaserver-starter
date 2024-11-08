@@ -20,18 +20,18 @@ jobs:
         working-directory: ./matchbox-frontend
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           # https://github.com/actions/setup-node
-          node-version: 18
+          node-version: 20
           cache: npm
           cache-dependency-path: matchbox-frontend/package-lock.json
 
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         # https://github.com/actions/setup-java#usage
         with:
           java-version: 21
@@ -40,7 +40,7 @@ jobs:
       - name: Set up Maven
         uses: stCarolas/setup-maven@v5
         with:
-          maven-version: 3.9.6
+          maven-version: 3.9.9
 
       - name: Update the project version
         shell: bash
@@ -65,7 +65,7 @@ jobs:
 
       - name: Commit
         if: success()
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "server: rebuild the Angular GUI resources"
           file_pattern: "matchbox-server/src/main/resources/static"

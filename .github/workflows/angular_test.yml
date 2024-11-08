@@ -13,13 +13,13 @@ jobs:
         working-directory: ./matchbox-frontend
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           # https://github.com/actions/setup-node
-          node-version: 18
+          node-version: 20
           cache: npm
           cache-dependency-path: matchbox-frontend/package-lock.json
 

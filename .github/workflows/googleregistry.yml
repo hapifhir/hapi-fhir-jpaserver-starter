@@ -25,10 +25,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
 
       - name: Build Java
-        uses: actions/setup-java@main
+        uses: actions/setup-java@v4
         with:
           java-version: 21
           distribution: adopt
@@ -45,7 +45,7 @@ jobs:
       # Configure Workload Identity Federation and generate an access token.
       - id: "auth"
         name: "Authenticate to Google Cloud"
-        uses: "google-github-actions/auth@v1"
+        uses: google-github-actions/auth@v2
         with:
           token_format: "access_token"
           workload_identity_provider: "projects/1022310475153/locations/global/workloadIdentityPools/github-wif-pool/providers/oidc-github-provider"

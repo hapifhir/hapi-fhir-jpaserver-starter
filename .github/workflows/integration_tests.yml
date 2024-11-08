@@ -13,18 +13,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout matchbox
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: matchbox
 
       - name: Checkout integration tests
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: matchbox-int-tests
           repository: ahdis/matchbox-int-tests
 
       - name: Setup Java 21
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         # https://github.com/actions/setup-java#usage
         with:
           java-version: 21
@@ -57,3 +57,9 @@ jobs:
           name: testresults
           path: ./matchbox-int-tests/target/site
           retention-days: 2
+
+      - name: Test Summary
+        uses: test-summary/action@v2
+        with:
+          paths: "./matchbox-int-tests/target//surefire-reports/TEST-*.xml"
+        if: always()
