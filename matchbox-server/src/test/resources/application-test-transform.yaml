@@ -1,0 +1,10 @@
+server:
+  port: 8086
+  servlet:
+    context-path: /matchboxv3
+matchbox:
+  fhir:
+    context:
+spring:
+  datasource:
+    url: "jdbc:h2:mem:test-transform"

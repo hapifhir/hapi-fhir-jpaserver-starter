@@ -547,7 +547,10 @@ public class MatchboxEngine extends ValidationEngine {
 	 * Adapted transform operation from Validation Engine to use patched
 	 * MatchboxStructureMapUtilities
 	 */
-	public org.hl7.fhir.r5.elementmodel.Element transform(ByteProvider source, FhirFormat cntType, String mapUri, SimpleWorkerContext targetContext)
+	public org.hl7.fhir.r5.elementmodel.Element transform(final ByteProvider source,
+																			final FhirFormat cntType,
+																			final String mapUri,
+																			final SimpleWorkerContext targetContext)
 			throws FHIRException, IOException {
 		SimpleWorkerContext context = this.getContext();
 
