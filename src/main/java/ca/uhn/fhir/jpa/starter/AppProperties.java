@@ -80,6 +80,7 @@ public class AppProperties {
   private Subscription subscription = new Subscription();
   private Cors cors = null;
   private Partitioning partitioning = null;
+  private Boolean validate_resource_status_for_package_upload = true;
   private Boolean install_transitive_ig_dependencies = true;
   private Map<String, PackageInstallationSpec> implementationGuides = null;
 
@@ -587,6 +588,14 @@ public Cors getCors() {
 	
 	public void setInstall_transitive_ig_dependencies(boolean install_transitive_ig_dependencies) {
 		this.install_transitive_ig_dependencies = install_transitive_ig_dependencies;
+	}
+
+  public Boolean getValidate_resource_status_for_package_upload() {
+		return validate_resource_status_for_package_upload;
+	}
+
+	public void setValidate_resource_status_for_package_upload(Boolean validate_resource_status_for_package_upload) {
+		this.validate_resource_status_for_package_upload = validate_resource_status_for_package_upload;
 	}
 
 	public Integer getBundle_batch_pool_size() {
