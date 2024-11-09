@@ -247,6 +247,8 @@ public class FhirServerConfigCommon {
 			} else {
 				retVal.setAllowReferencesAcrossPartitions(CrossPartitionReferenceMode.NOT_ALLOWED);
 			}
+			retVal.setConditionalCreateDuplicateIdentifiersEnabled(
+				appProperties.getPartitioning().getConditional_create_duplicate_identifiers_enabled());
 		}
 
 		return retVal;
