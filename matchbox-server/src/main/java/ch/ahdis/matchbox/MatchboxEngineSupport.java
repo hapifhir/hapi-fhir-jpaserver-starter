@@ -1,9 +1,6 @@
 package ch.ahdis.matchbox;
 
-import static org.apache.commons.lang3.StringUtils.defaultString;
-
 import java.io.File;
-import java.security.MessageDigest;
 import java.util.*;
 
 import ch.ahdis.matchbox.config.MatchboxFhirContextProperties;
@@ -432,7 +429,7 @@ public class MatchboxEngineSupport {
 				}
 			}
 			final var created = this.createMatchboxEngine(baseEngine, cliContext.getIg(), cliContext);
-			sessionCache.cacheSession("" + cliContext.hashCode(), created);
+			this.sessionCache.cacheSession("" + cliContext.hashCode(), created);
 			return created;
 		}
 		return null;
@@ -507,6 +504,10 @@ public class MatchboxEngineSupport {
 				throw new TerminologyServerException("Error while setting while trying to clear the terminology cache", e);
 			}
 		
+		}
+
+		if (cli.isHttpReadOnly() && cli.isAutoInstallMissingIgs()) {
+			throw new MatchboxEngineCreationException("httpReadOnly and autoInstallMissingIgs are mutually exclusive");
 		}
 
 		validator.setDebug(cli.isDoDebug());

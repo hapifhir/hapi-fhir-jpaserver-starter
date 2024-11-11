@@ -515,4 +515,25 @@ public class ImplementationGuideProviderR4B extends ImplementationGuideResourceP
 		}
 	}
 
+	/**
+	 * Returns whether the given ImplementationGuide is installed or not.
+	 */
+	@Override
+	public boolean has(final String packageId, final String packageVersion) {
+		return Boolean.TRUE.equals(new TransactionTemplate(this.myTxManager)
+												.execute(tx -> this.myPackageVersionDao.findByPackageIdAndVersion(packageId, packageVersion).isPresent()));
+	}
+
+	/**
+	 * Installs the given ImplementationGuide from the internet registry.
+	 */
+	@Override
+	public void installFromInternetRegistry(final String packageId, final String packageVersion) {
+		this.packageInstallerSvc.install(
+			this.getPackageInstallationSpec()
+				.setName(packageId)
+				.setPackageUrl("https://packages2.fhir.org/packages/%s/%s".formatted(packageId, packageVersion))
+				.setVersion(packageVersion)
+		);
+	}
 }

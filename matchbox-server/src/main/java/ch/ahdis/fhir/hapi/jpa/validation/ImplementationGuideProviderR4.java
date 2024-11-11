@@ -176,8 +176,10 @@ public class ImplementationGuideProviderR4 extends ImplementationGuideResourcePr
 
 	public PackageInstallOutcomeJson load(ImplementationGuide theResource, PackageInstallOutcomeJson install) {
 		PackageInstallOutcomeJson installOutcome = packageInstallerSvc
-				.install(this.getPackageInstallationSpec().setName(theResource.getName())
-						.setPackageUrl(theResource.getUrl()).setVersion(theResource.getVersion()));
+				.install(this.getPackageInstallationSpec()
+								.setName(theResource.getName())
+								.setPackageUrl(theResource.getUrl())
+								.setVersion(theResource.getVersion()));
 		if (install != null) {
 			install.getMessage().addAll(installOutcome.getMessage());
 			return install;
@@ -188,10 +190,8 @@ public class ImplementationGuideProviderR4 extends ImplementationGuideResourcePr
 	public OperationOutcome load(ImplementationGuide theResource) {
 		PackageInstallOutcomeJson installOutcome = packageInstallerSvc.install(this.getPackageInstallationSpec()
 				.setPackageUrl(theResource.getUrl())
-				.addInstallResourceTypes(MatchboxPackageInstallerImpl.DEFAULT_INSTALL_TYPES.toArray(new String[0]))
 				.setName(theResource.getName())
-				.setVersion(theResource.getVersion())
-				.setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_ONLY));
+				.setVersion(theResource.getVersion()));
 
 		if (cliContext!=null && cliContext.getOnlyOneEngine()) {
 			MatchboxEngine engine = matchboxEngineSupport.getMatchboxEngine(FHIRVersion._4_0_1.getDisplay(), this.cliContext, false, false);
@@ -511,4 +511,25 @@ public class ImplementationGuideProviderR4 extends ImplementationGuideResourcePr
 		}
 	}
 
+	/**
+	 * Returns whether the given ImplementationGuide is installed or not.
+	 */
+	@Override
+	public boolean has(final String packageId, final String packageVersion) {
+		return Boolean.TRUE.equals(new TransactionTemplate(this.myTxManager)
+												.execute(tx -> this.myPackageVersionDao.findByPackageIdAndVersion(packageId, packageVersion).isPresent()));
+	}
+
+	/**
+	 * Installs the given ImplementationGuide from the internet registry.
+	 */
+	@Override
+	public void installFromInternetRegistry(final String packageId, final String packageVersion) {
+		this.packageInstallerSvc.install(
+			this.getPackageInstallationSpec()
+				.setName(packageId)
+				.setPackageUrl("https://packages2.fhir.org/packages/%s/%s".formatted(packageId, packageVersion))
+				.setVersion(packageVersion)
+		);
+	}
 }

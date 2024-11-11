@@ -193,6 +193,12 @@ public class CliContext {
     return this.httpReadOnly;
   }
 
+  private boolean autoInstallMissingIgs = false;
+
+  public boolean isAutoInstallMissingIgs() {
+    return this.autoInstallMissingIgs;
+  }
+
   private boolean xVersion = false;
   
   public boolean getXVersion() {
@@ -225,6 +231,7 @@ public class CliContext {
     this.igsPreloaded = environment.getProperty("matchbox.fhir.context.igsPreloaded", String[].class);
     this.onlyOneEngine = environment.getProperty("matchbox.fhir.context.onlyOneEngine", Boolean.class, false);
     this.httpReadOnly = environment.getProperty("matchbox.fhir.context.httpReadOnly", Boolean.class, false);
+    this.autoInstallMissingIgs = environment.getProperty("matchbox.fhir.context.autoInstallMissingIgs", Boolean.class, false);
     this.extensions = Arrays.asList(environment.getProperty("matchbox.fhir.context.extensions", String[].class, new String[]{"any"}));
     this.xVersion = environment.getProperty("matchbox.fhir.context.xVersion", Boolean.class, false);
   }
@@ -245,6 +252,7 @@ public class CliContext {
     this.igsPreloaded = other.igsPreloaded;
     this.onlyOneEngine = other.onlyOneEngine;
     this.httpReadOnly = other.httpReadOnly;
+    this.autoInstallMissingIgs = other.autoInstallMissingIgs;
     this.extensions = other.extensions;
     this.xVersion = other.xVersion;
   }
@@ -675,6 +683,7 @@ public class CliContext {
         && onlyOneEngine == that.onlyOneEngine
         && xVersion == that.xVersion
         && httpReadOnly == that.httpReadOnly
+        && autoInstallMissingIgs == that.autoInstallMissingIgs
         && htmlInMarkdownCheck == that.htmlInMarkdownCheck
         && Objects.equals(extensions, that.extensions)
         && Objects.equals(txServer, that.txServer)
@@ -717,6 +726,7 @@ public class CliContext {
         showTerminologyRouting,
         clearTxCache,
         httpReadOnly,
+		  autoInstallMissingIgs,
         allowExampleUrls,
         htmlInMarkdownCheck,
         txServer,
@@ -782,6 +792,7 @@ public class CliContext {
         ", onlyOneEngine=" + onlyOneEngine +
         ", xVersion=" + xVersion +
         ", httpReadOnly=" + httpReadOnly +
+        ", autoInstallMissingIgs=" + autoInstallMissingIgs +
         '}';
   }
 
@@ -817,6 +828,7 @@ public class CliContext {
 	addExtension(ext, "showTerminologyRouting", new BooleanType(this.showTerminologyRouting));
 	addExtension(ext, "clearTxCache", new BooleanType(this.clearTxCache));
 	addExtension(ext, "httpReadOnly", new BooleanType(this.httpReadOnly));
+	addExtension(ext, "autoInstallMissingIgs", new BooleanType(this.autoInstallMissingIgs));
 	addExtension(ext, "allowExampleUrls", new BooleanType(this.allowExampleUrls));
 	addExtension(ext, "txServer", new UriType(this.txServer));
 	addExtension(ext, "txServerCache", new BooleanType(this.txServerCache));

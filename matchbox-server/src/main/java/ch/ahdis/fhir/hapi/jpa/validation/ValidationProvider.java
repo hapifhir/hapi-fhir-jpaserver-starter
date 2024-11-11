@@ -38,7 +38,6 @@ import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.StructureDefinition;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.model.Duration;
 import org.hl7.fhir.r5.model.OperationOutcome;
@@ -77,6 +76,9 @@ public class ValidationProvider {
 
 	@Autowired
 	private FhirContext myContext;
+
+	@Autowired
+	private MatchboxImplementationGuideProvider igProvider;
 
 //	@Operation(name = "$canonical", manualRequest = true, idempotent = true, returnParameters = {
 //			@OperationParam(name = "return", type = IBase.class, min = 1, max = 1) })
@@ -129,6 +131,15 @@ public class ValidationProvider {
 					log.error("error setting property " + cliContextProperty + " to " + theRequest.getParameter(
 						cliContextProperty));
 				}
+			}
+		}
+
+		// Check if the IG should be auto-installed
+		if (cliContext.isAutoInstallMissingIgs() && theRequest.getParameterMap().containsKey("ig")) {
+			final var parts = theRequest.getParameter("ig").split("#");
+			if (!this.igProvider.has(parts[0], parts[1])) {
+				log.debug("Auto-installing the IG '{}' version '{}'", parts[0], parts[1]);
+				this.igProvider.installFromInternetRegistry(parts[0], parts[1]);
 			}
 		}
 
