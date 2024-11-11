@@ -2,7 +2,7 @@ package ca.uhn.fhir.jpa.starter;
 
 import ch.ahdis.matchbox.spring.MatchboxEventListener;
 import ch.ahdis.matchbox.terminology.RegistryWs;
-import ch.ahdis.matchbox.gazelle.GazelleValidationWs;
+import ch.ahdis.matchbox.validation.gazelle.GazelleValidationWs;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -21,7 +21,7 @@ import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
 import ca.uhn.fhir.jpa.starter.common.FhirServerConfigR4;
 import ca.uhn.fhir.jpa.starter.mdm.MdmConfig;
 import ca.uhn.fhir.rest.server.RestfulServer;
-import ch.ahdis.matchbox.MatchboxJpaConfig;
+import ch.ahdis.matchbox.config.MatchboxJpaConfig;
 
 @ServletComponentScan(basePackageClasses = {RestfulServer.class})
 @SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class})

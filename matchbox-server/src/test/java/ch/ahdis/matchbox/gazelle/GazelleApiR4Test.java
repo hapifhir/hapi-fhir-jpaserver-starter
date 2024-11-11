@@ -1,9 +1,9 @@
 package ch.ahdis.matchbox.gazelle;
 
 import ca.uhn.fhir.jpa.starter.Application;
-import ch.ahdis.matchbox.gazelle.models.validation.SeverityLevel;
-import ch.ahdis.matchbox.gazelle.models.validation.ValidationReport;
-import ch.ahdis.matchbox.gazelle.models.validation.ValidationTestResult;
+import ch.ahdis.matchbox.validation.gazelle.models.validation.SeverityLevel;
+import ch.ahdis.matchbox.validation.gazelle.models.validation.ValidationReport;
+import ch.ahdis.matchbox.validation.gazelle.models.validation.ValidationTestResult;
 import ch.ahdis.matchbox.test.CompareUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

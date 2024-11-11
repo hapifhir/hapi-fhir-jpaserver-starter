@@ -3,7 +3,7 @@ package ch.ahdis.matchbox.questionnaire;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
-import ch.ahdis.matchbox.MatchboxEngineSupport;
+import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 
 import org.hl7.fhir.r5.fhirpath.ExpressionNode;

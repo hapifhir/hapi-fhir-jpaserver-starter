@@ -16,7 +16,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.api.Constants;
 import ca.uhn.fhir.rest.server.RestfulServerUtils;
 import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
-import ch.ahdis.matchbox.MatchboxEngineSupport;
+import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 
 /**

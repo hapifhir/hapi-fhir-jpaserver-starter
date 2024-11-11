@@ -1,9 +1,9 @@
 package ch.ahdis.matchbox.gazelle;
 
-import ch.ahdis.matchbox.gazelle.models.validation.ValidationItem;
-import ch.ahdis.matchbox.gazelle.models.validation.ValidationProfile;
-import ch.ahdis.matchbox.gazelle.models.validation.ValidationReport;
-import ch.ahdis.matchbox.gazelle.models.validation.ValidationRequest;
+import ch.ahdis.matchbox.validation.gazelle.models.validation.ValidationItem;
+import ch.ahdis.matchbox.validation.gazelle.models.validation.ValidationProfile;
+import ch.ahdis.matchbox.validation.gazelle.models.validation.ValidationReport;
+import ch.ahdis.matchbox.validation.gazelle.models.validation.ValidationRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;

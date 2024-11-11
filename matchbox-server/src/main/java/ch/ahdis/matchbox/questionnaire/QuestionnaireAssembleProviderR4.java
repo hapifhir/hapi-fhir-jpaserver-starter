@@ -34,7 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
-import ch.ahdis.matchbox.MatchboxEngineSupport;
+import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 
 /**

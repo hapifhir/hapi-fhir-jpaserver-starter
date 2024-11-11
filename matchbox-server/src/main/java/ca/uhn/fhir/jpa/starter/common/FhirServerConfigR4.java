@@ -1,9 +1,10 @@
 package ca.uhn.fhir.jpa.starter.common;
 
-import ch.ahdis.fhir.hapi.jpa.validation.ImplementationGuideProviderR4;
+import ch.ahdis.matchbox.providers.ValueSetResourceProvider;
+import ch.ahdis.matchbox.providers.ConceptMapResourceProvider;
+import ch.ahdis.matchbox.packages.ImplementationGuideProviderR4;
 import ch.ahdis.matchbox.terminology.CodeSystemCodeValidationProvider;
 import ch.ahdis.matchbox.terminology.ValueSetCodeValidationProvider;
-import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -18,16 +19,13 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
 import ca.uhn.fhir.jpa.validation.ValidatorPolicyAdvisor;
 import ca.uhn.fhir.jpa.validation.ValidatorResourceFetcher;
-import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
-import ch.ahdis.matchbox.CodeSystemResourceProvider;
-import ch.ahdis.matchbox.ConceptMapResourceProvider;
-import ch.ahdis.matchbox.MatchboxJpaConfig;
-import ch.ahdis.matchbox.QuestionnaireResourceProvider;
-import ch.ahdis.matchbox.StructureDefinitionResourceProvider;
-import ch.ahdis.matchbox.ValueSetResourceProvider;
+import ch.ahdis.matchbox.validation.ValidationProvider;
+import ch.ahdis.matchbox.providers.CodeSystemResourceProvider;
+import ch.ahdis.matchbox.config.MatchboxJpaConfig;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireResourceProvider;
+import ch.ahdis.matchbox.providers.StructureDefinitionResourceProvider;
 import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR4;
-import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR4;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 
@@ -98,28 +96,28 @@ public class FhirServerConfigR4 {
   @Primary
   public QuestionnaireResourceProvider rpQuestionnaireR4() {
     QuestionnaireResourceProvider retVal;
-    retVal = new  ch.ahdis.matchbox.QuestionnaireResourceProvider();
+    retVal = new QuestionnaireResourceProvider();
     return retVal;
   }
   
   @Bean(name = "myValueSetRpR4")
   @Primary
-  public ch.ahdis.matchbox.ValueSetResourceProvider rpValueSetR4() {
-  	ValueSetResourceProvider retVal = new ch.ahdis.matchbox.ValueSetResourceProvider();
+  public ValueSetResourceProvider rpValueSetR4() {
+  	ValueSetResourceProvider retVal = new ValueSetResourceProvider();
     return retVal;
   }
 
   @Bean(name = "myCodeSystemRpR4")
   @Primary
-  public ch.ahdis.matchbox.CodeSystemResourceProvider rpCodeSystem4() {
-  	CodeSystemResourceProvider retVal = new ch.ahdis.matchbox.CodeSystemResourceProvider();
+  public CodeSystemResourceProvider rpCodeSystem4() {
+  	CodeSystemResourceProvider retVal = new CodeSystemResourceProvider();
     return retVal;
   }
   
   @Bean(name = "myConceptMapRpR4")
   @Primary
-  public ch.ahdis.matchbox.ConceptMapResourceProvider rpConceptMap4() {
-  	ConceptMapResourceProvider retVal = new ch.ahdis.matchbox.ConceptMapResourceProvider();
+  public ConceptMapResourceProvider rpConceptMap4() {
+  	ConceptMapResourceProvider retVal = new ConceptMapResourceProvider();
     return retVal;
   }
 

@@ -1,29 +1,13 @@
 package ch.ahdis.matchbox.terminology;
 
-import ca.uhn.fhir.rest.api.EncodingEnum;
-import ca.uhn.fhir.util.StopWatch;
-import ch.ahdis.fhir.hapi.jpa.validation.ValidationProvider;
 import ch.ahdis.matchbox.CliContext;
-import ch.ahdis.matchbox.MatchboxEngineSupport;
-import ch.ahdis.matchbox.StructureDefinitionResourceProvider;
-import ch.ahdis.matchbox.engine.MatchboxEngine;
-import ch.ahdis.matchbox.engine.cli.VersionUtil;
-import ch.ahdis.matchbox.engine.exception.MatchboxEngineCreationException;
-import ch.ahdis.matchbox.gazelle.models.metadata.Interface;
-import ch.ahdis.matchbox.gazelle.models.metadata.RestBinding;
-import ch.ahdis.matchbox.gazelle.models.metadata.Service;
-import ch.ahdis.matchbox.gazelle.models.validation.*;
-import org.hl7.fhir.r4.model.StructureDefinition;
-import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.lang.reflect.Field;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Objects;
 

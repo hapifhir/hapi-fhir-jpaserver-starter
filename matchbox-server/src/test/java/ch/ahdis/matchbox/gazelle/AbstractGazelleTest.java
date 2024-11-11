@@ -1,7 +1,7 @@
 package ch.ahdis.matchbox.gazelle;
 
-import ch.ahdis.matchbox.gazelle.models.validation.Metadata;
-import ch.ahdis.matchbox.gazelle.models.validation.ValidationReport;
+import ch.ahdis.matchbox.validation.gazelle.models.validation.Metadata;
+import ch.ahdis.matchbox.validation.gazelle.models.validation.ValidationReport;
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.ClassPathResource;
 
