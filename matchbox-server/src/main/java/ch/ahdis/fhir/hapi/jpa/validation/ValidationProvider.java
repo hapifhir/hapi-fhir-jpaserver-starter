@@ -21,6 +21,8 @@ package ch.ahdis.fhir.hapi.jpa.validation;
  */
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionDao;
+import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.api.EncodingEnum;
@@ -31,8 +33,14 @@ import ch.ahdis.matchbox.MatchboxEngineSupport;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
+import ch.ahdis.matchbox.registry.SimplifierPackage;
+import ch.ahdis.matchbox.registry.SimplifierPackageVersionsObject;
+import com.google.gson.Gson;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
@@ -50,10 +58,16 @@ import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
+
+import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -79,6 +93,15 @@ public class ValidationProvider {
 
 	@Autowired
 	private MatchboxImplementationGuideProvider igProvider;
+
+	@Autowired
+	private INpmPackageVersionDao myPackageVersionDao;
+
+	@Autowired
+	private INpmPackageVersionResourceDao myPackageVersionResourceDao;
+
+	@Autowired
+	private PlatformTransactionManager myTxManager;
 
 //	@Operation(name = "$canonical", manualRequest = true, idempotent = true, returnParameters = {
 //			@OperationParam(name = "return", type = IBase.class, min = 1, max = 1) })
@@ -135,12 +158,8 @@ public class ValidationProvider {
 		}
 
 		// Check if the IG should be auto-installed
-		if (cliContext.isAutoInstallMissingIgs() && theRequest.getParameterMap().containsKey("ig")) {
-			final var parts = theRequest.getParameter("ig").split("#");
-			if (!this.igProvider.has(parts[0], parts[1])) {
-				log.debug("Auto-installing the IG '{}' version '{}'", parts[0], parts[1]);
-				this.igProvider.installFromInternetRegistry(parts[0], parts[1]);
-			}
+		if (cliContext.isAutoInstallMissingIgs()) {
+			this.ensureIgIsInstalled(theRequest.getParameter("ig"), theRequest.getParameter("profile"));
 		}
 
 		if (theRequest.getParameter("extensions") != null) {
@@ -326,6 +345,84 @@ public class ValidationProvider {
 		issue.setDiagnostics(message);
 		issue.addExtension().setUrl(ToolingExtensions.EXT_ISSUE_SOURCE).setValue(new StringType("ValidationProvider"));
 		return VersionConvertorFactory_40_50.convertResource(oo);
+	}
+
+	private void ensureIgIsInstalled(@Nullable final String ig,
+												final String profile) {
+		if (ig != null) {
+			// Easy case, the IG is known
+			final var parts = ig.split("#");
+			if (!this.igProvider.has(parts[0], parts[1])) {
+				log.debug("Auto-installing the IG '{}' version '{}'", parts[0], parts[1]);
+				this.igProvider.installFromInternetRegistry(parts[0], parts[1]);
+			}
+			return;
+		}
+
+		if (profile.startsWith("http://hl7.org/fhir/")) {
+			log.debug("Profile '{}' is a core FHIR profile, no need to install an IG", profile);
+			return;
+		}
+
+		// Harder case, only the profile is known
+		final var parts = profile.split("\\|");
+		final String canonical;
+		final String version;
+		if (parts.length == 2) {
+			final boolean found = new TransactionTemplate(this.myTxManager)
+				.execute(tx -> this.myPackageVersionResourceDao.getPackageVersionByCanonicalAndVersion(parts[0], parts[1]).isPresent());
+			if (found) {
+				// The profile was found in the database, the IG is installed
+				return;
+			}
+			canonical = parts[0];
+			version = parts[1];
+		} else {
+			canonical = profile;
+			version = null;
+		}
+
+		// The profile was not found in the database, we need to search for the IG that contains it
+		final var gson = new Gson();
+		final var igSearchUrl =
+			"https://packages.simplifier.net/catalog?canonical=%s&prerelease=false".formatted(URLEncoder.encode(canonical, StandardCharsets.UTF_8));
+		final SimplifierPackage[] packages;
+		try (final CloseableHttpClient httpclient = HttpClients.createDefault()) {
+			final var httpget = new HttpGet(igSearchUrl);
+			packages = httpclient.execute(httpget, response ->
+					 gson.fromJson(new InputStreamReader(response.getEntity().getContent()), SimplifierPackage[].class));
+		} catch (final Exception e) {
+			log.error("Error while searching for IGs", e);
+			return;
+		}
+
+		if (packages == null || packages.length == 0) {
+			return;
+		}
+		log.debug("Found {} IGs for profile '{}', checking the first one ('{}')", packages.length, profile,
+					 packages[0].getName());
+		if (version != null) {
+			// This might not be always true, but it's a good heuristic: let's use the profile version as the IG version
+			this.igProvider.installFromInternetRegistry(packages[0].getName(), version);
+			return;
+		}
+		// We have to search for the latest profile version
+		final var versionSearchUrl = "https://packages.simplifier.net/" + packages[0].getName();
+		final SimplifierPackageVersionsObject versionsObject;
+		try (final CloseableHttpClient httpclient = HttpClients.createDefault()) {
+			final var httpget = new HttpGet(versionSearchUrl);
+			versionsObject = httpclient.execute(httpget, response ->
+				gson.fromJson(new InputStreamReader(response.getEntity().getContent()), SimplifierPackageVersionsObject.class));
+		} catch (final Exception e) {
+			log.error("Error while searching for IG versions", e);
+			return;
+		}
+
+		if (versionsObject == null || versionsObject.getVersions() == null || versionsObject.getVersions().isEmpty()) {
+			return;
+		}
+		final var latestVersion = versionsObject.getVersions().keySet().stream().max(String::compareTo).orElse(null);
+		this.igProvider.installFromInternetRegistry(packages[0].getName(), latestVersion);
 	}
 
 	public static List<ValidationMessage> doValidate(final MatchboxEngine engine,
