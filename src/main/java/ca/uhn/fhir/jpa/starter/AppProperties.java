@@ -106,8 +106,9 @@ public class AppProperties {
 	private final List<String> custom_provider_classes = new ArrayList<>();
 	private Boolean upliftedRefchains_enabled = false;
 
-	private List<Integer> search_prefetch_thresholds = new ArrayList<>();
+	private boolean userRequestRetryVersionConflictsInterceptorEnabled = false;
 
+	private List<Integer> search_prefetch_thresholds = new ArrayList<>();
 
 	public List<String> getCustomInterceptorClasses() {
     return custom_interceptor_classes;
@@ -671,6 +672,14 @@ public Cors getCors() {
 		this.upliftedRefchains_enabled = upliftedRefchains_enabled;
 	}
 
+	public Boolean getUserRequestRetryVersionConflictsInterceptorEnabled() {
+		return userRequestRetryVersionConflictsInterceptorEnabled;
+	}
+
+	public void setUserRequestRetryVersionConflictsInterceptorEnabled(Boolean userRequestRetryVersionConflictsInterceptorEnabled) {
+		this.userRequestRetryVersionConflictsInterceptorEnabled = userRequestRetryVersionConflictsInterceptorEnabled;
+	}
+
 	public static class Cors {
     private Boolean allow_Credentials = true;
     private List<String> allowed_origin = List.of("*");
@@ -690,8 +699,6 @@ public Cors getCors() {
     public void setAllow_Credentials(Boolean allow_Credentials) {
       this.allow_Credentials = allow_Credentials;
     }
-
-
   }
 
   public static class Logger {

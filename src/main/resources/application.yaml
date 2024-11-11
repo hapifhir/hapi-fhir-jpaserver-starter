@@ -214,6 +214,8 @@ hapi:
     narrative_enabled: false
     mdm_enabled: false
     mdm_rules_json_location: "mdm-rules.json"
+    ##  see: https://hapifhir.io/hapi-fhir/docs/interceptors/built_in_server_interceptors.html#jpa-server-retry-on-version-conflicts
+    #    userRequestRetryVersionConflictsInterceptorEnabled : false
     #    local_base_urls:
     #      - https://hapi.fhir.org/baseR4
     logical_urls:
