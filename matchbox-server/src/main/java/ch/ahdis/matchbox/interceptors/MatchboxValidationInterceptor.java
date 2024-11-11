@@ -37,7 +37,7 @@ public class MatchboxValidationInterceptor {
 		
 		switch (restOperationType) {
 			case EXTENDED_OPERATION_SERVER:
-				if ("validate".equals(methodName)) {
+				if ("validate".equals(methodName) || "installNpmPackage".equals(methodName)) {
 					return theMethodBinding;
 				}
 				return null;

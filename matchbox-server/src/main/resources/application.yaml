@@ -76,9 +76,11 @@ matchbox:
     context:
       fhirVersion: 4.0.1
       txServer: n/a
-#      xVersion: true      
+#      xVersion: true
 #      onlyOneEngine: true
 #      igsPreloaded: ch.fhir.ig.ch-core#4.0.0-ballot
+#      autoInstallMissingIgs: true
+#      devMode: true
       suppressWarnInfo:
         hl7.fhir.r4.core#4.0.1:
           #- "Constraint failed: dom-6:"

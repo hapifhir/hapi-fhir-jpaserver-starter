@@ -94,10 +94,6 @@ public class ValidationProvider {
 
 	@Autowired
 	private MatchboxImplementationGuideProvider igProvider;
-
-	@Autowired
-	private INpmPackageVersionDao myPackageVersionDao;
-
 	@Autowired
 	private INpmPackageVersionResourceDao myPackageVersionResourceDao;
 

@@ -48,6 +48,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Base64;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -116,6 +117,9 @@ public class PackageLoaderSvc extends BasePackageCacheManager {
 
 		byte[] bytes = IOUtils.toByteArray(thePackageTgzInputStream);
 
+		if (theSourceDesc.length() > 100) {
+			theSourceDesc = theSourceDesc.substring(0, 100) + "[...]";
+		}
 		ourLog.info("Parsing package .tar.gz ({} bytes) from {}", bytes.length, theSourceDesc);
 
 		NpmPackage npmPackage = NpmPackage.fromPackage(new ByteArrayInputStream(bytes));
@@ -163,12 +167,20 @@ public class PackageLoaderSvc extends BasePackageCacheManager {
 				return bytes;
 			} catch (IOException | URISyntaxException e) {
 				throw new InternalErrorException(
-						Msg.code(2031) + "Error loading \"" + thePackageUrl + "\": " + e.getMessage());
+					Msg.code(2031) + "Error loading \"" + thePackageUrl + "\": " + e.getMessage());
 			}
+		} else if (thePackageUrl.startsWith("data:")) {
+			// Data URL, RFC 2397. The MIME type is skipped. The data must be encoded as base64.
+			final var pos = thePackageUrl.indexOf(";base64,");
+			if (pos == -1) {
+				throw new IllegalArgumentException("The data URI is not base64-encoded");
+			}
+			final var base64data = thePackageUrl.substring(pos + 8);
+			return Base64.getDecoder().decode(base64data);
 		} else {
 			// matchbox: https://github.com/ahdis/matchbox/issues/75
-			HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
-			try {
+			final var clientBuilder = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL);
+			try (final HttpClient client = clientBuilder.build()) {
 				HttpRequest httpRequest = HttpRequest.newBuilder(new URI(thePackageUrl)).build();
 				HttpResponse<byte[]> res = client.send(httpRequest, HttpResponse.BodyHandlers.ofByteArray());
 				if (res.statusCode() != 200) {

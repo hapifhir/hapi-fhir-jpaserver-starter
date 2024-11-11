@@ -25,4 +25,14 @@ public class MatchboxFhirContextProperties {
 	public void setSuppressWarnInfo(final @Nullable Map<String, List<String>> suppressWarnInfo) {
 		this.suppressWarnInfo = suppressWarnInfo;
 	}
+
+	private boolean devMode = false;
+
+	public boolean isDevMode() {
+		return devMode;
+	}
+
+	public void setDevMode(final boolean devMode) {
+		this.devMode = devMode;
+	}
 }

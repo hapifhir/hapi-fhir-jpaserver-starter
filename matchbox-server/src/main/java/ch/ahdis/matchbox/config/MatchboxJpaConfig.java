@@ -9,9 +9,11 @@ import ch.ahdis.matchbox.interceptors.*;
 import ch.ahdis.matchbox.packages.ImplementationGuideProviderR4;
 import ch.ahdis.matchbox.packages.ImplementationGuideProviderR4B;
 import ch.ahdis.matchbox.packages.ImplementationGuideProviderR5;
+import ch.ahdis.matchbox.packages.InstallNpmPackageProvider;
 import ch.ahdis.matchbox.providers.*;
 import ch.ahdis.matchbox.questionnaire.*;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
+import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 import jakarta.persistence.EntityManager;
 
 import ca.uhn.fhir.jpa.dao.tx.IHapiTransactionService;
@@ -163,7 +165,6 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	@Autowired
 	private ValueSetCodeValidationProvider valueSetCodeValidationProvider;
 
-
 	// removed GraphQlProvider
 	// removed IVAldiationSupport
 	
@@ -176,7 +177,9 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 			Optional<CorsInterceptor> corsInterceptor, IInterceptorBroadcaster interceptorBroadcaster,
 			Optional<BinaryAccessProvider> binaryAccessProvider, BinaryStorageInterceptor binaryStorageInterceptor,
 			PartitionManagementProvider partitionManagementProvider,
-			IPackageInstallerSvc packageInstallerSvc, ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc) {
+			IPackageInstallerSvc packageInstallerSvc, ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc,
+												  final InstallNpmPackageProvider installNpmPackageOperationProvider,
+												  final MatchboxFhirContextProperties matchboxFhirContextProperties) {
 
 		RestfulServer fhirServer = super.restfulServer(fhirSystemDao, appProperties, daoRegistry, mdmProviderProvider,
 				jpaSystemProvider, resourceProviderFactory, daoConfig, searchParamRegistry,
@@ -196,6 +199,10 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 											  conceptMapProvider, codeSystemProvider, valueSetProvider, structureDefinitionProvider,
 											codeSystemCodeValidationProvider,
 											  valueSetCodeValidationProvider, this.structureMapTransformProvider);
+
+		if (matchboxFhirContextProperties.isDevMode()) {
+			fhirServer.registerProvider(installNpmPackageOperationProvider);
+		}
 									  
 		switch (this.myFhirContext.getVersion().getVersion()) {
 			case R4 -> {
@@ -389,6 +396,8 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 				theInterceptorBroadcaster);
 	}
 
-
-
+	@Bean
+	public InstallNpmPackageProvider installNpmPackageOperationProvider(final MatchboxPackageInstallerImpl packageInstallerSvc) {
+		return new InstallNpmPackageProvider(packageInstallerSvc);
+	}
 }
