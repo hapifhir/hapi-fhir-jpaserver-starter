@@ -88,7 +88,14 @@ class CdsHooksServletIT implements IServerSupport {
 
 	private Boolean hasCdsServices() throws IOException {
 		var response = callCdsServicesDiscovery();
-		return response.getEntity().getContentLength() > 21 || response.getEntity().isChunked();
+
+		// NOTE: this is looking for a repsonse that indicates there are CDS services availalble.
+		// And empty response looks like: {"services": []}
+		// Looking at the actual response string consumes the InputStream which has side-effects, making it tricky to compare the actual contents.
+		// Hence the test just looks at the length to make this determination.
+		// The actual response has newlines in it which vary in size on some systems, but a value of 25 seems to work across linux/mac/windows
+		// to ensure the repsonse actually contains CDS services in it
+		return response.getEntity().getContentLength() > 25 || response.getEntity().isChunked();
 	}
 
 	private CloseableHttpResponse callCdsServicesDiscovery() {

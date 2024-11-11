@@ -152,6 +152,8 @@ hapi:
     ### enable to set the Server URL
     #    server_address: http://hapi.fhir.org/baseR4
     #    defer_indexing_for_codesystems_of_size: 101
+    ### Flag is true by default. This flag filters resources during package installation, allowing only those resources with a valid status (e.g. active) to be installed.
+    #    validate_resource_status_for_package_upload: false 
     #    install_transitive_ig_dependencies: true
     #implementationguides:
     ###    example from registry (packages.fhir.org)
@@ -228,6 +230,7 @@ hapi:
     #    partitioning:
     #      allow_references_across_partitions: false
     #      partitioning_include_in_search_hashes: false
+    #      conditional_create_duplicate_identifiers_enabled: false
     cors:
       allow_Credentials: true
       # These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-
@@ -238,7 +241,18 @@ hapi:
     search-coord-core-pool-size: 20
     search-coord-max-pool-size: 100
     search-coord-queue-capacity: 200
-    
+
+    # Search Prefetch Thresholds.
+
+    # This setting sets the number of search results to prefetch. For example, if this list
+    # is set to [100, 1000, -1] then the server will initially load 100 results and not
+    # attempt to load more. If the user requests subsequent page(s) of results and goes
+    # past 100 results, the system will load the next 900 (up to the following threshold of 1000).
+    # The system will progressively work through these thresholds.
+    # A threshold of -1 means to load all results. Note that if the final threshold is a
+    # number other than -1, the system will never prefetch more than the given number.
+    search_prefetch_thresholds: 13,503,2003,-1
+
     # comma-separated package names, will be @ComponentScan'ed by Spring to allow for creating custom Spring beans
     #custom-bean-packages:
     
