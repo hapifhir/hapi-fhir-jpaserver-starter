@@ -77,6 +77,7 @@ import org.slf4j.LoggerFactory;
 public class FilesystemPackageCacheManager extends BasePackageCacheManager implements IPackageCacheManager {
 
   private final FilesystemPackageCacheManagerLocks locks;
+
   private final FilesystemPackageCacheManagerLocks.LockParameters lockParameters;
 
   private final static String VER_XVER_PROVIDED = "0.0.13";
@@ -582,7 +583,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
    * Add an already fetched package to the cache
    */
   @Override
-  public NpmPackage addPackageToCache(String id, final String version, InputStream packageTgzInputStream, String sourceDesc) throws IOException {
+  public NpmPackage addPackageToCache(final String id, final String version, final InputStream packageTgzInputStream, final String sourceDesc) throws IOException {
 // matchbox-engine PATCH, we do not want to load from a package server for hl7.fhir.xver-extension :
   	if (CommonPackages.ID_XVER.equals(id)) {
       NpmPackage npm = NpmPackage.fromPackage(packageTgzInputStream, sourceDesc, true);
@@ -781,7 +782,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 
   private InputStream fetchFromUrlSpecific(String source, boolean optional) throws FHIRException {
     try {
-      HTTPResult res = ManagedWebAccess.get(source);
+      HTTPResult res = ManagedWebAccess.get(Arrays.asList("web"), source);
       res.checkThrowException();
       return new ByteArrayInputStream(res.getContent());
     } catch (Exception e) {
@@ -914,8 +915,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
   }
 
   private void loadFromBuildServer() throws IOException {
-
-    HTTPResult res = ManagedWebAccess.get("https://build.fhir.org/ig/qas.json?nocache=" + System.currentTimeMillis());
+    HTTPResult res = ManagedWebAccess.get(Arrays.asList("web"), "https://build.fhir.org/ig/qas.json?nocache=" + System.currentTimeMillis());
     res.checkThrowException();
 
     buildInfo = (JsonArray) JsonParser.parse(TextFile.bytesToString(res.getContent()));

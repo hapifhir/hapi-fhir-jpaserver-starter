@@ -144,7 +144,12 @@ public class FhirPathR4 implements IFhirPath {
 			public ValueSet resolveValueSet(FHIRPathEngine engine, Object appContext, String url) {
 				return null;
 			}
-		});
+
+      @Override
+      public boolean paramIsType(final String s, final int i) {
+        return false;
+      }
+    });
 	}
 
 	private static class ParsedExpression implements IParsedExpression {

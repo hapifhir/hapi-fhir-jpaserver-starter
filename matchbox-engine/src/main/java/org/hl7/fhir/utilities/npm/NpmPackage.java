@@ -44,15 +44,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -1481,7 +1473,7 @@ public class NpmPackage {
   }
 
   public static NpmPackage fromUrl(String source) throws IOException {
-    HTTPResult res = ManagedWebAccess.get(source+"?nocache=" + System.currentTimeMillis());
+    HTTPResult res = ManagedWebAccess.get(Arrays.asList("npm-package", "fhir-package"), source+"?nocache=" + System.currentTimeMillis());
     res.checkThrowException();
     return fromPackage(new ByteArrayInputStream(res.getContent()));
   }

@@ -163,7 +163,7 @@ public class Element extends Base implements NamedItem {
   private Object nativeObject;
   private List<SliceDefinition> sliceDefinitions;
   private boolean elided;
-
+  
 	public Element(String name) {
 		super();
 		this.name = name;
@@ -1649,4 +1649,5 @@ public class Element extends Base implements NamedItem {
   public boolean isElided() {
     return this.elided;
   }
+  
 }

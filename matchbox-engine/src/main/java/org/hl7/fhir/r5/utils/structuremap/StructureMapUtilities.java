@@ -2164,7 +2164,7 @@ public class StructureMapUtilities {
 
   private void addChildMappings(StringBuilder b, String id, String indent, StructureDefinition sd, ElementDefinition ed, boolean inner) throws DefinitionException {
     boolean first = true;
-    List<ElementDefinition> children = profileUtilities.getChildMap(sd, ed).getList();
+    List<ElementDefinition> children = profileUtilities.getChildMap(sd, ed, true).getList();
     for (ElementDefinition child : children) {
       if (first && inner) {
         b.append(" then {\r\n");

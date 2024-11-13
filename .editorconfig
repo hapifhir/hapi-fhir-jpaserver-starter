@@ -14,6 +14,21 @@ indent_style = tab
 indent_size = 3
 tab_width = 3
 
+# Override the Java formatting settings for HAPI files, to facilitate the patching process
+[matchbox-{engine,server}/src/main/java/ca/uhn/fhir/**/*.java]
+indent_style = space
+indent_size = 2
+tab_width = 2
+trim_trailing_whitespace = false
+insert_final_newline = false
+
+[matchbox-{engine,server}/src/main/java/org/hl7/fhir/**/*.java]
+indent_style = tab
+indent_size = 4
+tab_width = 4
+trim_trailing_whitespace = false
+insert_final_newline = false
+
 [*.xml]
 indent_size = 4
 tab_width = 4

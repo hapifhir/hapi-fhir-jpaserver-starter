@@ -1,3 +1,7 @@
+Unreleased
+
+- Upgrade hapifhir org.hl7.fhir.core to 6.4.1
+
 2024/10/24 Release 3.9.6
 
 - Remove lucene dependencies [#301](https://github.com/ahdis/matchbox/issues/301)

@@ -211,5 +211,10 @@ public class SearchParamExtractorR4 extends BaseSearchParamExtractor implements 
 		public ValueSet resolveValueSet(FHIRPathEngine engine, Object appContext, String url) {
 			return null;
 		}
-	}
+
+    @Override
+    public boolean paramIsType(final String s, final int i) {
+      return false;
+    }
+  }
 }
