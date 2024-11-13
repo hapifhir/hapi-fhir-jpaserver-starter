@@ -1,4 +1,4 @@
-Unreleased
+2024/11/13 Release 3.9.7
 
 - Upgrade hapifhir org.hl7.fhir.core to 6.4.1
 
