@@ -142,9 +142,10 @@ public class MatchboxEngine extends ValidationEngine {
       FHIRPathEngine fhirPathEngine = new FHIRPathEngine(context);
       fhirPathEngine.setAllowDoubleQuotes(false);
       this.setFhirPathEngine(fhirPathEngine);
-  		// Create a new IgLoader, otherwise the context is desynchronized between the loader and the engine
   		try {
-  			this.setPcm(new FilesystemPackageCacheManager.Builder().build());
+  			this.setPcm(new FilesystemPackageCacheManager.Builder()
+								.withCacheFolder(this.getPcm().getFolder())
+								.build());
   		} catch (final IOException e) {
   			throw new MatchboxEngineCreationException(e);
   		}
@@ -153,14 +154,16 @@ public class MatchboxEngine extends ValidationEngine {
 	public MatchboxEngine(final @NonNull ValidationEngine other) throws FHIRException, IOException {
 		super(other);
 		if (other instanceof MatchboxEngine) {
-				MatchboxEngine otherMatchboxEgine = (MatchboxEngine) other;
-				this.sessionCache = otherMatchboxEgine.sessionCache;
-				this.suppressedWarnInfoPatterns = otherMatchboxEgine.suppressedWarnInfoPatterns;
+				MatchboxEngine otherMatchboxEngine = (MatchboxEngine) other;
+				this.sessionCache = otherMatchboxEngine.sessionCache;
+				this.suppressedWarnInfoPatterns = otherMatchboxEngine.suppressedWarnInfoPatterns;
 		}
 		// Create a new IgLoader, otherwise the context is desynchronized between the loader and the engine
 		this.setIgLoader(new IgLoader(this.getPcm(), this.getContext(), this.getVersion(), this.isDebug()));
 		try {
-			this.setPcm(new FilesystemPackageCacheManager.Builder().build());
+			this.setPcm(new FilesystemPackageCacheManager.Builder()
+								.withCacheFolder(this.getPcm().getFolder())
+								.build());
 		} catch (final IOException e) {
 			throw new MatchboxEngineCreationException(e);
 		}
