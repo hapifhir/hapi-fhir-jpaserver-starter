@@ -523,7 +523,8 @@ export class ValidateComponent implements AfterViewInit {
           this.selectedProfile = profile;
           hasSetProfile = true;
         } else {
-          this.showErrorToast('Unknown profile', `The profile '${profile}' is unknown to this server`);
+          this.showErrorToast('Unknown profile', `The profile '${profile}' is unknown to this server. Please choose another profile from the list.`);
+          return;
         }
       }
 
@@ -544,6 +545,10 @@ export class ValidateComponent implements AfterViewInit {
       }
 
       this.validateResource(`provided.${extension}`, resource, contentType, !hasSetProfile);
+      this.toastr.info('Validation', 'The validation of your resource has started', {
+        closeButton: true,
+        timeOut: 3000,
+      });
     }
   }
 }
