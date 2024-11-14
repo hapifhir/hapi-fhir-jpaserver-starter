@@ -32,6 +32,7 @@ import static ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl.SD_EXTENSION_T
  * A provider of CapabilityStatement customized for Matchbox.
  */
 public class MatchboxCapabilityStatementProvider extends ServerCapabilityStatementProvider {
+	private static final String VALIDATE_OPERATION_NAME = "Validate";
 	private final StructureDefinitionResourceProvider structureDefinitionProvider;
 	protected final CliContext cliContext;
 	protected final FhirContext myFhirContext;
@@ -129,41 +130,48 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 	 */
 	@Read(typeName = "OperationDefinition")
 	@Override
-	public IBaseResource readOperationDefinition(@IdParam IIdType theId, RequestDetails theRequestDetails) {
+	public IBaseResource readOperationDefinition(@IdParam final IIdType theId,
+																final RequestDetails theRequestDetails) {
 		final var baseResource = super.readOperationDefinition(theId, theRequestDetails);
-		if (baseResource instanceof final OperationDefinition opDefR5 && "Validate".equals(opDefR5.getName())) {
+
+		if (baseResource instanceof final OperationDefinition opDefR5) {
 			// In R5 mode
-			this.updateOperationDefinition(opDefR5);
+			if (VALIDATE_OPERATION_NAME.equals(opDefR5.getName())) {
+				this.updateValidateOperationDefinition(opDefR5);
+			}
 			return baseResource;
-		} else if (baseResource instanceof final org.hl7.fhir.r4b.model.OperationDefinition opDefR4B && "Validate".equals(
-			opDefR4B.getName())) {
+		} else if (baseResource instanceof final org.hl7.fhir.r4b.model.OperationDefinition opDefR4B) {
 			// In R4B mode: convert to R5, update, and convert back to R4B
 			final var opDefR5 = (OperationDefinition) VersionConvertorFactory_43_50.convertResource(opDefR4B);
-			this.updateOperationDefinition(opDefR5);
+			if (VALIDATE_OPERATION_NAME.equals(opDefR5.getName())) {
+				this.updateValidateOperationDefinition(opDefR5);
+			}
 			return VersionConvertorFactory_43_50.convertResource(opDefR5);
-		} else if (baseResource instanceof final org.hl7.fhir.r4.model.OperationDefinition opDefR4 && "Validate".equals(
-			opDefR4.getName())) {
+		} else if (baseResource instanceof final org.hl7.fhir.r4.model.OperationDefinition opDefR4) {
 			// In R4 mode: convert to R5, update, and convert back to R4
 			final var opDefR5 = (OperationDefinition) VersionConvertorFactory_40_50.convertResource(opDefR4);
-			this.updateOperationDefinition(opDefR5);
+			if (VALIDATE_OPERATION_NAME.equals(opDefR5.getName())) {
+				this.updateValidateOperationDefinition(opDefR5);
+			}
 			return VersionConvertorFactory_40_50.convertResource(opDefR5);
 		}
+		// Only fail if the base resource is not R4, R4B or R5
 		throw new MatchboxUnsupportedFhirVersionException("MatchboxCapabilityStatementProvider",
-																		  theRequestDetails.getFhirContext().getVersion().getVersion());
+																		  baseResource.getStructureFhirVersionEnum());
 	}
 
 	/**
 	 * Updates an R5 OperationDefinition with the parameters required for the $validate operation, including the
 	 * parameters supported and the list of installed profiles.
 	 */
-	private void updateOperationDefinition(final OperationDefinition operationDefinition) {
-		operationDefinition.addParameter()
+	private void updateValidateOperationDefinition(final OperationDefinition validateOperationDefinition) {
+		validateOperationDefinition.addParameter()
 			.setName("resource")
 			.setUse(Enumerations.OperationParameterUse.IN)
 			.setMin(0)
 			.setMax("1")
 			.setType(Enumerations.FHIRTypes.RESOURCE);
-		operationDefinition.addParameter()
+		validateOperationDefinition.addParameter()
 			.setName("mode")
 			.setUse(Enumerations.OperationParameterUse.IN)
 			.setMin(0)
@@ -174,14 +182,14 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 			.filter(sd -> !sd.getExtensionByUrl("sd-title").getValueStringType().getValue().startsWith(
 				SD_EXTENSION_TITLE_PREFIX))
 			.toList();
-		operationDefinition.addParameter()
+		validateOperationDefinition.addParameter()
 			.setName("profile")
 			.setUse(Enumerations.OperationParameterUse.IN)
 			.setMin(0)
 			.setMax("1")
 			.setType(Enumerations.FHIRTypes.CANONICAL)
 			.setTargetProfile(profiles);
-		operationDefinition.addParameter()
+		validateOperationDefinition.addParameter()
 			.setName("reload")
 			.setUse(Enumerations.OperationParameterUse.IN)
 			.setMin(0)
@@ -190,7 +198,7 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 
 		final var cliContextProperties = this.cliContext.getValidateEngineParameters();
 		for (final Field field : cliContextProperties) {
-			operationDefinition.addParameter()
+			validateOperationDefinition.addParameter()
 				.setName(field.getName())
 				.setUse(Enumerations.OperationParameterUse.IN)
 				.setMin(0)
@@ -198,7 +206,7 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 				.setType(field.getType().equals(boolean.class) ? Enumerations.FHIRTypes.BOOLEAN : Enumerations.FHIRTypes.STRING);
 		}
 
-		operationDefinition.addParameter()
+		validateOperationDefinition.addParameter()
 			.setName("extensions")
 			.setUse(Enumerations.OperationParameterUse.IN)
 			.setMin(0)
