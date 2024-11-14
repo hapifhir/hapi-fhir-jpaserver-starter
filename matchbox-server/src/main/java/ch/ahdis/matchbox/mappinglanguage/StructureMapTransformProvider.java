@@ -221,6 +221,7 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
 										  @OperationParam(name = "to", min = 0, max = 1) final String to,
 										  final HttpServletRequest theRequest) {
 		// HAPI has already converted the textual map to a StructureMap resource if the Content-Type was right
+		// (text/fhir-mapping)
 		return content;
 	}
 

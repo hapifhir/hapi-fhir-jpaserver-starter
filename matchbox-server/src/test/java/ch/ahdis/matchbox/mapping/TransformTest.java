@@ -25,6 +25,7 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * matchbox
@@ -51,7 +52,30 @@ public class TransformTest {
 	}
 
 	@Test
+	void testTransform() throws Exception {
+		// Test the regular $transform operation
+		final var createMapRequest = HttpRequest.newBuilder(URI.create(TARGET_SERVER + "/fhir/StructureMap"))
+			.POST(HttpRequest.BodyPublishers.ofString(this.getContent("qr2patgender.map")))
+			.header("Content-Type", "text/fhir-mapping")
+			.header("Accept", "application/fhir+xml")
+			.build();
+		this.httpClient.send(createMapRequest, HttpResponse.BodyHandlers.discarding());
+
+		final var transformRequest = HttpRequest.newBuilder(URI.create(
+			TARGET_SERVER + "/fhir/StructureMap/$transform?source=http://ahdis.ch/matchbox/fml/qr2patgender"))
+			.POST(HttpRequest.BodyPublishers.ofString(this.getContent("qr.json")))
+			.header("Content-Type", "application/fhir+json")
+			.header("Accept", "application/fhir+xml")
+			.build();
+		final var response = this.httpClient.send(transformRequest, HttpResponse.BodyHandlers.ofString());
+		final var patient = response.body();
+		assertTrue(patient.contains("<Patient xmlns=\"http://hl7.org/fhir\">"));
+		assertTrue(patient.contains("<gender value=\"female\"/>"));
+	}
+
+	@Test
 	void testTransformFullyContained() throws Exception {
+		// Test Brian's FHIRPath Lab API
 		final var transformRequest = HttpRequest.newBuilder(URI.create(TARGET_SERVER + "/fhir/StructureMap/$transform"))
 			.POST(HttpRequest.BodyPublishers.ofString(this.getContent("transform_fully_contained_body.json")))
 			.header("Content-Type", "application/fhir+json")

@@ -5,6 +5,7 @@ server:
 matchbox:
   fhir:
     context:
+      onlyOneEngine: true
 spring:
   datasource:
     url: "jdbc:h2:mem:test-transform"

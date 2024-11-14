@@ -1,0 +1,50 @@
+{
+    "resourceType": "QuestionnaireResponse",
+    "id": "qrpatientsexeresponse",
+    "questionnaire": "http://ahdis.ch/matchbox/fml/qrpatientsex",
+    "status": "in-progress",
+    "item": [
+      {
+        "linkId": "patient",
+        "text": "Patient",
+        "item": [
+          {
+            "linkId": "patient.sex",
+            "text": "Geschlecht",
+            "answer": [
+              {
+                "valueString": "female"
+              }
+            ]
+          },
+          {
+            "linkId": "patient.family",
+            "text": "Family",
+            "answer": [
+              {
+                "valueString": "family"
+              }
+            ]
+          },
+          {
+            "linkId": "patient.claim-type",
+            "text": "claim-type",
+            "answer": [
+              {
+                "valueString": "oral"
+              }
+            ]
+          },
+          {
+            "linkId": "systolic-bp_1.2",
+            "text": " systolic-bp_1.2",
+            "answer": [
+              {
+                "valueString": "90"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
