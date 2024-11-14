@@ -25,10 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -74,17 +71,17 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 	@Operation(name = "$validate-code", idempotent = true)
 	public IAnyResource validateCode(@ResourceParam final IBaseParameters baseParameters,
 												final HttpServletResponse servletResponse) {
-		final Parameters request;
-		if (baseParameters instanceof final Parameters parametersR5) {
-			request = parametersR5;
-		} else if (baseParameters instanceof final org.hl7.fhir.r4.model.Parameters parametersR4) {
-			request = (Parameters) VersionConvertorFactory_40_50.convertResource(parametersR4);
-		} else if (baseParameters instanceof final org.hl7.fhir.r4b.model.Parameters parametersR4B) {
-			request = (Parameters) VersionConvertorFactory_43_50.convertResource(parametersR4B);
-		} else {
-			throw new MatchboxUnsupportedFhirVersionException("CodeSystemCodeValidationProvider",
-																			  this.fhirContext.getVersion().getVersion());
-		}
+		Objects.requireNonNull(baseParameters, "baseParameters is null in ValueSetCodeValidationProvider.validateCode");
+		// Convert the incoming parameters to R5, to handle a single FHIR version in the method
+		final Parameters request = switch (baseParameters) {
+			case final Parameters parametersR5 -> parametersR5;
+			case final org.hl7.fhir.r4.model.Parameters parametersR4 ->
+				(Parameters) VersionConvertorFactory_40_50.convertResource(parametersR4);
+			case final org.hl7.fhir.r4b.model.Parameters parametersR4B ->
+				(Parameters) VersionConvertorFactory_43_50.convertResource(parametersR4B);
+			default -> throw new MatchboxUnsupportedFhirVersionException("CodeSystemCodeValidationProvider",
+																							 baseParameters.getStructureFhirVersionEnum());
+		};
 
 		final String valueSetMode = request.hasParameter("valueSetMode")
 			? request.getParameterValue("valueSetMode").toString()
@@ -142,7 +139,7 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 		if (coding != null) {
 			codings = List.of(coding);
 		} else {
-			codings = codeableConcept.getCoding();
+			codings = requireNonNull(codeableConcept).getCoding();
 		}
 
 		if ("NO_MEMBERSHIP_CHECK".equals(valueSetMode)) {
@@ -189,11 +186,12 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 						log.debug(" - code '{}' is excluded from value set composition", validatedCoding.getCode());
 					} else if (membership == CodeMembership.INCLUDED) {
 						log.debug(" - code '{}' is included in value set composition", validatedCoding.getCode());
-						// We can stop here, we've found a Coding explicitly included
+						// We can stop here, we've found a 'Coding' explicitly included
 						return createSuccessfulResponseParameters(validatedCoding);
 					} else {
 						log.debug(" - code '{}' is not included/excluded from value set composition", validatedCoding.getCode());
-						// We can stop here, we've found a Coding explicitly included
+						// The 'Coding' is neither included nor excluded from the composition
+						// We can't infer the code membership, so we return a success in this case
 						return createSuccessfulResponseParameters(validatedCoding);
 					}
 				}
@@ -214,12 +212,12 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 				valueSet = (ValueSet) VersionConvertorFactory_43_50.convertResource(valueSetR4B);
 			} else {
 				throw new MatchboxUnsupportedFhirVersionException("ValueSetCodeValidationProvider",
-																				  this.fhirContext.getVersion().getVersion());
+																				  baseValueSet.getStructureFhirVersionEnum());
 			}
 
 			if (valueSet.getExpansion().getContains().isEmpty()) {
 				// The value set expansion is successful but empty
-				log.debug("OK - expansion failed without reporting errors (empty value set)");
+				log.debug("OK - expansion successful but empty");
 				return createSuccessfulResponseParameters(codings.getFirst());
 			}
 
@@ -304,8 +302,6 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 
 	private @Nullable ValueSet getExpandedValueSet(final String cacheId,
 																  final String valueSetUrl) {
-		requireNonNull(cacheId);
-		requireNonNull(valueSetUrl);
 		return Optional.ofNullable(this.valueSetCache.get(cacheId))
 			.map(m -> m.get(valueSetUrl))
 			.orElse(null);
@@ -314,9 +310,6 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 	private void cacheExpandedValueSet(final String cacheId,
 												  final String valueSetUrl,
 												  final ValueSet valueSet) {
-		requireNonNull(cacheId);
-		requireNonNull(valueSetUrl);
-		requireNonNull(valueSet);
 		this.valueSetCache
 			.computeIfAbsent(cacheId, k -> new HashMap<>(20))
 			.put(valueSetUrl, valueSet);
