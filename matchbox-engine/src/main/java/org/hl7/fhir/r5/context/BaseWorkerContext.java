@@ -512,16 +512,25 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
           if (Utilities.existsInList(url, "http://hl7.org/fhir/SearchParameter/example")) {
             return;
           }
-					// matchbox patch for duplicate resources, see https://github.com/ahdis/matchbox/issues/227
-					// org.hl7.fhir.r5.conformance.R5ExtensionsLoader.loadR5SpecialTypes(R5ExtensionsLoader.java:141)
-					CanonicalResource ex = fetchResourceWithException(m.fhirType(), url);
-					if (ex.getVersion()!=null && m.getVersion()!=null && laterVersion(m.getVersion(), ex.getVersion())) {
-						logger.logMessage("Note replacing old version: " + formatMessage(I18nConstants.DUPLICATE_RESOURCE_, url, m.getVersion(), ex.getVersion(), ex.fhirType()));
-						dropResource(ex);
-					} else {
-						logger.logMessage("Note keeping newer version: " + formatMessage(I18nConstants.DUPLICATE_RESOURCE_, url, m.getVersion(), ex.getVersion(), ex.fhirType()));
-						return;
-					}
+			// matchbox patch for duplicate resources, see https://github.com/ahdis/matchbox/issues/227
+			// org.hl7.fhir.r5.conformance.R5ExtensionsLoader.loadR5SpecialTypes(R5ExtensionsLoader.java:141)
+			CanonicalResource ex = fetchResourceWithException(m.fhirType(), url);
+			if (ex.getVersion() != null && m.getVersion() != null && laterVersion(m.getVersion(), ex.getVersion())) {
+				logger.logDebugMessage(LogCategory.INIT,
+									   "Note replacing old version: "
+										   + formatMessage(I18nConstants.DUPLICATE_RESOURCE_, url,
+														   m.getVersion(), ex.getVersion(), ex.fhirType()));
+				dropResource(ex);
+			} else {
+				logger.logDebugMessage(LogCategory.INIT,
+									   "Note keeping newer version: "
+										   + formatMessage(I18nConstants.DUPLICATE_RESOURCE_,
+														   url,
+														   m.getVersion(),
+														   ex.getVersion(),
+														   ex.fhirType()));
+				return;
+			}
         }
         if (r instanceof StructureDefinition) {
           StructureDefinition sd = (StructureDefinition) m;
