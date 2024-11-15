@@ -97,7 +97,7 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 
 	@Nonnull
 	public FhirContext getFhirContext(FhirVersionEnum theFhirVersion) {
-		return myVersionToContext.computeIfAbsent(theFhirVersion, v -> new FhirContext(v));
+		return myVersionToContext.computeIfAbsent(theFhirVersion, FhirContext::forCached);
 	}
 
 	private void cleanModifierExtensions(org.hl7.fhir.r5.model.ConceptMap r) {
