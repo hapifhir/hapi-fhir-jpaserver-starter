@@ -15,9 +15,12 @@
 <mat-card class="card-maps">
   <mat-form-field appearance="fill">
     <mat-label>Map for transforming</mat-label>
-    <mat-select [formControl]="selectedMap">
+    <mat-select [formControl]="structureMapControl">
+      <mat-option>
+        <ngx-mat-select-search [formControl]="structureMapFilterControl"></ngx-mat-select-search>
+      </mat-option>
       <mat-option
-        *ngFor="let structureMap of structureMaps"
+        *ngFor="let structureMap of filteredStructureMaps | async"
         value="{{ structureMap.url }}"
       >{{ structureMap.name }}
       </mat-option

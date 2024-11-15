@@ -6,6 +6,7 @@ Unreleased
 - Introduce the configuration parameter 'devMode' to enable the development environment; it allows installing an 
   ImplementationGuide by posting its NPM package to the operation _$install-npm-package_
   [#306](https://github.com/ahdis/matchbox/issues/306)
+- Add filtering to the list of StructureMaps in the GUI
 
 2024/11/13 Release 3.9.7
 
