@@ -85,6 +85,7 @@ matchbox:
         hl7.fhir.r4.core#4.0.1:
           #- "Constraint failed: dom-6:"
 logging:
+  config: classpath:logback.xml # This is needed, otherwise Logback will load logback-test.xml in priority
   level:
     root: INFO
     #ch.ahdis.matchbox: DEBUG
