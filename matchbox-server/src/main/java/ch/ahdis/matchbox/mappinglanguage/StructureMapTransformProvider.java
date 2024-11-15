@@ -67,6 +67,8 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
 	@Autowired
 	protected MatchboxEngineSupport matchboxEngineSupport;
 
+	private final FhirContext fhirR5Context = FhirContext.forR5Cached();
+
 	@Override
 	public MethodOutcome create(final HttpServletRequest theRequest,
 										 @ResourceParam final IBaseResource theResource,
@@ -228,18 +230,18 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
 	private IBaseResource parseBaseResource(String content) {
 		content = content.trim();
 		if (content.startsWith("<")) {
-			return FhirContext.forR5().newXmlParser().parseResource(content);
+			return this.fhirR5Context.newXmlParser().parseResource(content);
 		} else {
-			return FhirContext.forR5().newJsonParser().parseResource(content);
+			return this.fhirR5Context.newJsonParser().parseResource(content);
 		}
 	}
 
 	private <T extends IBaseResource> T parseResource(String content, final Class<T> theResourceType) {
 		content = content.trim();
 		if (content.startsWith("<")) {
-			return FhirContext.forR5().newXmlParser().parseResource(theResourceType, content);
+			return this.fhirR5Context.newXmlParser().parseResource(theResourceType, content);
 		} else {
-			return FhirContext.forR5().newJsonParser().parseResource(theResourceType, content);
+			return this.fhirR5Context.newJsonParser().parseResource(theResourceType, content);
 		}
 	}
 
