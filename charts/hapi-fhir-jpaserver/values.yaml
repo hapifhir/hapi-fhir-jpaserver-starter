@@ -7,7 +7,7 @@ image:
   # -- the path inside the repository
   repository: hapiproject/hapi
   # -- the image tag. As of v5.7.0, this is the `distroless` flavor by default, add `-tomcat` to use the Tomcat-based image.
-  tag: "v7.2.0@sha256:9bcafa8342b572eee248cb7c48c496863d352bbd0347e1d98ea238d09620e89b"
+  tag: "latest"
   # -- image pullPolicy to use
   pullPolicy: IfNotPresent
 
@@ -53,21 +53,24 @@ service:
 
 ingress:
   # -- whether to create an Ingress to expose the FHIR server HTTP endpoint
-  enabled: false
+  enabled: true
+  className: "kong"
   # -- provide any additional annotations which may be required. Evaluated as a template.
   annotations:
-    {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    konghq.com/protocols: "https"
+    konghq.com/https-redirect-status-code: "308"
+    kubernetes.io/ingress.class: kong
   hosts:
-    - host: fhir-server.127.0.0.1.nip.io
+    - host: fhir.test.slade360edi.com
       pathType: ImplementationSpecific
       paths: ["/"]
   # -- ingress TLS config
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls:
+    - secretName: letsencrypt-prod
+      hosts:
+        - fhir.test.slade360edi.com
 
 # -- configure the FHIR server's resource requests and limits
 resources:
@@ -108,7 +111,7 @@ postgresql:
   # -- enable an included PostgreSQL DB.
   # see <https://github.com/bitnami/charts/tree/master/bitnami/postgresql> for details
   # if set to `false`, the values under `externalDatabase` are used
-  enabled: true
+  enabled: false
   auth:
     # -- name for a custom database to create
     database: "fhir"
@@ -121,6 +124,9 @@ postgresql:
     # picked from this secret in this case.
     # The value is evaluated as a template.
     existingSecret: ""
+    secretKeys:
+      userPasswordKey: ""
+      adminPasswordKey: ""
 
 # -- readiness probe
 # @ignored
@@ -176,9 +182,16 @@ externalDatabase:
 
 # -- extra environment variables to set on the server container
 extraEnv:
-  []
-  # - name: SPRING_FLYWAY_BASELINE_ON_MIGRATE
-  #   value: "true"
+  - name: OTEL_METRICS_EXPORTER
+    value: "none"
+  - name: OTEL_LOGS_EXPORTER
+    value: "none"
+  - name: OTEL_TRACES_EXPORTER
+    value: "jaeger"
+  - name: OTEL_SERVICE_NAME
+    value: "hapi-fhir-jpaserver"
+  - name: OTEL_EXPORTER_JAEGER_ENDPOINT
+    value: "https://jaeger-collector.savannahghi.org/"
 
 podDisruptionBudget:
   # -- Enable PodDisruptionBudget for the server pods.
