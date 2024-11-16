@@ -513,7 +513,10 @@ export class ValidateComponent implements AfterViewInit {
    * @private
    */
   private analyzeUrlForValidation(): void {
-    const searchParams = new URLSearchParams(window.location.search);
+    if (!window.location.hash) {
+      return;
+    }
+    const searchParams = new URLSearchParams(window.location.hash.substring(1));
     if (searchParams.has('resource')) {
       let hasSetProfile = false;
       if (searchParams.has('profile')) {

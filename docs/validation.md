@@ -15,7 +15,9 @@ see [matchbox-engine](matchbox-engine.md) for using the validation functionality
 
 ### FHIR API
 
-For the $validate operation on the server see the OperationDefintion for validation support: [[server]/$validate](https://test.ahdis.ch/matchboxv3/fhir/OperationDefinition/-s-validate) for checking FHIR resources conforming to the loaded implementation guides.
+For the $validate operation on the server, see the OperationDefinition for validation support:
+[[server]/$validate](https://test.ahdis.ch/matchboxv3/fhir/OperationDefinition/-s-validate) for checking FHIR 
+resources conforming to the loaded implementation guides.
 
 | Parameter IN | Card | Description                                                                                                                                                                                                                                |
 |--------------|------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -169,18 +171,23 @@ LOINC, etc).
 
 ### GUI
 
-You can run a validation through the GUI by using search parameters in the URL.
+You can run a validation through the GUI by using the fragment in the URL.
+The fragment is the part of the URL that starts with a `#` character (also called the hash or anchor).
+The different parameters shall be set as if they were in the query string:
+`/matchbox/validate#resource=...&profile=...`.
 
-| Parameter        | Description                                    |
-|------------------|------------------------------------------------|
-| `resource`       | The resource to validate, encoded as base64url |
-| `profile`        | The profile to use for validation              |
-| Other parameters | Any parameter supported by the FHIR API        |
+The following parameters are supported:
+
+| Parameter        | Description                                                            |
+|------------------|------------------------------------------------------------------------|
+| `resource`       | The resource to validate, encoded as base64url. Required.              |
+| `profile`        | The profile to use for validation. Optional.                           |
+| Other parameters | Any parameter supported by the FHIR API or the `CliContext`. Optional. |
 
 The only required parameter is `resource`.
 If `profile` is not provided, it will default to `http://hl7.org/fhir/StructureDefinition/{resourceType}`.
 
 E.g.
 ```http
-GET https://test.ahdis.ch/matchboxv3/?profile=http%3A%2F%2Fhl7.org%2Ffhir%2FStructureDefinition%2FBundle&txServer=http://tx.fhir.org/r4&resource=PFBhdGllbnQgeG1sbnM9Imh0dHA6Ly9obDcub3JnL2ZoaXIiPgogIDxuYW1lPgogICAgPGZhbWlseSB2YWx1ZT0iVGVzdCIvPgogIDwvbmFtZT4KPC9QYXRpZW50Pg#/validate HTTP/1
+GET https://test.ahdis.ch/matchboxv3/validate#profile=http%3A%2F%2Fhl7.org%2Ffhir%2FStructureDefinition%2FBundle&txServer=http://tx.fhir.org/r4&resource=PFBhdGllbnQgeG1sbnM9Imh0dHA6Ly9obDcub3JnL2ZoaXIiPgogIDxuYW1lPgogICAgPGZhbWlseSB2YWx1ZT0iVGVzdCIvPgogIDwvbmFtZT4KPC9QYXRpZW50Pg HTTP/1
 ```

@@ -1,5 +1,5 @@
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -20,7 +20,12 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import {HighlightLineNumbers} from "ngx-highlightjs/line-numbers";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
+import {HashUrlRedirectionService} from "./util/hash-url-redirection-service";
+import {APP_BASE_HREF} from "@angular/common";
 
+// The Angular routes
+// All paths defined here must be supported in matchbox-server's MatchboxStaticResourceConfig, otherwise a direct access
+// to the URL will result in a 404 error.
 const routes: Routes = [
   {
     path: '',
@@ -74,7 +79,7 @@ export function createTranslateLoader(http: HttpClient) {
     SharedModule,
     HighlightModule,
     RouterModule.forRoot(routes, {
-      useHash: true,
+      useHash: false, // Move from HashLocationStrategy to PathLocationStrategy
     }),
     TranslateModule.forRoot({
       loader: {
@@ -102,6 +107,8 @@ export function createTranslateLoader(http: HttpClient) {
       },
     },
     provideHttpClient(withInterceptorsFromDi()),
+    HashUrlRedirectionService,
+    {provide: APP_BASE_HREF, useValue: (window as any).MATCHBOX_BASE_PATH}
   ],
 })
 export class AppModule {}

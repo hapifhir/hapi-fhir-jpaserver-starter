@@ -7,6 +7,7 @@ Unreleased
   ImplementationGuide by posting its NPM package to the operation _$install-npm-package_
   [#306](https://github.com/ahdis/matchbox/issues/306)
 - Add filtering to the list of StructureMaps in the GUI
+- Move from the hash-based Angular routing to the path-based routing
 
 2024/11/13 Release 3.9.7
 

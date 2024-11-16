@@ -32,7 +32,6 @@ spring:
 server:
   servlet:
     context-path: /matchboxv3
-  max-http-request-header-size: 40KB
 management:
   endpoint:
     health:
