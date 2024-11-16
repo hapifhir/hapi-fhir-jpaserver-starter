@@ -1,39 +1,74 @@
+<h2>Transform a resource with the $transform operation</h2>
+
 <mat-card class="card-maps">
+  <mat-card-header>
+    <mat-card-title>The resource</mat-card-title>
+  </mat-card-header>
   <mat-card-content>
-    <mat-card-header>
-      <mat-card-title>{{ client.baseUrl }}</mat-card-title>
-    </mat-card-header>
-
-    <div>Resource</div>
-
-    <app-upload (addFiles)="addFile($event)"></app-upload>
-
-    <pre><code [highlight]="getSource()" lineNumbers language="json"></code></pre>
+    <app-upload (addFiles)="setResource($event)"></app-upload>
+    <pre><code [highlight]="getResource()" lineNumbers language="json"></code></pre>
   </mat-card-content>
 </mat-card>
 
 <mat-card class="card-maps">
-  <mat-form-field appearance="fill">
-    <mat-label>Map for transforming</mat-label>
-    <mat-select [formControl]="structureMapControl">
-      <mat-option>
-        <ngx-mat-select-search [formControl]="structureMapFilterControl"></ngx-mat-select-search>
-      </mat-option>
-      <mat-option
-        *ngFor="let structureMap of filteredStructureMaps | async"
-        value="{{ structureMap.url }}"
-      >{{ structureMap.name }}
-      </mat-option
-      >
-    </mat-select>
-  </mat-form-field>
+  <mat-card-header>
+    <mat-card-title>The map</mat-card-title>
+    <mat-card-subtitle>Choose a StructureMap to use for the transformation</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-tab-group>
+      <mat-tab label="By reference">
+        <div class="tab-content flex">
+          <mat-form-field appearance="fill">
+            <mat-label>The map to use:</mat-label>
+            <mat-select [formControl]="structureMapControl">
+              <mat-option>
+                <ngx-mat-select-search [formControl]="structureMapFilterControl"></ngx-mat-select-search>
+              </mat-option>
+              <mat-option
+                *ngFor="let structureMap of filteredStructureMaps | async"
+                value="{{ structureMap.url }}"
+              >{{ structureMap.title ? structureMap.title : structureMap.name }}
+              </mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </mat-tab>
+      <mat-tab label="By uploading">
+        <div class="tab-content">
+          Provide a StructureMap to use for the transformation (JSON or XML):
+          <app-upload (addFiles)="setMapContent($event)"></app-upload>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="card-maps">
+  <mat-card-header>
+    <mat-card-title>The model(s)</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    Provide a StructureDefinition or Bundle of StructureDefinitions resource that are imported by the map (JSON or XML):
+    <app-upload (addFiles)="setModelContent($event)"></app-upload>
+  </mat-card-content>
 </mat-card>
 
 <mat-card class="card-maps">
   <mat-card-content>
-    <mat-card-header>
-      <mat-card-title>Transformed</mat-card-title>
-    </mat-card-header>
+    <button mat-stroked-button (click)="transform()">
+      <mat-icon>transform</mat-icon>
+      Transform
+    </button>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="card-maps" *ngIf="transformed || operationOutcomeTransformed">
+  <mat-card-header>
+    <mat-card-title>Transformed</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
     <mat-error *ngIf="operationOutcomeTransformed">
       <ul>
         <li *ngFor="let issue of operationOutcomeTransformed.issue">

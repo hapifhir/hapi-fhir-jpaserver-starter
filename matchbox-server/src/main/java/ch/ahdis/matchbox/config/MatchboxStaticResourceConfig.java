@@ -100,7 +100,8 @@ public class MatchboxStaticResourceConfig implements WebMvcConfigurer {
 				String content = classPathResource.getContentAsString(StandardCharsets.UTF_8);
 
 				// Replace the base path of the server
-				content = content.replace("\"/matchboxv3\"", "\"%s\"".formatted(this.parent.baseServerPath));
+				content = content.replace("window.MATCHBOX_BASE_PATH = \"/\"",
+												  "window.MATCHBOX_BASE_PATH = \"%s\"".formatted(this.parent.baseServerPath));
 
 				return new ByteArrayResource(content.getBytes(StandardCharsets.UTF_8));
 			}

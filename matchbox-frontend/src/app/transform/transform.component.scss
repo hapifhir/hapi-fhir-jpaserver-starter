@@ -1,3 +1,23 @@
 .card-maps {
   margin-bottom: 10px;
 }
+.tab-content {
+  padding: 2em 1em 0 1em;
+}
+mat-select {
+  width: 100%;
+}
+.tab-content.flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  .form-field-label {
+    white-space: nowrap;
+  }
+  .form-field-label + mat-form-field {
+    margin-left: 10px;
+  }
+  mat-form-field {
+    width: 100%;
+  }
+}
