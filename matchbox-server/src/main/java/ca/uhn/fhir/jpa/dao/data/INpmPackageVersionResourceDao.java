@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 /*
@@ -105,5 +106,8 @@ public interface INpmPackageVersionResourceDao extends JpaRepository<NpmPackageV
 	@Query("SELECT e.myPackageVersion FROM NpmPackageVersionResourceEntity e WHERE e.myCanonicalUrl = :url AND e.myCanonicalVersion = :version")
 	Optional<NpmPackageVersionEntity> getPackageVersionByCanonicalAndVersion(@Param("url") final String theCanonicalUrl,
 																									 @Param("version") final String theCanonicalVersion);
+  
+  @Query("SELECT e FROM NpmPackageVersionResourceEntity e WHERE e.myResourceType = 'StructureMap'")
+  List<NpmPackageVersionResourceEntity> getStructureMapResources();
 
 }

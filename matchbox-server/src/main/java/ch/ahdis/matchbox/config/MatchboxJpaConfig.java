@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import ch.ahdis.matchbox.CliContext;
 import ch.ahdis.matchbox.interceptors.*;
+import ch.ahdis.matchbox.mappinglanguage.StructureMapListProvider;
 import ch.ahdis.matchbox.packages.*;
 import ch.ahdis.matchbox.providers.*;
 import ch.ahdis.matchbox.questionnaire.*;
@@ -144,6 +145,9 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	@Autowired(required = false)
 	protected StructureMapTransformProvider structureMapTransformProvider;
 
+	@Autowired(required = false)
+	protected StructureMapListProvider structureMapListProvider;
+
 	@Autowired
 	private ApplicationContext context;
 
@@ -192,10 +196,16 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 		fhirServer.registerInterceptor(new ImplementationGuidePackageInterceptor(myPackageCacheManager, myFhirContext));
 		fhirServer.registerInterceptor(new MatchboxValidationInterceptor(this.myFhirContext, structureDefinitionProvider));
 		fhirServer.registerInterceptor(new TerminologyCapabilitiesInterceptor());
-		fhirServer.registerProviders(validationProvider, questionnaireProvider,
-											  conceptMapProvider, codeSystemProvider, valueSetProvider, structureDefinitionProvider,
-											codeSystemCodeValidationProvider,
-											  valueSetCodeValidationProvider, this.structureMapTransformProvider);
+		fhirServer.registerProviders(this.validationProvider,
+											  this.questionnaireProvider,
+											  this.conceptMapProvider,
+											  this.codeSystemProvider,
+											  this.valueSetProvider,
+											  this.structureDefinitionProvider,
+											  this.codeSystemCodeValidationProvider,
+											  this.valueSetCodeValidationProvider,
+											  this.structureMapTransformProvider,
+											  this.structureMapListProvider);
 
 		if (matchboxFhirContextProperties.isDevMode()) {
 			fhirServer.registerProvider(installNpmPackageOperationProvider);

@@ -5,11 +5,13 @@ import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import ca.uhn.fhir.jpa.config.r5.JpaR5Config;
 import ca.uhn.fhir.jpa.dao.BaseHapiFhirResourceDao;
 import ca.uhn.fhir.jpa.dao.JpaResourceDao;
+import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnR5Condition;
 import ca.uhn.fhir.jpa.validation.ValidatorPolicyAdvisor;
 import ca.uhn.fhir.jpa.validation.ValidatorResourceFetcher;
 import ch.ahdis.matchbox.config.MatchboxJpaConfig;
+import ch.ahdis.matchbox.mappinglanguage.StructureMapListProvider;
 import ch.ahdis.matchbox.packages.ImplementationGuideProviderR5;
 import ch.ahdis.matchbox.providers.*;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResourceProvider;
@@ -25,6 +27,7 @@ import org.hl7.fhir.r5.model.StructureMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @Conditional(OnR5Condition.class)
@@ -135,6 +138,12 @@ public class FhirServerConfigR5 {
 //    retVal.setDao(daoStructureMapR5());
 		return retVal;
 	}
+
+  @Bean
+  public StructureMapListProvider structureMapListProvider(final INpmPackageVersionResourceDao npmPackageVersionResourceDao,
+                                                           final PlatformTransactionManager myTxManager) {
+    return new StructureMapListProvider(npmPackageVersionResourceDao, myTxManager);
+  }
 
 	@Bean
 	public ValidatorResourceFetcher jpaValidatorResourceFetcher() {

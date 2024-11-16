@@ -261,7 +261,7 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 		});
 	}
 
-	private IBaseResource loadPackageEntityAdjustId(NpmPackageVersionResourceEntity contents) {
+	protected IBaseResource loadPackageEntityAdjustId(NpmPackageVersionResourceEntity contents) {
 		IBaseResource resource = loadPackageEntity(contents);
 		if (resource != null) {
 			resource.setId(contents.getId());

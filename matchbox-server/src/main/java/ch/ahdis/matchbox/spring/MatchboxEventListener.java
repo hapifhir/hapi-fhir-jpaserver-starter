@@ -31,7 +31,7 @@ public class MatchboxEventListener implements ApplicationListener<ApplicationRea
 	 */
 	@Override
 	public void onApplicationEvent(final ApplicationReadyEvent ignored) {
-		log.info("Loading all ImplementationGuides");
+		log.debug("Loading all ImplementationGuides");
 		this.igProvider.loadAll(false);
 	}
 }
