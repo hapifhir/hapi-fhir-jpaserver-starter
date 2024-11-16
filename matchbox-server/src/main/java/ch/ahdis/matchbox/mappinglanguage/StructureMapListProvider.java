@@ -1,5 +1,6 @@
 package ch.ahdis.matchbox.mappinglanguage;
 
+import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
@@ -7,6 +8,7 @@ import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionExceptio
 import ch.ahdis.matchbox.providers.StructureMapResourceProvider;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
+import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r5.model.Bundle;
 import org.hl7.fhir.r5.model.StructureMap;
@@ -28,15 +30,19 @@ public class StructureMapListProvider extends StructureMapResourceProvider {
 
 	private final PlatformTransactionManager myTxManager;
 
+	private final FhirContext fhirContext;
+
 	public StructureMapListProvider(final INpmPackageVersionResourceDao npmPackageVersionResourceDao,
-											  final PlatformTransactionManager myTxManager) {
+											  final PlatformTransactionManager myTxManager,
+											  final FhirContext fhirContext) {
 		super();
 		this.npmPackageVersionResourceDao = npmPackageVersionResourceDao;
 		this.myTxManager = myTxManager;
+		this.fhirContext = fhirContext;
 	}
 
 	@Operation(name = "$list", idempotent = true)
-	public Bundle listStructureMaps(final RequestDetails requestDetails) {
+	public IBaseBundle listStructureMaps(final RequestDetails requestDetails) {
 		final var resources = new TransactionTemplate(this.myTxManager)
 			.execute(tx -> this.npmPackageVersionResourceDao.getStructureMapResources())
 			.stream()
@@ -49,7 +55,14 @@ public class StructureMapListProvider extends StructureMapResourceProvider {
 		bundle.setTotal(resources.size());
 		bundle.addLink().setRelation(Bundle.LinkRelationTypes.SELF).setUrl(requestDetails.getCompleteUrl());
 		resources.forEach(resource -> bundle.addEntry().setResource(resource));
-		return bundle;
+
+		return switch (this.fhirContext.getVersion().getVersion()) {
+			case R4 -> (org.hl7.fhir.r4.model.Bundle) VersionConvertorFactory_40_50.convertResource(bundle);
+			case R4B -> (org.hl7.fhir.r4b.model.Bundle) VersionConvertorFactory_43_50.convertResource(bundle);
+			case R5 -> bundle;
+			default -> throw new MatchboxUnsupportedFhirVersionException("StructureMapListProvider",
+																							 this.fhirContext.getVersion().getVersion());
+		};
 	}
 
 	private StructureMap summarizeStructureMap(final IBaseResource structureMapBase) {

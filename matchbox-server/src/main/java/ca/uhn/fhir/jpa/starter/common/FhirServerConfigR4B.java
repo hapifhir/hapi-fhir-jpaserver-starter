@@ -142,9 +142,11 @@ public class FhirServerConfigR4B {
 
   @Bean
   public StructureMapListProvider structureMapListProvider(final INpmPackageVersionResourceDao npmPackageVersionResourceDao,
-                                                           final PlatformTransactionManager myTxManager) {
-    return new StructureMapListProvider(npmPackageVersionResourceDao, myTxManager);
+                                                           final PlatformTransactionManager myTxManager,
+                                                           final FhirContext fhirContext) {
+    return new StructureMapListProvider(npmPackageVersionResourceDao, myTxManager, fhirContext);
   }
+
 
   @Bean
   public ValidatorResourceFetcher jpaValidatorResourceFetcher() {
