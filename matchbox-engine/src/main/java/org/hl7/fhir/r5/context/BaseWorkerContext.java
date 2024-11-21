@@ -662,8 +662,10 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
         return laterVersion(newParts[i], oldParts[i]);
       }
     }
+	// MATCHBOX PATCH for allowing loading HL7 Terminology (THO)
+	return true;
     // This should never happen
-    throw new Error(formatMessage(I18nConstants.DELIMITED_VERSIONS_HAVE_EXACT_MATCH_FOR_DELIMITER____VS_, delimiter, newParts, oldParts));
+    //throw new Error(formatMessage(I18nConstants.DELIMITED_VERSIONS_HAVE_EXACT_MATCH_FOR_DELIMITER____VS_, delimiter, newParts, oldParts));
   }
   
   protected <T extends CanonicalResource> void seeMetadataResource(T r, Map<String, T> map, List<T> list, boolean addId) throws FHIRException {

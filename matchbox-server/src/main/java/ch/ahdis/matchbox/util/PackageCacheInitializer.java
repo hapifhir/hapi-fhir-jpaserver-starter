@@ -86,7 +86,7 @@ public class PackageCacheInitializer {
             igProperty.setName(ig.get("name"));
             igProperty.setVersion(ig.get("version"));
             igProperty.setUrl(ig.get("url"));
-            if (!noSystems || !(igProperty.getName().equals("hl7.fhir.r4.core") || igProperty.getName().equals("hl7.terminology"))) {
+            if (!noSystems || !(igProperty.getName().equals("hl7.fhir.r4.core") || igProperty.getName().startsWith("hl7.terminology"))) {
               igProperties.add(igProperty);
             }
           }

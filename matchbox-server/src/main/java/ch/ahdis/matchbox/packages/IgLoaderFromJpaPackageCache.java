@@ -30,6 +30,7 @@ import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
+import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
 import ch.ahdis.matchbox.util.MatchboxServerUtils;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_30_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
@@ -62,6 +63,8 @@ import ca.uhn.fhir.jpa.packages.JpaPackageCache;
 import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager.PackageContents;
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 
+import static ch.ahdis.matchbox.engine.MatchboxEngine.*;
+
 /**
  * Loads packages from the classpath
  * 
@@ -80,7 +83,6 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 
 	private final Map<FhirVersionEnum, FhirContext> myVersionToContext = Collections.synchronizedMap(new HashMap<>());
 
-	@Autowired
 	private FhirContext myCtx;
 
 	public IgLoaderFromJpaPackageCache(FilesystemPackageCacheManager packageCacheManager, SimpleWorkerContext context,
@@ -93,6 +95,7 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 		this.myDaoRegistry = myDaoRegistry;
 		this.myBinaryStorageSvc = myBinaryStorageSvc;
 		this.myTxManager = myTxManager;
+		this.myCtx = FhirContext.forCached(FhirVersionEnum.forVersionString(theVersion));
 	}
 
 	@Nonnull
@@ -170,51 +173,62 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 	@Override
 	public void loadIg(List<ImplementationGuide> igs, Map<String, ByteProvider> binaries, String src, boolean recursive)
 			throws IOException, FHIRException {
-		if (src.startsWith("hl7.terminology.")) {
-			// hl7.terminology.r4 and hl7.terminology.r5 are empty IGs that were created to allow depending on
-			// hl7.terminology from both R4 and R5 IGs.
-			final var replace = "hl7.terminology#5.4.0";
-			log.debug("Replacing '{}' with '{}'", src, replace);
-			loadIg(igs, binaries, replace, recursive);
-			return;
-		}
-		if (src.startsWith("hl7.terminology#") && !"hl7.terminology#5.4.0".equals(src)) {
-			// We use a fix version of hl7.terminology (hopefully the most recent)
-			final var replace = "hl7.terminology#5.4.0";
-			log.debug("Replacing '{}' with '{}'", src, replace);
-			loadIg(igs, binaries, replace, recursive);
-			return;
-		}
+
+		switch (FhirVersionEnum.forVersionString(this.getVersion())) {
+			case R4, R4B -> {
+				if (src.startsWith("hl7.terminology.") && !PACKAGE_R4_TERMINOLOGY.equals(src)) {
+					log.debug("Replacing '{}' with '{}'", src, PACKAGE_R4_TERMINOLOGY);
+					loadIg(igs, binaries, PACKAGE_R4_TERMINOLOGY, recursive);
+					return;
+				}
+				if (src.startsWith("hl7.terminology#")) {
+					log.debug("Replacing '{}' with '{}'", src, PACKAGE_R4_TERMINOLOGY);
+					loadIg(igs, binaries, PACKAGE_R4_TERMINOLOGY, recursive);
+					return;
+				}
+			}
+			case R5 -> {
+				if (src.startsWith("hl7.terminology.") && !PACKAGE_R5_TERMINOLOGY.equals(src)) {
+					log.debug("Replacing '{}' with '{}'", src, PACKAGE_R5_TERMINOLOGY);
+					loadIg(igs, binaries, PACKAGE_R5_TERMINOLOGY, recursive);
+					return;
+				}
+				if (src.startsWith("hl7.terminology#")) {
+					log.debug("Replacing '{}' with '{}'", src, PACKAGE_R5_TERMINOLOGY);
+					loadIg(igs, binaries, PACKAGE_R5_TERMINOLOGY, recursive);
+					return;
+				}
+			}
+			default -> throw new MatchboxUnsupportedFhirVersionException("IgLoaderFromJpaPackageCache",
+																							 this.myCtx.getVersion().getVersion());
+		};
 		if (src.equals("hl7.fhir.cda#dev")) {
-			final var replace = "hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch";
-			log.info("Replacing 'hl7.fhir.cda#dev' with '{}'", replace);
-			loadIg(igs, binaries, replace, recursive);
+			log.debug("Replacing 'hl7.fhir.cda#dev' with '{}'", PACKAGE_CDA_UV_CORE);
+			loadIg(igs, binaries, PACKAGE_CDA_UV_CORE, recursive);
 			return;
 		}
 		if (src.equals("ch.fhir.ig.ch-epr-term#current")) {
 			final var replace = "ch.fhir.ig.ch-epr-term#2.0.x";
-			log.info("Replacing 'ch.fhir.ig.ch-epr-term#current' with '{}'", replace);
+			log.debug("Replacing 'ch.fhir.ig.ch-epr-term#current' with '{}'", replace);
 			loadIg(igs, binaries, replace, recursive);
 			return;
 		}
 		if ("hl7.fhir.uv.extensions#current".equals(src)) {
-			final var replace = "hl7.fhir.uv.extensions#1.0.0";
-			log.info("Replacing 'hl7.fhir.uv.extensions#current' with '{}'", replace);
-			loadIg(igs, binaries, replace, recursive);
+			log.debug("Replacing 'hl7.fhir.uv.extensions#current' with '{}'", PACKAGE_UV_EXTENSIONS);
+			loadIg(igs, binaries, PACKAGE_UV_EXTENSIONS, recursive);
 			return;
 		}
 		if ("hl7.fhir.uv.extensions.r5#1.0.0".equals(src)) {
-			final var replace = "hl7.fhir.uv.extensions#1.0.0";
-			log.info("Replacing 'hl7.fhir.uv.extensions.r5#1.0.0' with '{}'", replace);
-			loadIg(igs, binaries, replace, recursive);
+			log.debug("Replacing 'hl7.fhir.uv.extensions.r5#1.0.0' with '{}'", PACKAGE_UV_EXTENSIONS);
+			loadIg(igs, binaries, PACKAGE_UV_EXTENSIONS, recursive);
 			return;
 		}
 		if (getContext().getLoadedPackages().contains(src)) {
-			log.info("Package '{}' already in context", src);
+			log.debug("Package '{}' already in context", src);
 			return;
 		}
 		if (this.getVersion()!=null && getVersion().equals("5.0.0") && (src.startsWith("hl7.fhir.r4.core") || src.startsWith("hl7.fhir.uv.extensions.r4")) ) {
-			log.info("do not load r4 in a r5 context: '{}'", src);
+			log.debug("do not load r4 in a r5 context: '{}'", src);
 			return;
 		}
 		new TransactionTemplate(myTxManager).execute(tx -> {
@@ -230,7 +244,7 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 				return null;
 			}
 			for (final String dependency : npm.dependencies()) {
-				if (id.startsWith("hl7.terminology#5.4.0")) {
+				if (id.startsWith("hl7.terminology")) {
 					// FHIR Core should be loaded manually, see MatchboxEngineSupport.getMatchboxEngineNotSynchronized()
 					log.info("Ignoring dependency '{}' for '{}'", dependency, id);
 					continue;
@@ -248,7 +262,7 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 			Optional<NpmPackageVersionEntity> npmPackage = myNpmPackageVersionDao.findByPackageIdAndVersion(id, version);
 			if (npmPackage.isPresent()) {
 				int count = 0;
-				log.info("Loading package " + src);
+				log.debug("Loading package " + src);
 
 				// this way we have 0.5 seconds per 100 resources (eg hl7.fhir.r4.core has 15 seconds for 3128 resources)
 				NpmPackage pi = this.loadPackage(npmPackage.get());

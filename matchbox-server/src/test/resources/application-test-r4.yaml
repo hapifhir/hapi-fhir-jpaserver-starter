@@ -14,9 +14,9 @@ hapi:
         version: 1.0.0
         url: classpath:/hl7.fhir.uv.extensions.r4#1.0.0.tgz
       fhir_terminology:
-        name: hl7.terminology
-        version: 5.4.0
-        url: classpath:/hl7.terminology#5.4.0.tgz
+        name: hl7.terminology.r4
+        version: 6.1.0
+        url: classpath:/hl7.terminology.r4#6.1.0.tgz
       matchbox_health_test_ig_r4:
         name: matchbox.health.test.ig.r4
         version: 0.1.0

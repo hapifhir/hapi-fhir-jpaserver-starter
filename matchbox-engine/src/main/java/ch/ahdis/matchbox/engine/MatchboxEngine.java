@@ -68,7 +68,6 @@ import org.hl7.fhir.r5.utils.validation.IResourceValidator;
 import org.hl7.fhir.r5.utils.validation.constants.ReferenceValidationPolicy;
 import org.hl7.fhir.utilities.ByteProvider;
 import org.hl7.fhir.utilities.FhirPublication;
-import org.hl7.fhir.utilities.TimeTracker;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.utilities.json.model.JsonObject;
@@ -98,6 +97,14 @@ import ch.ahdis.matchbox.mappinglanguage.TransformSupportServices;
  *
  */
 public class MatchboxEngine extends ValidationEngine {
+
+	// Current packages that are provided with Matchbox Engine
+	public static final String PACKAGE_R4_TERMINOLOGY = "hl7.terminology.r4#6.1.0";
+	public static final String PACKAGE_R5_TERMINOLOGY = "hl7.terminology.r5#6.1.0";
+	public static final String PACKAGE_R4_UV_EXTENSIONS = "hl7.fhir.uv.extensions.r4#1.0.0";
+	public static final String PACKAGE_UV_EXTENSIONS = "hl7.fhir.uv.extensions#1.0.0";
+	public static final String PACKAGE_R4_UV_XVER = "hl7.fhir.uv.xver#0.1.0@mb";
+	public static final String PACKAGE_CDA_UV_CORE = "hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch";
 
 	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MatchboxEngine.class);
 
@@ -273,15 +280,11 @@ public class MatchboxEngine extends ValidationEngine {
 			log.info("loaded hl7.fhir.r4.core#4.0.1");
 			engine.setVersion(FhirPublication.R4.toCode());
 			try {
-				engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.4.0.tgz"));
-				log.info("loaded hl7.terminology#5.4.0");
-				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions.r4#1.0.0.tgz"));
-				log.info("loaded hl7.fhir.uv.extensions.r4");
+				engine.loadPackage(getClass().getResourceAsStream("/%s.tgz".formatted(PACKAGE_R4_TERMINOLOGY)));
+				engine.loadPackage(getClass().getResourceAsStream("/%s.tgz".formatted(PACKAGE_R4_UV_EXTENSIONS)));
 				if (this.withXVersion) {
 					removeStructureMaps(engine);
-					log.info("removed maps");
-					engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.xver#0.1.0@mb.tgz"));
-					log.info("loaded xversion");
+					engine.loadPackage(getClass().getResourceAsStream("/%s.tgz".formatted(PACKAGE_R4_UV_XVER)));
 				}
 			} catch (final IOException e) {
 				throw new IgLoadException(e);
@@ -320,11 +323,11 @@ public class MatchboxEngine extends ValidationEngine {
 			catch (final Exception e) { throw new MatchboxEngineCreationException(e); } 
 			engine.setVersion(FhirPublication.R4B.toCode());
 			try {
-				engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.4.0.tgz"));
-				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions.r4#1.0.0.tgz"));
+				engine.loadPackage(getClass().getResourceAsStream("/%s.tgz".formatted(PACKAGE_R4_TERMINOLOGY)));
+				engine.loadPackage(getClass().getResourceAsStream("/%s.tgz".formatted(PACKAGE_R4_UV_EXTENSIONS)));
 				if (this.withXVersion) {
 					removeStructureMaps(engine);
-					engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.xver#0.1.0@mb.tgz"));
+					engine.loadPackage(getClass().getResourceAsStream("/%s.tgz".formatted(PACKAGE_R4_UV_XVER)));
 				}
 			} catch (final IOException e) {
 				throw new IgLoadException(e);
@@ -349,7 +352,7 @@ public class MatchboxEngine extends ValidationEngine {
 		}
 		
 		/**
-		 * remove old StructureMaps from the context, especially from hl7.fhir.uv.extensions.r4#1.0.0 which are replaced by newer versions
+		 * remove old StructureMaps from the context, especially from PACKAGE_R4_UV_EXTENSIONS which are replaced by newer versions
 		 * @param engine
 		 */
 		public void removeStructureMaps(MatchboxEngine engine) {
@@ -373,11 +376,11 @@ public class MatchboxEngine extends ValidationEngine {
 			catch (final Exception e) { throw new MatchboxEngineCreationException(e); } 
 			engine.setVersion(FhirPublication.R5.toCode());
 			try {
-				engine.loadPackage(getClass().getResourceAsStream("/hl7.terminology#5.4.0.tgz"));
-				engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.extensions#1.0.0.tgz"));
+				engine.loadPackage(getClass().getResourceAsStream("/%s.tgz".formatted(PACKAGE_R5_TERMINOLOGY)));
+				engine.loadPackage(getClass().getResourceAsStream("/%s.tgz".formatted(PACKAGE_UV_EXTENSIONS)));
 				if (this.withXVersion) {
 					removeStructureMaps(engine);
-					engine.loadPackage(getClass().getResourceAsStream("/hl7.fhir.uv.xver#0.1.0@mb.tgz"));
+					engine.loadPackage(getClass().getResourceAsStream("/%s.tgz".formatted(PACKAGE_R4_UV_XVER)));
 				}
 			} catch (final IOException e) {
 				throw new IgLoadException(e);
