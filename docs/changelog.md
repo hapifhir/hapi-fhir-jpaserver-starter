@@ -8,6 +8,7 @@ Unreleased
   [#306](https://github.com/ahdis/matchbox/issues/306)
 - Add filtering to the list of StructureMaps in the GUI
 - Move from the hash-based Angular routing to the path-based routing
+- Upgrade hapifhir org.hl7.fhir.core to 6.4.2
 
 2024/11/13 Release 3.9.7
 

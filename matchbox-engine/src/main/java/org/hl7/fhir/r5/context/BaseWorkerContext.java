@@ -136,6 +136,7 @@ import org.hl7.fhir.r5.terminologies.client.TerminologyClientContext;
 import org.hl7.fhir.r5.utils.PackageHackerR5;
 import org.hl7.fhir.r5.utils.ResourceUtilities;
 import org.hl7.fhir.r5.utils.ToolingExtensions;
+import org.hl7.fhir.r5.utils.UserDataNames;
 import org.hl7.fhir.r5.utils.client.EFhirClientException;
 import org.hl7.fhir.r5.utils.validation.ValidationContextCarrier;
 import org.hl7.fhir.utilities.FhirPublication;
@@ -1132,7 +1133,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
         } else {
           be.getRequest().setUrl("CodeSystem/$validate-code");
         }
-        be.setUserData("source", codingValidationRequest);
+        be.setUserData(UserDataNames.TX_REQUEST, codingValidationRequest);
         systems.add(codingValidationRequest.getCoding().getSystem());
         findRelevantSystems(systems, codingValidationRequest.getCoding());
       }
@@ -1142,7 +1143,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       TerminologyClientContext tc = terminologyClientManager.chooseServer(vs, systems, false);
       Bundle resp = processBatch(tc, batch, systems);      
       for (int i = 0; i < batch.getEntry().size(); i++) {
-        CodingValidationRequest t = (CodingValidationRequest) batch.getEntry().get(i).getUserData("source");
+        CodingValidationRequest t = (CodingValidationRequest) batch.getEntry().get(i).getUserData(UserDataNames.TX_REQUEST);
         BundleEntryComponent r = resp.getEntry().get(i);
 
         if (r.getResource() instanceof Parameters) {
@@ -1240,7 +1241,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
         } else {
           be.getRequest().setUrl("CodeSystem/$validate-code");
         }
-        be.setUserData("source", codingValidationRequest);
+        be.setUserData(UserDataNames.TX_REQUEST, codingValidationRequest);
         systems.add(codingValidationRequest.getCoding().getSystem());
       }
     }
@@ -1249,7 +1250,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     if (batch.getEntry().size() > 0) {
       Bundle resp = processBatch(tc, batch, systems);      
       for (int i = 0; i < batch.getEntry().size(); i++) {
-        CodingValidationRequest t = (CodingValidationRequest) batch.getEntry().get(i).getUserData("source");
+        CodingValidationRequest t = (CodingValidationRequest) batch.getEntry().get(i).getUserData(UserDataNames.TX_REQUEST);
         BundleEntryComponent r = resp.getEntry().get(i);
 
         if (r.getResource() instanceof Parameters) {
@@ -3298,7 +3299,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
           web = Utilities.pathURL(svs.getServer(), "ValueSet", svs.getVs().getIdBase());
         }
         svs.getVs().setWebPath(web);
-        svs.getVs().setUserData("External.Link", svs.getServer()); // so we can render it differently
+        svs.getVs().setUserData(UserDataNames.render_external_link, svs.getServer()); // so we can render it differently
       }      
       if (svs == null) {
         return null;
@@ -3320,7 +3321,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
           web = Utilities.pathURL(scs.getServer(), "ValueSet", scs.getCs().getIdBase());
         }
         scs.getCs().setWebPath(web);
-        scs.getCs().setUserData("External.Link", scs.getServer()); // so we can render it differently
+        scs.getCs().setUserData(UserDataNames.render_external_link, scs.getServer()); // so we can render it differently
       }      
       if (scs == null) {
         return null;

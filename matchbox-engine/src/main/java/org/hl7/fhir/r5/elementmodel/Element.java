@@ -54,6 +54,7 @@ import org.hl7.fhir.r5.model.TypeConvertor;
 import org.hl7.fhir.r5.model.ValueSet.ValueSetExpansionContainsComponent;
 import org.hl7.fhir.r5.terminologies.expansion.ValueSetExpansionOutcome;
 import org.hl7.fhir.r5.utils.ToolingExtensions;
+import org.hl7.fhir.r5.utils.UserDataNames;
 import org.hl7.fhir.utilities.ElementDecoration;
 import org.hl7.fhir.utilities.ElementDecoration.DecorationType;
 import org.hl7.fhir.utilities.FhirPublication;
@@ -692,7 +693,7 @@ public class Element extends Base implements NamedItem {
   }
 
 	public void clearDecorations() {
-	  clearUserData("fhir.decorations");
+	  clearUserData(UserDataNames.rendering_xml_decorations);
 	  for (Element e : children) {
 	    e.clearDecorations();	  
 	  }
@@ -700,10 +701,10 @@ public class Element extends Base implements NamedItem {
 	
 	public void markValidation(StructureDefinition profile, ElementDefinition definition) {
 	  @SuppressWarnings("unchecked")
-    List<ElementDecoration> decorations = (List<ElementDecoration>) getUserData("fhir.decorations");
+    List<ElementDecoration> decorations = (List<ElementDecoration>) getUserData(UserDataNames.rendering_xml_decorations);
 	  if (decorations == null) {
 	    decorations = new ArrayList<>();
-	    setUserData("fhir.decorations", decorations);
+	    setUserData(UserDataNames.rendering_xml_decorations, decorations);
 	  }
 	  decorations.add(new ElementDecoration(DecorationType.TYPE, profile.getWebPath(), definition.getPath()));
 	  if (definition.getId() != null && tail(definition.getId()).contains(":")) {

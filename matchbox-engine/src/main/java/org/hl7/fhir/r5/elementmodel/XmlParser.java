@@ -66,6 +66,7 @@ import org.hl7.fhir.r5.model.ElementDefinition.PropertyRepresentation;
 import org.hl7.fhir.r5.model.Enumeration;
 import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.utils.ToolingExtensions;
+import org.hl7.fhir.r5.utils.UserDataNames;
 import org.hl7.fhir.r5.utils.formats.XmlLocationAnnotator;
 import org.hl7.fhir.r5.utils.formats.XmlLocationData;
 import org.hl7.fhir.utilities.ElementDecoration;
@@ -817,7 +818,7 @@ public class XmlParser extends ParserBase {
     if (!(isElideElements() && element.isElided())) {
       if (showDecorations) {
         @SuppressWarnings("unchecked")
-        List<ElementDecoration> decorations = (List<ElementDecoration>) element.getUserData("fhir.decorations");
+        List<ElementDecoration> decorations = (List<ElementDecoration>) element.getUserData(UserDataNames.rendering_xml_decorations);
         if (decorations != null)
           for (ElementDecoration d : decorations)
             xml.decorate(d);

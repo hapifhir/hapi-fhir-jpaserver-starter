@@ -69,6 +69,7 @@ import org.hl7.fhir.r5.renderers.TerminologyRenderer;
 import org.hl7.fhir.r5.terminologies.expansion.ValueSetExpansionOutcome;
 import org.hl7.fhir.r5.terminologies.utilities.ValidationResult;
 import org.hl7.fhir.r5.utils.ToolingExtensions;
+import org.hl7.fhir.r5.utils.UserDataNames;
 import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
 import org.hl7.fhir.utilities.FhirPublication;
 import org.hl7.fhir.utilities.Utilities;
@@ -623,7 +624,7 @@ public class StructureMapUtilities {
       b.append("\r\n");
     }
   }
-  
+
   public ITransformerServices getServices() {
     return services;
   }
@@ -1256,8 +1257,8 @@ public class StructureMapUtilities {
             if (services != null)
               res = services.createResource(context.getAppInfo(), res, root);
           }
-          if (tgt.hasUserData("profile"))
-            res.setUserData("profile", tgt.getUserData("profile"));
+          if (tgt.hasUserData(UserDataNames.map_profile))
+            res.setUserData(UserDataNames.map_profile, tgt.getUserData(UserDataNames.map_profile));
           return res;
         case COPY:
           return getParam(vars, tgt.getParameter().get(0));
@@ -1932,7 +1933,7 @@ public class StructureMapUtilities {
       StructureDefinition sd = var.getProperty().getProfileProperty().getStructure();
       ElementDefinition ednew = sd.getDifferential().addElement();
       ednew.setPath(var.getProperty().getProfileProperty().getDefinition().getPath() + "." + pc.getName());
-      ednew.setUserData("slice-name", sliceName);
+      ednew.setUserData(UserDataNames.MAP_slice_name, sliceName); // todo.. why do this?
       ednew.setFixed(fixed);
       for (ProfiledType pt : type.getProfiledTypes()) {
         if (pt.hasBindings())
@@ -2084,7 +2085,7 @@ public class StructureMapUtilities {
     profile.setBaseDefinition(prop.getBaseProperty().getStructure().getUrl());
     profile.setName("Profile for " + profile.getType() + " for " + sliceName);
     profile.setUrl(map.getUrl().replace("StructureMap", "StructureDefinition") + "-" + profile.getType() + suffix);
-    ctxt.setUserData("profile", profile.getUrl()); // then we can easily assign this profile url for validation later when we actually transform
+    ctxt.setUserData(UserDataNames.map_profile, profile.getUrl()); // then we can easily assign this profile url for validation later when we actually transform
     profile.setId(map.getId() + "-" + profile.getType() + suffix);
     profile.setStatus(map.getStatus());
     profile.setExperimental(map.getExperimental());
