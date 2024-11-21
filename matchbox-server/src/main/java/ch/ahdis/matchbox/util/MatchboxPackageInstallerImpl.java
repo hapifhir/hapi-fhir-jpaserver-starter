@@ -9,6 +9,7 @@ import java.util.*;
 
 import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
+import ca.uhn.fhir.jpa.model.entity.NpmPackageVersionResourceEntity;
 import jakarta.annotation.PostConstruct;
 
 import org.hl7.fhir.instance.model.api.*;
@@ -205,8 +206,8 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 			}
 
 
-			// We have installed at least one new package, let's save the StructureDefinition titles in the database
-			ourLog.debug("Updating StructureDefinition titles...");
+			// We have installed at least one new package, let's save the StructureDefinition/StructureMap titles in the database
+			ourLog.debug("Updating StructureDefinition/StructureMap titles...");
 			final var parserR4 = new org.hl7.fhir.r4.formats.JsonParser();
 			final var parserR4B = new org.hl7.fhir.r4b.formats.JsonParser();
 			final var parserR5 = new org.hl7.fhir.r5.formats.JsonParser();
@@ -219,83 +220,167 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 								// The filename has already been modified
 								return;
 							}
-							// we update the canonical version to the package version for StructureDefinitions
-							// https://github.com/ahdis/matchbox/issues/225
-							npmPackageVersionResourceEntity.setCanonicalVersion(npmPackageVersionResourceEntity.getPackageVersion().getVersionId());
-
-							final var sdBinary = MatchboxServerUtils.getBinaryFromId(npmPackageVersionResourceEntity.getResourceBinary().getId(), myDaoRegistry);
-							final byte[] resourceContentsBytes;
-							resourceContentsBytes = MatchboxServerUtils.fetchBlobFromBinary(sdBinary, myBinaryStorageSvc,
-																												 myFhirContext);
-							final String resourceContents = new String(resourceContentsBytes, StandardCharsets.UTF_8);
-							final var title = switch (npmPackageVersionResourceEntity.getFhirVersion()) {
-								case R4 -> {
-									final var sd = (org.hl7.fhir.r4.model.StructureDefinition) parserR4.parse(resourceContents);
-
-									final String sdTitle;
-									if (sd.getTitle() != null) {
-										sdTitle = sd.getTitle();
-									} else {
-										sdTitle = sd.getName();
-									}
-
-									if ("Extension".equals(sd.getType())) {
-										yield SD_EXTENSION_TITLE_PREFIX + sdTitle;
-									} else {
-										yield sdTitle;
-									}
-								}
-								case R4B -> {
-									final var sd = (org.hl7.fhir.r4b.model.StructureDefinition) parserR4B.parse(resourceContents);
-
-									final String sdTitle;
-									if (sd.getTitle() != null) {
-										sdTitle = sd.getTitle();
-									} else {
-										sdTitle = sd.getName();
-									}
-
-									if ("Extension".equals(sd.getType())) {
-										yield SD_EXTENSION_TITLE_PREFIX + sdTitle;
-									} else {
-										yield sdTitle;
-									}
-								}
-								case R5 -> {
-									final var sd = (org.hl7.fhir.r5.model.StructureDefinition) parserR5.parse(resourceContents);
-
-									final String sdTitle;
-									if (sd.getTitle() != null) {
-										sdTitle = sd.getTitle();
-									} else {
-										sdTitle = sd.getName();
-									}
-
-									if ("Extension".equals(sd.getType())) {
-										yield SD_EXTENSION_TITLE_PREFIX + sdTitle;
-									} else {
-										yield sdTitle;
-									}
-								}
-								default -> {
-									ourLog.error("FHIR version not supported for parsing the StructureDefinition");
-									throw new RuntimeException(Msg.code(1305) + "Failed to load package resource " + resourceContents);
-								}
-							};
-
-							// Change the filename for the StructureDefinition title
-							npmPackageVersionResourceEntity.setFilename(title);
+							this.updateStructureDefinitionEntity(npmPackageVersionResourceEntity, parserR4, parserR4B, parserR5);
 							this.myPackageVersionResourceDao.save(npmPackageVersionResourceEntity);
 						} catch (final IOException e) {
 							ourLog.error("Unable to extract the StructureDefinition title", e);
 						}
 				});
+				this.myPackageVersionResourceDao.findByResourceType(page, "StructureMap")
+					.forEach(npmPackageVersionResourceEntity -> {
+						try {
+							if (npmPackageVersionResourceEntity.getFilename() != null && !npmPackageVersionResourceEntity.getFilename().endsWith(".json")) {
+								// The filename has already been modified
+								return;
+							}
+							this.updateStructureMapEntity(npmPackageVersionResourceEntity, parserR4, parserR4B, parserR5);
+							this.myPackageVersionResourceDao.save(npmPackageVersionResourceEntity);
+						} catch (final IOException e) {
+							ourLog.error("Unable to extract the StructureMap title", e);
+						}
+					});
 				return null;
 			});
-			ourLog.debug("Updating StructureDefinition titles... Done");
+			ourLog.debug("Updating StructureDefinition/StructureMap titles... Done");
 		}
 
 		return retVal;
+	}
+
+	/**
+	 * Updates the NpmPackageVersionResourceEntity of a StructureDefinition:
+	 * <ol>
+	 *    <li>entity.myFilename now contains the StructureDefinition.title or StructureDefinition.name</li>
+	 *    <li>entity.myCanonicalVersion now contains the StructureDefinition package version</li>
+	 * </ol>
+	 */
+	private void updateStructureDefinitionEntity(final NpmPackageVersionResourceEntity npmPackageVersionResourceEntity,
+																final org.hl7.fhir.r4.formats.JsonParser parserR4,
+																final org.hl7.fhir.r4b.formats.JsonParser parserR4B,
+																final org.hl7.fhir.r5.formats.JsonParser parserR5) throws IOException {
+		// we update the canonical version to the package version for StructureDefinitions
+		// https://github.com/ahdis/matchbox/issues/225
+		npmPackageVersionResourceEntity.setCanonicalVersion(npmPackageVersionResourceEntity.getPackageVersion().getVersionId());
+
+		final var sdBinary = MatchboxServerUtils.getBinaryFromId(npmPackageVersionResourceEntity.getResourceBinary().getId(), myDaoRegistry);
+		final byte[] resourceContentsBytes;
+		resourceContentsBytes = MatchboxServerUtils.fetchBlobFromBinary(sdBinary, myBinaryStorageSvc,
+																							 myFhirContext);
+		final String resourceContents = new String(resourceContentsBytes, StandardCharsets.UTF_8);
+		final var title = switch (npmPackageVersionResourceEntity.getFhirVersion()) {
+			case R4 -> {
+				final var sd = (org.hl7.fhir.r4.model.StructureDefinition) parserR4.parse(resourceContents);
+
+				final String sdTitle;
+				if (sd.getTitle() != null) {
+					sdTitle = sd.getTitle();
+				} else {
+					sdTitle = sd.getName();
+				}
+
+				if ("Extension".equals(sd.getType())) {
+					yield SD_EXTENSION_TITLE_PREFIX + sdTitle;
+				} else {
+					yield sdTitle;
+				}
+			}
+			case R4B -> {
+				final var sd = (org.hl7.fhir.r4b.model.StructureDefinition) parserR4B.parse(resourceContents);
+
+				final String sdTitle;
+				if (sd.getTitle() != null) {
+					sdTitle = sd.getTitle();
+				} else {
+					sdTitle = sd.getName();
+				}
+
+				if ("Extension".equals(sd.getType())) {
+					yield SD_EXTENSION_TITLE_PREFIX + sdTitle;
+				} else {
+					yield sdTitle;
+				}
+			}
+			case R5 -> {
+				final var sd = (org.hl7.fhir.r5.model.StructureDefinition) parserR5.parse(resourceContents);
+
+				final String sdTitle;
+				if (sd.getTitle() != null) {
+					sdTitle = sd.getTitle();
+				} else {
+					sdTitle = sd.getName();
+				}
+
+				if ("Extension".equals(sd.getType())) {
+					yield SD_EXTENSION_TITLE_PREFIX + sdTitle;
+				} else {
+					yield sdTitle;
+				}
+			}
+			default -> {
+				ourLog.error("FHIR version not supported for parsing the StructureDefinition");
+				throw new RuntimeException(Msg.code(1305) + "Failed to load package resource " + resourceContents);
+			}
+		};
+
+		// Change the filename for the StructureDefinition title
+		npmPackageVersionResourceEntity.setFilename(title);
+	}
+
+	/**
+	 * Updates the NpmPackageVersionResourceEntity of a StructureMap:
+	 * <ol>
+	 *    <li>entity.myFilename now contains the StructureMap.title or StructureMap.name</li>
+	 * </ol>
+	 */
+	private void updateStructureMapEntity(final NpmPackageVersionResourceEntity npmPackageVersionResourceEntity,
+													  final org.hl7.fhir.r4.formats.JsonParser parserR4,
+													  final org.hl7.fhir.r4b.formats.JsonParser parserR4B,
+													  final org.hl7.fhir.r5.formats.JsonParser parserR5) throws IOException {
+		final var smBinary =
+			MatchboxServerUtils.getBinaryFromId(npmPackageVersionResourceEntity.getResourceBinary().getId(), myDaoRegistry);
+		final byte[] resourceContentsBytes;
+		resourceContentsBytes = MatchboxServerUtils.fetchBlobFromBinary(smBinary, myBinaryStorageSvc,
+																							 myFhirContext);
+		final String resourceContents = new String(resourceContentsBytes, StandardCharsets.UTF_8);
+		final var title = switch (npmPackageVersionResourceEntity.getFhirVersion()) {
+			case R4 -> {
+				final var sm = (org.hl7.fhir.r4.model.StructureMap) parserR4.parse(resourceContents);
+				final String smTitle;
+				if (sm.getTitle() != null) {
+					smTitle = sm.getTitle();
+				} else {
+					smTitle = sm.getName();
+				}
+				yield smTitle;
+			}
+			case R4B -> {
+				final var sm = (org.hl7.fhir.r4b.model.StructureMap) parserR4B.parse(resourceContents);
+				final String smTitle;
+				if (sm.getTitle() != null) {
+					smTitle = sm.getTitle();
+				} else {
+					smTitle = sm.getName();
+				}
+				yield smTitle;
+			}
+			case R5 -> {
+				final var sm = (org.hl7.fhir.r5.model.StructureMap) parserR5.parse(resourceContents);
+				final String smTitle;
+				if (sm.getTitle() != null) {
+					smTitle = sm.getTitle();
+				} else {
+					smTitle = sm.getName();
+				}
+				yield smTitle;
+			}
+			default -> {
+				ourLog.error("FHIR version not supported for parsing the StructureMap");
+				throw new RuntimeException(Msg.code(1305) + "Failed to load package resource " + resourceContents);
+			}
+		};
+
+		// Change the filename for the StructureDefinition title
+		npmPackageVersionResourceEntity.setFilename(title);
 	}
 
 	private void fetchAndInstallDependencies(NpmPackage npmPackage, PackageInstallationSpec theInstallationSpec, PackageInstallOutcomeJson theOutcome) throws ImplementationGuideInstallationException {

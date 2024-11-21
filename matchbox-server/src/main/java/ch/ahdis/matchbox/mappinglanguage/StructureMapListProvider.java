@@ -2,6 +2,7 @@ package ch.ahdis.matchbox.mappinglanguage;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
+import ca.uhn.fhir.jpa.model.entity.NpmPackageVersionResourceEntity;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
@@ -46,7 +47,6 @@ public class StructureMapListProvider extends StructureMapResourceProvider {
 		final var resources = new TransactionTemplate(this.myTxManager)
 			.execute(tx -> this.npmPackageVersionResourceDao.getStructureMapResources())
 			.stream()
-			.map(this::loadPackageEntityAdjustId)
 			.map(this::summarizeStructureMap)
 			.toList();
 
@@ -65,39 +65,11 @@ public class StructureMapListProvider extends StructureMapResourceProvider {
 		};
 	}
 
-	private StructureMap summarizeStructureMap(final IBaseResource structureMapBase) {
-		final StructureMap structureMap = switch (structureMapBase) {
-			case final org.hl7.fhir.r4.model.StructureMap structureMapR4 ->
-				(StructureMap) VersionConvertorFactory_40_50.convertResource(structureMapR4);
-			case final org.hl7.fhir.r4b.model.StructureMap structureMapR4B ->
-				(StructureMap) VersionConvertorFactory_43_50.convertResource(structureMapR4B);
-			case final StructureMap structureMapR5 -> structureMapR5;
-			default -> throw new MatchboxUnsupportedFhirVersionException("StructureMapListProvider",
-																							 structureMapBase.getStructureFhirVersionEnum());
-		};
-
-		structureMap.setText(null);
-		structureMap.setContained(null);
-		structureMap.setExtension(null);
-		structureMap.setModifierExtension(null);
-		structureMap.setIdentifier(null);
-		structureMap.setVersionAlgorithm(null);
-		structureMap.setStatus(null);
-		structureMap.setExperimentalElement(null);
-		structureMap.setDate(null);
-		structureMap.setPublisher(null);
-		structureMap.setContact(null);
-		structureMap.setDescription(null);
-		structureMap.setUseContext(null);
-		structureMap.setJurisdiction(null);
-		structureMap.setPurpose(null);
-		structureMap.setCopyright(null);
-		structureMap.setCopyrightLabel(null);
-		structureMap.setStructure(null);
-		structureMap.setImport(null);
-		structureMap.setConst(null);
-		structureMap.setGroup(null);
-
+	private StructureMap summarizeStructureMap(final NpmPackageVersionResourceEntity entity) {
+		final StructureMap structureMap = new StructureMap();
+		structureMap.setTitle(entity.getFilename());
+		structureMap.setUrl(entity.getCanonicalUrl());
+		structureMap.setVersion(entity.getCanonicalVersion());
 		return structureMap;
 	}
 }
