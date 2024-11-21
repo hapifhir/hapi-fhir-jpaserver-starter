@@ -280,11 +280,11 @@ public class MatchboxEngine extends ValidationEngine {
 			log.info("loaded hl7.fhir.r4.core#4.0.1");
 			engine.setVersion(FhirPublication.R4.toCode());
 			try {
-				engine.loadPackage(getClass().getResourceAsStream("/%s.tgz".formatted(PACKAGE_R4_TERMINOLOGY)));
-				engine.loadPackage(getClass().getResourceAsStream("/%s.tgz".formatted(PACKAGE_R4_UV_EXTENSIONS)));
+				engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_TERMINOLOGY));
+				engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_UV_EXTENSIONS));
 				if (this.withXVersion) {
 					removeStructureMaps(engine);
-					engine.loadPackage(getClass().getResourceAsStream("/%s.tgz".formatted(PACKAGE_R4_UV_XVER)));
+					engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_UV_XVER));
 				}
 			} catch (final IOException e) {
 				throw new IgLoadException(e);
@@ -323,11 +323,11 @@ public class MatchboxEngine extends ValidationEngine {
 			catch (final Exception e) { throw new MatchboxEngineCreationException(e); } 
 			engine.setVersion(FhirPublication.R4B.toCode());
 			try {
-				engine.loadPackage(getClass().getResourceAsStream("/%s.tgz".formatted(PACKAGE_R4_TERMINOLOGY)));
-				engine.loadPackage(getClass().getResourceAsStream("/%s.tgz".formatted(PACKAGE_R4_UV_EXTENSIONS)));
+				engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_TERMINOLOGY));
+				engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_UV_EXTENSIONS));
 				if (this.withXVersion) {
 					removeStructureMaps(engine);
-					engine.loadPackage(getClass().getResourceAsStream("/%s.tgz".formatted(PACKAGE_R4_UV_XVER)));
+					engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_UV_XVER));
 				}
 			} catch (final IOException e) {
 				throw new IgLoadException(e);
@@ -376,11 +376,11 @@ public class MatchboxEngine extends ValidationEngine {
 			catch (final Exception e) { throw new MatchboxEngineCreationException(e); } 
 			engine.setVersion(FhirPublication.R5.toCode());
 			try {
-				engine.loadPackage(getClass().getResourceAsStream("/%s.tgz".formatted(PACKAGE_R5_TERMINOLOGY)));
-				engine.loadPackage(getClass().getResourceAsStream("/%s.tgz".formatted(PACKAGE_UV_EXTENSIONS)));
+				engine.loadPackage(this.getNpmPackageStream(PACKAGE_R5_TERMINOLOGY));
+				engine.loadPackage(this.getNpmPackageStream(PACKAGE_UV_EXTENSIONS));
 				if (this.withXVersion) {
 					removeStructureMaps(engine);
-					engine.loadPackage(getClass().getResourceAsStream("/%s.tgz".formatted(PACKAGE_R4_UV_XVER)));
+					engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_UV_XVER));
 				}
 			} catch (final IOException e) {
 				throw new IgLoadException(e);
@@ -475,6 +475,11 @@ public class MatchboxEngine extends ValidationEngine {
 			} catch (final IOException e) {
 				throw new MatchboxEngineCreationException(e);
 			}
+		}
+
+		@NonNull
+		private InputStream getNpmPackageStream(final String packageName) {
+			return Objects.requireNonNull(getClass().getResourceAsStream("/%s.tgz".formatted(packageName)));
 		}
 	}
 
