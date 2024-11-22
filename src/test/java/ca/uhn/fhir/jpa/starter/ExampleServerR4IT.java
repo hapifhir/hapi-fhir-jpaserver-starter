@@ -69,6 +69,7 @@ import static org.opencds.cqf.fhir.utility.r4.Parameters.stringPart;
 	"hapi.fhir.cr.enabled=true",
 	"hapi.fhir.cr.caregaps.section_author=Organization/alphora-author",
 	"hapi.fhir.cr.caregaps.reporter=Organization/alphora",
+	"hapi.fhir.cr.cql.data.search_parameter_mode=USE_SEARCH_PARAMETERS",
 	"hapi.fhir.implementationguides.dk-core.name=hl7.fhir.dk.core",
 	"hapi.fhir.implementationguides.dk-core.version=1.1.0",
 	"hapi.fhir.auto_create_placeholder_reference_targets=true",
