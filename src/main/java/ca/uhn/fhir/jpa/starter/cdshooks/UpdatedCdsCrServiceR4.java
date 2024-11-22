@@ -2,7 +2,7 @@ package ca.uhn.fhir.jpa.starter.cdshooks;
 
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsConfigService;
-import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServiceRequestJson;
+import ca.uhn.fhir.rest.api.server.cdshooks.CdsServiceRequestJson;
 import ca.uhn.hapi.fhir.cdshooks.svc.cr.CdsCrServiceR4;
 import org.hl7.fhir.r4.model.BooleanType;
 import org.hl7.fhir.r4.model.Parameters;
