@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 :host {
   display: flex;
   flex-direction: column;
@@ -46,7 +48,7 @@
     }
 
     &.file-over {
-      background: darken(#f0f3f6, 5%);
+      background: color.scale(#f0f3f6, $lightness: -5%);
     }
 
     .spacer {

@@ -5,9 +5,10 @@ import packageJson from '../../package.json';
 import {HashUrlRedirectionService} from "./util/hash-url-redirection-service";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    standalone: false
 })
 export class AppComponent {
   public version: string = packageJson.version;

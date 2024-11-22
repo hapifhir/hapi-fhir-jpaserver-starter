@@ -1,12 +1,13 @@
 @use '@angular/material' as mat;
-@import '_variables';
-@import 'highlight.js/styles/github.css';
-@import 'ngx-toastr/toastr';
+@use 'variables';
+@use 'highlight.js/styles/github.css';
+@use 'ngx-toastr/toastr';
+@use "sass:map";
 
 @include mat.core();
-@include mat.core-theme($theme);
-@include mat.all-component-themes($theme);
-@include mat.all-component-typographies($theme);
+@include mat.core-theme(variables.$theme);
+@include mat.all-component-themes(variables.$theme);
+@include mat.all-component-typographies(variables.$theme);
 
 body {
   background: #e2e7ea;
@@ -20,7 +21,7 @@ body {
   }
 }
 
-$primary: map-get($theme, primary);
+$primary: map.get(variables.$theme, primary);
 $outer-space: 1.5rem;
 
 .mat-card.primary {

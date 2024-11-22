@@ -6,9 +6,10 @@ import FhirClient from 'fhir-kit-client';
 import debug from 'debug';
 
 @Component({
-  selector: 'app-mapping-language',
-  templateUrl: './mapping-language.component.html',
-  styleUrls: ['./mapping-language.component.scss'],
+    selector: 'app-mapping-language',
+    templateUrl: './mapping-language.component.html',
+    styleUrls: ['./mapping-language.component.scss'],
+    standalone: false
 })
 export class MappingLanguageComponent implements OnInit {
   static log = debug('app:');

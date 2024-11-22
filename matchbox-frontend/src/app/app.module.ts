@@ -1,7 +1,7 @@
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import {APP_INITIALIZER, NgModule} from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AppComponent } from './app.component';
 import { CapabilityStatementComponent } from './capability-statement/capability-statement.component';
@@ -17,11 +17,11 @@ import { OperationResultComponent } from './operation-result/operation-result.co
 import { UploadComponent } from './upload/upload.component';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import {HighlightLineNumbers} from "ngx-highlightjs/line-numbers";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {ToastrModule} from "ngx-toastr";
-import {HashUrlRedirectionService} from "./util/hash-url-redirection-service";
-import {APP_BASE_HREF} from "@angular/common";
+import { HighlightLineNumbers } from 'ngx-highlightjs/line-numbers';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
+import { HashUrlRedirectionService } from './util/hash-url-redirection-service';
+import { APP_BASE_HREF } from '@angular/common';
 
 // The Angular routes
 // All paths defined here must be supported in matchbox-server's MatchboxStaticResourceConfig, otherwise a direct access
@@ -81,13 +81,6 @@ export function createTranslateLoader(http: HttpClient) {
     RouterModule.forRoot(routes, {
       useHash: false, // Move from HashLocationStrategy to PathLocationStrategy
     }),
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: createTranslateLoader,
-        deps: [HttpClient],
-      },
-    }),
     OAuthModule.forRoot(),
     NgxMatSelectSearchModule,
     HighlightLineNumbers,
@@ -95,6 +88,13 @@ export function createTranslateLoader(http: HttpClient) {
     ToastrModule.forRoot(),
   ],
   providers: [
+    provideTranslateService({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: createTranslateLoader,
+        deps: [HttpClient],
+      },
+    }),
     {
       provide: HIGHLIGHT_OPTIONS,
       useValue: {
@@ -108,7 +108,7 @@ export function createTranslateLoader(http: HttpClient) {
     },
     provideHttpClient(withInterceptorsFromDi()),
     HashUrlRedirectionService,
-    {provide: APP_BASE_HREF, useValue: (window as any).MATCHBOX_BASE_PATH}
+    { provide: APP_BASE_HREF, useValue: (window as any).MATCHBOX_BASE_PATH },
   ],
 })
 export class AppModule {}

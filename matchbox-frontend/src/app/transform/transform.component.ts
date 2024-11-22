@@ -10,9 +10,10 @@ import OperationOutcome = fhir.r4.OperationOutcome;
 import Bundle = fhir.r4.Bundle;
 
 @Component({
-  selector: 'app-transform',
-  templateUrl: './transform.component.html',
-  styleUrls: ['./transform.component.scss'],
+    selector: 'app-transform',
+    templateUrl: './transform.component.html',
+    styleUrls: ['./transform.component.scss'],
+    standalone: false
 })
 export class TransformComponent {
   // The list of all structure maps, as advertised by the server
@@ -60,7 +61,9 @@ export class TransformComponent {
 
     this.structureMapControl.valueChanges
       .pipe(debounceTime(400), distinctUntilChanged())
-      .subscribe((url) => (this.map = { canonical: url }));
+      .subscribe((url) => {
+        this.map = { canonical: url };
+      });
 
     // Listen for changes in the filter text
     this.structureMapFilterControl.valueChanges.subscribe(() => this.filterStructureMaps());
@@ -94,7 +97,6 @@ export class TransformComponent {
           'valueString': this.model,
         });
       }
-      console.log(payload);
 
       this.client
         .operation({
@@ -162,21 +164,18 @@ export class TransformComponent {
   }
 
   protected filterStructureMaps() {
-    console.log('filtering');
     if (!this.allStructureMaps || this.allStructureMaps.length === 0) {
-      console.log('return early');
       return;
     }
     // get the search keyword
     let search = this.structureMapFilterControl.value;
     if (!search) {
       this.filteredStructureMaps.next(this.allStructureMaps.slice());
-      console.log('no search');
       return;
     }
     search = search.toLowerCase();
     this.filteredStructureMaps.next(
-      this.allStructureMaps.filter((structureMap) => structureMap.name.toLowerCase().indexOf(search) > -1)
+      this.allStructureMaps.filter((structureMap) => structureMap.title.toLowerCase().indexOf(search) > -1)
     );
   }
 }

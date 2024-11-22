@@ -6,9 +6,10 @@ import { FhirPathService } from '../fhirpath.service';
 import {OperationResult} from "../util/operation-result";
 
 @Component({
-  selector: 'app-igs',
-  templateUrl: './igs.component.html',
-  styleUrls: ['./igs.component.scss'],
+    selector: 'app-igs',
+    templateUrl: './igs.component.html',
+    styleUrls: ['./igs.component.scss'],
+    standalone: false
 })
 export class IgsComponent {
   public addPackageId: UntypedFormControl;

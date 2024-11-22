@@ -5,9 +5,10 @@ import {Issue, OperationResult} from "../util/operation-result";
 const SEVERITY_ORDER = ['fatal', 'error', 'warning', 'information'];
 
 @Component({
-  selector: 'app-operation-result',
-  templateUrl: './operation-result.component.html',
-  styleUrls: ['./operation-result.component.scss'],
+    selector: 'app-operation-result',
+    templateUrl: './operation-result.component.html',
+    styleUrls: ['./operation-result.component.scss'],
+    standalone: false
 })
 export class OperationResultComponent implements OnInit {
   @Output() select: EventEmitter<Issue> = new EventEmitter();

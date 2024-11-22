@@ -17,9 +17,10 @@ import {ValidationCodeEditor} from "./validation-code-editor";
 const INDENT_SPACES = 2;
 
 @Component({
-  selector: 'app-validate',
-  templateUrl: './validate.component.html',
-  styleUrls: ['./validate.component.scss'],
+    selector: 'app-validate',
+    templateUrl: './validate.component.html',
+    styleUrls: ['./validate.component.scss'],
+    standalone: false
 })
 export class ValidateComponent implements AfterViewInit {
   readonly AUTO_IG_SELECTION = 'AUTOMATIC';

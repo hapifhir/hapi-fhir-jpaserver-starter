@@ -15,7 +15,7 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": {
-              "base": "dist",
+              "base": "dist"
             },
             "index": "src/index.html",
             "tsConfig": "src/tsconfig.app.json",
@@ -27,7 +27,7 @@
             "browser": "src/main.ts",
             "allowedCommonJsDependencies": [
               "fhirpath", "fhir-kit-client", "js-untar"
-            ]
+            ],
           },
           "configurations": {
             "production": {

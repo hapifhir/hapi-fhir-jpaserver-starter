@@ -7,10 +7,11 @@ export interface IDroppedBlob {
 }
 
 @Component({
-  selector: 'app-upload',
-  templateUrl: './upload.component.html',
-  styleUrls: ['./upload.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-upload',
+    templateUrl: './upload.component.html',
+    styleUrls: ['./upload.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class UploadComponent {
   @Output() addFiles = new EventEmitter<IDroppedBlob>();

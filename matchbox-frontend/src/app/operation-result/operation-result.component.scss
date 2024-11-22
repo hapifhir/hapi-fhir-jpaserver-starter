@@ -1,4 +1,4 @@
-@import '../../_variables';
+@use '../../variables';
 
 .card-maps {
   margin-bottom: 10px;
@@ -35,13 +35,13 @@ ul {
   }
   &.fatal,
   &.error {
-    --color: #{$issue-error};
+    --color: #{variables.$issue-error};
   }
   &.warning {
-    --color: #{$issue-warning};
+    --color: #{variables.$issue-warning};
   }
   &.information {
-    --color: #{$issue-info};
+    --color: #{variables.$issue-info};
   }
 }
 

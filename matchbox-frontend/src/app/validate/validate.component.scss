@@ -1,4 +1,4 @@
-@import '../../_variables';
+@use '../../variables';
 
 :host {
   margin: 0 auto;
@@ -21,7 +21,7 @@ mat-hint {
   color: #7db99e;
 }
 p.error {
-  color: $issue-error;
+  color: variables.$issue-error;
   margin-top: 20px;
   mat-icon {
     vertical-align: middle;
@@ -69,13 +69,13 @@ table {
       vertical-align: bottom;
 
       &.error {
-        color: $issue-error;
+        color: variables.$issue-error;
       }
       &.warning {
-        color: $issue-warning;
+        color: variables.$issue-warning;
       }
       &.info {
-        color: $issue-info;
+        color: variables.$issue-info;
       }
     }
   }
@@ -83,7 +83,7 @@ table {
     mat-icon {
       font-size: 24px;
       &.delete {
-        color: $issue-error;
+        color: variables.$issue-error;
         margin-right: .2em;
       }
       &.copy {
@@ -171,13 +171,13 @@ mat-option {
   display: inline-block;
   font-size: 1.4em;
   margin: 0.3em 1em .6em 0;
-  border-bottom: 3px solid $green-light;
+  border-bottom: 3px solid variables.$green-light;
   cursor: pointer;
   color: #5a5f5c;
   padding-bottom: 2px;
 
   &.active {
-    border-bottom: 3px solid $green-primary;
+    border-bottom: 3px solid variables.$green-primary;
     cursor: default;
     color: #000;
   }

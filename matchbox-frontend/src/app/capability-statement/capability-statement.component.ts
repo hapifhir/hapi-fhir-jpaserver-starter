@@ -9,9 +9,10 @@ import {OperationResult} from "../util/operation-result";
 const INDENT_SPACES = 4;
 
 @Component({
-  selector: 'app-capability-statement',
-  templateUrl: './capability-statement.component.html',
-  styleUrls: ['./capability-statement.component.scss'],
+    selector: 'app-capability-statement',
+    templateUrl: './capability-statement.component.html',
+    styleUrls: ['./capability-statement.component.scss'],
+    standalone: false
 })
 export class CapabilityStatementComponent implements AfterViewInit {
   capabilityStatement: string | null = null;

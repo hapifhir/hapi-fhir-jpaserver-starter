@@ -1,4 +1,6 @@
 @use '@angular/material' as mat;
+@use 'sass:color';
+@use "sass:map";
 
 $md-mcgpalette0: (
   50: #e8ebee,
@@ -63,7 +65,7 @@ $issue-info: #4ca8de;
   );
 }
 
-$theme: map-merge(
+$theme: map.merge(
   mat.m2-define-light-theme((
     color: (
       primary: $my-primary,
@@ -74,6 +76,6 @@ $theme: map-merge(
     density: -1, // https://material.angular.io/guide/theming#customizing-density
   )),
   (
-    foreground: my-mat-light-theme-foreground(darken(#113549, 5%)),
+    foreground: my-mat-light-theme-foreground(color.scale(#113549, $lightness: -5%)),
   )
 );

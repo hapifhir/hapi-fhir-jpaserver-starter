@@ -1,6 +1,6 @@
-<ul *ngIf="result" [ngClass]="{'clickable': this.reactsToClick}">
+<ul *ngIf="result" [ngClass]="{'clickable': reactsToClick}">
   <li *ngFor="let issue of result.issues" class="issue {{ issue.severity }}"
-       (click)="this.select.emit(issue)">
+       (click)="select.emit(issue)">
     <span class="severity">{{ issue.severity }}</span>
     <span [innerHtml]="getTemplateHeaderLine(issue)"></span><br/>
     <p>{{ issue.text }}</p>
