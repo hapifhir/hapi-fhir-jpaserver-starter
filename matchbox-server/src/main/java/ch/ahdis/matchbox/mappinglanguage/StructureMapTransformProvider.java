@@ -148,16 +148,23 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
 					throw new InvalidRequestException("The parameter 'map' must be a StructureMap resource");
 				}
 			}
+
+			if (inputParameters.hasParameter("source")) {
+				source = inputParameters.getParameter("source").getValueStringType().getValueNotNull();
+			}
 		} else {
 			resource = body;
 		}
 
-		final Map<String, String[]> requestParams = theServletRequest.getParameterMap();
-		if (requestParams.containsKey("source") && requestParams.get("source").length > 0) {
-			if (requestParams.get("source").length > 1) {
-				throw new InvalidRequestException("Only one 'source' parameter is allowed");
+		if (source == null) {
+			// If the 'source' was not provided in the Parameters, check the URL query parameters
+			final Map<String, String[]> requestParams = theServletRequest.getParameterMap();
+			if (requestParams.containsKey("source") && requestParams.get("source").length > 0) {
+				if (requestParams.get("source").length > 1) {
+					throw new InvalidRequestException("Only one 'source' parameter is allowed");
+				}
+				source = requestParams.get("source")[0];
 			}
-			source = requestParams.get("source")[0];
 		}
 
 		if (source == null && map == null) {
