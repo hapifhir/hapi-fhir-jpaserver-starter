@@ -8,10 +8,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.resource.EncodedResourceResolver;
-import org.springframework.web.servlet.resource.ResourceResolverChain;
-import org.springframework.web.servlet.resource.ResourceTransformer;
-import org.springframework.web.servlet.resource.ResourceTransformerChain;
+import org.springframework.web.servlet.resource.*;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -37,13 +34,13 @@ public class MatchboxStaticResourceConfig implements WebMvcConfigurer {
 	public MatchboxStaticResourceConfig(@Value("${spring.web.resources.static-locations}") final String staticLocation,
 													@Value("${server.servlet.context-path}") final String contextPath) {
 		this.baseResPath = staticLocation;
-		this.indexHtmlPath = staticLocation.split(":")[1] + "index.html";
+		this.indexHtmlPath = staticLocation.split(":")[1].substring(staticLocation.contains(":/") ? 1 : 0)
+			+ "index.html";
 		this.baseServerPath = contextPath;
 	}
 
 	@Override
 	public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-
 		registry
 			.addResourceHandler("/**")
 			.addResourceLocations(this.baseResPath)
@@ -100,10 +97,11 @@ public class MatchboxStaticResourceConfig implements WebMvcConfigurer {
 				String content = classPathResource.getContentAsString(StandardCharsets.UTF_8);
 
 				// Replace the base path of the server
-				content = content.replace("window.MATCHBOX_BASE_PATH = \"/\"",
-												  "window.MATCHBOX_BASE_PATH = \"%s\"".formatted(this.parent.baseServerPath));
+				content = content.replace("MATCHBOX_BASE_PATH = \"/\"",
+												  "MATCHBOX_BASE_PATH = \"%s\"".formatted(this.parent.baseServerPath));
 
-				return new ByteArrayResource(content.getBytes(StandardCharsets.UTF_8));
+				return new TransformedResource(resource,
+														 content.getBytes(StandardCharsets.UTF_8));
 			}
 
 			return resource;
