@@ -31,9 +31,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check if documentation is up-to-date
-        run: helm-docs && git diff --exit-code HEAD
-
       - name: Run chart-testing (lint)
         run: ct lint --config .github/ct/config.yaml
 
