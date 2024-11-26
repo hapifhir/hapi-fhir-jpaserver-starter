@@ -16,7 +16,10 @@ helm upgrade \
     --set externalDatabase.user="${DB_USER}" \
     --set externalDatabase.password="${DB_PASSWORD}" \
     --set externalDatabase.database="${DB_NAME}" \
-    --version="0.1.0" \
+    --set ingress.hosts[0].host="${DOMAIN_NAME}" \
+    --set ingress.tls[0].hosts[0]="${DOMAIN_NAME}" \
+    --set ingress.tls[0].secretName="letsencrypt-prod" \
+    --version="0.17.3" \
     --wait \
     --timeout 300s \
     -f ../charts/hapi-fhir-jpaserver/values.yaml \

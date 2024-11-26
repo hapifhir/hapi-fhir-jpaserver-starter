@@ -63,14 +63,14 @@ ingress:
     konghq.com/https-redirect-status-code: "308"
     kubernetes.io/ingress.class: kong
   hosts:
-    - host: fhir.test.slade360edi.com
+    - host: ""
       pathType: ImplementationSpecific
       paths: ["/"]
   # -- ingress TLS config
   tls:
-    - secretName: letsencrypt-prod
+    - secretName: ""
       hosts:
-        - fhir.test.slade360edi.com
+        - ""
 
 # -- configure the FHIR server's resource requests and limits
 resources:

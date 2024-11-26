@@ -4,11 +4,11 @@ on: [push]
 
 jobs:
   deploy_to_testing:
-    name: Deploy HAPI FHIR server to testing environment
-    if: ${{ github.ref == 'refs/heads/initial-commit'}}
+    name: Deploy HAPI FHIR server to ${{ matrix.environment }} environment
+    if: ${{ github.ref == 'refs/heads/master'}}
     strategy:
       matrix:
-        environment: [testing]
+        environment: [testing, staging, prod]
 
     runs-on: ubuntu-latest
     environment:
@@ -66,6 +66,7 @@ jobs:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
+          DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
 
         shell: bash
         run: cd deploy/ && cat deploy.sh && sh deploy.sh
