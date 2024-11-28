@@ -508,10 +508,6 @@ public class MatchboxEngineSupport {
 		
 		}
 
-		if (cli.isHttpReadOnly() && cli.isAutoInstallMissingIgs()) {
-			throw new MatchboxEngineCreationException("httpReadOnly and autoInstallMissingIgs are mutually exclusive");
-		}
-
 		validator.setDebug(cli.isDoDebug());
 		validator.getContext().setLogger(new EngineLoggingService());
 

@@ -155,7 +155,7 @@ public class ValidationProvider {
 		}
 
 		// Check if the IG should be auto-installed
-		if (cliContext.isAutoInstallMissingIgs()) {
+		if (!cliContext.isHttpReadOnly()) {
 			this.ensureIgIsInstalled(theRequest.getParameter("ig"), theRequest.getParameter("profile"));
 		}
 

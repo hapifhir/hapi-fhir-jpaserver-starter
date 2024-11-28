@@ -18,3 +18,15 @@ Content-Type: application/gzip
 
 <gzip content of the NPM package>
 ```
+
+## Auto-installation of FHIR packages in the $validate operation
+
+The operation `$validate` will try to install the FHIR package if it is not already installed, if and only if
+`httpReadOnly` is disabled.
+
+The FHIR package to install will be determined by (in the implemented order):
+
+1. The `ig` parameter, if present;
+2. The `profile` parameter. Matchbox will search for IGs that contain that canonical with the
+   [Simplifier API](https://app.swaggerhub.com/apis-docs/firely/Simplifier.net_FHIR_Package_API/1.0.1) and install 
+   the first result.

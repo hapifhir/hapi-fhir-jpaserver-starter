@@ -68,7 +68,6 @@ matchbox:
       #      onlyOneEngine: true
       #      xVersion : false
       #      igsPreloaded: ch.fhir.ig.ch-core#4.0.0-ballot
-      #      autoInstallMissingIgs: true
       suppressWarnInfo:
         hl7.fhir.r4.core#4.0.1:
         #- "Constraint failed: dom-6:"
@@ -86,7 +85,6 @@ matchbox:
 | httpReadOnly          | 0..1  | Whether to allow creating, modifying or deleting resources on the server via the HTTP API or not. If `true`, IGs can only be loaded through the configuration.                                                                                                                                                                                                                                                                                                                    |
 | suppressWarnInfo      | 0..\* | A list of warning message to ignore while validating resources, per Implementation Guide and version.                                                                                                                                                                                                                                                                                                                                                                             |
 | extensions            | 0..1  | Extensions not defined by the ImplementationgGuides which are accepted, comma separted list by url patterns, defaults to 'any'                                                                                                                                                                                                                                                                                                                                                    |
-| autoInstallMissingIgs | 0..1  | Whether to automatically install IGs from the public registry if they are not installed. Default to `false`.                                                                                                                                                                                                                                                                                                                                                                      |
 
 #### Suppress warning/information-level issues in validation
 
