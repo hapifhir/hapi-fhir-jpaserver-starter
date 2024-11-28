@@ -54,6 +54,7 @@ curl 'http://localhost:8080/fhir/$import-poll-status?_jobId=XXXX'
 
 * check the status of the server
 
+Navigate to project root dir to run docker compose commands.
 Use standard docker compose commands, e.g. 
 
 * show running
@@ -77,7 +78,7 @@ docker compose stats
 
 * get the counts of data loaded
 ```bash
-python fhir-util.py count-resources 
+python fhir-aggregator-scripts/fhir-util.py count-resources 
 ```
 
 ## Prepare new data for upload
