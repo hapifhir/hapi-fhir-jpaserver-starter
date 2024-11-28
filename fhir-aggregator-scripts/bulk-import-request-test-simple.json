@@ -1,0 +1,75 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "inputFormat",
+      "valueCode": "application/fhir+ndjson"
+    },
+    {
+      "name": "inputSource",
+      "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com"
+    },
+    {
+      "name": "storageDetail",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "https"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "DocumentReference"
+        },
+        {
+          "name": "url",
+          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/test-simple/META/DocumentReference.ndjson"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "Patient"
+        },
+        {
+          "name": "url",
+          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/test-simple/META/Patient.ndjson"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "ResearchStudy"
+        },
+        {
+          "name": "url",
+          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/test-simple/META/ResearchStudy.ndjson"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "ResearchSubject"
+        },
+        {
+          "name": "url",
+          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/test-simple/META/ResearchSubject.ndjson"
+        }
+      ]
+    }
+  ]
+}
+

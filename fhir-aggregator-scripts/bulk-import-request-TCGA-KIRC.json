@@ -1,0 +1,204 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "inputFormat",
+      "valueCode": "application/fhir+ndjson"
+    },
+    {
+      "name": "inputSource",
+      "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com"
+    },
+    {
+      "name": "storageDetail",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "https"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "DocumentReference"
+        },
+        {
+          "name": "url",
+          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/DocumentReference.ndjson"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "Procedure"
+        },
+        {
+          "name": "url",
+          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/Procedure.ndjson"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "Specimen"
+        },
+        {
+          "name": "url",
+          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/Specimen.ndjson"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "Medication"
+        },
+        {
+          "name": "url",
+          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/Medication.ndjson"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "Observation"
+        },
+        {
+          "name": "url",
+          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/Observation.ndjson"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "ResearchStudy"
+        },
+        {
+          "name": "url",
+          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/ResearchStudy.ndjson"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "BodyStructure"
+        },
+        {
+          "name": "url",
+          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/BodyStructure.ndjson"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "Condition"
+        },
+        {
+          "name": "url",
+          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/Condition.ndjson"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "ResearchSubject"
+        },
+        {
+          "name": "url",
+          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/ResearchSubject.ndjson"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "Encounter"
+        },
+        {
+          "name": "url",
+          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/Encounter.ndjson"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "Group"
+        },
+        {
+          "name": "url",
+          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/Group.ndjson"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "MedicationAdministration"
+        },
+        {
+          "name": "url",
+          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/MedicationAdministration.ndjson"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "ImagingStudy"
+        },
+        {
+          "name": "url",
+          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/ImagingStudy.ndjson"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "part": [
+        {
+          "name": "type",
+          "valueCode": "Patient"
+        },
+        {
+          "name": "url",
+          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/Patient.ndjson"
+        }
+      ]
+    }
+  ]
+}
