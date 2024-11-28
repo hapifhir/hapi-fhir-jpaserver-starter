@@ -79,3 +79,15 @@ docker compose stats
 ```bash
 python fhir-util.py count-resources 
 ```
+
+## Prepare new data for upload
+
+* upload to public bucket
+```bash
+./upload.sh
+```
+
+* create a new bulk import request
+```bash
+python create-bulk-import-request.py
+```
