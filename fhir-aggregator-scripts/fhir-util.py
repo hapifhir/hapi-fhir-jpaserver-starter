@@ -202,9 +202,16 @@ def fetch(fhir_url, auth_token, identifier):
         # Send GET request to fetch all ResearchStudy resources
         response = requests.get(f"{fhir_url}ResearchStudy?identifier={identifier}&_revinclude=ResearchSubject:study&_include=ResearchSubject:subject", headers=headers)
         if response.status_code == 200:
+            # the bundle should have all ResearchStudy, ResearchSubject, and Patient resources
             bundle = response.json()
+
+            # now fetch all the resources that refer to Patients
             fetch_all_patient_revincludes(fhir_url, headers, bundle)
+
+            # now fetch all the resources that refer to Specimens
             fetch_all_specimen_revincludes(fhir_url, headers, bundle)
+
+            # print the bundle
             click.echo(json.dumps(bundle, indent=2))
         else:
             click.echo(f"Failed with status {response.status_code}: {response.text}")
