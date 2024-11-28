@@ -1,7 +1,8 @@
 version: "3"
 services:
   hapi-fhir-jpaserver-start:
-    build: .
+    #build: .
+    image: hapiproject/hapi:v7.4.0
     container_name: hapi-fhir-jpaserver-start
     restart: on-failure
     environment:
@@ -9,6 +10,16 @@ services:
       SPRING_DATASOURCE_USERNAME: "admin"
       SPRING_DATASOURCE_PASSWORD: "admin"
       SPRING_DATASOURCE_DRIVERCLASSNAME: "org.postgresql.Driver"
+      # this parameter was missing from master branch
+      # unless this is set, service will log a lot of "table not found errors"
+      spring.jpa.properties.hibernate.dialect: "ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect"
+      # lets work with the R5 release
+      hapi.fhir.fhir_version: R5
+      # all the resources load to happen in arbitrary order
+      hapi.fhir.enforce_referential_integrity_on_write: false 
+      # enable bulk IO
+      hapi.fhir.bulk_export_enabled: true 
+      hapi.fhir.bulk_import_enabled: true
     ports:
       - "8080:8080"
   hapi-fhir-postgres:
