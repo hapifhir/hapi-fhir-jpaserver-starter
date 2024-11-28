@@ -179,8 +179,7 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 			Optional<BinaryAccessProvider> binaryAccessProvider, BinaryStorageInterceptor binaryStorageInterceptor,
 			PartitionManagementProvider partitionManagementProvider,
 			IPackageInstallerSvc packageInstallerSvc, ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc,
-												  final InstallNpmPackageProvider installNpmPackageOperationProvider,
-												  final MatchboxFhirContextProperties matchboxFhirContextProperties) {
+												  final InstallNpmPackageProvider installNpmPackageOperationProvider) {
 
 		RestfulServer fhirServer = super.restfulServer(fhirSystemDao, appProperties, daoRegistry, mdmProviderProvider,
 				jpaSystemProvider, resourceProviderFactory, daoConfig, searchParamRegistry,
@@ -207,7 +206,8 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 											  this.structureMapTransformProvider,
 											  this.structureMapListProvider);
 
-		if (matchboxFhirContextProperties.isDevMode()) {
+		if (!this.getCliContext().isHttpReadOnly()) {
+			// The operation $install-npm-package is enabled if the httpReadOnly mode is disabled
 			fhirServer.registerProvider(installNpmPackageOperationProvider);
 		}
 									  

@@ -17,26 +17,3 @@ Need to map your health data into FHIR and want to share your mapping to FHIR in
 ## Structured Data Capture (SDC) Questionnaire support for data extraction with the FHIR Mapping Language
 
 SDC (Structured Data Capture) [extraction](https://build.fhir.org/ig/HL7/sdc/extraction.html#map-extract) support based on the FHIR Mapping language and preliminary support for assemble of modular questionnaires.
-
-## Development mode
-
-The development mode can be enabled with the configuration property `matchbox.fhir.context.devMode`.
-
-The following features are available when enabling the development mode.
-
-### Installing an NPM package through an operation
-
-The operation $install-npm-package allows you to install an NPM package through the API.
-
-| Parameter IN | Card | Description                                 |
-|--------------|------|---------------------------------------------|
-| name         | 1..1 | The name of the package.                    |
-| version      | 1..1 | The version of the package.                 |
-| body         | 1..1 | The content of the NPM package as HTTP body |
-
-```http request
-POST /matchboxv3/fhir/$install-npm-package?name=ch.fhir.ig.ch-core&version=4.0.1
-Content-Type: application/gzip
-
-<gzip content>
-```
