@@ -1,3 +1,7 @@
+Unreleased
+
+- Upgrade hapifhir org.hl7.fhir.core to 6.4.4
+
 2024/11/25 Release 3.9.8
 
 - Allow providing map and models in the StructureMap $transform operation [#305](https://github.com/ahdis/matchbox/issues/305)

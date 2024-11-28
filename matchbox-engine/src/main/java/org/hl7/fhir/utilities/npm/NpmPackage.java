@@ -331,6 +331,7 @@ public class NpmPackage {
 
   }
 
+
   private String path;
   private JsonObject npm;
   private Map<String, NpmPackageFolder> folders = new HashMap<>();
@@ -339,6 +340,7 @@ public class NpmPackage {
   private boolean minimalMemory;
   private int size;
   private boolean warned = false;
+  private static boolean loadCustomResources;
 
   /**
    * Constructor
@@ -406,7 +408,7 @@ public class NpmPackage {
   public void loadFiles(String path, File source, String... exemptions) throws FileNotFoundException, IOException {
     this.npm = JsonParser.parseObject(TextFile.fileToString(Utilities.path(path, "package", "package.json")));
     this.path = path;
-    
+
     File dir = ManagedFileAccess.file(path);
     for (File f : dir.listFiles()) {
       if (!isInternalExemptFile(f) && !Utilities.existsInList(f.getName(), exemptions)) {
@@ -431,6 +433,7 @@ public class NpmPackage {
             }
           }
           loadSubFolders(dir.getAbsolutePath(), f);
+
         } else {
           NpmPackageFolder folder = this.new NpmPackageFolder(Utilities.path("package", "$root"));
           folder.folder = dir;
@@ -448,24 +451,26 @@ public class NpmPackage {
   private void loadSubFolders(String rootPath, File dir) throws IOException {
     for (File f : dir.listFiles()) {
       if (f.isDirectory()) {
-        String d = f.getAbsolutePath().substring(rootPath.length()+1);
-        if (!d.startsWith("package")) {
-          d = Utilities.path("package", d);
-        }
-        NpmPackageFolder folder = this.new NpmPackageFolder(d);
-        folder.folder = f;
-        this.folders.put(d, folder);
-        File ij = ManagedFileAccess.file(Utilities.path(f.getAbsolutePath(), ".index.json"));
-        if (ij.exists() || !minimalMemory) {
-          try {
-            if (!ij.exists() || !folder.readIndex(JsonParser.parseObject(ij), folder.getTypes())) {
-              indexFolder(folder.getFolderName(), folder);
-            }
-          } catch (Exception e) {
-            throw new IOException("Error parsing "+ij.getAbsolutePath()+": "+e.getMessage(), e);
+        if (!"custom".equals(f.getName()) || loadCustomResources) {
+          String d = f.getAbsolutePath().substring(rootPath.length()+1);
+          if (!d.startsWith("package")) {
+            d = Utilities.path("package", d);
           }
+          NpmPackageFolder folder = this.new NpmPackageFolder(d);
+          folder.folder = f;
+          this.folders.put(d, folder);
+          File ij = ManagedFileAccess.file(Utilities.path(f.getAbsolutePath(), ".index.json"));
+          if (ij.exists() || !minimalMemory) {
+            try {
+              if (!ij.exists() || !folder.readIndex(JsonParser.parseObject(ij), folder.getTypes())) {
+                indexFolder(folder.getFolderName(), folder);
+              }
+            } catch (Exception e) {
+              throw new IOException("Error parsing "+ij.getAbsolutePath()+": "+e.getMessage(), e);
+            }
+          }
+          loadSubFolders(rootPath, f); 
         }
-        loadSubFolders(rootPath, f);        
       }
     }    
   }
@@ -1511,5 +1516,12 @@ public class NpmPackage {
     return id()+"#"+version();
   }
 
-  
+  public static boolean isLoadCustomResources() {
+    return loadCustomResources;
+  }
+
+  public static void setLoadCustomResources(boolean loadCustomResources) {
+    NpmPackage.loadCustomResources = loadCustomResources;
+  }
+
 }

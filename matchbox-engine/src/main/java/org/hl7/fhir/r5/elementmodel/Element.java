@@ -1111,6 +1111,20 @@ public class Element extends Base implements NamedItem {
     return null;
   }
 
+  public String getExtensionString(String url) {
+    if (children != null) {
+      for (Element child : children) {
+        if (extensionList.contains(child.getName())) {
+          String u = child.getChildValue("url");
+          if (url.equals(u)) {
+            return child.getNamedChildValue("value");
+          }
+        }
+      }
+    }
+    return null;
+  }
+
   public List<Element> getExtensions(String url) {
     List<Element> list = new ArrayList<>();
     if (children != null) {
