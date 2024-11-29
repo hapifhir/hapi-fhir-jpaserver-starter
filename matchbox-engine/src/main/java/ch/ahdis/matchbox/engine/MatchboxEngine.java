@@ -283,7 +283,7 @@ public class MatchboxEngine extends ValidationEngine {
 				engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_TERMINOLOGY));
 				engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_UV_EXTENSIONS));
 				if (this.withXVersion) {
-					removeStructureMaps(engine);
+					this.removeStructureMaps(engine);
 					engine.loadPackage(this.getNpmPackageStream(PACKAGE_UV_XVER));
 				}
 			} catch (final IOException e) {
@@ -326,7 +326,7 @@ public class MatchboxEngine extends ValidationEngine {
 				engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_TERMINOLOGY));
 				engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_UV_EXTENSIONS));
 				if (this.withXVersion) {
-					removeStructureMaps(engine);
+					this.removeStructureMaps(engine);
 					engine.loadPackage(this.getNpmPackageStream(PACKAGE_UV_XVER));
 				}
 			} catch (final IOException e) {
@@ -350,16 +350,6 @@ public class MatchboxEngine extends ValidationEngine {
 			engine.setAllowExampleUrls(true);
 			return engine;
 		}
-		
-		/**
-		 * remove old StructureMaps from the context, especially from PACKAGE_R4_UV_EXTENSIONS which are replaced by newer versions
-		 * @param engine
-		 */
-		public void removeStructureMaps(MatchboxEngine engine) {
-			for (StructureMap map : engine.getContext().fetchResourcesByType(StructureMap.class)) {
-				engine.getContext().dropResource(map);
-			}
-		}
 
 		/**
 		 * Returns a FHIR R5 engine configured with hl7 terminology
@@ -379,7 +369,7 @@ public class MatchboxEngine extends ValidationEngine {
 				engine.loadPackage(this.getNpmPackageStream(PACKAGE_R5_TERMINOLOGY));
 				engine.loadPackage(this.getNpmPackageStream(PACKAGE_UV_EXTENSIONS));
 				if (this.withXVersion) {
-					removeStructureMaps(engine);
+					this.removeStructureMaps(engine);
 					engine.loadPackage(this.getNpmPackageStream(PACKAGE_UV_XVER));
 				}
 			} catch (final IOException e) {
@@ -480,6 +470,17 @@ public class MatchboxEngine extends ValidationEngine {
 		@NonNull
 		private InputStream getNpmPackageStream(final String packageName) {
 			return Objects.requireNonNull(getClass().getResourceAsStream("/%s.tgz".formatted(packageName)));
+		}
+
+		/**
+		 * Remove old StructureMaps from the context, especially from PACKAGE_R4_UV_EXTENSIONS which are replaced by
+		 * newer versions from PACKAGE_UV_XVER
+		 * @param engine
+		 */
+		private void removeStructureMaps(final MatchboxEngine engine) {
+			for (final StructureMap map : engine.getContext().fetchResourcesByType(StructureMap.class)) {
+				engine.getContext().dropResource(map);
+			}
 		}
 	}
 
