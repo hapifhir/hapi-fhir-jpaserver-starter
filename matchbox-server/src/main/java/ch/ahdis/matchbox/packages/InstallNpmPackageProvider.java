@@ -7,6 +7,7 @@ import ca.uhn.fhir.rest.annotation.OperationParam;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.hl7.fhir.instance.model.api.IBaseOperationOutcome;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.StringType;
 import org.hl7.fhir.r4.utils.ToolingExtensions;
@@ -31,8 +32,8 @@ public class InstallNpmPackageProvider {
 	}
 
 	@Operation(name = "$install-npm-package", manualRequest = true, returnParameters = {
-		@OperationParam(name = "return", type = OperationOutcome.class, min = 1, max = 1)})
-	public OperationOutcome installNpmPackage(final HttpServletRequest theRequest) {
+		@OperationParam(name = "return", typeName = "OperationOutcome", min = 1, max = 1)})
+	public IBaseOperationOutcome installNpmPackage(final HttpServletRequest theRequest) {
 		if (theRequest.getParameter("name") == null) {
 			return this.getOoForError("The 'name' parameter must be provided");
 		}
