@@ -103,7 +103,7 @@ public class MatchboxEngine extends ValidationEngine {
 	public static final String PACKAGE_R5_TERMINOLOGY = "hl7.terminology.r5#6.1.0";
 	public static final String PACKAGE_R4_UV_EXTENSIONS = "hl7.fhir.uv.extensions.r4#1.0.0";
 	public static final String PACKAGE_UV_EXTENSIONS = "hl7.fhir.uv.extensions#1.0.0";
-	public static final String PACKAGE_R4_UV_XVER = "hl7.fhir.uv.xver#0.1.0@mb";
+	public static final String PACKAGE_UV_XVER = "hl7.fhir.uv.xver#0.1.0@mb";
 	public static final String PACKAGE_CDA_UV_CORE = "hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch";
 
 	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MatchboxEngine.class);
@@ -284,7 +284,7 @@ public class MatchboxEngine extends ValidationEngine {
 				engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_UV_EXTENSIONS));
 				if (this.withXVersion) {
 					removeStructureMaps(engine);
-					engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_UV_XVER));
+					engine.loadPackage(this.getNpmPackageStream(PACKAGE_UV_XVER));
 				}
 			} catch (final IOException e) {
 				throw new IgLoadException(e);
@@ -327,7 +327,7 @@ public class MatchboxEngine extends ValidationEngine {
 				engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_UV_EXTENSIONS));
 				if (this.withXVersion) {
 					removeStructureMaps(engine);
-					engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_UV_XVER));
+					engine.loadPackage(this.getNpmPackageStream(PACKAGE_UV_XVER));
 				}
 			} catch (final IOException e) {
 				throw new IgLoadException(e);
@@ -380,7 +380,7 @@ public class MatchboxEngine extends ValidationEngine {
 				engine.loadPackage(this.getNpmPackageStream(PACKAGE_UV_EXTENSIONS));
 				if (this.withXVersion) {
 					removeStructureMaps(engine);
-					engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_UV_XVER));
+					engine.loadPackage(this.getNpmPackageStream(PACKAGE_UV_XVER));
 				}
 			} catch (final IOException e) {
 				throw new IgLoadException(e);
