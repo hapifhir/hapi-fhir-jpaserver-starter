@@ -11,11 +11,13 @@ nav:
   - index.md
   - features.md
   - changelog.md
-  - validation.md
-  - api.md
-  - docker.md
   - matchbox-engine.md
+  - matchbox-server.md
+  - api.md
+  - validation.md
+  - docker.md
   - cda.md
+  - 'Tutorial: validation': validation-tutorial.md
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
@@ -24,3 +26,4 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - attr_list
