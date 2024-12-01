@@ -197,8 +197,8 @@ hapi:
     ###  !!Extended Lucene/Elasticsearch Indexing is still a experimental feature, expect some features (e.g. _total=accurate) to not work as expected!!
     ###  more information here: https://hapifhir.io/hapi-fhir/docs/server_jpa/elastic.html
     advanced_lucene_indexing: false
-    bulk_export_enabled: false
-    bulk_import_enabled: false
+    bulk_export_enabled: true
+    bulk_import_enabled: true
     #    language_search_parameter_enabled: true
     #    enforce_referential_integrity_on_delete: false
     # This is an experimental feature, and does not fully support _total and other FHIR features.
@@ -207,7 +207,7 @@ hapi:
     #    etag_support_enabled: true
     #    expunge_enabled: true
     #    client_id_strategy: ALPHANUMERIC
-    #    server_id_strategy: SEQUENTIAL_NUMERIC
+    server_id_strategy: UUID
     #    fhirpath_interceptor_enabled: false
     #    filter_search_enabled: true
     #    graphql_enabled: true
