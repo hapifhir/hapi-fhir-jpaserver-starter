@@ -21,7 +21,7 @@ import ca.uhn.fhir.jpa.binary.interceptor.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
 import ca.uhn.fhir.jpa.config.util.HapiEntityManagerFactoryUtil;
 import ca.uhn.fhir.jpa.config.util.ResourceCountCacheUtil;
-import ca.uhn.fhir.jpa.config.util.ValidationSupportConfigUtil;
+
 import ca.uhn.fhir.jpa.dao.FulltextSearchSvcImpl;
 import ca.uhn.fhir.jpa.dao.IFulltextSearchSvc;
 import ca.uhn.fhir.jpa.dao.search.HSearchSortHelperImpl;
@@ -101,12 +101,6 @@ public class StarterJpaConfig {
 	@Bean
 	public IStaleSearchDeletingSvc staleSearchDeletingSvc() {
 		return new StaleSearchDeletingSvcImpl();
-	}
-
-	@Primary
-	@Bean
-	public CachingValidationSupport validationSupportChain(JpaValidationSupportChain theJpaValidationSupportChain) {
-		return ValidationSupportConfigUtil.newCachingValidationSupport(theJpaValidationSupportChain);
 	}
 
 	@Autowired
