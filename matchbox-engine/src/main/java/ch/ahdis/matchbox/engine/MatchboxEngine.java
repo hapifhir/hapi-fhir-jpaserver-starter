@@ -361,7 +361,7 @@ public class MatchboxEngine extends ValidationEngine {
 			log.info("Initializing Matchbox Engine (FHIR R5 with terminology provided in classpath)");
 			log.info(VersionUtil.getPoweredBy());
 			final MatchboxEngine engine;
-			try { engine = new MatchboxEngine(new SimpleWorkerContextBuilder().fromPackage(NpmPackage.fromPackage(getClass().getResourceAsStream("/hl7.fhir.r5.core.tgz")), ValidatorUtils.loaderForVersion("5.0.0"), false));
+			try { engine = new MatchboxEngine(createR5WorkerContext());
 			}
 			catch (final Exception e) { throw new MatchboxEngineCreationException(e); } 
 			engine.setVersion(FhirPublication.R5.toCode());
@@ -439,7 +439,7 @@ public class MatchboxEngine extends ValidationEngine {
 		}
 
 		@Override
-		public ValidationEngine fromSource(String src) throws IOException, URISyntaxException {
+		public ValidationEngine fromSource(String src) throws URISyntaxException {
 			try {
 				return super.fromSource(src);				
 			} catch (final IOException e) {
@@ -482,6 +482,15 @@ public class MatchboxEngine extends ValidationEngine {
 				engine.getContext().dropResource(map);
 			}
 		}
+	}
+
+	public static SimpleWorkerContext createR5WorkerContext() throws IOException {
+		return new SimpleWorkerContextBuilder()
+			.fromPackage(
+				NpmPackage.fromPackage(MatchboxEngine.class.getResourceAsStream("/hl7.fhir.r5.core.tgz")),
+				ValidatorUtils.loaderForVersion("5.0.0"),
+				false
+			);
 	}
 
 	/**
