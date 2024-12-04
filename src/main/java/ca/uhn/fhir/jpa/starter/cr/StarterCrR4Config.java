@@ -2,8 +2,6 @@ package ca.uhn.fhir.jpa.starter.cr;
 
 import ca.uhn.fhir.cr.config.r4.ApplyOperationConfig;
 import ca.uhn.fhir.cr.config.r4.CrR4Config;
-import ca.uhn.fhir.cr.config.r4.DataRequirementsOperationConfig;
-import ca.uhn.fhir.cr.config.r4.EvaluateOperationConfig;
 import ca.uhn.fhir.cr.config.r4.ExtractOperationConfig;
 import ca.uhn.fhir.cr.config.r4.PackageOperationConfig;
 import ca.uhn.fhir.cr.config.r4.PopulateOperationConfig;
@@ -19,11 +17,11 @@ import org.springframework.context.annotation.Import;
 	CrCommonConfig.class,
 	CrR4Config.class,
 	ApplyOperationConfig.class,
-	DataRequirementsOperationConfig.class,
-	EvaluateOperationConfig.class,
 	ExtractOperationConfig.class,
 	PackageOperationConfig.class,
 	PopulateOperationConfig.class,
 	QuestionnaireOperationConfig.class
 })
-public class StarterCrR4Config {}
+public class StarterCrR4Config {
+	
+}

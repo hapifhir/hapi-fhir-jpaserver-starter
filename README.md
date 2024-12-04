@@ -589,3 +589,55 @@ docker run --rm -it -p 8080:8080 \
 ```
 
 You can configure the agent using environment variables or Java system properties, see <https://opentelemetry.io/docs/instrumentation/java/automatic/agent-config/> for details.
+
+
+
+## Custom Authorization Interceptor (CustomAuthorizationInterceptor)
+
+In order to implement Custom Authorization Interceptor, an additional package named __CustomAuthorizationInterceptor__ (__ca.uhn.fhir.jpa.starter.custom__) has been added, configured & registered in HAPI FHIR source code. The package can be found in  __*/src/main/java/ca/uhn/fhir/jpa/starter/custom/CustomAuthorizationInterceptor.java*__.
+
+The Registration of the __CustomAuthorizationInterceptor__ has been done in __*src/main/java/ca/uhn/fhir/jpa/starter/common/StarterJpaConfig.java*__ file : 
+
+```java
+		// Custom Interceptors
+		fhirServer.registerInterceptor(new CustomAuthorizationInterceptor());
+```
+
+### Custom RESTful Web Requests
+
+RESTful request services are setup in __*CustomStartupService.java*__ to fetch JWT Certificates, etc.
+
+### Authorization Interceptor
+
+Custom Authorization Interceptor is defined in __*CustomAuthorizationInterceptor.java*__.
+The file mainly contains methods that intercepts, checks, verifies and authorizes the incoming web requests.
+
+Custom Environment variables are defined in __*CustomEnvironment.java*__
+
+### Project Setup Guide (Docker)
+
+1. Clone the project into local.
+2. Navigate to __*hapi-fhir-jpaserver-starter-master*__
+3. Execute the Docker Compose file
+```sh
+docker compose -f "docker-compose.yml" up
+```
+
+3. If source code is modified by you, Re-Build the image & execute the Docker Compose file again:
+```sh
+docker build -t "hapiproject/hapi":latest -f Dockerfile .
+docker compose -f "docker-compose.yml" up
+```
+### Components of Web Request to HAPI FHIR server : 
+1. ResourceId (GroupID) in Request URL. Key: ```http://domain-name/fhir/TYPE/RESOURCE-ID/```
+2. Authorization Token for consumers as explained in <https://authorization.iudx.org.in/apis#tag/Token-APIs/operation/post-auth-v1-token> with  
+
+### Example Web Request to HAPI FHIR server : 
+```sh
+curl --location 'http://localhost:8080/fhir/Group/a1836982-567a-480e-b97a-b065c61ebbaa/_history/1' \
+--header 'Authorization: Bearer eyJpc3MiOiJzdGFnaW5nLmNvcy5pdWR4LmlvIiwidHlwIjoiSldUIiwiYWxnIjoiRVMyNTYifQ.eyJzdWIiOiIzM2MwZmM2Mi0xYWQ0LTQ0ZDgtODZkYi02MzQ1YzQ2ZmEyMjAiLCJpc3MiOiJzdGFnaW5nLmNvcy5pdWR4LmlvIiwiYXVkIjoiaWNtci1ycy5jb3MuaXVkeC5pbyIsImV4cCI6MTczMzE3MDIyNywiaWF0IjoxNzMzMTI3MDI3LCJpaWQiOiJyaTphMTgzNjk4Mi01NjdhLTQ4MGUtYjk3YS1iMDY1YzYxZWJiYWEiLCJyb2xlIjoiY29uc3VtZXIiLCJjb25zIjp7ImFjY2VzcyI6WyJmaWxlIl19LCJyZyI6IjE4YTRmYTU0LTRjMjgtNDk2My05ZmMwLTNkOTFkMDM2MmQ5OSJ9.7PD-L0SsDBNTavffg7l4WYknZKxDlVmWcIltzAWQP8SxIUdAVIFgy8PCeTO8TME1fP_lZEZ71D0NulahLVRbjQ'
+```
+
+
+
+

@@ -5,7 +5,7 @@ import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.LibraryBuilder;
 
 public class CqlCompilerProperties {
-	private Boolean validate_units = true;
+    private Boolean validate_units = true;
 	private Boolean verify_only = false;
 	private String compatibility_level = "1.5";
 	private CqlCompilerException.ErrorSeverity error_level = CqlCompilerException.ErrorSeverity.Info;
@@ -26,6 +26,7 @@ public class CqlCompilerProperties {
 	private Boolean disable_method_invocation = false;
 	private Boolean require_from_keyword = false;
 	private Boolean disable_default_model_info_load = false;
+
 
 	public boolean isValidateUnits() {
 		return validate_units;
@@ -193,5 +194,5 @@ public class CqlCompilerProperties {
 
 	public void setTranslatorFormat(CqlTranslator.Format translatorFormat) {
 		this.translator_format = translatorFormat;
-	}
+	}  
 }

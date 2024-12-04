@@ -1,6 +1,5 @@
 package ca.uhn.fhir.jpa.starter.common;
 
-import ca.uhn.fhir.batch2.config.Batch2JobRegisterer;
 import ca.uhn.fhir.batch2.coordinator.JobDefinitionRegistry;
 import ca.uhn.fhir.batch2.jobs.export.BulkDataExportProvider;
 import ca.uhn.fhir.batch2.jobs.imprt.BulkDataImportProvider;
@@ -45,8 +44,10 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
+import ca.uhn.fhir.jpa.starter.custom.CustomAuthorizationInterceptor;
 import ca.uhn.fhir.jpa.starter.ig.IImplementationGuideOperationProvider;
 import ca.uhn.fhir.jpa.starter.util.EnvironmentHelper;
+import ca.uhn.fhir.jpa.starter.ig.IImplementationGuideOperationProvider;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceCountCache;
 import ca.uhn.fhir.jpa.validation.JpaValidationSupportChain;
@@ -66,8 +67,6 @@ import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
 import jakarta.persistence.EntityManagerFactory;
 import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -87,11 +86,11 @@ import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInt
 
 @Configuration
 // allow users to configure custom packages to scan for additional beans
-@ComponentScan(basePackages = {"${hapi.fhir.custom-bean-packages:}"})
+@ComponentScan(basePackages = { "${hapi.fhir.custom-bean-packages:}" })
 @Import(ThreadPoolFactoryConfig.class)
 public class StarterJpaConfig {
 
-	private static final Logger ourLog = LoggerFactory.getLogger(StarterJpaConfig.class);
+	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(StarterJpaConfig.class);
 
 	@Bean
 	public IFulltextSearchSvc fullTextSearchSvc() {
@@ -113,7 +112,8 @@ public class StarterJpaConfig {
 	private ConfigurableEnvironment configurableEnvironment;
 
 	/**
-	 * Customize the default/max page sizes for search results. You can set these however
+	 * Customize the default/max page sizes for search results. You can set these
+	 * however
 	 * you want, although very large page sizes will require a lot of RAM.
 	 */
 	@Bean
@@ -137,11 +137,11 @@ public class StarterJpaConfig {
 	@Primary
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-		DataSource myDataSource,
-		ConfigurableListableBeanFactory myConfigurableListableBeanFactory,
-		FhirContext theFhirContext, JpaStorageSettings theStorageSettings) {
-		LocalContainerEntityManagerFactoryBean retVal =
-				HapiEntityManagerFactoryUtil.newEntityManagerFactory(myConfigurableListableBeanFactory, theFhirContext, theStorageSettings);
+			DataSource myDataSource,
+			ConfigurableListableBeanFactory myConfigurableListableBeanFactory,
+			FhirContext theFhirContext, JpaStorageSettings theStorageSettings) {
+		LocalContainerEntityManagerFactoryBean retVal = HapiEntityManagerFactoryUtil
+				.newEntityManagerFactory(myConfigurableListableBeanFactory, theFhirContext, theStorageSettings);
 		retVal.setPersistenceUnitName("HAPI_PU");
 
 		try {
@@ -193,11 +193,11 @@ public class StarterJpaConfig {
 	@Primary
 	@Conditional(OnImplementationGuidesPresent.class)
 	public IPackageInstallerSvc packageInstaller(
-		AppProperties appProperties,
-		IPackageInstallerSvc packageInstallerSvc,
-		Batch2JobRegisterer batch2JobRegisterer) {
-
-		batch2JobRegisterer.start();
+			AppProperties appProperties,
+			JobDefinition<ReindexJobParameters> reindexJobParametersJobDefinition,
+			JobDefinitionRegistry jobDefinitionRegistry,
+			IPackageInstallerSvc packageInstallerSvc) {
+		jobDefinitionRegistry.addJobDefinitionIfNotRegistered(reindexJobParametersJobDefinition);
 
 		if (appProperties.getImplementationGuides() != null) {
 			Map<String, PackageInstallationSpec> guides = appProperties.getImplementationGuides();
@@ -278,7 +278,8 @@ public class StarterJpaConfig {
 			IPackageInstallerSvc packageInstallerSvc,
 			ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc,
 			ApplicationContext appContext,
-			Optional<IpsOperationProvider> theIpsOperationProvider, Optional<IImplementationGuideOperationProvider> implementationGuideOperationProvider) {
+			Optional<IpsOperationProvider> theIpsOperationProvider,
+			Optional<IImplementationGuideOperationProvider> implementationGuideOperationProvider) {
 		RestfulServer fhirServer = new RestfulServer(fhirSystemDao.getContext());
 
 		List<String> supportedResourceTypes = appProperties.getSupported_resource_types();
@@ -296,7 +297,8 @@ public class StarterJpaConfig {
 			fhirSystemDao.getContext().setNarrativeGenerator(new NullNarrativeGenerator());
 		}
 
-		if (appProperties.getMdm_enabled()) mdmProviderProvider.get().loadProvider();
+		if (appProperties.getMdm_enabled())
+			mdmProviderProvider.get().loadProvider();
 
 		fhirServer.registerProviders(resourceProviderFactory.createProviders());
 		fhirServer.registerProvider(jpaSystemProvider);
@@ -307,7 +309,8 @@ public class StarterJpaConfig {
 		 * ETag Support
 		 */
 
-		if (!appProperties.getEtag_support_enabled()) fhirServer.setETagSupport(ETagSupportEnum.DISABLED);
+		if (!appProperties.getEtag_support_enabled())
+			fhirServer.setETagSupport(ETagSupportEnum.DISABLED);
 
 		/*
 		 * Default to JSON and pretty printing
@@ -346,7 +349,8 @@ public class StarterJpaConfig {
 		/*
 		 * If you are hosting this server at a specific DNS name, the server will try to
 		 * figure out the FHIR base URL based on what the web container tells it, but
-		 * this doesn't always work. If you are setting links in your search bundles that
+		 * this doesn't always work. If you are setting links in your search bundles
+		 * that
 		 * just refer to "localhost", you might want to use a server address strategy:
 		 */
 		String serverAddress = appProperties.getServer_address();
@@ -361,10 +365,14 @@ public class StarterJpaConfig {
 		}
 
 		/*
-		 * If you are using DSTU3+, you may want to add a terminology uploader, which allows
-		 * uploading of external terminologies such as Snomed CT. Note that this uploader
-		 * does not have any security attached (any anonymous user may use it by default)
-		 * so it is a potential security vulnerability. Consider using an AuthorizationInterceptor
+		 * If you are using DSTU3+, you may want to add a terminology uploader, which
+		 * allows
+		 * uploading of external terminologies such as Snomed CT. Note that this
+		 * uploader
+		 * does not have any security attached (any anonymous user may use it by
+		 * default)
+		 * so it is a potential security vulnerability. Consider using an
+		 * AuthorizationInterceptor
 		 * with this feature.
 		 */
 		if (fhirSystemDao
@@ -460,7 +468,7 @@ public class StarterJpaConfig {
 			fhirServer.registerProvider(theIpsOperationProvider.get());
 		}
 
-		if (appProperties.getUserRequestRetryVersionConflictsInterceptorEnabled() ) {
+		if (appProperties.getUserRequestRetryVersionConflictsInterceptorEnabled()) {
 			fhirServer.registerInterceptor(new UserRequestRetryVersionConflictsInterceptor());
 		}
 
@@ -473,7 +481,7 @@ public class StarterJpaConfig {
 	/**
 	 * check the properties for custom interceptor classes and registers them.
 	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void registerCustomInterceptors(
 			RestfulServer fhirServer, ApplicationContext theAppContext, List<String> customInterceptorClasses) {
 
@@ -507,14 +515,17 @@ public class StarterJpaConfig {
 			}
 			fhirServer.registerInterceptor(interceptor);
 		}
+
+		// Custom Interceptors
+		fhirServer.registerInterceptor(new CustomAuthorizationInterceptor());
 	}
 
 	/**
 	 * check the properties for custom provider classes and registers them.
 	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void registerCustomProviders(
-		RestfulServer fhirServer, ApplicationContext theAppContext, List<String> customProviderClasses) {
+			RestfulServer fhirServer, ApplicationContext theAppContext, List<String> customProviderClasses) {
 
 		if (customProviderClasses == null) {
 			return;
@@ -556,14 +567,14 @@ public class StarterJpaConfig {
 			IValidationSupport theValidationSupport) {
 		FhirVersionEnum fhirVersion = fhirSystemDao.getContext().getVersion().getVersion();
 		if (fhirVersion == FhirVersionEnum.DSTU2) {
-			JpaConformanceProviderDstu2 confProvider =
-					new JpaConformanceProviderDstu2(fhirServer, fhirSystemDao, jpaStorageSettings);
+			JpaConformanceProviderDstu2 confProvider = new JpaConformanceProviderDstu2(fhirServer, fhirSystemDao,
+					jpaStorageSettings);
 			confProvider.setImplementationDescription("HAPI FHIR DSTU2 Server");
 			return confProvider;
 		} else if (fhirVersion == FhirVersionEnum.DSTU3) {
 
-			JpaConformanceProviderDstu3 confProvider =
-					new JpaConformanceProviderDstu3(fhirServer, fhirSystemDao, jpaStorageSettings, searchParamRegistry);
+			JpaConformanceProviderDstu3 confProvider = new JpaConformanceProviderDstu3(fhirServer, fhirSystemDao,
+					jpaStorageSettings, searchParamRegistry);
 			confProvider.setImplementationDescription("HAPI FHIR DSTU3 Server");
 			return confProvider;
 		} else if (fhirVersion == FhirVersionEnum.R4) {

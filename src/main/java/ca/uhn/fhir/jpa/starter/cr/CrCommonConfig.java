@@ -1,14 +1,13 @@
 package ca.uhn.fhir.jpa.starter.cr;
 
-import ca.uhn.fhir.cr.common.CodeCacheResourceChangeListener;
-import ca.uhn.fhir.cr.common.CqlThreadFactory;
-import ca.uhn.fhir.cr.common.ElmCacheResourceChangeListener;
-import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
-import ca.uhn.fhir.jpa.cache.IResourceChangeListenerRegistry;
-import ca.uhn.fhir.jpa.cache.ResourceChangeListenerRegistryInterceptor;
-import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
-import ca.uhn.fhir.rest.server.RestfulServer;
-import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.cqframework.cql.cql2elm.CqlCompilerOptions;
 import org.cqframework.cql.cql2elm.model.CompiledLibrary;
 import org.cqframework.cql.cql2elm.model.Model;
@@ -29,13 +28,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.concurrent.DelegatingSecurityContextExecutorService;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import ca.uhn.fhir.cr.common.CodeCacheResourceChangeListener;
+import ca.uhn.fhir.cr.common.CqlThreadFactory;
+import ca.uhn.fhir.cr.common.ElmCacheResourceChangeListener;
+import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
+import ca.uhn.fhir.jpa.cache.IResourceChangeListenerRegistry;
+import ca.uhn.fhir.jpa.cache.ResourceChangeListenerRegistryInterceptor;
+import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
+import ca.uhn.fhir.rest.server.RestfulServer;
+import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 
 @Configuration
 @Conditional({CrConfigCondition.class})
@@ -156,12 +157,8 @@ public class CrCommonConfig {
 	@Bean
 	CareGapsProperties careGapsProperties(CrProperties theCrProperties) {
 		var careGapsProperties = new CareGapsProperties();
-		// This check for the resource type really should be happening down in CR where the setting is actually used but
-		// that will have to wait for a future CR release
-		careGapsProperties.setCareGapsReporter(
-				theCrProperties.getCareGaps().getReporter().replace("Organization/", ""));
-		careGapsProperties.setCareGapsCompositionSectionAuthor(
-				theCrProperties.getCareGaps().getSection_author().replace("Organization/", ""));
+		careGapsProperties.setCareGapsReporter(theCrProperties.getCareGaps().getReporter());
+		careGapsProperties.setCareGapsCompositionSectionAuthor(theCrProperties.getCareGaps().getSection_author());
 		return careGapsProperties;
 	}
 
@@ -227,5 +224,5 @@ public class CrCommonConfig {
 	@Bean
 	public ResourceChangeListenerRegistryInterceptor resourceChangeListenerRegistryInterceptor() {
 		return new ResourceChangeListenerRegistryInterceptor();
-	}
+	}   
 }

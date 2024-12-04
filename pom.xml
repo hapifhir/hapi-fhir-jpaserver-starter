@@ -388,6 +388,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- CUSTOM -->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.4.0</version> <!-- Use the latest version -->
+        </dependency>
     </dependencies>
 
     <build>
