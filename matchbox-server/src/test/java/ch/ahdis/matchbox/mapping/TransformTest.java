@@ -74,6 +74,28 @@ public class TransformTest {
 	}
 
 	@Test
+	void testTransformUtf8() throws Exception {
+		final var createMapRequest = HttpRequest.newBuilder(URI.create(TARGET_SERVER + "/fhir/StructureMap"))
+			.POST(HttpRequest.BodyPublishers.ofString(this.getContent("BundleToDocRef.map")))
+			.header("Content-Type", "text/fhir-mapping")
+			.header("Accept", "application/fhir+xml")
+			.build();
+		this.httpClient.send(createMapRequest, HttpResponse.BodyHandlers.discarding());
+
+		final var transformRequest = HttpRequest.newBuilder(URI.create(
+				TARGET_SERVER + "/fhir/StructureMap/$transform?source=http://fhir.ch/ig/ch-elm/StructureMap/BundleToDocRef"))
+			.POST(HttpRequest.BodyPublishers.ofString(this.getContent("Bundle-51Doc-Gelbfieber.xml")))
+			.header("Content-Type", "application/fhir+xml")
+			.header("Accept", "application/fhir+xml")
+			.build();
+		final var response = this.httpClient.send(transformRequest, HttpResponse.BodyHandlers.ofString());
+		final var docRef = response.body();
+		assertTrue(docRef.contains("<DocumentReference xmlns=\"http://hl7.org/fhir\">"));
+		assertTrue(docRef.contains("<line value=\"rue de la république 10\">"));
+		assertTrue(docRef.contains("<valueString value=\"rue de la république\"/>"));
+	}
+
+	@Test
 	void testTransformFullyContained() throws Exception {
 		// Test Brian's FHIRPath Lab API
 		final var transformRequest = HttpRequest.newBuilder(URI.create(TARGET_SERVER + "/fhir/StructureMap/$transform"))

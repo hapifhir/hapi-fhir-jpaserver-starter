@@ -1,6 +1,7 @@
 package ch.ahdis.matchbox.questionnaire;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 import jakarta.servlet.ServletOutputStream;
@@ -93,7 +94,7 @@ public class QuestionnaireResponseExtractProvider  {
       }
     } catch(org.hl7.fhir.exceptions.FHIRException e) {
       log.error("Transform exception", e);
-      output.write("Exception during Transform".getBytes());
+      output.write("Exception during Transform".getBytes(StandardCharsets.UTF_8));
     }
     theServletResponse.getOutputStream().close();
   }

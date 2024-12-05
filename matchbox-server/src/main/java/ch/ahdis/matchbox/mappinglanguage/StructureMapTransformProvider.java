@@ -1,6 +1,7 @@
 package ch.ahdis.matchbox.mappinglanguage;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Set;
 
@@ -209,7 +210,7 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
 																			 !resource.startsWith("<"),
 																			 map.getUrl(),
 																			 responseContentType.contains("json"));
-			theServletResponse.getOutputStream().print(transformed);
+			theServletResponse.getOutputStream().write(transformed.getBytes(StandardCharsets.UTF_8));
 		} finally {
 			// Let's clean up the engine of the models and map we've cached, if any
 			// This allows re-use of the engine for other transformations, decreasing the startup time

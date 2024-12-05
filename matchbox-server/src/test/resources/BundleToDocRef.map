@@ -1,0 +1,26 @@
+map "http://fhir.ch/ig/ch-elm/StructureMap/BundleToDocRef" = "BundleToDocRef"
+
+uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as source
+uses "http://hl7.org/fhir/StructureDefinition/DocumentReference" alias DocumentReference as target
+uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as target
+uses "http://hl7.org/fhir/StructureDefinition/Patient" alias Patient as target
+uses "http://hl7.org/fhir/StructureDefinition/Specimen" alias Specimen as target
+uses "http://hl7.org/fhir/StructureDefinition/Organization" alias Organization as target
+uses "http://hl7.org/fhir/StructureDefinition/Practitioner" alias Practitioner as target
+uses "http://hl7.org/fhir/StructureDefinition/PractitionerRole" alias PractitionerRole as target
+uses "http://hl7.org/fhir/StructureDefinition/ServiceRequest" alias ServiceRequest as target
+uses "http://hl7.org/fhir/StructureDefinition/Extension" alias Extension as target
+uses "http://hl7.org/fhir/StructureDefinition/DiagnosticReport" alias DiagnosticReport as target
+uses "http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse" alias QuestionnaireResponse as target
+
+group BundleToDocRef(source bundle : Bundle, target docref : DocumentReference ) {
+      bundle.identifier as identifier ->
+         docref.id = ('Publish-' + %bundle.id),
+         docref.identifier = identifier,
+         docref.contained = bundle,
+         docref.status = 'current',
+         docref.content as content,
+         content.attachment as attachment,
+         attachment.url = ('#' + %bundle.id),
+         attachment.language = 'de-CH';
+}
