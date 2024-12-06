@@ -27,7 +27,7 @@
             "browser": "src/main.ts",
             "allowedCommonJsDependencies": [
               "fhirpath", "fhir-kit-client", "js-untar"
-            ],
+            ]
           },
           "configurations": {
             "production": {
@@ -45,10 +45,15 @@
               ]
             },
             "development": {
-              "optimization": false,
+              "optimization": {
+                "scripts": true,
+                "styles": false,
+                "fonts": false
+              },
+              "outputHashing": "all",
               "sourceMap": true,
               "namedChunks": true,
-              "extractLicenses": true
+              "progress": true
             }
           }
         },

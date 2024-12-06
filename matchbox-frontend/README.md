@@ -23,18 +23,13 @@ Chrome on OSX has a CORS Problem and cannot execute te $extract operation, this 
 if you are not using the devcontainer from this project with [VS Code Remote Development](https://code.visualstudio.com/docs/remote/containers) extension you need to have angular cli and [yarn](https://yarnpkg.com/en/) installed:
 
 ```
-npm install -g @angular/cli
-npm install
-ng build --configuration development
+npm ci
+npm run start
 ```
-
-and then
-
-ng serve --configuration development
 
 ## usage
 
-Run `ng serve --configuration development` to start the app, app will be at [http://localhost:4200](http://localhost:4200/).
+Run `npm run start` to start the app, app will be at [http://localhost:4200](http://localhost:4200/).
 If you use the Visual Code functionality with Remote containers: Open Folder in container option, you need to start it with `ng serve --host 0.0.0.0`.
 
 if you use localhost and have cross site blocking issues within chrome start chrome directly from command line (osx)
@@ -43,16 +38,14 @@ if you use localhost and have cross site blocking issues within chrome start chr
 
 ## running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `npm run test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
 ## frontend for matchbox
 
 this angular app is directly provided with matchbox
 
 ```
-ng build --configuration production
-rm -rf ../matchbox-server/src/main/resources/static/*
-cp -r dist/* ../matchbox-server/src/main/resources/static
+npm run build-matchbox
 ```
 
 ## Contributing
