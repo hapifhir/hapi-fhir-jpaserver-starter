@@ -4,6 +4,7 @@ import java.util.*;
 
 import javax.annotation.Nullable;
 
+import ca.uhn.fhir.batch2.model.*;
 import ch.ahdis.matchbox.CliContext;
 import ch.ahdis.matchbox.interceptors.*;
 import ch.ahdis.matchbox.mappinglanguage.StructureMapListProvider;
@@ -29,15 +30,12 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 
-import ca.uhn.fhir.batch2.model.StatusEnum;
 import ca.uhn.fhir.batch2.api.IJobCoordinator;
 import ca.uhn.fhir.batch2.api.IJobPartitionProvider;
 import ca.uhn.fhir.batch2.api.IJobPersistence;
 import ca.uhn.fhir.batch2.api.JobOperationResultJson;
 import ca.uhn.fhir.batch2.coordinator.DefaultJobPartitionProvider;
 import ca.uhn.fhir.batch2.jobs.parameters.UrlPartitioner;
-import ca.uhn.fhir.batch2.model.JobInstance;
-import ca.uhn.fhir.batch2.model.JobInstanceStartRequest;
 import ca.uhn.fhir.batch2.models.JobInstanceFetchRequest;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
@@ -308,7 +306,7 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 		
 			public List<JobInstance> getInstancesbyJobDefinitionIdAndEndedStatus(String theJobDefinitionId, @Nullable Boolean theEnded, int theCount, int theStart) {
 				// fetch job instances by job definition id and ended status
-				return null;
+				return List.of();
 			}
 		
 			/**
@@ -326,7 +324,7 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 			 */
 			public List<JobInstance> getJobInstancesByJobDefinitionIdAndStatuses(String theJobDefinitionId, Set<StatusEnum> theStatuses, int theCount, int theStart) {
 				// fetch job instances by job definition id and statuses
-				return null;
+				return List.of();
 			}
 		
 			/**
@@ -334,9 +332,18 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 			 */
 			public List<JobInstance> getJobInstancesByJobDefinitionId(String theJobDefinitionId, int theCount, int theStart) {
 				// fetch job instances by job definition id
+				return List.of();
+			}
+
+			@Override
+			public List<BatchWorkChunkStatusDTO> getWorkChunkStatus(final String s) {
+				return List.of();
+			}
+
+			@Override
+			public BatchInstanceStatusDTO getBatchInstanceStatus(final String s) {
 				return null;
 			}
-			
 		};
 	}
 
