@@ -2,7 +2,7 @@ package ca.uhn.fhir.jpa.starter.cr;
 
 public class CqlRuntimeProperties {
 
-    private Boolean debug_logging_enabled = false;
+	private Boolean debug_logging_enabled = false;
 	private Boolean enable_validation = false;
 	private Boolean enable_expression_caching = true;
 
@@ -13,7 +13,6 @@ public class CqlRuntimeProperties {
 	public void setDebugLoggingEnabled(boolean debug_logging_enabled) {
 		this.debug_logging_enabled = debug_logging_enabled;
 	}
-
 
 	public boolean isEnableExpressionCaching() {
 		return enable_expression_caching;
@@ -30,6 +29,4 @@ public class CqlRuntimeProperties {
 	public void EnableValidation(boolean enable_validation) {
 		this.enable_validation = enable_validation;
 	}
-
-    
 }
