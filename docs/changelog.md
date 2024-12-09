@@ -1,4 +1,4 @@
-Unreleased
+2024/12/09 Release 3.9.9
 
 - Upgrade org.hl7.fhir.core to 6.4.4 and hapi-fhir to 7.6.0
 - Remove the `devMode` configuration parameter, it is now enabled when `httpReadOnly` is not [#315](https://github.com/ahdis/matchbox/issues/315)
