@@ -487,6 +487,7 @@ public class StarterJpaConfig {
 			Object interceptor = null;
 			try {
 				interceptor = theAppContext.getBean(clazz);
+				ourLog.info("registering custom interceptor as bean: {}", className);
 			} catch (NoSuchBeanDefinitionException ex) {
 				// no op - if it's not a bean we'll try to create it
 			}
@@ -495,6 +496,7 @@ public class StarterJpaConfig {
 			if (interceptor == null) {
 				try {
 					interceptor = clazz.getConstructor().newInstance();
+					ourLog.info("registering custom interceptor as pojo: {}", className);
 				} catch (Exception e) {
 					throw new ConfigurationException("Unable to instantiate interceptor class : " + className, e);
 				}
@@ -526,6 +528,7 @@ public class StarterJpaConfig {
 			Object provider = null;
 			try {
 				provider = theAppContext.getBean(clazz);
+				ourLog.info("registering custom provider as bean: {}", className);
 			} catch (NoSuchBeanDefinitionException ex) {
 				// no op - if it's not a bean we'll try to create it
 			}
@@ -534,6 +537,7 @@ public class StarterJpaConfig {
 			if (provider == null) {
 				try {
 					provider = clazz.getConstructor().newInstance();
+					ourLog.info("registering custom provider as pojo: {}", className);
 				} catch (Exception e) {
 					throw new ConfigurationException("Unable to instantiate provider class : " + className, e);
 				}
