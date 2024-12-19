@@ -1,0 +1,74 @@
+---
+services:
+  swag:
+    #
+    # a reverse proxy to expose the hapi server
+    # complete snapshot of all configs found at gs://hapi-vm/opt/appdata
+    # see /opt/appdata/swag/config/nginx/ for proxy configuration
+    #
+    image: lscr.io/linuxserver/swag:latest
+    container_name: swag
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - URL=fhir-aggregator.org
+      - VALIDATION=http
+      - SUBDOMAINS=docs,hapi #optional
+      # - CERTPROVIDER= #optional
+      # - DNSPLUGIN=cloudflare #optional
+      # - PROPAGATION= #optional
+      # - EMAIL= #optional
+      # - ONLY_SUBDOMAINS=false #optional
+      - EXTRA_DOMAINS=hapi.fhir-aggregator.org,docs.fhir-aggregator.org
+      # - STAGING=false #optional
+    volumes:
+      - /opt/appdata/swag/config:/config
+    ports:
+      - 443:443
+      - 80:80 #optional
+    restart: unless-stopped
+
+  hapi:
+    #build: .
+    image: hapiproject/hapi:v7.4.0
+    container_name: hapi
+    restart: on-failure
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/hapi"
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SPRING_DATASOURCE_DRIVERCLASSNAME: "org.postgresql.Driver"
+      # this parameter was missing from master branch
+      # unless this is set, service will log a lot of "table not found errors"
+      spring.jpa.properties.hibernate.dialect: "ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect"
+      # lets work with the R5 release
+      hapi.fhir.fhir_version: R5
+      # all the resources load to happen in arbitrary order
+      hapi.fhir.enforce_referential_integrity_on_write: false
+      # enable bulk IO
+      hapi.fhir.bulk_export_enabled: true
+      hapi.fhir.bulk_import_enabled: true
+      hapi.fhir.server_address: "https://hapi.fhir-aggregator.org/fhir"
+      hapi.fhir.tester.home.server_address: "https://hapi.fhir-aggregator.org/fhir"
+      hapi.fhir.tester.home.fhir_version: R5
+      hapi.fhir.delete_expunge_enabled: true
+      hapi.fhir.expunge_enabled: true
+      # enable sql (doesn't work :-( )
+      hapi.hfql.endpoint.enabled: true
+    ports:
+      - "8080:8080"
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: "hapi"
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - hapi-fhir-postgres:/var/lib/postgresql/data
+volumes:
+  hapi-fhir-postgres:
