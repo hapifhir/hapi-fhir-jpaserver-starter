@@ -1,21 +1,21 @@
 #!/bin/bash
 
-
-if [ -z "$1" ]; then
-  echo "Usage: $0 <directory>"
+# Check if gcloud is installed
+if ! command -v gcloud &> /dev/null; then
+  echo "Error: gcloud is not installed."
+  echo "Please install gcloud by following the instructions at: https://cloud.google.com/sdk/docs/install"
   exit 1
 fi
 
-# remove trailing /
-DIRECTORY="${1%/}"
+if [ -z "$1" ] || [ -z "$2" ]; then
+  echo "Error: Both FULL_PATH and PROJECT_NAME parameters are required."
+  echo "FULL_PATH: The source of the FHIR ndjson files."
+  echo "PROJECT_NAME: The path in the bucket."
+  echo "Usage: $0 FULL_PATH PROJECT_NAME"
+  exit 1
+fi
 
-CMD_PREFIX='aws s3api put-object --bucket fhir-aggregator-public'
-CMD_SUFFIX='--content-type application/fhir+ndjson'
+FULL_PATH=$1
+PROJECT_NAME=$2
 
-for file in $(find $DIRECTORY -name '*.ndjson'); do
-  # key=$(echo $file | sed "s|$DIRECTORY/||")
-  key=$file
-  echo "Uploading $file to s3://fhir-aggregator-public/$key"
-  $CMD_PREFIX --key $key --body $file $CMD_SUFFIX
-done
-
+gcloud storage cp ${FULL_PATH}/*.ndjson gs://fhir-aggregator-public/${PROJECT_NAME}/META/ --content-type=application/fhir+ndjson --project=ncpi-rti-p01-007-ohsu

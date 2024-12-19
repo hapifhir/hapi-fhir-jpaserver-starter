@@ -3,6 +3,11 @@ import json
 import requests
 import os
 import yaml
+from halo import Halo
+import sys
+
+FHIR_BASE = 'https://hapi.fhir-aggregator.org/fhir/'
+
 
 
 @click.group()
@@ -13,7 +18,7 @@ def cli():
 @cli.command()
 @click.option(
     '--fhir-url', '-u',
-    default="http://localhost:8080/fhir",
+    default=FHIR_BASE,
     help="Base URL of the FHIR service (e.g., 'https://fhir.example.com')."
 )
 def get_resource_counts(fhir_url):
@@ -42,7 +47,7 @@ def get_resource_counts(fhir_url):
 @cli.command()
 @click.option(
     '--fhir-url', '-u',
-    default="http://localhost:8080/fhir",
+    default=FHIR_BASE,
     help="Base URL of the FHIR service (e.g., 'https://fhir.example.com')."
 )
 def count_resources(fhir_url):
@@ -55,45 +60,89 @@ def count_resources(fhir_url):
             fhir_url += '/'
 
         # Send GET request to FHIR service
-        response = requests.get(f"{fhir_url}metadata")
-        if response.status_code == 200:
-            metadata = response.json()
-            resource_types = [_['type'] for _ in metadata['rest'][0]['resource']]
-            for resource_type in resource_types:
-                response = requests.get(f"{fhir_url}{resource_type}?_count=0&_total=accurate")
-                if response.status_code == 200:
-                    total = response.json().get('total')
-                    if total:
-                        click.echo(f"{resource_type}: {total}")
-                else:
-                    click.echo(f"Failed with status {response.status_code}: {response.text}")
-        else:
-            click.echo(f"Failed with status {response.status_code}: {response.text}")
-
+        output = {'resources': {}}
+        resources = output['resources']
+        with Halo(text='Querying', spinner='line', placement='right', color='white', stream=sys.stderr) as spinner:
+            spinner.text = f"Querying metadata"
+            response = requests.get(f"{fhir_url}metadata")
+            if response.status_code == 200:
+                metadata = response.json()
+                resource_types = [_['type'] for _ in metadata['rest'][0]['resource']]
+                for resource_type in resource_types:
+                    spinner.text = f"Querying {resource_type}"
+                    response = requests.get(f"{fhir_url}{resource_type}?_count=0&_total=accurate")
+                    if response.status_code == 200:
+                        total = response.json().get('total')
+                        if total:
+                            resources[resource_type] = total
+                    else:
+                        click.echo(f"Failed with status {response.status_code}: {response.text}", file=sys.stderr)
+                        break
+            else:
+                click.echo(f"Failed with status {response.status_code}: {response.text}", file=sys.stderr)
+        # write output as yaml
+        yaml_output = yaml.dump(output, default_flow_style=False)
+        print(yaml_output)
     except Exception as e:
         click.echo(f"Error: {e}")
 
 
 @cli.command()
 @click.option(
-    '--directory', '-d',
-    type=click.Path(exists=True, file_okay=False),
-    required=True,
-    help="Path to the directory containing NDJSON files."
-)
-@click.option(
     '--fhir-url', '-u',
-    default="http://localhost:8080/fhir",
+    default=FHIR_BASE,
     help="Base URL of the FHIR service (e.g., 'https://fhir.example.com')."
 )
-@click.option(
-    '--auth-token', '-t',
-    default=None,
-    help="Optional authentication token for the FHIR service."
-)
-def push(directory, fhir_url, auth_token):
+def count_resources(fhir_url):
     """
-    Send all NDJSON files in a directory to server. See `$import` for faster method.
+    Explicitly count every resource type.
+    """
+    try:
+        # Validate the FHIR base URL
+        if not fhir_url.endswith('/'):
+            fhir_url += '/'
+
+        # Send GET request to FHIR service
+        output = {'resources': {}}
+        resources = output['resources']
+        with Halo(text='Querying', spinner='line', placement='right', color='white', stream=sys.stderr) as spinner:
+            spinner.text = f"Querying metadata"
+            response = requests.get(f"{fhir_url}metadata")
+            if response.status_code == 200:
+                metadata = response.json()
+                resource_types = [_['type'] for _ in metadata['rest'][0]['resource']]
+                for resource_type in resource_types:
+                    spinner.text = f"Querying {resource_type}"
+                    response = requests.get(f"{fhir_url}{resource_type}?_count=0&_total=accurate")
+                    if response.status_code == 200:
+                        total = response.json().get('total')
+                        if total:
+                            resources[resource_type] = total
+                    else:
+                        click.echo(f"Failed with status {response.status_code}: {response.text}", file=sys.stderr)
+                        break
+            else:
+                click.echo(f"Failed with status {response.status_code}: {response.text}", file=sys.stderr)
+        # write output as yaml
+        yaml_output = yaml.dump(output, default_flow_style=False)
+        print(yaml_output)
+    except Exception as e:
+        click.echo(f"Error: {e}")
+
+
+@cli.command()
+@click.option(
+    '--fhir-url', '-u',
+    default=FHIR_BASE,
+    help="Base URL of the FHIR service (e.g., 'https://fhir.example.com')."
+)
+@click.argument('resource_type', required=True)
+def summarize(fhir_url, resource_type):
+    """
+    List Summary information for resource
+
+    \b
+    RESOURCE_TYPE: The type of FHIR resource to summarize.
     """
     try:
         # Validate the FHIR base URL
@@ -104,40 +153,23 @@ def push(directory, fhir_url, auth_token):
         headers = {
             'Content-Type': 'application/json',
         }
-        if auth_token:
-            headers['Authorization'] = f"Bearer {auth_token}"
 
-        # Process all NDJSON files in the directory
-        for filename in os.listdir(directory):
-            if filename.endswith('.ndjson'):
-                filepath = os.path.join(directory, filename)
-                click.echo(f"Processing file: {filepath}")
+        entries = []
+        with Halo(text='Querying', spinner='line', placement='right', color='white', stream=sys.stderr) as spinner:
+            spinner.text = f"Querying {resource_type}"
+            response = requests.get(f"{fhir_url}{resource_type}?_summary=summary", headers=headers)
+            if response.status_code == 200:
+                summary = response.json()
+                entries = [_['resource'] for _ in summary['entry']]
+            else:
+                click.echo(f"Failed with status {response.status_code}: {response.text}", file=sys.stderr)
+        yaml_summary = yaml.dump({'entry': entries}, default_flow_style=False)
+        print(yaml_summary)
 
-                with open(filepath, 'r') as ndjson_file:
-                    for line_number, line in enumerate(ndjson_file, start=1):
-                        try:
-                            # Parse JSON
-                            entry = json.loads(line.strip())
-                            resource_type = entry.get('resourceType')
+        for entry in entries:
+            response = requests.get(f"{fhir_url}{resource_type}?_id={entry['id']}&", headers=headers)
 
-                            if not resource_type:
-                                click.echo(f"Line {line_number}: Missing resourceType field, skipping.")
-                                continue
 
-                            # Construct FHIR endpoint
-                            id_ = entry.get('id')
-                            assert id_, f"Line {line_number}: Missing id field."
-                            fhir_endpoint = f"{fhir_url}{resource_type}/{id_}"
-
-                            # Send PUT request to FHIR service, since we have the id in the resource
-                            response = requests.put(fhir_endpoint, headers=headers, json=entry)
-                            if response.status_code in [200, 201]:
-                                click.echo(f"Line {line_number}: Successfully sent to {resource_type}.")
-                            else:
-                                click.echo(f"Line {line_number}: Failed with status {response.status_code}: {response.text}")
-
-                        except json.JSONDecodeError as e:
-                            click.echo(f"Line {line_number}: Invalid JSON - {e}")
 
     except Exception as e:
         click.echo(f"Error: {e}")
@@ -170,7 +202,7 @@ def fetch_all_specimen_revincludes(fhir_url, headers, bundle):
 @cli.command()
 @click.option(
     '--fhir-url', '-u',
-    default="http://localhost:8080/fhir",
+    default=FHIR_BASE,
     help="Base URL of the FHIR service (e.g., 'https://fhir.example.com')."
 )
 @click.option(
@@ -218,6 +250,7 @@ def fetch(fhir_url, auth_token, identifier):
 
     except Exception as e:
         click.echo(f"Error: {e}")
+
 
 if __name__ == '__main__':
     cli()

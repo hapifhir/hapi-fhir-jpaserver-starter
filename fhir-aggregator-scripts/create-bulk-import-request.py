@@ -5,19 +5,25 @@ import click
 import os
 
 
-@click.group()
-def cli():
-    pass
+@click.command()
+@click.argument('full_path')
+@click.argument('project_name')
+@click.option('--input-source', default='https://storage.googleapis.com/fhir-aggregator-public', help='The publicly available https:// url base')
+def bulk_import(full_path, project_name, input_source):
+    """
+    Create manifest for loading FHIR data from bucket.
 
+    \b
+    Arguments:\n
+    full_path (str): The source of the FHIR ndjson files in the local file system.
+    project_name (str): The path in the bucket.
+    """
 
-@cli.command()
-@click.option(
-    '--directory', '-d',
-    type=click.Path(exists=True, file_okay=False),
-    required=True,
-    help="Path to the directory containing NDJSON files."
-)
-def bulk_import(directory):
+    if not os.path.exists(full_path):
+        raise FileNotFoundError(f"{full_path} does not exist")
+    if input_source.endswith("/"):
+        input_source = input_source[:-1]
+
     # read all ndjson recursively files in the directory
     ndjson_files = []
 
@@ -30,7 +36,7 @@ def bulk_import(directory):
             },
             {
                 "name": "inputSource",
-                "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com"
+                "valueUri": f"{input_source}/{project_name}/META/"
             },
             {
                 "name": "storageDetail",
@@ -44,7 +50,7 @@ def bulk_import(directory):
         ]
     }
 
-    for root, dirs, files in os.walk(directory):
+    for root, dirs, files in os.walk(full_path):
         for file in files:
             if file.endswith(".ndjson"):
                 ndjson_files.append(os.path.join(root, file))
@@ -60,13 +66,17 @@ def bulk_import(directory):
             },
             {
               "name": "url",
-              "valueUri": f"https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/{path}"
+              "valueUri": f"https://storage.googleapis.com/fhir-aggregator-public/{project_name}/META/{path.name}"
             }
           ]
         }
         parameters['parameter'].append(_)
-    print(json.dumps(parameters))
 
+    # Write the JSON output to a file
+    output_file = f"bulk-import-request-{project_name}.json"
+    with open(output_file, 'w') as f:
+        json.dump(parameters, f, indent=2)
+    print(f"Manifest written to {output_file}")
 
 if __name__ == '__main__':
-    cli()
+    bulk_import()

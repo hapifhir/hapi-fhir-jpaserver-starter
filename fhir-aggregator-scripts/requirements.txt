@@ -1,3 +1,8 @@
 click
 requests
 pyyaml
+halo
+httpx
+
+fhir.resources==8.0.0b4
+dotty-dict

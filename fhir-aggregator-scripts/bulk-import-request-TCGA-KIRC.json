@@ -7,7 +7,7 @@
     },
     {
       "name": "inputSource",
-      "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com"
+      "valueUri": "https://storage.googleapis.com/fhir-aggregator-public/TCGA-KIRC/META/"
     },
     {
       "name": "storageDetail",
@@ -27,7 +27,7 @@
         },
         {
           "name": "url",
-          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/DocumentReference.ndjson"
+          "valueUri": "https://storage.googleapis.com/fhir-aggregator-public/TCGA-KIRC/META/DocumentReference.ndjson"
         }
       ]
     },
@@ -40,7 +40,7 @@
         },
         {
           "name": "url",
-          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/Procedure.ndjson"
+          "valueUri": "https://storage.googleapis.com/fhir-aggregator-public/TCGA-KIRC/META/Procedure.ndjson"
         }
       ]
     },
@@ -53,7 +53,7 @@
         },
         {
           "name": "url",
-          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/Specimen.ndjson"
+          "valueUri": "https://storage.googleapis.com/fhir-aggregator-public/TCGA-KIRC/META/Specimen.ndjson"
         }
       ]
     },
@@ -66,7 +66,7 @@
         },
         {
           "name": "url",
-          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/Medication.ndjson"
+          "valueUri": "https://storage.googleapis.com/fhir-aggregator-public/TCGA-KIRC/META/Medication.ndjson"
         }
       ]
     },
@@ -79,7 +79,7 @@
         },
         {
           "name": "url",
-          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/Observation.ndjson"
+          "valueUri": "https://storage.googleapis.com/fhir-aggregator-public/TCGA-KIRC/META/Observation.ndjson"
         }
       ]
     },
@@ -92,7 +92,7 @@
         },
         {
           "name": "url",
-          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/ResearchStudy.ndjson"
+          "valueUri": "https://storage.googleapis.com/fhir-aggregator-public/TCGA-KIRC/META/ResearchStudy.ndjson"
         }
       ]
     },
@@ -105,7 +105,7 @@
         },
         {
           "name": "url",
-          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/BodyStructure.ndjson"
+          "valueUri": "https://storage.googleapis.com/fhir-aggregator-public/TCGA-KIRC/META/BodyStructure.ndjson"
         }
       ]
     },
@@ -118,7 +118,7 @@
         },
         {
           "name": "url",
-          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/Condition.ndjson"
+          "valueUri": "https://storage.googleapis.com/fhir-aggregator-public/TCGA-KIRC/META/Condition.ndjson"
         }
       ]
     },
@@ -131,7 +131,7 @@
         },
         {
           "name": "url",
-          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/ResearchSubject.ndjson"
+          "valueUri": "https://storage.googleapis.com/fhir-aggregator-public/TCGA-KIRC/META/ResearchSubject.ndjson"
         }
       ]
     },
@@ -144,7 +144,7 @@
         },
         {
           "name": "url",
-          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/Encounter.ndjson"
+          "valueUri": "https://storage.googleapis.com/fhir-aggregator-public/TCGA-KIRC/META/Encounter.ndjson"
         }
       ]
     },
@@ -157,7 +157,7 @@
         },
         {
           "name": "url",
-          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/Group.ndjson"
+          "valueUri": "https://storage.googleapis.com/fhir-aggregator-public/TCGA-KIRC/META/Group.ndjson"
         }
       ]
     },
@@ -170,7 +170,7 @@
         },
         {
           "name": "url",
-          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/MedicationAdministration.ndjson"
+          "valueUri": "https://storage.googleapis.com/fhir-aggregator-public/TCGA-KIRC/META/MedicationAdministration.ndjson"
         }
       ]
     },
@@ -183,7 +183,7 @@
         },
         {
           "name": "url",
-          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/ImagingStudy.ndjson"
+          "valueUri": "https://storage.googleapis.com/fhir-aggregator-public/TCGA-KIRC/META/ImagingStudy.ndjson"
         }
       ]
     },
@@ -196,7 +196,7 @@
         },
         {
           "name": "url",
-          "valueUri": "https://fhir-aggregator-public.s3.us-west-2.amazonaws.com/TCGA-KIRC/META/Patient.ndjson"
+          "valueUri": "https://storage.googleapis.com/fhir-aggregator-public/TCGA-KIRC/META/Patient.ndjson"
         }
       ]
     }

@@ -25,30 +25,68 @@ hapi-fhir-jpaserver-start   hapiproject/hapi:v7.4.0   "java --class-path /…"  
 hapi-fhir-postgres          postgres:15-alpine        "docker-entrypoint.s…"   hapi-fhir-postgres          8 minutes ago   Up 8 minutes   5432/tcp
 ```
 
-* query the server
+* configure the endpoint
 
 ```bash
- curl -s 'http://localhost:8080/fhir/metadata' > /dev/null && echo 'OK: server running'
+# local
+export FHIR_BASE=http://localhost:8080/fhir/
+# deployed
+export FHIR_BASE=https://hapi.fhir-aggregator.org/write-fhir/
+# set the project name, used as a prefix for the bucket objects
+export PROJECT_NAME=TCGA-CHANGEME
+```
+
+* query the server
+
+
+```bash
+ curl -s $FHIR_BASE'/metadata' > /dev/null && echo 'OK: server running'
 OK: server running
 
 ```
 
-* start a job to load from a public bucket
+* upload your data to the public bucket. See upload.sh for details.
 
-  * see https://smilecdr.com/docs/bulk/fhir_bulk_import.html#triggering-a-bulk-import
-  > storageDetail.type; Must be https. Other input mechanisms will be added in the future. Note that Smile CDR will accept non-HTTPS URLs as a data source in order to simplify testing, however this should not be used for production / PHI / PII scenarios.
+* create a manifest file to describe the data you want to load. See create-manifest.py for details.
 
 ```bash
-curl -vvvv --header "Content-Type: application/fhir+json" --header "Prefer: respond-async"  -X POST 'http://localhost:8080/fhir/$import' --data @bulk-import-request-TCGA-KIRC.json 
+python create-bulk-import-request.py --help
+Usage: create-bulk-import-request.py [OPTIONS] FULL_PATH PROJECT_NAME
+
+  Create manifest for loading FHIR data from bucket.
+
+  Arguments:
+
+  full_path (str): The source of the FHIR ndjson files in the local file
+  system. project_name (str): The path in the bucket.
+
+Options:
+  --input-source TEXT  The publicly available https:// url base
+  --help               Show this message and exit.
+
+```
+
+* start a job to load from a `public` bucket
+
+  * This is for open access data only
+
+```bash
+# local
+unset AUTH
+# deployed
+export AUTH='-u USER:PASS'
+
+curl -vvvv $AUTH --header "Content-Type: application/fhir+json" --header "Prefer: respond-async"  -X POST $FHIR_BASE'/$import' --data @bulk-import-request-PROJECT_NAME.json 
 ```
 *Note:*
 > The first time this command is run after restarting the server, it may take a few ( well more than a few ) minutes  to respond. Subsequent runs will be faster.
+> See https://groups.google.com/g/hapi-fhir/c/V87IZHvlDyM/m/JIOvBvgwAQAJ
 
 * check the status of the job
 
 ```bash
 # where XXXX came from the response of the previous command
-curl 'http://localhost:8080/fhir/$import-poll-status?_jobId=XXXX'
+curl $FHIR_BASE'/$import-poll-status?_jobId=XXXX'
 
 ```
 
