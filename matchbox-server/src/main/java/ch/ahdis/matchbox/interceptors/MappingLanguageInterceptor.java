@@ -165,34 +165,10 @@ public class MappingLanguageInterceptor extends InterceptorAdapter {
 	public String compileAndSerializeMap(final String mapText,
 													 final FhirVersionEnum fhirVersion,
 													 final @Nullable String structureMapId) throws IOException {
-		final IWorkerContext workerContext;
-		if (this.matchboxEngineSupport.getClientContext().getOnlyOneEngine()) {
-			// In 'onlyOneEngine' mode, we cannot initialize a new engine for the compilation
-			if (FhirVersionEnum.R5.getFhirVersionString().equals(this.matchboxEngineSupport.getClientContext().getFhirVersion())) {
-				// We try to reuse the main engine if it's R5
-				workerContext = MatchboxEngineSupport.mainEngine.getContext();
-			} else {
-				// Otherwise, we have to initialize a new worker context
-				workerContext = MatchboxEngine.createR5WorkerContext();
-			}
-		} else {
-			// Let's get or initialize a new R5 engine
-			workerContext = MatchboxEngineSupport.mainEngine.getContextForFhirVersion(fhirVersion.getFhirVersionString());
-		}
-
-		final var scu = new MatchboxStructureMapUtilities(workerContext,
-																		  new TransformSupportServices(workerContext,
-																												 Collections.emptyList()),
-																		  MatchboxEngineSupport.mainEngine);
-		final StructureMap mapR5 = scu.parse(mapText, "map");
-		mapR5.getText().setStatus(Narrative.NarrativeStatus.GENERATED);
-		mapR5.getText().setDiv(new XhtmlNode(NodeType.Element, "div"));
-		final String render = StructureMapUtilities.render(mapR5);
-		mapR5.getText().getDiv().addTag("pre").addText(render);
+		StructureMap mapR5 = MatchboxEngineSupport.mainEngine.parseMapR5(mapText);
 		if (structureMapId != null) {
 			mapR5.setId(structureMapId);
 		}
-
 		return switch (fhirVersion) {
 			case R4:
 				org.hl7.fhir.r4.model.StructureMap sm4 = (org.hl7.fhir.r4.model.StructureMap) VersionConvertorFactory_40_50.convertResource(

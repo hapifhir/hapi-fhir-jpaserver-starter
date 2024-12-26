@@ -1,4 +1,4 @@
-@host = http://localhost:8080/matchboxv3/fhir
+@host = http://localhost:8080/matchbox/fhir
 #@host = https://test.ahdis.ch/matchbox/fhir
 ### @host = https://test.ahdis.ch/matchboxv3/fhir
 
@@ -23,7 +23,7 @@ group item(source src, target tgt: Patient) {
 }
 
 ### Convert Textual representation of a FHIR Mapping Language to StructureMap resource
-POST {{host}}/StructureMap/$convert HTTP/1.1
+POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+json
 Content-Type: text/fhir-mapping
 
@@ -38,7 +38,15 @@ group item(source src, target tgt: Patient) {
 }
 
 ### Convert Textual representation of a FHIR Mapping Language to StructureMap resource
-POST {{host}}/StructureMap/$convert HTTP/1.1
+GET {{host}}/StructureMap/qr2patgender HTTP/1.1
+Accept: application/fhir+json
+
+### Convert Textual representation of a FHIR Mapping Language to StructureMap resource
+GET {{host}}/StructureMap?url=http://ahdis.ch/matchbox/fml/qr2patgender HTTP/1.1
+Accept: application/fhir+json
+
+### Convert Textual representation of a FHIR Mapping Language to StructureMap resource
+POST {{host}}/StructureMap HTTP/1.1
 Accept: application/fhir+json
 Content-Type: text/fhir-mapping
 
