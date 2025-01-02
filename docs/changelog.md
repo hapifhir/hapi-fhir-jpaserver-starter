@@ -1,6 +1,7 @@
 2025/01/xx Release 3.9.10
 - Performance improvement fml [#323](parsing https://github.com/ahdis/matchbox/issues/323)
 - Update org.hl7.fhir.core to 6.5.2 and hapi-fhir to 7.6.1 
+- Update integration tests
 
 2024/12/09 Release 3.9.9
 
