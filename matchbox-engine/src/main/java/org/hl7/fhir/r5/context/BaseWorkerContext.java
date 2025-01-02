@@ -59,6 +59,7 @@ import org.hl7.fhir.exceptions.TerminologyServiceException;
 import org.hl7.fhir.r5.conformance.profile.ProfileUtilities;
 import org.hl7.fhir.r5.context.CanonicalResourceManager.CanonicalResourceProxy;
 import org.hl7.fhir.r5.context.ILoggingService.LogCategory;
+import org.hl7.fhir.r5.context.IWorkerContext.ITerminologyOperationDetails;
 import org.hl7.fhir.r5.model.ActorDefinition;
 import org.hl7.fhir.r5.model.BooleanType;
 import org.hl7.fhir.r5.model.Bundle;
@@ -237,7 +238,6 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
   private Object lock = new Object(); // used as a lock for the data that follows
   protected String version; // although the internal resources are all R5, the version of FHIR they describe may not be 
 
-  protected final TerminologyClientManager terminologyClientManager = new TerminologyClientManager(new TerminologyClientR5.TerminologyClientR5Factory(), UUID.randomUUID().toString());
   private boolean minimalMemory = false;
 
   private Map<String, Map<String, ResourceProxy>> allResourcesById = new HashMap<String, Map<String, ResourceProxy>>();
@@ -279,6 +279,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
   protected boolean noTerminologyServer;
   private int expandCodesLimit = 1000;
   protected org.hl7.fhir.r5.context.ILoggingService logger = new SystemOutLoggingService();
+  protected final TerminologyClientManager terminologyClientManager = new TerminologyClientManager(new TerminologyClientR5.TerminologyClientR5Factory(), UUID.randomUUID().toString(), logger);
   protected Parameters expParameters;
   private Map<String, PackageInformation> packages = new HashMap<>();
 
@@ -867,7 +868,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
 
 
   @Override
-  public ValueSetExpansionOutcome expandVS(ConceptSetComponent inc, boolean hierarchical, boolean noInactive) throws TerminologyServiceException {
+  public ValueSetExpansionOutcome expandVS(ITerminologyOperationDetails opCtxt, ConceptSetComponent inc, boolean hierarchical, boolean noInactive) throws TerminologyServiceException {
     ValueSet vs = new ValueSet();
     vs.setStatus(PublicationStatus.ACTIVE);
     vs.setCompose(new ValueSetComposeComponent());
@@ -884,7 +885,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     if (tc == null) {
       return new ValueSetExpansionOutcome("No server available", TerminologyServiceErrorClass.INTERNAL_ERROR, true);      
     }
-    Parameters p = constructParameters(tc, vs, hierarchical);
+    Parameters p = constructParameters(opCtxt, tc, vs, hierarchical);
     for (ConceptSetComponent incl : vs.getCompose().getInclude()) {
       codeSystemsUsed.add(incl.getSystem());
     }
@@ -898,7 +899,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     p.addParameter("count", expandCodesLimit);
     p.addParameter("offset", 0);
     txLog("$expand on "+txCache.summary(vs)+" on "+tc.getAddress());
-    if (addDependentResources(tc, p, vs)) {
+    if (addDependentResources(opCtxt, tc, p, vs)) {
       p.addParameter().setName("cache-id").setValue(new IdType(terminologyClientManager.getCacheId()));
     }
 
@@ -921,6 +922,65 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       throw new Error(formatMessage(I18nConstants.NO_EXPANSION_PARAMETERS_PROVIDED));
     Parameters p = expParameters.copy(); 
     return expandVS(vs, cacheOk, heirarchical, false, p);
+  }
+
+  @Override
+  public ValueSetExpansionOutcome expandVS(ValueSet vs, boolean cacheOk, boolean heirarchical, int count) {
+    if (expParameters == null)
+      throw new Error(formatMessage(I18nConstants.NO_EXPANSION_PARAMETERS_PROVIDED));
+    Parameters p = expParameters.copy(); 
+    p.addParameter("count", count);
+    return expandVS(vs, cacheOk, heirarchical, false, p);
+  }
+
+  @Override
+  public ValueSetExpansionOutcome expandVS(String url, boolean cacheOk, boolean hierarchical, int count) {
+    if (expParameters == null)
+      throw new Error(formatMessage(I18nConstants.NO_EXPANSION_PARAMETERS_PROVIDED));
+    if (noTerminologyServer) {
+      return new ValueSetExpansionOutcome(formatMessage(I18nConstants.ERROR_EXPANDING_VALUESET_RUNNING_WITHOUT_TERMINOLOGY_SERVICES), TerminologyServiceErrorClass.NOSERVICE, null, false);
+    }
+
+    Parameters p = expParameters.copy(); 
+    p.addParameter("count", count);
+    p.addParameter("url", new UriType(url));
+    p.setParameter("_limit",new IntegerType("10000"));
+    p.setParameter("_incomplete", new BooleanType("true"));
+
+    CacheToken cacheToken = txCache.generateExpandToken(url, hierarchical);
+    ValueSetExpansionOutcome res;
+    if (cacheOk) {
+      res = txCache.getExpansion(cacheToken);
+      if (res != null) {
+        return res;
+      }
+    }
+    p.setParameter("excludeNested", !hierarchical);
+    List<String> allErrors = new ArrayList<>();
+
+    p.addParameter().setName("cache-id").setValue(new IdType(terminologyClientManager.getCacheId()));
+    TerminologyClientContext tc = terminologyClientManager.chooseServer(url, true);
+    try {
+      if (tc == null) {
+        throw new FHIRException("Unable to find a server to expand '"+url+"'");
+      }
+      txLog("$expand "+url+" on "+tc.getAddress());
+    
+      ValueSet result = tc.getClient().expandValueset(null, p);
+      if (result != null) {
+        if (!result.hasUrl()) {
+          result.setUrl(url);
+        }
+        if (!result.hasUrl()) {
+          throw new Error(formatMessage(I18nConstants.NO_URL_IN_EXPAND_VALUE_SET_2));
+        }
+      }
+      res = new ValueSetExpansionOutcome(result).setTxLink(txLog.getLastId());  
+    } catch (Exception e) {
+      res = new ValueSetExpansionOutcome((e.getMessage() == null ? e.getClass().getName() : e.getMessage()), TerminologyServiceErrorClass.UNKNOWN, allErrors, true).setTxLink(txLog == null ? null : txLog.getLastId());
+    }
+    txCache.cacheExpansion(cacheToken, res, TerminologyCache.PERMANENT);
+    return res;
   }
 
   @Override
@@ -972,7 +1032,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       }
     }
 
-    if (!noLimits) {
+    if (!noLimits && !p.hasParameter("count")) {
       p.addParameter("count", expandCodesLimit);
       p.addParameter("offset", 0);
     }
@@ -1013,7 +1073,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     p.addParameter().setName("cache-id").setValue(new IdType(terminologyClientManager.getCacheId()));
     Set<String> systems = findRelevantSystems(vs);
     TerminologyClientContext tc = terminologyClientManager.chooseServer(vs, systems, true);
-    addDependentResources(tc, p, vs);
+    addDependentResources(null, tc, p, vs);
 
     
     txLog("$expand on "+txCache.summary(vs)+" on "+tc.getAddress());
@@ -1393,7 +1453,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     }
     try {
       Parameters pIn = constructParameters(options, code);
-      res = validateOnServer(tc, vs, pIn, options);
+      res = validateOnServer2(tc, vs, pIn, options, systems);
     } catch (Exception e) {
       res = new ValidationResult(IssueSeverity.ERROR, e.getMessage() == null ? e.getClass().getName() : e.getMessage(), null).setTxLink(txLog == null ? null : txLog.getLastId()).setErrorClass(TerminologyServiceErrorClass.SERVER_ERROR);
     }
@@ -1504,12 +1564,12 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     return new ValueSetValidator(this, new TerminologyOperationContext(this, options, "validation"), options, vs, expParameters, terminologyClientManager);
   }
 
-  protected Parameters constructParameters(TerminologyClientContext tcd, ValueSet vs, boolean hierarchical) {
+  protected Parameters constructParameters(ITerminologyOperationDetails opCtxt, TerminologyClientContext tcd, ValueSet vs, boolean hierarchical) {
     Parameters p = expParameters.copy();
     p.setParameter("includeDefinition", false);
     p.setParameter("excludeNested", !hierarchical);
 
-    addDependentResources(tcd, p, vs);
+    addDependentResources(opCtxt, tcd, p, vs);
     p.addParameter().setName("cache-id").setValue(new IdType(terminologyClientManager.getCacheId()));
     return p;
   }
@@ -1663,7 +1723,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     txLog("$validate "+txCache.summary(code)+" for "+ txCache.summary(vs)+" on "+tc.getAddress());
     try {
       Parameters pIn = constructParameters(options, code);
-      res = validateOnServer(tc, vs, pIn, options);
+      res = validateOnServer2(tc, vs, pIn, options, systems);
     } catch (Exception e) {
       issues.clear();
       OperationOutcomeIssueComponent iss = new OperationOutcomeIssueComponent(org.hl7.fhir.r5.model.OperationOutcome.IssueSeverity.ERROR, org.hl7.fhir.r5.model.OperationOutcome.IssueType.EXCEPTION);
@@ -1745,6 +1805,10 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
   }
 
   protected ValidationResult validateOnServer(TerminologyClientContext tc, ValueSet vs, Parameters pin, ValidationOptions options) throws FHIRException {
+    return  validateOnServer2(tc, vs, pin, options, null);
+  }
+  
+  protected ValidationResult validateOnServer2(TerminologyClientContext tc, ValueSet vs, Parameters pin, ValidationOptions options, Set<String> systems) throws FHIRException {
 
     if (vs != null) {
       for (ConceptSetComponent inc : vs.getCompose().getInclude()) {
@@ -1755,7 +1819,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       }
     }
 
-    addServerValidationParameters(tc, vs, pin, options);
+    addServerValidationParameters(null, tc, vs, pin, options, systems);
 
     if (txLog != null) {
       txLog.clearLastId();
@@ -1772,7 +1836,11 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     return processValidationResult(pOut, vs == null ? null : vs.getUrl(), tc.getClient().getAddress());
   }
 
-  protected void addServerValidationParameters(TerminologyClientContext terminologyClientContext, ValueSet vs, Parameters pin, ValidationOptions options) {
+  protected void addServerValidationParameters(ITerminologyOperationDetails opCtxt, TerminologyClientContext terminologyClientContext, ValueSet vs, Parameters pin, ValidationOptions options) {
+    addServerValidationParameters(opCtxt, terminologyClientContext, vs, pin, options, null);
+  }
+  
+  protected void addServerValidationParameters(ITerminologyOperationDetails opCtxt, TerminologyClientContext terminologyClientContext, ValueSet vs, Parameters pin, ValidationOptions options, Set<String> systems) {
     boolean cache = false;
     if (vs != null) {
       if (terminologyClientContext != null && terminologyClientContext.isTxCaching() && terminologyClientContext.getCacheId() != null && vs.getUrl() != null && terminologyClientContext.getCached().contains(vs.getUrl()+"|"+ vs.getVersion())) {
@@ -1793,7 +1861,12 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
         }
       }
       cache = true;
-      addDependentResources(terminologyClientContext, pin, vs);
+      addDependentResources(opCtxt, terminologyClientContext, pin, vs);
+    }
+    if (systems != null) {
+      for (String s : systems) {
+        cache = addDependentCodeSystem(opCtxt, terminologyClientContext, pin, s, null) || cache;
+      }
     }
     pin.addParameter().setName("cache-id").setValue(new IdType(terminologyClientManager.getCacheId()));
     for (ParametersParameterComponent pp : pin.getParameter()) {
@@ -1812,46 +1885,81 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     pin.addParameter("diagnostics", true);
   }
 
-  private boolean addDependentResources(TerminologyClientContext tc, Parameters pin, ValueSet vs) {
+  private boolean addDependentResources(ITerminologyOperationDetails opCtxt, TerminologyClientContext tc, Parameters pin, ValueSet vs) {
     boolean cache = false;
     for (ConceptSetComponent inc : vs.getCompose().getInclude()) {
-      cache = addDependentResources(tc, pin, inc, vs) || cache;
+      cache = addDependentResources(opCtxt, tc, pin, inc, vs) || cache;
     }
     for (ConceptSetComponent inc : vs.getCompose().getExclude()) {
-      cache = addDependentResources(tc, pin, inc, vs) || cache;
+      cache = addDependentResources(opCtxt, tc, pin, inc, vs) || cache;
     }
     return cache;
   }
 
-  private boolean addDependentResources(TerminologyClientContext tc, Parameters pin, ConceptSetComponent inc, Resource src) {
+  private boolean addDependentResources(ITerminologyOperationDetails opCtxt, TerminologyClientContext tc, Parameters pin, ConceptSetComponent inc, Resource src) {
     boolean cache = false;
     for (CanonicalType c : inc.getValueSet()) {
       ValueSet vs = fetchResource(ValueSet.class, c.getValue(), src);
       if (vs != null && !hasCanonicalResource(pin, "tx-resource", vs.getVUrl())) {
         cache = checkAddToParams(tc, pin, vs) || cache;
-        addDependentResources(tc, pin, vs);
+        addDependentResources(opCtxt, tc, pin, vs);
         for (Extension ext : vs.getExtensionsByUrl(ToolingExtensions.EXT_VS_CS_SUPPL_NEEDED)) {
           if (ext.hasValueCanonicalType()) {
             String url = ext.getValueCanonicalType().asStringValue();
             CodeSystem supp = fetchResource(CodeSystem.class, url);
             if (supp != null) {
+              if (opCtxt != null) {
+                opCtxt.seeSupplement(supp);
+              }
               cache = checkAddToParams(tc, pin, supp) || cache;            
             }
           }
         }
       }
     }
-    CodeSystem cs = fetchResource(CodeSystem.class, inc.getSystem(), src);
+    String sys = inc.getSystem();
+    cache = addDependentCodeSystem(opCtxt, tc, pin, sys, src) || cache;
+    return cache;
+  }
+
+  public boolean addDependentCodeSystem(ITerminologyOperationDetails opCtxt, TerminologyClientContext tc, Parameters pin, String sys, Resource src) {
+    boolean cache = false;
+    CodeSystem cs = fetchResource(CodeSystem.class, sys, src);
     if (cs != null && !hasCanonicalResource(pin, "tx-resource", cs.getVUrl()) && (cs.getContent() == CodeSystemContentMode.COMPLETE || cs.getContent() == CodeSystemContentMode.FRAGMENT)) {
       cache = checkAddToParams(tc, pin, cs) || cache;
     }
     for (CodeSystem supp : codeSystems.getSupplements(cs)) {
-      //if (supp.getContent() == CodeSystemContentMode.SUPPLEMENT && supp.getSupplements().equals(inc.getSystem())) {
-      assert supp.getContent() == CodeSystemContentMode.SUPPLEMENT && supp.getSupplements().equals(inc.getSystem());
+      opCtxt.seeSupplement(supp);
+      cache = checkAddToParams(tc, pin, supp) || cache;
+    }
+    if (sys != null) {
+      // we also have to look at this by version because the resource might not be versioned or we might not have a copy
+      for (CodeSystem supp : codeSystems.getSupplements(sys)) {
+        opCtxt.seeSupplement(supp);
         cache = checkAddToParams(tc, pin, supp) || cache;
-      //}
+      }
+      if (!sys.contains("!")) {
+        sys = getFixedVersion(sys, pin);
+        if (sys != null) {
+          for (CodeSystem supp : codeSystems.getSupplements(sys)) {
+            opCtxt.seeSupplement(supp);
+            cache = checkAddToParams(tc, pin, supp) || cache;
+          }
+        }
+      }
     }
     return cache;
+  }
+
+  private String getFixedVersion(String sys, Parameters pin) {
+    for (ParametersParameterComponent p : pin.getParameter()) {
+      if (Utilities.existsInList(p.getName(), "system-version", "force-system-version", "default-system-version")) {
+        if (p.hasValuePrimitive() && p.getValue().primitiveValue() != null && p.getValue().primitiveValue().startsWith(sys)) {
+          return p.getValue().primitiveValue();
+        }
+      }
+    }
+    return null;
   }
 
   private boolean checkAddToParams(TerminologyClientContext tc, Parameters pin, CanonicalResource cr) {
@@ -2049,6 +2157,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
 
   public void setLogger(@Nonnull org.hl7.fhir.r5.context.ILoggingService logger) {
     this.logger = logger;
+    getTxClientManager().setLogger(logger);
   }
 
   public Parameters getExpansionParameters() {

@@ -1995,7 +1995,7 @@ public class StructureMapUtilities {
         if (expr == null) {
           expr = fpe.parse(getParamString(vars, tgt.getParameter().get(tgt.getParameter().size() - 1)));
         }
-        return fpe.check(vars, null, expr);
+        return fpe.check(vars, null, null, expr);
       case TRANSLATE:
         return new TypeDetails(CollectionStatus.SINGLETON, "CodeableConcept");
       case CC:

@@ -117,9 +117,6 @@ public class PackageLoaderSvc extends BasePackageCacheManager {
 
 		byte[] bytes = IOUtils.toByteArray(thePackageTgzInputStream);
 
-		if (theSourceDesc.length() > 100) {
-			theSourceDesc = theSourceDesc.substring(0, 100) + "[...]";
-		}
 		ourLog.info("Parsing package .tar.gz ({} bytes) from {}", bytes.length, theSourceDesc);
 
 		NpmPackage npmPackage = NpmPackage.fromPackage(new ByteArrayInputStream(bytes));
@@ -167,7 +164,7 @@ public class PackageLoaderSvc extends BasePackageCacheManager {
 				return bytes;
 			} catch (IOException | URISyntaxException e) {
 				throw new InternalErrorException(
-					Msg.code(2031) + "Error loading \"" + thePackageUrl + "\": " + e.getMessage());
+						Msg.code(2031) + "Error loading \"" + thePackageUrl + "\": " + e.getMessage());
 			}
 		} else if (thePackageUrl.startsWith("data:")) {
 			// Data URL, RFC 2397. The MIME type is skipped. The data must be encoded as base64.

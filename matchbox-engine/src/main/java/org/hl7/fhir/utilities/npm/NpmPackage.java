@@ -60,6 +60,7 @@ import org.apache.commons.compress.compressors.gzip.GzipParameters;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.utilities.ByteProvider;
 import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
+import org.hl7.fhir.utilities.StringPair;
 import org.hl7.fhir.utilities.TextFile;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
@@ -163,6 +164,39 @@ public class NpmPackage {
     }
   }
 
+  public static class PackagedResourceFile {
+    private String folder;
+    private String filename;
+    private String resourceType;
+    protected PackagedResourceFile(String folder, String filename, String resourceType) {
+      super();
+      this.folder = folder;
+      this.filename = filename;
+      this.resourceType = resourceType;
+    }
+    public String getFolder() {
+      return folder;
+    }
+    public String getFilename() {
+      return filename;
+    }
+    public String getResourceType() {
+      return resourceType;
+    }
+    public static class Sorter implements Comparator<PackagedResourceFile> {
+
+      @Override
+      public int compare(PackagedResourceFile o1, PackagedResourceFile o2) {
+        int res = o1.folder.compareTo(o2.folder);
+        if (res == 0) {
+          res = o1.filename.compareTo(o2.filename);
+        }
+        return res;
+      }
+      
+    }
+  }
+  
   public static boolean isValidName(String pid) {
     return pid.matches("^[a-z][a-zA-Z0-9]*(\\.[a-z][a-zA-Z0-9\\-]*)+$");
   }
@@ -751,9 +785,17 @@ public class NpmPackage {
     return listResources(Utilities.strings(types));
   }
   
+  public List<String> listResourcesinFolder(String folder, String... types) throws IOException {
+    return listResourcesInFolder(folder, Utilities.strings(types));
+  }
+  
   public List<String> listResources(List<String> types) throws IOException {
+    return listResourcesInFolder("package", types);
+  }
+  
+  public List<String> listResourcesInFolder(String folderName, List<String> types) throws IOException {
     List<String> res = new ArrayList<String>();
-    NpmPackageFolder folder = folders.get("package");
+    NpmPackageFolder folder = folders.get(folderName);
     if (types.size() == 0) {
       for (String s : folder.types.keySet()) {
         if (folder.types.containsKey(s)) {
@@ -768,6 +810,31 @@ public class NpmPackage {
       }
     }
     Collections.sort(res);
+    return res;
+  }
+
+  public List<PackagedResourceFile> listAllResources(Collection<String> types) throws IOException {
+    List<PackagedResourceFile> res = new ArrayList<PackagedResourceFile>();
+    for (NpmPackageFolder folder : folders.values()) {
+      if (types.size() == 0) {
+        for (String s : folder.types.keySet()) {
+          if (folder.types.containsKey(s)) {
+            for (String n : folder.types.get(s)) {
+              res.add(new PackagedResourceFile(folder.folderName, n, s));
+            }
+          }
+        }
+      } else {
+        for (String s : types) {
+          if (folder.types.containsKey(s)) {
+            for (String n : folder.types.get(s)) {
+              res.add(new PackagedResourceFile(folder.folderName, n, s));
+            }
+          }
+        }
+      }
+    }
+    Collections.sort(res, new PackagedResourceFile.Sorter());
     return res;
   }
 
