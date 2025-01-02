@@ -102,7 +102,7 @@
         <stax2_api_version>3.1.4</stax2_api_version>
         <testcontainers_version>1.19.4</testcontainers_version>
         <thymeleaf-version>3.1.2.RELEASE</thymeleaf-version>
-        <tomcat_embed_version>10.1.33</tomcat_embed_version>
+        <tomcat_embed_version>10.1.34</tomcat_embed_version>
         <woodstox_core_asl_version>4.4.1</woodstox_core_asl_version>
         <jacoco_version>0.8.12</jacoco_version>
         <info_cqframework_version>1.5.1</info_cqframework_version>
@@ -178,7 +178,7 @@
             <dependency>
                 <groupId>org.fhir</groupId>
                 <artifactId>ucum</artifactId>
-                <version>1.0.8</version>
+                <version>1.0.9</version>
             </dependency>
             <dependency>
                 <groupId>ca.uhn.hapi.fhir</groupId>
@@ -421,7 +421,7 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-webmvc</artifactId>
-                <version>6.1.13</version>
+                <version>6.1.14</version>
             </dependency>
             <dependency>
                 <groupId>org.awaitility</groupId>
