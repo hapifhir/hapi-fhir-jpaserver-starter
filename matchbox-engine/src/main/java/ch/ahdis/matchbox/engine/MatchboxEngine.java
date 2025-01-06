@@ -112,6 +112,9 @@ public class MatchboxEngine extends ValidationEngine {
 	protected PassiveExpiringSessionCache sessionCache = new PassiveExpiringSessionCache();
 	
 	static protected ValidationEngine nullEngine;
+
+	static protected SimpleWorkerContext fmlParseContext = null;
+
 	
 	static {
 			try {
@@ -934,20 +937,17 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @return parsed StructureMap resource
 	 * @throws FHIRException FHIR Exception
 	 */
-	public org.hl7.fhir.r5.model.StructureMap parseMapR5(String content) throws FHIRException {
-		SimpleWorkerContext context = null;
-		try {
-				context = this.getContextForFhirVersion("5.0.0");
-		} catch (FHIRException e) {
-				log.error("error creating context",e);
-				return null;
-		} catch (IOException e) {
-				log.error("error creating context",e);
-				return null;
+	public org.hl7.fhir.r5.model.StructureMap parseMapR5(String content) throws IOException, FHIRException {
+		if (fmlParseContext == null) {
+			if ("5.0.0".equals(this.getContext().getVersion())) {
+				fmlParseContext = this.getContext();
+			} else {
+				fmlParseContext = MatchboxEngine.createR5WorkerContext();
+			}
 		}
 		List<Base> outputs = new ArrayList<>();
-		StructureMapUtilities scu = new MatchboxStructureMapUtilities(context,
-				new TransformSupportServices(context, outputs), this);
+		StructureMapUtilities scu = new MatchboxStructureMapUtilities(fmlParseContext,
+				new TransformSupportServices(fmlParseContext, outputs), this);
 		org.hl7.fhir.r5.model.StructureMap mapR5 = scu.parse(content, "map");
 		mapR5.getText().setStatus(NarrativeStatus.GENERATED);
 		mapR5.getText().setDiv(new XhtmlNode(NodeType.Element, "div"));
@@ -964,9 +964,9 @@ public class MatchboxEngine extends ValidationEngine {
 	 * 
 	 * @param content FHIR Mapping Language text
 	 * @return parsed StructureMap resource
-	 * @throws FHIRException FHIR Exception
+	 * @throws IOException, FHIRException FHIR Exception
 	 */
-	public org.hl7.fhir.r4.model.StructureMap parseMap(String content) throws FHIRException {
+	public org.hl7.fhir.r4.model.StructureMap parseMap(String content) throws IOException, FHIRException {
 		org.hl7.fhir.r5.model.StructureMap mapR5 = parseMapR5(content);
 		return (org.hl7.fhir.r4.model.StructureMap) VersionConvertorFactory_40_50.convertResource(mapR5);
 	}
