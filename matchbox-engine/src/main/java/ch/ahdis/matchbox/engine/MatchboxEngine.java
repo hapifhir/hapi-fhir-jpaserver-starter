@@ -964,7 +964,8 @@ public class MatchboxEngine extends ValidationEngine {
 	 * 
 	 * @param content FHIR Mapping Language text
 	 * @return parsed StructureMap resource
-	 * @throws IOException, FHIRException FHIR Exception
+	 * @throws IOException FHIR Exception
+	 * @throws FHIRException FHIR Exception
 	 */
 	public org.hl7.fhir.r4.model.StructureMap parseMap(String content) throws IOException, FHIRException {
 		org.hl7.fhir.r5.model.StructureMap mapR5 = parseMapR5(content);
