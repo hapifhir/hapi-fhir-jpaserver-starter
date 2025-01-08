@@ -1300,6 +1300,7 @@ class FhirMappingLanguageTests {
 				"http://test.ch/DummyBundleToBundle", true);
 		assertTrue(result != null);
 
+		CompareUtil.logMemory();
 	}
 
 }

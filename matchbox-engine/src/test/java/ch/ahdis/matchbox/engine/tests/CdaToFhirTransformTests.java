@@ -300,7 +300,7 @@ class CdaToFhirTransformTests {
 		assertNotNull(cda);
 		// check that we do not have an "item in deserialization" see https://github.com/ahdis/matchbox/issues/196
 		assertTrue(cda.indexOf("item") < 0);
-
+		CompareUtil.logMemory();
 	}
 
 	private int errors(OperationOutcome op) {

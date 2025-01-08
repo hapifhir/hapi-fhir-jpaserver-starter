@@ -415,11 +415,17 @@ public class ValidationProvider {
 			return;
 		}
 
-		if (versionsObject == null || versionsObject.getVersions() == null || versionsObject.getVersions().isEmpty()) {
+		if (versionsObject == null || versionsObject.getVersions() == null || versionsObject.getVersions().isEmpty() || versionsObject.getVersions().keySet().isEmpty()) {
 			return;
 		}
-		final var latestVersion = versionsObject.getVersions().keySet().stream().max(String::compareTo).orElse(null);
-		this.igProvider.installFromInternetRegistry(packages[0].getName(), latestVersion);
+
+		final var latestVersion = versionsObject.getVersions().keySet().toArray()[ versionsObject.getVersions().keySet().size()-1].toString();
+		try (final CloseableHttpClient httpclient = HttpClients.createDefault()) {
+			this.igProvider.installFromInternetRegistry(packages[0].getName(), latestVersion);
+		} catch (final Exception e) {
+			log.error("Error while installing IG version", e);
+			return;
+		}
 	}
 
 	public static List<ValidationMessage> doValidate(final MatchboxEngine engine,

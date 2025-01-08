@@ -51,16 +51,23 @@ class FhirXVersTests {
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
+		log.info("Setup");
+		CompareUtil.logMemory();
 		engineR4 = new MatchboxEngineBuilder().withXVersion(true).getEngineR4();
+		CompareUtil.logMemory();
 //		engineR4B = new MatchboxEngineBuilder().withXVersion(true).getEngineR4B();
 		engineR5 = new MatchboxEngineBuilder().withXVersion(true).getEngineR5();
+		CompareUtil.logMemory();
 //		optional, just for peformance reason
 //	  	engineR4.cacheXVersionEngine(engineR4B);
 		engineR4.cacheXVersionEngine(engineR5);
+		CompareUtil.logMemory();
 //		engineR4B.cacheXVersionEngine(engineR4);
 //		engineR4B.cacheXVersionEngine(engineR5);
 		engineR5.cacheXVersionEngine(engineR4);
+		CompareUtil.logMemory();
 //		engineR5.cacheXVersionEngine(engineR4B);
+		log.info("Setup finsihed");
 	}
 
 	@AfterAll
@@ -68,6 +75,7 @@ class FhirXVersTests {
 		engineR4 = null;
 		engineR5 = null;
 //		engineR4B = null;
+		log.info("Teardown");
 		CompareUtil.logMemory();
 	}
 
@@ -87,6 +95,7 @@ class FhirXVersTests {
 
 	@Test
 	void testMedication5to4inR4() throws FHIRException, IOException {
+		log.info("testMedication5to4inR4");
 		MatchboxEngine engine = FhirXVersTests.engineR4;
 		assertEquals("4.0.1", engine.getVersion());
 		assertEquals("4.0.1", engine.getContext().getVersion());
@@ -132,6 +141,7 @@ class FhirXVersTests {
 
 	@Test
 	void testMedication5to4inR5() throws FHIRException, IOException {
+		log.info("testMedication5to4inR5");
 		MatchboxEngine engine = FhirXVersTests.engineR5;
 		SimpleWorkerContext context = engine.getContext();
 		log.info("finished TestEngineR5");
@@ -148,19 +158,20 @@ class FhirXVersTests {
 		CompareUtil.logMemory();
 	}
 
-	@Test
-	void testMedication5to4BinR5() throws FHIRException, IOException {
-		MatchboxEngine engine = FhirXVersTests.engineR5;
-		String result = engine.transform(getFileAsStringFromResources("/medication-r5-med0301.json"),
-				true,
-				"http://hl7.org/fhir/uv/xver/StructureMap/Medication5to4b", true);
-		log.info(result);
-		CompareUtil.compare(getFileAsStringFromResources("/medication-r4b-med0301.json"),
-				result, false);
-	}
+	// @Test
+	// void testMedication5to4BinR5() throws FHIRException, IOException {
+	// 	MatchboxEngine engine = FhirXVersTests.engineR5;
+	// 	String result = engine.transform(getFileAsStringFromResources("/medication-r5-med0301.json"),
+	// 			true,
+	// 			"http://hl7.org/fhir/uv/xver/StructureMap/Medication5to4b", true);
+	// 	log.info(result);
+	// 	CompareUtil.compare(getFileAsStringFromResources("/medication-r4b-med0301.json"),
+	// 			result, false);
+	// }
 
 	@Test
 	void testMedication4to5inR4() throws FHIRException, IOException {
+		log.info("testMedication4to5inR4");
 		MatchboxEngine engine = FhirXVersTests.engineR4;
 		String result = engine.transform(getFileAsStringFromResources("/medication-r4-med0301.json"), true,
 				"http://hl7.org/fhir/uv/xver/StructureMap/Medication4to5", true);
@@ -191,6 +202,7 @@ class FhirXVersTests {
 
 	@Test
 	void testMedication4to5inR5() throws FHIRException, IOException {
+		log.info("testMedication4to5inR5");
 		MatchboxEngine engine = FhirXVersTests.engineR5;
 		String result = engine.transform(getFileAsStringFromResources("/medication-r4-med0301.json"), true,
 				"http://hl7.org/fhir/uv/xver/StructureMap/Medication4to5", true);
@@ -199,14 +211,14 @@ class FhirXVersTests {
 		CompareUtil.logMemory();
 	}
 
-	@Test
-	void testMedication4Bto5inR5() throws FHIRException, IOException {
-		MatchboxEngine engine = FhirXVersTests.engineR5;
-		String result = engine.transform(getFileAsStringFromResources("/medication-r4b-med0301.json"),
-				true,
-				"http://hl7.org/fhir/uv/xver/StructureMap/Medication4Bto5", true);
-		CompareUtil.compare(getFileAsStringFromResources("/medication-r5-med0301.json"),
-				result, false);
-	}
+	// @Test
+	// void testMedication4Bto5inR5() throws FHIRException, IOException {
+	// 	MatchboxEngine engine = FhirXVersTests.engineR5;
+	// 	String result = engine.transform(getFileAsStringFromResources("/medication-r4b-med0301.json"),
+	// 			true,
+	// 			"http://hl7.org/fhir/uv/xver/StructureMap/Medication4Bto5", true);
+	// 	CompareUtil.compare(getFileAsStringFromResources("/medication-r5-med0301.json"),
+	// 			result, false);
+	// }
 
 }

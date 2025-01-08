@@ -2,6 +2,7 @@
 - Performance improvement fml [#323](parsing https://github.com/ahdis/matchbox/issues/323)
 - Update org.hl7.fhir.core to 6.5.4 and hapi-fhir to 7.6.1 
 - Update integration tests with correct url
+- make autoinstall new ig [#325](https://github.com/ahdis/matchbox/issues/325)
 
 2024/12/09 Release 3.9.9
 

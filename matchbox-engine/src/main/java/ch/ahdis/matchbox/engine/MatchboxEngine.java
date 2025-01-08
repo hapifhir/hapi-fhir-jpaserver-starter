@@ -938,11 +938,11 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @throws FHIRException FHIR Exception
 	 */
 	public org.hl7.fhir.r5.model.StructureMap parseMapR5(String content) throws IOException, FHIRException {
-		if (fmlParseContext == null) {
+		if (MatchboxEngine.fmlParseContext == null) {
 			if ("5.0.0".equals(this.getContext().getVersion())) {
-				fmlParseContext = this.getContext();
+				MatchboxEngine.fmlParseContext = this.getContext();
 			} else {
-				fmlParseContext = MatchboxEngine.createR5WorkerContext();
+				MatchboxEngine.fmlParseContext = MatchboxEngine.createR5WorkerContext();
 			}
 		}
 		List<Base> outputs = new ArrayList<>();
