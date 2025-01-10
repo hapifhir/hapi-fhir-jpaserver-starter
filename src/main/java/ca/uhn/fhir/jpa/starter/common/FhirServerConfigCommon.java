@@ -122,6 +122,18 @@ public class FhirServerConfigCommon {
 				subscriptionSettings.addSupportedSubscriptionType(
 						org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
 			}
+			if (appProperties.getSubscription().getPolling_interval_ms() != null) {
+				ourLog.info(
+						"Setting subscription polling interval to {} ms",
+						appProperties.getSubscription().getPolling_interval_ms());
+				subscriptionSettings.setSubscriptionIntervalInMs(
+						appProperties.getSubscription().getPolling_interval_ms());
+			}
+			if (appProperties.getSubscription().getImmediately_queued()) {
+				ourLog.info("Subscription update will be queued immediately");
+				subscriptionSettings.setSubscriptionChangeQueuedImmediately(
+						appProperties.getSubscription().getImmediately_queued());
+			}
 		}
 		if (appProperties.getMdm_enabled()) {
 			// MDM requires the subscription of type message
