@@ -31,6 +31,7 @@ import org.hl7.fhir.r5.renderers.spreadsheets.StructureDefinitionSpreadsheetGene
 import org.hl7.fhir.r5.renderers.spreadsheets.ValueSetSpreadsheetGenerator;
 import org.hl7.fhir.r5.terminologies.CodeSystemUtilities;
 import org.hl7.fhir.r5.terminologies.client.TerminologyClientManager.InternalLogEvent;
+import org.hl7.fhir.r5.utils.validation.constants.ReferenceValidationPolicy;
 import org.hl7.fhir.utilities.TextFile;
 import org.hl7.fhir.utilities.TimeTracker;
 import org.hl7.fhir.utilities.Utilities;
@@ -59,9 +60,11 @@ import org.hl7.fhir.validation.cli.services.SessionCache;
 import org.hl7.fhir.validation.cli.services.StandAloneValidatorFetcher;
 import org.hl7.fhir.validation.cli.utils.EngineMode;
 import org.hl7.fhir.validation.cli.utils.VersionSourceInformation;
+import org.hl7.fhir.validation.instance.advisor.BasePolicyAdvisorForFullValidation;
 
 import ch.ahdis.matchbox.engine.CdaMappingEngine;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
+import ch.ahdis.matchbox.engine.ValidationPolicyAdvisor;
 
 /**
  * A executable class 
@@ -432,7 +435,7 @@ public class MatchboxService {
       validator.setForPublication(cliContext.isForPublication());
       validator.setShowTimes(cliContext.isShowTimes());
       validator.setAllowExampleUrls(cliContext.isAllowExampleUrls());
-      validator.setPolicyAdvisor(validator);
+      validator.setPolicyAdvisor(new ValidationPolicyAdvisor(ReferenceValidationPolicy.CHECK_VALID));
 
       validator.getBundleValidationRules().addAll(cliContext.getBundleValidationRules());
       validator.setJurisdiction(CodeSystemUtilities.readCoding(cliContext.getJurisdiction()));

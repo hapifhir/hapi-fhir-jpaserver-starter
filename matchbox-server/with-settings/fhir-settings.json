@@ -1,0 +1,10 @@
+{
+  "servers": [
+    {
+      "url" : "http://localhost:8080/matchboxv3/fhir",
+      "type" : "fhir",
+      "authenticationType" : "apikey",
+      "apikey": "myapikey123"
+    }
+  ]  
+}

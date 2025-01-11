@@ -16,6 +16,6 @@ RUN chown matchbox:matchbox /
 
 USER matchbox
 
-ENTRYPOINT java -Xmx3072M -jar /matchbox.jar -Dspring.config.additional-location=optional:file:/config/application.yaml,optional:file:application.yaml
+ENTRYPOINT java -Xmx3072M -Dfhir.settings.path=/config/fhir-settings.json -Dspring.config.additional-location=optional:file:/config/application.yaml,optional:file:application.yaml -jar /matchbox.jar
 
 # used by .github/workflows/

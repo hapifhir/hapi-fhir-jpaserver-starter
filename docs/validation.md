@@ -169,6 +169,10 @@ Please be aware that if you have unbound code/coding/codeableConcepts, or the bi
 code/coding/codeableConcept will be considered valid if the code system is not defined locally (e.g. SNOMED CT, 
 LOINC, etc).
 
+### Terminology server requiring authentication
+
+If you configure a terminology server which requires authentication you need to specifiy the authentication parameters in [fhir-settings.json](https://confluence.hl7.org/display/FHIR/Using+fhir-settings.json), an additional file in the confiugration directory where you put the application.yaml, see example in https://github.com/ahdis/matchbox/tree/main/matchbox-server/with-ca
+
 ### GUI
 
 You can run a validation through the GUI by using the fragment in the URL.

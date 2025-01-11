@@ -9,13 +9,15 @@ docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.8.1
 ## Configurable base image:
 
 ```bash
-docker run -d --name matchbox -p 8080:8080 -e matchbox.fhir.context.onlyOneEngine=true -v /Users/oliveregger/apps/:/apps/ matchbox
+docker run -d --name matchbox -p 8080:8080 -e matchbox.fhir.context.onlyOneEngine=true -v /Users/oliveregger/apps/:/apps/ -v /Users/oliveregger/config/:/config/ matchbox
 ```
 
 Server will then be accessible at http://localhost:8080/matchboxv3/fhir/metadata.
 
 The local volume /Users/oliveregger/apps/ will be mapped inside the container and Matchbox will serve the content
 if is requested via http://localhost:8080/matchboxv3/apps/ (allows you to add own html apps).
+
+The optional local volume /Users/oliveregger/config/ will be mapped inside the container and Matchbox will use [fhir-settings.json](https://confluence.hl7.org/display/FHIR/Using+fhir-settings.json) and application.yaml for additional configuration see [https://github.com/ahdis/matchbox/tree/main/matchbox-server](https://github.com/ahdis/matchbox/tree/main/matchbox-server) different directories started with with-xxx for sample configurations.
 
 The last parameter is to set development environment, which allows you to create/update conformance resources (e.g. transform StructureMaps). If not provided, you need to provide the conformance resources by an FHIR Implementation Guide.
 

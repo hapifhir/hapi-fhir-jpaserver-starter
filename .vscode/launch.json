@@ -15,12 +15,21 @@
     },
     {
       "type": "java",
-      "name": "Launch MatchboxCli",
+      "name": "Launch MatchboxCli (transform)",
       "request": "launch",
       "mainClass": "ch.ahdis.matchbox.engine.cli.MatchboxCli",
       "projectName": "matchbox-engine",
       "args": "-transform test.map",
       "vmArgs": "-Dlog.ch.ahdis.matchbox.engine.CdaMappingEngine=error",
+      "cwd": "${workspaceFolder}/matchbox-engine"
+    },
+    {
+      "type": "java",
+      "name": "Launch MatchboxCli (validate)",
+      "request": "launch",
+      "mainClass": "ch.ahdis.matchbox.engine.cli.MatchboxCli",
+      "projectName": "matchbox-engine",
+      "args": "-version 4.0 -ig 'ca.infoway.io.psca#2.0.0-DFT-Ballot' -tx http://tx.fhir.org -txLog 'test.txt' -clear-tx-cache ./src/test/resources/r4-samples/CIH-85-PASSED.json",
       "cwd": "${workspaceFolder}/matchbox-engine"
     },
     {
@@ -57,6 +66,15 @@
       "mainClass": "ca.uhn.fhir.jpa.starter.Application",
       "projectName": "matchbox-server",
       "vmArgs": "-Dspring.config.additional-location=file:with-cda-r5/application.yaml",
+      "cwd": "${workspaceFolder}/matchbox-server"
+    },
+    {
+      "type": "java",
+      "name": "Launch Matchbox-Server (ca)",
+      "request": "launch",
+      "mainClass": "ca.uhn.fhir.jpa.starter.Application",
+      "projectName": "matchbox-server",
+      "vmArgs": "-Dspring.config.additional-location=file:with-ca/application.yaml",
       "cwd": "${workspaceFolder}/matchbox-server"
     },
     {

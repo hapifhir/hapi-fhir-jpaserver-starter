@@ -1,0 +1,10 @@
+{
+    "servers": [
+        {
+        "url": "https://terminologystandardsservice.ca/tx/fhir",
+        "type": "fhir",
+        "authenticationType": "apikey",
+        "apikey": "request from https://infocentral.infoway-inforoute.ca/en/system-account-requisition-process"
+        }
+    ]
+}

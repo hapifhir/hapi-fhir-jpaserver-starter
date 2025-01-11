@@ -27,6 +27,14 @@ The docker file will create a docker image with no preloaded implementation guid
 
 The easiest way to run this server entirely depends on your environment requirements. At least, the following 4 ways are supported:
 
+## using prebuilt image
+
+```
+docker run -d --name matchbox -p 8080:8080  europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.9.10 -v /Users/oegger/Documents/github/matchbox/matchbox-server/with-settings:/config matchbox
+```
+
+note replace /Users/oegger/Documents/github/matchbox/matchbox-server/with-settings with the folder where you have your application.yaml (and since v3.9.10) your [fhir-settings.json](https://confluence.hl7.org/display/FHIR/Using+fhir-settings.json).
+
 ### Using spring-boot
 
 With no implementation guide:
@@ -56,6 +64,22 @@ Then, browse to the following link to use the server:
 [http://localhost:8080/matchbox/fhir](http://localhost:8080/matchboxv3/fhir)
 or
 [http://localhost:8080/matchbox/#/](http://localhost:8080/matchboxv3/#/)
+
+
+## building with Docker
+
+### Configurable base image:
+
+```bash
+cd matchbox-server
+mvn package -DskipTests
+docker build -t matchbox .
+docker run -d --name matchbox -p 8080:8080 -v /Users/oegger/Documents/github/matchbox/matchbox-server/with-settings:/config matchbox
+```
+
+Server will then be accessible at http://localhost:8080/matchboxv3/fhir/metadata.
+
+To dynamically configure run in a kubernetes environment and add a kubernetes config map that provides /config/application.yaml file with implementation guide list like in "with-preload/application.yaml"
 
 ## Using docker-compose with a persistent postgreSQL database
 
@@ -92,21 +116,6 @@ Reimport the DB data:
 ```
 docker-compose exec -T matchbox-test-db pg_restore -c -U matchbox -d matchbox < mydump
 ```
-
-## building with Docker
-
-### Configurable base image:
-
-```bash
-cd matchbox-server
-mvn package -DskipTests
-docker build -t matchbox .
-docker run -d --name matchbox -p 8080:8080 -v /Users/oegger/Documents/github/matchbox/matchbox-server/with-cda:/config matchbox
-```
-
-Server will then be accessible at http://localhost:8080/matchboxv3/fhir/metadata.
-
-To dynamically configure run in a kubernetes environment and add a kubernetes config map that provides /config/application.yaml file with implementation guide list like in "with-preload/application.yaml"
 
 ### making container available
 
@@ -151,3 +160,4 @@ mvn -Dtest=CapabilityStatementTests test
    2. The [Maven workflow](https://github.com/ahdis/matchbox/blob/main/.github/workflows/central_repository.yml), that
       builds the `matchbox-engine` JAR and publishes it to the Maven Central Repository. The version used is the one
       specified in the POM.
+

@@ -22,5 +22,10 @@ public class ValidationPolicyAdvisor extends BasePolicyAdvisorForFullValidation 
         }                                                        
         return ReferenceValidationPolicy.IGNORE;
     }
+    
+    @Override
+    public boolean isSuppressMessageId(String path, String messageId) {
+      return false;
+    }
 
 }
