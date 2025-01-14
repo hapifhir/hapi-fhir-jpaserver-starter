@@ -94,6 +94,29 @@ public class TransformTest {
 		assertTrue(docRef.contains("<line value=\"rue de la république 10\">"));
 		assertTrue(docRef.contains("<valueString value=\"rue de la république\"/>"));
 	}
+	
+	@Test
+	void testTransformEncounterR4() throws Exception {
+		// Test the regular $transform operation with an R4 resource
+		final var createMapRequest = HttpRequest.newBuilder(URI.create(TARGET_SERVER + "/fhir/StructureMap"))
+			.POST(HttpRequest.BodyPublishers.ofString(this.getContent("encounter-r4.map")))
+			.header("Content-Type", "text/fhir-mapping")
+			.header("Accept", "application/fhir+json")
+			.build();
+		this.httpClient.send(createMapRequest, HttpResponse.BodyHandlers.discarding());
+
+		// "status": "finished" is only available in Encounter R4 (is "completed" in R5)
+		final var transformRequest = HttpRequest.newBuilder(URI.create(
+			TARGET_SERVER + "/fhir/StructureMap/$transform?source=http://ahdis.ch/matchbox/fml/encounter-r4"))
+			.POST(HttpRequest.BodyPublishers.ofString(this.getContent("encounter-r4.json")))
+			.header("Content-Type", "application/fhir+json;fhirVersion=4.0")
+			.header("Accept", "application/fhir+json;fhirVersion=4.0")
+			.build();
+		final var response = this.httpClient.send(transformRequest, HttpResponse.BodyHandlers.ofString());
+		final var encounter = response.body();
+		System.out.println(encounter);
+		assertTrue(encounter.contains("\"status\" : \"finished\""));
+	}
 
 	@Test
 	void testTransformFullyContained() throws Exception {

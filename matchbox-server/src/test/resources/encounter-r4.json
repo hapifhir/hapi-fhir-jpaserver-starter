@@ -1,0 +1,5 @@
+{
+    "resourceType": "Encounter",
+    "id": "e-1",
+    "status": "finished"
+}
