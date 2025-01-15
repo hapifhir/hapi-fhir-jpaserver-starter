@@ -1,0 +1,21 @@
+map "http://ahdis.ch/matchbox/fml/encounter-r4-to-r5" = "encounter-r4-to-r5"
+
+conceptmap "cm-encounter-status" {
+  prefix s = "http://hl7.org/fhir/4.0/encounter-status"
+  prefix t = "http://hl7.org/fhir/5.0/encounter-status"
+  s:"onleave" == t:"on-hold"
+  s:"cancelled" == t:"cancelled"
+  s:"finished" == t:"completed"
+  s:"planned" == t:"planned"
+  s:"entered-in-error" == t:"entered-in-error"
+  s:"in-progress" == t:"in-progress"
+  s:"unknown" == t:"unknown"
+}
+
+uses "http://hl7.org/fhir/4.0/StructureDefinition/Encounter" alias EncounterR4 as source
+uses "http://hl7.org/fhir/5.0/StructureDefinition/Encounter" alias EncounterR5 as target
+
+group encounter(source src : EncounterR4, target tgt : EncounterR5) {
+  src.id as id -> tgt.id = id;
+  src.status as status -> tgt.status = translate(status, '#cm-encounter-status', 'code');
+}
