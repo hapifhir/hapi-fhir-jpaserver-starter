@@ -165,7 +165,7 @@ public class MappingLanguageInterceptor extends InterceptorAdapter {
 	public String compileAndSerializeMap(final String mapText,
 													 final FhirVersionEnum fhirVersion,
 													 final @Nullable String structureMapId) throws IOException {
-		StructureMap mapR5 = matchboxEngineSupport.getMatchboxEngine("default", null, false, false).parseMapR5(mapText);
+		StructureMap mapR5 = matchboxEngineSupport.getMatchboxEngine("default", matchboxEngineSupport.getClientContext(), true, false).parseMapR5(mapText);
 		if (structureMapId != null) {
 			mapR5.setId(structureMapId);
 		}
