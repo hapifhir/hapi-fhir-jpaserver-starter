@@ -109,8 +109,8 @@ public class TransformTest {
 		final var transformRequest = HttpRequest.newBuilder(URI.create(
 			TARGET_SERVER + "/fhir/StructureMap/$transform?source=http://ahdis.ch/matchbox/fml/encounter-r4-to-r5"))
 			.POST(HttpRequest.BodyPublishers.ofString(this.getContent("encounter-r4.json")))
-			.header("Content-Type", "application/fhir+json;fhirVersion=5.0")
-			.header("Accept", "application/fhir+json;fhirVersion=4.0")
+			.header("Content-Type", "application/fhir+json;fhirVersion=4.0")
+			.header("Accept", "application/fhir+json;fhirVersion=5.0")
 			.build();
 		final var response = this.httpClient.send(transformRequest, HttpResponse.BodyHandlers.ofString());
 		final var encounter = response.body();

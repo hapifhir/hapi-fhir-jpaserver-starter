@@ -6,6 +6,9 @@ matchbox:
   fhir:
     context:
       onlyOneEngine: true
+      fhirVersion: 4.0.1
+      xVersion: true      
+
 spring:
   datasource:
     url: "jdbc:h2:mem:test-transform"

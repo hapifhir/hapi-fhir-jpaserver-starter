@@ -43,6 +43,7 @@ import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.annotation.ResourceParam;
 import ca.uhn.fhir.rest.api.Constants;
+import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.server.RestfulServerUtils;
@@ -97,7 +98,12 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
 												final HttpServletResponse theServletResponse) throws IOException {
 		// Parse the request body, it is either a Parameters resource, or any resource
 		final String body = new String(theServletRequest.getInputStream().readAllBytes()).trim();
-		final IBaseResource bodyResource = this.parseBaseResource(body);
+		@Nullable String resource = null;
+		
+		EncodingEnum encoding = EncodingEnum.forContentType(theServletRequest.getContentType());
+		if (encoding == null) {
+			encoding = EncodingEnum.detectEncoding(body);
+		}
 
 		/*
 		 * Parse the operation inputs:
@@ -108,18 +114,38 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
 		 * - body (optional): the resource to transform
 		 *
 		 * Either 'source' or 'map' MUST be provided; if 'source' is provided, then it must exist in the server.
+		 * 
+		 * We need to differentiate two cases:
+		 *   - input other FHIR versions the one we are in or a logical model: source as query http query parameter
+		 *   - input same FHIR version, no logical model -> everything provided as ParameterResource
 		 */
-		final String resource;
+		
+		// If the 'source' was not provided in the Parameters, check the URL query parameters
 		@Nullable String source = null;
+		final Map<String, String[]> requestParams = theServletRequest.getParameterMap();
+		if (requestParams.containsKey("source") && requestParams.get("source").length > 0) {
+			if (requestParams.get("source").length > 1) {
+				throw new InvalidRequestException("Only one 'source' parameter is allowed");
+			}
+			source = requestParams.get("source")[0];
+			resource = body;
+		}
+		
+		
 		final List<StructureDefinition> models = new ArrayList<>(2);
 		@Nullable StructureMap map = null;
 
-		if (bodyResource instanceof final Parameters inputParameters) {
+		if (source == null) {
+			final IBaseResource bodyResource = this.parseBaseResource(body);
+			if (!(bodyResource instanceof final Parameters inputParameters)) {
+					throw new InvalidRequestException("Expecting a Parameters resource in the body if no source query parameter is provided");
+			}
+	
 			if (!inputParameters.hasParameter("resource")) {
-				throw new InvalidRequestException("When the body is a Parameters resource, the parameter 'resource' MUST " +
-																 "be present");
+				throw new InvalidRequestException("When the body is a Parameters resource, the parameter 'resource' MUST be present");
 			}
 			resource = inputParameters.getParameter("resource").getValueStringType().getValueNotNull();
+			encoding = EncodingEnum.detectEncoding(resource);
 
 			if (inputParameters.hasParameter("model")) {
 				final IBaseResource model = this.parseBaseResource(inputParameters.getParameter("model").getValueStringType().getValueNotNull());
@@ -149,30 +175,9 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
 					throw new InvalidRequestException("The parameter 'map' must be a StructureMap resource");
 				}
 			}
-
-			if (inputParameters.hasParameter("source")) {
-				source = inputParameters.getParameter("source").getValueStringType().getValueNotNull();
-			}
-		} else {
-			resource = body;
-		}
-
-		if (source == null) {
-			// If the 'source' was not provided in the Parameters, check the URL query parameters
-			final Map<String, String[]> requestParams = theServletRequest.getParameterMap();
-			if (requestParams.containsKey("source") && requestParams.get("source").length > 0) {
-				if (requestParams.get("source").length > 1) {
-					throw new InvalidRequestException("Only one 'source' parameter is allowed");
-				}
-				source = requestParams.get("source")[0];
-			}
-		}
-
 		if (source == null && map == null) {
 			throw new InvalidRequestException("Either 'source' or 'map' parameter must be provided");
 		}
-		if (source != null && map != null) {
-			throw new InvalidRequestException("Only one of 'source' or 'map' parameters can be provided");
 		}
 
 		// Initialize the Matchbox engine that will perform the transformation
@@ -207,7 +212,7 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
 			theServletResponse.setContentType(responseContentType);
 
 			final var transformed = matchboxEngine.transform(resource,
-																			 !resource.startsWith("<"),
+																			 encoding == EncodingEnum.JSON,
 																			 map.getUrl(),
 																			 responseContentType.contains("json"));
 			theServletResponse.getOutputStream().write(transformed.getBytes(StandardCharsets.UTF_8));
