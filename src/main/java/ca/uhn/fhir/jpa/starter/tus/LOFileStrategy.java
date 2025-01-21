@@ -9,11 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ByteArrayOutputStream;
+
+import java.io.OutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -39,22 +40,27 @@ public class LOFileStrategy implements FileStrategy {
 		String fileName = new String(Base64.decodeBase64(dataList.get("filename")), Charsets.UTF_8);
 		String loCamLength = new String(Base64.decodeBase64(dataList.get("lo_cam_length")), Charsets.UTF_8);
 		String loCamName = new String(Base64.decodeBase64(dataList.get("lo_cam_name")), Charsets.UTF_8);
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		byte[] buffer = new byte[1024];
-		int bytesRead;
-		while ((bytesRead = inputStream.read(buffer)) != -1) {
-			byteArrayOutputStream.write(buffer, 0, bytesRead);
+		Path outputPath = Paths.get(appProperties.getHyper_spectral_files_path(), fileName);
+
+		// Ensure the parent directory exists
+		Files.createDirectories(outputPath.getParent());
+
+		// Stream data directly to the file
+		try (OutputStream outputStream = Files.newOutputStream(outputPath)) {
+			byte[] buffer = new byte[8192]; // Use a larger buffer for efficiency
+			int bytesRead;
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				outputStream.write(buffer, 0, bytesRead);
+			}
+		} finally {
+			inputStream.close(); // Ensure the input stream is closed
 		}
-		inputStream.close();
-		byteArrayOutputStream.close();
-		byte[] completeByteArray = byteArrayOutputStream.toByteArray();
-		String folderName = fileName.substring(0, fileName.lastIndexOf('.'));
-		Path directoryPath = Paths.get(appProperties.getHyper_spectral_files_path(), folderName);
-		boolean isFileSaved = saveByteArrayDataToFile(completeByteArray, directoryPath, fileName, uploadUrl);
-		if (isFileSaved) {
-			createConfigurationsFile(directoryPath, loCamName, loCamLength);
-			tusFileUploadService.deleteUpload(uploadUrl);
-		}
+
+		// Create configurations file in the same directory
+		createConfigurationsFile(outputPath.getParent(), loCamName, loCamLength);
+
+		// Clean up upload
+		tusFileUploadService.deleteUpload(uploadUrl);
 	}
 
 	private Map<String, String> extractKeyValuesFromMetaData(String encodedMetaDataInput){
