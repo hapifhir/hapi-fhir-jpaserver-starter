@@ -100,6 +100,10 @@ public class FileStrategyContext {
 		return "UNKNOWN";
 	}
 
+	public Map<String, String> getEncodedMetaData(String uploadUrl) throws TusException, IOException {
+		return extractKeyValuesFromMetaData(tusFileUploadService.getUploadInfo(uploadUrl).getEncodedMetadata());
+	}
+
 	// Extract key values from metadata
 	private Map<String, String> extractKeyValuesFromMetaData(String encodedMetaDataInput) {
 		String[] keys = {"filename", "isCalibFile"};

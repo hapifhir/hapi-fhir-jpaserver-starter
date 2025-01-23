@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 public class TusService {
 	private static final Logger logger = LoggerFactory.getLogger(TusService.class);
-	private static final long FIXED_DELAY = 3000;
+	private static final long FIXED_DELAY = 60 * 3000;
 	private static final long INITIAl_DELAY = 3000;
 
 	@Autowired
@@ -25,12 +25,11 @@ public class TusService {
 	@Autowired
 	private TusServerProperties tusServerProperties;
 
-	public void transferToFinalStorage(String uploadUrl, String fileType) throws Exception {
-		if (fileStrategyContext.isFileLocked(uploadUrl)) {
-			logger.warn("File is locked, skipping transfer for: " + uploadUrl);
-			return;
-		}
+	public void logTUSUploadMetaData(String uploadUrl) throws Exception {
+		logger.info("TUS Upload Info:" + fileStrategyContext.getEncodedMetaData(uploadUrl));
+	}
 
+	public void transferToFinalStorage(String uploadUrl, String fileType) throws Exception {
 		// Set strategy based on file type
 		fileStrategyContext.setFileStrategy(fileType);
 		// Execute the transfer via the selected strategy
@@ -43,7 +42,12 @@ public class TusService {
 		for (String subDirectory : subDirectories) {
 			String uploadUrl = tusServerProperties.getContextPath() + "/" + subDirectory;
 			String fileType = fileStrategyContext.determineFileType(uploadUrl);
-			transferToFinalStorage(uploadUrl, fileType);
+			if (fileStrategyContext.isFileLocked(uploadUrl)) {
+				logger.warn("File is locked, skipping transfer for: " + uploadUrl);
+			}else{
+				logTUSUploadMetaData(uploadUrl);
+				transferToFinalStorage(uploadUrl, fileType);
+			}
 		}
 	}
 

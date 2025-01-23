@@ -36,14 +36,20 @@ public class LOFileStrategy implements FileStrategy {
 	public void transferToFinalStorage(String uploadUrl) throws TusException, IOException {
 		InputStream inputStream = tusFileUploadService.getUploadedBytes(uploadUrl);
 		String encodedMetadata = tusFileUploadService.getUploadInfo(uploadUrl).getEncodedMetadata();
-		Map<String,String> dataList = extractKeyValuesFromMetaData(encodedMetadata.replace(" ",""));
+		Map<String, String> dataList = extractKeyValuesFromMetaData(encodedMetadata.replace(" ", ""));
+
+		// Decode metadata to get file details
 		String fileName = new String(Base64.decodeBase64(dataList.get("filename")), Charsets.UTF_8);
 		String loCamLength = new String(Base64.decodeBase64(dataList.get("lo_cam_length")), Charsets.UTF_8);
 		String loCamName = new String(Base64.decodeBase64(dataList.get("lo_cam_name")), Charsets.UTF_8);
-		Path outputPath = Paths.get(appProperties.getHyper_spectral_files_path(), fileName);
 
-		// Ensure the parent directory exists
-		Files.createDirectories(outputPath.getParent());
+		// Create folder path and output file path
+		String folderName = fileName.substring(0, fileName.lastIndexOf('.'));
+		Path directoryPath = Paths.get(appProperties.getHyper_spectral_files_path(), folderName);
+		Path outputPath = directoryPath.resolve(fileName);
+
+		// Ensure the directory exists
+		Files.createDirectories(directoryPath);
 
 		// Stream data directly to the file
 		try (OutputStream outputStream = Files.newOutputStream(outputPath)) {
@@ -56,12 +62,11 @@ public class LOFileStrategy implements FileStrategy {
 			inputStream.close(); // Ensure the input stream is closed
 		}
 
-		// Create configurations file in the same directory
-		createConfigurationsFile(outputPath.getParent(), loCamName, loCamLength);
-
-		// Clean up upload
+		// Create configurations file and clean up upload
+		createConfigurationsFile(directoryPath, loCamName, loCamLength);
 		tusFileUploadService.deleteUpload(uploadUrl);
 	}
+
 
 	private Map<String, String> extractKeyValuesFromMetaData(String encodedMetaDataInput){
 		String[] keys = {"filename", "lo_cam_length", "lo_cam_name", "isCalibFile"};
