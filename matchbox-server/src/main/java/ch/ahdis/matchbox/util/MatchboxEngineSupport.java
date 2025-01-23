@@ -388,20 +388,22 @@ public class MatchboxEngineSupport {
 			}
 			return mainEngine;
 		}
-
+		
 		// check if we have already a validator in cache for that
 		final var matchboxEngine =
 			(MatchboxEngine) this.sessionCache.fetchSessionValidatorEngine("" + cliContext.hashCode());
 		if (matchboxEngine != null && !reload) {
-			log.debug("Using cached validate engine {} with parameters {}",
+			log.info("Using cached validate engine {} with parameters {}",
 						(cliContext.getIg() != null ? "for " + cliContext.getIg() : ""),
 						cliContext.hashCode());
+			// Runtime runtime = Runtime.getRuntime();
+			// runtime.gc();
 			return matchboxEngine;
 		}
 
 		// create a new validator and cache it temporarily
 		if (create && cliContext.getIg() != null) {
-			log.debug("Creating new cached validate engine {} with parameters {}",
+			log.info("Creating new cached validate engine {} with parameters {}",
 						 (cliContext.getIg() != null ? "for " + cliContext.getIg() : ""),
 						 cliContext.hashCode());
 			MatchboxEngine baseEngine = mainEngine;
@@ -432,6 +434,8 @@ public class MatchboxEngineSupport {
 			}
 			final var created = this.createMatchboxEngine(baseEngine, cliContext.getIg(), cliContext);
 			this.sessionCache.cacheSession("" + cliContext.hashCode(), created);
+			// Runtime runtime = Runtime.getRuntime();
+			// runtime.gc();
 			return created;
 		}
 		return null;

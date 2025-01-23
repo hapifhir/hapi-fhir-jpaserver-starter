@@ -1,0 +1,723 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.2">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="memorycheck" enabled="true">
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+    </TestPlan>
+    <hashTree>
+      <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="config" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="host" elementType="Argument">
+            <stringProp name="Argument.name">host</stringProp>
+            <stringProp name="Argument.value">http://localhost:8080/matchboxv3</stringProp>
+            <stringProp name="Argument.desc">endpoint (without fhir) for matchbox</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="matchbox" elementType="Argument">
+            <stringProp name="Argument.name">matchbox</stringProp>
+            <stringProp name="Argument.value">---</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </Arguments>
+      <hashTree/>
+      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+        <collectionProp name="HeaderManager.headers">
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">Content-Type</stringProp>
+            <stringProp name="Header.value">application/fhir+json</stringProp>
+          </elementProp>
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">Accept</stringProp>
+            <stringProp name="Header.value">application/json</stringProp>
+          </elementProp>
+        </collectionProp>
+      </HeaderManager>
+      <hashTree/>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="metadata" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">stoptest</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <stringProp name="LoopController.loops">1</stringProp>
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.delayedStart">false</boolProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="metadata" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.path">${host}/fhir/metadata</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.BROWSER_COMPATIBLE_MULTIPART">false</boolProp>
+          <boolProp name="HTTPSampler.image_parser">false</boolProp>
+          <boolProp name="HTTPSampler.concurrentDwn">false</boolProp>
+          <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
+          <boolProp name="HTTPSampler.md5">false</boolProp>
+          <intProp name="HTTPSampler.ipSourceType">0</intProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response AssertionHTTP/1.1 200 OK" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <sentBytes>true</sentBytes>
+                <url>true</url>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+                <connectTime>true</connectTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="validate ch-elm" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">stopthread</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <stringProp name="LoopController.loops">10</stringProp>
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">0.1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration">0</stringProp>
+        <stringProp name="ThreadGroup.delay">0.5</stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+        <boolProp name="ThreadGroup.delayedStart">false</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="$validate" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;resourceType&quot; : &quot;DocumentReference&quot;,&#xd;
+  &quot;id&quot; : &quot;1-DocumentReferenceStrict&quot;,&#xd;
+  &quot;contained&quot; : [{&#xd;
+    &quot;resourceType&quot; : &quot;Bundle&quot;,&#xd;
+    &quot;id&quot; : &quot;1Doc-NeisseriaGonorrhoeae&quot;,&#xd;
+    &quot;identifier&quot; : {&#xd;
+      &quot;system&quot; : &quot;urn:ietf:rfc:3986&quot;,&#xd;
+      &quot;value&quot; : &quot;urn:uuid:1901332d-6012-443f-9690-9291adb2e19d&quot;&#xd;
+    },&#xd;
+    &quot;type&quot; : &quot;document&quot;,&#xd;
+    &quot;timestamp&quot; : &quot;2023-07-14T16:00:00+02:00&quot;,&#xd;
+    &quot;entry&quot; : [{&#xd;
+      &quot;fullUrl&quot; : &quot;http://test.fhir.ch/r4/Composition/1Comp-NeisseriaGonorrhoeae&quot;,&#xd;
+      &quot;resource&quot; : {&#xd;
+        &quot;resourceType&quot; : &quot;Composition&quot;,&#xd;
+        &quot;id&quot; : &quot;1Comp-NeisseriaGonorrhoeae&quot;,&#xd;
+        &quot;language&quot; : &quot;de-CH&quot;,&#xd;
+        &quot;identifier&quot; : {&#xd;
+          &quot;system&quot; : &quot;urn:ietf:rfc:3986&quot;,&#xd;
+          &quot;value&quot; : &quot;urn:uuid:1901332d-6012-443f-9690-9291adb2e19d&quot;&#xd;
+        },&#xd;
+        &quot;status&quot; : &quot;final&quot;,&#xd;
+        &quot;type&quot; : {&#xd;
+          &quot;coding&quot; : [{&#xd;
+            &quot;system&quot; : &quot;http://snomed.info/sct&quot;,&#xd;
+            &quot;version&quot; : &quot;http://snomed.info/sct/2011000195101&quot;,&#xd;
+            &quot;code&quot; : &quot;4241000179101&quot;,&#xd;
+            &quot;display&quot; : &quot;Laborbericht&quot;&#xd;
+          },&#xd;
+          {&#xd;
+            &quot;system&quot; : &quot;http://loinc.org&quot;,&#xd;
+            &quot;code&quot; : &quot;11502-2&quot;,&#xd;
+            &quot;display&quot; : &quot;Laboratory report&quot;&#xd;
+          }]&#xd;
+        },&#xd;
+        &quot;subject&quot; : {&#xd;
+          &quot;reference&quot; : &quot;Patient/Pat-001&quot;&#xd;
+        },&#xd;
+        &quot;date&quot; : &quot;2023-07-14T16:00:00+02:00&quot;,&#xd;
+        &quot;author&quot; : [{&#xd;
+          &quot;reference&quot; : &quot;Organization/1Org-Labor&quot;&#xd;
+        }],&#xd;
+        &quot;title&quot; : &quot;Laborbericht vom 14.07.2023&quot;,&#xd;
+        &quot;section&quot; : [{&#xd;
+          &quot;title&quot; : &quot;Analyseergebnisse der mikrobiologischen Untersuchung&quot;,&#xd;
+          &quot;code&quot; : {&#xd;
+            &quot;coding&quot; : [{&#xd;
+              &quot;system&quot; : &quot;http://loinc.org&quot;,&#xd;
+              &quot;code&quot; : &quot;18725-2&quot;,&#xd;
+              &quot;display&quot; : &quot;Microbiology studies (set)&quot;&#xd;
+            }]&#xd;
+          },&#xd;
+          &quot;entry&quot; : [{&#xd;
+            &quot;reference&quot; : &quot;Observation/1Obs-NeisseriaGonorrhoeae&quot;&#xd;
+          }]&#xd;
+        }]&#xd;
+      }&#xd;
+    },&#xd;
+    {&#xd;
+      &quot;fullUrl&quot; : &quot;http://test.fhir.ch/r4/DiagnosticReport/1DR-NeisseriaGonorrhoeae&quot;,&#xd;
+      &quot;resource&quot; : {&#xd;
+        &quot;resourceType&quot; : &quot;DiagnosticReport&quot;,&#xd;
+        &quot;id&quot; : &quot;1DR-NeisseriaGonorrhoeae&quot;,&#xd;
+        &quot;extension&quot; : [{&#xd;
+          &quot;url&quot; : &quot;http://hl7.org/fhir/5.0/StructureDefinition/extension-DiagnosticReport.composition&quot;,&#xd;
+          &quot;valueReference&quot; : {&#xd;
+            &quot;reference&quot; : &quot;Composition/1Comp-NeisseriaGonorrhoeae&quot;&#xd;
+          }&#xd;
+        }],&#xd;
+        &quot;identifier&quot; : [{&#xd;
+          &quot;system&quot; : &quot;urn:ietf:rfc:3986&quot;,&#xd;
+          &quot;value&quot; : &quot;urn:uuid:1901332d-6012-443f-9690-9291adb2e19d&quot;&#xd;
+        }],&#xd;
+        &quot;basedOn&quot; : [{&#xd;
+          &quot;reference&quot; : &quot;ServiceRequest/1SR-Order&quot;&#xd;
+        }],&#xd;
+        &quot;status&quot; : &quot;final&quot;,&#xd;
+        &quot;code&quot; : {&#xd;
+          &quot;coding&quot; : [{&#xd;
+            &quot;system&quot; : &quot;http://loinc.org&quot;,&#xd;
+            &quot;code&quot; : &quot;11502-2&quot;,&#xd;
+            &quot;display&quot; : &quot;Laboratory report&quot;&#xd;
+          }]&#xd;
+        },&#xd;
+        &quot;subject&quot; : {&#xd;
+          &quot;reference&quot; : &quot;Patient/Pat-001&quot;&#xd;
+        },&#xd;
+        &quot;performer&quot; : [{&#xd;
+          &quot;reference&quot; : &quot;Organization/1Org-Labor&quot;&#xd;
+        }],&#xd;
+        &quot;specimen&quot; : [{&#xd;
+          &quot;reference&quot; : &quot;Specimen/1Spec-Specimen&quot;&#xd;
+        }],&#xd;
+        &quot;result&quot; : [{&#xd;
+          &quot;reference&quot; : &quot;Observation/1Obs-NeisseriaGonorrhoeae&quot;&#xd;
+        }]&#xd;
+      }&#xd;
+    },&#xd;
+    {&#xd;
+      &quot;fullUrl&quot; : &quot;http://test.fhir.ch/r4/Patient/Pat-001&quot;,&#xd;
+      &quot;resource&quot; : {&#xd;
+        &quot;resourceType&quot; : &quot;Patient&quot;,&#xd;
+        &quot;id&quot; : &quot;Pat-001&quot;,&#xd;
+        &quot;identifier&quot; : [{&#xd;
+          &quot;system&quot; : &quot;urn:oid:2.16.756.5.32&quot;,&#xd;
+          &quot;value&quot; : &quot;7562295883070&quot;&#xd;
+        }],&#xd;
+        &quot;name&quot; : [{&#xd;
+          &quot;family&quot; : &quot;M&quot;,&#xd;
+          &quot;given&quot; : [&quot;D&quot;]&#xd;
+        }],&#xd;
+        &quot;gender&quot; : &quot;male&quot;,&#xd;
+        &quot;birthDate&quot; : &quot;1960-08-22&quot;,&#xd;
+        &quot;address&quot; : [{&#xd;
+          &quot;use&quot; : &quot;home&quot;,&#xd;
+          &quot;city&quot; : &quot;Bern&quot;,&#xd;
+          &quot;state&quot; : &quot;BE&quot;,&#xd;
+          &quot;postalCode&quot; : &quot;3000&quot;,&#xd;
+          &quot;country&quot; : &quot;CH&quot;,&#xd;
+          &quot;_country&quot; : {&#xd;
+            &quot;extension&quot; : [{&#xd;
+              &quot;url&quot; : &quot;http://hl7.org/fhir/StructureDefinition/iso21090-SC-coding&quot;,&#xd;
+              &quot;valueCoding&quot; : {&#xd;
+                &quot;system&quot; : &quot;urn:iso:std:iso:3166&quot;,&#xd;
+                &quot;code&quot; : &quot;CH&quot;&#xd;
+              }&#xd;
+            }]&#xd;
+          }&#xd;
+        }]&#xd;
+      }&#xd;
+    },&#xd;
+    {&#xd;
+      &quot;fullUrl&quot; : &quot;http://test.fhir.ch/r4/Observation/1Obs-NeisseriaGonorrhoeae&quot;,&#xd;
+      &quot;resource&quot; : {&#xd;
+        &quot;resourceType&quot; : &quot;Observation&quot;,&#xd;
+        &quot;id&quot; : &quot;1Obs-NeisseriaGonorrhoeae&quot;,&#xd;
+        &quot;status&quot; : &quot;final&quot;,&#xd;
+        &quot;category&quot; : [{&#xd;
+          &quot;coding&quot; : [{&#xd;
+            &quot;system&quot; : &quot;http://terminology.hl7.org/CodeSystem/observation-category&quot;,&#xd;
+            &quot;code&quot; : &quot;laboratory&quot;,&#xd;
+            &quot;display&quot; : &quot;Laboratory&quot;&#xd;
+          }]&#xd;
+        }],&#xd;
+        &quot;code&quot; : {&#xd;
+          &quot;coding&quot; : [{&#xd;
+            &quot;system&quot; : &quot;http://loinc.org&quot;,&#xd;
+            &quot;code&quot; : &quot;697-3&quot;,&#xd;
+            &quot;display&quot; : &quot;Neisseria gonorrhoeae [Presence] in Urethra by Organism specific culture&quot;&#xd;
+          }]&#xd;
+        },&#xd;
+        &quot;subject&quot; : {&#xd;
+          &quot;reference&quot; : &quot;Patient/Pat-001&quot;&#xd;
+        },&#xd;
+        &quot;effectiveDateTime&quot; : &quot;2023-07-14T11:10:00+02:00&quot;,&#xd;
+        &quot;performer&quot; : [{&#xd;
+          &quot;reference&quot; : &quot;Organization/1Org-Labor&quot;&#xd;
+        }],&#xd;
+        &quot;valueCodeableConcept&quot; : {&#xd;
+          &quot;coding&quot; : [{&#xd;
+            &quot;system&quot; : &quot;http://snomed.info/sct&quot;,&#xd;
+            &quot;code&quot; : &quot;10828004&quot;,&#xd;
+            &quot;display&quot; : &quot;Positive&quot;&#xd;
+          }]&#xd;
+        },&#xd;
+        &quot;interpretation&quot; : [{&#xd;
+          &quot;coding&quot; : [{&#xd;
+            &quot;system&quot; : &quot;http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation&quot;,&#xd;
+            &quot;code&quot; : &quot;POS&quot;,&#xd;
+            &quot;display&quot; : &quot;Positive&quot;&#xd;
+          }]&#xd;
+        }],&#xd;
+        &quot;specimen&quot; : {&#xd;
+          &quot;reference&quot; : &quot;Specimen/1Spec-Specimen&quot;&#xd;
+        }&#xd;
+      }&#xd;
+    },&#xd;
+    {&#xd;
+      &quot;fullUrl&quot; : &quot;http://test.fhir.ch/r4/Specimen/1Spec-Specimen&quot;,&#xd;
+      &quot;resource&quot; : {&#xd;
+        &quot;resourceType&quot; : &quot;Specimen&quot;,&#xd;
+        &quot;id&quot; : &quot;1Spec-Specimen&quot;,&#xd;
+        &quot;type&quot; : {&#xd;
+          &quot;text&quot; : &quot;Material declared by Observation.code or non-mandatory&quot;&#xd;
+        },&#xd;
+        &quot;subject&quot; : {&#xd;
+          &quot;reference&quot; : &quot;Patient/Pat-001&quot;&#xd;
+        },&#xd;
+        &quot;collection&quot; : {&#xd;
+          &quot;collectedDateTime&quot; : &quot;2023-07-01&quot;&#xd;
+        }&#xd;
+      }&#xd;
+    },&#xd;
+    {&#xd;
+      &quot;fullUrl&quot; : &quot;http://test.fhir.ch/r4/ServiceRequest/1SR-Order&quot;,&#xd;
+      &quot;resource&quot; : {&#xd;
+        &quot;resourceType&quot; : &quot;ServiceRequest&quot;,&#xd;
+        &quot;id&quot; : &quot;1SR-Order&quot;,&#xd;
+        &quot;identifier&quot; : [{&#xd;
+          &quot;value&quot; : &quot;22000938108&quot;&#xd;
+        }],&#xd;
+        &quot;status&quot; : &quot;completed&quot;,&#xd;
+        &quot;intent&quot; : &quot;order&quot;,&#xd;
+        &quot;code&quot; : {&#xd;
+          &quot;coding&quot; : [{&#xd;
+            &quot;system&quot; : &quot;http://loinc.org&quot;,&#xd;
+            &quot;code&quot; : &quot;697-3&quot;,&#xd;
+            &quot;display&quot; : &quot;Neisseria gonorrhoeae [Presence] in Urethra by Organism specific culture&quot;&#xd;
+          }]&#xd;
+        },&#xd;
+        &quot;subject&quot; : {&#xd;
+          &quot;reference&quot; : &quot;Patient/Pat-001&quot;&#xd;
+        },&#xd;
+        &quot;requester&quot; : {&#xd;
+          &quot;reference&quot; : &quot;PractitionerRole/1PR-KsAbc&quot;&#xd;
+        },&#xd;
+        &quot;specimen&quot; : [{&#xd;
+          &quot;reference&quot; : &quot;Specimen/1Spec-Specimen&quot;&#xd;
+        }]&#xd;
+      }&#xd;
+    },&#xd;
+    {&#xd;
+      &quot;fullUrl&quot; : &quot;http://test.fhir.ch/r4/PractitionerRole/1PR-KsAbc&quot;,&#xd;
+      &quot;resource&quot; : {&#xd;
+        &quot;resourceType&quot; : &quot;PractitionerRole&quot;,&#xd;
+        &quot;id&quot; : &quot;1PR-KsAbc&quot;,&#xd;
+        &quot;practitioner&quot; : {&#xd;
+          &quot;reference&quot; : &quot;Practitioner/1Pract-KsAbc&quot;&#xd;
+        },&#xd;
+        &quot;organization&quot; : {&#xd;
+          &quot;reference&quot; : &quot;Organization/1Org-KsAbc&quot;&#xd;
+        }&#xd;
+      }&#xd;
+    },&#xd;
+    {&#xd;
+      &quot;fullUrl&quot; : &quot;http://test.fhir.ch/r4/Practitioner/1Pract-KsAbc&quot;,&#xd;
+      &quot;resource&quot; : {&#xd;
+        &quot;resourceType&quot; : &quot;Practitioner&quot;,&#xd;
+        &quot;id&quot; : &quot;1Pract-KsAbc&quot;,&#xd;
+        &quot;identifier&quot; : [{&#xd;
+          &quot;system&quot; : &quot;urn:oid:2.51.1.3&quot;,&#xd;
+          &quot;value&quot; : &quot;7601000234438&quot;&#xd;
+        },&#xd;
+        {&#xd;
+          &quot;system&quot; : &quot;urn:oid:2.16.756.5.30.1.123.100.2.1.1&quot;,&#xd;
+          &quot;value&quot; : &quot;A123262&quot;&#xd;
+        }],&#xd;
+        &quot;name&quot; : [{&#xd;
+          &quot;family&quot; : &quot;Giacometti&quot;,&#xd;
+          &quot;given&quot; : [&quot;Monika&quot;]&#xd;
+        }],&#xd;
+        &quot;telecom&quot; : [{&#xd;
+          &quot;system&quot; : &quot;email&quot;,&#xd;
+          &quot;value&quot; : &quot;m.giacometti@ks-abc.ch&quot;&#xd;
+        },&#xd;
+        {&#xd;
+          &quot;system&quot; : &quot;phone&quot;,&#xd;
+          &quot;value&quot; : &quot;+41 79 111 44 55&quot;&#xd;
+        }]&#xd;
+      }&#xd;
+    },&#xd;
+    {&#xd;
+      &quot;fullUrl&quot; : &quot;http://test.fhir.ch/r4/Organization/1Org-Labor&quot;,&#xd;
+      &quot;resource&quot; : {&#xd;
+        &quot;resourceType&quot; : &quot;Organization&quot;,&#xd;
+        &quot;id&quot; : &quot;1Org-Labor&quot;,&#xd;
+        &quot;identifier&quot; : [{&#xd;
+          &quot;system&quot; : &quot;urn:oid:2.51.1.3&quot;,&#xd;
+          &quot;value&quot; : &quot;7601002331470&quot;&#xd;
+        }],&#xd;
+        &quot;name&quot; : &quot;SanLab&quot;&#xd;
+      }&#xd;
+    },&#xd;
+    {&#xd;
+      &quot;fullUrl&quot; : &quot;http://test.fhir.ch/r4/Organization/1Org-KsAbc&quot;,&#xd;
+      &quot;resource&quot; : {&#xd;
+        &quot;resourceType&quot; : &quot;Organization&quot;,&#xd;
+        &quot;id&quot; : &quot;1Org-KsAbc&quot;,&#xd;
+        &quot;extension&quot; : [{&#xd;
+          &quot;url&quot; : &quot;http://fhir.ch/ig/ch-elm/StructureDefinition/ch-elm-ext-department&quot;,&#xd;
+          &quot;valueString&quot; : &quot;Abteilung 2&quot;&#xd;
+        }],&#xd;
+        &quot;identifier&quot; : [{&#xd;
+          &quot;system&quot; : &quot;urn:oid:2.16.756.5.45&quot;,&#xd;
+          &quot;value&quot; : &quot;A99684215&quot;&#xd;
+        }],&#xd;
+        &quot;name&quot; : &quot;Kantonsspital ABC&quot;,&#xd;
+        &quot;address&quot; : [{&#xd;
+          &quot;line&quot; : [&quot;Aortastrasse 22&quot;],&#xd;
+          &quot;_line&quot; : [{&#xd;
+            &quot;extension&quot; : [{&#xd;
+              &quot;url&quot; : &quot;http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetName&quot;,&#xd;
+              &quot;valueString&quot; : &quot;Aortastrasse&quot;&#xd;
+            },&#xd;
+            {&#xd;
+              &quot;url&quot; : &quot;http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-houseNumber&quot;,&#xd;
+              &quot;valueString&quot; : &quot;22&quot;&#xd;
+            },&#xd;
+            {&#xd;
+              &quot;url&quot; : &quot;http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-postBox&quot;,&#xd;
+              &quot;valueString&quot; : &quot;18&quot;&#xd;
+            }]&#xd;
+          }],&#xd;
+          &quot;city&quot; : &quot;Bern&quot;,&#xd;
+          &quot;postalCode&quot; : &quot;3000&quot;&#xd;
+        }]&#xd;
+      }&#xd;
+    }]&#xd;
+  }],&#xd;
+  &quot;identifier&quot; : [{&#xd;
+    &quot;system&quot; : &quot;urn:ietf:rfc:3986&quot;,&#xd;
+    &quot;value&quot; : &quot;urn:uuid:1901332d-6012-443f-9690-9291adb2e19d&quot;&#xd;
+  }],&#xd;
+  &quot;status&quot; : &quot;current&quot;,&#xd;
+  &quot;content&quot; : [{&#xd;
+    &quot;attachment&quot; : {&#xd;
+      &quot;language&quot; : &quot;de-CH&quot;,&#xd;
+      &quot;url&quot; : &quot;#1Doc-NeisseriaGonorrhoeae&quot;&#xd;
+    }&#xd;
+  }]&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.path">${host}/fhir/$validate?profile=http://fhir.ch/ig/ch-elm/StructureDefinition/PublishDocumentReferenceStrict</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.BROWSER_COMPATIBLE_MULTIPART">false</boolProp>
+          <boolProp name="HTTPSampler.image_parser">false</boolProp>
+          <boolProp name="HTTPSampler.concurrentDwn">false</boolProp>
+          <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
+          <boolProp name="HTTPSampler.md5">false</boolProp>
+          <intProp name="HTTPSampler.ipSourceType">0</intProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response AssertionHTTP/1.1 200 OK" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <sentBytes>true</sentBytes>
+                <url>true</url>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+                <connectTime>true</connectTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">matchbox</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.issue[0].extension[0].extension[?(@.url == &apos;validatorVersion&apos;)].valueString</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">sessionid</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.issue[0].extension[0].extension[?(@.url == &apos;sessionId&apos;)].valueString</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">validationms</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.issue[0].extension[0].extension[?(@.url == &apos;total&apos;)].valueDuration.value</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+          <DebugPostProcessor guiclass="TestBeanGUI" testclass="DebugPostProcessor" testname="Debug PostProcessor" enabled="true">
+            <boolProp name="displayJMeterProperties">false</boolProp>
+            <boolProp name="displayJMeterVariables">true</boolProp>
+            <boolProp name="displaySamplerProperties">true</boolProp>
+            <boolProp name="displaySystemProperties">false</boolProp>
+          </DebugPostProcessor>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="jvm.memory.used" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+          <stringProp name="HTTPSampler.path">${host}/actuator/metrics/jvm.memory.used</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.BROWSER_COMPATIBLE_MULTIPART">false</boolProp>
+          <boolProp name="HTTPSampler.image_parser">false</boolProp>
+          <boolProp name="HTTPSampler.concurrentDwn">false</boolProp>
+          <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
+          <boolProp name="HTTPSampler.md5">false</boolProp>
+          <intProp name="HTTPSampler.ipSourceType">0</intProp>
+          <stringProp name="HTTPSampler.response_timeout">10000</stringProp>
+          <stringProp name="TestPlan.comments">get the memover used on matchbox  statement</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response AssertionHTTP/1.1 200 OK" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">16</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">memoryused</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.measurements[0].value</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+          <DebugPostProcessor guiclass="TestBeanGUI" testclass="DebugPostProcessor" testname="Debug PostProcessor" enabled="true">
+            <boolProp name="displayJMeterProperties">false</boolProp>
+            <boolProp name="displayJMeterVariables">true</boolProp>
+            <boolProp name="displaySamplerProperties">true</boolProp>
+            <boolProp name="displaySystemProperties">false</boolProp>
+          </DebugPostProcessor>
+          <hashTree/>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <sentBytes>true</sentBytes>
+                <url>true</url>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+                <connectTime>true</connectTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+          <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>true</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <sentBytes>true</sentBytes>
+                <url>true</url>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+                <connectTime>true</connectTime>
+              </value>
+            </objProp>
+            <stringProp name="filename">/Users/oegger/Documents/github/matchbox/jmeter/memory.jtl</stringProp>
+          </ResultCollector>
+          <hashTree/>
+          <ResultCollector guiclass="SimpleDataWriter" testclass="ResultCollector" testname="Simple Data Writer" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <sentBytes>true</sentBytes>
+                <url>true</url>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+                <connectTime>true</connectTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+        </hashTree>
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Pause 30 second" enabled="true">
+          <stringProp name="ConstantTimer.delay">30000</stringProp>
+        </ConstantTimer>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>

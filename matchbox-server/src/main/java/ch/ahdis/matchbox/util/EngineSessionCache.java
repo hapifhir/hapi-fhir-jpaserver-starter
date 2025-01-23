@@ -39,9 +39,14 @@ public class EngineSessionCache extends PassiveExpiringSessionCache {
     private final Map<String, ValidationEngine> cachedSessionsNoTimeout = new java.util.HashMap<String, ValidationEngine>();
     private final Map<ValidationEngine, String> cachedSessionIdsNoTimeout = new java.util.HashMap<ValidationEngine, String>();
     private final PassiveExpiringMap<ValidationEngine, String> cachedSessionIds;
+    
+    final static int TEST_TIME_TO_LIVE = 60;
+    
 
     public EngineSessionCache() {
-        cachedSessionIds = new PassiveExpiringMap<>(TIME_TO_LIVE, TIME_UNIT);
+        super(TEST_TIME_TO_LIVE,TIME_UNIT); 
+        this.setResetExpirationAfterFetch(true);
+        cachedSessionIds = new PassiveExpiringMap<>(TEST_TIME_TO_LIVE, TIME_UNIT);
     }
 
     /**
@@ -54,10 +59,15 @@ public class EngineSessionCache extends PassiveExpiringSessionCache {
      */
     @Override
     public ValidationEngine fetchSessionValidatorEngine(String sessionId) {
+        cachedSessionIds.keySet(); // https://github.com/ahdis/matchbox/issues/336
         if (cachedSessionsNoTimeout.containsKey(sessionId)) {
             return cachedSessionsNoTimeout.get(sessionId);
         }
-        return super.fetchSessionValidatorEngine(sessionId);
+        ValidationEngine valEngine = super.fetchSessionValidatorEngine(sessionId);
+        if (valEngine!=null && super.resetExpirationAfterFetch) {
+            cachedSessionIds.put(valEngine, sessionId);
+        }
+        return valEngine;
     }
 
     /**
