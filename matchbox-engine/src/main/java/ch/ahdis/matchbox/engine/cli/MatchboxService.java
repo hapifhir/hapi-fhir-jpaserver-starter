@@ -53,6 +53,7 @@ import org.hl7.fhir.validation.cli.renderers.DefaultRenderer;
 import org.hl7.fhir.validation.cli.renderers.ESLintCompactRenderer;
 import org.hl7.fhir.validation.cli.renderers.NativeRenderer;
 import org.hl7.fhir.validation.cli.renderers.ValidationOutputRenderer;
+import org.hl7.fhir.validation.cli.services.DisabledValidationPolicyAdvisor;
 import org.hl7.fhir.validation.cli.services.HTMLOutputGenerator;
 import org.hl7.fhir.validation.cli.services.IPackageInstaller;
 import org.hl7.fhir.validation.cli.services.PassiveExpiringSessionCache;
@@ -435,10 +436,27 @@ public class MatchboxService {
       validator.setForPublication(cliContext.isForPublication());
       validator.setShowTimes(cliContext.isShowTimes());
       validator.setAllowExampleUrls(cliContext.isAllowExampleUrls());
-      validator.setPolicyAdvisor(new ValidationPolicyAdvisor(ReferenceValidationPolicy.CHECK_VALID));
-
+      if (!cliContext.isDisableDefaultResourceFetcher()) {
+          StandAloneValidatorFetcher fetcher = new StandAloneValidatorFetcher(validator.getPcm(), validator.getContext(), validator);
+          validator.setFetcher(fetcher);
+          validator.getContext().setLocator(fetcher);
+          validator.setPolicyAdvisor(fetcher);
+          if (cliContext.isCheckReferences()) {
+            fetcher.setReferencePolicy(ReferenceValidationPolicy.CHECK_VALID);
+          } else {
+            fetcher.setReferencePolicy(ReferenceValidationPolicy.IGNORE);
+          }
+          fetcher.setResolutionContext(cliContext.getResolutionContext());
+        } else {
+          validator.setPolicyAdvisor(new ValidationPolicyAdvisor(ReferenceValidationPolicy.CHECK_VALID));
+          // https://github.com/ahdis/matchbox/issues/334
+//          DisabledValidationPolicyAdvisor fetcher = new DisabledValidationPolicyAdvisor();
+//          validator.setPolicyAdvisor(fetcher);
+//          refpol = ReferenceValidationPolicy.CHECK_TYPE_IF_EXISTS;
+      }
       validator.getBundleValidationRules().addAll(cliContext.getBundleValidationRules());
       validator.setJurisdiction(CodeSystemUtilities.readCoding(cliContext.getJurisdiction()));
+      
 //      TerminologyCache.setNoCaching(cliContext.isNoInternalCaching());
       validator.prepare(); // generate any missing snapshots
       System.out.println(" go (" + tt.milestone() + ")");

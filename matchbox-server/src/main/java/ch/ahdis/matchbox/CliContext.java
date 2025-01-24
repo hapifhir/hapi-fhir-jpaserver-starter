@@ -198,6 +198,19 @@ public class CliContext {
   public boolean getXVersion() {
     return xVersion;
   }
+  
+  @JsonProperty("check-references")
+  private boolean checkReferences = false;
+
+  // @JsonProperty("showTimes")
+  // private boolean showTimes = false;
+
+  @JsonProperty("resolution-context")
+  private String resolutionContext = null;
+
+  @JsonProperty("disableDefaultResourceFetcher")
+  private boolean disableDefaultResourceFetcher = true;
+
 
   @Autowired
   public CliContext(Environment environment) {
@@ -645,6 +658,34 @@ public class CliContext {
   public void setJurisdiction(String jurisdiction) {
     this.jurisdiction = jurisdiction;
   }
+  
+  public boolean isCheckReferences() {
+    return this.checkReferences;
+  }
+
+  @JsonProperty("check-references")
+  public void setCheckReferences(boolean checkReferences) {
+    this.checkReferences = checkReferences;
+  }
+  
+  public String getResolutionContext() {
+      return this.resolutionContext;
+  }
+
+  @JsonProperty("resolution-context")
+  public void setResolutionContext(String resolutionContext) {
+    this.resolutionContext = resolutionContext;
+  }
+
+  public boolean isDisableDefaultResourceFetcher() {
+      return this.disableDefaultResourceFetcher;
+    }
+
+  @JsonProperty("disableDefaultResourceFetcher")
+  public void setDisableDefaultResourceFetcher(boolean disableDefaultResourceFetcher) {
+    this.disableDefaultResourceFetcher = disableDefaultResourceFetcher;
+  }
+
 
   @Override
   public boolean equals(final Object o) {
@@ -691,7 +732,10 @@ public class CliContext {
         && Objects.equals(locale, that.locale)
         && Objects.equals(locations, that.locations)
         && Objects.equals(jurisdiction, that.jurisdiction)
-        && Arrays.equals(igsPreloaded, that.igsPreloaded);
+        && Arrays.equals(igsPreloaded, that.igsPreloaded)
+        && checkReferences == that.checkReferences
+        && Objects.equals(resolutionContext, that.resolutionContext)
+        && disableDefaultResourceFetcher == that.disableDefaultResourceFetcher;
   }
 
   @Override
@@ -734,7 +778,10 @@ public class CliContext {
         locations,
         jurisdiction,
         onlyOneEngine,
-        xVersion);
+        xVersion,
+        checkReferences,
+        resolutionContext,
+        disableDefaultResourceFetcher);
     result = 31 * result + Arrays.hashCode(igsPreloaded);
     return result;
   }
@@ -782,6 +829,9 @@ public class CliContext {
         ", onlyOneEngine=" + onlyOneEngine +
         ", xVersion=" + xVersion +
         ", httpReadOnly=" + httpReadOnly +
+        ", checkReferences=" + checkReferences +
+        ", resolutionContext=" + resolutionContext +
+        ", disableDefaultResourceFetcher=" + disableDefaultResourceFetcher +
         '}';
   }
 
@@ -834,6 +884,9 @@ public class CliContext {
 	addExtension(ext, "locale", new StringType(this.locale));
 	// addExtension(ext, "locations", new StringType(this.locations));
 	addExtension(ext, "jurisdiction", new StringType(this.jurisdiction));
+	addExtension(ext, "check-references", new BooleanType(this.checkReferences));
+	addExtension(ext, "resolution-context", new StringType(this.resolutionContext));
+	addExtension(ext, "disableDefaultResourceFetcher", new BooleanType(this.disableDefaultResourceFetcher));
   for( var extension : this.extensions) {
     addExtension(ext, "extensions", new StringType(extension));
   }

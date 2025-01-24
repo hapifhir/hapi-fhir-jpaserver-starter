@@ -35,7 +35,7 @@ Validation for profile http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-pat
 
 ### Configuration parameters
 
-Default validation parameters can be set directly in provided application.yaml
+Default validation parameters can be set directly in provided application.yaml, see also the confluecne page of HL7 [Using the FHIR Validator](https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator)
 
 ```yaml
 hapi:
@@ -84,7 +84,10 @@ matchbox:
 | onlyOneEngine         | 0..1  | Implementation Guides can have multiple versions with different dependencies. Matchbox creates for transformation and validation an own engine for each Implementation Guide and its dependencies (default setting). You can switch this behavior, e.g. if you are using it in development and want to create and update resources or transform maps. Set the setting for onlyOneEngine to true. The changes are however not persisted and will be lost if matchbox is restarted. |
 | httpReadOnly          | 0..1  | Whether to allow creating, modifying or deleting resources on the server via the HTTP API or not. If `true`, IGs can only be loaded through the configuration.                                                                                                                                                                                                                                                                                                                   |
 | suppressWarnInfo      | 0..\* | A list of warning message to ignore while validating resources, per Implementation Guide and version.                                                                                                                                                                                                                                                                                                                                                                            |
-| extensions            | 0..1  | Extensions not defined by the ImplementationgGuides which are accepted, comma separated list by url patterns, defaults to 'any'                                                                                                                                                                                                                                                                                                                                                  |
+| extensions            | 0..1  | Extensions not defined by the ImplementationgGuides which are accepted, comma separated list by url patterns, defaults to 'any'    |
+| disableDefaultResourceFetcher  | 0..1  | defaults to true, enables matchbox behaviour that references within bundles are resolved, validated and checked (different to java validator), if false see below  |
+| check-references  | 0..1  | Provided with this parameter and disableDefaultResourceFetcher set to false, the validator only knows how to follow absolute URLs, and it will attempt to. Invalid absolute URLs and any relative URLs will cause validation failures. Defaults to false |
+| resolution-context  | 0..1  | Provided with this parameter and disableDefaultResourceFetcher set to false the validator resolve relative references, needs to be a server address |
 
 See configuration parameters in [Matchbox Server](matchbox-server.md#configuration) for more details.
 
