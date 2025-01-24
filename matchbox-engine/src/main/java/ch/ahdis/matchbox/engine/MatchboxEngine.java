@@ -841,7 +841,6 @@ public class MatchboxEngine extends ValidationEngine {
 		}
 		final List<ValidationMessage> messages = new ArrayList<>();
 		final InstanceValidator validator = getValidator(format);
-		validator.setPolicyAdvisor(new ValidationPolicyAdvisor(ReferenceValidationPolicy.CHECK_VALID));
 		validator.validate(null, messages, stream, format, (sd != null) ? new ArrayList<>(List.of(sd)) :  new ArrayList<>());
 		return this.filterValidationMessages(messages);
 	}

@@ -267,7 +267,7 @@ public class CliContext {
     return ig;
   }
 
-  @JsonProperty("igs")
+  @JsonProperty("ig")
   public void setIg(String ig) {
     this.ig = ig;
   }
