@@ -34,6 +34,7 @@ import org.hl7.fhir.r5.context.SimpleWorkerContext;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import ch.ahdis.matchbox.engine.MatchboxEngine;
@@ -41,7 +42,9 @@ import ch.ahdis.matchbox.engine.MatchboxEngine.MatchboxEngineBuilder;
 
 /**
  * https://build.fhir.org/ig/HL7/fhir-cross-version/package.tgz
+ * Uses more then 4GB on the ci-build
  */
+@Disabled
 class FhirXVersTests {
 
 //	static private MatchboxEngine engineR4B;

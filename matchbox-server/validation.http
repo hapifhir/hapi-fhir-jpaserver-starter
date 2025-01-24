@@ -97,3 +97,22 @@ POST {{host}}/$validate?profile=http://hl7.org/fhir/uv/ips/StructureDefinition/B
 Content-Type: application/fhir+json
 
 < ./examples/ips-minimal-err-patnobirthdate.json
+
+
+### lenient-display-validation does not work with displayLanguage de-CH: "Wrong Display Name 'PRESCRIPTIONS' for http://loinc.org#57828-6. There are no valid display names found for language(s) 'de-CH'. Default display is 'Prescription list'
+POST http://tx.fhir.org/r4/CodeSystem/$validate-code? HTTP/1.0
+User-Agent: hapi-fhir-tooling-client
+Accept: application/fhir+json; fhirVersion=4.0
+Content-Type: application/fhir+json; fhirVersion=4.0;charset=UTF-8
+
+{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"http://loinc.org","code":"57828-6","display":"PRESCRIPTIONS"}},{"name":"displayLanguage","valueString":"de-CH"},{"name":"lenient-display-validation","valueBoolean":true},{"name":"default-to-latest-version","valueBoolean":true},{"name":"cache-id","valueId":"5ccc8cc7-c61a-49cd-b8f6-b2c8899b2ee4"},{"name":"profile-url","valueString":"http://hl7.org/fhir/ExpansionProfile/dc8fd4bc-091a-424a-8a3b-6198ef146891"},{"name":"mode","valueString":"lenient-display-validation"},{"name":"diagnostics","valueBoolean":true}]}
+
+
+### lenient-display-validation works with displayLanguage en-US
+POST http://tx.fhir.org/r4/CodeSystem/$validate-code? HTTP/1.0
+User-Agent: hapi-fhir-tooling-client
+Accept: application/fhir+json; fhirVersion=4.0
+Content-Type: application/fhir+json; fhirVersion=4.0;charset=UTF-8
+
+{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"http://loinc.org","code":"57828-6","display":"PRESCRIPTIONS"}},{"name":"displayLanguage","valueString":"en-US"},{"name":"lenient-display-validation","valueBoolean":true},{"name":"default-to-latest-version","valueBoolean":true},{"name":"cache-id","valueId":"5ccc8cc7-c61a-49cd-b8f6-b2c8899b2ee4"},{"name":"profile-url","valueString":"http://hl7.org/fhir/ExpansionProfile/dc8fd4bc-091a-424a-8a3b-6198ef146891"},{"name":"mode","valueString":"lenient-display-validation"},{"name":"diagnostics","valueBoolean":true}]}
+
