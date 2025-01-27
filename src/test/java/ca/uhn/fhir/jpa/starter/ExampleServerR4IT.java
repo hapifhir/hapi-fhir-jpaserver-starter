@@ -41,6 +41,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -315,10 +316,10 @@ class ExampleServerR4IT implements IServerSupport {
 
 	@ParameterizedTest
 	@ValueSource(strings = {"prometheus", "health", "metrics", "info"})
-	void testActuatorEndpointExists(String endpoint) throws IOException {
+	void testActuatorEndpointExists(String endpoint) throws IOException, URISyntaxException {
 
 		CloseableHttpClient httpclient = HttpClients.createDefault();
-		CloseableHttpResponse response = httpclient.execute(new HttpGet("http://localhost:" + port + "/actuator/" + endpoint));
+		CloseableHttpResponse response = httpclient.execute(new HttpGet(new URI("http", null, "localhost", port, "/actuator/" + endpoint, null, null)));
 		int statusCode = response.getStatusLine().getStatusCode();
 		assertEquals(200, statusCode);
 
