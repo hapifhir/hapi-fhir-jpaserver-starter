@@ -27,6 +27,7 @@ import ca.uhn.fhir.jpa.dao.IFulltextSearchSvc;
 import ca.uhn.fhir.jpa.dao.search.HSearchSortHelperImpl;
 import ca.uhn.fhir.jpa.dao.search.IHSearchSortHelper;
 import ca.uhn.fhir.jpa.delete.ThreadSafeResourceDeleterSvc;
+import ca.uhn.fhir.jpa.fql.executor.HfqlExecutor;
 import ca.uhn.fhir.jpa.fql.provider.HfqlRestProvider;
 import ca.uhn.fhir.jpa.graphql.GraphQLProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
@@ -105,6 +106,17 @@ public class StarterJpaConfig {
 	public IStaleSearchDeletingSvc staleSearchDeletingSvc() {
 		return new StaleSearchDeletingSvcImpl();
 	}
+
+	@Bean
+    public HfqlRestProvider hfqlRestProvider() {
+        return new HfqlRestProvider();
+    }
+
+	@Bean
+	public HfqlExecutor hfqlExecutor() {
+		return new HfqlExecutor();
+	}
+
 
 	@Primary
 	@Bean
@@ -272,6 +284,7 @@ public class StarterJpaConfig {
 			BinaryStorageInterceptor binaryStorageInterceptor,
 			IValidatorModule validatorModule,
 			Optional<GraphQLProvider> graphQLProvider,
+			HfqlRestProvider hfqlRestProvider,
 			BulkDataExportProvider bulkDataExportProvider,
 			BulkDataImportProvider bulkDataImportProvider,
 			ValueSetOperationProvider theValueSetOperationProvider,
@@ -443,7 +456,7 @@ public class StarterJpaConfig {
 
 		// HFQL
 		if (appProperties.getHfql_enabled()) {
-			fhirServer.registerProvider(new HfqlRestProvider());
+			fhirServer.registerProvider(hfqlRestProvider);
 		}
 
 		// valueSet Operations i.e $expand

@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.batch2.jobs.config.Batch2JobsConfig;
 import ca.uhn.fhir.jpa.batch2.JpaBatch2Config;
+import ca.uhn.fhir.jpa.fql.provider.HfqlRestProvider;
 import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
 import ca.uhn.fhir.jpa.starter.cdshooks.StarterCdsHooksConfig;
 import ca.uhn.fhir.jpa.starter.cr.StarterCrDstu3Config;
@@ -25,7 +26,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
 
-@ServletComponentScan(basePackageClasses = {RestfulServer.class})
+@ServletComponentScan(basePackageClasses = {RestfulServer.class, HfqlRestProvider.class})
 @SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class, ThymeleafAutoConfiguration.class})
 @Import({
 	StarterCrR4Config.class,
