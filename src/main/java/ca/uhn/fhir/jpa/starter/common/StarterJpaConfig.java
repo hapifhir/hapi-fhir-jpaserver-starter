@@ -27,6 +27,7 @@ import ca.uhn.fhir.jpa.dao.IFulltextSearchSvc;
 import ca.uhn.fhir.jpa.dao.search.HSearchSortHelperImpl;
 import ca.uhn.fhir.jpa.dao.search.IHSearchSortHelper;
 import ca.uhn.fhir.jpa.delete.ThreadSafeResourceDeleterSvc;
+import ca.uhn.fhir.jpa.fql.provider.HfqlRestProvider;
 import ca.uhn.fhir.jpa.graphql.GraphQLProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
 import ca.uhn.fhir.jpa.interceptor.UserRequestRetryVersionConflictsInterceptor;
@@ -65,6 +66,8 @@ import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
 import jakarta.persistence.EntityManagerFactory;
+
+import org.apache.jena.sparql.algebra.Op;
 import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -436,6 +439,11 @@ public class StarterJpaConfig {
 		// Bulk Import
 		if (appProperties.getBulk_import_enabled()) {
 			fhirServer.registerProvider(bulkDataImportProvider);
+		}
+
+		// HFQL
+		if (appProperties.getHfql_enabled()) {
+			fhirServer.registerProvider(new HfqlRestProvider());
 		}
 
 		// valueSet Operations i.e $expand

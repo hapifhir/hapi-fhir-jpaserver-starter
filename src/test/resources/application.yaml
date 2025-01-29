@@ -139,7 +139,8 @@ hapi:
     #    client_id_strategy: ALPHANUMERIC
     #    fhirpath_interceptor_enabled: false
     #    filter_search_enabled: true
-    #    graphql_enabled: true
+    graphql_enabled: true
+    hfql_enabled: true
     #    narrative_enabled: true
     #    mdm_enabled: true
     #    local_base_urls:

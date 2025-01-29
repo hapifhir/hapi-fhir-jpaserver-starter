@@ -52,6 +52,7 @@ public class AppProperties {
   private Boolean fhirpath_interceptor_enabled = false;
   private Boolean filter_search_enabled = true;
   private Boolean graphql_enabled = false;
+  private Boolean hfql_enabled = false;
   private Boolean binary_storage_enabled = false;
   private Integer inline_resource_storage_below_size = 0;
   private Boolean bulk_export_enabled = false;
@@ -966,4 +967,13 @@ public Boolean getResource_dbhistory_enabled() {
 public void setResource_dbhistory_enabled(Boolean resource_dbhistory_enabled) {
 	this.resource_dbhistory_enabled = resource_dbhistory_enabled;
 }
+
+public Boolean getHfql_enabled() {
+  return hfql_enabled;
+}
+
+public void setHfql_enabled(Boolean hfql_enabled) {
+  this.hfql_enabled = hfql_enabled;
+}
+
 }

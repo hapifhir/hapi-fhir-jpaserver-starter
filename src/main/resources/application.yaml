@@ -210,7 +210,8 @@ hapi:
     #    server_id_strategy: SEQUENTIAL_NUMERIC
     #    fhirpath_interceptor_enabled: false
     #    filter_search_enabled: true
-    #    graphql_enabled: true
+    graphql_enabled: true
+    hfql_enabled: true
     narrative_enabled: false
     mdm_enabled: false
     mdm_rules_json_location: "mdm-rules.json"
