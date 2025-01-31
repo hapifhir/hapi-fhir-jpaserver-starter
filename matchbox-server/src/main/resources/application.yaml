@@ -59,8 +59,8 @@ hapi:
       #   url: classpath:/hl7.fhir.uv.extensions.r4#1.0.0.tgz
       # fhir_terminology:
       #   name: hl7.terminology.r4
-      #   version: 6.1.0
-      #   url: classpath:/hl7.terminology.r4#6.1.0.tgz
+      #   version: 6.2.0
+      #   url: classpath:/hl7.terminology.r4#6.2.0.tgz
     #      ch-core:
     #        name: ch.fhir.ig.ch-core
     #        version: 4.0.0-ballot

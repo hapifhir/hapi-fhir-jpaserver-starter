@@ -150,6 +150,8 @@ import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 import org.hl7.fhir.utilities.i18n.I18nBase;
 import org.hl7.fhir.utilities.i18n.I18nConstants;
+import org.hl7.fhir.utilities.i18n.subtag.LanguageSubtagRegistry;
+import org.hl7.fhir.utilities.i18n.subtag.LanguageSubtagRegistryLoader;
 import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.hl7.fhir.utilities.validation.ValidationMessage.IssueSeverity;
 import org.hl7.fhir.utilities.validation.ValidationMessage.IssueType;
@@ -318,6 +320,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
   private final CanonicalResourceManager<NamingSystem> systems = new CanonicalResourceManager<NamingSystem>(false, minimalMemory);
   private Map<String, NamingSystem> systemUrlMap;
 
+  private LanguageSubtagRegistry registry;
   
   private UcumService ucumService;
   protected Map<String, IByteProvider> binaries = new HashMap<String, IByteProvider>();
@@ -348,11 +351,13 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
   protected BaseWorkerContext() throws FileNotFoundException, IOException, FHIRException {
     setValidationMessageLanguage(getLocale());
     clock = new TimeTracker();
+    initLang();
   }
 
   protected BaseWorkerContext(Locale locale) throws FileNotFoundException, IOException, FHIRException {
     setValidationMessageLanguage(locale);
     clock = new TimeTracker();
+    initLang();
   }
 
   protected BaseWorkerContext(CanonicalResourceManager<CodeSystem> codeSystems, CanonicalResourceManager<ValueSet> valueSets, CanonicalResourceManager<ConceptMap> maps, CanonicalResourceManager<StructureDefinition> profiles,
@@ -365,6 +370,13 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     this.typeManager = new TypeManager(structures);
     this.guides = guides;
     clock = new TimeTracker();
+    initLang();
+  }
+
+  private void initLang() throws IOException {
+    registry = new LanguageSubtagRegistry();
+    LanguageSubtagRegistryLoader loader = new LanguageSubtagRegistryLoader(registry);
+    loader.loadFromDefaultResource();
   }
 
   protected void copy(BaseWorkerContext other) {
@@ -718,10 +730,8 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
         return laterVersion(newParts[i], oldParts[i]);
       }
     }
-	// MATCHBOX PATCH for allowing loading HL7 Terminology (THO)
-	return true;
-    // This should never happen
-    //throw new Error(formatMessage(I18nConstants.DELIMITED_VERSIONS_HAVE_EXACT_MATCH_FOR_DELIMITER____VS_, delimiter, newParts, oldParts));
+    // MATCHBOX PATCH for allowing loading HL7 Terminology (THO)
+    return true;
   }
   
   protected <T extends CanonicalResource> void seeMetadataResource(T r, Map<String, T> map, List<T> list, boolean addId) throws FHIRException {
@@ -775,6 +785,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     }
     CodeSystem cs;
     synchronized (lock) {
+
       cs = codeSystems.get(system);
     }
     if (cs == null && locator != null) {
@@ -1474,6 +1485,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       } catch (TerminologyServiceProtectionException e) {
         OperationOutcomeIssueComponent iss = new OperationOutcomeIssueComponent(org.hl7.fhir.r5.model.OperationOutcome.IssueSeverity.ERROR, e.getType());
         iss.getDetails().setText(e.getMessage());
+        iss.setDiagnostics(e.getDiagnostics());
         issues.add(iss);
         return new ValidationResult(IssueSeverity.FATAL, e.getMessage(), e.getError(), issues);
       } catch (Exception e) {
@@ -1624,11 +1636,11 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
   }
 
   protected ValueSetValidator constructValueSetCheckerSimple(ValidationOptions options,  ValueSet vs,  ValidationContextCarrier ctxt) {
-    return new ValueSetValidator(this, new TerminologyOperationContext(this, options, "validation"), options, vs, ctxt, expParameters, terminologyClientManager);
+    return new ValueSetValidator(this, new TerminologyOperationContext(this, options, "validation"), options, vs, ctxt, expParameters, terminologyClientManager, registry);
   }
 
   protected ValueSetValidator constructValueSetCheckerSimple( ValidationOptions options,  ValueSet vs) {
-    return new ValueSetValidator(this, new TerminologyOperationContext(this, options, "validation"), options, vs, expParameters, terminologyClientManager);
+    return new ValueSetValidator(this, new TerminologyOperationContext(this, options, "validation"), options, vs, expParameters, terminologyClientManager, registry);
   }
 
   protected Parameters constructParameters(ITerminologyOperationDetails opCtxt, TerminologyClientContext tcd, ValueSet vs, boolean hierarchical) {
@@ -1757,6 +1769,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       } catch (TerminologyServiceProtectionException e) {
         OperationOutcomeIssueComponent iss = new OperationOutcomeIssueComponent(org.hl7.fhir.r5.model.OperationOutcome.IssueSeverity.ERROR, e.getType());
         iss.getDetails().setText(e.getMessage());
+        iss.setDiagnostics(e.getDiagnostics());
         issues.add(iss);
         return new ValidationResult(IssueSeverity.FATAL, e.getMessage(), e.getError(), issues);
       } catch (Exception e) {

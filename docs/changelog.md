@@ -1,3 +1,8 @@
+2025/01/31 Release 3.9.12
+
+- Update org.hl7.fhir.core to 6.5.7 
+- Update hl7.terminology.r4 to 6.2.0 (note you need to update your application.yaml) [#339](https://github.com/ahdis/matchbox/issues/339)
+
 2025/01/24 Release 3.9.11
 
 - remove introduced FML limitation to R5 [#329](https://github.com/ahdis/matchbox/issues/329), [#331](https://github.com/ahdis/matchbox/issues/331) thanks @mrunibe for PR's !
