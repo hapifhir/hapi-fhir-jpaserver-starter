@@ -13,7 +13,7 @@ default fhir package configuration:
 - cda-uv-core-2.0#2.0.0-sd-202406-matchbox-patch.tgz
 - hl7.fhir.r4.core.tgz
 - hl7.fhir.xver-extensions#0.1.0.tgz
-- hl7.terminology.r4#6.1.0.tgz
+- hl7.terminology.r4#6.2.0.tgz
 - hl7.fhir.uv.extensions.r4#1.0.0.tgz
 
 ## Library based on matchbox and hapi-fhir / org.hl7.fhir.core
