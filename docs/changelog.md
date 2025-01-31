@@ -2,6 +2,8 @@
 
 - Update org.hl7.fhir.core to 6.5.7 
 - Update hl7.terminology.r4 to 6.2.0 (note you need to update your application.yaml) [#339](https://github.com/ahdis/matchbox/issues/339)
+- Validation GUI: handle non-200 responses that contain an OperationOutcome [#326](https://github.com/ahdis/matchbox/issues/326)
+- Set the right PostgreSQL dialect in Hibernate configuration [#321](https://github.com/ahdis/matchbox/issues/321)
 
 2025/01/24 Release 3.9.11
 
