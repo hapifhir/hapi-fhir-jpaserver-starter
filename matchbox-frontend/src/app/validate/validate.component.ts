@@ -308,13 +308,29 @@ export class ValidateComponent implements AfterViewInit {
         }
       })
       .catch((error) => {
-        // fhir-kit-client throws an error when return in not json
-        entry.loading = false;
-        this.showErrorToast('Unexpected error', error.message);
-        entry.result = OperationResult.fromMatchboxError(
-          'Error while sending the validation request: ' + error.message
-        );
         console.error(error);
+        entry.loading = false;
+        if (error?.response?.data?.resourceType === 'OperationOutcome') {
+          // Got an OperationOutcome, probably with a 500-error code
+          entry.setOperationOutcome(error?.response?.data);
+          if (entry === this.selectedEntry) {
+            this.editor.updateCodeEditorContent(this.selectedEntry, this.editorContent);
+          }
+        } else if ('message' in error) {
+          // Got an error message
+          this.showErrorToast('Unexpected error', error.message);
+          entry.result = OperationResult.fromMatchboxError(
+            'Error while sending the validation request: ' + error.message
+          );
+          console.error(error);
+        } else {
+          // Got nothing useful, it seems
+          this.showErrorToast('Unknown error', 'Unknown error while sending the validation request');
+          entry.result = OperationResult.fromMatchboxError(
+            'Unknown error while sending the validation request'
+          );
+          console.error(error);
+        }
       });
   }
 
