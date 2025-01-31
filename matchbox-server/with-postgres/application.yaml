@@ -13,4 +13,4 @@ spring:
       maximum-pool-size: 10
   jpa:
     properties:
-      hibernate.dialect: org.hibernate.dialect.PostgreSQL95Dialect
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
