@@ -26,7 +26,7 @@ import org.hl7.fhir.r5.model.StringType;
 
 import java.lang.reflect.Field;
 
-import static ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl.SD_EXTENSION_TITLE_PREFIX;
+import static ch.ahdis.matchbox.packages.MatchboxJpaPackageCache.SD_EXTENSION_TITLE_PREFIX;
 
 /**
  * A provider of CapabilityStatement customized for Matchbox.

@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl.SD_EXTENSION_TITLE_PREFIX;
+import static ch.ahdis.matchbox.packages.MatchboxJpaPackageCache.SD_EXTENSION_TITLE_PREFIX;
 
 /**
  * The WebService for validation with the new Gazelle Validation API.
