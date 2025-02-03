@@ -5,6 +5,7 @@
 - Validation GUI: handle non-200 responses that contain an OperationOutcome [#326](https://github.com/ahdis/matchbox/issues/326)
 - Set the right PostgreSQL dialect in Hibernate configuration [#321](https://github.com/ahdis/matchbox/issues/321)
 - Customize the NpmPackageVersionResourceEntities before saving them for the first time [#341](https://github.com/ahdis/matchbox/issues/341)
+- Optimize `NpmPackageIndexBuilder.seeFile` for memory consumption [#342](https://github.com/ahdis/matchbox/issues/342)
 
 2025/01/24 Release 3.9.11
 
