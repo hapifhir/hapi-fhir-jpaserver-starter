@@ -107,6 +107,9 @@ export class ValidationCodeEditor {
       if (selectedEntry.result !== undefined && 'operationOutcome' in selectedEntry.result) {
         this.editor.setValue(JSON.stringify(selectedEntry.result.operationOutcome, null, this.indentSpace), -1);
         this.editor.getSession().setMode('ace/mode/json');
+      } else if (editorContent == CodeEditorContent.MATCHSPARK_RESULT){
+        this.editor.setValue(selectedEntry.aiRecommendation, -1);
+        this.editor.getSession().setMode('ace/mode/txt');
       } else {
         this.clearContent();
       }
