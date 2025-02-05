@@ -6448,7 +6448,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
             } else {
               ok = rule(errors, "2025-01-28", IssueType.DUPLICATE, element.line(), element.col(), stack.getLiteralPath(),
                   !stack.getIds().containsKey("!"+id), I18nConstants.RESOURCE_DUPLICATE_CONTAINED_ID, id) && ok;
-              stack.getIds().put("!"+id, element);
+// matchbox patch #344              stack.getIds().put("!"+id, element);
             }
           }
           stack.resetIds();
