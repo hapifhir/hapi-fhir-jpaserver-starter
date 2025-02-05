@@ -1,4 +1,4 @@
-2025/01/31 Release 3.9.12
+2025/02/05 Release 3.9.12
 
 - Update org.hl7.fhir.core to 6.5.7 
 - Update hl7.terminology.r4 to 6.2.0 (note you need to update your application.yaml) [#339](https://github.com/ahdis/matchbox/issues/339)
@@ -6,6 +6,8 @@
 - Set the right PostgreSQL dialect in Hibernate configuration [#321](https://github.com/ahdis/matchbox/issues/321)
 - Customize the NpmPackageVersionResourceEntities before saving them for the first time [#341](https://github.com/ahdis/matchbox/issues/341)
 - Optimize `NpmPackageIndexBuilder.seeFile` for memory consumption [#342](https://github.com/ahdis/matchbox/issues/342)
+- Matchbox too strict in document validation [#345](https://github.com/ahdis/matchbox/issues/345)
+- Duplicate ID for contained resource in IG Publisher 1.8.10 / core 6.5.7 [#344](https://github.com/ahdis/matchbox/issues/344)
 
 2025/01/24 Release 3.9.11
 
