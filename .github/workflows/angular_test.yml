@@ -24,7 +24,7 @@ jobs:
           cache-dependency-path: matchbox-frontend/package-lock.json
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Test the build
         run: npm run build

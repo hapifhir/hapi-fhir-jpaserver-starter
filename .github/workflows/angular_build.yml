@@ -7,6 +7,7 @@ on:
       - main
     paths:
       - "matchbox-frontend/**"
+      - "pom.xml" # Since we use the Maven version, also trigger the workflow when the version changes
 
 jobs:
   build-angular-and-commit:
@@ -42,26 +43,21 @@ jobs:
         with:
           maven-version: 3.9.9
 
-      - name: Update the project version
+      - name: Update the GUI version from the Maven project version
         shell: bash
         run: |
           cd ..
           VERSION=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout`
-          echo "The project version is ${VERSION}"
+          echo "The Maven project version is ${VERSION}"
           cd ./matchbox-frontend
           npm --no-git-tag-version --allow-same-version=true version "$VERSION"
 
       - name: Install dependencies
-        run: npm install
+        # Use dependencies from the lock file, no unattended updates
+        run: npm ci
 
       - name: Build
-        run: npm run build
-
-      - name: Remove the old GUI
-        run: rm -rf ../matchbox-server/src/main/resources/static
-
-      - name: Move the new GUI
-        run: mv dist ../matchbox-server/src/main/resources/static
+        run: npm run build-matchbox
 
       - name: Commit
         if: success()
