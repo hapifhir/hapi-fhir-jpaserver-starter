@@ -7,7 +7,6 @@ on:
       - main
     paths:
       - "matchbox-frontend/**"
-      - "pom.xml" # Since we use the Maven version, also trigger the workflow when the version changes
 
 jobs:
   build-angular-and-commit:
@@ -30,27 +29,6 @@ jobs:
           node-version: 20
           cache: npm
           cache-dependency-path: matchbox-frontend/package-lock.json
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        # https://github.com/actions/setup-java#usage
-        with:
-          java-version: 21
-          distribution: adopt
-
-      - name: Set up Maven
-        uses: stCarolas/setup-maven@v5
-        with:
-          maven-version: 3.9.9
-
-      - name: Update the GUI version from the Maven project version
-        shell: bash
-        run: |
-          cd ..
-          VERSION=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout`
-          echo "The Maven project version is ${VERSION}"
-          cd ./matchbox-frontend
-          npm --no-git-tag-version --allow-same-version=true version "$VERSION"
 
       - name: Install dependencies
         # Use dependencies from the lock file, no unattended updates

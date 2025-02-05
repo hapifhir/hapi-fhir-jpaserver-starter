@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import packageJson from '../../../package.json';
 
 @Component({
     selector: 'app-home',
@@ -8,5 +7,5 @@ import packageJson from '../../../package.json';
     standalone: false
 })
 export class HomeComponent {
-  public version: string = packageJson.version;
+  public version: string = (window as any).MATCHBOX_VERSION;
 }

@@ -12,7 +12,6 @@
     "baseUrl": ".",
     "module": "ES2022",
     "esModuleInterop": true,
-    "resolveJsonModule": true,
     "paths": {
       "*": [
         "node_modules/*",

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FhirConfigService } from './fhirConfig.service';
 import { TranslateService } from '@ngx-translate/core';
-import packageJson from '../../package.json';
 import {HashUrlRedirectionService} from "./util/hash-url-redirection-service";
 
 @Component({
@@ -11,7 +10,7 @@ import {HashUrlRedirectionService} from "./util/hash-url-redirection-service";
     standalone: false
 })
 export class AppComponent {
-  public version: string = packageJson.version;
+  public version: string = (window as any).MATCHBOX_VERSION;
 
   constructor(readonly translateService: TranslateService,
               readonly fhirConfigService: FhirConfigService,

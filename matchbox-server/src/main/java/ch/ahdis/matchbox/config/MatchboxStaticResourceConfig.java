@@ -1,9 +1,9 @@
 package ch.ahdis.matchbox.config;
 
+import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -97,8 +97,11 @@ public class MatchboxStaticResourceConfig implements WebMvcConfigurer {
 				String content = classPathResource.getContentAsString(StandardCharsets.UTF_8);
 
 				// Replace the base path of the server
-				content = content.replace("MATCHBOX_BASE_PATH = \"/\"",
-												  "MATCHBOX_BASE_PATH = \"%s\"".formatted(this.parent.baseServerPath));
+				content = content
+					.replace("MATCHBOX_BASE_PATH = \"/\"",
+								"MATCHBOX_BASE_PATH = \"%s\"".formatted(this.parent.baseServerPath))
+					.replace("MATCHBOX_VERSION = \"served-by-ng\"",
+								"MATCHBOX_VERSION = \"%s\"".formatted(VersionUtil.getVersion()));
 
 				return new TransformedResource(resource,
 														 content.getBytes(StandardCharsets.UTF_8));
