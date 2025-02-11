@@ -22,12 +22,14 @@ package ch.ahdis.matchbox.validation;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
+import ca.uhn.fhir.model.primitive.StringDt;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.util.StopWatch;
 import ch.ahdis.matchbox.CliContext;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
+import ch.ahdis.matchbox.validation.matchspark.OpenAIConnector;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
@@ -43,11 +45,13 @@ import org.apache.http.impl.client.HttpClients;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
+import org.hl7.fhir.instance.model.api.IAnyResource;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.model.Duration;
 import org.hl7.fhir.r5.model.OperationOutcome;
+import org.hl7.fhir.r5.model.Parameters;
 import org.hl7.fhir.r5.model.StringType;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.hl7.fhir.r5.model.UriType;
@@ -56,10 +60,15 @@ import org.hl7.fhir.r5.utils.ToolingExtensions;
 import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
@@ -167,6 +176,12 @@ public class ValidationProvider {
 		}
 		String profile = theRequest.getParameter("profile");
 
+		// Check if AI parameter is set
+		boolean ai = false;
+		if (theRequest.getParameter("ai") != null) {
+			ai = theRequest.getParameter("ai").equals("true");
+		}
+
 		boolean reload = false;
 		if (theRequest.getParameter("reload") != null) {
 			reload = theRequest.getParameter("reload").equals("true");
@@ -229,7 +244,15 @@ public class ValidationProvider {
 		long millis = sw.getMillis();
 		log.debug("Validation time: {}", sw);
 
-		return this.getOperationOutcome(sha3Hex, messages, profile, engine, millis, cliContext);
+		var oo = this.getOperationOutcome(sha3Hex, messages, profile, engine, millis, cliContext);
+		if (ai) {
+			OpenAIConnector openAIConnector = new OpenAIConnector();
+			String json = myContext.newJsonParser().setPrettyPrint(true).encodeResourceToString(oo);
+			String aiResult = openAIConnector.interpretWithMatchbox(contentString, json);
+			return this.addAIIssueToOperationOutcome(oo, aiResult);
+		}
+
+		return oo;
 	}
 
 	private IBaseResource getOperationOutcome(final String id,
@@ -456,5 +479,19 @@ public class ValidationProvider {
 			messages.add(m);
 		} 
 		return messages;
+	}
+
+	public IBaseResource addAIIssueToOperationOutcome(IBaseResource resource, String aiResponse) {
+		if (resource instanceof org.hl7.fhir.r4.model.OperationOutcome) {
+			org.hl7.fhir.r4.model.OperationOutcome outcome = (org.hl7.fhir.r4.model.OperationOutcome) resource;
+			
+			var issue = outcome.addIssue();
+			issue.setSeverity(org.hl7.fhir.r4.model.OperationOutcome.IssueSeverity.INFORMATION);
+			issue.setCode(org.hl7.fhir.r4.model.OperationOutcome.IssueType.INFORMATIONAL);
+			issue.setDiagnostics(aiResponse);
+	
+			return outcome;
+		}
+		throw new IllegalArgumentException("Provided resource is not an OperationOutcome.");
 	}
 }

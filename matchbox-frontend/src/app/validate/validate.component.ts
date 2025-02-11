@@ -144,7 +144,7 @@ export class ValidateComponent implements AfterViewInit {
     let entry: ValidationEntry;
     try {
       // Try to parse the resource to extract information
-      entry = new ValidationEntry(filename, content, contentType, null, this.getCurrentValidationSettings());
+      entry = new ValidationEntry(filename, content, contentType, null, this.getCurrentValidationSettings(), false);
       this.currentResource = new UploadedFile(
         filename,
         contentType,
@@ -234,7 +234,7 @@ export class ValidateComponent implements AfterViewInit {
               let res = JSON.parse(decoder.decode(extractedFile.buffer)) as fhir.r4.Resource;
               let profiles = res.meta?.profile;
               // maybe better add ig as a parmeter, we assume now that ig version is equal to canonical version
-              let entry = new ValidationEntry(name, JSON.stringify(res, null, 2), 'application/fhir+json', profiles, this.getCurrentValidationSettings());
+              let entry = new ValidationEntry(name, JSON.stringify(res, null, 2), 'application/fhir+json', profiles, this.getCurrentValidationSettings(), false);
               dataSource.push(entry);
             }
           }
@@ -284,6 +284,7 @@ export class ValidateComponent implements AfterViewInit {
     if (entry.ig) {
       searchParams.set('ig', entry.ig);
     }
+    searchParams.set('ai', entry.useAI.toString());
 
     // Validation options
     for (const param of entry.validationParameters) {
@@ -372,7 +373,8 @@ export class ValidateComponent implements AfterViewInit {
       this.currentResource.content,
       this.currentResource.contentType,
       [this.selectedProfile],
-      this.getCurrentValidationSettings()
+      this.getCurrentValidationSettings(),
+      false // useAI
     );
     if (this.selectedIg != this.AUTO_IG_SELECTION) {
       entry.ig = this.selectedIg;
@@ -386,15 +388,20 @@ export class ValidateComponent implements AfterViewInit {
    * Event handler for the click on the "AI Analyze" button.
    */
   onAiButtonClick() {
-    const formData = new FormData();
-    formData.append("inputResource", this.currentResource.content);
-    formData.append("inputOperationOutcome", JSON.stringify(this.selectedEntry.result.operationOutcome));
-
-    // send HTTP request for AI analysis
-    this.httpClient.post('http://localhost:8080/validate', formData, {responseType: 'text'})
-      .subscribe(response => {
-        // TODO update code editor
-      })
+    let entry = new ValidationEntry(
+      this.currentResource.filename,
+      this.currentResource.content,
+      this.currentResource.contentType,
+      [this.selectedProfile],
+      this.getCurrentValidationSettings(),
+      true // useAI
+    );
+    if (this.selectedIg != this.AUTO_IG_SELECTION) {
+      entry.ig = this.selectedIg;
+    }
+    this.validationEntries.unshift(entry);
+    this.show(entry);
+    this.runValidation(entry);
   }
 
   /**

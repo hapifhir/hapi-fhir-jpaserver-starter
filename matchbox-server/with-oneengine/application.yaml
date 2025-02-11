@@ -32,4 +32,5 @@ matchbox:
       fhirVersion: 4.0.1
       xVersion: true      
       onlyOneEngine: true
-      txServer: http://tx.fhir.org
+      #txServer: http://tx.fhir.org
+      txServer: n/a
