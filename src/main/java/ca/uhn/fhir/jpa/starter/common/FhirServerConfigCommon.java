@@ -1,13 +1,17 @@
 package ca.uhn.fhir.jpa.starter.common;
 
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.interceptor.api.IInterceptorService;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.binstore.DatabaseBinaryContentStorageSvcImpl;
 import ca.uhn.fhir.jpa.config.HibernatePropertiesProvider;
+import ca.uhn.fhir.jpa.interceptor.PatientIdPartitionInterceptor;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings.CrossPartitionReferenceMode;
 import ca.uhn.fhir.jpa.model.config.SubscriptionSettings;
 import ca.uhn.fhir.jpa.model.entity.StorageSettings;
+import ca.uhn.fhir.jpa.searchparam.extractor.ISearchParamExtractor;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.util.JpaHibernatePropertiesProvider;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.EmailSenderImpl;
@@ -96,30 +100,31 @@ public class FhirServerConfigCommon {
 		if (appProperties.getSubscription() != null) {
 			if (appProperties.getSubscription().getEmail() != null)
 				subscriptionSettings.setEmailFromAddress(
-						appProperties.getSubscription().getEmail().getFrom());
+					appProperties.getSubscription().getEmail().getFrom());
 
 			// Subscriptions are enabled by channel type
 			if (appProperties.getSubscription().getResthook_enabled()) {
 				ourLog.info("Enabling REST-hook subscriptions");
 				subscriptionSettings.addSupportedSubscriptionType(
-						org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.RESTHOOK);
+					org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.RESTHOOK);
 			}
 			if (appProperties.getSubscription().getEmail() != null) {
 				ourLog.info("Enabling email subscriptions");
 				subscriptionSettings.addSupportedSubscriptionType(
-						org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.EMAIL);
+					org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.EMAIL);
 			}
 			if (appProperties.getSubscription().getWebsocket_enabled()) {
 				ourLog.info("Enabling websocket subscriptions");
 				subscriptionSettings.addSupportedSubscriptionType(
-						org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
+					org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
 			}
+
 		}
 		if (appProperties.getMdm_enabled()) {
 			// MDM requires the subscription of type message
 			ourLog.info("Enabling message subscriptions");
 			subscriptionSettings.addSupportedSubscriptionType(
-					org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.MESSAGE);
+				org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.MESSAGE);
 		}
 		return subscriptionSettings;
 	}
@@ -136,7 +141,8 @@ public class FhirServerConfigCommon {
 						: StorageSettings.IndexEnabledEnum.DISABLED);
 		jpaStorageSettings.setAutoCreatePlaceholderReferenceTargets(
 				appProperties.getAuto_create_placeholder_reference_targets());
-		jpaStorageSettings.setMassIngestionMode(appProperties.getMass_ingestion_mode_enabled());
+		jpaStorageSettings.setMassIngestionMode(
+				appProperties.getMass_ingestion_mode_enabled());
 		jpaStorageSettings.setAutoVersionReferenceAtPaths(appProperties.getAuto_version_reference_at_paths());
 		jpaStorageSettings.setEnforceReferentialIntegrityOnWrite(
 				appProperties.getEnforce_referential_integrity_on_write());
@@ -149,8 +155,7 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setDeleteExpungeEnabled(appProperties.getDelete_expunge_enabled());
 		jpaStorageSettings.setExpungeEnabled(appProperties.getExpunge_enabled());
 		jpaStorageSettings.setLanguageSearchParameterEnabled(appProperties.getLanguage_search_parameter_enabled());
-		jpaStorageSettings.setValidateResourceStatusForPackageUpload(
-				appProperties.getValidate_resource_status_for_package_upload());
+		jpaStorageSettings.setValidateResourceStatusForPackageUpload(appProperties.getValidate_resource_status_for_package_upload());
 		jpaStorageSettings.setIndexOnUpliftedRefchains(appProperties.getUpliftedRefchains_enabled());
 
 		if (!appProperties.getSearch_prefetch_thresholds().isEmpty()) {
@@ -168,6 +173,8 @@ public class FhirServerConfigCommon {
 
 		Long retainCachedSearchesMinutes = appProperties.getRetain_cached_searches_mins();
 		jpaStorageSettings.setExpireSearchResultsAfterMillis(retainCachedSearchesMinutes * 60 * 1000);
+
+
 
 		jpaStorageSettings.setFilterParameterEnabled(appProperties.getFilter_search_enabled());
 		jpaStorageSettings.setHibernateSearchIndexSearchParams(appProperties.getAdvanced_lucene_indexing());
@@ -215,8 +222,8 @@ public class FhirServerConfigCommon {
 			jpaStorageSettings.setResourceServerIdStrategy(appProperties.getServer_id_strategy());
 			ourLog.info("Server configured to use '" + appProperties.getServer_id_strategy() + "' Server ID Strategy");
 		}
-
-		// to Disable the Resource History
+		
+		//to Disable the Resource History
 		jpaStorageSettings.setResourceDbHistoryEnabled(appProperties.getResource_dbhistory_enabled());
 
 		// Parallel Batch GET execution settings
@@ -232,6 +239,7 @@ public class FhirServerConfigCommon {
 		return new YamlPropertySourceLoader();
 	}
 
+
 	@Bean
 	public PartitionSettings partitionSettings(AppProperties appProperties) {
 		PartitionSettings retVal = new PartitionSettings();
@@ -239,8 +247,7 @@ public class FhirServerConfigCommon {
 		// Partitioning
 		if (appProperties.getPartitioning() != null) {
 			retVal.setPartitioningEnabled(true);
-			boolean databasePartitionModeEnabled =
-					defaultIfNull(appProperties.getPartitioning().getDatabase_partition_mode_enabled(), Boolean.FALSE);
+			boolean databasePartitionModeEnabled = defaultIfNull(appProperties.getPartitioning().getDatabase_partition_mode_enabled(), Boolean.FALSE);
 			Integer defaultPartitionId = appProperties.getPartitioning().getDefault_partition_id();
 			if (databasePartitionModeEnabled) {
 				retVal.setDatabasePartitionMode(true);
@@ -255,8 +262,9 @@ public class FhirServerConfigCommon {
 				retVal.setAllowReferencesAcrossPartitions(CrossPartitionReferenceMode.NOT_ALLOWED);
 			}
 			retVal.setConditionalCreateDuplicateIdentifiersEnabled(
-					appProperties.getPartitioning().getConditional_create_duplicate_identifiers_enabled());
+				appProperties.getPartitioning().getConditional_create_duplicate_identifiers_enabled());
 		}
+
 
 		return retVal;
 	}
@@ -265,6 +273,7 @@ public class FhirServerConfigCommon {
 	public PartitionModeConfigurer partitionModeConfigurer() {
 		return new PartitionModeConfigurer();
 	}
+
 
 	@Primary
 	@Bean

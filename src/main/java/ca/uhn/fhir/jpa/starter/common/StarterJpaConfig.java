@@ -92,12 +92,12 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.web.cors.CorsConfiguration;
 
+import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.sql.DataSource;
 
 import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory.ENABLE_REPOSITORY_VALIDATING_INTERCEPTOR;
 
@@ -147,12 +147,11 @@ public class StarterJpaConfig {
 	@Primary
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-			DataSource myDataSource,
-			ConfigurableListableBeanFactory myConfigurableListableBeanFactory,
-			FhirContext theFhirContext,
-			JpaStorageSettings theStorageSettings) {
-		LocalContainerEntityManagerFactoryBean retVal = HapiEntityManagerFactoryUtil.newEntityManagerFactory(
-				myConfigurableListableBeanFactory, theFhirContext, theStorageSettings);
+		DataSource myDataSource,
+		ConfigurableListableBeanFactory myConfigurableListableBeanFactory,
+		FhirContext theFhirContext, JpaStorageSettings theStorageSettings) {
+		LocalContainerEntityManagerFactoryBean retVal =
+				HapiEntityManagerFactoryUtil.newEntityManagerFactory(myConfigurableListableBeanFactory, theFhirContext, theStorageSettings);
 		retVal.setPersistenceUnitName("HAPI_PU");
 
 		try {
@@ -204,9 +203,9 @@ public class StarterJpaConfig {
 	@Primary
 	@Conditional(OnImplementationGuidesPresent.class)
 	public IPackageInstallerSvc packageInstaller(
-			AppProperties appProperties,
-			IPackageInstallerSvc packageInstallerSvc,
-			Batch2JobRegisterer batch2JobRegisterer) {
+		AppProperties appProperties,
+		IPackageInstallerSvc packageInstallerSvc,
+		Batch2JobRegisterer batch2JobRegisterer) {
 
 		batch2JobRegisterer.start();
 
@@ -288,8 +287,7 @@ public class StarterJpaConfig {
 			IPackageInstallerSvc packageInstallerSvc,
 			ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc,
 			ApplicationContext appContext,
-			Optional<IpsOperationProvider> theIpsOperationProvider,
-			Optional<IImplementationGuideOperationProvider> implementationGuideOperationProvider) {
+			Optional<IpsOperationProvider> theIpsOperationProvider, Optional<IImplementationGuideOperationProvider> implementationGuideOperationProvider) {
 		RestfulServer fhirServer = new RestfulServer(fhirSystemDao.getContext());
 
 		List<String> supportedResourceTypes = appProperties.getSupported_resource_types();
@@ -466,7 +464,7 @@ public class StarterJpaConfig {
 			fhirServer.registerProvider(theIpsOperationProvider.get());
 		}
 
-		if (appProperties.getUserRequestRetryVersionConflictsInterceptorEnabled()) {
+		if (appProperties.getUserRequestRetryVersionConflictsInterceptorEnabled() ) {
 			fhirServer.registerInterceptor(new UserRequestRetryVersionConflictsInterceptor());
 		}
 
@@ -522,7 +520,7 @@ public class StarterJpaConfig {
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	private void registerCustomProviders(
-			RestfulServer fhirServer, ApplicationContext theAppContext, List<String> customProviderClasses) {
+		RestfulServer fhirServer, ApplicationContext theAppContext, List<String> customProviderClasses) {
 
 		if (customProviderClasses == null) {
 			return;
