@@ -49,7 +49,6 @@ public class Application extends SpringBootServletInitializer {
 		// UI is now accessible at http://localhost:8080/
 	}
 
-
 	@Autowired
 	AutowireCapableBeanFactory beanFactory;
 
@@ -64,5 +63,4 @@ public class Application extends SpringBootServletInitializer {
 
 		return servletRegistrationBean;
 	}
-
 }

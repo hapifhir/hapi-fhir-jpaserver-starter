@@ -8,14 +8,12 @@ import org.hl7.fhir.r4.model.BooleanType;
 import org.hl7.fhir.r4.model.Parameters;
 import org.opencds.cqf.fhir.api.Repository;
 
-import java.util.stream.Collectors;
-
 import static ca.uhn.hapi.fhir.cdshooks.svc.cr.CdsCrConstants.APPLY_PARAMETER_DATA;
-import static ca.uhn.hapi.fhir.cdshooks.svc.cr.CdsCrConstants.APPLY_PARAMETER_DATA_ENDPOINT;
 import static org.opencds.cqf.fhir.utility.r4.Parameters.part;
 
 public class UpdatedCdsCrServiceR4 extends CdsCrServiceR4 {
-	public UpdatedCdsCrServiceR4(RequestDetails theRequestDetails, Repository theRepository, ICdsConfigService theCdsConfigService) {
+	public UpdatedCdsCrServiceR4(
+			RequestDetails theRequestDetails, Repository theRepository, ICdsConfigService theCdsConfigService) {
 		super(theRequestDetails, theRepository, theCdsConfigService);
 	}
 

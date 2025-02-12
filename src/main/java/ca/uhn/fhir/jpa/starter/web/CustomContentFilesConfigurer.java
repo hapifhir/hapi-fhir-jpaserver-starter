@@ -17,21 +17,20 @@ public class CustomContentFilesConfigurer implements WebMvcConfigurer {
 	public static final String CUSTOM_CONTENT = "/content";
 	private String customContentPath;
 
-
 	public CustomContentFilesConfigurer(AppProperties appProperties) {
 		customContentPath = appProperties.getCustom_content_path();
 		if (customContentPath.endsWith("/"))
 			customContentPath = customContentPath.substring(0, customContentPath.lastIndexOf('/'));
-
 	}
-
 
 	@Override
 	public void addResourceHandlers(@NotNull ResourceHandlerRegistry theRegistry) {
 		if (!theRegistry.hasMappingForPattern(CUSTOM_CONTENT + "/**")) {
 
 			try {
-				theRegistry.addResourceHandler(CUSTOM_CONTENT + "/**").addResourceLocations(new FileUrlResource(customContentPath));
+				theRegistry
+						.addResourceHandler(CUSTOM_CONTENT + "/**")
+						.addResourceLocations(new FileUrlResource(customContentPath));
 			} catch (MalformedURLException e) {
 				throw new RuntimeException(e);
 			}
