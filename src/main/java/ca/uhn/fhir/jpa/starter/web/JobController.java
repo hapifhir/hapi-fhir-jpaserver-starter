@@ -22,7 +22,10 @@ public class JobController {
 	}
 
 	@RequestMapping(value = JobController.JOBS, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<JobInstance> getAllJobs(@RequestParam(name = "pageStart") @Min(0) int pageStart, @RequestParam(name = "batchSize") int batchSize, @RequestParam(name = "jobStatus", required = false) StatusEnum jobStatus) {
+	public List<JobInstance> getAllJobs(
+			@RequestParam(name = "pageStart") @Min(0) int pageStart,
+			@RequestParam(name = "batchSize") int batchSize,
+			@RequestParam(name = "jobStatus", required = false) StatusEnum jobStatus) {
 		JobInstanceFetchRequest jobInstanceFetchRequest = new JobInstanceFetchRequest();
 		jobInstanceFetchRequest.setPageStart(pageStart);
 		jobInstanceFetchRequest.setBatchSize(batchSize);
@@ -32,7 +35,10 @@ public class JobController {
 		return theJobCoordinator.fetchAllJobInstances(jobInstanceFetchRequest).getContent();
 	}
 
-	@RequestMapping(value = JobController.JOBS, method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(
+			value = JobController.JOBS,
+			method = RequestMethod.DELETE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public JobOperationResultJson cancelInstance(@RequestParam(name = "instanceId") String instanceId) {
 		return theJobCoordinator.cancelInstance(instanceId);
 	}

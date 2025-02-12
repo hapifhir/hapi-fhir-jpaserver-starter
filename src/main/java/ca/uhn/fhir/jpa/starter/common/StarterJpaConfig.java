@@ -1,12 +1,9 @@
 package ca.uhn.fhir.jpa.starter.common;
 
 import ca.uhn.fhir.batch2.config.Batch2JobRegisterer;
-import ca.uhn.fhir.batch2.coordinator.JobDefinitionRegistry;
 import ca.uhn.fhir.batch2.jobs.export.BulkDataExportProvider;
 import ca.uhn.fhir.batch2.jobs.imprt.BulkDataImportProvider;
-import ca.uhn.fhir.batch2.jobs.reindex.ReindexJobParameters;
 import ca.uhn.fhir.batch2.jobs.reindex.ReindexProvider;
-import ca.uhn.fhir.batch2.model.JobDefinition;
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
@@ -137,11 +134,12 @@ public class StarterJpaConfig {
 	@Primary
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-		DataSource myDataSource,
-		ConfigurableListableBeanFactory myConfigurableListableBeanFactory,
-		FhirContext theFhirContext, JpaStorageSettings theStorageSettings) {
-		LocalContainerEntityManagerFactoryBean retVal =
-				HapiEntityManagerFactoryUtil.newEntityManagerFactory(myConfigurableListableBeanFactory, theFhirContext, theStorageSettings);
+			DataSource myDataSource,
+			ConfigurableListableBeanFactory myConfigurableListableBeanFactory,
+			FhirContext theFhirContext,
+			JpaStorageSettings theStorageSettings) {
+		LocalContainerEntityManagerFactoryBean retVal = HapiEntityManagerFactoryUtil.newEntityManagerFactory(
+				myConfigurableListableBeanFactory, theFhirContext, theStorageSettings);
 		retVal.setPersistenceUnitName("HAPI_PU");
 
 		try {
@@ -193,9 +191,9 @@ public class StarterJpaConfig {
 	@Primary
 	@Conditional(OnImplementationGuidesPresent.class)
 	public IPackageInstallerSvc packageInstaller(
-		AppProperties appProperties,
-		IPackageInstallerSvc packageInstallerSvc,
-		Batch2JobRegisterer batch2JobRegisterer) {
+			AppProperties appProperties,
+			IPackageInstallerSvc packageInstallerSvc,
+			Batch2JobRegisterer batch2JobRegisterer) {
 
 		batch2JobRegisterer.start();
 
@@ -278,7 +276,8 @@ public class StarterJpaConfig {
 			IPackageInstallerSvc packageInstallerSvc,
 			ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc,
 			ApplicationContext appContext,
-			Optional<IpsOperationProvider> theIpsOperationProvider, Optional<IImplementationGuideOperationProvider> implementationGuideOperationProvider) {
+			Optional<IpsOperationProvider> theIpsOperationProvider,
+			Optional<IImplementationGuideOperationProvider> implementationGuideOperationProvider) {
 		RestfulServer fhirServer = new RestfulServer(fhirSystemDao.getContext());
 
 		List<String> supportedResourceTypes = appProperties.getSupported_resource_types();
@@ -460,7 +459,7 @@ public class StarterJpaConfig {
 			fhirServer.registerProvider(theIpsOperationProvider.get());
 		}
 
-		if (appProperties.getUserRequestRetryVersionConflictsInterceptorEnabled() ) {
+		if (appProperties.getUserRequestRetryVersionConflictsInterceptorEnabled()) {
 			fhirServer.registerInterceptor(new UserRequestRetryVersionConflictsInterceptor());
 		}
 
@@ -516,7 +515,7 @@ public class StarterJpaConfig {
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	private void registerCustomProviders(
-		RestfulServer fhirServer, ApplicationContext theAppContext, List<String> customProviderClasses) {
+			RestfulServer fhirServer, ApplicationContext theAppContext, List<String> customProviderClasses) {
 
 		if (customProviderClasses == null) {
 			return;
