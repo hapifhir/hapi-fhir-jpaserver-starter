@@ -1,13 +1,17 @@
 package ca.uhn.fhir.jpa.starter.common;
 
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.interceptor.api.IInterceptorService;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.binstore.DatabaseBinaryContentStorageSvcImpl;
 import ca.uhn.fhir.jpa.config.HibernatePropertiesProvider;
+import ca.uhn.fhir.jpa.interceptor.PatientIdPartitionInterceptor;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings.CrossPartitionReferenceMode;
 import ca.uhn.fhir.jpa.model.config.SubscriptionSettings;
 import ca.uhn.fhir.jpa.model.entity.StorageSettings;
+import ca.uhn.fhir.jpa.searchparam.extractor.ISearchParamExtractor;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.util.JpaHibernatePropertiesProvider;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.EmailSenderImpl;
@@ -26,6 +30,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.HashSet;
 import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
 /**
  * This is the primary configuration file for the example server
@@ -171,7 +177,7 @@ public class FhirServerConfigCommon {
 
 
 		jpaStorageSettings.setFilterParameterEnabled(appProperties.getFilter_search_enabled());
-		jpaStorageSettings.setAdvancedHSearchIndexing(appProperties.getAdvanced_lucene_indexing());
+		jpaStorageSettings.setHibernateSearchIndexSearchParams(appProperties.getAdvanced_lucene_indexing());
 		jpaStorageSettings.setTreatBaseUrlsAsLocal(new HashSet<>(appProperties.getLocal_base_urls()));
 		jpaStorageSettings.setTreatReferencesAsLogical(new HashSet<>(appProperties.getLogical_urls()));
 
@@ -233,6 +239,7 @@ public class FhirServerConfigCommon {
 		return new YamlPropertySourceLoader();
 	}
 
+
 	@Bean
 	public PartitionSettings partitionSettings(AppProperties appProperties) {
 		PartitionSettings retVal = new PartitionSettings();
@@ -240,6 +247,13 @@ public class FhirServerConfigCommon {
 		// Partitioning
 		if (appProperties.getPartitioning() != null) {
 			retVal.setPartitioningEnabled(true);
+			boolean databasePartitionModeEnabled = defaultIfNull(appProperties.getPartitioning().getDatabase_partition_mode_enabled(), Boolean.FALSE);
+			Integer defaultPartitionId = appProperties.getPartitioning().getDefault_partition_id();
+			if (databasePartitionModeEnabled) {
+				retVal.setDatabasePartitionMode(true);
+				defaultPartitionId = defaultIfNull(defaultPartitionId, 0);
+			}
+			retVal.setDefaultPartitionId(defaultPartitionId);
 			retVal.setIncludePartitionInSearchHashes(
 					appProperties.getPartitioning().getPartitioning_include_in_search_hashes());
 			if (appProperties.getPartitioning().getAllow_references_across_partitions()) {
@@ -251,8 +265,15 @@ public class FhirServerConfigCommon {
 				appProperties.getPartitioning().getConditional_create_duplicate_identifiers_enabled());
 		}
 
+
 		return retVal;
 	}
+
+	@Bean
+	public PartitionModeConfigurer partitionModeConfigurer() {
+		return new PartitionModeConfigurer();
+	}
+
 
 	@Primary
 	@Bean

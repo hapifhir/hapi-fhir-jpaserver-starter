@@ -1,12 +1,9 @@
 package ca.uhn.fhir.jpa.starter.common;
 
 import ca.uhn.fhir.batch2.config.Batch2JobRegisterer;
-import ca.uhn.fhir.batch2.coordinator.JobDefinitionRegistry;
 import ca.uhn.fhir.batch2.jobs.export.BulkDataExportProvider;
 import ca.uhn.fhir.batch2.jobs.imprt.BulkDataImportProvider;
-import ca.uhn.fhir.batch2.jobs.reindex.ReindexJobParameters;
 import ca.uhn.fhir.batch2.jobs.reindex.ReindexProvider;
-import ca.uhn.fhir.batch2.model.JobDefinition;
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
@@ -21,7 +18,6 @@ import ca.uhn.fhir.jpa.binary.interceptor.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
 import ca.uhn.fhir.jpa.config.util.HapiEntityManagerFactoryUtil;
 import ca.uhn.fhir.jpa.config.util.ResourceCountCacheUtil;
-
 import ca.uhn.fhir.jpa.dao.FulltextSearchSvcImpl;
 import ca.uhn.fhir.jpa.dao.IFulltextSearchSvc;
 import ca.uhn.fhir.jpa.dao.search.HSearchSortHelperImpl;
@@ -35,9 +31,14 @@ import ca.uhn.fhir.jpa.ips.provider.IpsOperationProvider;
 import ca.uhn.fhir.jpa.model.config.SubscriptionSettings;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
 import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
-import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
+import ca.uhn.fhir.jpa.provider.DaoRegistryResourceSupportedSvc;
+import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
+import ca.uhn.fhir.jpa.provider.JpaCapabilityStatementProvider;
+import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
+import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
+import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
+import ca.uhn.fhir.jpa.provider.ValueSetOperationProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
-import ca.uhn.fhir.jpa.provider.*;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.IStaleSearchDeletingSvc;
 import ca.uhn.fhir.jpa.search.StaleSearchDeletingSvcImpl;
@@ -49,23 +50,29 @@ import ca.uhn.fhir.jpa.starter.ig.IImplementationGuideOperationProvider;
 import ca.uhn.fhir.jpa.starter.util.EnvironmentHelper;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceCountCache;
-import ca.uhn.fhir.jpa.validation.JpaValidationSupportChain;
 import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.narrative2.NullNarrativeGenerator;
 import ca.uhn.fhir.rest.api.IResourceSupportedSvc;
 import ca.uhn.fhir.rest.openapi.OpenApiInterceptor;
-import ca.uhn.fhir.rest.server.interceptor.partition.RequestTenantPartitionInterceptor;
-import ca.uhn.fhir.rest.server.*;
-import ca.uhn.fhir.rest.server.interceptor.*;
+import ca.uhn.fhir.rest.server.ApacheProxyAddressStrategy;
+import ca.uhn.fhir.rest.server.ETagSupportEnum;
+import ca.uhn.fhir.rest.server.HardcodedServerAddressStrategy;
+import ca.uhn.fhir.rest.server.IServerConformanceProvider;
+import ca.uhn.fhir.rest.server.IncomingRequestAddressStrategy;
+import ca.uhn.fhir.rest.server.RestfulServer;
+import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.FhirPathFilterInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.LoggingInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.RequestValidatingInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.ResponseValidatingInterceptor;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
-import ca.uhn.fhir.rest.server.tenant.UrlBaseTenantIdentificationStrategy;
 import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
 import jakarta.persistence.EntityManagerFactory;
-import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -73,15 +80,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.web.cors.CorsConfiguration;
 
-import java.util.*;
 import javax.sql.DataSource;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory.ENABLE_REPOSITORY_VALIDATING_INTERCEPTOR;
 
@@ -267,7 +283,6 @@ public class StarterJpaConfig {
 			BulkDataImportProvider bulkDataImportProvider,
 			ValueSetOperationProvider theValueSetOperationProvider,
 			ReindexProvider reindexProvider,
-			PartitionManagementProvider partitionManagementProvider,
 			Optional<RepositoryValidatingInterceptor> repositoryValidatingInterceptor,
 			IPackageInstallerSvc packageInstallerSvc,
 			ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc,
@@ -438,12 +453,7 @@ public class StarterJpaConfig {
 		// reindex Provider $reindex
 		fhirServer.registerProvider(reindexProvider);
 
-		// Partitioning
-		if (appProperties.getPartitioning() != null) {
-			fhirServer.registerInterceptor(new RequestTenantPartitionInterceptor());
-			fhirServer.setTenantIdentificationStrategy(new UrlBaseTenantIdentificationStrategy());
-			fhirServer.registerProviders(partitionManagementProvider);
-		}
+		// Validation
 		repositoryValidatingInterceptor.ifPresent(fhirServer::registerInterceptor);
 
 		// register custom interceptors

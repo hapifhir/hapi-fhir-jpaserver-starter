@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter.cdshooks;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.i18n.Msg;
+import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.rest.client.api.IClientInterceptor;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
@@ -53,8 +54,9 @@ public class ModuleConfigurationPrefetchSvc extends CdsPrefetchSvc {
 	public ModuleConfigurationPrefetchSvc(CdsResolutionStrategySvc theCdsResolutionStrategySvc,
 													  CdsPrefetchDaoSvc theResourcePrefetchDao,
 													  CdsPrefetchFhirClientSvc theResourcePrefetchFhirClient,
-													  ICdsHooksDaoAuthorizationSvc theCdsHooksDaoAuthorizationSvc) {
-		super(theCdsResolutionStrategySvc, theResourcePrefetchDao, theResourcePrefetchFhirClient, theCdsHooksDaoAuthorizationSvc);
+													  ICdsHooksDaoAuthorizationSvc theCdsHooksDaoAuthorizationSvc,
+													  IInterceptorBroadcaster theInterceptorBroadcaster) {
+		super(theCdsResolutionStrategySvc, theResourcePrefetchDao, theResourcePrefetchFhirClient, theCdsHooksDaoAuthorizationSvc, theInterceptorBroadcaster);
 		myResourcePrefetchFhirClient = theResourcePrefetchFhirClient;
 		fhirContext = theResourcePrefetchDao.getFhirContext();
 	}

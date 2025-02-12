@@ -175,11 +175,11 @@ public class AppProperties {
     this.cr_enabled = cr_enabled;
   }
 
-  public Boolean getIps_enabled() {
+	public Boolean getIps_enabled() {
 	return ips_enabled;
  }
 
- public void setIps_enabled(Boolean ips_enabled) {
+	public void setIps_enabled(Boolean ips_enabled) {
 	this.ips_enabled = ips_enabled;
  }
 
@@ -810,8 +810,36 @@ public Cors getCors() {
     private Boolean partitioning_include_in_search_hashes = false;
     private Boolean allow_references_across_partitions = false;
     private Boolean conditional_create_duplicate_identifiers_enabled = false;
+		private Boolean database_partition_mode_enabled = false;
+		private Boolean patient_id_partitioning_mode = false;
+		private Integer default_partition_id = 0;
+	  private boolean request_tenant_partitioning_mode;
 
-    public Boolean getPartitioning_include_in_search_hashes() {
+	  public Integer getDefault_partition_id() {
+		  return default_partition_id;
+	  }
+
+	  public void setDefault_partition_id(Integer theDefault_partition_id) {
+		  default_partition_id = theDefault_partition_id;
+	  }
+
+	  public Boolean getDatabase_partition_mode_enabled() {
+		  return database_partition_mode_enabled;
+	  }
+
+	  public void setDatabase_partition_mode_enabled(Boolean theDatabase_partition_mode_enabled) {
+		  database_partition_mode_enabled = theDatabase_partition_mode_enabled;
+	  }
+
+	  public Boolean getPatient_id_partitioning_mode() {
+		  return patient_id_partitioning_mode;
+	  }
+
+	  public void setPatient_id_partitioning_mode(Boolean thePatient_id_partitioning_mode) {
+		  patient_id_partitioning_mode = thePatient_id_partitioning_mode;
+	  }
+
+	  public Boolean getPartitioning_include_in_search_hashes() {
       return partitioning_include_in_search_hashes;
     }
 
@@ -833,6 +861,10 @@ public Cors getCors() {
     public void setConditional_create_duplicate_identifiers_enabled(Boolean conditional_create_duplicate_identifiers_enabled) {
       this.conditional_create_duplicate_identifiers_enabled = conditional_create_duplicate_identifiers_enabled;
     }
+
+	  public boolean getRequest_tenant_partitioning_mode() {
+		  return request_tenant_partitioning_mode;
+	  }
   }
 
   public static class Subscription {
