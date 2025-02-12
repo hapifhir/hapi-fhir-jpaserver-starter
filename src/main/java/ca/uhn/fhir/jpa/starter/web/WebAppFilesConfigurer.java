@@ -20,21 +20,19 @@ public class WebAppFilesConfigurer implements WebMvcConfigurer {
 	public static final String WEB_CONTENT = "web";
 	private String appContentPath;
 
-
 	public WebAppFilesConfigurer(AppProperties appProperties) {
 		appContentPath = appProperties.getApp_content_path();
-		if (appContentPath.endsWith("/"))
-			appContentPath = appContentPath.substring(0, appContentPath.lastIndexOf('/'));
-
+		if (appContentPath.endsWith("/")) appContentPath = appContentPath.substring(0, appContentPath.lastIndexOf('/'));
 	}
-
 
 	@Override
 	public void addResourceHandlers(@NotNull ResourceHandlerRegistry theRegistry) {
 		if (!theRegistry.hasMappingForPattern(WEB_CONTENT + "/**")) {
 			{
 				try {
-					theRegistry.addResourceHandler(WEB_CONTENT + "/**").addResourceLocations(new FileUrlResource(appContentPath));
+					theRegistry
+							.addResourceHandler(WEB_CONTENT + "/**")
+							.addResourceLocations(new FileUrlResource(appContentPath));
 				} catch (MalformedURLException e) {
 					throw new RuntimeException(e);
 				}
@@ -47,10 +45,10 @@ public class WebAppFilesConfigurer implements WebMvcConfigurer {
 		String path = URI.create(appContentPath).getPath();
 		String lastSegment = path.substring(path.lastIndexOf('/') + 1);
 
-		registry.addViewController(WEB_CONTENT + "/" + lastSegment).setViewName("redirect:" + lastSegment + "/index.html");
+		registry.addViewController(WEB_CONTENT + "/" + lastSegment)
+				.setViewName("redirect:" + lastSegment + "/index.html");
 		registry.addViewController(WEB_CONTENT + "/" + lastSegment + "/").setViewName("redirect:index.html");
 
 		registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
-
 	}
 }
