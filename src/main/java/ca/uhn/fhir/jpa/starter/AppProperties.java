@@ -29,8 +29,8 @@ public class AppProperties {
   private Boolean openapi_enabled = false;
   private Boolean mdm_enabled = false;
   private String mdm_rules_json_location = "mdm-rules.json";
-  private boolean advanced_lucene_indexing = false;
-  private boolean enable_index_of_type = false;
+  private Boolean advanced_lucene_indexing = false;
+  private Boolean enable_index_of_type = false;
   private Boolean allow_cascading_deletes = false;
   private Boolean allow_contains_searches = true;
   private Boolean allow_external_references = false;
@@ -88,7 +88,7 @@ public class AppProperties {
   private String app_content_path = null;
 
   private Boolean lastn_enabled = false;
-  private boolean store_resource_in_lucene_index_enabled = false;
+  private Boolean store_resource_in_lucene_index_enabled = false;
   private NormalizedQuantitySearchLevel normalized_quantity_search_level = NormalizedQuantitySearchLevel.NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED;
 
   private Boolean use_apache_address_strategy = false;
@@ -106,9 +106,10 @@ public class AppProperties {
 	private final List<String> custom_provider_classes = new ArrayList<>();
 	private Boolean upliftedRefchains_enabled = false;
 
-	private boolean userRequestRetryVersionConflictsInterceptorEnabled = false;
+	private Boolean userRequestRetryVersionConflictsInterceptorEnabled = false;
 
 	private List<Integer> search_prefetch_thresholds = new ArrayList<>();
+	private Boolean force_offset_search_mode;
 
 	public List<String> getCustomInterceptorClasses() {
     return custom_interceptor_classes;
@@ -281,11 +282,11 @@ public Cors getCors() {
     this.server_id_strategy = server_id_strategy;
   }
 
-  public boolean getAdvanced_lucene_indexing() {
+  public Boolean getAdvanced_lucene_indexing() {
 		return this.advanced_lucene_indexing;
 	}
 
-	public void setAdvanced_lucene_indexing(boolean theAdvanced_lucene_indexing) {
+	public void setAdvanced_lucene_indexing(Boolean theAdvanced_lucene_indexing) {
 		advanced_lucene_indexing = theAdvanced_lucene_indexing;
 	}
 
@@ -567,7 +568,7 @@ public Cors getCors() {
     this.lastn_enabled = lastn_enabled;
   }
 
-	public boolean getStore_resource_in_lucene_index_enabled() {
+	public Boolean getStore_resource_in_lucene_index_enabled() {
 		return store_resource_in_lucene_index_enabled;
 	}
 
@@ -583,11 +584,11 @@ public Cors getCors() {
 	this.normalized_quantity_search_level = normalized_quantity_search_level;
   }
 
-	public boolean getInstall_transitive_ig_dependencies() {
+	public Boolean getInstall_transitive_ig_dependencies() {
 		return install_transitive_ig_dependencies;
 	}
 	
-	public void setInstall_transitive_ig_dependencies(boolean install_transitive_ig_dependencies) {
+	public void setInstall_transitive_ig_dependencies(Boolean install_transitive_ig_dependencies) {
 		this.install_transitive_ig_dependencies = install_transitive_ig_dependencies;
 	}
 
@@ -664,11 +665,11 @@ public Cors getCors() {
 		this.search_prefetch_thresholds = thePrefetchThresholds;
 	}
 
-	public boolean getUpliftedRefchains_enabled() {
+	public Boolean getUpliftedRefchains_enabled() {
 		return upliftedRefchains_enabled;
 	}
 
-	public void setUpliftedRefchains_enabled(boolean upliftedRefchains_enabled) {
+	public void setUpliftedRefchains_enabled(Boolean upliftedRefchains_enabled) {
 		this.upliftedRefchains_enabled = upliftedRefchains_enabled;
 	}
 
@@ -951,19 +952,27 @@ public Cors getCors() {
     }
   }
 
-  public boolean getEnable_index_of_type() {
+  public Boolean getEnable_index_of_type() {
     return enable_index_of_type;
   }
 
-  public void setEnable_index_of_type(boolean enable_index_of_type) {
+  public void setEnable_index_of_type(Boolean enable_index_of_type) {
     this.enable_index_of_type = enable_index_of_type;
   }
 
-public Boolean getResource_dbhistory_enabled() {
-	return resource_dbhistory_enabled;
-}
+	public Boolean getResource_dbhistory_enabled() {
+		return resource_dbhistory_enabled;
+	}
 
-public void setResource_dbhistory_enabled(Boolean resource_dbhistory_enabled) {
-	this.resource_dbhistory_enabled = resource_dbhistory_enabled;
-}
+	public void setResource_dbhistory_enabled(Boolean resource_dbhistory_enabled) {
+		this.resource_dbhistory_enabled = resource_dbhistory_enabled;
+	}
+
+	public Boolean isForce_offset_search_mode() {
+		return force_offset_search_mode;
+	}
+
+	public void setForce_offset_search_mode(Boolean force_offset_search_mode) {
+		this.force_offset_search_mode = force_offset_search_mode;
+	}
 }

@@ -29,6 +29,7 @@ import ca.uhn.fhir.jpa.dao.search.IHSearchSortHelper;
 import ca.uhn.fhir.jpa.delete.ThreadSafeResourceDeleterSvc;
 import ca.uhn.fhir.jpa.graphql.GraphQLProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
+import ca.uhn.fhir.jpa.interceptor.ForceOffsetSearchModeInterceptor;
 import ca.uhn.fhir.jpa.interceptor.UserRequestRetryVersionConflictsInterceptor;
 import ca.uhn.fhir.jpa.interceptor.validation.RepositoryValidatingInterceptor;
 import ca.uhn.fhir.jpa.ips.provider.IpsOperationProvider;
@@ -462,6 +463,10 @@ public class StarterJpaConfig {
 
 		if (appProperties.getUserRequestRetryVersionConflictsInterceptorEnabled() ) {
 			fhirServer.registerInterceptor(new UserRequestRetryVersionConflictsInterceptor());
+		}
+
+		if (appProperties.isForce_offset_search_mode()) {
+			fhirServer.registerInterceptor(new ForceOffsetSearchModeInterceptor());
 		}
 
 		// register custom providers
