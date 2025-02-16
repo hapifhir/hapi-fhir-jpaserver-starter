@@ -145,10 +145,27 @@ hapi:
     #    local_base_urls:
     #      - https://hapi.fhir.org/baseR4
     mdm_enabled: false
+
+    ### Uncomment the following section, and any sub-properties you need in order to enable
+    ### partitioning support on this server.
     #    partitioning:
     #      allow_references_across_partitions: false
     #      partitioning_include_in_search_hashes: false
-    #      partitioning_include_in_search_hashes
+    #      default_partition_id: 0
+    #      ### Enable the following setting to enable Database Partitioning Mode
+    #      ###    See: https://hapifhir.io/hapi-fhir/docs/server_jpa_partitioning/db_partition_mode.html
+    #      database_partition_mode_enabled: false
+    #      ### Partition Style: Partitioning requires a partition interceptor which helps the server
+    #      ###    select which partition(s) should be accessed for a given request. You can supply your
+    #      ###    own interceptor (see https://hapifhir.io/hapi-fhir/docs/server_jpa_partitioning/partitioning.html#partition-interceptors )
+    #      ###    but the following setting can also be used to use a built-in form.
+    #      ### Patient ID Partitioning Mode uses the patient/subject ID to determine the partition
+    #      patient_id_partitioning_mode: false
+    #      ### Request tenant mode can be used for a multi-tenancy setup where the request path is
+    #      ###    expected to have an additional path element, e.g. GET http://example.com/fhir/TENANT-ID/Patient/A
+    #      request_tenant_partitioning_mode: false
+
+
     #cors:
     #  allow_Credentials: true
       # These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-

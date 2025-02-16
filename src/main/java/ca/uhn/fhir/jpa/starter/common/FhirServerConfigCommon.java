@@ -27,6 +27,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
+
 /**
  * This is the primary configuration file for the example server
  */
@@ -168,7 +170,7 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setExpireSearchResultsAfterMillis(retainCachedSearchesMinutes * 60 * 1000);
 
 		jpaStorageSettings.setFilterParameterEnabled(appProperties.getFilter_search_enabled());
-		jpaStorageSettings.setAdvancedHSearchIndexing(appProperties.getAdvanced_lucene_indexing());
+		jpaStorageSettings.setHibernateSearchIndexSearchParams(appProperties.getAdvanced_lucene_indexing());
 		jpaStorageSettings.setTreatBaseUrlsAsLocal(new HashSet<>(appProperties.getLocal_base_urls()));
 		jpaStorageSettings.setTreatReferencesAsLogical(new HashSet<>(appProperties.getLogical_urls()));
 
@@ -237,6 +239,14 @@ public class FhirServerConfigCommon {
 		// Partitioning
 		if (appProperties.getPartitioning() != null) {
 			retVal.setPartitioningEnabled(true);
+			boolean databasePartitionModeEnabled =
+					defaultIfNull(appProperties.getPartitioning().getDatabase_partition_mode_enabled(), Boolean.FALSE);
+			Integer defaultPartitionId = appProperties.getPartitioning().getDefault_partition_id();
+			if (databasePartitionModeEnabled) {
+				retVal.setDatabasePartitionMode(true);
+				defaultPartitionId = defaultIfNull(defaultPartitionId, 0);
+			}
+			retVal.setDefaultPartitionId(defaultPartitionId);
 			retVal.setIncludePartitionInSearchHashes(
 					appProperties.getPartitioning().getPartitioning_include_in_search_hashes());
 			if (appProperties.getPartitioning().getAllow_references_across_partitions()) {
@@ -249,6 +259,11 @@ public class FhirServerConfigCommon {
 		}
 
 		return retVal;
+	}
+
+	@Bean
+	public PartitionModeConfigurer partitionModeConfigurer() {
+		return new PartitionModeConfigurer();
 	}
 
 	@Primary
