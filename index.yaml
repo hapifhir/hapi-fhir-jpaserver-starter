@@ -6,6 +6,50 @@ entries:
         # When using the list of objects option the valid supported kinds are
         # added, changed, deprecated, removed, fixed, and security.
         - kind: changed
+          description: "updated postgresql sub-chart to 16.3.2"
+        - kind: changed
+          description: "updated curlimages/curl to 8.11.1"
+        - kind: changed
+          description: "updated hapiproject/hapi to 7.6.0"
+        - kind: added
+          description: "support for setting resource limits and requests from presets. With a default set for all containers"
+        - kind: added
+          description: "support for setting extra volumes and volume mounts"
+        - kind: changed
+          description: "set default pod security context for main and test pods"
+      artifacthub.io/containsSecurityUpdates: "false"
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/operator: "false"
+      artifacthub.io/prerelease: "false"
+      artifacthub.io/recommendations: |
+        - url: https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack
+        - url: https://artifacthub.io/packages/helm/bitnami/postgresql
+    apiVersion: v2
+    appVersion: 7.6.0
+    created: "2025-02-16T07:45:28.824157755Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 16.3.2
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 2.28.0
+    description: A Helm chart for deploying the HAPI FHIR JPA server starter on Kubernetes.
+    digest: 6463bd1c2d523e298e1dc9f54c14ae25ac3c1252a4499f53e1c68a563e5ddc73
+    home: https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    name: hapi-fhir-jpaserver
+    sources:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    type: application
+    urls:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.18.0/hapi-fhir-jpaserver-0.18.0.tgz
+    version: 0.18.0
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
+        - kind: changed
           description: updated curlimages/curl to 8.9.1
         - kind: changed
           description: "updated postgresql sub-chart to 15.5.22."
@@ -497,4 +541,4 @@ entries:
     urls:
     - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.6.0/hapi-fhir-jpaserver-0.6.0.tgz
     version: 0.6.0
-generated: "2024-08-24T20:31:55.038521248Z"
+generated: "2025-02-16T07:45:28.824259184Z"
