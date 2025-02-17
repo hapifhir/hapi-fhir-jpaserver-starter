@@ -144,7 +144,7 @@ export class ValidateComponent implements AfterViewInit {
     let entry: ValidationEntry;
     try {
       // Try to parse the resource to extract information
-      entry = new ValidationEntry(filename, content, contentType, null, this.getCurrentValidationSettings(), false);
+      entry = new ValidationEntry(filename, content, contentType, null, this.getCurrentValidationSettings());
       this.currentResource = new UploadedFile(
         filename,
         contentType,
@@ -234,7 +234,7 @@ export class ValidateComponent implements AfterViewInit {
               let res = JSON.parse(decoder.decode(extractedFile.buffer)) as fhir.r4.Resource;
               let profiles = res.meta?.profile;
               // maybe better add ig as a parmeter, we assume now that ig version is equal to canonical version
-              let entry = new ValidationEntry(name, JSON.stringify(res, null, 2), 'application/fhir+json', profiles, this.getCurrentValidationSettings(), false);
+              let entry = new ValidationEntry(name, JSON.stringify(res, null, 2), 'application/fhir+json', profiles, this.getCurrentValidationSettings());
               dataSource.push(entry);
             }
           }
@@ -284,7 +284,6 @@ export class ValidateComponent implements AfterViewInit {
     if (entry.ig) {
       searchParams.set('ig', entry.ig);
     }
-    searchParams.set('ai', entry.useAI.toString());
 
     // Validation options
     for (const param of entry.validationParameters) {
@@ -310,6 +309,7 @@ export class ValidateComponent implements AfterViewInit {
         if (entry === this.selectedEntry) {
           this.editor.updateCodeEditorContent(this.selectedEntry, this.editorContent);
         }
+        console.log(response)
       })
       .catch((error) => {
         console.error(error);
@@ -373,8 +373,7 @@ export class ValidateComponent implements AfterViewInit {
       this.currentResource.content,
       this.currentResource.contentType,
       [this.selectedProfile],
-      this.getCurrentValidationSettings(),
-      false // useAI
+      this.getCurrentValidationSettings()
     );
     if (this.selectedIg != this.AUTO_IG_SELECTION) {
       entry.ig = this.selectedIg;
@@ -393,8 +392,7 @@ export class ValidateComponent implements AfterViewInit {
       this.currentResource.content,
       this.currentResource.contentType,
       [this.selectedProfile],
-      this.getCurrentValidationSettings(),
-      true // useAI
+      this.getCurrentValidationSettings()
     );
     if (this.selectedIg != this.AUTO_IG_SELECTION) {
       entry.ig = this.selectedIg;

@@ -22,7 +22,6 @@ package ch.ahdis.matchbox.validation;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
-import ca.uhn.fhir.model.primitive.StringDt;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.api.EncodingEnum;
@@ -45,13 +44,12 @@ import org.apache.http.impl.client.HttpClients;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
-import org.hl7.fhir.instance.model.api.IAnyResource;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r5.model.CodeableConcept;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.model.Duration;
 import org.hl7.fhir.r5.model.OperationOutcome;
-import org.hl7.fhir.r5.model.Parameters;
 import org.hl7.fhir.r5.model.StringType;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.hl7.fhir.r5.model.UriType;
@@ -60,15 +58,10 @@ import org.hl7.fhir.r5.utils.ToolingExtensions;
 import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.MediaType;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
@@ -177,10 +170,7 @@ public class ValidationProvider {
 		String profile = theRequest.getParameter("profile");
 
 		// Check if AI parameter is set
-		boolean ai = false;
-		if (theRequest.getParameter("ai") != null) {
-			ai = theRequest.getParameter("ai").equals("true");
-		}
+		boolean aiAnalyze = cliContext.getAnalyzeOutcomeWithAI();
 
 		boolean reload = false;
 		if (theRequest.getParameter("reload") != null) {
@@ -245,14 +235,19 @@ public class ValidationProvider {
 		log.debug("Validation time: {}", sw);
 
 		var oo = this.getOperationOutcome(sha3Hex, messages, profile, engine, millis, cliContext);
-		if (ai) {
+		if (aiAnalyze) {
 			OpenAIConnector openAIConnector = new OpenAIConnector();
-			String json = myContext.newJsonParser().setPrettyPrint(true).encodeResourceToString(oo);
+			String json = FhirContext.forR5().newJsonParser().setPrettyPrint(true).encodeResourceToString(oo);
 			String aiResult = openAIConnector.interpretWithMatchbox(contentString, json);
-			return this.addAIIssueToOperationOutcome(oo, aiResult);
+			oo = this.addAIIssueToOperationOutcome(oo, aiResult);
 		}
-
-		return oo;
+		return switch (this.myContext.getVersion().getVersion()) {
+			case R4 -> VersionConvertorFactory_40_50.convertResource((OperationOutcome) oo);
+			case R4B -> VersionConvertorFactory_43_50.convertResource((OperationOutcome) oo);
+			case R5 -> oo;
+			default -> throw new MatchboxUnsupportedFhirVersionException("ValidationProvider",
+																							 this.myContext.getVersion().getVersion());
+		};
 	}
 
 	private IBaseResource getOperationOutcome(final String id,
@@ -345,13 +340,7 @@ public class ValidationProvider {
 			issue.setDiagnostics("No fatal or error issues detected, the validation has passed");
 		}
 
-		return switch (this.myContext.getVersion().getVersion()) {
-			case R4 -> VersionConvertorFactory_40_50.convertResource(oo);
-			case R4B -> VersionConvertorFactory_43_50.convertResource(oo);
-			case R5 -> oo;
-			default -> throw new MatchboxUnsupportedFhirVersionException("ValidationProvider",
-																							 this.myContext.getVersion().getVersion());
-		};
+		return oo;
 	}
 
 	private IBaseResource getOoForError(final @NonNull String message) {
@@ -482,13 +471,17 @@ public class ValidationProvider {
 	}
 
 	public IBaseResource addAIIssueToOperationOutcome(IBaseResource resource, String aiResponse) {
-		if (resource instanceof org.hl7.fhir.r4.model.OperationOutcome) {
-			org.hl7.fhir.r4.model.OperationOutcome outcome = (org.hl7.fhir.r4.model.OperationOutcome) resource;
+		if (resource instanceof OperationOutcome) {
+			var outcome = (OperationOutcome) resource;
 			
 			var issue = outcome.addIssue();
-			issue.setSeverity(org.hl7.fhir.r4.model.OperationOutcome.IssueSeverity.INFORMATION);
-			issue.setCode(org.hl7.fhir.r4.model.OperationOutcome.IssueType.INFORMATIONAL);
+			issue.setSeverity(OperationOutcome.IssueSeverity.INFORMATION);
+			issue.setCode(OperationOutcome.IssueType.INFORMATIONAL);
 			issue.setDiagnostics(aiResponse);
+			issue.addExtension().setUrl("http://hl7.org/fhir/StructureDefinition/rendering-style").setValue(new StringType("markdown"));
+			CodeableConcept details = new CodeableConcept();
+        	details.setText("AI Analyze of the Operation Outcome");
+			issue.setDetails(details);
 	
 			return outcome;
 		}

@@ -215,6 +215,8 @@ public class CliContext {
   @JsonProperty("disableDefaultResourceFetcher")
   private boolean disableDefaultResourceFetcher = true;
 
+  @JsonProperty("analyzeOutcomeWithAI")
+  private boolean analyzeOutcomeWithAI = false;
 
   @Autowired
   public CliContext(Environment environment) {
@@ -689,7 +691,7 @@ public class CliContext {
   public void setDisableDefaultResourceFetcher(boolean disableDefaultResourceFetcher) {
     this.disableDefaultResourceFetcher = disableDefaultResourceFetcher;
   }
-
+  
   public boolean isCheckIpsCodes() {
     return this.checkIpsCodes;
   }
@@ -706,6 +708,16 @@ public class CliContext {
   @JsonProperty("bundle")
   public void setBundle(String bundle) {
     this.bundle = bundle;
+  }
+
+  @JsonProperty("analyzeOutcomeWithAI")
+  public boolean getAnalyzeOutcomeWithAI() {
+    return analyzeOutcomeWithAI;
+  }
+
+  @JsonProperty("analyzeOutcomeWithAI")
+  public void setAnalyzeOutcomeWithAI(boolean analyzeOutcomeWithAI) {
+    this.analyzeOutcomeWithAI = analyzeOutcomeWithAI;
   }
 
   @Override
@@ -758,7 +770,8 @@ public class CliContext {
         && Objects.equals(resolutionContext, that.resolutionContext)
         && disableDefaultResourceFetcher == that.disableDefaultResourceFetcher
         && checkIpsCodes == that.checkIpsCodes
-        && Objects.equals(bundle, that.bundle);
+        && Objects.equals(bundle, that.bundle)
+        && analyzeOutcomeWithAI == that.analyzeOutcomeWithAI;
   }
 
   @Override
@@ -806,7 +819,8 @@ public class CliContext {
         resolutionContext,
         disableDefaultResourceFetcher,
         checkIpsCodes,
-        bundle);
+        bundle,
+        analyzeOutcomeWithAI);
     result = 31 * result + Arrays.hashCode(igsPreloaded);
     return result;
   }
@@ -859,6 +873,7 @@ public class CliContext {
         ", disableDefaultResourceFetcher=" + disableDefaultResourceFetcher +
         ", checkIpsCodes=" + checkIpsCodes +
         ", bundle=" + bundle +
+        ", analyzeOutcomeWithAI=" + analyzeOutcomeWithAI +
         '}';
   }
 
@@ -916,6 +931,7 @@ public class CliContext {
 	addExtension(ext, "disableDefaultResourceFetcher", new BooleanType(this.disableDefaultResourceFetcher));
 	addExtension(ext, "check-ips-codes", new BooleanType(this.checkIpsCodes));
 	addExtension(ext, "bundle", new StringType(this.bundle));
+  addExtension(ext, "analyzeOutcomeWithAI", new BooleanType(this.analyzeOutcomeWithAI));
   for( var extension : this.extensions) {
     addExtension(ext, "extensions", new StringType(extension));
   }

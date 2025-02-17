@@ -15,13 +15,11 @@ export class ValidationEntry {
   readonly date: Date;
   readonly validationParameters: ValidationParameter[] = [];
   public loading: boolean = false;
-  useAI: boolean;
 
-  constructor(filename: string, resource: string, mimetype: string | null, profiles: string[] | null, settings: ValidationParameter[] = [], useAI: boolean) {
+  constructor(filename: string, resource: string, mimetype: string | null, profiles: string[] | null, settings: ValidationParameter[] = []) {
     this.filename = filename;
     this.resource = resource;
     this.validationParameters = settings;
-    this.useAI = useAI;
 
     if (mimetype) {
       this.mimetype = mimetype;
@@ -75,6 +73,10 @@ export class ValidationEntry {
 
   setOperationOutcome(operationOutcome: fhir.r4.OperationOutcome): void {
     this.result = OperationResult.fromOperationOutcome(operationOutcome);
+  }
+
+  setAiRecommendation(operationOutcome: fhir.r4.OperationOutcome): void {
+    this.aiRecommendation = operationOutcome.text.div
   }
 
   extractJsonInfo(): void {

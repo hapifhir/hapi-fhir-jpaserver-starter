@@ -64,9 +64,10 @@
           <mat-hint>A specific IG version may be specified.</mat-hint>
         </mat-form-field>
       </div>
-
-      <button color="primary" mat-raised-button (click)="onValidationButtonClick()">Validate</button>
-      <button color="primary" mat-raised-button (click)="onAiButtonClick()">AI Analyze</button>
+      <div>
+        <button color="primary" mat-raised-button (click)="onValidationButtonClick()">Validate</button>
+        <button color="primary" mat-raised-button (click)="onAiButtonClick()">AI Analyze</button>
+      </div>
     </ng-container>
 
     <ng-container *ngIf="showSettings">
