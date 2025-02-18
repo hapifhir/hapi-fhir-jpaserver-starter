@@ -36,8 +36,9 @@ export class Issue {
   line?: number;
   col?: number;
   sliceInfo: string[] = [];
+  markdown: boolean;
 
-  constructor(severity: IssueSeverity, code: string, text: string, expression?: string, line?: number, col?: number, sliceInfo?: string[]) {
+  constructor(severity: IssueSeverity, code: string, text: string, expression?: string, line?: number, col?: number, sliceInfo?: string[], markdown?: boolean) {
     this.severity = severity;
     this.code = code;
     this.text = text;
@@ -45,6 +46,7 @@ export class Issue {
     this.line = line;
     this.col = col;
     this.sliceInfo = sliceInfo ?? [];
+    this.markdown = markdown;
   }
 
   static fromOoIssue(ooIssue: fhir.r4.OperationOutcomeIssue): Issue {
@@ -64,6 +66,7 @@ export class Issue {
     } else {
       text = ooIssue.diagnostics;
     }
+    let markdown = Issue.getExtensionStringValue(ooIssue, "http://hl7.org/fhir/StructureDefinition/rendering-style") == "markdown";
     return new Issue(
       ooIssue.severity as IssueSeverity,
       ooIssue.code,
@@ -71,7 +74,8 @@ export class Issue {
       expression,
       Issue.getLineNo(ooIssue),
       Issue.getColNo(ooIssue),
-      sliceInfo
+      sliceInfo,
+      markdown
     );
   }
 
@@ -95,6 +99,18 @@ export class Issue {
     for (const ext of issue.extension) {
       if (ext.url === url) {
         return ext.valueInteger;
+      }
+    }
+    return undefined;
+  }
+
+  static getExtensionStringValue(issue: fhir.r4.OperationOutcomeIssue, url: string): string | undefined {
+    if (!issue.extension) {
+      return undefined;
+    }
+    for (const ext of issue.extension) {
+      if (ext.url === url) {
+        return ext.valueString;
       }
     }
     return undefined;
