@@ -3,6 +3,7 @@
        (click)="select.emit(issue)">
     <span class="severity">{{ issue.severity }}</span>
     <span [innerHtml]="getTemplateHeaderLine(issue)"></span><br/>
+    <span *ngIf="issue.details" class="details">{{ issue.details }}</span>
     <p *ngIf="!issue.markdown">{{ issue.text }}</p>
     <markdown *ngIf="issue.markdown" [data]="issue.text"></markdown>
     <ol *ngIf="issue.sliceInfo.length">

@@ -37,8 +37,9 @@ export class Issue {
   col?: number;
   sliceInfo: string[] = [];
   markdown: boolean;
+  details: string;
 
-  constructor(severity: IssueSeverity, code: string, text: string, expression?: string, line?: number, col?: number, sliceInfo?: string[], markdown?: boolean) {
+  constructor(severity: IssueSeverity, code: string, text: string, expression?: string, line?: number, col?: number, sliceInfo?: string[], markdown?: boolean, details?: string) {
     this.severity = severity;
     this.code = code;
     this.text = text;
@@ -47,6 +48,7 @@ export class Issue {
     this.col = col;
     this.sliceInfo = sliceInfo ?? [];
     this.markdown = markdown;
+    this.details = details;
   }
 
   static fromOoIssue(ooIssue: fhir.r4.OperationOutcomeIssue): Issue {
@@ -67,6 +69,7 @@ export class Issue {
       text = ooIssue.diagnostics;
     }
     let markdown = Issue.getExtensionStringValue(ooIssue, "http://hl7.org/fhir/StructureDefinition/rendering-style") == "markdown";
+    let details = ooIssue.details ? ooIssue.details.text : undefined;
     return new Issue(
       ooIssue.severity as IssueSeverity,
       ooIssue.code,
@@ -75,7 +78,8 @@ export class Issue {
       Issue.getLineNo(ooIssue),
       Issue.getColNo(ooIssue),
       sliceInfo,
-      markdown
+      markdown,
+      details
     );
   }
 

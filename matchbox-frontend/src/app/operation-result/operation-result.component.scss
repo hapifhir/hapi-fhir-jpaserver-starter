@@ -43,6 +43,10 @@ ul {
   &.information {
     --color: #{variables.$issue-info};
   }
+  .details {
+    font-weight: 700;
+    font-size: large;
+  }
 }
 
 :host ::ng-deep .issue {
