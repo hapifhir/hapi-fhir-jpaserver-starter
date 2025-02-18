@@ -4,6 +4,7 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+
   
     
 
@@ -84,6 +85,15 @@
       "mainClass": "ca.uhn.fhir.jpa.starter.Application",
       "projectName": "matchbox-server",
       "vmArgs": "-Dspring.config.additional-location=file:with-elm/application.yaml",
+      "cwd": "${workspaceFolder}/matchbox-server"
+    },
+    {
+      "type": "java",
+      "name": "Launch Matchbox-Server (ips)",
+      "request": "launch",
+      "mainClass": "ca.uhn.fhir.jpa.starter.Application",
+      "projectName": "matchbox-server",
+      "vmArgs": "-Dspring.config.additional-location=file:with-ips/application.yaml",
       "cwd": "${workspaceFolder}/matchbox-server"
     },
     {

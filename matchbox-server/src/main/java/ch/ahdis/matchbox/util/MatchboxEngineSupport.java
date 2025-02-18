@@ -548,7 +548,18 @@ public class MatchboxEngineSupport {
 		validator.setForPublication(cli.isForPublication());
 		validator.setShowTimes(true);
 		validator.setAllowExampleUrls(cli.isAllowExampleUrls());
-
+		validator.setCheckIPSCodes(cli.isCheckIpsCodes());
+		if (cli.getBundle() != null) {
+			validator.setQuestionnaireMode(cli.getQuestionnaireMode());
+			String[] bundle = cli.getBundle().split(" ");
+			if (bundle.length != 2) {
+				log.error("Bundle parameter must have two values, the rule and the profile, ignoring the bundle parameter");
+			} else {
+				String rule = bundle[0];
+				String profile = bundle[1];
+				validator.getBundleValidationRules().add(new org.hl7.fhir.r5.utils.validation.BundleValidationRule().setRule(rule).setProfile(profile));
+			}
+		}
 		if (!cli.isDisableDefaultResourceFetcher()) {
 			StandAloneValidatorFetcher fetcher = new StandAloneValidatorFetcher(validator.getPcm(), validator.getContext(),
 					validator);
@@ -568,7 +579,6 @@ public class MatchboxEngineSupport {
 			// validator.setPolicyAdvisor(fetcher);
 			// refpol = ReferenceValidationPolicy.CHECK_TYPE_IF_EXISTS;
 		}
-		// validator.getBundleValidationRules().addAll(cliContext.getBundleValidationRules());
 		validator.setJurisdiction(CodeSystemUtilities.readCoding(cli.getJurisdiction()));
 		// TerminologyCache.setNoCaching(cliContext.isNoInternalCaching());
 

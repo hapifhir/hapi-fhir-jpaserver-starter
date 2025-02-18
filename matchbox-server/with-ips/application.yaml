@@ -1,0 +1,28 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /matchboxv3
+hapi:
+  fhir:
+    server_address: http://localhost:8080/matchboxv3/fhir
+    implementationguides:
+      fhir_r4_core:
+        name: hl7.fhir.r4.core
+        version: 4.0.1
+        url: classpath:/hl7.fhir.r4.core.tgz
+      fhir_terminology:
+        name: hl7.terminology.r4
+        version: 6.2.0
+        url: classpath:/hl7.terminology.r4#6.2.0.tgz
+      fhir_extensions:
+        name: hl7.fhir.uv.extensions.r4
+        version: 1.0.0
+        url: classpath:/hl7.fhir.uv.extensions.r4#1.0.0.tgz
+      ch-ips:
+        name: hl7.fhir.uv.ips
+        version: 1.1.0
+matchbox:
+  fhir:
+    context:
+      fhirVersion: 4.0.1
+      txServer: http://tx.fhir.org

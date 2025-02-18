@@ -1,6 +1,7 @@
-Unreleased
+2025/03/xx Release 3.9.13
 
 - No more GUI version mismatch [#346](https://github.com/ahdis/matchbox/issues/346)
+- Support for bundle option to validate directly a resource within the bundle [#348](https://github.com/ahdis/matchbox/issues/348)
 
 2025/02/05 Release 3.9.12
 

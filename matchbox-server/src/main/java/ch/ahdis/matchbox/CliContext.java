@@ -169,11 +169,15 @@ public class CliContext {
   // @JsonProperty("outputStyle")
   // private String outputStyle = null;
 
-  // TODO: Mark what goes here?
-  // private List<BundleValidationRule> bundleValidationRules = new ArrayList<>();
-
   @JsonProperty("jurisdiction")
   private String jurisdiction = JurisdictionUtilities.getJurisdictionFromLocale(Locale.getDefault().getCountry());
+
+  @JsonProperty("check-ips-codes")
+  private boolean checkIpsCodes = false;
+
+  @JsonProperty("bundle")
+  private String bundle = null;
+
 
   private String igsPreloaded[];
 
@@ -686,6 +690,23 @@ public class CliContext {
     this.disableDefaultResourceFetcher = disableDefaultResourceFetcher;
   }
 
+  public boolean isCheckIpsCodes() {
+    return this.checkIpsCodes;
+  }
+
+  @JsonProperty("check-ips-codes")
+  public void setCheckIpsCodes(boolean checkIpsCodes) {
+    this.checkIpsCodes = checkIpsCodes;
+  }
+
+  public String getBundle() {
+    return this.bundle;
+  }
+
+  @JsonProperty("bundle")
+  public void setBundle(String bundle) {
+    this.bundle = bundle;
+  }
 
   @Override
   public boolean equals(final Object o) {
@@ -735,7 +756,9 @@ public class CliContext {
         && Arrays.equals(igsPreloaded, that.igsPreloaded)
         && checkReferences == that.checkReferences
         && Objects.equals(resolutionContext, that.resolutionContext)
-        && disableDefaultResourceFetcher == that.disableDefaultResourceFetcher;
+        && disableDefaultResourceFetcher == that.disableDefaultResourceFetcher
+        && checkIpsCodes == that.checkIpsCodes
+        && bundle == that.bundle;
   }
 
   @Override
@@ -781,7 +804,9 @@ public class CliContext {
         xVersion,
         checkReferences,
         resolutionContext,
-        disableDefaultResourceFetcher);
+        disableDefaultResourceFetcher,
+        checkIpsCodes,
+        bundle);
     result = 31 * result + Arrays.hashCode(igsPreloaded);
     return result;
   }
@@ -832,6 +857,8 @@ public class CliContext {
         ", checkReferences=" + checkReferences +
         ", resolutionContext=" + resolutionContext +
         ", disableDefaultResourceFetcher=" + disableDefaultResourceFetcher +
+        ", checkIpsCodes=" + checkIpsCodes +
+        ", bundle=" + bundle +
         '}';
   }
 
@@ -887,6 +914,8 @@ public class CliContext {
 	addExtension(ext, "check-references", new BooleanType(this.checkReferences));
 	addExtension(ext, "resolution-context", new StringType(this.resolutionContext));
 	addExtension(ext, "disableDefaultResourceFetcher", new BooleanType(this.disableDefaultResourceFetcher));
+	addExtension(ext, "check-ips-codes", new BooleanType(this.checkIpsCodes));
+	addExtension(ext, "bundle", new StringType(this.bundle));
   for( var extension : this.extensions) {
     addExtension(ext, "extensions", new StringType(extension));
   }
