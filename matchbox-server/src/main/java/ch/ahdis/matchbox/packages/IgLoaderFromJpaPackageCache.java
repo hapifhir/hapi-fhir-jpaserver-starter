@@ -42,7 +42,7 @@ import org.hl7.fhir.r5.model.CanonicalResource;
 import org.hl7.fhir.r5.model.ImplementationGuide;
 import org.hl7.fhir.r5.model.Resource;
 import org.hl7.fhir.utilities.ByteProvider;
-import org.hl7.fhir.utilities.TextFile;
+import org.hl7.fhir.utilities.FileUtilities;
 import org.hl7.fhir.utilities.npm.FilesystemPackageCacheManager;
 import org.hl7.fhir.utilities.npm.NpmPackage;
 import org.hl7.fhir.validation.IgLoader;
@@ -273,7 +273,7 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 						++count;
 						Resource r = null;
 						try {
-							r = loadResourceByVersion(npm.fhirVersion(), TextFile.streamToBytes(pi.load("package", s)), s);
+							r = loadResourceByVersion(npm.fhirVersion(), FileUtilities.streamToBytes(pi.load("package", s)), s);
 							// https://github.com/ahdis/matchbox/issues/227
 							if (r instanceof org.hl7.fhir.r5.model.StructureMap ) {
 								cleanModifierExtensions((org.hl7.fhir.r5.model.StructureMap) r);

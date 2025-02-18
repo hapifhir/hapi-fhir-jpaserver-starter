@@ -11,7 +11,7 @@ import java.sql.Statement;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonToken;
 import org.hl7.fhir.exceptions.FHIRException;
-import org.hl7.fhir.utilities.TextFile;
+import org.hl7.fhir.utilities.FileUtilities;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 import org.hl7.fhir.utilities.json.model.JsonArray;
@@ -164,9 +164,9 @@ public class NpmPackageIndexBuilder {
     start(Utilities.path(folder, ".index.db"));
     File dir = ManagedFileAccess.file(folder);
     for (File f : dir.listFiles()) {
-      seeFile(f.getName(), TextFile.fileToBytes(f));
+      seeFile(f.getName(), FileUtilities.fileToBytes(f));
     }
-    TextFile.stringToFile(build(), Utilities.path(folder, ".index.json"));
+    FileUtilities.stringToFile(build(), Utilities.path(folder, ".index.json"));
   }
 
   private boolean existsFolder(String... args) throws IOException {

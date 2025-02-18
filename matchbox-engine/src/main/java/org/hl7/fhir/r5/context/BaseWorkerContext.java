@@ -41,7 +41,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -57,10 +56,8 @@ import org.hl7.fhir.exceptions.DefinitionException;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.TerminologyServiceException;
 import org.hl7.fhir.r5.conformance.profile.ProfileUtilities;
-import org.hl7.fhir.r5.context.BaseWorkerContext.IByteProvider;
 import org.hl7.fhir.r5.context.CanonicalResourceManager.CanonicalResourceProxy;
 import org.hl7.fhir.r5.context.ILoggingService.LogCategory;
-import org.hl7.fhir.r5.context.IWorkerContext.ITerminologyOperationDetails;
 import org.hl7.fhir.r5.model.ActorDefinition;
 import org.hl7.fhir.r5.model.BooleanType;
 import org.hl7.fhir.r5.model.Bundle;
@@ -68,6 +65,7 @@ import org.hl7.fhir.r5.model.CanonicalResource;
 import org.hl7.fhir.r5.model.CanonicalType;
 import org.hl7.fhir.r5.model.CapabilityStatement;
 import org.hl7.fhir.r5.model.CodeSystem;
+import org.hl7.fhir.r5.model.CodeType;
 import org.hl7.fhir.r5.model.Enumerations.CodeSystemContentMode;
 import org.hl7.fhir.r5.model.CodeSystem.ConceptDefinitionComponent;
 import org.hl7.fhir.r5.model.CodeableConcept;
@@ -141,12 +139,7 @@ import org.hl7.fhir.r5.utils.ToolingExtensions;
 import org.hl7.fhir.r5.utils.UserDataNames;
 import org.hl7.fhir.r5.utils.client.EFhirClientException;
 import org.hl7.fhir.r5.utils.validation.ValidationContextCarrier;
-import org.hl7.fhir.utilities.FhirPublication;
-import org.hl7.fhir.utilities.TextFile;
-import org.hl7.fhir.utilities.TimeTracker;
-import org.hl7.fhir.utilities.ToolingClientLogger;
-import org.hl7.fhir.utilities.Utilities;
-import org.hl7.fhir.utilities.VersionUtilities;
+import org.hl7.fhir.utilities.*;
 import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 import org.hl7.fhir.utilities.i18n.I18nBase;
 import org.hl7.fhir.utilities.i18n.I18nConstants;
@@ -161,6 +154,7 @@ import com.google.gson.JsonObject;
 
 import javax.annotation.Nonnull;
 
+@MarkedToMoveToAdjunctPackage
 public abstract class BaseWorkerContext extends I18nBase implements IWorkerContext {
 
   public interface IByteProvider {
@@ -195,7 +189,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
 
     @Override
     public byte[] bytes() throws IOException {
-      return TextFile.streamToBytes(pi.load("other", name));
+      return FileUtilities.streamToBytes(pi.load("other", name));
     }
 
   }
@@ -210,7 +204,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
 
     @Override
     public byte[] bytes() throws IOException {
-      return TextFile.streamToBytes(ManagedFileAccess.inStream(name));
+      return FileUtilities.streamToBytes(ManagedFileAccess.inStream(name));
     }
 
   }
@@ -388,6 +382,14 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       transforms.copy(other.transforms);
       structures.copy(other.structures);
       typeManager = new TypeManager(structures);
+      // Snapshot generation is not thread safe, so before this copy of can be used by another thread, we create all the
+      // necessary snapshots. This prevent asynchronous snapshot generation for the shared structure definitions.
+      for (String typeName : typeManager.getTypeNames()) {
+        if (typeName != null) {
+          StructureDefinition structureDefinition = typeManager.fetchTypeDefinition(typeName);
+          generateSnapshot(structureDefinition, "6");
+        }
+      }
       searchParameters.copy(other.searchParameters);
       plans.copy(other.plans);
       questionnaires.copy(other.questionnaires);
@@ -408,7 +410,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
         txCache = other.txCache; // no copy. for now?
       expandCodesLimit = other.expandCodesLimit;
       logger = other.logger;
-      expParameters = other.expParameters;
+      expParameters = other.expParameters != null ? other.expParameters.copy() : null;
       version = other.version;
       supportedCodeSystems.addAll(other.supportedCodeSystems);
       unsupportedCodeSystems.addAll(other.unsupportedCodeSystems);
@@ -1957,7 +1959,11 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     if (expParameters == null) {
       throw new Error(formatMessage(I18nConstants.NO_EXPANSIONPROFILE_PROVIDED));
     }
-    pin.addParameters(expParameters);
+    for (ParametersParameterComponent pp : expParameters.getParameter()) {
+      if (!pin.hasParameter(pp.getName())) {
+        pin.addParameter(pp);
+      }
+    }
 
     if (options.isDisplayWarningMode()) {
       pin.addParameter("mode","lenient-display-validation");
@@ -2322,7 +2328,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
             if (r instanceof CanonicalResource) {
               CanonicalResource cr = (CanonicalResource) r;
               if (!cr.hasUrl()) {
-                cr.setUrl(Utilities.makeUuidUrn());
+                cr.setUrl(UUIDUtilities.makeUuidUrn());
               }              
             }
             return (T) r;
@@ -3095,32 +3101,36 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
         return res;
       }
     } 
-    StructureDefinition p = typeManager.fetchTypeDefinition(typeName);
-    if (p != null && !p.isGeneratedSnapshot()) {
-      if (p.isGeneratingSnapshot()) {
-        throw new FHIRException("Attempt to fetch the profile "+p.getVersionedUrl()+" while generating the snapshot for it");
+    StructureDefinition structureDefinition = typeManager.fetchTypeDefinition(typeName);
+    generateSnapshot(structureDefinition, "5");
+    return structureDefinition;
+  }
+
+  void generateSnapshot(StructureDefinition structureDefinition, String breadcrumb) {
+    if (structureDefinition != null && !structureDefinition.isGeneratedSnapshot()) {
+      if (structureDefinition.isGeneratingSnapshot()) {
+        throw new FHIRException("Attempt to fetch the profile "+ structureDefinition.getVersionedUrl()+" while generating the snapshot for it");
       }
       try {
         if (logger.isDebugLogging()) {
-          System.out.println("Generating snapshot for "+p.getVersionedUrl());
+          System.out.println("Generating snapshot for "+ structureDefinition.getVersionedUrl());
         }
-        p.setGeneratingSnapshot(true);
+       // structureDefinition.setGeneratingSnapshot(true);
         try {
-          new ContextUtilities(this).generateSnapshot(p);
+          new ContextUtilities(this).generateSnapshot(structureDefinition);
         } finally {
-          p.setGeneratingSnapshot(false);      
+          //structureDefinition.setGeneratingSnapshot(false);
         }
       } catch (Exception e) {
         // not sure what to do in this case?
-        System.out.println("Unable to generate snapshot @5 for "+p.getVersionedUrl()+": "+e.getMessage());
+        System.out.println("Unable to generate snapshot in @" + breadcrumb + " for " + structureDefinition.getVersionedUrl()+": "+e.getMessage());
         if (logger.isDebugLogging()) {
           e.printStackTrace();
         }
       }
     }
-    return p;
   }
-  
+
   @Override
   public List<StructureDefinition> fetchTypeDefinitions(String typeName) {
     return typeManager.getDefinitions(typeName);
@@ -3660,5 +3670,24 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     }
     return res;
   }
-
+  public void setLocale(Locale locale) {
+    super.setLocale(locale);
+    if (expParameters != null && locale != null) {
+      for (ParametersParameterComponent p : expParameters.getParameter()) {
+        if ("displayLanguage".equals(p.getName())) {
+          if (p.hasUserData(UserDataNames.auto_added_parameter)) {
+            p.setValue(new CodeType(locale.toLanguageTag()));
+            return;
+          } else {
+            // user supplied, we leave it alone
+            return ;
+          }
+        }
+      }
+      ParametersParameterComponent p = expParameters.addParameter();
+      p.setName("displayLanguage");
+      p.setValue(new CodeType(locale.toLanguageTag()));
+      p.setUserData(UserDataNames.auto_added_parameter, true);
+    }
+  }
 }

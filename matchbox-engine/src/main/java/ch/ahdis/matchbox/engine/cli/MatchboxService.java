@@ -32,7 +32,7 @@ import org.hl7.fhir.r5.renderers.spreadsheets.ValueSetSpreadsheetGenerator;
 import org.hl7.fhir.r5.terminologies.CodeSystemUtilities;
 import org.hl7.fhir.r5.terminologies.client.TerminologyClientManager.InternalLogEvent;
 import org.hl7.fhir.r5.utils.validation.constants.ReferenceValidationPolicy;
-import org.hl7.fhir.utilities.TextFile;
+import org.hl7.fhir.utilities.FileUtilities;
 import org.hl7.fhir.utilities.TimeTracker;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.VersionUtilities;
@@ -186,7 +186,7 @@ public class MatchboxService {
 
     if (cliContext.getHtmlOutput() != null) {
       String html = new HTMLOutputGenerator(records).generate(System.currentTimeMillis() - start);
-      TextFile.stringToFile(html, cliContext.getHtmlOutput());
+      FileUtilities.stringToFile(html, cliContext.getHtmlOutput());
       System.out.println("HTML Summary in " + cliContext.getHtmlOutput());
     }
 
@@ -377,7 +377,7 @@ public class MatchboxService {
       }
       byte[] r = validator.transformVersion(cliContext.getSources().get(0), cliContext.getTargetVer(), cliContext.getOutput().endsWith(".json") ? Manager.FhirFormat.JSON : Manager.FhirFormat.XML, cliContext.getCanDoNative());
       System.out.println(" ...success");
-      TextFile.bytesToFile(r, cliContext.getOutput());
+      FileUtilities.bytesToFile(r, cliContext.getOutput());
     } catch (Exception e) {
       System.out.println(" ...Failure: " + e.getMessage());
       e.printStackTrace();
