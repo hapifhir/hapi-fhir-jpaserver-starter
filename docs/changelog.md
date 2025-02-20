@@ -2,6 +2,7 @@
 
 - No more GUI version mismatch [#346](https://github.com/ahdis/matchbox/issues/346)
 - Support for bundle option to validate directly a resource within the bundle [#348](https://github.com/ahdis/matchbox/issues/348)
+- Automatically validate composition within bundle if profile can be deduced [#348](https://github.com/ahdis/matchbox/issues/348)
 - Update org.hl7.fhir.core to 6.5.9
 
 2025/02/05 Release 3.9.12
