@@ -21,6 +21,7 @@ import ca.uhn.fhir.jpa.config.util.ResourceCountCacheUtil;
 import ca.uhn.fhir.jpa.config.util.ValidationSupportConfigUtil;
 import ca.uhn.fhir.jpa.dao.FulltextSearchSvcImpl;
 import ca.uhn.fhir.jpa.dao.IFulltextSearchSvc;
+import ca.uhn.fhir.jpa.dao.TransactionProcessor;
 import ca.uhn.fhir.jpa.dao.search.HSearchSortHelperImpl;
 import ca.uhn.fhir.jpa.dao.search.IHSearchSortHelper;
 import ca.uhn.fhir.jpa.delete.ThreadSafeResourceDeleterSvc;
@@ -42,6 +43,7 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
+import ca.uhn.fhir.jpa.starter.ig.AdditionalResourceInstaller;
 import ca.uhn.fhir.jpa.starter.ig.IImplementationGuideOperationProvider;
 import ca.uhn.fhir.jpa.starter.util.EnvironmentHelper;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
@@ -51,6 +53,7 @@ import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.narrative2.NullNarrativeGenerator;
 import ca.uhn.fhir.rest.api.IResourceSupportedSvc;
+import ca.uhn.fhir.rest.api.server.SystemRequestDetails;
 import ca.uhn.fhir.rest.openapi.OpenApiInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.partition.RequestTenantPartitionInterceptor;
 import ca.uhn.fhir.rest.server.*;
@@ -191,9 +194,12 @@ public class StarterJpaConfig {
 	@Primary
 	@Conditional(OnImplementationGuidesPresent.class)
 	public IPackageInstallerSvc packageInstaller(
-			AppProperties appProperties,
-			IPackageInstallerSvc packageInstallerSvc,
-			Batch2JobRegisterer batch2JobRegisterer) {
+		AppProperties appProperties,
+		IPackageInstallerSvc packageInstallerSvc,
+		AdditionalResourceInstaller implementationGuideOperationProvider,
+		Batch2JobRegisterer batch2JobRegisterer,
+		FhirContext fhirContext,
+		TransactionProcessor transactionProcessor) {
 
 		batch2JobRegisterer.start();
 
@@ -209,7 +215,14 @@ public class StarterJpaConfig {
 							.addDependencyExclude("hl7.fhir.r4.core")
 							.addDependencyExclude("hl7.fhir.r5.core");
 				}
+
 				packageInstallerSvc.install(packageInstallationSpec);
+				List<String> additionalResources = List.of("example");
+				if(additionalResources != null) {
+					var transaction = implementationGuideOperationProvider.collectAdditionalResources(additionalResources, packageInstallationSpec, fhirContext);
+					transactionProcessor.transaction(new SystemRequestDetails(), transaction, false);
+
+				}
 			}
 		}
 		return packageInstallerSvc;
