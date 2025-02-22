@@ -204,9 +204,9 @@ public class StarterJpaConfig {
 		batch2JobRegisterer.start();
 
 		if (appProperties.getImplementationGuides() != null) {
-			Map<String, PackageInstallationSpec> guides = appProperties.getImplementationGuides();
-			for (Map.Entry<String, PackageInstallationSpec> guidesEntry : guides.entrySet()) {
-				PackageInstallationSpec packageInstallationSpec = guidesEntry.getValue();
+			var guides = appProperties.getImplementationGuides();
+			for (var guidesEntry : guides.entrySet()) {
+				var packageInstallationSpec = guidesEntry.getValue();
 				if (appProperties.getInstall_transitive_ig_dependencies()) {
 
 					packageInstallationSpec
@@ -218,7 +218,8 @@ public class StarterJpaConfig {
 
 				packageInstallerSvc.install(packageInstallationSpec);
 
-				var extraResources = appProperties.getInstall_additional_resources_from_ig_folders();
+				var extraResources = packageInstallationSpec.getAdditionalResourceFolders();
+
 				if(!extraResources.isEmpty()) {
 					var transaction = additionalResourceInstaller.collectAdditionalResources(extraResources, packageInstallationSpec, fhirContext);
 					transactionProcessor.transaction(new SystemRequestDetails(), transaction, false);
