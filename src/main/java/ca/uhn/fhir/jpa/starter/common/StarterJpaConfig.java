@@ -196,7 +196,7 @@ public class StarterJpaConfig {
 	public IPackageInstallerSvc packageInstaller(
 		AppProperties appProperties,
 		IPackageInstallerSvc packageInstallerSvc,
-		AdditionalResourceInstaller implementationGuideOperationProvider,
+		AdditionalResourceInstaller additionalResourceInstaller,
 		Batch2JobRegisterer batch2JobRegisterer,
 		FhirContext fhirContext,
 		TransactionProcessor transactionProcessor) {
@@ -217,9 +217,10 @@ public class StarterJpaConfig {
 				}
 
 				packageInstallerSvc.install(packageInstallationSpec);
-				List<String> additionalResources = List.of("example");
-				if(additionalResources != null) {
-					var transaction = implementationGuideOperationProvider.collectAdditionalResources(additionalResources, packageInstallationSpec, fhirContext);
+
+				var extraResources = appProperties.getInstall_additional_resources_from_ig_folders();
+				if(!extraResources.isEmpty()) {
+					var transaction = additionalResourceInstaller.collectAdditionalResources(extraResources, packageInstallationSpec, fhirContext);
 					transactionProcessor.transaction(new SystemRequestDetails(), transaction, false);
 
 				}

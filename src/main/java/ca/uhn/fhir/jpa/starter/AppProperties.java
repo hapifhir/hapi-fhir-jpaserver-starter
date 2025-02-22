@@ -81,6 +81,8 @@ public class AppProperties {
 	private Partitioning partitioning = null;
 	private Boolean validate_resource_status_for_package_upload = true;
 	private Boolean install_transitive_ig_dependencies = true;
+
+	private List<String> install_additional_resources_from_ig_folders = new ArrayList<>();
 	private Map<String, PackageInstallationSpec> implementationGuides = null;
 
 	private String custom_content_path = null;
@@ -669,6 +671,14 @@ public class AppProperties {
 	public void setUserRequestRetryVersionConflictsInterceptorEnabled(
 			Boolean userRequestRetryVersionConflictsInterceptorEnabled) {
 		this.userRequestRetryVersionConflictsInterceptorEnabled = userRequestRetryVersionConflictsInterceptorEnabled;
+	}
+
+	public List<String> getInstall_additional_resources_from_ig_folders() {
+		return install_additional_resources_from_ig_folders;
+	}
+
+	public void setInstall_additional_resources_from_ig_folders(List<String> install_additional_resources_from_ig_folders) {
+		this.install_additional_resources_from_ig_folders = install_additional_resources_from_ig_folders;
 	}
 
 	public static class Cors {

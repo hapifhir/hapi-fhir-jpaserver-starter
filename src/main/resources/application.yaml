@@ -155,6 +155,9 @@ hapi:
     ### Flag is true by default. This flag filters resources during package installation, allowing only those resources with a valid status (e.g. active) to be installed.
     #    validate_resource_status_for_package_upload: false 
     #    install_transitive_ig_dependencies: true
+    install_additional_resources_from_ig_folders:
+      - example
+      - example2
     implementationguides:
     ###    example from registry (packages.fhir.org)
     #  swiss:

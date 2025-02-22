@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,9 +37,9 @@ public class AdditionalResourceInstaller {
 	@NotNull
 	public List<IBaseResource> getAdditionalResources(List<String> folderNames, NpmPackage npmPackage, FhirContext fhirContext) {
 
-		var npmFolders = folderNames.stream().map(name -> npmPackage.getFolders().get(name)).collect(Collectors.toList());
+		var npmFolders = folderNames.stream().map(name -> npmPackage.getFolders().get(name)).filter(Objects::nonNull).collect(Collectors.toList());
 
-		List<IBaseResource> resources = new LinkedList<>();
+		var resources = new LinkedList<IBaseResource>();
 		for (var folder : npmFolders) {
 			List<String> fileNames;
 			try {
