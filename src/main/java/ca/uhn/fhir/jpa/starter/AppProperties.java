@@ -24,6 +24,11 @@ import java.util.Set;
 @EnableConfigurationProperties
 public class AppProperties {
 
+	private final Set<String> auto_version_reference_at_paths = new HashSet<>();
+	private final Set<String> local_base_urls = new HashSet<>();
+	private final Set<String> logical_urls = new HashSet<>();
+	private final List<String> custom_interceptor_classes = new ArrayList<>();
+	private final List<String> custom_provider_classes = new ArrayList<>();
 	private Boolean cr_enabled = false;
 	private Boolean ips_enabled = false;
 	private Boolean openapi_enabled = false;
@@ -38,7 +43,6 @@ public class AppProperties {
 	private Boolean allow_override_default_search_params = true;
 	private Boolean auto_create_placeholder_reference_targets = false;
 	private Boolean mass_ingestion_mode_enabled = false;
-	private final Set<String> auto_version_reference_at_paths = new HashSet<>();
 	private Boolean language_search_parameter_enabled = false;
 	private Boolean dao_scheduling_enabled = true;
 	private Boolean delete_expunge_enabled = false;
@@ -71,9 +75,7 @@ public class AppProperties {
 	private List<String> supported_resource_types = new ArrayList<>();
 	private List<Bundle.BundleType> allowed_bundle_types = null;
 	private Boolean narrative_enabled = true;
-
 	private Boolean ig_runtime_upload_enabled = false;
-
 	private Validation validation = new Validation();
 	private Map<String, Tester> tester = null;
 	private Logger logger = new Logger();
@@ -85,28 +87,17 @@ public class AppProperties {
 
 	private List<String> install_additional_resources_from_ig_folders = new ArrayList<>();
 	private Map<String, ExtendedPackageInstallationSpec> implementationGuides = null;
-
 	private String custom_content_path = null;
 	private String app_content_path = null;
-
 	private Boolean lastn_enabled = false;
 	private boolean store_resource_in_lucene_index_enabled = false;
 	private NormalizedQuantitySearchLevel normalized_quantity_search_level =
 			NormalizedQuantitySearchLevel.NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED;
-
 	private Boolean use_apache_address_strategy = false;
 	private Boolean use_apache_address_strategy_https = false;
-
 	private Integer bundle_batch_pool_size = 20;
 	private Integer bundle_batch_pool_max_size = 100;
-	private final Set<String> local_base_urls = new HashSet<>();
-	private final Set<String> logical_urls = new HashSet<>();
-
 	private Boolean resource_dbhistory_enabled = true;
-
-	private final List<String> custom_interceptor_classes = new ArrayList<>();
-
-	private final List<String> custom_provider_classes = new ArrayList<>();
 	private Boolean upliftedRefchains_enabled = false;
 
 	private boolean userRequestRetryVersionConflictsInterceptorEnabled = false;
@@ -229,16 +220,16 @@ public class AppProperties {
 		return subscription;
 	}
 
+	public void setSubscription(Subscription subscription) {
+		this.subscription = subscription;
+	}
+
 	public Boolean getDefault_pretty_print() {
 		return default_pretty_print;
 	}
 
 	public void setDefault_pretty_print(Boolean default_pretty_print) {
 		this.default_pretty_print = default_pretty_print;
-	}
-
-	public void setSubscription(Subscription subscription) {
-		this.subscription = subscription;
 	}
 
 	public Validation getValidation() {
@@ -674,6 +665,22 @@ public class AppProperties {
 		this.userRequestRetryVersionConflictsInterceptorEnabled = userRequestRetryVersionConflictsInterceptorEnabled;
 	}
 
+	public boolean getEnable_index_of_type() {
+		return enable_index_of_type;
+	}
+
+	public void setEnable_index_of_type(boolean enable_index_of_type) {
+		this.enable_index_of_type = enable_index_of_type;
+	}
+
+	public Boolean getResource_dbhistory_enabled() {
+		return resource_dbhistory_enabled;
+	}
+
+	public void setResource_dbhistory_enabled(Boolean resource_dbhistory_enabled) {
+		this.resource_dbhistory_enabled = resource_dbhistory_enabled;
+	}
+
 	public List<String> getInstall_additional_resources_from_ig_folders() {
 		return install_additional_resources_from_ig_folders;
 	}
@@ -811,6 +818,38 @@ public class AppProperties {
 		private Boolean partitioning_include_in_search_hashes = false;
 		private Boolean allow_references_across_partitions = false;
 		private Boolean conditional_create_duplicate_identifiers_enabled = false;
+		private Boolean database_partition_mode_enabled = false;
+		private Boolean patient_id_partitioning_mode = false;
+		private Integer default_partition_id = 0;
+		private boolean request_tenant_partitioning_mode;
+
+		public boolean isRequest_tenant_partitioning_mode() {
+			return request_tenant_partitioning_mode;
+		}
+
+		public Integer getDefault_partition_id() {
+			return default_partition_id;
+		}
+
+		public void setDefault_partition_id(Integer theDefault_partition_id) {
+			default_partition_id = theDefault_partition_id;
+		}
+
+		public Boolean getDatabase_partition_mode_enabled() {
+			return database_partition_mode_enabled;
+		}
+
+		public void setDatabase_partition_mode_enabled(Boolean theDatabase_partition_mode_enabled) {
+			database_partition_mode_enabled = theDatabase_partition_mode_enabled;
+		}
+
+		public Boolean getPatient_id_partitioning_mode() {
+			return patient_id_partitioning_mode;
+		}
+
+		public void setPatient_id_partitioning_mode(Boolean thePatient_id_partitioning_mode) {
+			patient_id_partitioning_mode = thePatient_id_partitioning_mode;
+		}
 
 		public Boolean getPartitioning_include_in_search_hashes() {
 			return partitioning_include_in_search_hashes;
@@ -836,9 +875,21 @@ public class AppProperties {
 				Boolean conditional_create_duplicate_identifiers_enabled) {
 			this.conditional_create_duplicate_identifiers_enabled = conditional_create_duplicate_identifiers_enabled;
 		}
+
+		public boolean getRequest_tenant_partitioning_mode() {
+			return request_tenant_partitioning_mode;
+		}
+
+		public void setRequest_tenant_partitioning_mode(boolean theRequest_tenant_partitioning_mode) {
+			request_tenant_partitioning_mode = theRequest_tenant_partitioning_mode;
+		}
 	}
 
 	public static class Subscription {
+
+		private Boolean resthook_enabled = false;
+		private Boolean websocket_enabled = false;
+		private Email email = null;
 
 		public Boolean getResthook_enabled() {
 			return resthook_enabled;
@@ -856,10 +907,6 @@ public class AppProperties {
 			this.websocket_enabled = websocket_enabled;
 		}
 
-		private Boolean resthook_enabled = false;
-		private Boolean websocket_enabled = false;
-		private Email email = null;
-
 		public Email getEmail() {
 			return email;
 		}
@@ -869,6 +916,16 @@ public class AppProperties {
 		}
 
 		public static class Email {
+			private String from;
+			private String host;
+			private Integer port = 25;
+			private String username;
+			private String password;
+			private Boolean auth = false;
+			private Boolean startTlsEnable = false;
+			private Boolean startTlsRequired = false;
+			private Boolean quitWait = false;
+
 			public String getFrom() {
 				return from;
 			}
@@ -940,32 +997,6 @@ public class AppProperties {
 			public void setQuitWait(Boolean quitWait) {
 				this.quitWait = quitWait;
 			}
-
-			private String from;
-			private String host;
-			private Integer port = 25;
-			private String username;
-			private String password;
-			private Boolean auth = false;
-			private Boolean startTlsEnable = false;
-			private Boolean startTlsRequired = false;
-			private Boolean quitWait = false;
 		}
-	}
-
-	public boolean getEnable_index_of_type() {
-		return enable_index_of_type;
-	}
-
-	public void setEnable_index_of_type(boolean enable_index_of_type) {
-		this.enable_index_of_type = enable_index_of_type;
-	}
-
-	public Boolean getResource_dbhistory_enabled() {
-		return resource_dbhistory_enabled;
-	}
-
-	public void setResource_dbhistory_enabled(Boolean resource_dbhistory_enabled) {
-		this.resource_dbhistory_enabled = resource_dbhistory_enabled;
 	}
 }

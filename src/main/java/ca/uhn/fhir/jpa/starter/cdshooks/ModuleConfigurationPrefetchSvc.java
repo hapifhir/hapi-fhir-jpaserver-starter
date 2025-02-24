@@ -2,6 +2,9 @@ package ca.uhn.fhir.jpa.starter.cdshooks;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.i18n.Msg;
+import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
+import ca.uhn.fhir.rest.api.server.cdshooks.CdsServiceRequestAuthorizationJson;
+import ca.uhn.fhir.rest.api.server.cdshooks.CdsServiceRequestJson;
 import ca.uhn.fhir.rest.client.api.IClientInterceptor;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
@@ -11,8 +14,6 @@ import ca.uhn.fhir.util.UrlUtil;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsHooksDaoAuthorizationSvc;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsServiceMethod;
 import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServiceJson;
-import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServiceRequestAuthorizationJson;
-import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServiceRequestJson;
 import ca.uhn.hapi.fhir.cdshooks.svc.prefetch.CdsPrefetchDaoSvc;
 import ca.uhn.hapi.fhir.cdshooks.svc.prefetch.CdsPrefetchFhirClientSvc;
 import ca.uhn.hapi.fhir.cdshooks.svc.prefetch.CdsPrefetchSvc;
@@ -72,12 +73,14 @@ public class ModuleConfigurationPrefetchSvc extends CdsPrefetchSvc {
 			CdsResolutionStrategySvc theCdsResolutionStrategySvc,
 			CdsPrefetchDaoSvc theResourcePrefetchDao,
 			CdsPrefetchFhirClientSvc theResourcePrefetchFhirClient,
-			ICdsHooksDaoAuthorizationSvc theCdsHooksDaoAuthorizationSvc) {
+			ICdsHooksDaoAuthorizationSvc theCdsHooksDaoAuthorizationSvc,
+			IInterceptorBroadcaster theInterceptorBroadcaster) {
 		super(
 				theCdsResolutionStrategySvc,
 				theResourcePrefetchDao,
 				theResourcePrefetchFhirClient,
-				theCdsHooksDaoAuthorizationSvc);
+				theCdsHooksDaoAuthorizationSvc,
+				theInterceptorBroadcaster);
 		myResourcePrefetchFhirClient = theResourcePrefetchFhirClient;
 		fhirContext = theResourcePrefetchDao.getFhirContext();
 	}
