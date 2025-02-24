@@ -9,6 +9,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
+import ca.uhn.fhir.interceptor.model.RequestPartitionId;
 import ca.uhn.fhir.jpa.api.IDaoRegistry;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.config.ThreadPoolFactoryConfig;
@@ -31,7 +32,6 @@ import ca.uhn.fhir.jpa.interceptor.validation.RepositoryValidatingInterceptor;
 import ca.uhn.fhir.jpa.ips.provider.IpsOperationProvider;
 import ca.uhn.fhir.jpa.model.config.SubscriptionSettings;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
-import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.provider.DaoRegistryResourceSupportedSvc;
 import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
 import ca.uhn.fhir.jpa.provider.JpaCapabilityStatementProvider;
@@ -98,7 +98,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
 
@@ -233,10 +232,9 @@ public class StarterJpaConfig {
 
 				var extraResources = packageInstallationSpec.getAdditionalResourceFolders();
 
-				if(!extraResources.isEmpty()) {
+				if(extraResources != null && !extraResources.isEmpty()) {
 					var transaction = additionalResourceInstaller.collectAdditionalResources(extraResources, packageInstallationSpec, fhirContext);
-					transactionProcessor.transaction(new SystemRequestDetails(), transaction, false);
-
+					transactionProcessor.transaction(new SystemRequestDetails().setRequestPartitionId(RequestPartitionId.defaultPartition()), transaction, false);
 				}
 			}
 		}

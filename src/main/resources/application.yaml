@@ -170,7 +170,7 @@ hapi:
         installMode: STORE_AND_INSTALL
         additionalResourceFolders:
           - example
-          - example2
+        #  - example2
     #    supported_resource_types:
     #      - Patient
     #      - Observation
@@ -231,10 +231,14 @@ hapi:
       - https://unitsofmeasure.org/*
       - http://loinc.org/*
       - https://loinc.org/*
-    #    partitioning:
-    #      allow_references_across_partitions: false
-    #      partitioning_include_in_search_hashes: false
-    #      conditional_create_duplicate_identifiers_enabled: false
+    #partitioning:
+    #  allow_references_across_partitions: true
+    #  partitioning_include_in_search_hashes: true
+    #  conditional_create_duplicate_identifiers_enabled: true
+    #  patient-id-partitioning-mode: true
+    #  request-tenant-partitioning-mode: true
+    #  database-partition-mode-enabled: true
+    #  default-partition-id: 0
     cors:
       allow_Credentials: true
       # These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-
