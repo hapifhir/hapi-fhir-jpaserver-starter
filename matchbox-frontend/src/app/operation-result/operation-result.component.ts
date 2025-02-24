@@ -30,6 +30,12 @@ export class OperationResultComponent implements OnInit {
   }
 
   static sortIssues(issue1: Issue, issue2: Issue): number {
+    if (issue1.markdown) {
+      return -1;
+    }
+    if (issue2.markdown) {
+      return 1;
+    }
     // Sort by severity, then line number
     const severityDiff = SEVERITY_ORDER.indexOf(issue1.severity) - SEVERITY_ORDER.indexOf(issue2.severity);
     if (severityDiff !== 0) {

@@ -49,6 +49,9 @@ export class Issue {
     this.sliceInfo = sliceInfo ?? [];
     this.markdown = markdown;
     this.details = details;
+    if (markdown && this.text.includes("```markdown")) {
+      this.text = this.text.substring(11, this.text.length - 3);
+    }
   }
 
   static fromOoIssue(ooIssue: fhir.r4.OperationOutcomeIssue): Issue {

@@ -202,6 +202,12 @@ public class CliContext {
   public boolean getXVersion() {
     return xVersion;
   }
+
+  private String openaiAPIKey;
+
+  public String getOpenaiAPIKey() {
+    return openaiAPIKey;
+  }
   
   @JsonProperty("check-references")
   private boolean checkReferences = false;
@@ -246,6 +252,8 @@ public class CliContext {
     this.httpReadOnly = environment.getProperty("matchbox.fhir.context.httpReadOnly", Boolean.class, false);
     this.extensions = Arrays.asList(environment.getProperty("matchbox.fhir.context.extensions", String[].class, new String[]{"any"}));
     this.xVersion = environment.getProperty("matchbox.fhir.context.xVersion", Boolean.class, false);
+    this.openaiAPIKey = environment.getProperty("matchbox.fhir.context.openai_api_key", String.class);
+    this.getOpenaiAPIKey();
   }
 
   public CliContext(CliContext other) {
@@ -266,6 +274,7 @@ public class CliContext {
     this.httpReadOnly = other.httpReadOnly;
     this.extensions = other.extensions;
     this.xVersion = other.xVersion;
+    this.openaiAPIKey = other.openaiAPIKey;
   }
 
   @JsonProperty("ig")
