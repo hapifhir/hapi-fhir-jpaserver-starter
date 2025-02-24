@@ -66,7 +66,6 @@
       </div>
       <div>
         <button color="primary" mat-raised-button (click)="onValidationButtonClick()">Validate</button>
-        <button color="primary" mat-raised-button (click)="onAiButtonClick()">AI Analyze</button>
       </div>
     </ng-container>
 
@@ -152,7 +151,6 @@
   <div class="card-maps white-block">
     <span (click)="changeCodeEditorContent(CodeEditorContent.RESOURCE_CONTENT)" class="editor-content-selector" [ngClass]="{active: editorContent == CodeEditorContent.RESOURCE_CONTENT}">Validated resource</span>
     <span (click)="changeCodeEditorContent(CodeEditorContent.OPERATION_OUTCOME)" class="editor-content-selector" [ngClass]="{active: editorContent == CodeEditorContent.OPERATION_OUTCOME}">Operation outcome</span>
-    <span (click)="changeCodeEditorContent(CodeEditorContent.MATCHSPARK_RESULT)" class="editor-content-selector" [ngClass]="{active: editorContent == CodeEditorContent.MATCHSPARK_RESULT}">AI result</span>
 
     <div id="editor"></div>
   </div>

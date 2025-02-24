@@ -103,9 +103,6 @@ export class ValidationCodeEditor {
         this.editor.getSession().setMode('ace/mode/xml');
       }
       this.updateEditorIssues(selectedEntry);
-    } else if (editorContent == CodeEditorContent.MATCHSPARK_RESULT){
-      this.editor.setValue(selectedEntry.aiRecommendation, -1);
-      this.editor.getSession().setMode('ace/mode/txt');
     } else {
       if (selectedEntry.result !== undefined && 'operationOutcome' in selectedEntry.result) {
         this.editor.setValue(JSON.stringify(selectedEntry.result.operationOutcome, null, this.indentSpace), -1);
