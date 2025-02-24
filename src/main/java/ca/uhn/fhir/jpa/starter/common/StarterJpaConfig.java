@@ -206,12 +206,12 @@ public class StarterJpaConfig {
 	@Primary
 	@Conditional(OnImplementationGuidesPresent.class)
 	public IPackageInstallerSvc packageInstaller(
-		AppProperties appProperties,
-		IPackageInstallerSvc packageInstallerSvc,
-		AdditionalResourceInstaller additionalResourceInstaller,
-		Batch2JobRegisterer batch2JobRegisterer,
-		FhirContext fhirContext,
-		TransactionProcessor transactionProcessor) {
+			AppProperties appProperties,
+			IPackageInstallerSvc packageInstallerSvc,
+			AdditionalResourceInstaller additionalResourceInstaller,
+			Batch2JobRegisterer batch2JobRegisterer,
+			FhirContext fhirContext,
+			TransactionProcessor transactionProcessor) {
 
 		batch2JobRegisterer.start();
 
@@ -232,9 +232,13 @@ public class StarterJpaConfig {
 
 				var extraResources = packageInstallationSpec.getAdditionalResourceFolders();
 
-				if(extraResources != null && !extraResources.isEmpty()) {
-					var transaction = additionalResourceInstaller.collectAdditionalResources(extraResources, packageInstallationSpec, fhirContext);
-					transactionProcessor.transaction(new SystemRequestDetails().setRequestPartitionId(RequestPartitionId.defaultPartition()), transaction, false);
+				if (extraResources != null && !extraResources.isEmpty()) {
+					var transaction = additionalResourceInstaller.collectAdditionalResources(
+							extraResources, packageInstallationSpec, fhirContext);
+					transactionProcessor.transaction(
+							new SystemRequestDetails().setRequestPartitionId(RequestPartitionId.defaultPartition()),
+							transaction,
+							false);
 				}
 			}
 		}

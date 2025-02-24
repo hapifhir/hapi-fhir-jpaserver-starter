@@ -26,14 +26,17 @@ public class JpaHibernatePropertiesProvider extends HibernatePropertiesProvider 
 		try {
 			assert connection != null;
 			try (Connection dbConnection = connection.getConnection()) {
-				temporaryDialect = new StandardDialectResolver().resolveDialect(new DatabaseMetaDataDialectResolutionInfoAdapter(dbConnection.getMetaData()));
+				temporaryDialect = new StandardDialectResolver()
+						.resolveDialect(new DatabaseMetaDataDialectResolutionInfoAdapter(dbConnection.getMetaData()));
 			}
 		} catch (SQLException sqlException) {
 			throw new ConfigurationException(sqlException.getMessage(), sqlException);
 		}
 		try {
-			temporaryDialect = (Dialect) Class.forName(PACKAGE_NAME.concat(temporaryDialect.getClass().getSimpleName()))
-				.getDeclaredConstructor().newInstance();
+			temporaryDialect = (Dialect) Class.forName(
+							PACKAGE_NAME.concat(temporaryDialect.getClass().getSimpleName()))
+					.getDeclaredConstructor()
+					.newInstance();
 		} catch (Exception e) {
 			logger.info("Looking up optimized HAPI adjusted dialect failed");
 		}

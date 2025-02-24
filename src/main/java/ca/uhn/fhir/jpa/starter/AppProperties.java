@@ -4,7 +4,6 @@ import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.ClientIdStrategyEnum;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.IdStrategyEnum;
 import ca.uhn.fhir.jpa.model.entity.NormalizedQuantitySearchLevel;
-
 import ca.uhn.fhir.jpa.starter.ig.ExtendedPackageInstallationSpec;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import org.hl7.fhir.r4.model.Bundle;
@@ -685,7 +684,8 @@ public class AppProperties {
 		return install_additional_resources_from_ig_folders;
 	}
 
-	public void setInstall_additional_resources_from_ig_folders(List<String> install_additional_resources_from_ig_folders) {
+	public void setInstall_additional_resources_from_ig_folders(
+			List<String> install_additional_resources_from_ig_folders) {
 		this.install_additional_resources_from_ig_folders = install_additional_resources_from_ig_folders;
 	}
 

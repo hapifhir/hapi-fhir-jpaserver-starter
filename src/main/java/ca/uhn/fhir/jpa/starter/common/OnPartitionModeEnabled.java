@@ -9,7 +9,9 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 public class OnPartitionModeEnabled implements Condition {
 	@Override
 	public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-		var appProperties = Binder.get(context.getEnvironment()).bind("hapi.fhir", AppProperties.class).orElse(null);
+		var appProperties = Binder.get(context.getEnvironment())
+				.bind("hapi.fhir", AppProperties.class)
+				.orElse(null);
 		if (appProperties == null) return false;
 		return appProperties.getPartitioning() != null;
 	}

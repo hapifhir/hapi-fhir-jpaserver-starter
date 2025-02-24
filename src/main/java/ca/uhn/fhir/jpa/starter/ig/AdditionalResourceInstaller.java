@@ -16,7 +16,8 @@ import java.util.*;
 @Service
 public class AdditionalResourceInstaller {
 
-	public IBaseBundle collectAdditionalResources(Set<String> additionalResources, PackageInstallationSpec packageInstallationSpec, FhirContext fhirContext) {
+	public IBaseBundle collectAdditionalResources(
+			Set<String> additionalResources, PackageInstallationSpec packageInstallationSpec, FhirContext fhirContext) {
 		NpmPackage npmPackage;
 		try {
 			npmPackage = NpmPackage.fromPackage(new ByteArrayInputStream(packageInstallationSpec.getPackageContents()));
@@ -31,28 +32,36 @@ public class AdditionalResourceInstaller {
 	}
 
 	@NotNull
-	public List<IBaseResource> getAdditionalResources(Set<String> folderNames, NpmPackage npmPackage, FhirContext fhirContext) {
+	public List<IBaseResource> getAdditionalResources(
+			Set<String> folderNames, NpmPackage npmPackage, FhirContext fhirContext) {
 
-		var npmFolders = folderNames.stream().map(name -> npmPackage.getFolders().get(name)).filter(Objects::nonNull).toList();
+		var npmFolders = folderNames.stream()
+				.map(name -> npmPackage.getFolders().get(name))
+				.filter(Objects::nonNull)
+				.toList();
 
 		var resources = new LinkedList<IBaseResource>();
 		for (var folder : npmFolders) {
 			List<String> fileNames;
 			try {
-				fileNames = folder.getTypes().values().stream().flatMap(Collection::stream).toList();
+				fileNames = folder.getTypes().values().stream()
+						.flatMap(Collection::stream)
+						.toList();
 			} catch (IOException e) {
 				throw new RuntimeException(e.getMessage(), e);
 			}
 
-			resources.addAll(fileNames.stream().map(fileName -> {
-				try {
-					return new String(folder.fetchFile(fileName));
-				} catch (IOException e) {
-					throw new RuntimeException(e.getMessage(), e);
-				}
-			}).map(fhirContext.newJsonParser().setSuppressNarratives(true)::parseResource).toList());
+			resources.addAll(fileNames.stream()
+					.map(fileName -> {
+						try {
+							return new String(folder.fetchFile(fileName));
+						} catch (IOException e) {
+							throw new RuntimeException(e.getMessage(), e);
+						}
+					})
+					.map(fhirContext.newJsonParser().setSuppressNarratives(true)::parseResource)
+					.toList());
 		}
 		return resources;
 	}
-
 }
