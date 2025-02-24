@@ -4,15 +4,15 @@ import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.util.List;
+import java.util.Set;
 
 public class ExtendedPackageInstallationSpec extends PackageInstallationSpec {
 
-	public List<String> getAdditionalResourceFolders() {
+	public Set<String> getAdditionalResourceFolders() {
 		return additionalResourceFolders;
 	}
 
-	public void setAdditionalResourceFolders(List<String> additionalResourceFolders) {
+	public void setAdditionalResourceFolders(Set<String> additionalResourceFolders) {
 		this.additionalResourceFolders = additionalResourceFolders;
 	}
 
@@ -20,5 +20,5 @@ public class ExtendedPackageInstallationSpec extends PackageInstallationSpec {
 		description =
 			"If resources are being installed individually, this is list provides the resource types to install. By default, all conformance resources will be installed.")
 	@JsonProperty("additionalResourceFolders")
-	private List<String> additionalResourceFolders;
+	private Set<String> additionalResourceFolders;
 }

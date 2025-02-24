@@ -11,16 +11,12 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class AdditionalResourceInstaller {
 
-	public IBaseBundle collectAdditionalResources(List<String> additionalResources, PackageInstallationSpec packageInstallationSpec, FhirContext fhirContext) {
+	public IBaseBundle collectAdditionalResources(Set<String> additionalResources, PackageInstallationSpec packageInstallationSpec, FhirContext fhirContext) {
 		NpmPackage npmPackage;
 		try {
 			npmPackage = NpmPackage.fromPackage(new ByteArrayInputStream(packageInstallationSpec.getPackageContents()));
@@ -35,9 +31,9 @@ public class AdditionalResourceInstaller {
 	}
 
 	@NotNull
-	public List<IBaseResource> getAdditionalResources(List<String> folderNames, NpmPackage npmPackage, FhirContext fhirContext) {
+	public List<IBaseResource> getAdditionalResources(Set<String> folderNames, NpmPackage npmPackage, FhirContext fhirContext) {
 
-		var npmFolders = folderNames.stream().map(name -> npmPackage.getFolders().get(name)).filter(Objects::nonNull).collect(Collectors.toList());
+		var npmFolders = folderNames.stream().map(name -> npmPackage.getFolders().get(name)).filter(Objects::nonNull).toList();
 
 		var resources = new LinkedList<IBaseResource>();
 		for (var folder : npmFolders) {
