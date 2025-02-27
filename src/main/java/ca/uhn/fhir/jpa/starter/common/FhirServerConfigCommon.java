@@ -88,6 +88,14 @@ public class FhirServerConfigCommon {
 		if (appProperties.getEnable_index_contained_resource() == Boolean.TRUE) {
 			ourLog.info("Indexed on contained resource enabled");
 		}
+
+		ourLog.info("Server configured to " + (appProperties.getPre_expand_value_sets() ? "enable" : "disable")
+			+ " value set pre-expansion");
+		ourLog.info("Server configured to " + (appProperties.getEnable_task_pre_expand_value_sets() ? "enable" : "disable")
+			+ " value set pre-expansion task");
+		ourLog.info("Server configured for pre-expand value set default count of " + (appProperties.getPre_expand_value_sets_default_count().toString()));
+		ourLog.info("Server configured for pre-expand value set max count of " + (appProperties.getPre_expand_value_sets_default_count().toString()));
+		ourLog.info("Server configured for maximum expansion size of " + (appProperties.getPre_expand_value_sets_default_count().toString()));
 	}
 
 	@Bean
@@ -129,6 +137,12 @@ public class FhirServerConfigCommon {
 	@Bean
 	public JpaStorageSettings jpaStorageSettings(AppProperties appProperties) {
 		JpaStorageSettings jpaStorageSettings = new JpaStorageSettings();
+
+		jpaStorageSettings.setPreExpandValueSets(appProperties.getPre_expand_value_sets());
+		jpaStorageSettings.setEnableTaskPreExpandValueSets(appProperties.getEnable_task_pre_expand_value_sets());
+		jpaStorageSettings.setPreExpandValueSetsDefaultCount(appProperties.getPre_expand_value_sets_default_count());
+		jpaStorageSettings.setPreExpandValueSetsMaxCount(appProperties.getPre_expand_value_sets_max_count());
+		jpaStorageSettings.setMaximumExpansionSize(appProperties.getMaximum_expansion_size());
 
 		jpaStorageSettings.setIndexMissingFields(
 				appProperties.getEnable_index_missing_fields()
