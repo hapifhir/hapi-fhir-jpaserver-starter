@@ -261,11 +261,6 @@ public class FhirServerConfigCommon {
 		return retVal;
 	}
 
-	@Bean
-	public PartitionModeConfigurer partitionModeConfigurer() {
-		return new PartitionModeConfigurer();
-	}
-
 	@Primary
 	@Bean
 	public HibernatePropertiesProvider jpaStarterDialectProvider(

@@ -9,6 +9,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
+import ca.uhn.fhir.interceptor.model.RequestPartitionId;
 import ca.uhn.fhir.jpa.api.IDaoRegistry;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.config.ThreadPoolFactoryConfig;
@@ -20,6 +21,7 @@ import ca.uhn.fhir.jpa.config.util.HapiEntityManagerFactoryUtil;
 import ca.uhn.fhir.jpa.config.util.ResourceCountCacheUtil;
 import ca.uhn.fhir.jpa.dao.FulltextSearchSvcImpl;
 import ca.uhn.fhir.jpa.dao.IFulltextSearchSvc;
+import ca.uhn.fhir.jpa.dao.TransactionProcessor;
 import ca.uhn.fhir.jpa.dao.search.HSearchSortHelperImpl;
 import ca.uhn.fhir.jpa.dao.search.IHSearchSortHelper;
 import ca.uhn.fhir.jpa.delete.ThreadSafeResourceDeleterSvc;
@@ -30,7 +32,6 @@ import ca.uhn.fhir.jpa.interceptor.validation.RepositoryValidatingInterceptor;
 import ca.uhn.fhir.jpa.ips.provider.IpsOperationProvider;
 import ca.uhn.fhir.jpa.model.config.SubscriptionSettings;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
-import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.provider.DaoRegistryResourceSupportedSvc;
 import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
 import ca.uhn.fhir.jpa.provider.JpaCapabilityStatementProvider;
@@ -46,6 +47,7 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
+import ca.uhn.fhir.jpa.starter.ig.AdditionalResourceInstaller;
 import ca.uhn.fhir.jpa.starter.ig.IImplementationGuideOperationProvider;
 import ca.uhn.fhir.jpa.starter.util.EnvironmentHelper;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
@@ -54,6 +56,7 @@ import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.narrative2.NullNarrativeGenerator;
 import ca.uhn.fhir.rest.api.IResourceSupportedSvc;
+import ca.uhn.fhir.rest.api.server.SystemRequestDetails;
 import ca.uhn.fhir.rest.openapi.OpenApiInterceptor;
 import ca.uhn.fhir.rest.server.ApacheProxyAddressStrategy;
 import ca.uhn.fhir.rest.server.ETagSupportEnum;
@@ -95,7 +98,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
 
@@ -206,14 +208,17 @@ public class StarterJpaConfig {
 	public IPackageInstallerSvc packageInstaller(
 			AppProperties appProperties,
 			IPackageInstallerSvc packageInstallerSvc,
-			Batch2JobRegisterer batch2JobRegisterer) {
+			AdditionalResourceInstaller additionalResourceInstaller,
+			Batch2JobRegisterer batch2JobRegisterer,
+			FhirContext fhirContext,
+			TransactionProcessor transactionProcessor) {
 
 		batch2JobRegisterer.start();
 
 		if (appProperties.getImplementationGuides() != null) {
-			Map<String, PackageInstallationSpec> guides = appProperties.getImplementationGuides();
-			for (Map.Entry<String, PackageInstallationSpec> guidesEntry : guides.entrySet()) {
-				PackageInstallationSpec packageInstallationSpec = guidesEntry.getValue();
+			var guides = appProperties.getImplementationGuides();
+			for (var guidesEntry : guides.entrySet()) {
+				var packageInstallationSpec = guidesEntry.getValue();
 				if (appProperties.getInstall_transitive_ig_dependencies()) {
 
 					packageInstallationSpec
@@ -222,7 +227,19 @@ public class StarterJpaConfig {
 							.addDependencyExclude("hl7.fhir.r4.core")
 							.addDependencyExclude("hl7.fhir.r5.core");
 				}
+
 				packageInstallerSvc.install(packageInstallationSpec);
+
+				var extraResources = packageInstallationSpec.getAdditionalResourceFolders();
+
+				if (extraResources != null && !extraResources.isEmpty()) {
+					var transaction = additionalResourceInstaller.collectAdditionalResources(
+							extraResources, packageInstallationSpec, fhirContext);
+					transactionProcessor.transaction(
+							new SystemRequestDetails().setRequestPartitionId(RequestPartitionId.defaultPartition()),
+							transaction,
+							false);
+				}
 			}
 		}
 		return packageInstallerSvc;
