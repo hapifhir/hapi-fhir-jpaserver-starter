@@ -90,12 +90,16 @@ public class FhirServerConfigCommon {
 		}
 
 		ourLog.info("Server configured to " + (appProperties.getPre_expand_value_sets() ? "enable" : "disable")
-			+ " value set pre-expansion");
-		ourLog.info("Server configured to " + (appProperties.getEnable_task_pre_expand_value_sets() ? "enable" : "disable")
-			+ " value set pre-expansion task");
-		ourLog.info("Server configured for pre-expand value set default count of " + (appProperties.getPre_expand_value_sets_default_count().toString()));
-		ourLog.info("Server configured for pre-expand value set max count of " + (appProperties.getPre_expand_value_sets_default_count().toString()));
-		ourLog.info("Server configured for maximum expansion size of " + (appProperties.getPre_expand_value_sets_default_count().toString()));
+				+ " value set pre-expansion");
+		ourLog.info(
+				"Server configured to " + (appProperties.getEnable_task_pre_expand_value_sets() ? "enable" : "disable")
+						+ " value set pre-expansion task");
+		ourLog.info("Server configured for pre-expand value set default count of "
+				+ (appProperties.getPre_expand_value_sets_default_count().toString()));
+		ourLog.info("Server configured for pre-expand value set max count of "
+				+ (appProperties.getPre_expand_value_sets_default_count().toString()));
+		ourLog.info("Server configured for maximum expansion size of "
+				+ (appProperties.getPre_expand_value_sets_default_count().toString()));
 	}
 
 	@Bean
@@ -121,6 +125,18 @@ public class FhirServerConfigCommon {
 				ourLog.info("Enabling websocket subscriptions");
 				subscriptionSettings.addSupportedSubscriptionType(
 						org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
+			}
+			if (appProperties.getSubscription().getPolling_interval_ms() != null) {
+				ourLog.info(
+						"Setting subscription polling interval to {} ms",
+						appProperties.getSubscription().getPolling_interval_ms());
+				subscriptionSettings.setSubscriptionIntervalInMs(
+						appProperties.getSubscription().getPolling_interval_ms());
+			}
+			if (appProperties.getSubscription().getImmediately_queued()) {
+				ourLog.info("Subscription update will be queued immediately");
+				subscriptionSettings.setSubscriptionChangeQueuedImmediately(
+						appProperties.getSubscription().getImmediately_queued());
 			}
 		}
 		if (appProperties.getMdm_enabled()) {
