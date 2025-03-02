@@ -683,31 +683,41 @@ public class AppProperties {
 		this.resource_dbhistory_enabled = resource_dbhistory_enabled;
 	}
 
-	public Boolean getPre_expand_value_sets() { return this.pre_expand_value_sets; }
+	public Boolean getPre_expand_value_sets() {
+		return this.pre_expand_value_sets;
+	}
 
 	public void setPre_expand_value_sets(Boolean pre_expand_value_sets) {
 		this.pre_expand_value_sets = pre_expand_value_sets;
 	}
 
-	public Boolean getEnable_task_pre_expand_value_sets() { return this.enable_task_pre_expand_value_sets; }
+	public Boolean getEnable_task_pre_expand_value_sets() {
+		return this.enable_task_pre_expand_value_sets;
+	}
 
 	public void setEnable_task_pre_expand_value_setss(Boolean enable_task_pre_expand_value_sets) {
 		this.enable_task_pre_expand_value_sets = enable_task_pre_expand_value_sets;
 	}
 
-	public Integer getPre_expand_value_sets_default_count() {return pre_expand_value_sets_default_count; }
+	public Integer getPre_expand_value_sets_default_count() {
+		return pre_expand_value_sets_default_count;
+	}
 
 	public void setPre_expand_value_sets_default_count(Integer pre_expand_value_sets_default_count) {
 		this.pre_expand_value_sets_default_count = pre_expand_value_sets_default_count;
 	}
 
-	public Integer getPre_expand_value_sets_max_count() { return pre_expand_value_sets_max_count; }
+	public Integer getPre_expand_value_sets_max_count() {
+		return pre_expand_value_sets_max_count;
+	}
 
 	public void setPre_expand_value_sets_max_count(Integer pre_expand_value_sets_max_count) {
 		this.pre_expand_value_sets_max_count = pre_expand_value_sets_max_count;
 	}
 
-	public Integer getMaximum_expansion_size() { return maximum_expansion_size; }
+	public Integer getMaximum_expansion_size() {
+		return maximum_expansion_size;
+	}
 
 	public void setMaximum_expansion_size(Integer maximum_expansion_size) {
 		this.maximum_expansion_size = maximum_expansion_size;
