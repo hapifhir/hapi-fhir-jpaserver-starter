@@ -935,6 +935,8 @@ public class AppProperties {
 		private Boolean resthook_enabled = false;
 		private Boolean websocket_enabled = false;
 		private Email email = null;
+		private Integer polling_interval_ms = null;
+		private Boolean immediately_queued = false;
 
 		public Boolean getResthook_enabled() {
 			return resthook_enabled;
@@ -958,6 +960,22 @@ public class AppProperties {
 
 		public void setEmail(Email email) {
 			this.email = email;
+		}
+
+		public Integer getPolling_interval_ms() {
+			return polling_interval_ms;
+		}
+
+		public void setPolling_interval_ms(Integer polling_interval_ms) {
+			this.polling_interval_ms = polling_interval_ms;
+		}
+
+		public Boolean getImmediately_queued() {
+			return immediately_queued;
+		}
+
+		public void setImmediately_queued(Boolean immediately_queued) {
+			this.immediately_queued = immediately_queued;
 		}
 
 		public static class Email {
