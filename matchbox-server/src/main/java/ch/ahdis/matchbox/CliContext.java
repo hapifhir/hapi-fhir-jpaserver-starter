@@ -758,7 +758,7 @@ public class CliContext {
         && Objects.equals(resolutionContext, that.resolutionContext)
         && disableDefaultResourceFetcher == that.disableDefaultResourceFetcher
         && checkIpsCodes == that.checkIpsCodes
-        && bundle == that.bundle;
+        && Objects.equals(bundle, that.bundle);
   }
 
   @Override
