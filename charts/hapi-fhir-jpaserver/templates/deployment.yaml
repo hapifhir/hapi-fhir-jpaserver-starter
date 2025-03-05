@@ -31,16 +31,11 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
         - name: wait-for-db-to-be-ready
-          image: docker.io/bitnami/postgresql:17.2.0-debian-12-r3@sha256:4de5c47eb98dd8fe09abdcbc2264984486ee8196e90902fb354f5d2ab97e8921
+          image: docker.io/bitnami/postgresql:16.4.0-debian-12-r1@sha256:fb3d0a34e7b9f3e59442aa1fa2e6377857147c09ae754ddd5d4bb3fc0dd137da
           imagePullPolicy: IfNotPresent
           {{- with .Values.restrictedContainerSecurityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- if .Values.initContainers.resources }}
-          resources: {{- toYaml .Values.initContainers.resources | nindent 12 }}
-          {{- else if ne .Values.initContainers.resourcesPreset "none" }}
-          resources: {{- include "common.resources.preset" (dict "type" .Values.initContainers.resourcesPreset) | nindent 12 }}
           {{- end }}
           env:
             - name: PGHOST
@@ -81,11 +76,8 @@ spec:
           readinessProbe:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- if .Values.resources }}
-          resources: {{- toYaml .Values.resources | nindent 12 }}
-          {{- else if ne .Values.resourcesPreset "none" }}
-          resources: {{- include "common.resources.preset" (dict "type" .Values.resourcesPreset) | nindent 12 }}
-          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
           env:
             - name: SPRING_DATASOURCE_URL
               value: {{ include "hapi-fhir-jpaserver.database.jdbcUrl" $ }}
@@ -106,8 +98,6 @@ spec:
               value: "true"
             - name: MANAGEMENT_SERVER_PORT
               value: "8081"
-            - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
-              value: "health,prometheus"
             {{- if .Values.extraConfig }}
             - name: SPRING_CONFIG_IMPORT
               value: "/app/config/application-extra.yaml"
@@ -125,9 +115,6 @@ spec:
               mountPath: /app/config/application-extra.yaml
               readOnly: true
               subPath: application-extra.yaml
-          {{- end }}
-          {{- if .Values.extraVolumeMounts }}
-            {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
           {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -154,7 +141,4 @@ spec:
         - name: application-extra-config
           configMap:
             name: {{ include "hapi-fhir-jpaserver.fullname" . }}-application-config
-      {{- end }}
-      {{- if .Values.extraVolumes }}
-      {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumes "context" $) | nindent 8 }}
       {{- end }}

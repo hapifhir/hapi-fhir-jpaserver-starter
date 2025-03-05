@@ -1,6 +1,6 @@
 package ca.uhn.fhir.jpa.starter.cdshooks;
 
-import ca.uhn.fhir.rest.api.server.cdshooks.CdsServiceRequestJson;
+import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServiceRequestJson;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties({"extension"})

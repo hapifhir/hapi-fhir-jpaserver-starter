@@ -12,4 +12,3 @@ upgrade: true
 skip-missing-values: true
 release-label: release
 release-name-template: "helm-v{{ .Version }}"
-target-branch: master

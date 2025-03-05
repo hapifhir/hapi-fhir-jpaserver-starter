@@ -28,13 +28,8 @@ podAnnotations: {}
 
 # -- pod security context
 podSecurityContext:
-  fsGroupChangePolicy: OnRootMismatch
-  runAsNonRoot: true
-  runAsGroup: 65532
-  runAsUser: 65532
-  fsGroup: 65532
-  seccompProfile:
-    type: RuntimeDefault
+  {}
+  # fsGroup: 2000
 
 securityContext:
   allowPrivilegeEscalation: false
@@ -76,10 +71,6 @@ ingress:
     - secretName: ""
       hosts:
         - ""
-# -- set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge).
-# This is ignored if `resources` is set (`resources` is recommended for production).
-# More information: <https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15>
-resourcesPreset: "medium"
 
 # -- configure the FHIR server's resource requests and limits
 resources:
@@ -253,39 +244,12 @@ curl:
   image:
     registry: docker.io
     repository: curlimages/curl
-    tag: 8.11.1@sha256:c1fe1679c34d9784c1b0d1e5f62ac0a79fca01fb6377cdd33e90473c6f9f9a69
+    tag: 8.9.1@sha256:8addc281f0ea517409209f76832b6ddc2cabc3264feb1ebbec2a2521ffad24e4
 
 tests:
   # -- whether the service account token should be auto-mounted for the test pods
   automountServiceAccountToken: false
-  # -- set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge).
-  # This is ignored if `resources` is set (`resources` is recommended for production).
-  # More information: <https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15>
-  resourcesPreset: "nano"
   # -- configure the test pods resource requests and limits
-  resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # @ignored
-  podSecurityContext:
-    fsGroupChangePolicy: OnRootMismatch
-    runAsNonRoot: true
-    runAsGroup: 65532
-    runAsUser: 65532
-    fsGroup: 65532
-    seccompProfile:
-      type: RuntimeDefault
-
-initContainers:
-  # -- set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge).
-  # This is ignored if `resources` is set (`resources` is recommended for production).
-  # More information: <https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15>
-  resourcesPreset: "nano"
-  # -- configure the init containers pods resource requests and limits
   resources: {}
   # limits:
   #   cpu: 100m
@@ -306,9 +270,3 @@ extraConfig:
   #         url: https://build.fhir.org/ig/hl7-eu/gravitate-health/package.tgz
   #         name: hl7.eu.fhir.gh
   #         version: 0.1.0
-
-# -- Optionally specify extra list of additional volumes
-extraVolumes: []
-
-# -- Optionally specify extra list of additional volumeMounts
-extraVolumeMounts: []
