@@ -20,6 +20,14 @@ annotations:
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
     - kind: changed
-      description: updated curlimages/curl to 8.9.1
+      description: "updated postgresql sub-chart to 16.3.2"
     - kind: changed
-      description: "updated postgresql sub-chart to 15.5.22."
+      description: "updated curlimages/curl to 8.11.1"
+    - kind: changed
+      description: "updated hapiproject/hapi to 7.6.0"
+    - kind: added
+      description: "support for setting resource limits and requests from presets. With a default set for all containers"
+    - kind: added
+      description: "support for setting extra volumes and volume mounts"
+    - kind: changed
+      description: "set default pod security context for main and test pods"

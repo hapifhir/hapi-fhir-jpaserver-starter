@@ -41,6 +41,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -117,7 +118,7 @@ class ExampleServerR4IT implements IServerSupport {
 		Parameters inParams = new Parameters();
 		inParams.addParameter().setName("periodStart").setValue(new StringType("2019-01-01"));
 		inParams.addParameter().setName("periodEnd").setValue(new StringType("2019-12-31"));
-		inParams.addParameter().setName("reportType").setValue(new StringType("summary"));
+		inParams.addParameter().setName("reportType").setValue(new StringType("population"));
 
 		Parameters outParams = ourClient
 			.operation()
@@ -315,10 +316,10 @@ class ExampleServerR4IT implements IServerSupport {
 
 	@ParameterizedTest
 	@ValueSource(strings = {"prometheus", "health", "metrics", "info"})
-	void testActuatorEndpointExists(String endpoint) throws IOException {
+	void testActuatorEndpointExists(String endpoint) throws IOException, URISyntaxException {
 
 		CloseableHttpClient httpclient = HttpClients.createDefault();
-		CloseableHttpResponse response = httpclient.execute(new HttpGet("http://localhost:" + port + "/actuator/" + endpoint));
+		CloseableHttpResponse response = httpclient.execute(new HttpGet(new URI("http", null, "localhost", port, "/actuator/" + endpoint, null, null)));
 		int statusCode = response.getStatusLine().getStatusCode();
 		assertEquals(200, statusCode);
 

@@ -2,12 +2,12 @@ package ca.uhn.fhir.jpa.starter.cdshooks;
 
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
-import jakarta.servlet.http.HttpServletResponse;
 
 public class ErrorHandling {
 

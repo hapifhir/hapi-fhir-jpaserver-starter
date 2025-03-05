@@ -10,7 +10,7 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-22.04
-    container: quay.io/helmpack/chart-testing:v3.10.1@sha256:7d8a7f99fc5840142249cc33ed6d9752fc66b92f9e1bf792d987ee85227d84da
+    container: quay.io/helmpack/chart-testing:v3.11.0@sha256:f2fd21d30b64411105c7eafb1862783236a219d29f2292219a09fe94ca78ad2a
     steps:
       - name: Install helm-docs
         working-directory: /tmp
@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        k8s-version: [1.29.8, 1.30.4, 1.31.0]
+        k8s-version: [1.30.8, 1.31.4, 1.32.0]
     needs:
       - lint
     steps:

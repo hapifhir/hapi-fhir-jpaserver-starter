@@ -27,6 +27,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
+
 /**
  * This is the primary configuration file for the example server
  */
@@ -86,6 +88,18 @@ public class FhirServerConfigCommon {
 		if (appProperties.getEnable_index_contained_resource() == Boolean.TRUE) {
 			ourLog.info("Indexed on contained resource enabled");
 		}
+
+		ourLog.info("Server configured to " + (appProperties.getPre_expand_value_sets() ? "enable" : "disable")
+				+ " value set pre-expansion");
+		ourLog.info(
+				"Server configured to " + (appProperties.getEnable_task_pre_expand_value_sets() ? "enable" : "disable")
+						+ " value set pre-expansion task");
+		ourLog.info("Server configured for pre-expand value set default count of "
+				+ (appProperties.getPre_expand_value_sets_default_count().toString()));
+		ourLog.info("Server configured for pre-expand value set max count of "
+				+ (appProperties.getPre_expand_value_sets_default_count().toString()));
+		ourLog.info("Server configured for maximum expansion size of "
+				+ (appProperties.getPre_expand_value_sets_default_count().toString()));
 	}
 
 	@Bean
@@ -94,31 +108,42 @@ public class FhirServerConfigCommon {
 		if (appProperties.getSubscription() != null) {
 			if (appProperties.getSubscription().getEmail() != null)
 				subscriptionSettings.setEmailFromAddress(
-					appProperties.getSubscription().getEmail().getFrom());
+						appProperties.getSubscription().getEmail().getFrom());
 
 			// Subscriptions are enabled by channel type
 			if (appProperties.getSubscription().getResthook_enabled()) {
 				ourLog.info("Enabling REST-hook subscriptions");
 				subscriptionSettings.addSupportedSubscriptionType(
-					org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.RESTHOOK);
+						org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.RESTHOOK);
 			}
 			if (appProperties.getSubscription().getEmail() != null) {
 				ourLog.info("Enabling email subscriptions");
 				subscriptionSettings.addSupportedSubscriptionType(
-					org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.EMAIL);
+						org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.EMAIL);
 			}
 			if (appProperties.getSubscription().getWebsocket_enabled()) {
 				ourLog.info("Enabling websocket subscriptions");
 				subscriptionSettings.addSupportedSubscriptionType(
-					org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
+						org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
 			}
-
+			if (appProperties.getSubscription().getPolling_interval_ms() != null) {
+				ourLog.info(
+						"Setting subscription polling interval to {} ms",
+						appProperties.getSubscription().getPolling_interval_ms());
+				subscriptionSettings.setSubscriptionIntervalInMs(
+						appProperties.getSubscription().getPolling_interval_ms());
+			}
+			if (appProperties.getSubscription().getImmediately_queued()) {
+				ourLog.info("Subscription update will be queued immediately");
+				subscriptionSettings.setSubscriptionChangeQueuedImmediately(
+						appProperties.getSubscription().getImmediately_queued());
+			}
 		}
 		if (appProperties.getMdm_enabled()) {
 			// MDM requires the subscription of type message
 			ourLog.info("Enabling message subscriptions");
 			subscriptionSettings.addSupportedSubscriptionType(
-				org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.MESSAGE);
+					org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.MESSAGE);
 		}
 		return subscriptionSettings;
 	}
@@ -129,14 +154,19 @@ public class FhirServerConfigCommon {
 	public JpaStorageSettings jpaStorageSettings(AppProperties appProperties) {
 		JpaStorageSettings jpaStorageSettings = new JpaStorageSettings();
 
+		jpaStorageSettings.setPreExpandValueSets(appProperties.getPre_expand_value_sets());
+		jpaStorageSettings.setEnableTaskPreExpandValueSets(appProperties.getEnable_task_pre_expand_value_sets());
+		jpaStorageSettings.setPreExpandValueSetsDefaultCount(appProperties.getPre_expand_value_sets_default_count());
+		jpaStorageSettings.setPreExpandValueSetsMaxCount(appProperties.getPre_expand_value_sets_max_count());
+		jpaStorageSettings.setMaximumExpansionSize(appProperties.getMaximum_expansion_size());
+
 		jpaStorageSettings.setIndexMissingFields(
 				appProperties.getEnable_index_missing_fields()
 						? StorageSettings.IndexEnabledEnum.ENABLED
 						: StorageSettings.IndexEnabledEnum.DISABLED);
 		jpaStorageSettings.setAutoCreatePlaceholderReferenceTargets(
 				appProperties.getAuto_create_placeholder_reference_targets());
-		jpaStorageSettings.setMassIngestionMode(
-				appProperties.getMass_ingestion_mode_enabled());
+		jpaStorageSettings.setMassIngestionMode(appProperties.getMass_ingestion_mode_enabled());
 		jpaStorageSettings.setAutoVersionReferenceAtPaths(appProperties.getAuto_version_reference_at_paths());
 		jpaStorageSettings.setEnforceReferentialIntegrityOnWrite(
 				appProperties.getEnforce_referential_integrity_on_write());
@@ -149,7 +179,8 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setDeleteExpungeEnabled(appProperties.getDelete_expunge_enabled());
 		jpaStorageSettings.setExpungeEnabled(appProperties.getExpunge_enabled());
 		jpaStorageSettings.setLanguageSearchParameterEnabled(appProperties.getLanguage_search_parameter_enabled());
-		jpaStorageSettings.setValidateResourceStatusForPackageUpload(appProperties.getValidate_resource_status_for_package_upload());
+		jpaStorageSettings.setValidateResourceStatusForPackageUpload(
+				appProperties.getValidate_resource_status_for_package_upload());
 		jpaStorageSettings.setIndexOnUpliftedRefchains(appProperties.getUpliftedRefchains_enabled());
 
 		if (!appProperties.getSearch_prefetch_thresholds().isEmpty()) {
@@ -168,10 +199,8 @@ public class FhirServerConfigCommon {
 		Long retainCachedSearchesMinutes = appProperties.getRetain_cached_searches_mins();
 		jpaStorageSettings.setExpireSearchResultsAfterMillis(retainCachedSearchesMinutes * 60 * 1000);
 
-
-
 		jpaStorageSettings.setFilterParameterEnabled(appProperties.getFilter_search_enabled());
-		jpaStorageSettings.setAdvancedHSearchIndexing(appProperties.getAdvanced_lucene_indexing());
+		jpaStorageSettings.setHibernateSearchIndexSearchParams(appProperties.getAdvanced_lucene_indexing());
 		jpaStorageSettings.setTreatBaseUrlsAsLocal(new HashSet<>(appProperties.getLocal_base_urls()));
 		jpaStorageSettings.setTreatReferencesAsLogical(new HashSet<>(appProperties.getLogical_urls()));
 
@@ -216,8 +245,8 @@ public class FhirServerConfigCommon {
 			jpaStorageSettings.setResourceServerIdStrategy(appProperties.getServer_id_strategy());
 			ourLog.info("Server configured to use '" + appProperties.getServer_id_strategy() + "' Server ID Strategy");
 		}
-		
-		//to Disable the Resource History
+
+		// to Disable the Resource History
 		jpaStorageSettings.setResourceDbHistoryEnabled(appProperties.getResource_dbhistory_enabled());
 
 		// Parallel Batch GET execution settings
@@ -240,6 +269,14 @@ public class FhirServerConfigCommon {
 		// Partitioning
 		if (appProperties.getPartitioning() != null) {
 			retVal.setPartitioningEnabled(true);
+			boolean databasePartitionModeEnabled =
+					defaultIfNull(appProperties.getPartitioning().getDatabase_partition_mode_enabled(), Boolean.FALSE);
+			Integer defaultPartitionId = appProperties.getPartitioning().getDefault_partition_id();
+			if (databasePartitionModeEnabled) {
+				retVal.setDatabasePartitionMode(true);
+				defaultPartitionId = defaultIfNull(defaultPartitionId, 0);
+			}
+			retVal.setDefaultPartitionId(defaultPartitionId);
 			retVal.setIncludePartitionInSearchHashes(
 					appProperties.getPartitioning().getPartitioning_include_in_search_hashes());
 			if (appProperties.getPartitioning().getAllow_references_across_partitions()) {
@@ -248,10 +285,15 @@ public class FhirServerConfigCommon {
 				retVal.setAllowReferencesAcrossPartitions(CrossPartitionReferenceMode.NOT_ALLOWED);
 			}
 			retVal.setConditionalCreateDuplicateIdentifiersEnabled(
-				appProperties.getPartitioning().getConditional_create_duplicate_identifiers_enabled());
+					appProperties.getPartitioning().getConditional_create_duplicate_identifiers_enabled());
 		}
 
 		return retVal;
+	}
+
+	@Bean
+	public PartitionModeConfigurer partitionModeConfigurer() {
+		return new PartitionModeConfigurer();
 	}
 
 	@Primary
