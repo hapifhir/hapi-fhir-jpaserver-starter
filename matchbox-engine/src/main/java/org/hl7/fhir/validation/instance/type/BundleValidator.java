@@ -107,25 +107,34 @@ public class BundleValidator extends BaseValidator {
           ok = validateDocument(errors, bundle, entries, resource, firstStack.push(resource, -1, null, null), fullUrl, id) && ok;
           if (validator().getBundleValidationRules().size()==0) {
 	          // matchbox patch #348
-	          Element res = resource;
-	//          NodeStack rstack = estack.push(res, -1, null, null);
-	          NodeStack rstack = stack.push(res, -1, null, null);
-	          String profilesCommaSep = validator().getFHIRPathEngine().evaluateToString(hostContext.getProfile(), "snapshot.element.where(min=1 and max='1' and path='Bundle.entry.resource' and type.where(code='Composition').exists()).first().type.where(code='Composition').first().profile");
-	          if (profilesCommaSep !=null) {
-	            String profiles[] = profilesCommaSep.split(",");
-		            for (String profile : profiles) {
-		              StructureDefinition defn = context.fetchResource(StructureDefinition.class, profile);
-		              if (defn != null) {
-		                if (validator().isCrumbTrails()) {
-		                  res.addMessage(signpost(errors, NO_RULE_DATE, IssueType.INFORMATIONAL, res.line(), res.col(), stack.getLiteralPath(), I18nConstants.VALIDATION_VAL_PROFILE_SIGNPOST_BUNDLE_PARAM, defn.getUrl()));
-		                }
-		                stack.resetIds();
-		                ok = validator().startInner(hostContext, errors, res, res, defn, rstack, false, pct, mode, false) && ok;
-		            }
-		            // also, while we're here, check the specials, since this doesn't happen anywhere else 
-		            ((InstanceValidator) parent).checkSpecials(hostContext, errors, res, rstack, true, pct, mode, true, ok);
-		          }
-	          }
+            StructureDefinition sdProfile = hostContext.getProfile();
+            if (sdProfile != null) {
+              Element res = resource;
+              // NodeStack rstack = estack.push(res, -1, null, null);
+              NodeStack rstack = stack.push(res, -1, null, null);
+              String profilesCommaSep = validator().getFHIRPathEngine().evaluateToString(sdProfile,
+                  "snapshot.element.where(min=1 and max='1' and path='Bundle.entry.resource' and type.where(code='Composition').exists()).first().type.where(code='Composition').first().profile");
+              if (profilesCommaSep != null) {
+                String profiles[] = profilesCommaSep.split(",");
+                for (String profile : profiles) {
+                  StructureDefinition defn = context.fetchResource(StructureDefinition.class, profile);
+                  if (defn != null) {
+                    if (validator().isCrumbTrails()) {
+                      res.addMessage(signpost(errors, NO_RULE_DATE, IssueType.INFORMATIONAL, res.line(), res.col(),
+                          stack.getLiteralPath(), I18nConstants.VALIDATION_VAL_PROFILE_SIGNPOST_BUNDLE_PARAM,
+                          defn.getUrl()));
+                    }
+                    stack.resetIds();
+                    ok = validator().startInner(hostContext, errors, res, res, defn, rstack, false, pct, mode, false)
+                        && ok;
+                  }
+                  // also, while we're here, check the specials, since this doesn't happen
+                  // anywhere else
+                  ((InstanceValidator) parent).checkSpecials(hostContext, errors, res, rstack, true, pct, mode, true,
+                      ok);
+                }
+              }
+            }
           }
         }
         
