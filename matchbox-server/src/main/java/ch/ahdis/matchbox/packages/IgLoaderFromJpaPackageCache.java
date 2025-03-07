@@ -213,13 +213,8 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 			loadIg(igs, binaries, replace, recursive);
 			return;
 		}
-		if ("hl7.fhir.uv.extensions#current".equals(src)) {
-			log.debug("Replacing 'hl7.fhir.uv.extensions#current' with '{}'", PACKAGE_UV_EXTENSIONS);
-			loadIg(igs, binaries, PACKAGE_UV_EXTENSIONS, recursive);
-			return;
-		}
-		if ("hl7.fhir.uv.extensions.r5#1.0.0".equals(src)) {
-			log.debug("Replacing 'hl7.fhir.uv.extensions.r5#1.0.0' with '{}'", PACKAGE_UV_EXTENSIONS);
+		if (src.startsWith("hl7.fhir.uv.extensions") && !PACKAGE_UV_EXTENSIONS.equals(src)) {
+			log.debug("Replacing '{}' with '{}'", src, PACKAGE_UV_EXTENSIONS);
 			loadIg(igs, binaries, PACKAGE_UV_EXTENSIONS, recursive);
 			return;
 		}

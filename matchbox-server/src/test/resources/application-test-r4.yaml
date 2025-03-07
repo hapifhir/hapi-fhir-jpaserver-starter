@@ -10,9 +10,9 @@ hapi:
         version: 4.0.1
         url: classpath:/hl7.fhir.r4.core.tgz
       fhir_extensions:
-        name: hl7.fhir.uv.extensions.r4
+        name: hl7.fhir.uv.extensions
         version: 1.0.0
-        url: classpath:/hl7.fhir.uv.extensions.r4#1.0.0.tgz
+        url: classpath:/hl7.fhir.uv.extensions#1.0.0.tgz
       fhir_terminology:
         name: hl7.terminology.r4
         version: 6.2.0

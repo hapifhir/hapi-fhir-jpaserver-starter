@@ -5,6 +5,7 @@ import ch.ahdis.matchbox.validation.gazelle.models.validation.SeverityLevel;
 import ch.ahdis.matchbox.validation.gazelle.models.validation.ValidationReport;
 import ch.ahdis.matchbox.validation.gazelle.models.validation.ValidationTestResult;
 import ch.ahdis.matchbox.test.CompareUtil;
+import org.apache.jena.base.Sys;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -39,7 +40,7 @@ public class GazelleApiR4Test extends AbstractGazelleTest {
 	@Test
 	void testProfiles() throws Exception {
 		final var profiles = this.client.getProfiles();
-		assertTrue(profiles.size() > 500);
+		assertTrue(profiles.size() > 300);
 	}
 
 	@Test

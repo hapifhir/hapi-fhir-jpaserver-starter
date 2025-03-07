@@ -101,7 +101,6 @@ public class MatchboxEngine extends ValidationEngine {
 	// Current packages that are provided with Matchbox Engine
 	public static final String PACKAGE_R4_TERMINOLOGY = "hl7.terminology.r4#6.2.0";
 	public static final String PACKAGE_R5_TERMINOLOGY = "hl7.terminology.r5#6.2.0";
-	public static final String PACKAGE_R4_UV_EXTENSIONS = "hl7.fhir.uv.extensions.r4#1.0.0";
 	public static final String PACKAGE_UV_EXTENSIONS = "hl7.fhir.uv.extensions#1.0.0";
 	public static final String PACKAGE_UV_XVER = "hl7.fhir.uv.xver#0.1.0@mb";
 	public static final String PACKAGE_CDA_UV_CORE = "hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch";
@@ -284,7 +283,7 @@ public class MatchboxEngine extends ValidationEngine {
 			engine.setVersion(FhirPublication.R4.toCode());
 			try {
 				engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_TERMINOLOGY));
-				engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_UV_EXTENSIONS));
+				engine.loadPackage(this.getNpmPackageStream(PACKAGE_UV_EXTENSIONS));
 				if (this.withXVersion) {
 					this.removeStructureMaps(engine);
 					engine.loadPackage(this.getNpmPackageStream(PACKAGE_UV_XVER));
@@ -327,7 +326,7 @@ public class MatchboxEngine extends ValidationEngine {
 			engine.setVersion(FhirPublication.R4B.toCode());
 			try {
 				engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_TERMINOLOGY));
-				engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_UV_EXTENSIONS));
+				engine.loadPackage(this.getNpmPackageStream(PACKAGE_UV_EXTENSIONS));
 				if (this.withXVersion) {
 					this.removeStructureMaps(engine);
 					engine.loadPackage(this.getNpmPackageStream(PACKAGE_UV_XVER));

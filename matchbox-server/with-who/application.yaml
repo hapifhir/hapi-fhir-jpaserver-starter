@@ -14,9 +14,9 @@ hapi:
         version: 6.2.0
         url: classpath:/hl7.terminology.r4#6.2.0.tgz
       fhir_extensions:
-        name: hl7.fhir.uv.extensions.r4
+        name: hl7.fhir.uv.extensions
         version: 1.0.0
-        url: classpath:/hl7.fhir.uv.extensions.r4#1.0.0.tgz
+        url: classpath:/hl7.fhir.uv.extensions#1.0.0.tgz
       fhir_it:
         name: fhir.worldhealthorganization.smart-ot
         version: 0.2.1
