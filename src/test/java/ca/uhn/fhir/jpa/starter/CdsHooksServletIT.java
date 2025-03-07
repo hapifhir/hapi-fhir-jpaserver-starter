@@ -20,7 +20,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.opencds.cqf.fhir.cr.hapi.config.CrCdsConfig;
+import org.opencds.cqf.fhir.cr.hapi.config.CrCdsHooksConfig;
 import org.opencds.cqf.fhir.cr.hapi.config.RepositoryConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 		Application.class,
 		NicknameServiceConfig.class,
 		RepositoryConfig.class,
-		CrCdsConfig.class,
+		CrCdsHooksConfig.class,
 		StarterCdsHooksConfig.class
 	}, properties = {
 	"spring.profiles.include=storageSettingsTest",
@@ -116,7 +116,7 @@ class CdsHooksServletIT implements IServerSupport {
 	}
 
 	@Test
-	void testCdsHooks() throws IOException, InterruptedException {
+	void testCdsHooks() throws IOException {
 		loadBundle("r4/HelloWorld-Bundle.json", ourCtx, ourClient);
 		await().atMost(10000, TimeUnit.MILLISECONDS).until(() -> hasCdsServices());
 		var cdsRequest = "{\n" +

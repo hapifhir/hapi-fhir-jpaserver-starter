@@ -12,7 +12,7 @@ import org.opencds.cqf.fhir.cr.hapi.cdshooks.CdsCrSettings;
 import org.opencds.cqf.fhir.cr.hapi.cdshooks.ICdsCrServiceRegistry;
 import org.opencds.cqf.fhir.cr.hapi.cdshooks.discovery.CdsCrDiscoveryServiceRegistry;
 import org.opencds.cqf.fhir.cr.hapi.cdshooks.discovery.ICdsCrDiscoveryServiceRegistry;
-import org.opencds.cqf.fhir.cr.hapi.config.CrCdsConfig;
+import org.opencds.cqf.fhir.cr.hapi.config.CrCdsHooksConfig;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -22,8 +22,9 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Conditional({CdsHooksConfigCondition.class, CrConfigCondition.class})
-//@Import({CdsHooksConfig.class, CrCommonConfig.class})
-@Import({CrCdsConfig.class, CrCommonConfig.class})
+// LUKETODO:  Config missing ICdsServiceRegistry
+// LUKETODO:  HAPI-1653: Provider not supported for the current FHIR version
+@Import({CrCdsHooksConfig.class, CrCommonConfig.class})
 public class StarterCdsHooksConfig {
 
 	//	@Bean
