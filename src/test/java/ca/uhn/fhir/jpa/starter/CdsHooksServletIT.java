@@ -22,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.opencds.cqf.fhir.cr.hapi.config.CrCdsHooksConfig;
 import org.opencds.cqf.fhir.cr.hapi.config.RepositoryConfig;
+import org.opencds.cqf.fhir.cr.hapi.config.test.TestCdsHooksConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -40,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 		NicknameServiceConfig.class,
 		RepositoryConfig.class,
 		CrCdsHooksConfig.class,
+		TestCdsHooksConfig.class,
 		StarterCdsHooksConfig.class
 	}, properties = {
 	"spring.profiles.include=storageSettingsTest",
