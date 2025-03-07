@@ -1,9 +1,11 @@
 package ch.ahdis.matchbox.packages;
 
+import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.model.entity.NpmPackageVersionResourceEntity;
+import ca.uhn.fhir.util.FhirTerser;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.BaseResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,16 +27,17 @@ public class MatchboxJpaPackageCache {
 	}
 
 	/**
-	 * This is Matchbox's hook to customize the {@link NpmPackageVersionResourceEntity}s being generated when loading
-	 * a package.
-	 *
+	 * This is Matchbox's hook to customize the {@link NpmPackageVersionResourceEntity}s being generated when loading a
+	 * package.
+	 * <p>
 	 * This will check the resource type and delegate to the appropriate method to customize the entity.
 	 */
 	public static void customizeNpmPackageVersionResourceEntity(final NpmPackageVersionResourceEntity entity,
-																			final IBaseResource res) {
+																					final IBaseResource res) {
 		switch (res) {
 			case org.hl7.fhir.r4.model.StructureDefinition sdR4 -> customizeStructureDefinition(entity, sdR4, null, null);
-			case org.hl7.fhir.r4b.model.StructureDefinition sdR4b -> customizeStructureDefinition(entity, null, sdR4b, null);
+			case org.hl7.fhir.r4b.model.StructureDefinition sdR4b ->
+				customizeStructureDefinition(entity, null, sdR4b, null);
 			case org.hl7.fhir.r5.model.StructureDefinition sdR5 -> customizeStructureDefinition(entity, null, null, sdR5);
 			case org.hl7.fhir.r4.model.StructureMap smR4 -> customizeStructureMap(entity, smR4, null, null);
 			case org.hl7.fhir.r4b.model.StructureMap smR4b -> customizeStructureMap(entity, null, smR4b, null);
@@ -51,26 +54,21 @@ public class MatchboxJpaPackageCache {
 	 * </ol>
 	 */
 	private static void customizeStructureDefinition(final NpmPackageVersionResourceEntity npmPackageVersionResourceEntity,
-															final org.hl7.fhir.r4.model.@Nullable StructureDefinition sdR4,
-															final org.hl7.fhir.r4b.model.@Nullable StructureDefinition sdR4b,
-															final org.hl7.fhir.r5.model.@Nullable StructureDefinition sdR5) {
+																	 final org.hl7.fhir.r4.model.@Nullable StructureDefinition sdR4,
+																	 final org.hl7.fhir.r4b.model.@Nullable StructureDefinition sdR4b,
+																	 final org.hl7.fhir.r5.model.@Nullable StructureDefinition sdR5) {
 		// we update the canonical version to the package version for StructureDefinitions
 		// https://github.com/ahdis/matchbox/issues/225
 		npmPackageVersionResourceEntity.setCanonicalVersion(npmPackageVersionResourceEntity.getPackageVersion().getVersionId());
 
-		final var fhirVersion = SupportedFhirVersion.forResource(sdR4, sdR4b, sdR5);
+		final var terser = new FhirTerserWrapper(sdR4, sdR4b, sdR5);
 
-		final var type = switch (fhirVersion) {
-			case R4 -> sdR4.getType();
-			case R4B -> sdR4b.getType();
-			case R5 -> sdR5.getType();
-		};
+		final var type = terser.getSinglePrimitiveValueOrNull("type");
 
-		var title = switch (fhirVersion) {
-			case R4 -> sdR4.getTitle() != null ? sdR4.getTitle() : sdR4.getName();
-			case R4B -> sdR4b.getTitle() != null ? sdR4b.getTitle() : sdR4b.getName();
-			case R5 -> sdR5.getTitle() != null ? sdR5.getTitle() : sdR5.getName();
-		};
+		var title = terser.getSinglePrimitiveValueOrNull("title");
+		if (title == null) {
+			title = terser.getSinglePrimitiveValueOrNull("name");
+		}
 		if ("Extension".equals(type)) {
 			title = SD_EXTENSION_TITLE_PREFIX + title;
 		}
@@ -86,36 +84,39 @@ public class MatchboxJpaPackageCache {
 	 * </ol>
 	 */
 	private static void customizeStructureMap(final NpmPackageVersionResourceEntity npmPackageVersionResourceEntity,
-												  final org.hl7.fhir.r4.model.@Nullable StructureMap smR4,
-												  final org.hl7.fhir.r4b.model.@Nullable StructureMap smR4b,
-												  final org.hl7.fhir.r5.model.@Nullable StructureMap smR5) {
-
-		final var fhirVersion = SupportedFhirVersion.forResource(smR4, smR4b, smR5);
-		var title = switch (fhirVersion) {
-			case R4 -> smR4.getTitle() != null ? smR4.getTitle() : smR4.getName();
-			case R4B -> smR4b.getTitle() != null ? smR4b.getTitle() : smR4b.getName();
-			case R5 -> smR5.getTitle() != null ? smR5.getTitle() : smR5.getName();
-		};
+															final org.hl7.fhir.r4.model.@Nullable StructureMap smR4,
+															final org.hl7.fhir.r4b.model.@Nullable StructureMap smR4b,
+															final org.hl7.fhir.r5.model.@Nullable StructureMap smR5) {
+		final var terser = new FhirTerserWrapper(smR4, smR4b, smR5);
 
 		// Change the filename for the StructureDefinition title
-		npmPackageVersionResourceEntity.setFilename(title);
+		npmPackageVersionResourceEntity.setFilename(terser.getSinglePrimitiveValueOrNull("title"));
 	}
 
-	private enum SupportedFhirVersion {
-		R4, R4B, R5;
+	// A small wrapper around FhirTerser to handle the different FHIR versions of a resource
+	private static class FhirTerserWrapper {
+		private final IBase resource;
+		private final FhirTerser terser;
 
-		public static SupportedFhirVersion forResource(final BaseResource resR4,
-																	  final org.hl7.fhir.r4b.model.BaseResource resR4b,
-																	  final org.hl7.fhir.r5.model.BaseResource resR5) {
-			if (resR4 != null) {
-				return R4;
-			} else if (resR4b != null) {
-				return R4B;
-			} else if (resR5 != null) {
-				return R5;
+		public FhirTerserWrapper(final org.hl7.fhir.r4.model.@Nullable BaseResource resourceR4,
+										 final org.hl7.fhir.r4b.model.@Nullable BaseResource resourceR4b,
+										 final org.hl7.fhir.r5.model.@Nullable BaseResource resourceR5) {
+			if (resourceR4 != null) {
+				this.resource = resourceR4;
+				this.terser = new FhirTerser(FhirContext.forR4Cached());
+			} else if (resourceR4b != null) {
+				this.resource = resourceR4b;
+				this.terser = new FhirTerser(FhirContext.forR4BCached());
+			} else if (resourceR5 != null) {
+				this.resource = resourceR5;
+				this.terser = new FhirTerser(FhirContext.forR5Cached());
 			} else {
 				throw new IllegalArgumentException("All arguments are null");
 			}
+		}
+
+		public String getSinglePrimitiveValueOrNull(final String thePath) {
+			return this.terser.getSinglePrimitiveValueOrNull(this.resource, thePath);
 		}
 	}
 }
