@@ -26,7 +26,7 @@ import org.hl7.fhir.r5.model.StringType;
 
 import java.lang.reflect.Field;
 
-import static ch.ahdis.matchbox.packages.MatchboxJpaPackageCache.SD_EXTENSION_TITLE_PREFIX;
+import static ch.ahdis.matchbox.packages.MatchboxJpaPackageCache.structureDefinitionIsValidatable;
 
 /**
  * A provider of CapabilityStatement customized for Matchbox.
@@ -179,8 +179,7 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 			.setType(Enumerations.FHIRTypes.CODE);
 
 		final var profiles = this.structureDefinitionProvider.getCanonicalsR5().stream()
-			.filter(sd -> !sd.getExtensionByUrl("sd-title").getValueStringType().getValue().startsWith(
-				SD_EXTENSION_TITLE_PREFIX))
+			.filter(sd -> structureDefinitionIsValidatable(sd.getExtensionByUrl("sd-title").getValueStringType().getValue()))
 			.toList();
 		validateOperationDefinition.addParameter()
 			.setName("profile")

@@ -1,3 +1,7 @@
+XXXX/XX/XX Release 3.9.14
+
+- Hide primitive/complex datatypes and logical models in the validators [#352](https://github.com/ahdis/matchbox/issues/352)
+
 2025/03/05 Release 3.9.13
 
 - No more GUI version mismatch [#346](https://github.com/ahdis/matchbox/issues/346)

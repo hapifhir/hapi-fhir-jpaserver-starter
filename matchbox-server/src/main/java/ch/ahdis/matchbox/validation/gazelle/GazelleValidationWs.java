@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static ch.ahdis.matchbox.packages.MatchboxJpaPackageCache.SD_EXTENSION_TITLE_PREFIX;
+import static ch.ahdis.matchbox.packages.MatchboxJpaPackageCache.structureDefinitionIsValidatable;
 
 /**
  * The WebService for validation with the new Gazelle Validation API.
@@ -99,7 +99,7 @@ public class GazelleValidationWs {
 		// Filter the extensions, because they won't be validated directly
 		final List<NpmPackageVersionResourceEntity> entities =
 			this.structureDefinitionProvider.getPackageResources().stream()
-			.filter(packageVersionResource -> !packageVersionResource.getFilename().startsWith(SD_EXTENSION_TITLE_PREFIX))
+			.filter(packageVersionResource -> structureDefinitionIsValidatable(packageVersionResource.getFilename()))
 			.toList();
 
 		final var profiles = new ArrayList<ValidationProfile>(entities.size()*2);

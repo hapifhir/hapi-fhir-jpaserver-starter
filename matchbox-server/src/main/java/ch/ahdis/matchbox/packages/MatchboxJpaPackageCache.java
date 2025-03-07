@@ -19,6 +19,9 @@ public class MatchboxJpaPackageCache {
 	private static final Logger ourLog = LoggerFactory.getLogger(MatchboxJpaPackageCache.class);
 
 	public static final String SD_EXTENSION_TITLE_PREFIX = "[Extension] ";
+	public static final String SD_PRIMITIVE_DT_TITLE_PREFIX = "[Primitive Datatype] ";
+	public static final String SD_COMPLEX_DT_TITLE_PREFIX = "[Complex Datatype] ";
+	public static final String SD_LOGICAL_TITLE_PREFIX = "[Logical] ";
 
 	/**
 	 * This class is not instantiable.
@@ -64,12 +67,19 @@ public class MatchboxJpaPackageCache {
 		final var terser = new FhirTerserWrapper(sdR4, sdR4b, sdR5);
 
 		final var type = terser.getSinglePrimitiveValueOrNull("type");
+		final var kind = terser.getSinglePrimitiveValueOrNull("kind");
 
 		var title = terser.getSinglePrimitiveValueOrNull("title");
 		if (title == null) {
 			title = terser.getSinglePrimitiveValueOrNull("name");
 		}
-		if ("Extension".equals(type)) {
+		if ("primitive-type".equals(kind)) {
+			title = SD_PRIMITIVE_DT_TITLE_PREFIX + title;
+		} else if ("complex-type".equals(kind)) {
+			title = SD_COMPLEX_DT_TITLE_PREFIX + title;
+		} else if ("logical".equals(kind)) {
+			title = SD_LOGICAL_TITLE_PREFIX + title;
+		} else if ("Extension".equals(type)) {
 			title = SD_EXTENSION_TITLE_PREFIX + title;
 		}
 
@@ -91,6 +101,18 @@ public class MatchboxJpaPackageCache {
 
 		// Change the filename for the StructureDefinition title
 		npmPackageVersionResourceEntity.setFilename(terser.getSinglePrimitiveValueOrNull("title"));
+	}
+
+	/**
+	 * Checks if a StructureDefinition is validatable, i.e. if it is returned in the list of profiles supported
+	 * by the server in the $validate OperationDefinition and in the Gazelle Webservice.
+	 */
+	public static boolean structureDefinitionIsValidatable(final String title) {
+		// All those prefixes are added when loading the IGs, so we can filter out the profiles
+		return !title.startsWith(SD_EXTENSION_TITLE_PREFIX)
+			&& !title.startsWith(SD_PRIMITIVE_DT_TITLE_PREFIX)
+			&& !title.startsWith(SD_COMPLEX_DT_TITLE_PREFIX)
+			&& !title.startsWith(SD_LOGICAL_TITLE_PREFIX);
 	}
 
 	// A small wrapper around FhirTerser to handle the different FHIR versions of a resource
