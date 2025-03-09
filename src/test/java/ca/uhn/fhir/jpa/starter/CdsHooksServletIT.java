@@ -40,8 +40,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 		Application.class,
 		NicknameServiceConfig.class,
 		RepositoryConfig.class,
-		CrCdsHooksConfig.class,
 		TestCdsHooksConfig.class,
+		CrCdsHooksConfig.class,
 		StarterCdsHooksConfig.class
 	}, properties = {
 	"spring.profiles.include=storageSettingsTest",

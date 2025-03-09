@@ -13,6 +13,8 @@ import org.opencds.cqf.fhir.cr.hapi.cdshooks.ICdsCrServiceRegistry;
 import org.opencds.cqf.fhir.cr.hapi.cdshooks.discovery.CdsCrDiscoveryServiceRegistry;
 import org.opencds.cqf.fhir.cr.hapi.cdshooks.discovery.ICdsCrDiscoveryServiceRegistry;
 import org.opencds.cqf.fhir.cr.hapi.config.CrCdsHooksConfig;
+import org.opencds.cqf.fhir.cr.hapi.config.RepositoryConfig;
+import org.opencds.cqf.fhir.cr.hapi.config.test.TestCdsHooksConfig;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -22,23 +24,8 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Conditional({CdsHooksConfigCondition.class, CrConfigCondition.class})
-// LUKETODO:  Config missing ICdsServiceRegistry
-// LUKETODO:  HAPI-1653: Provider not supported for the current FHIR version
-@Import({CrCdsHooksConfig.class, CrCommonConfig.class})
+@Import({RepositoryConfig.class, TestCdsHooksConfig.class, CrCdsHooksConfig.class, CrCommonConfig.class})
 public class StarterCdsHooksConfig {
-
-	//	@Bean
-	//	CdsPrefetchSvc cdsPrefetchSvc(
-	//		CdsResolutionStrategySvc theCdsResolutionStrategySvc,
-	//		CdsPrefetchDaoSvc theResourcePrefetchDao,
-	//		CdsPrefetchFhirClientSvc theResourcePrefetchFhirClient,
-	//		ICdsHooksDaoAuthorizationSvc theCdsHooksDaoAuthorizationSvc) {
-	//		return new ModuleConfigurationPrefetchSvc(
-	//			theCdsResolutionStrategySvc,
-	//			theResourcePrefetchDao,
-	//			theResourcePrefetchFhirClient,
-	//			theCdsHooksDaoAuthorizationSvc);
-	//	}
 
 	@Bean
 	public ICdsCrDiscoveryServiceRegistry cdsCrDiscoveryServiceRegistry() {

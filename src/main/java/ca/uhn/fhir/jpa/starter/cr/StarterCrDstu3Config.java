@@ -5,7 +5,7 @@ import org.opencds.cqf.fhir.cr.hapi.config.dstu3.CrDstu3Config;
 import org.opencds.cqf.fhir.cr.hapi.config.dstu3.DataRequirementsOperationConfig;
 import org.opencds.cqf.fhir.cr.hapi.config.dstu3.EvaluateOperationConfig;
 import org.opencds.cqf.fhir.cr.hapi.config.dstu3.PackageOperationConfig;
-import org.opencds.cqf.fhir.cr.hapi.config.r4.ApplyOperationConfig;
+import org.opencds.cqf.fhir.cr.hapi.config.dstu3.ApplyOperationConfig;
 import org.springframework.context.annotation.*;
 
 @Configuration

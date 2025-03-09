@@ -1,9 +1,9 @@
 package ca.uhn.fhir.jpa.starter.cr;
 
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
-import org.opencds.cqf.fhir.cr.hapi.config.dstu3.DataRequirementsOperationConfig;
-import org.opencds.cqf.fhir.cr.hapi.config.dstu3.EvaluateOperationConfig;
-import org.opencds.cqf.fhir.cr.hapi.config.dstu3.PackageOperationConfig;
+import org.opencds.cqf.fhir.cr.hapi.config.r4.DataRequirementsOperationConfig;
+import org.opencds.cqf.fhir.cr.hapi.config.r4.EvaluateOperationConfig;
+import org.opencds.cqf.fhir.cr.hapi.config.r4.PackageOperationConfig;
 import org.opencds.cqf.fhir.cr.hapi.config.r4.ApplyOperationConfig;
 import org.opencds.cqf.fhir.cr.hapi.config.r4.CrR4Config;
 import org.opencds.cqf.fhir.cr.hapi.config.r4.ExtractOperationConfig;
