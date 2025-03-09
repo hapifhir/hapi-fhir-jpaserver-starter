@@ -22,6 +22,7 @@
 
     <properties>
         <java.version>17</java.version>
+        <clinical-reasoning.version>3.19.0-SNAPSHOT</clinical-reasoning.version>
     </properties>
 
     <prerequisites>
@@ -111,9 +112,9 @@
         </dependency>
         <!-- This dependency includes the JPA CQL Server -->
         <dependency>
-            <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>hapi-fhir-storage-cr</artifactId>
-            <version>${project.parent.version}</version>
+            <groupId>org.opencds.cqf.fhir</groupId>
+            <artifactId>cqf-fhir-cr-hapi</artifactId>
+            <version>${clinical-reasoning.version}</version>
         </dependency>
         <!-- This dependency includes the JPA MDM Server -->
         <dependency>

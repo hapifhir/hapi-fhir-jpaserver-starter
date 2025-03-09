@@ -1,12 +1,12 @@
 package ca.uhn.fhir.jpa.starter.cdshooks;
 
-import ca.uhn.hapi.fhir.cdshooks.svc.cr.discovery.CrDiscoveryServiceR4;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.opencds.cqf.fhir.api.Repository;
+import org.opencds.cqf.fhir.cr.hapi.cdshooks.discovery.CrDiscoveryServiceR4;
 
 public class UpdatedCrDiscoveryServiceR4 extends CrDiscoveryServiceR4 {
 	public UpdatedCrDiscoveryServiceR4(IIdType thePlanDefinitionId, Repository theRepository) {
 		super(thePlanDefinitionId, theRepository);
-		myMaxUriLength = 6000;
+		maxUriLength = 6000;
 	}
 }
