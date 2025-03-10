@@ -33,3 +33,4 @@ matchbox:
       xVersion: true      
       onlyOneEngine: true
       txServer: http://tx.fhir.org
+      openai_api_key: 1234

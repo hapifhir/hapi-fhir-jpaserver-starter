@@ -71,10 +71,13 @@
 
     <ng-container *ngIf="showSettings">
       <div *ngFor="let setting of validatorSettings.values()" class="form-field-group">
-        <mat-form-field class="column50">
+        <mat-form-field class="column50" *ngIf="setting.param.type !== 'boolean'">
           <mat-label>{{ setting.param.name }}</mat-label>
           <input [formControl]="setting.formControl" matInput/>
         </mat-form-field>
+        <mat-checkbox *ngIf="setting.param.type === 'boolean'" [formControl]="setting.formControl">
+          {{ setting.param.name }}
+        </mat-checkbox>
       </div>
     </ng-container>
   </div>

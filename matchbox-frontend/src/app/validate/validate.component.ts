@@ -478,10 +478,11 @@ export class ValidateComponent implements AfterViewInit {
   private getCurrentValidationSettings(): ValidationParameter[] {
     const parameters: ValidationParameter[] = [];
     for (const [_, setting] of this.validatorSettings) {
-      if (setting.formControl.value != null && setting.formControl.value.length > 0) {
-        parameters.push(new ValidationParameter(setting.param.name, setting.formControl.value));
+      if (setting.formControl.value != null && setting.formControl.value.toString().length > 0) {
+        parameters.push(new ValidationParameter(setting.param.name, setting.formControl.value.toString()));
       }
     }
+    console.log(parameters)
     return parameters;
   }
 
