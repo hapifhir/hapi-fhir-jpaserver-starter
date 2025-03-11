@@ -18,6 +18,15 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import dev.langchain4j.data.message.SystemMessage;
+import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.memory.ChatMemory;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
+import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.huggingface.HuggingFaceChatModel;
+import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.openai.OpenAiChatModelName;
+
 import org.springframework.beans.factory.annotation.Value;
 
 /**
@@ -26,7 +35,7 @@ import org.springframework.beans.factory.annotation.Value;
  * Four of the used prompts are displayed here as final strings.
  * Because there were 3 prototypes, a slightly different block of code for the respecting methods. There could be some refactoring done here.
  */
-public class OpenAIConnector {
+public class OpenAIConnector2 {
 
     // String names of two OpenAI LLMs used in this project.
     private static final String MODEL_OLD = "gpt-3.5-turbo";
@@ -34,6 +43,8 @@ public class OpenAIConnector {
 
     // The API-key used for the requests. Stored as an environment variable.
     //private static final String API_KEY = System.getenv("OPENAI_API_KEY");
+    private static String LLM_PROVIDER;
+    private static String MODEL_NAME;
     private static String API_KEY;
 
     // Four of the prompts used in this project.
@@ -51,14 +62,38 @@ public class OpenAIConnector {
 
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
+    private ChatLanguageModel model;
+    private ChatMemory chatMemory;
 
     /**
      * Constructor for the OpenAIConnector.
      */
-    public OpenAIConnector(CliContext cliContext) {
+    public OpenAIConnector2(CliContext cliContext) {
         httpClient = HttpClient.newHttpClient();
         objectMapper = new ObjectMapper();
+        LLM_PROVIDER = cliContext.getLlmProvider();
+        MODEL_NAME = cliContext.getModelName();
         API_KEY = cliContext.getApiKey();
+        initializeChatModel();
+    }
+
+    private void initializeChatModel() {
+        chatMemory = MessageWindowChatMemory.builder()
+            .id("12345")
+            .maxMessages(10)
+            .build();
+        chatMemory.add(SystemMessage.from(PROMPT4));
+        if (LLM_PROVIDER.equals("openai")) {
+            model = OpenAiChatModel.builder()
+                .apiKey(API_KEY)
+                .modelName(MODEL_NAME)
+                .build();
+        } else if (LLM_PROVIDER.equals("huggingface")) {
+            model = HuggingFaceChatModel.builder()
+                .accessToken(API_KEY)
+                .modelId(MODEL_NAME)
+                .build();
+        }
     }
 
     /**
@@ -81,24 +116,11 @@ public class OpenAIConnector {
             // write the whole LLM-Input-String to a File for later Tokenizer-analysis
             saveStringToFile(requestBody);
 
-            // Create a HTTP request
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://api.openai.com/v1/chat/completions"))
-                    .header("Authorization", "Bearer " + API_KEY)
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                    .build();
-
-            // Send the request and handle the response
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() != 200) {
-                throw new IOException("Error: " + response.statusCode() + " - " + response.body());
-            }
-
+            //String response = model.chat(requestBody);
+            chatMemory.add(UserMessage.from(requestBody));
+            String response = model.chat(chatMemory.messages()).aiMessage().text();
             // Return the LLMs response
-            return objectMapper.readTree(response.body())
-                    .get("choices").get(0).get("message").get("content").asText().trim();
+            return response.replace(requestBody, "").replace(PROMPT4, "").trim();
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -126,10 +148,10 @@ public class OpenAIConnector {
         ArrayNode messages = objectMapper.createArrayNode();
 
         // System message to set the context for the LLM
-        ObjectNode systemMessage = objectMapper.createObjectNode();
+       /* ObjectNode systemMessage = objectMapper.createObjectNode();
         systemMessage.put("role", "system");
         systemMessage.put("content", prompt);
-        messages.add(systemMessage);
+        messages.add(systemMessage);*/
 
         // User message for the FHIR resource
         ObjectNode resourceMessage = objectMapper.createObjectNode();
@@ -151,8 +173,12 @@ public class OpenAIConnector {
         jsonForRequest.put("max_tokens", 500);
         jsonForRequest.put("temperature", 1);
 
+        String requestString = "Here is the FHIR resource: " + fhirResourceContent.toString() + "\n";
+        requestString += "Here is the validation result: " + operationOutcomeContent.toString();
+
         // Convert the JSON payload to a string
-        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonForRequest);
+        return requestString;
+        //return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonForRequest);
     }
 
     /**

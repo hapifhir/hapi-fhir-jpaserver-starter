@@ -203,10 +203,22 @@ public class CliContext {
     return xVersion;
   }
 
-  private String openaiAPIKey;
+  private String llmProvider;
 
-  public String getOpenaiAPIKey() {
-    return openaiAPIKey;
+  public String getLlmProvider() {
+    return llmProvider;
+  }
+
+  private String modelName;
+
+  public String getModelName() {
+    return modelName;
+  }
+
+  private String apiKey;
+
+  public String getApiKey() {
+    return apiKey;
   }
   
   @JsonProperty("check-references")
@@ -252,8 +264,9 @@ public class CliContext {
     this.httpReadOnly = environment.getProperty("matchbox.fhir.context.httpReadOnly", Boolean.class, false);
     this.extensions = Arrays.asList(environment.getProperty("matchbox.fhir.context.extensions", String[].class, new String[]{"any"}));
     this.xVersion = environment.getProperty("matchbox.fhir.context.xVersion", Boolean.class, false);
-    this.openaiAPIKey = environment.getProperty("matchbox.fhir.context.openai_api_key", String.class);
-    this.getOpenaiAPIKey();
+    this.llmProvider = environment.getProperty("matchbox.fhir.context.llm.provider", String.class);
+    this.modelName = environment.getProperty("matchbox.fhir.context.llm.modelName", String.class);
+    this.apiKey = environment.getProperty("matchbox.fhir.context.llm.apiKey", String.class);
   }
 
   public CliContext(CliContext other) {
@@ -274,7 +287,9 @@ public class CliContext {
     this.httpReadOnly = other.httpReadOnly;
     this.extensions = other.extensions;
     this.xVersion = other.xVersion;
-    this.openaiAPIKey = other.openaiAPIKey;
+    this.llmProvider = other.llmProvider;
+    this.modelName = other.modelName;
+    this.apiKey = other.apiKey;
   }
 
   @JsonProperty("ig")
