@@ -309,7 +309,6 @@ export class ValidateComponent implements AfterViewInit {
         if (entry === this.selectedEntry) {
           this.editor.updateCodeEditorContent(this.selectedEntry, this.editorContent);
         }
-        console.log(response)
       })
       .catch((error) => {
         console.error(error);
@@ -374,6 +373,25 @@ export class ValidateComponent implements AfterViewInit {
       this.currentResource.contentType,
       [this.selectedProfile],
       this.getCurrentValidationSettings()
+    );
+    if (this.selectedIg != this.AUTO_IG_SELECTION) {
+      entry.ig = this.selectedIg;
+    }
+    this.validationEntries.unshift(entry);
+    this.show(entry);
+    this.runValidation(entry);
+  }
+
+  onAiAnalyzeButtonClick() {
+    let aiAnalyzeSetting = {name: "analyzeOutcomeWithAI", value: "true"};
+    let settings = this.getCurrentValidationSettings()
+    settings.push(aiAnalyzeSetting);
+    let entry = new ValidationEntry(
+      this.currentResource.filename,
+      this.currentResource.content,
+      this.currentResource.contentType,
+      [this.selectedProfile],
+      settings
     );
     if (this.selectedIg != this.AUTO_IG_SELECTION) {
       entry.ig = this.selectedIg;
@@ -482,7 +500,6 @@ export class ValidateComponent implements AfterViewInit {
         parameters.push(new ValidationParameter(setting.param.name, setting.formControl.value.toString()));
       }
     }
-    console.log(parameters)
     return parameters;
   }
 
