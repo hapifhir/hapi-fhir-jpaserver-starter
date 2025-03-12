@@ -3,6 +3,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <properties>
+        <java.version>17</java.version>
+        <hapi.fhir.jpa.server.starter.revision>1</hapi.fhir.jpa.server.starter.revision>
+    </properties>
+
     <!-- one-liner to take you to the cloud with settings form the application.yaml file: -->
     <!-- 'mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=distroless-hapi && docker run -p 8080:8080 distroless-hapi' -->
     <!--
@@ -18,11 +23,8 @@
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
+    <version>${project.parent.version}-${hapi.fhir.jpa.server.starter.revision}</version>
     <packaging>war</packaging>
-
-    <properties>
-        <java.version>17</java.version>
-    </properties>
 
     <prerequisites>
         <maven>3.8.3</maven>
