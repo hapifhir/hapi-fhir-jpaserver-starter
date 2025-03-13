@@ -1,5 +1,6 @@
-XXXX/XX/XX Release 3.9.14
+2025/03/XX Release 4.0.0
 
+- Upgrade to HAPI 8.0.0 and FHIR Core 6.5.15, plus various other dependency upgrades
 - Hide primitive/complex datatypes and logical models in the validators [#352](https://github.com/ahdis/matchbox/issues/352)
 - Fix handling of the hl7.fhir.uv.extensions packages [#343](https://github.com/ahdis/matchbox/issues/343)
 
