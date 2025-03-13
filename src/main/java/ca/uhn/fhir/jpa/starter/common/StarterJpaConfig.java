@@ -32,6 +32,7 @@ import ca.uhn.fhir.jpa.model.config.SubscriptionSettings;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
 import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.provider.DaoRegistryResourceSupportedSvc;
+import ca.uhn.fhir.jpa.provider.DiffProvider;
 import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
 import ca.uhn.fhir.jpa.provider.JpaCapabilityStatementProvider;
 import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
@@ -289,7 +290,8 @@ public class StarterJpaConfig {
 			ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc,
 			ApplicationContext appContext,
 			Optional<IpsOperationProvider> theIpsOperationProvider,
-			Optional<IImplementationGuideOperationProvider> implementationGuideOperationProvider) {
+			Optional<IImplementationGuideOperationProvider> implementationGuideOperationProvider,
+			DiffProvider diffProvider) {
 		RestfulServer fhirServer = new RestfulServer(fhirSystemDao.getContext());
 
 		List<String> supportedResourceTypes = appProperties.getSupported_resource_types();
@@ -457,6 +459,9 @@ public class StarterJpaConfig {
 
 		// Validation
 		repositoryValidatingInterceptor.ifPresent(fhirServer::registerInterceptor);
+
+		// Diff Provider
+		fhirServer.registerProvider(diffProvider);
 
 		// register custom interceptors
 		registerCustomInterceptors(fhirServer, appContext, appProperties.getCustomInterceptorClasses());
