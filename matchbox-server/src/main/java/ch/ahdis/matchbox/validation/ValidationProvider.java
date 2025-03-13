@@ -21,13 +21,11 @@ package ch.ahdis.matchbox.validation;
  */
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionDao;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.util.StopWatch;
-import ca.uhn.fhir.validation.SingleValidationMessage;
 import ch.ahdis.matchbox.CliContext;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
@@ -124,7 +122,6 @@ public class ValidationProvider {
 		@OperationParam(name = "return", type = IBase.class, min = 1, max = 1)})
 	public IBaseResource validate(final HttpServletRequest theRequest) {
 		log.debug("$validate");
-		final ArrayList<SingleValidationMessage> addedValidationMessages = new ArrayList<>();
 
 		final var sw = new StopWatch();
 		sw.startTask("Total");
@@ -148,8 +145,8 @@ public class ValidationProvider {
 						BeanUtils.setProperty(cliContext, cliContextProperty, value);
 					}
 				} catch (final IllegalAccessException | InvocationTargetException e) {
-					log.error("error setting property " + cliContextProperty + " to " + theRequest.getParameter(
-						cliContextProperty));
+					log.error("error setting property %s to %s".formatted(cliContextProperty,
+																							theRequest.getParameter(cliContextProperty)));
 				}
 			}
 		}
@@ -161,7 +158,7 @@ public class ValidationProvider {
 
 		if (theRequest.getParameter("extensions") != null) {
 			String extensions = theRequest.getParameter("extensions");
-			cliContext.setExtensions(new ArrayList<String>(Arrays.asList(extensions.split(","))));
+			cliContext.setExtensions(new ArrayList<>(Arrays.asList(extensions.split(","))));
 		}
 
 		if (theRequest.getParameter("profile") == null) {
@@ -196,7 +193,7 @@ public class ValidationProvider {
 		}
 		if (engine == null) {
 			return this.getOoForError(
-				"Matchbox engine for profile '%s' could not be created, is an an ig configured for matchbox?".formatted(
+				"Matchbox engine for profile '%s' could not be created, check the installed IGs".formatted(
 					profile));
 		}
 		int versionSeparator = profile.lastIndexOf('|');
@@ -205,8 +202,7 @@ public class ValidationProvider {
 		}
 		if (engine.getStructureDefinitionR5(profile) == null) {
 			return this.getOoForError(
-				"Engine configured, but validation for profile '%s' not found. ".formatted(
-					profile)+engine.toString());
+				"Engine configured, but validation for profile '%s' not found. %s".formatted(profile, engine));
 		}
 		if (!this.matchboxEngineSupport.isInitialized()) {
 			return this.getOoForError("Validation engine not initialized, please try again");
@@ -286,7 +282,7 @@ public class ValidationProvider {
 		// Map the SingleValidationMessages to OperationOutcomeIssue
 		for (final ValidationMessage message : messages) {
 			if (message.getType() == null) {
-				// TODO: this did not happen with other core versions
+				// Note: this did not happen with previous core versions
 				message.setType(ValidationMessage.IssueType.UNKNOWN);
 			}
 			final var issue = OperationOutcomeUtilities.convertToIssue(message, oo);
@@ -366,9 +362,9 @@ public class ValidationProvider {
 		final String canonical;
 		final String version;
 		if (parts.length == 2) {
-			final boolean found = new TransactionTemplate(this.myTxManager)
+			final Boolean found = new TransactionTemplate(this.myTxManager)
 				.execute(tx -> this.myPackageVersionResourceDao.getPackageVersionByCanonicalAndVersion(parts[0], parts[1]).isPresent());
-			if (found) {
+			if (found != null && found) {
 				// The profile was found in the database, the IG is installed
 				return;
 			}
@@ -415,16 +411,15 @@ public class ValidationProvider {
 			return;
 		}
 
-		if (versionsObject == null || versionsObject.getVersions() == null || versionsObject.getVersions().isEmpty() || versionsObject.getVersions().keySet().isEmpty()) {
+		if (versionsObject == null || versionsObject.getVersions() == null || versionsObject.getVersions().isEmpty()) {
 			return;
 		}
 
-		final var latestVersion = versionsObject.getVersions().keySet().toArray()[ versionsObject.getVersions().keySet().size()-1].toString();
-		try (final CloseableHttpClient httpclient = HttpClients.createDefault()) {
+		final var latestVersion = versionsObject.getVersions().keySet().toArray()[ versionsObject.getVersions().size()-1].toString();
+		try {
 			this.igProvider.installFromInternetRegistry(packages[0].getName(), latestVersion);
 		} catch (final Exception e) {
 			log.error("Error while installing IG version", e);
-			return;
 		}
 	}
 
