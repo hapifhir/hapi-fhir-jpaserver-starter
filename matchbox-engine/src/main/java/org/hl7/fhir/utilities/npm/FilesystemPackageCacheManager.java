@@ -677,6 +677,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
   public NpmPackage loadPackage(String id, String version) throws FHIRException, IOException {
     //ok, try to resolve locally
 
+    // MATCHBOX PATCH
 		if (CommonPackages.ID_XVER.equals(id)) {
 			InputStreamWithSrc packageTgzInputStream = this.loadFromPackageServer(id, version);
     	  	NpmPackage npm = NpmPackage.fromPackage(packageTgzInputStream.stream);
@@ -730,8 +731,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 
     // nup, don't have it locally (or it's expired)
     FilesystemPackageCacheManager.InputStreamWithSrc source;
-    // matchbox-engine
-		if (packageProvider != null && packageProvider.handlesPackage(id, version)) {
+    if (false && packageProvider != null && packageProvider.handlesPackage(id, version)) {
       source = packageProvider.provide(id, version);
     } else if (Utilities.isAbsoluteUrl(version)) {
       source = fetchSourceFromUrlSpecific(version);

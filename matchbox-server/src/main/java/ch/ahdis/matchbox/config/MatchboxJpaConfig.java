@@ -5,6 +5,8 @@ import java.util.*;
 import javax.annotation.Nullable;
 
 import ca.uhn.fhir.batch2.model.*;
+import ca.uhn.fhir.context.support.IValidationSupport;
+import ca.uhn.fhir.jpa.config.JpaConfig;
 import ch.ahdis.matchbox.CliContext;
 import ch.ahdis.matchbox.interceptors.*;
 import ch.ahdis.matchbox.mappinglanguage.StructureMapListProvider;
@@ -21,6 +23,7 @@ import ch.ahdis.matchbox.terminology.CodeSystemCodeValidationProvider;
 import ch.ahdis.matchbox.terminology.ValueSetCodeValidationProvider;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
@@ -48,7 +51,6 @@ import ca.uhn.fhir.jpa.batch2.JpaJobPersistenceImpl;
 import ca.uhn.fhir.jpa.binary.interceptor.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
 import ca.uhn.fhir.jpa.bulk.export.api.IBulkExportProcessor;
-import ca.uhn.fhir.jpa.config.util.ValidationSupportConfigUtil;
 import ca.uhn.fhir.jpa.dao.data.IBatch2JobInstanceRepository;
 import ca.uhn.fhir.jpa.dao.data.IBatch2WorkChunkMetadataViewRepository;
 import ca.uhn.fhir.jpa.dao.data.IBatch2WorkChunkRepository;
@@ -381,8 +383,13 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	}
 
 	@Bean
-	public CachingValidationSupport validationSupportChain(JpaValidationSupportChain theJpaValidationSupportChain) {
-		return ValidationSupportConfigUtil.newCachingValidationSupport(theJpaValidationSupportChain);
+	public CachingValidationSupport validationSupportChain(@Qualifier(JpaConfig.JPA_VALIDATION_SUPPORT_CHAIN) IValidationSupport theJpaValidationSupportChain) {
+		// Short timeout for code translation because TermConceptMappingSvcImpl has its own caching
+		CachingValidationSupport.CacheTimeouts cacheTimeouts =
+			CachingValidationSupport.CacheTimeouts.defaultValues().setTranslateCodeMillis(1000);
+
+		return new CachingValidationSupport(
+			theJpaValidationSupportChain, cacheTimeouts, false);
 	}
 
 	@Bean

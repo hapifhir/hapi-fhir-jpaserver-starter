@@ -1,10 +1,8 @@
-package ca.uhn.fhir.jpa.config;
-
 /*-
  * #%L
  * HAPI FHIR JPA Server
  * %%
- * Copyright (C) 2014 - 2023 Smile CDR, Inc.
+ * Copyright (C) 2014 - 2025 Smile CDR, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,27 +17,21 @@ package ca.uhn.fhir.jpa.config;
  * limitations under the License.
  * #L%
  */
+package ca.uhn.fhir.jpa.config;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
-import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
-import ca.uhn.fhir.jpa.dao.JpaPersistedResourceValidationSupport;
 import ca.uhn.fhir.jpa.validation.JpaValidationSupportChain;
+import ca.uhn.fhir.jpa.validation.FhirContextValidationSupportSvc;
 import ca.uhn.fhir.jpa.validation.ValidatorPolicyAdvisor;
 import ca.uhn.fhir.jpa.validation.ValidatorResourceFetcher;
 import ca.uhn.fhir.validation.IInstanceValidatorModule;
 import ca.uhn.fhir.validation.IValidationContext;
-
-import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
 import org.hl7.fhir.common.hapi.validation.support.InMemoryTerminologyServerValidationSupport;
-import org.hl7.fhir.common.hapi.validation.support.ValidationSupportChain;
-import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
-import org.hl7.fhir.common.hapi.validation.validator.HapiToHl7OrgDstu2ValidatingSupportWrapper;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r5.utils.validation.constants.BestPracticeWarningLevel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -47,27 +39,35 @@ import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class ValidationSupportConfig {
+  
+  public class DummyInstanceValidatorModule implements IInstanceValidatorModule {
 
-	public class DummyInstanceValidatorModule implements IInstanceValidatorModule {
+    @Override
+    public void validateResource(IValidationContext<IBaseResource> theCtx) {
+    }
 
-		@Override
-		public void validateResource(IValidationContext<IBaseResource> theCtx) {
-		}
+  }
 
-	}
+  public class DummyValidationSupport implements IValidationSupport {
 
-	public class DummyValidationSupport implements IValidationSupport {
+    FhirContext context;
 
-		FhirContext context;
-		
-		DummyValidationSupport(FhirContext context) {
-			this.context = context;
-		}
-		
-		@Override
-		public FhirContext getFhirContext() {
-			return context;
-		}
+    DummyValidationSupport(FhirContext context) {
+      this.context = context;
+    }
+
+    @Override
+    public FhirContext getFhirContext() {
+      return context;
+    }
+  }
+
+	@Autowired
+	private FhirContext myFhirContext;
+
+	@Bean
+	public FhirContextValidationSupportSvc fhirValidationSupportSvc() {
+		return new FhirContextValidationSupportSvc(myFhirContext);
 	}
 
 	@Bean
@@ -79,7 +79,7 @@ public class ValidationSupportConfig {
 		return retVal;
 	}
 
-	@Bean(name = "myDefaultProfileValidationSupport")
+	@Bean(name = JpaConfig.DEFAULT_PROFILE_VALIDATION_SUPPORT)
 	public DefaultProfileValidationSupport defaultProfileValidationSupport(FhirContext theFhirContext) {
 		return new DefaultProfileValidationSupport(theFhirContext);
 	}
@@ -89,7 +89,6 @@ public class ValidationSupportConfig {
 		return new JpaValidationSupportChain(theFhirContext);
 	}
 
-	@Primary
 	@Bean(name = JpaConfig.JPA_VALIDATION_SUPPORT)
 	public IValidationSupport jpaValidationSupport(FhirContext theFhirContext) {
 		return new DummyValidationSupport(theFhirContext);
@@ -97,13 +96,13 @@ public class ValidationSupportConfig {
 
 	@Bean(name = "myInstanceValidator")
 	public IInstanceValidatorModule instanceValidator() {
-		return new DummyInstanceValidatorModule();
+    return new DummyInstanceValidatorModule();
 	}
 
 	@Bean
 	@Lazy
 	public ValidatorResourceFetcher jpaValidatorResourceFetcher() {
-		return new ValidatorResourceFetcher();
+    return new ValidatorResourceFetcher();
 	}
 
 	@Bean
@@ -111,5 +110,4 @@ public class ValidationSupportConfig {
 	public ValidatorPolicyAdvisor jpaValidatorPolicyAdvisor() {
 		return new ValidatorPolicyAdvisor();
 	}
-
 }

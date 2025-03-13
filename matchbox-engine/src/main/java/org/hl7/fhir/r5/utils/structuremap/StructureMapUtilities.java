@@ -33,6 +33,7 @@ package org.hl7.fhir.r5.utils.structuremap;
 // remember group resolution
 // trace - account for which wasn't transformed in the source
 
+import net.sourceforge.plantuml.utils.Log;
 import org.hl7.fhir.exceptions.DefinitionException;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.FHIRFormatError;
@@ -82,8 +83,6 @@ import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.hl7.fhir.utilities.validation.ValidationOptions;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
-
-import net.sourceforge.plantuml.utils.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -1256,7 +1255,6 @@ public class StructureMapUtilities {
               }
             }
           }
-          // matchbox patch https://github.com/ahdis/matchbox/issues/264
           Base res = services != null ? services.createType(context.getAppInfo(), tn, profileUtilities) : typeFactory(tn);
           if (res.isResource() && !res.fhirType().equals("Parameters")) {
 //	        res.setIdBase(tgt.getParameter().size() > 1 ? getParamString(vars, tgt.getParameter().get(0)) : UUID.randomUUID().toString().toLowerCase());
@@ -1398,7 +1396,6 @@ public class StructureMapUtilities {
       if (sd == null) {
         throw new FHIRException("Unable to create type "+tn);
       } else {
-        // matchbox pr https://github.com/hapifhir/org.hl7.fhir.core/issues/1777
         return Manager.build(worker, sd, profileUtilities);
       }
     } else {

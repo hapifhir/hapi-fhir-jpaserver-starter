@@ -292,6 +292,8 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
   private boolean minimalMemory = false;
 
   private Map<String, Map<String, ResourceProxy>> allResourcesById = new HashMap<String, Map<String, ResourceProxy>>();
+  private Map<String, List<ResourceProxy>> allResourcesByUrl = new HashMap<String, List<ResourceProxy>>();
+  
   // all maps are to the full URI
   private CanonicalResourceManager<CodeSystem> codeSystems = new CanonicalResourceManager<CodeSystem>(false, minimalMemory);
   private final Set<String> supportedCodeSystems = new HashSet<String>();
@@ -451,6 +453,14 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
           map.put(r.getId(), new ResourceProxy(r));
         }
       }
+      if (r.getUrl() != null) {
+        List<ResourceProxy> list = allResourcesByUrl.get(r.getUrl());
+        if (list == null) {
+          list = new ArrayList<>();
+          allResourcesByUrl.put(r.getUrl(), list);
+        }
+        list.add(new ResourceProxy(r));
+      }
 
       String url = r.getUrl();
       if (!allowLoadingDuplicates && hasResourceVersion(r.getType(), url, r.getVersion()) && !packageInfo.isHTO()) {
@@ -537,6 +547,17 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
           map.put(r.getId(), new ResourceProxy(r));
         } else {
           logger.logDebugMessage(LogCategory.PROGRESS,"Ignore "+r.fhirType()+"/"+r.getId()+" from package "+packageInfo.toString());
+        }
+      }
+      if (r instanceof CanonicalResource) {
+        CanonicalResource cr = (CanonicalResource) r;
+        if (cr.getUrl() != null) {
+          List<ResourceProxy> list = allResourcesByUrl.get(cr.getUrl());
+          if (list == null) {
+            list = new ArrayList<>();
+            allResourcesByUrl.put(cr.getUrl(), list);
+          }
+          list.add(new ResourceProxy(r));
         }
       }
 
@@ -2018,7 +2039,9 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       if (opCtxt != null) {
         opCtxt.seeSupplement(supp);
       }
-      cache = checkAddToParams(tc, pin, supp) || cache;
+      if (!hasCanonicalResource(pin, "tx-resource", supp.getVUrl()) ) {
+        cache = checkAddToParams(tc, pin, supp) || cache;
+      }
     }
     if (sys != null) {
       // we also have to look at this by version because the resource might not be versioned or we might not have a copy
@@ -2027,7 +2050,9 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
         if (opCtxt != null) {
           opCtxt.seeSupplement(supp);
         }
-        cache = checkAddToParams(tc, pin, supp) || cache;
+        if (!hasCanonicalResource(pin, "tx-resource", supp.getVUrl()) ) {
+          cache = checkAddToParams(tc, pin, supp) || cache;
+        }
       }
       if (!sys.contains("!")) {
         sys = getFixedVersion(sys, pin);
@@ -2036,7 +2061,9 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
             if (opCtxt != null) {
               opCtxt.seeSupplement(supp);
             }
-            cache = checkAddToParams(tc, pin, supp) || cache;
+            if (!hasCanonicalResource(pin, "tx-resource", supp.getVUrl()) ) {
+              cache = checkAddToParams(tc, pin, supp) || cache;
+            }
           }
         }
       }
@@ -3593,8 +3620,9 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       } 
       synchronized (lock) {
         if (class_ == Resource.class || class_ == null) {
-          for (Map<String, ResourceProxy> rt : allResourcesById.values()) {
-            for (ResourceProxy r : rt.values()) {
+          List<ResourceProxy> list = allResourcesByUrl.get(uri);
+          if (list != null) {
+            for (ResourceProxy r : list) {
               if (uri.equals(r.getUrl())) {
                 res.add((T) r.getResource());
               }

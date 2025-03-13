@@ -36,9 +36,9 @@ public class MatchboxServerUtils {
 	 * @param myDaoRegistry the DAO registry
 	 * @return the Binary
 	 */
-	public static IBaseBinary getBinaryFromId(final long binaryId,
+	public static IBaseBinary getBinaryFromId(final JpaPid binaryId,
 													      final DaoRegistry myDaoRegistry) {
-		return (IBaseBinary) myDaoRegistry.getResourceDao("Binary").readByPid(JpaPid.fromId(binaryId));
+		return (IBaseBinary) myDaoRegistry.getResourceDao("Binary").readByPid(binaryId);
 	}
 
 	/**

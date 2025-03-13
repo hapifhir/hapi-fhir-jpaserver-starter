@@ -158,6 +158,7 @@ import org.hl7.fhir.r5.utils.validation.BundleValidationRule;
 import org.hl7.fhir.r5.utils.validation.IResourceValidator;
 import org.hl7.fhir.r5.utils.validation.IValidationPolicyAdvisor.CodedContentValidationAction;
 import org.hl7.fhir.r5.utils.validation.IValidationPolicyAdvisor.ElementValidationAction;
+import org.hl7.fhir.r5.utils.validation.IValidationPolicyAdvisor.ReferenceDestinationType;
 import org.hl7.fhir.r5.utils.validation.IValidationProfileUsageTracker;
 import org.hl7.fhir.r5.utils.validation.IValidatorResourceFetcher;
 import org.hl7.fhir.r5.utils.validation.ValidatorSession;
@@ -3535,8 +3536,10 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
 
   public boolean validateReference(ValidationContext valContext, List<ValidationMessage> errors, String path, String type, ElementDefinition context, Element e, String url) {
     boolean ok = true;
+    ReferenceDestinationType refType = ReferenceDestinationType.EXTERNAL;
     if (url.startsWith("#")) {
       valContext.getInternalRefs().add(url.substring(1));
+      refType = ReferenceDestinationType.CONTAINED;
     }
     // now, do we check the URI target?
     if (fetcher != null && !type.equals("uuid")) {
@@ -3552,7 +3555,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       }
       if (!found) {
         if (type.equals("canonical")) {
-          ReferenceValidationPolicy rp = policyAdvisor.policyForReference(this, valContext, path, url);
+          ReferenceValidationPolicy rp = policyAdvisor.policyForReference(this, valContext, path, url, refType);
           if (rp == ReferenceValidationPolicy.CHECK_EXISTS || rp == ReferenceValidationPolicy.CHECK_EXISTS_AND_TYPE) {
             ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_CANONICAL_RESOLVE, url) && ok;
           } else {
@@ -3574,7 +3577,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         }
       } else {
         if (type.equals("canonical")) {
-          ReferenceValidationPolicy rp = policyAdvisor.policyForReference(this, valContext, path, url);
+          ReferenceValidationPolicy rp = policyAdvisor.policyForReference(this, valContext, path, url, refType);
           if (rp == ReferenceValidationPolicy.CHECK_EXISTS_AND_TYPE || rp == ReferenceValidationPolicy.CHECK_TYPE_IF_EXISTS || rp == ReferenceValidationPolicy.CHECK_VALID) {
             try {
               Resource r = null;
@@ -3765,12 +3768,11 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         } else if (href.contains(":") && Utilities.isAbsoluteUrl(href)) {
           String scheme = href.substring(0, href.indexOf(":"));
           if (rule(errors, "2024-07-20", IssueType.INVALID, e.line(), e.col(), path, !isActiveScheme(scheme), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_XHTML_ACTIVE_HREF, href, xpath, Utilities.stripEoln(node.allText()).trim(), scheme)) {
-          	// matchbox patch https://github.com/ahdis/matchbox/issues/268
-            // if (rule(errors, "2024-07-20", IssueType.INVALID, e.line(), e.col(), path, isLiteralScheme(scheme), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_XHTML_LITERAL_HREF, href, xpath, Utilities.stripEoln(node.allText()).trim(), scheme)) {
+            if (rule(errors, "2024-07-20", IssueType.INVALID, e.line(), e.col(), path, isLiteralScheme(scheme), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_XHTML_LITERAL_HREF, href, xpath, Utilities.stripEoln(node.allText()).trim(), scheme)) {
               hint(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, isKnownScheme(scheme), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_XHTML_UNKNOWN_HREF, href, xpath, node.allText().trim(), scheme);
-            // } else {
-            //   ok = false;
-            //}
+            } else {
+              ok = false;
+            }
           } else {
             ok = false;
           }
@@ -3925,10 +3927,9 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     }
     if (noTerminologyChecks)
       return true;
-    
+          
     boolean ok = true;
     String value = element.primitiveValue();
-    // System.out.println("check "+value+" in "+path);
 
     // firstly, resolve the value set
     ElementDefinitionBindingComponent binding = elementContext.getBinding();
@@ -4263,23 +4264,23 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     BooleanHolder bh = new BooleanHolder();
     ResolvedReference we = localResolve(ref, stack, errors, path, valContext.getRootResource(), valContext.getGroupingResource(), element, bh);
     ok = bh.ok() && ok;
-    String refType;
+    ReferenceDestinationType refType;
     if (ref.startsWith("#")) {
       valContext.getInternalRefs().add(ref.substring(1));
-      refType = "contained";
+      refType = ReferenceDestinationType.CONTAINED;
     } else {
       if (we == null) {
-        refType = "remote";
+        refType = ReferenceDestinationType.EXTERNAL;
       } else {
-        refType = "bundled";
+        refType = ReferenceDestinationType.INTERNAL;
       }
     }
     boolean conditional = ref.contains("?") && context.getResourceNamesAsSet().contains(ref.substring(0, ref.indexOf("?")));
     ReferenceValidationPolicy pol;
-    if (refType.equals("contained") || refType.equals("bundled")) {
+    if (refType == ReferenceDestinationType.CONTAINED || refType == ReferenceDestinationType.INTERNAL) {
       pol = ReferenceValidationPolicy.CHECK_VALID;
     } else {
-      pol = policyAdvisor.policyForReference(this, valContext.getAppContext(), path, ref);
+      pol = policyAdvisor.policyForReference(this, valContext.getAppContext(), path, ref, refType);
     }
 
     if (conditional) {
@@ -4290,7 +4291,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
   
     } else if (pol.checkExists()) {
       if (we == null) {
-        if (!refType.equals("contained")) {
+        if (refType != ReferenceDestinationType.CONTAINED) {
           if (fetcher == null) {
             throw new FHIRException(context.formatMessage(I18nConstants.RESOURCE_RESOLUTION_SERVICES_NOT_PROVIDED));
           } else {
@@ -4463,15 +4464,15 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
           CommaSeparatedStringBuilder b = new CommaSeparatedStringBuilder();
           for (Enumeration<AggregationMode> mode : type.getAggregation()) {
             b.append(mode.getCode());
-            if (mode.getValue().equals(AggregationMode.CONTAINED) && refType.equals("contained"))
+            if (mode.getValue().equals(AggregationMode.CONTAINED) && refType == ReferenceDestinationType.CONTAINED)
               modeOk = true;
-            else if (mode.getValue().equals(AggregationMode.BUNDLED) && refType.equals("bundled"))
+            else if (mode.getValue().equals(AggregationMode.BUNDLED) && refType == ReferenceDestinationType.INTERNAL)
               modeOk = true;
-            else if (mode.getValue().equals(AggregationMode.REFERENCED) && (refType.equals("bundled") || refType.equals("remote")))
+            else if (mode.getValue().equals(AggregationMode.REFERENCED) && (refType != ReferenceDestinationType.CONTAINED))
               modeOk = true;
           }
           ok = rule(errors, NO_RULE_DATE, IssueType.STRUCTURE, element.line(), element.col(), path, modeOk,
-            I18nConstants.REFERENCE_REF_AGGREGATION, refType, b.toString()) && ok;
+            I18nConstants.REFERENCE_REF_AGGREGATION, refType.toCode(), b.toString()) && ok;
         }
       }
     }
@@ -5482,7 +5483,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       for (String url : shc.getSliceRecords().keySet()) {
         StructureDefinition sdt = context.fetchResource(StructureDefinition.class, url);
         slicingHint(sliceInfo, NO_RULE_DATE, IssueType.STRUCTURE, element.line(), element.col(), path, false, isProfile(slicer), 
-         context.formatMessage(I18nConstants.DETAILS_FOR__MATCHING_AGAINST_PROFILE_, stack.getLiteralPath(), sdt == null ?  url : sdt.getVersionedUrl()),
+          context.formatMessage(I18nConstants.DETAILS_FOR__MATCHING_AGAINST_PROFILE_, stack.getLiteralPath(), sdt == null ?  url : sdt.getVersionedUrl()),
           context.formatMessage(I18nConstants.PROFILE__DOES_NOT_MATCH_FOR__BECAUSE_OF_THE_FOLLOWING_PROFILE_ISSUES__,
               url,
               stack.getLiteralPath(), errorSummaryForSlicingAsHtml(shc.getSliceRecords().get(url))), errorSummaryForSlicingAsText(shc.getSliceRecords().get(url)));
@@ -6150,7 +6151,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
           ok = rule(errors, "2024-09-17", IssueType.BUSINESSRULE, element.line(), element.col(), stack.getLiteralPath(), !"true".equals(exp), I18nConstants.VALIDATION_NO_EXPERIMENTAL_CONTENT) && ok;
         }
         
-        if (isHL7Core(element) && !isExample()) {
+        if (isHL7Org(element) && !isExample()) {
           ok = checkPublisherConsistency(valContext, errors, element, stack, contained) && ok;  
         }
         String version = element.getNamedChildValue("version");

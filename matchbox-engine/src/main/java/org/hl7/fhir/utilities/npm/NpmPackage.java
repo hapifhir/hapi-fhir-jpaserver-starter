@@ -44,6 +44,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
@@ -1589,6 +1590,12 @@ public class NpmPackage {
 
   public static void setLoadCustomResources(boolean loadCustomResources) {
     NpmPackage.loadCustomResources = loadCustomResources;
+  }
+
+  public LocalDate dateAsLocalDate() {
+    String date = date();
+    String d = date.substring(0, 4)+"-"+date.substring(4, 6)+"-"+date.substring(6, 8);
+    return LocalDate.parse(d);
   }
 
 }

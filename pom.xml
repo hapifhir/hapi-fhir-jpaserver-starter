@@ -38,8 +38,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <fhir.core.version>6.5.9</fhir.core.version>
-        <hapi.fhir.version>7.6.1</hapi.fhir.version>
         <!-- Dependency Versions -->
         <validator_test_case_version>1.6.8</validator_test_case_version>
         <activation_api_version>1.2.0</activation_api_version>
@@ -47,6 +45,8 @@
         <aries_spifly_version>1.2</aries_spifly_version>
         <caffeine_version>3.1.8</caffeine_version>
         <commons_codec_version>1.15</commons_codec_version>
+        <fhir.core.version>6.5.15</fhir.core.version>
+        <hapi.fhir.version>8.0.0</hapi.fhir.version>
         <commons_compress_version>1.27.1</commons_compress_version>
         <commons_dbcp2_version>2.12.0</commons_dbcp2_version>
         <commons_text_version>1.10.0</commons_text_version>

@@ -1,10 +1,8 @@
-package ca.uhn.fhir.jpa.validation;
-
 /*-
  * #%L
  * HAPI FHIR Storage api
  * %%
- * Copyright (C) 2014 - 2023 Smile CDR, Inc.
+ * Copyright (C) 2014 - 2025 Smile CDR, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,18 +17,22 @@ package ca.uhn.fhir.jpa.validation;
  * limitations under the License.
  * #L%
  */
+package ca.uhn.fhir.jpa.validation;
 
-import ca.uhn.fhir.i18n.Msg;
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.RuntimeResourceDefinition;
 import ca.uhn.fhir.context.support.IValidationSupport;
+import ca.uhn.fhir.i18n.Msg;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
+import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
+import ca.uhn.fhir.rest.param.TokenParam;
+import ca.uhn.fhir.rest.param.UriParam;
+import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import org.hl7.fhir.common.hapi.validation.validator.VersionSpecificWorkerContextWrapper;
-import org.hl7.fhir.exceptions.DefinitionException;
 import org.hl7.fhir.exceptions.FHIRException;
-import org.hl7.fhir.exceptions.FHIRFormatError;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r5.elementmodel.Element;
@@ -38,40 +40,40 @@ import org.hl7.fhir.r5.elementmodel.JsonParser;
 import org.hl7.fhir.r5.model.CanonicalResource;
 import org.hl7.fhir.r5.utils.validation.IResourceValidator;
 import org.hl7.fhir.r5.utils.validation.IValidatorResourceFetcher;
+import org.hl7.fhir.utilities.CanonicalPair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import jakarta.annotation.PostConstruct;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+/**
+ * Please note that this bean is not currently used as part of the $validate operation.
+ * The FHIR Core validation library uses {@link VersionSpecificWorkerContextWrapper} to retrieve validation resources.
+ */
 public class ValidatorResourceFetcher implements IValidatorResourceFetcher {
 
 	private static final Logger ourLog = LoggerFactory.getLogger(ValidatorResourceFetcher.class);
 
-	@PostConstruct
-	public void start() {
+	public ValidatorResourceFetcher() {
 	}
 
 	@Override
-	public Element fetch(IResourceValidator iResourceValidator, Object appContext, String theUrl) throws FHIRFormatError, DefinitionException, FHIRException, IOException {
+	public Element fetch(IResourceValidator iResourceValidator, Object appContext, String theUrl) throws FHIRException {
 		// matchbox 3.1.0: we don't use validator resource fetcher
 		return null;
 	}
 
-		@Override
-	public boolean resolveURL(IResourceValidator validator, Object appContext, String path, String url, String type,
-			boolean canonical) throws IOException, FHIRException {
+	@Override
+	public boolean resolveURL(
+			IResourceValidator iResourceValidator, Object o, String s, String s1, String s2, boolean isCanonical) {
 		return true;
 	}
 
-
 	@Override
-	public byte[] fetchRaw(IResourceValidator iResourceValidator, String s) throws MalformedURLException, IOException {
+	public byte[] fetchRaw(IResourceValidator iResourceValidator, String s) throws UnsupportedOperationException {
 		throw new UnsupportedOperationException(Msg.code(577));
 	}
 
@@ -82,7 +84,7 @@ public class ValidatorResourceFetcher implements IValidatorResourceFetcher {
 	}
 
 	@Override
-	public CanonicalResource fetchCanonicalResource(IResourceValidator validator, Object appContext, String url) throws URISyntaxException {
+	public CanonicalResource fetchCanonicalResource(IResourceValidator validator, Object appContext, String url) {
 		return null;
 	}
 
@@ -93,6 +95,6 @@ public class ValidatorResourceFetcher implements IValidatorResourceFetcher {
 
 	@Override
 	public Set<String> fetchCanonicalResourceVersions(IResourceValidator validator, Object appContext, String url) {
-		return Set.of();
+		return Collections.emptySet();
 	}
 }

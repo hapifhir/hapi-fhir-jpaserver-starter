@@ -2,7 +2,7 @@
  * #%L
  * HAPI FHIR JPA Server
  * %%
- * Copyright (C) 2014 - 2024 Smile CDR, Inc.
+ * Copyright (C) 2014 - 2025 Smile CDR, Inc.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,6 @@ import ca.uhn.fhir.util.ClasspathUtil;
 import jakarta.annotation.Nullable;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.HttpClientConnectionManager;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.utilities.npm.BasePackageCacheManager;
 import org.hl7.fhir.utilities.npm.NpmPackage;

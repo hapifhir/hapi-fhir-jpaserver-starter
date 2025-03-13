@@ -137,7 +137,6 @@ public class BundleValidator extends BaseValidator {
             }
           }
         }
-        
         if (!VersionUtilities.isThisOrLater(FHIRVersion._4_0_1.getDisplay(), bundle.getProperty().getStructure().getFhirVersion().getDisplay())) {
           ok = handleSpecialCaseForLastUpdated(bundle, errors, stack) && ok;
         }
