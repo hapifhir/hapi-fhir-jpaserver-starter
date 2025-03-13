@@ -218,7 +218,6 @@ public class JpaPackageCache extends BasePackageCacheManager implements IHapiPac
 
 	private IHapiPackageCacheManager.PackageContents loadPackageContents(NpmPackageVersionEntity thePackageVersion) {
 		IFhirResourceDao<? extends IBaseBinary> binaryDao = getBinaryDao();
-    // TODO: the PID has no id?
 		IBaseBinary binary = binaryDao.readByPid(thePackageVersion.getPackageBinary().getId());
 		try {
 			byte[] content = fetchBlobFromBinary(binary);
@@ -593,7 +592,6 @@ public class JpaPackageCache extends BasePackageCacheManager implements IHapiPac
 
 	private IBaseResource loadPackageEntity(NpmPackageVersionResourceEntity contents) {
 		try {
-      // TODO: the PID has no id?
 			JpaPid binaryPid = contents.getResourceBinary().getId();
 			IBaseBinary binary = getBinaryDao().readByPid(binaryPid);
 			byte[] resourceContentsBytes = fetchBlobFromBinary(binary);
