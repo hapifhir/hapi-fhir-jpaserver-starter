@@ -123,7 +123,7 @@ hapi:
         data:
           search_parameter_mode: USE_SEARCH_PARAMETERS # AUTO, USE_SEARCH_PARAMETERS, FILTER_IN_MEMORY
           terminology_parameter_mode: FILTER_IN_MEMORY #  AUTO, USE_VALUE_SET_URL, USE_INLINE_CODES, FILTER_IN_MEMORY
-          profile_mode: OFF # ENFORCED, DECLARED, OPTIONAL, TRUST, OFF
+          profile_mode: DECLARED # ENFORCED, DECLARED, OPTIONAL, TRUST, OFF
 
     cdshooks:
       enabled: false

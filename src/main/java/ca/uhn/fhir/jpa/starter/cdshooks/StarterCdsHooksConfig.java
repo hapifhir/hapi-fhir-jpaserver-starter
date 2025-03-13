@@ -31,7 +31,7 @@ public class StarterCdsHooksConfig {
 	public ICdsCrDiscoveryServiceRegistry cdsCrDiscoveryServiceRegistry() {
 		CdsCrDiscoveryServiceRegistry registry = new CdsCrDiscoveryServiceRegistry();
 		registry.unregister(FhirVersionEnum.R4);
-		registry.register(FhirVersionEnum.R4, UpdatedCrDiscoveryServiceR4.class);
+		registry.register(FhirVersionEnum.R4, UpdatedCrDiscoveryService.class);
 		return registry;
 	}
 
@@ -39,7 +39,7 @@ public class StarterCdsHooksConfig {
 	public ICdsCrServiceRegistry cdsCrServiceRegistry() {
 		CdsCrServiceRegistry registry = new CdsCrServiceRegistry();
 		registry.unregister(FhirVersionEnum.R4);
-		registry.register(FhirVersionEnum.R4, UpdatedCdsCrServiceR4.class);
+		registry.register(FhirVersionEnum.R4, UpdatedCdsCrService.class);
 		return registry;
 	}
 
