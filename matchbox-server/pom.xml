@@ -5,7 +5,7 @@
     <parent>
         <artifactId>matchbox</artifactId>
         <groupId>health.matchbox</groupId>
-        <version>3.9.13</version>
+        <version>4.0.0</version>
     </parent>
 
     <artifactId>matchbox-server</artifactId>
@@ -97,7 +97,6 @@
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-            <version>1.9.4</version>
         </dependency>
 
         <!-- If you are using HAPI narrative generation, you will need to include Thymeleaf as well. Otherwise the following can be omitted. <dependency> <groupId>org.thymeleaf</groupId> <artifactId>thymeleaf</artifactId> </dependency> -->

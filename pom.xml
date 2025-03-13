@@ -9,7 +9,7 @@
 
     <groupId>health.matchbox</groupId>
     <artifactId>matchbox</artifactId>
-    <version>3.9.13</version>
+    <version>4.0.0</version>
     <packaging>pom</packaging>
     <name>matchbox</name>
     <description>An open-source implementation to support testing and implementation of FHIR based solutions and map or
@@ -38,77 +38,60 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <!-- Dependency Versions -->
-        <validator_test_case_version>1.6.8</validator_test_case_version>
-        <activation_api_version>1.2.0</activation_api_version>
-        <apache_karaf_version>4.2.5</apache_karaf_version>
-        <aries_spifly_version>1.2</aries_spifly_version>
-        <caffeine_version>3.1.8</caffeine_version>
-        <commons_codec_version>1.15</commons_codec_version>
+        <maven.compiler.release>21</maven.compiler.release>
+
         <fhir.core.version>6.5.15</fhir.core.version>
         <hapi.fhir.version>8.0.0</hapi.fhir.version>
+
+
+        <!-- The following section closely matches the one of HAPI-FHIR (for easier version comparison/upgrade).
+             Only re-used dependencies are listed here.
+             https://github.com/hapifhir/hapi-fhir/blob/master/pom.xml -->
+        <maven_surefire_version>3.5.2</maven_surefire_version>
         <commons_compress_version>1.27.1</commons_compress_version>
         <commons_dbcp2_version>2.12.0</commons_dbcp2_version>
-        <commons_text_version>1.10.0</commons_text_version>
         <commons_io_version>2.17.0</commons_io_version>
-        <commons_lang3_version>3.17.0</commons_lang3_version>
-        <com_jamesmurty_utils_version>1.2</com_jamesmurty_utils_version>
-        <cql_version>1.5.0</cql_version>
-        <derby_version>10.17.1.0</derby_version>
-        <error_prone_core_version>2.23.0</error_prone_core_version>
-        <mockito_version>5.8.0</mockito_version>
-        <nullaway_version>0.7.9</nullaway_version>
-        <guava_version>32.1.1-jre</guava_version>
-        <gson_version>2.8.9</gson_version>
-        <jaxb_bundle_version>2.2.11_1</jaxb_bundle_version>
-        <jaxb_api_version>2.3.1</jaxb_api_version>
-        <jaxb_core_version>2.3.0.1</jaxb_core_version>
-        <jaxb_runtime_version>4.0.4</jaxb_runtime_version>
-        <jena_version>4.9.0</jena_version>
-        <jersey_version>3.0.3</jersey_version>
-        <jsr305_version>3.0.2</jsr305_version>
         <junit_version>5.10.1</junit_version>
-        <flexmark_version>0.64.8</flexmark_version>
-        <flyway_version>9.4.0</flyway_version>
-        <hibernate_version>6.4.10.Final</hibernate_version>
-        <hibernate_search_version>7.0.1.Final</hibernate_search_version>
-        <!-- Update lucene version when you update hibernate-search version -->
-        <lucene_version>9.12.0</lucene_version>
-        <hamcrest_version>2.2</hamcrest_version>
-        <hibernate_validator_version>8.0.0.Final</hibernate_validator_version>
-        <httpcore_version>4.4.13</httpcore_version>
-        <httpclient_version>4.5.13</httpclient_version>
+        <logback_version>1.5.16</logback_version>
         <jackson_version>2.17.1</jackson_version>
-        <maven_assembly_plugin_version>3.3.0</maven_assembly_plugin_version>
-        <maven_license_plugin_version>1.8</maven_license_plugin_version>
-        <maven_surefire_version>3.5.2</maven_surefire_version>
         <okhttp_version>4.12.0</okhttp_version>
-        <poi_version>4.1.2</poi_version>
-        <poi_ooxml_schemas_version>1.4</poi_ooxml_schemas_version>
-        <resteasy_version>6.2.9.Final</resteasy_version>
-        <ph_schematron_version>7.1.2</ph_schematron_version>
-        <ph_commons_version>9.5.5</ph_commons_version>
-        <plexus_compiler_api_version>2.13.0</plexus_compiler_api_version>
-        <servicemix_saxon_version>9.8.0-15</servicemix_saxon_version>
-        <servicemix_xmlresolver_version>1.2_5</servicemix_xmlresolver_version>
-        <swagger_version>2.2.22</swagger_version>
-        <slf4j_version>2.0.13</slf4j_version>
         <log4j_to_slf4j_version>2.19.0</log4j_to_slf4j_version>
         <spring_version>6.1.14</spring_version>
-        <spring_data_version>2024.0.5</spring_data_version>
-        <spring_batch_version>4.3.10</spring_batch_version>
         <spring_boot_version>3.2.10</spring_boot_version>
-        <spring_retry_version>2.0.6</spring_retry_version>
-        <stax2_api_version>3.1.4</stax2_api_version>
         <testcontainers_version>1.19.4</testcontainers_version>
-        <thymeleaf-version>3.1.2.RELEASE</thymeleaf-version>
-        <tomcat_embed_version>10.1.34</tomcat_embed_version>
-        <woodstox_core_asl_version>4.4.1</woodstox_core_asl_version>
-        <jacoco_version>0.8.12</jacoco_version>
-        <info_cqframework_version>1.5.1</info_cqframework_version>
-        <lombok_version>1.18.32</lombok_version>
-        <byte_buddy_version>1.14.8</byte_buddy_version>
-        <apache_poi_version>5.2.1</apache_poi_version>
+        <ucum_version>1.0.9</ucum_version>
+
+        <!-- The following properties are linked to HAPI-FHIR, which hasn't attributed version properties -->
+        <awaitility_version>4.2.0</awaitility_version>
+        <xmlunit_version>2.10.0</xmlunit_version>
+        <beanutils_version>1.9.4</beanutils_version>
+
+
+        <!-- The following section closely matches the one of HAPI-FHIR (for easier version comparison/upgrade).
+             Only re-used dependencies are listed here.
+             https://github.com/hapifhir/org.hl7.fhir.core/blob/master/pom.xml -->
+        <validator_test_case_version>1.6.8</validator_test_case_version>
+
+
+        <!-- Other dependencies we need -->
+        <lombok_version>1.18.36</lombok_version>
+        <tomcat_embed_version>10.1.39</tomcat_embed_version>
+        <postgresql_version>42.7.5</postgresql_version>
+        <h2_version>2.3.232</h2_version>
+        <jakarta_servlet_version>6.1.0</jakarta_servlet_version>
+        <jaxb_api_version>2.3.1</jaxb_api_version>
+        <snakeyaml_version>2.4</snakeyaml_version>
+
+        <plugin_maven_compiler_version>3.14.0</plugin_maven_compiler_version>
+        <plugin_maven_resources_version>3.3.1</plugin_maven_resources_version>
+        <plugin_maven_failsafe_version>3.5.2</plugin_maven_failsafe_version>
+        <plugin_duplicate_finder_version>2.0.1</plugin_duplicate_finder_version>
+        <plugin_buildnumber_version>3.2.1</plugin_buildnumber_version>
+        <plugin_maven_war_version>3.4.0</plugin_maven_war_version>
+        <plugin_maven_source_version>3.3.1</plugin_maven_source_version>
+        <plugin_maven_javadoc_version>3.11.2</plugin_maven_javadoc_version>
+        <plugin_maven_gpg_version>3.2.7</plugin_maven_gpg_version>
+        <plugin_nexus_staging_version>1.7.0</plugin_nexus_staging_version>
 
         <excludePackageNames>org.hl7.*:ca.uhn.*</excludePackageNames>
     </properties>
@@ -145,11 +128,6 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.google.protobuf</groupId>
-                <artifactId>protobuf-java</artifactId>
-                <version>3.25.5</version>
-            </dependency>
-            <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons_io_version}</version>
@@ -178,7 +156,7 @@
             <dependency>
                 <groupId>org.fhir</groupId>
                 <artifactId>ucum</artifactId>
-                <version>1.0.9</version>
+                <version>${ucum_version}</version>
             </dependency>
             <dependency>
                 <groupId>ca.uhn.hapi.fhir</groupId>
@@ -262,12 +240,6 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <!-- https://github.com/ahdis/matchbox/security/code-scanning/83 -->
-            <dependency>
-                <groupId>com.graphql-java</groupId>
-                <artifactId>graphql-java</artifactId>
-                <version>21.5</version>
-            </dependency>    
             <dependency>
                 <groupId>ca.uhn.hapi.fhir</groupId>
                 <artifactId>hapi-fhir-jpaserver-mdm</artifactId>
@@ -309,7 +281,7 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.4.14</version>
+                <version>${logback_version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
@@ -392,26 +364,19 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>8.0.33</version>
-            </dependency>
-            <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
-            <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.7.2</version>
+                <version>${postgresql_version}</version>
             </dependency>
             <dependency>
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
-                <version>2.2.224</version>
+                <version>${h2_version}</version>
             </dependency>
             <dependency>
-                <!-- Manually upgrade SnakeYAML to avoid CVE-2022-1471 -->
                 <groupId>org.yaml</groupId>
                 <artifactId>snakeyaml</artifactId>
-                <version>2.2</version>
+                <version>${snakeyaml_version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -421,12 +386,12 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-webmvc</artifactId>
-                <version>6.1.14</version>
+                <version>${spring_version}</version>
             </dependency>
             <dependency>
                 <groupId>org.awaitility</groupId>
                 <artifactId>awaitility</artifactId>
-                <version>4.2.0</version>
+                <version>${awaitility_version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -439,8 +404,9 @@
                 <artifactId>spring-boot-starter-actuator</artifactId>
                 <version>${spring_boot_version}</version>
             </dependency>
-            <!-- https://github.com/ahdis/matchbox/security/code-scanning/206 -->
             <dependency>
+                <!-- Security upgrade: https://github.com/ahdis/matchbox/security/code-scanning/206 -->
+                <!-- If this isn't needed anymore, remove the exclusion for 'json-smart' below -->
                 <groupId>net.minidev</groupId>
                 <artifactId>json-smart</artifactId>
                 <version>2.5.2</version>
@@ -452,6 +418,7 @@
                 <version>${spring_boot_version}</version>
                 <exclusions>
                     <exclusion>
+                        <!-- Re-enable when it has been upgraded to >= 2.5.2 -->
                         <groupId>net.minidev</groupId>
                         <artifactId>json-smart</artifactId>
                     </exclusion>
@@ -467,14 +434,14 @@
             <dependency>
                 <groupId>jakarta.servlet</groupId>
                 <artifactId>jakarta.servlet-api</artifactId>
-                <version>6.0.0</version>
+                <version>${jakarta_servlet_version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <!-- Still needed by Jackson -->
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>
-                <version>2.3.1</version>
+                <version>${jaxb_api_version}</version>
             </dependency>
 
             <!-- Upgrading Tomcat, the version we get from spring-boot-starter-tomcat is too old (almost a year) -->
@@ -495,19 +462,6 @@
             </dependency>
 
             <dependency>
-                <!-- Upgrading because of CVE-2023-52428 (https://security.snyk.io/vuln/SNYK-JAVA-COMNIMBUSDS-6247633) -->
-                <groupId>com.nimbusds</groupId>
-                <artifactId>nimbus-jose-jwt</artifactId>
-                <version>9.37.3</version>
-            </dependency>
-            <dependency>
-                <!-- Upgrading because of CVE-2023-4043 (https://nvd.nist.gov/vuln/detail/CVE-2023-4043) -->
-                <groupId>org.eclipse.parsson</groupId>
-                <artifactId>parsson</artifactId>
-                <version>1.0.4</version>
-            </dependency>
-
-            <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>okhttp</artifactId>
                 <version>${okhttp_version}</version>
@@ -517,14 +471,19 @@
             <dependency>
                 <groupId>org.xmlunit</groupId>
                 <artifactId>xmlunit-core</artifactId>
-                <version>2.10.0</version>
+                <version>${xmlunit_version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.xmlunit</groupId>
                 <artifactId>xmlunit-matchers</artifactId>
-                <version>2.10.0</version>
+                <version>${xmlunit_version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${beanutils_version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -549,7 +508,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <release>21</release>
+                    <release>${maven.compiler.release}</release>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <annotationProcessorPaths>
                         <path>
@@ -669,27 +628,27 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.11.0</version>
+                    <version>${plugin_maven_compiler_version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>${plugin_maven_resources_version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.1.2</version>
+                    <version>${plugin_maven_failsafe_version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.basepom.maven</groupId>
                     <artifactId>duplicate-finder-maven-plugin</artifactId>
-                    <version>2.0.1</version>
+                    <version>${plugin_duplicate_finder_version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>buildnumber-maven-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>${plugin_buildnumber_version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
@@ -704,27 +663,27 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>3.3.2</version>
+                    <version>${plugin_maven_war_version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>${plugin_maven_source_version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>${plugin_maven_javadoc_version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>${plugin_maven_gpg_version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.sonatype.plugins</groupId>
                     <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>1.6.13</version>
+                    <version>${plugin_nexus_staging_version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
