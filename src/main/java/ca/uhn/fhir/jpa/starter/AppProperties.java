@@ -100,6 +100,11 @@ public class AppProperties {
 	private boolean userRequestRetryVersionConflictsInterceptorEnabled = false;
 
 	private List<Integer> search_prefetch_thresholds = new ArrayList<>();
+	private Boolean pre_expand_value_sets = true;
+	private Boolean enable_task_pre_expand_value_sets = true;
+	private Integer pre_expand_value_sets_default_count = 1000;
+	private Integer pre_expand_value_sets_max_count = 1000;
+	private Integer maximum_expansion_size = 1000;
 
 	public List<String> getCustomInterceptorClasses() {
 		return custom_interceptor_classes;
@@ -678,6 +683,46 @@ public class AppProperties {
 		this.resource_dbhistory_enabled = resource_dbhistory_enabled;
 	}
 
+	public Boolean getPre_expand_value_sets() {
+		return this.pre_expand_value_sets;
+	}
+
+	public void setPre_expand_value_sets(Boolean pre_expand_value_sets) {
+		this.pre_expand_value_sets = pre_expand_value_sets;
+	}
+
+	public Boolean getEnable_task_pre_expand_value_sets() {
+		return this.enable_task_pre_expand_value_sets;
+	}
+
+	public void setEnable_task_pre_expand_value_setss(Boolean enable_task_pre_expand_value_sets) {
+		this.enable_task_pre_expand_value_sets = enable_task_pre_expand_value_sets;
+	}
+
+	public Integer getPre_expand_value_sets_default_count() {
+		return pre_expand_value_sets_default_count;
+	}
+
+	public void setPre_expand_value_sets_default_count(Integer pre_expand_value_sets_default_count) {
+		this.pre_expand_value_sets_default_count = pre_expand_value_sets_default_count;
+	}
+
+	public Integer getPre_expand_value_sets_max_count() {
+		return pre_expand_value_sets_max_count;
+	}
+
+	public void setPre_expand_value_sets_max_count(Integer pre_expand_value_sets_max_count) {
+		this.pre_expand_value_sets_max_count = pre_expand_value_sets_max_count;
+	}
+
+	public Integer getMaximum_expansion_size() {
+		return maximum_expansion_size;
+	}
+
+	public void setMaximum_expansion_size(Integer maximum_expansion_size) {
+		this.maximum_expansion_size = maximum_expansion_size;
+	}
+
 	public static class Cors {
 		private Boolean allow_Credentials = true;
 		private List<String> allowed_origin = List.of("*");
@@ -879,6 +924,8 @@ public class AppProperties {
 		private Boolean resthook_enabled = false;
 		private Boolean websocket_enabled = false;
 		private Email email = null;
+		private Integer polling_interval_ms = null;
+		private Boolean immediately_queued = false;
 
 		public Boolean getResthook_enabled() {
 			return resthook_enabled;
@@ -902,6 +949,22 @@ public class AppProperties {
 
 		public void setEmail(Email email) {
 			this.email = email;
+		}
+
+		public Integer getPolling_interval_ms() {
+			return polling_interval_ms;
+		}
+
+		public void setPolling_interval_ms(Integer polling_interval_ms) {
+			this.polling_interval_ms = polling_interval_ms;
+		}
+
+		public Boolean getImmediately_queued() {
+			return immediately_queued;
+		}
+
+		public void setImmediately_queued(Boolean immediately_queued) {
+			this.immediately_queued = immediately_queued;
 		}
 
 		public static class Email {
