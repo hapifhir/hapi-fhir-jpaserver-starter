@@ -218,6 +218,12 @@ hapi:
     #    userRequestRetryVersionConflictsInterceptorEnabled : false
     #    local_base_urls:
     #      - https://hapi.fhir.org/baseR4
+    #    pre_expand_value_sets: true
+    #	 enable_task_pre_expand_value_sets: true
+    #    pre_expand_value_sets_default_count: 1000
+    #    pre_expand_value_sets_max_count: 1000
+    #    maximum_expansion_size: 1000
+
     logical_urls:
       - http://terminology.hl7.org/*
       - https://terminology.hl7.org/*
@@ -303,6 +309,8 @@ hapi:
 #    subscription:
 #      resthook_enabled: true
 #      websocket_enabled: false
+#      polling_interval_ms: 5000
+#      immediately_queued: false
 #      email:
 #        from: some@test.com
 #        host: google.com

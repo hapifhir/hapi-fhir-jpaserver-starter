@@ -122,6 +122,18 @@ public class FhirServerConfigCommon {
 				subscriptionSettings.addSupportedSubscriptionType(
 						org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
 			}
+			if (appProperties.getSubscription().getPolling_interval_ms() != null) {
+				ourLog.info(
+						"Setting subscription polling interval to {} ms",
+						appProperties.getSubscription().getPolling_interval_ms());
+				subscriptionSettings.setSubscriptionIntervalInMs(
+						appProperties.getSubscription().getPolling_interval_ms());
+			}
+			if (appProperties.getSubscription().getImmediately_queued()) {
+				ourLog.info("Subscription update will be queued immediately");
+				subscriptionSettings.setSubscriptionChangeQueuedImmediately(
+						appProperties.getSubscription().getImmediately_queued());
+			}
 		}
 		if (appProperties.getMdm_enabled()) {
 			// MDM requires the subscription of type message
@@ -137,6 +149,12 @@ public class FhirServerConfigCommon {
 	@Bean
 	public JpaStorageSettings jpaStorageSettings(AppProperties appProperties) {
 		JpaStorageSettings jpaStorageSettings = new JpaStorageSettings();
+
+		jpaStorageSettings.setPreExpandValueSets(appProperties.getPre_expand_value_sets());
+		jpaStorageSettings.setEnableTaskPreExpandValueSets(appProperties.getEnable_task_pre_expand_value_sets());
+		jpaStorageSettings.setPreExpandValueSetsDefaultCount(appProperties.getPre_expand_value_sets_default_count());
+		jpaStorageSettings.setPreExpandValueSetsMaxCount(appProperties.getPre_expand_value_sets_max_count());
+		jpaStorageSettings.setMaximumExpansionSize(appProperties.getMaximum_expansion_size());
 
 		jpaStorageSettings.setIndexMissingFields(
 				appProperties.getEnable_index_missing_fields()
