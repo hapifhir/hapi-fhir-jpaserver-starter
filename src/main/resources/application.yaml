@@ -227,6 +227,10 @@ hapi:
       - https://unitsofmeasure.org/*
       - http://loinc.org/*
       - https://loinc.org/*
+      - http://id.who.int/icd/*
+      - https://id.who.int/icd/*
+      - http://id.who.int/ichi/*
+      - https://id.who.int/ichi/*
     #    partitioning:
     #      allow_references_across_partitions: false
     #      partitioning_include_in_search_hashes: false
