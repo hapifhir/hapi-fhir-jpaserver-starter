@@ -217,7 +217,7 @@ hapi:
     #      - https://hapi.fhir.org/baseR4
 
     #    pre_expand_value_sets: true
-    #	 enable_task_pre_expand_value_sets: true
+    #	   enable_task_pre_expand_value_sets: true
     #    pre_expand_value_sets_default_count: 1000
     #    pre_expand_value_sets_max_count: 1000
     #    maximum_expansion_size: 1000
