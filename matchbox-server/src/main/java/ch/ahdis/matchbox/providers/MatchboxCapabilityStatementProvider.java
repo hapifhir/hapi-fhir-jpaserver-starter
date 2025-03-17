@@ -19,7 +19,9 @@ import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IIdType;
+import org.hl7.fhir.r5.model.BooleanType;
 import org.hl7.fhir.r5.model.CapabilityStatement;
+import org.hl7.fhir.r5.model.DataType;
 import org.hl7.fhir.r5.model.Enumerations;
 import org.hl7.fhir.r5.model.OperationDefinition;
 import org.hl7.fhir.r5.model.StringType;
@@ -197,12 +199,22 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 
 		final var cliContextProperties = this.cliContext.getValidateEngineParameters();
 		for (final Field field : cliContextProperties) {
-			validateOperationDefinition.addParameter()
-				.setName(field.getName())
-				.setUse(Enumerations.OperationParameterUse.IN)
-				.setMin(0)
-				.setMax("1")
-				.setType(field.getType().equals(boolean.class) ? Enumerations.FHIRTypes.BOOLEAN : Enumerations.FHIRTypes.STRING);
+			field.setAccessible(true);
+			try {
+				validateOperationDefinition.addParameter()
+					.setName(field.getName())
+					.setUse(Enumerations.OperationParameterUse.IN)
+					.setMin(0)
+					.setMax("1")
+					.setType(field.getType().equals(boolean.class) ? Enumerations.FHIRTypes.BOOLEAN : Enumerations.FHIRTypes.STRING)
+					.addExtension("http://matchbox.health/validationDefaultValue", field.getType().equals(boolean.class) ? new BooleanType((Boolean) field.get(cliContext)) : new StringType((String) field.get(cliContext)));
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		validateOperationDefinition.addParameter()

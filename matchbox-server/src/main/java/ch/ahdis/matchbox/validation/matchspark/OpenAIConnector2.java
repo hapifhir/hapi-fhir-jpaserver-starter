@@ -37,6 +37,8 @@ import org.springframework.beans.factory.annotation.Value;
  */
 public class OpenAIConnector2 {
 
+    private static OpenAIConnector2 INSTANCE;
+
     // String names of two OpenAI LLMs used in this project.
     private static final String MODEL_OLD = "gpt-3.5-turbo";
     private static final String MODEL = "gpt-4o-mini";
@@ -65,10 +67,18 @@ public class OpenAIConnector2 {
     private ChatLanguageModel model;
     private ChatMemory chatMemory;
 
+    public static OpenAIConnector2 getConnector(CliContext cliContext) {
+        if (INSTANCE == null) {
+            INSTANCE = new OpenAIConnector2(cliContext);
+        }
+
+        return INSTANCE;
+    }
+
     /**
      * Constructor for the OpenAIConnector.
      */
-    public OpenAIConnector2(CliContext cliContext) {
+    private OpenAIConnector2(CliContext cliContext) {
         httpClient = HttpClient.newHttpClient();
         objectMapper = new ObjectMapper();
         LLM_PROVIDER = cliContext.getLlmProvider();
@@ -83,17 +93,30 @@ public class OpenAIConnector2 {
             .maxMessages(10)
             .build();
         chatMemory.add(SystemMessage.from(PROMPT4));
-        if (LLM_PROVIDER.equals("openai")) {
-            model = OpenAiChatModel.builder()
-                .apiKey(API_KEY)
-                .modelName(MODEL_NAME)
-                .build();
-        } else if (LLM_PROVIDER.equals("huggingface")) {
-            model = HuggingFaceChatModel.builder()
-                .accessToken(API_KEY)
-                .modelId(MODEL_NAME)
-                .build();
+        switch (LLM_PROVIDER) {
+            case "openai":
+                model = OpenAiChatModel.builder()
+                    .apiKey(API_KEY)
+                    .modelName(MODEL_NAME)
+                    .build();
+                break;
+            case "huggingface":
+                model = HuggingFaceChatModel.builder()
+                    .accessToken(API_KEY)
+                    .modelId(MODEL_NAME)
+                    .build();
+                break;
+            default:
+                break;
         }
+    }
+
+    /**
+     * Remove all UserMessages from ChatMemory
+     */
+    private void resetChatMemory() {
+        chatMemory.clear();
+        chatMemory.add(SystemMessage.from(PROMPT4));
     }
 
     /**
@@ -106,7 +129,7 @@ public class OpenAIConnector2 {
      */
     public String interpretWithMatchbox(String resource, String operationOutcome) {
         if (API_KEY == null) {
-            return "API Key not found. Please set the OPENAI_API_KEY environment variable.";
+            return "API Key not found. Please set the matchbox.fhir.context.llm.apiKey configuration parameter.";
         }
         try {
             ObjectNode fhirResourceContent = (ObjectNode) objectMapper.readTree(resource);
@@ -116,16 +139,26 @@ public class OpenAIConnector2 {
             // write the whole LLM-Input-String to a File for later Tokenizer-analysis
             saveStringToFile(requestBody);
 
-            //String response = model.chat(requestBody);
             chatMemory.add(UserMessage.from(requestBody));
             String response = model.chat(chatMemory.messages()).aiMessage().text();
-            // Return the LLMs response
-            return response.replace(requestBody, "").replace(PROMPT4, "").trim();
 
+            resetChatMemory();
+            // clean and return the LLMs response
+            return cleanResult(response, requestBody);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             return e.getMessage();
         }
+    }
+
+    /**
+     * Removes the request text from the response. (certain models return the result with the original request)
+     * @param result The full response string
+     * @param requestBody The original request
+     * @return
+     */
+    private String cleanResult(String result, String requestBody) {
+        return result.replace(requestBody, "").replace(PROMPT4, "").trim();
     }
 
     /**

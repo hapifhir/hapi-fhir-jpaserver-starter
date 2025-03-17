@@ -238,11 +238,18 @@ public class ValidationProvider {
 		var oo = this.getOperationOutcome(sha3Hex, messages, profile, engine, millis, cliContext);
 		if (aiAnalyze) {
 			//OpenAIConnector openAIConnector = new OpenAIConnector(cliContext);
-			OpenAIConnector2 openAIConnector = new OpenAIConnector2(cliContext);
-			String json = FhirContext.forR5().newJsonParser().setPrettyPrint(true).encodeResourceToString(oo);
-			String aiResult = openAIConnector.interpretWithMatchbox(contentString, json);
-			oo = this.addAIIssueToOperationOutcome(oo, aiResult);
+			try {
+				OpenAIConnector2 openAIConnector = OpenAIConnector2.getConnector(cliContext);
+				String json = FhirContext.forR5().newJsonParser().setPrettyPrint(true).encodeResourceToString(oo);
+				String aiResult = openAIConnector.interpretWithMatchbox(contentString, json);
+				oo = this.addAIIssueToOperationOutcome(oo, aiResult);
+			} catch (Exception e) {
+				log.error("Error during AI analysis", e);
+				return this.getOoForError("Error during AI analysis: %s".formatted(e.getMessage()));
+			}
 		}
+
+		
 		return switch (this.myContext.getVersion().getVersion()) {
 			case R4 -> VersionConvertorFactory_40_50.convertResource((OperationOutcome) oo);
 			case R4B -> VersionConvertorFactory_43_50.convertResource((OperationOutcome) oo);
