@@ -196,7 +196,7 @@ extraEnv:
 podDisruptionBudget:
   # -- Enable PodDisruptionBudget for the server pods.
   # uses policy/v1/PodDisruptionBudget thus requiring k8s 1.21+
-  enabled: false
+  enabled: true
   # -- minimum available instances
   minAvailable: 1
   # -- maximum unavailable instances
