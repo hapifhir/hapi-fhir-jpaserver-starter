@@ -928,7 +928,8 @@ public class AppProperties {
 			request_tenant_partitioning_mode = theRequest_tenant_partitioning_mode;
 		}
 	}
-	public static class RemoteSystem{
+
+	public static class RemoteSystem {
 		private String system;
 		private String url;
 

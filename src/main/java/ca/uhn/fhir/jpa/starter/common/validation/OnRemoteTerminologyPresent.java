@@ -11,8 +11,8 @@ public class OnRemoteTerminologyPresent implements Condition {
 	public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata metadata) {
 
 		AppProperties config = Binder.get(conditionContext.getEnvironment())
-			.bind("hapi.fhir", AppProperties.class)
-			.orElse(null);
+				.bind("hapi.fhir", AppProperties.class)
+				.orElse(null);
 		if (config == null) return false;
 		if (config.getRemoteTerminologyServicesMap() == null) return false;
 		return !config.getRemoteTerminologyServicesMap().isEmpty();
