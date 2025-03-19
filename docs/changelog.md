@@ -1,4 +1,4 @@
-2025/03/XX Release 4.0.0
+2025/03/19 Release 4.0.0
 
 - Upgrade to HAPI 8.0.0 and FHIR Core 6.5.15, plus various other dependency upgrades
 - Hide primitive/complex datatypes and logical models in the validators [#352](https://github.com/ahdis/matchbox/issues/352)
