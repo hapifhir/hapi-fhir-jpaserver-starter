@@ -298,9 +298,9 @@ hapi:
         server_address: "http://hapi.fhir.org/baseR5"
         refuse_to_fetch_third_party_urls: false
         fhir_version: R5
-    #    validation:
-    #      requests_enabled: true
-    #      responses_enabled: true
+        validation:
+         requests_enabled: true
+         responses_enabled: true
     #    binary_storage_enabled: true
     inline_resource_storage_below_size: 4000
 #    bulk_export_enabled: true

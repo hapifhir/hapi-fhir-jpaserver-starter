@@ -74,17 +74,16 @@ ingress:
 
 # -- configure the FHIR server's resource requests and limits
 resources:
-  {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  limits:
+    memory: 4Gi
+    cpu: 1000m
+  requests:
+    memory: 2Gi
+    cpu: 1000m
 
 # -- node selector for the pod
 nodeSelector: {}
@@ -192,6 +191,10 @@ extraEnv:
     value: "hapi-fhir-jpaserver"
   - name: OTEL_EXPORTER_JAEGER_ENDPOINT
     value: "https://jaeger-collector.savannahghi.org/"
+  - name: JAVA_OPTS
+    value: "-Xms512M -Xmx2560M -XX:+UseG1GC -XX:MaxRAMPercentage=70"
+  - name: JAVA_TOOL_OPTIONS
+    value: "-Xms512M -Xmx2560M -XX:+UseG1GC -XX:MaxRAMPercentage=70"
 
 podDisruptionBudget:
   # -- Enable PodDisruptionBudget for the server pods.
@@ -270,3 +273,10 @@ extraConfig:
   #         url: https://build.fhir.org/ig/hl7-eu/gravitate-health/package.tgz
   #         name: hl7.eu.fhir.gh
   #         version: 0.1.0
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 90
+  targetMemoryUtilizationPercentage: 90

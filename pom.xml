@@ -1,10 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <!-- one-liner to take you to the cloud with settings form the application.yaml file: -->
-    <!-- 'mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=distroless-hapi && docker run -p 8080:8080 distroless-hapi' -->
+    <!-- 'mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild
+    -Dimage=distroless-hapi && docker run -p 8080:8080 distroless-hapi' -->
     <!--
     Note: HAPI projects use the "hapi-fhir" POM as their base to provide easy management.
     You do not need to use this in your own projects, so the "parent" tag and it's
@@ -41,14 +42,14 @@
     </repositories>
 
     <dependencyManagement>
-       <dependencies>
+        <dependencies>
 
             <dependency>
-               <groupId>org.glassfish.jaxb</groupId>
-               <artifactId>jaxb-runtime</artifactId>
-               <version>2.3.8</version>
-           </dependency>
-       </dependencies>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>2.3.8</version>
+            </dependency>
+        </dependencies>
     </dependencyManagement>
 
     <dependencies>
@@ -58,8 +59,8 @@
             <artifactId>postgresql</artifactId>
         </dependency>
         <dependency>
-          <groupId>com.microsoft.sqlserver</groupId>
-          <artifactId>mssql-jdbc</artifactId>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
         </dependency>
 
         <!-- Needed for Email subscriptions -->
@@ -80,7 +81,8 @@
             <artifactId>hapi-fhir-base</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <!-- This dependency includes the EmailSenderImpl we will be using instead of standard javamail.-->
+        <!-- This dependency includes the EmailSenderImpl we will be using instead of standard
+        javamail.-->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-jpaserver-subscription</artifactId>
@@ -93,7 +95,8 @@
             </exclusions>
         </dependency>
 
-        <!-- This dependency includes the JPA server itself, which is packaged separately from the rest of HAPI FHIR -->
+        <!-- This dependency includes the JPA server itself, which is packaged separately from the
+        rest of HAPI FHIR -->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-jpaserver-base</artifactId>
@@ -127,9 +130,9 @@
         </dependency>
         <!-- This dependency includes the CDS Hooks Server -->
         <dependency>
-          <groupId>ca.uhn.hapi.fhir</groupId>
-          <artifactId>hapi-fhir-server-cds-hooks</artifactId>
-          <version>${project.parent.version}</version>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-server-cds-hooks</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
         <!-- This dependency includes the OpenAPI Server -->
         <dependency>
@@ -164,7 +167,9 @@
             <version>${project.parent.version}</version>
         </dependency>
 
-        <!-- HAPI-FHIR uses Logback for logging support. The logback library is included automatically by Maven as a part of the hapi-fhir-base dependency, but you also need to include a logging library. Logback
+        <!-- HAPI-FHIR uses Logback for logging support. The logback library is included
+        automatically by Maven as a part of the hapi-fhir-base dependency, but you also need to
+        include a logging library. Logback
             is used here, but log4j would also be fine. -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -182,7 +187,8 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- If you are using HAPI narrative generation, you will need to include Thymeleaf as well. Otherwise the following can be omitted. -->
+        <!-- If you are using HAPI narrative generation, you will need to include Thymeleaf as well.
+        Otherwise the following can be omitted. -->
         <dependency>
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf</artifactId>
@@ -195,7 +201,8 @@
             <artifactId>spring-web</artifactId>
         </dependency>
 
-        <!-- commons-logging is provided by jcl-over-slf4j, and the jar often shows up because of transitive dependencies; this dependency should avoid it -->
+        <!-- commons-logging is provided by jcl-over-slf4j, and the jar often shows up because of
+        transitive dependencies; this dependency should avoid it -->
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
@@ -203,7 +210,8 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- You may not need this if you are deploying to an application server which provides database connection pools itself. -->
+        <!-- You may not need this if you are deploying to an application server which provides
+        database connection pools itself. -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-dbcp2</artifactId>
@@ -215,7 +223,9 @@
             </exclusions>
         </dependency>
 
-        <!-- This example uses H2 embedded database. If you are using another database such as Mysql or Oracle, you may omit the following dependencies and replace them with an appropriate database client
+        <!-- This example uses H2 embedded database. If you are using another database such as Mysql
+        or Oracle, you may omit the following dependencies and replace them with an appropriate
+        database client
             dependency for your database platform. -->
         <dependency>
             <groupId>com.h2database</groupId>
@@ -252,7 +262,8 @@
             <artifactId>moment</artifactId>
         </dependency>
 
-        <!-- The following dependencies are only needed for automated unit tests, you do not neccesarily need them to run the example. -->
+        <!-- The following dependencies are only needed for automated unit tests, you do not
+        neccesarily need them to run the example. -->
         <dependency>
             <groupId>co.elastic.clients</groupId>
             <artifactId>elasticsearch-java</artifactId>
@@ -356,7 +367,8 @@
             <version>1.13.3</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-prometheus-simpleclient -->
+        <!--
+        https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-prometheus-simpleclient -->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus-simpleclient</artifactId>
@@ -444,7 +456,8 @@
                 </configuration>
             </plugin>
 
-            <!-- The configuration here tells the WAR plugin to include the FHIR Tester overlay. You can omit it if you are not using that feature. -->
+            <!-- The configuration here tells the WAR plugin to include the FHIR Tester overlay. You
+            can omit it if you are not using that feature. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -580,12 +593,14 @@
     </build>
 
     <profiles>
-        <!-- Package the war for your preference. Use the boot profile if you prefer a single jar/war
+        <!-- Package the war for your preference. Use the boot profile if you prefer a single
+        jar/war
         that can be started with and embedded application server. Default is jetty as it is assumed
         that the main users of this project already have an app server.
         Different profiles are needed as packing it for spring boot, makes the resulting war undeployable
         due to a class shading issue between tomcat and jetty.
-        (the error is 'java.util.ServiceConfigurationError: org.apache.juli.logging.Log: org.eclipse.jetty.apache.jsp.JuliLog not a subtype')
+        (the error is 'java.util.ServiceConfigurationError: org.apache.juli.logging.Log:
+        org.eclipse.jetty.apache.jsp.JuliLog not a subtype')
 
          -->
 
@@ -709,6 +724,6 @@
                     <version>1.17.0</version>
                 </dependency>
             </dependencies>
-        </profile>       
+        </profile>
     </profiles>
 </project>
