@@ -133,8 +133,6 @@ public class LLMConnector {
      * @param resource The string received from the Matchbox containing the FHIR resource.
      * @param operationOutcome The string received from the Matchbox containing the validation result (OperationOutcome).
      * @return The response string from the LLM.
-     * @throws IOException          if an I/ O error occurs when sending or receiving
-     * @throws InterruptedException if the operation is interrupted
      */
     public String interpretWithMatchbox(String resource, String operationOutcome) {
         if (API_KEY == null) {
