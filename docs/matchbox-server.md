@@ -18,6 +18,9 @@ They can be set in the Spring configuration (e.g. `application.properties`/`appl
 | `matchbox.fhir.context.suppressWarnInfo` | `{}`          | The list of warnings/infos to suppress in validation reports. See [_Suppress warning/information-level issues in validation_](validation.md#suppress-warnings). |
 | `matchbox.fhir.context.httpReadOnly`     | `false`       | Whether the server is in read-only mode or not. See the section [_Read-only mode_](#read-only) below.                                                           |
 | `matchbox.fhir.context.extensions`       | `any`         | The list of domains allowed in extensions while validating resources; `any` will allow all extensions.                                                          |
+| `matchbox.fhir.context.llm.provider`       | `n/a`         | The LLM provider used for the AI analysis of validation.                                                          |
+| `matchbox.fhir.context.llm.model`       | `n/a`         | The LLM model used for the AI analysis of validation.                                                          |
+| `matchbox.fhir.context.llm.apiKey`       | `n/a`         | Your API key for the desired LLM provider.                                                          |
 
 See an example of configuration, to show the expected format:
 
@@ -33,6 +36,11 @@ matchbox:
         ch.fhir.ig.ch-elm:
           - "regex:Binding for path (.+) has no source, so can't be checked"
           - "regex:None of the codings provided are in the value set 'Observation Interpretation Codes'(.*)"
+      llm:
+        provider: anthropic
+        modelName: claude-3-5-sonnet-20241022
+        apiKey: sk-ant-api03-abc123
+
 ```
 
 The HAPI configuration parameters are also available.
@@ -130,3 +138,18 @@ This mode will load the [FHIR Cross-Version Mapping Pack](https://build.fhir.org
 which contains _StructureMaps_ for all FHIR Core resources.
 Matchbox will also force the right version on the FHIR Core _StructureDefinitions_, to allow their use by the 
 _StructureMaps_.
+
+
+## LLM support {: #llm-support}
+Adding `llm` configurations will allow the server to make API calls to the specified LLM and add an analysis of the validation results to the operation outcome. This provides the user with AI generated instructions on how to fix errors in the validated FHIR resource.
+
+This feature requires a provider, model and API key to be defined in the applications configuration.
+
+Supported LLMs:
+
+| Provider                                            | Recommended Model           | Supported Models                                                                                               |
+|-----------------------------------------------------|-----------------------------|----------------------------------------------------------------------------------------------------------------|
+| [OpenAI](https://openai.com/index/openai-api/) (`openai`)     | `gpt-4o-mini`               | `gpt-3.5-turbo`, `gpt-4`, `gpt-4o`, `gpt-4o-mini`                                                              |
+| [Anthropic](https://www.anthropic.com/api) (`anthropic`)| `claude-3-5-sonnet-20241022`         | `claude-3-5-sonnet-20241022`, `claude-3-5-haiku-20241022`, `claude-3-sonnet-20240229`, `claude-3-opus-20240229`|
+
+To use this feature, `analyzeOutcomeWithAI` must be set to `true` by the user in the validation settings.

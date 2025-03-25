@@ -9,6 +9,7 @@ Customized matchbox containers can be created with the following features for in
 - use the internal terminology server of matchbox to be independent of the availability of an external terminology server or configure an own terminology server
 - the [HL7 Java reference validator](https://github.com/hapifhir/org.hl7.fhir.core) version is fixed per matchbox version and specified in the results
 - warnings and information outcomes can be configured to be ignored
+- the validation outcome can be analysed by AI to provide simple instructions for fixing errors
 
 ## Mapping health data to and from FHIR using the FHIR mapping language
 

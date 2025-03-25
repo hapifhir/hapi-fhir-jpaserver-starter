@@ -71,6 +71,10 @@ matchbox:
       suppressWarnInfo:
         hl7.fhir.r4.core#4.0.1:
         #- "Constraint failed: dom-6:"
+      #llm:
+      #  provider: anthropic
+      #  modelName: claude-3-5-sonnet-20241022
+      #  apiKey: sk-ant-api03-abc123
 ```
 
 | Parameter             | Card  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |

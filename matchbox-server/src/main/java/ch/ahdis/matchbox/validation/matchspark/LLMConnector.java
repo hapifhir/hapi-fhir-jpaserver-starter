@@ -109,14 +109,14 @@ public class LLMConnector {
                     .modelId(MODEL_NAME)
                     .build();
                 break;
-            case "claude":
+            case "anthropic":
                 model = AnthropicChatModel.builder()
                     .apiKey(API_KEY)
                     .modelName(MODEL_NAME)
                     .build();
                 break;
             default:
-                break;
+                throw new IllegalArgumentException("Unsupported LLM provider: " + LLM_PROVIDER);
         }
     }
 
