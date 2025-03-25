@@ -22,10 +22,13 @@ import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
+import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.huggingface.HuggingFaceChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
+import dev.langchain4j.model.output.Response;
 
 import org.springframework.beans.factory.annotation.Value;
 
@@ -35,9 +38,9 @@ import org.springframework.beans.factory.annotation.Value;
  * Four of the used prompts are displayed here as final strings.
  * Because there were 3 prototypes, a slightly different block of code for the respecting methods. There could be some refactoring done here.
  */
-public class OpenAIConnector2 {
+public class LLMConnector {
 
-    private static OpenAIConnector2 INSTANCE;
+    private static LLMConnector INSTANCE;
 
     // String names of two OpenAI LLMs used in this project.
     private static final String MODEL_OLD = "gpt-3.5-turbo";
@@ -67,9 +70,9 @@ public class OpenAIConnector2 {
     private ChatLanguageModel model;
     private ChatMemory chatMemory;
 
-    public static OpenAIConnector2 getConnector(CliContext cliContext) {
+    public static LLMConnector getConnector(CliContext cliContext) {
         if (INSTANCE == null) {
-            INSTANCE = new OpenAIConnector2(cliContext);
+            INSTANCE = new LLMConnector(cliContext);
         }
 
         return INSTANCE;
@@ -78,7 +81,7 @@ public class OpenAIConnector2 {
     /**
      * Constructor for the OpenAIConnector.
      */
-    private OpenAIConnector2(CliContext cliContext) {
+    private LLMConnector(CliContext cliContext) {
         httpClient = HttpClient.newHttpClient();
         objectMapper = new ObjectMapper();
         LLM_PROVIDER = cliContext.getLlmProvider();
@@ -104,6 +107,12 @@ public class OpenAIConnector2 {
                 model = HuggingFaceChatModel.builder()
                     .accessToken(API_KEY)
                     .modelId(MODEL_NAME)
+                    .build();
+                break;
+            case "claude":
+                model = AnthropicChatModel.builder()
+                    .apiKey(API_KEY)
+                    .modelName(MODEL_NAME)
                     .build();
                 break;
             default:
@@ -140,11 +149,11 @@ public class OpenAIConnector2 {
             saveStringToFile(requestBody);
 
             chatMemory.add(UserMessage.from(requestBody));
-            String response = model.chat(chatMemory.messages()).aiMessage().text();
-
+            ChatResponse response = model.chat(chatMemory.messages());
+            
             resetChatMemory();
             // clean and return the LLMs response
-            return cleanResult(response, requestBody);
+            return cleanResult(response.aiMessage().text(), requestBody);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             return e.getMessage();

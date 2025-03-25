@@ -109,6 +109,12 @@ table {
   }
 }
 
+.button-row {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
 .card-maps {
   padding: 8px 16px;
 }

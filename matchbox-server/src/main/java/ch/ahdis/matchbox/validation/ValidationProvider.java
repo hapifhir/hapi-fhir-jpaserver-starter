@@ -29,7 +29,7 @@ import ca.uhn.fhir.util.StopWatch;
 import ch.ahdis.matchbox.CliContext;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import ch.ahdis.matchbox.validation.matchspark.OpenAIConnector;
-import ch.ahdis.matchbox.validation.matchspark.OpenAIConnector2;
+import ch.ahdis.matchbox.validation.matchspark.LLMConnector;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
@@ -237,9 +237,8 @@ public class ValidationProvider {
 
 		var oo = this.getOperationOutcome(sha3Hex, messages, profile, engine, millis, cliContext);
 		if (aiAnalyze) {
-			//OpenAIConnector openAIConnector = new OpenAIConnector(cliContext);
 			try {
-				OpenAIConnector2 openAIConnector = OpenAIConnector2.getConnector(cliContext);
+				LLMConnector openAIConnector = LLMConnector.getConnector(cliContext);
 				String json = FhirContext.forR5().newJsonParser().setPrettyPrint(true).encodeResourceToString(oo);
 				String aiResult = openAIConnector.interpretWithMatchbox(contentString, json);
 				oo = this.addAIIssueToOperationOutcome(oo, aiResult);
