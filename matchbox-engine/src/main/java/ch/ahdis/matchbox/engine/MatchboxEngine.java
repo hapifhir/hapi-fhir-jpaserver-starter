@@ -676,7 +676,7 @@ public class MatchboxEngine extends ValidationEngine {
 		org.hl7.fhir.r5.elementmodel.Element resource = getTargetResourceFromStructureMap(map, targetContext);
 		
 		// PoC: add resource to reference cache
-		if("Bundle".equals(src.fhirType())) {
+		if("Bundle".equals(src.fhirType()) && src.hasChildren("entry")) {
 			for(Base entry : src.getChildByName("entry").getValues()) {
 				Base r = entry.getChildValueByName("resource");
 				if(r != null) {
