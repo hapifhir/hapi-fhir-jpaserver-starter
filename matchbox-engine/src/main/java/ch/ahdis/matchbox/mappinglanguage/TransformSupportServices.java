@@ -21,6 +21,8 @@ package ch.ahdis.matchbox.mappinglanguage;
  */
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r5.conformance.profile.ProfileUtilities;
@@ -36,11 +38,13 @@ public class TransformSupportServices implements ITransformerServices {
 
   private List<Base> outputs;
   private IWorkerContext context;
+  private Map<String, Base> referenceCache;
   protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TransformSupportServices.class);
 
   public TransformSupportServices(IWorkerContext worker, List<Base> outputs) {
     this.context = worker;
     this.outputs = outputs;
+    this.referenceCache = new HashMap<String, Base>();
   }
 
   // matchbox patch https://github.com/ahdis/matchbox/issues/264
@@ -70,11 +74,22 @@ public class TransformSupportServices implements ITransformerServices {
     ConceptMapEngine cme = new ConceptMapEngine(context);
     return cme.translate(source, conceptMapUrl);
   }
+  
+  public void addToReferenceCache(Base res) {
+    // PoC: Just adding Resource/id for demonstration purposes.
+    // TODO: add other options, see BaseValidator.resolveInBundle() how to correctly resolve within a Bundle
+    this.referenceCache.put(res.fhirType() + "/" + res.getIdBase(), res);
+  }
 
   @Override
   public Base resolveReference(Object appContext, String url) throws FHIRException {	
    	org.hl7.fhir.r5.model.Resource resource = context.fetchResource(org.hl7.fhir.r5.model.Resource.class, url);
-   	return resource;
+   	if(resource != null)
+   	  return resource;
+   	
+    // check reference from Bundle
+   	return this.referenceCache.get(url);
+   	
 //    if (resource != null) {
 //      String inStr = FhirContext.forR4Cached().newJsonParser().encodeResourceToString(resource);
 //      try {

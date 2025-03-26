@@ -663,8 +663,8 @@ public class MatchboxEngine extends ValidationEngine {
 			throws FHIRException, IOException {
 		SimpleWorkerContext context = this.getContext();
 		List<Base> outputs = new ArrayList<>();
-		StructureMapUtilities scu = new MatchboxStructureMapUtilities(context,
-				new TransformSupportServices(targetContext!=null ? targetContext : context, outputs), this);
+		TransformSupportServices tss = new TransformSupportServices(targetContext!=null ? targetContext : context, outputs);
+		StructureMapUtilities scu = new MatchboxStructureMapUtilities(context, tss, this);
 		StructureMap map = context.fetchResource(StructureMap.class, mapUri);
 		if (map == null) {
 			log.error("Unable to find map " + mapUri + " (Known Maps = " + context.listMapUrls() + ")");
@@ -674,6 +674,16 @@ public class MatchboxEngine extends ValidationEngine {
 				+ (map.getDateElement() != null && !map.getDateElement().isEmpty()  ? "(" + map.getDateElement().asStringValue() + ")" : ""));
 
 		org.hl7.fhir.r5.elementmodel.Element resource = getTargetResourceFromStructureMap(map, targetContext);
+		
+		// PoC: add resource to reference cache
+		if("Bundle".equals(src.fhirType())) {
+			for(Base entry : src.getChildByName("entry").getValues()) {
+				Base r = entry.getChildValueByName("resource");
+				if(r != null) {
+					tss.addToReferenceCache(r);
+				}
+			}
+		}
 
 		scu.transform(null, src, map, resource);
 		resource.populatePaths(null);
