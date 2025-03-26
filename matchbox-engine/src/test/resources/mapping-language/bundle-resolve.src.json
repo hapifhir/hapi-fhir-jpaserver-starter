@@ -1,0 +1,138 @@
+{
+    "resourceType": "Bundle",
+    "id": "bundle-1",
+    "type": "searchset",
+    "entry": [{
+        "fullUrl": "http://localhost:8000/Patient/1",
+        "resource": {
+          "resourceType": "Patient",
+          "id": "1"
+        }
+    },
+    {
+        "fullUrl": "http://localhost:8000/DiagnosticReport/2",
+        "resource": {
+            "resourceType": "DiagnosticReport",
+            "id": "2",
+            "status": "final",
+            "code": {
+                "coding": [{
+                    "system": "http://snomed.info/sct",
+                    "code": "15220000"
+                }]
+            },
+            "subject": {
+                "reference": "Patient/1"
+            },
+            "result": [
+                {
+                    "reference": "Observation/3"
+                },
+                {
+                    "reference": "Observation/4"
+                }
+            ]
+        }
+    },
+    {
+        "fullUrl": "http://localhost:8000/Observation/3",
+        "resource": {
+            "resourceType": "Observation",
+            "id": "3",
+            "status": "final",
+            "code": {
+                "coding": [
+                    {
+                        "system": "https://loinc.org",
+                        "code": "11502-2"
+                    }
+                ]
+            },
+            "subject": {
+                "reference": "Patient/1"
+            }
+        }
+    },
+    {
+        "fullUrl": "http://localhost:8000/Observation/4",
+        "resource": {
+            "resourceType": "Observation",
+            "id": "4",
+            "status": "final",
+            "code": {
+                "coding": [
+                    {
+                        "system": "https://loinc.org",
+                        "code": "6298-4"
+                    }
+                ]
+            },
+            "subject": {
+                "reference": "Patient/1"
+            }
+        }
+    },
+    {
+        "fullUrl": "http://localhost:8000/DiagnosticReport/5",
+        "resource": {
+            "resourceType": "DiagnosticReport",
+            "id": "5",
+            "status": "final",
+            "code": {
+                "coding": [{
+                    "system": "http://snomed.info/sct",
+                    "code": "15220000"
+                }]
+            },
+            "subject": {
+                "reference": "Patient/1"
+            },
+            "result": [
+                {
+                    "reference": "Observation/6"
+                },
+                {
+                    "reference": "Observation/7"
+                }
+            ]
+        }
+    },
+    {
+        "fullUrl": "http://localhost:8000/Observation/6",
+        "resource": {
+            "resourceType": "Observation",
+            "id": "6",
+            "status": "final",
+            "code": {
+                "coding": [
+                    {
+                        "system": "https://loinc.org",
+                        "code": "41656-0"
+                    }
+                ]
+            },
+            "subject": {
+                "reference": "Patient/1"
+            }
+        }
+    },
+    {
+        "fullUrl": "http://localhost:8000/Observation/7",
+        "resource": {
+            "resourceType": "Observation",
+            "id": "7",
+            "status": "final",
+            "code": {
+                "coding": [
+                    {
+                        "system": "https://loinc.org",
+                        "code": "32713-0"
+                    }
+                ]
+            },
+            "subject": {
+                "reference": "Patient/1"
+            }
+        }
+    }]
+}
