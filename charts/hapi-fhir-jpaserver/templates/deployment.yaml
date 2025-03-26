@@ -31,7 +31,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
         - name: wait-for-db-to-be-ready
-          image: docker.io/bitnami/postgresql:17.2.0-debian-12-r3@sha256:4de5c47eb98dd8fe09abdcbc2264984486ee8196e90902fb354f5d2ab97e8921
+          image: docker.io/bitnami/postgresql:17.4.0-debian-12-r10@sha256:7b9af9dd759055265998bbf12368e6d7d6326e6fd23f8157be841fad0915c1a1
           imagePullPolicy: IfNotPresent
           {{- with .Values.restrictedContainerSecurityContext }}
           securityContext:

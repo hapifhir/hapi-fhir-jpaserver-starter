@@ -325,6 +325,39 @@ class ExampleServerR4IT implements IServerSupport {
 
 	}
 
+	@Test
+	void testDiffOperationIsRegistered() {
+		String methodName = "testDiff";
+		ourLog.info("Entering " + methodName + "()...");
+
+		Patient pt = new Patient();
+		pt.setActive(true);
+		pt.getBirthDateElement().setValueAsString("2020-01-01");
+		pt.addIdentifier().setSystem("http://foo").setValue("12345");
+		pt.addName().setFamily(methodName);
+		IIdType id = ourClient.create().resource(pt).execute().getId();
+
+		//now update the patient
+		pt.setId(id);
+		pt.getBirthDateElement().setValueAsString("2025-01-01");
+		ourClient.update().resource(pt).execute();
+
+		//now try a diff
+		Parameters outParams = ourClient.operation().onInstance(id).named("$diff").withNoParameters(Parameters.class).execute();
+		ourLog.trace("Params->\n{}", ourCtx.newJsonParser().setPrettyPrint(true).encodeResourceToString(outParams));
+		boolean foundDobChange = false;
+		//really, if we get a response at all, then the Diff worked, but we'll check the contents here anyway for good measure to see that our change is reflected
+		for(Parameters.ParametersParameterComponent ppc : outParams.getParameter() ) {
+			for(Parameters.ParametersParameterComponent ppc2 : ppc.getPart() ) {
+				if( "Patient.birthDate".equals(ppc2.getValue().toString()) ){
+					foundDobChange = true;
+					break;
+				}
+			}
+		}
+		assertTrue(foundDobChange);
+	}
+
 	@BeforeEach
 	void beforeEach() {
 
@@ -338,4 +371,5 @@ class ExampleServerR4IT implements IServerSupport {
 		//	return activeSubscriptionCount() == 2; // 2 subscription based on mdm-rules.json
 		//});
 	}
+
 }

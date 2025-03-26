@@ -97,9 +97,9 @@ public class FhirServerConfigCommon {
 		ourLog.info("Server configured for pre-expand value set default count of "
 				+ (appProperties.getPre_expand_value_sets_default_count().toString()));
 		ourLog.info("Server configured for pre-expand value set max count of "
-				+ (appProperties.getPre_expand_value_sets_default_count().toString()));
+				+ (appProperties.getPre_expand_value_sets_max_count().toString()));
 		ourLog.info("Server configured for maximum expansion size of "
-				+ (appProperties.getPre_expand_value_sets_default_count().toString()));
+				+ (appProperties.getMaximum_expansion_size().toString()));
 	}
 
 	@Bean
