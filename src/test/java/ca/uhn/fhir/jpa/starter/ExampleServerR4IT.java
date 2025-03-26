@@ -21,6 +21,8 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.DateType;
+import org.hl7.fhir.r4.model.BooleanType;
+import org.hl7.fhir.r4.model.UriType;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Measure;
 import org.hl7.fhir.r4.model.MeasureReport;
@@ -30,6 +32,7 @@ import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.StringType;
 import org.hl7.fhir.r4.model.Subscription;
+import org.hl7.fhir.r4.model.ValueSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -77,7 +80,10 @@ import static org.opencds.cqf.fhir.utility.r4.Parameters.stringPart;
 	// Override is currently required when using MDM as the construction of the MDM
 	// beans are ambiguous as they are constructed multiple places. This is evident
 	// when running in a spring boot environment
-	"spring.main.allow-bean-definition-overriding=true"})
+	"spring.main.allow-bean-definition-overriding=true",
+	"hapi.fhir.remote_terminology_service.snomed.system=http://snomed.info/sct",
+	"hapi.fhir.remote_terminology_service.snomed.url=http://tx.fhir.org/r4",
+})
 class ExampleServerR4IT implements IServerSupport {
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR4IT.class);
 	private IGenericClient ourClient;
@@ -356,6 +362,13 @@ class ExampleServerR4IT implements IServerSupport {
 			}
 		}
 		assertTrue(foundDobChange);
+	}
+
+	@Test
+	void testValidateRemoteTerminology() {
+		Parameters result = ourClient.operation().onType(ValueSet.class).named("$validate-code").withParameter(Parameters.class, "code", new StringType("22298006")).andParameter("system", new UriType("http://snomed.info/sct")).execute();
+		assertEquals(true, ((BooleanType) result.getParameterValue("result")).getValue());
+		assertEquals("Myocardial infarction", ((StringType) result.getParameterValue("display")).getValue());
 	}
 
 	@BeforeEach
