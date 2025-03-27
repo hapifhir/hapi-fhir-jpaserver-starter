@@ -323,8 +323,20 @@ public class GazelleValidationWs {
 		// Description, with slice info if available
 		var description = new StringBuilder();
 		description.append(message.getMessage());
-		if (message.sliceText != null && message.sliceText.length > 0) {
-			final var slices = engine.filterSlicingMessages(message.sliceText);
+		
+		if (message.hasSliceInfo() && message.sliceHtml != null) {
+			List<String> liElements = new ArrayList<>();
+			String html = message.sliceHtml;
+			int startIndex = 0;
+			while ((startIndex = html.indexOf("<li>", startIndex)) != -1) {
+				int endIndex = html.indexOf("</li>", startIndex);
+				if (endIndex != -1) {
+					String content = html.substring(startIndex + 4, endIndex).trim();
+					liElements.add(content);
+					startIndex = endIndex + 5;
+				}
+			}
+			var slices = engine.filterSlicingMessages(liElements.toArray(new String[0]));
 			if (!slices.isEmpty()) {
 				description.append("<br/><br/>Slice information:<br/><ul>");
 				for (final var slice : slices) {

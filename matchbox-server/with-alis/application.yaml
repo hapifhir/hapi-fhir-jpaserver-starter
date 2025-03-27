@@ -19,7 +19,7 @@ hapi:
         url: classpath:/hl7.fhir.uv.extensions#1.0.0.tgz
       hl7_fhir_uv_ips:
         name: ch.fhir.ig.ch-alis
-        version: 0.2.0
+        version: 0.3.0
         url: file:/Users/oegger/Documents/github/ch-alis/output/package.tgz
     staticLocation: file:/apps/
 matchbox:

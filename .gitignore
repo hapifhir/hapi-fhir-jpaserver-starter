@@ -232,3 +232,7 @@ matchbox-server/tx.html
 matchbox-server/test.html
 matchbox-server/src/main/resources/static/3rdpartylicenses.txt
 matchbox-server/src/main/resources/static/prerendered-routes.json
+
+*.repomixignore
+repomix-output.xml
+repomix.config.json

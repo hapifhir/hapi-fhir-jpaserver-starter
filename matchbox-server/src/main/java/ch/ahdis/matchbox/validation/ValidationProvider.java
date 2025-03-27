@@ -53,6 +53,7 @@ import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.hl7.fhir.r5.model.UriType;
 import org.hl7.fhir.r5.utils.OperationOutcomeUtilities;
 import org.hl7.fhir.r5.utils.ToolingExtensions;
+import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -293,8 +294,21 @@ public class ValidationProvider {
 			issue.setDetails(null);
 
 			// Add slice info to diagnostics
-			if (message.sliceText != null) {
-				List<String> sliceInfo = engine.filterSlicingMessages(message.sliceText);
+			if (message.hasSliceInfo() && message.sliceHtml != null) {
+
+				List<String> liElements = new ArrayList<>();
+				String html = message.sliceHtml;
+				int startIndex = 0;
+				while ((startIndex = html.indexOf("<li>", startIndex)) != -1) {
+					int endIndex = html.indexOf("</li>", startIndex);
+					if (endIndex != -1) {
+						String content = html.substring(startIndex + 4, endIndex).trim();
+						liElements.add(content);
+						startIndex = endIndex + 5;
+					}
+				}
+
+				List<String> sliceInfo = engine.filterSlicingMessages(liElements.toArray(new String[0]));
 				if (!sliceInfo.isEmpty()) {
 					final var newDiagnostics = new StringBuilder();
 					newDiagnostics.append(issue.getDiagnostics());
