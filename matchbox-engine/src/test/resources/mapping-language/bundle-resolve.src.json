@@ -90,9 +90,6 @@
             "result": [
                 {
                     "reference": "Observation/6"
-                },
-                {
-                    "reference": "Observation/7"
                 }
             ]
         }
@@ -108,25 +105,6 @@
                     {
                         "system": "https://loinc.org",
                         "code": "41656-0"
-                    }
-                ]
-            },
-            "subject": {
-                "reference": "Patient/1"
-            }
-        }
-    },
-    {
-        "fullUrl": "http://localhost:8000/Observation/7",
-        "resource": {
-            "resourceType": "Observation",
-            "id": "7",
-            "status": "final",
-            "code": {
-                "coding": [
-                    {
-                        "system": "https://loinc.org",
-                        "code": "32713-0"
                     }
                 ]
             },

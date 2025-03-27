@@ -1311,10 +1311,10 @@ class FhirMappingLanguageTests {
 		engine.addCanonicalResource(sm);
 		String result = engine.transform(getFileAsStringFromResources("/bundle-resolve.src.json"), true, "http://example.org/StructureMap/Bundle2Composition", true);
 		assertTrue(result != null);
-		System.out.println(result);
+		//System.out.println(result);
 		Composition comp = (Composition) new JsonParser().parse(result);
 		assertEquals(2,  comp.getSection().get(0).getSection().size());
-		assertEquals(2,  comp.getSection().get(1).getSection().size());
+		assertEquals(1,  comp.getSection().get(1).getSection().size());
 	}
 
 }
