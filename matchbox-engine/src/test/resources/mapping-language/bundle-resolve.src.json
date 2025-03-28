@@ -89,16 +89,15 @@
             },
             "result": [
                 {
-                    "reference": "Observation/6"
+                    "reference": "urn:uuid:9d1714da-b7e6-455b-bfd2-69ce0ff5fb12"
                 }
             ]
         }
     },
     {
-        "fullUrl": "http://localhost:8000/Observation/6",
+        "fullUrl": "urn:uuid:9d1714da-b7e6-455b-bfd2-69ce0ff5fb12",
         "resource": {
             "resourceType": "Observation",
-            "id": "6",
             "status": "final",
             "code": {
                 "coding": [
