@@ -674,16 +674,8 @@ public class MatchboxEngine extends ValidationEngine {
 				+ (map.getDateElement() != null && !map.getDateElement().isEmpty()  ? "(" + map.getDateElement().asStringValue() + ")" : ""));
 
 		org.hl7.fhir.r5.elementmodel.Element resource = getTargetResourceFromStructureMap(map, targetContext);
-		
-		// PoC: add resource to reference cache
-		if("Bundle".equals(src.fhirType()) && src.hasChildren("entry")) {
-			for(Base entry : src.getChildByName("entry").getValues()) {
-				Base r = entry.getChildValueByName("resource");
-				if(r != null) {
-					tss.addToReferenceCache(r);
-				}
-			}
-		}
+
+		this.getValidator(null).resolveReferencesInBundle(src);
 
 		scu.transform(null, src, map, resource);
 		resource.populatePaths(null);

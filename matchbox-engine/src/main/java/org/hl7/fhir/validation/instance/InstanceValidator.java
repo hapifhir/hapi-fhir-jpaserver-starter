@@ -8353,5 +8353,13 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
   public void setMatchetypeStatus(MatchetypeStatus matchetypeStatus) {
     this.matchetypeStatus = matchetypeStatus;
   }
+
+  // matchbox patch FML resolve() in Bundle #359
+  public void resolveReferencesInBundle(Element element) {
+		setParents(element);
+    if (element!=null && BUNDLE.equals(element.fhirType())) {
+      resolveBundleReferences(element, new ArrayList<Element>());
+    }
+  }
   
 }
