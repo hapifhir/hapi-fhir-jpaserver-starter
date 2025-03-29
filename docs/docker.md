@@ -1,25 +1,16 @@
-# Docker container
+# Running matchbox in docker
 
-if you have the rights, you can download Matchbox as a docker container:
-
-```
-docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.8.1
-```
-
-## Configurable base image:
+You can run matchbox directly in docker.
 
 ```bash
-docker run -d --name matchbox -p 8080:8080 -e matchbox.fhir.context.onlyOneEngine=true -v /Users/oliveregger/apps/:/apps/ -v /Users/oliveregger/config/:/config/ matchbox
+docker run -d --name europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:latest -p 8080:8080 -e matchbox.fhir.context.onlyOneEngine=true -v ${PWD}/config/:/config/ matchbox
+docker logs --follow matchbox
 ```
-
-Server will then be accessible at http://localhost:8080/matchboxv3/fhir/metadata.
-
-The local volume /Users/oliveregger/apps/ will be mapped inside the container and Matchbox will serve the content
-if is requested via http://localhost:8080/matchboxv3/apps/ (allows you to add own html apps).
+If you see A 'FHIR has been lit on this server' you can point your browser to http://localhost:8080/matchboxv3/fhir/metadata.
 
 The optional local volume /Users/oliveregger/config/ will be mapped inside the container and Matchbox will use [fhir-settings.json](https://confluence.hl7.org/display/FHIR/Using+fhir-settings.json) and application.yaml for additional configuration see [https://github.com/ahdis/matchbox/tree/main/matchbox-server](https://github.com/ahdis/matchbox/tree/main/matchbox-server) different directories started with with-xxx for sample configurations.
 
-The last parameter is to set development environment, which allows you to create/update conformance resources (e.g. transform StructureMaps). If not provided, you need to provide the conformance resources by an FHIR Implementation Guide.
+The parameter (matchbox.fhir.context.onlyOneEngine) is to set development environment, which allows you to create/update conformance resources (e.g. transform StructureMaps). If not provided, you need to provide the conformance resources by an FHIR Implementation Guide.
 
 We recommend to put at least 2.5 GB of RAM for the container instance, depending on how many ImplementationGuides's you plan to install and want to use.
 
@@ -28,7 +19,7 @@ We recommend to put at least 2.5 GB of RAM for the container instance, depending
 To check if the container is live and ready you can check the health:
 
 ```http
-GET https://test.ahdis.ch/matchboxv3/actuator/health HTTP/1.1
+GET http:///localhost:8080/matchboxv3/actuator/health HTTP/1.1
 Accept: application/vnd.spring-boot.actuator.v3+json
 
 HTTP/1.1 200
