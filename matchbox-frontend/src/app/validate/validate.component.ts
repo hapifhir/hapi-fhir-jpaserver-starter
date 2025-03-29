@@ -421,7 +421,7 @@ export class ValidateComponent implements AfterViewInit {
       url.searchParams.delete(name);
     });
 
-    url.searchParams.set('resource', btoa(entry.resource));
+    url.searchParams.set('resource', this.base64Encode(entry.resource));
     url.searchParams.set('profile', entry.selectedProfile);
     if (entry.ig) {
       url.searchParams.set('ig', entry.ig);
@@ -548,7 +548,7 @@ export class ValidateComponent implements AfterViewInit {
         }
       }
 
-      const resource = atob(searchParams.get('resource'));
+      const resource = this.base64Encode(searchParams.get('resource'));
       let contentType = 'application/fhir+json';
       if (resource.startsWith('<')) {
         contentType = 'application/fhir+xml';
@@ -570,6 +570,16 @@ export class ValidateComponent implements AfterViewInit {
         timeOut: 3000,
       });
     }
+  }
+
+  // Never use btoa() on UTF-8 directly
+  // https://developer.mozilla.org/en-US/docs/Web/API/Window/btoa
+  private base64Encode(str: string): string {
+    return window.btoa(
+      String.fromCharCode(
+        ...new TextEncoder().encode(str)
+      )
+    );
   }
 }
 

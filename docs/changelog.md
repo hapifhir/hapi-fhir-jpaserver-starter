@@ -1,3 +1,7 @@
+2025/xx/xx Unreleased
+
+- Fix handling of UTF-8 content in the validator GUI [#363](https://github.com/ahdis/matchbox/issues/363)
+
 2025/03/19 Release 4.0.0
 
 - Upgrade to HAPI 8.0.0 and FHIR Core 6.5.15, plus various other dependency upgrades
