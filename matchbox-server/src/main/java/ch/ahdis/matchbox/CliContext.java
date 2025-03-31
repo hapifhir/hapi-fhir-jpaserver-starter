@@ -264,6 +264,7 @@ public class CliContext {
     this.httpReadOnly = environment.getProperty("matchbox.fhir.context.httpReadOnly", Boolean.class, false);
     this.extensions = Arrays.asList(environment.getProperty("matchbox.fhir.context.extensions", String[].class, new String[]{"any"}));
     this.xVersion = environment.getProperty("matchbox.fhir.context.xVersion", Boolean.class, false);
+    this.analyzeOutcomeWithAI = environment.getProperty("matchbox.fhir.context.analyzeOutcomeWithAI", Boolean.class, false);
     this.llmProvider = environment.getProperty("matchbox.fhir.context.llm.provider", String.class);
     this.modelName = environment.getProperty("matchbox.fhir.context.llm.modelName", String.class);
     this.apiKey = environment.getProperty("matchbox.fhir.context.llm.apiKey", String.class);
