@@ -1,27 +1,27 @@
-import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
-import { FhirConfigService } from '../fhirConfig.service';
+import {AfterViewInit, ChangeDetectorRef, Component} from '@angular/core';
+import {FhirConfigService} from '../fhirConfig.service';
 import FhirClient from 'fhir-kit-client';
 import pako from 'pako';
 import untar from 'js-untar';
-import { IDroppedBlob } from '../upload/upload.component';
+import {IDroppedBlob} from '../upload/upload.component';
 import ace from 'ace-builds';
-import { ValidationEntry } from './validation-entry';
+import {ValidationEntry} from './validation-entry';
 import {ValidationParameter, ValidationParameterDefinition} from './validation-parameter';
-import { ITarEntry } from './tar-entry';
-import { Issue, OperationResult } from '../util/operation-result';
-import { FormControl, Validators } from '@angular/forms';
-import { StructureDefinition } from './structure-definition';
-import { ToastrService } from 'ngx-toastr';
+import {ITarEntry} from './tar-entry';
+import {Issue, OperationResult} from '../util/operation-result';
+import {FormControl, Validators} from '@angular/forms';
+import {StructureDefinition} from './structure-definition';
+import {ToastrService} from 'ngx-toastr';
 import {ValidationCodeEditor} from "./validation-code-editor";
 import {Base64} from 'js-base64';
 
 const INDENT_SPACES = 2;
 
 @Component({
-    selector: 'app-validate',
-    templateUrl: './validate.component.html',
-    styleUrls: ['./validate.component.scss'],
-    standalone: false
+  selector: 'app-validate',
+  templateUrl: './validate.component.html',
+  styleUrls: ['./validate.component.scss'],
+  standalone: false
 })
 export class ValidateComponent implements AfterViewInit {
   readonly AUTO_IG_SELECTION = 'AUTOMATIC';
@@ -63,7 +63,7 @@ export class ValidateComponent implements AfterViewInit {
     this.client = data.getFhirClient();
 
     const validateOperationDefinitionPromise = this.client
-          .read({ resourceType: 'OperationDefinition', id: '-s-validate' });
+      .read({resourceType: 'OperationDefinition', id: '-s-validate'});
 
     const implementationGuidesPromise = this.client
       .search({
@@ -438,11 +438,12 @@ export class ValidateComponent implements AfterViewInit {
     return url.toString();
   }
 
-  copyDirectLink(event: MouseEvent,entry: ValidationEntry) {
+  copyDirectLink(event: MouseEvent, entry: ValidationEntry) {
     if ('clipboard' in navigator) {
       event.preventDefault();
       const url = this.getDirectLink(entry);
-      navigator.clipboard.writeText(url).then(() => {});
+      navigator.clipboard.writeText(url).then(() => {
+      });
     }
   }
 
@@ -586,7 +587,8 @@ class UploadedFile {
     public contentType: string,
     public content: string,
     public resourceType: string
-  ) {}
+  ) {
+  }
 }
 
 /**
