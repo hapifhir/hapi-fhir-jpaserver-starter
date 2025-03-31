@@ -793,9 +793,12 @@ public class CliContext {
         && checkReferences == that.checkReferences
         && Objects.equals(resolutionContext, that.resolutionContext)
         && disableDefaultResourceFetcher == that.disableDefaultResourceFetcher
+        && analyzeOutcomeWithAI == that.analyzeOutcomeWithAI
+        && Objects.equals(llmProvider, that.llmProvider)
+        && Objects.equals(modelName, that.modelName)
+        && Objects.equals(apiKey, that.apiKey)
         && checkIpsCodes == that.checkIpsCodes
-        && Objects.equals(bundle, that.bundle)
-        && analyzeOutcomeWithAI == that.analyzeOutcomeWithAI;
+        && Objects.equals(bundle, that.bundle);
   }
 
   @Override
@@ -842,9 +845,12 @@ public class CliContext {
         checkReferences,
         resolutionContext,
         disableDefaultResourceFetcher,
+        analyzeOutcomeWithAI,
+        llmProvider,
+        modelName,
+        apiKey,
         checkIpsCodes,
-        bundle,
-        analyzeOutcomeWithAI);
+        bundle);
     result = 31 * result + Arrays.hashCode(igsPreloaded);
     return result;
   }
@@ -895,9 +901,12 @@ public class CliContext {
         ", checkReferences=" + checkReferences +
         ", resolutionContext=" + resolutionContext +
         ", disableDefaultResourceFetcher=" + disableDefaultResourceFetcher +
+        ", analyzeOutcomeWithAI=" + analyzeOutcomeWithAI +
+        ", llmProvider='" + llmProvider + '\'' +
+        ", modelName='" + modelName + '\'' +
+        ", apiKey='" + apiKey + '\'' +
         ", checkIpsCodes=" + checkIpsCodes +
         ", bundle=" + bundle +
-        ", analyzeOutcomeWithAI=" + analyzeOutcomeWithAI +
         '}';
   }
 
@@ -953,9 +962,12 @@ public class CliContext {
 	addExtension(ext, "check-references", new BooleanType(this.checkReferences));
 	addExtension(ext, "resolution-context", new StringType(this.resolutionContext));
 	addExtension(ext, "disableDefaultResourceFetcher", new BooleanType(this.disableDefaultResourceFetcher));
+  addExtension(ext, "analyzeOutcomeWithAI", new BooleanType(this.analyzeOutcomeWithAI));
+  addExtension(ext, "llmProvider", new StringType(this.llmProvider));
+  addExtension(ext, "modelName", new StringType(this.modelName));
+  addExtension(ext, "apiKey", new StringType(this.apiKey));
 	addExtension(ext, "check-ips-codes", new BooleanType(this.checkIpsCodes));
 	addExtension(ext, "bundle", new StringType(this.bundle));
-  addExtension(ext, "analyzeOutcomeWithAI", new BooleanType(this.analyzeOutcomeWithAI));
   for( var extension : this.extensions) {
     addExtension(ext, "extensions", new StringType(extension));
   }
