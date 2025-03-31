@@ -4,6 +4,7 @@
 - FML: support resolve() for source thx to @mrunibe 
 - Update org.hl7.fhir.core to 6.5.17
 - Incorporate PR for lookup with liquid templates https://github.com/hapifhir/org.hl7.fhir.core/issues/1942
+- Add AI Analyze feature to validator [#350](https://github.com/ahdis/matchbox/issues/350)
 
 2025/03/19 Release 4.0.0
 
