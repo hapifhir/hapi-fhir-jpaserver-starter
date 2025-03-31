@@ -203,6 +203,7 @@ public class CliContext {
     return xVersion;
   }
 
+  @JsonProperty("llmProvider")
   private String llmProvider;
 
   public String getLlmProvider() {

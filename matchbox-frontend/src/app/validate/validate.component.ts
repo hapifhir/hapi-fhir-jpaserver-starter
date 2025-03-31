@@ -54,6 +54,8 @@ export class ValidateComponent implements AfterViewInit {
   showSettings: boolean = false;
   currentResource: UploadedFile | null = null;
 
+  showAIAnalyzeButton: boolean = false;
+
   package: ArrayBuffer;
 
   constructor(
@@ -542,9 +544,12 @@ export class ValidateComponent implements AfterViewInit {
         });
         this.updateProfileFilter();
       }
+      if (parameter.name == 'llmProvider') {
+        this.showAIAnalyzeButton = true;
+      }
     });
     od.parameter
-      .filter((f) => f.use == 'in' && f.name != 'resource' && f.name != 'profile' && f.name != 'ig')
+      .filter((f) => f.use == 'in' && f.name != 'resource' && f.name != 'profile' && f.name != 'ig' && f.name != 'llmProvider')
       .forEach((parameter: fhir.r4.OperationDefinitionParameter) => {
         this.validatorSettings.set(parameter.name, new ValidationParameterDefinition(parameter));
       });
