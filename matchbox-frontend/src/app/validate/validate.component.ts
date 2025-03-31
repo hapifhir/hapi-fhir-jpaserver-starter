@@ -13,6 +13,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { StructureDefinition } from './structure-definition';
 import { ToastrService } from 'ngx-toastr';
 import {ValidationCodeEditor} from "./validation-code-editor";
+import {Base64} from 'js-base64';
 
 const INDENT_SPACES = 2;
 
@@ -417,20 +418,23 @@ export class ValidateComponent implements AfterViewInit {
 
   getDirectLink(entry: ValidationEntry): string {
     const url = new URL(document.location.href);
+    // Remove all search params
     url.searchParams.forEach((name: string) => {
       url.searchParams.delete(name);
     });
 
-    url.searchParams.set('resource', this.base64Encode(entry.resource));
-    url.searchParams.set('profile', entry.selectedProfile);
+    const hashParams = new URLSearchParams();
+    hashParams.set('resource', Base64.encodeURI(entry.resource));
+    hashParams.set('profile', entry.selectedProfile);
     if (entry.ig) {
-      url.searchParams.set('ig', entry.ig);
+      hashParams.set('ig', entry.ig);
     }
 
     for (const param of entry.validationParameters) {
-      url.searchParams.set(param.name, param.value);
+      hashParams.set(param.name, param.value);
     }
 
+    url.hash = hashParams.toString();
     return url.toString();
   }
 
@@ -548,7 +552,7 @@ export class ValidateComponent implements AfterViewInit {
         }
       }
 
-      const resource = this.base64Encode(searchParams.get('resource'));
+      const resource = Base64.decode(searchParams.get('resource'));
       let contentType = 'application/fhir+json';
       if (resource.startsWith('<')) {
         contentType = 'application/fhir+xml';
@@ -570,16 +574,6 @@ export class ValidateComponent implements AfterViewInit {
         timeOut: 3000,
       });
     }
-  }
-
-  // Never use btoa() on UTF-8 directly
-  // https://developer.mozilla.org/en-US/docs/Web/API/Window/btoa
-  private base64Encode(str: string): string {
-    return window.btoa(
-      String.fromCharCode(
-        ...new TextEncoder().encode(str)
-      )
-    );
   }
 }
 

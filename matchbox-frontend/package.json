@@ -22,6 +22,7 @@
     "debug": "^4.3.7",
     "fhir-kit-client": "1.9.2",
     "fhirpath": "^3.15.2",
+    "js-base64": "^3.7.7",
     "js-untar": "^2.0.0",
     "ngx-highlightjs": "^12.0.0",
     "ngx-mat-select-search": "^7.0.8",
