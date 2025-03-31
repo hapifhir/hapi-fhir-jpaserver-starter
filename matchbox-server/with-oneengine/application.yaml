@@ -33,4 +33,8 @@ matchbox:
       xVersion: true      
       onlyOneEngine: true
       txServer: http://tx.fhir.org
-      openai_api_key: 1234
+      llm:
+        llmProvider: openai
+        modelName: gpt-3.5-turbo
+        apiKey: sk-xxx
+
