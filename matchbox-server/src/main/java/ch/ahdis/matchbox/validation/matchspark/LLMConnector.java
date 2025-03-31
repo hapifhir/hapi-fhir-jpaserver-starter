@@ -141,7 +141,7 @@ public class LLMConnector {
         try {
             ObjectNode fhirResourceContent = (ObjectNode) objectMapper.readTree(resource);
             ObjectNode operationOutcomeContent = (ObjectNode) objectMapper.readTree(operationOutcome);
-            String requestBody = createRequestBody(fhirResourceContent, operationOutcomeContent, objectMapper, PROMPT4);
+            String requestBody = createRequestBody(fhirResourceContent, operationOutcomeContent);
 
             // write the whole LLM-Input-String to a File for later Tokenizer-analysis
             saveStringToFile(requestBody);
@@ -172,53 +172,14 @@ public class LLMConnector {
      * Creates the request body for the LLM-request.
      * @param fhirResourceContent The ObjectNode received from calling method containing the FHIR resource.
      * @param operationOutcomeContent The ObjectNode received from the calling method containing the validation result (OperationOutcome).
-     * @param objectMapper An ObjectMapper received to create the Json-structure of the request.
-     * @param prompt A prompt to give the necessary instructions to the LLM.
-     * @return The response string from the LLM.
-     * @throws IOException          if an I/ O error occurs when sending or receiving
-     * @throws InterruptedException if the operation is interrupted
+     * @return The request string for the LLM.
      */
-    private static String createRequestBody(ObjectNode fhirResourceContent, ObjectNode operationOutcomeContent, ObjectMapper objectMapper, String prompt)
+    private static String createRequestBody(ObjectNode fhirResourceContent, ObjectNode operationOutcomeContent)
             throws IOException, InterruptedException {
-
-        // Create the root JSON object for the request payload
-        ObjectNode jsonForRequest = objectMapper.createObjectNode();
-        jsonForRequest.put("model", MODEL);
-
-        ArrayNode messages = objectMapper.createArrayNode();
-
-        // System message to set the context for the LLM
-       /* ObjectNode systemMessage = objectMapper.createObjectNode();
-        systemMessage.put("role", "system");
-        systemMessage.put("content", prompt);
-        messages.add(systemMessage);*/
-
-        // User message for the FHIR resource
-        ObjectNode resourceMessage = objectMapper.createObjectNode();
-        resourceMessage.put("role", "user");
-        resourceMessage.put("content", "Here is the FHIR resource: " + fhirResourceContent.toString());
-        messages.add(resourceMessage);
-
-
-        // User message for the validation result
-        ObjectNode operationOutcomeMessage = objectMapper.createObjectNode();
-        operationOutcomeMessage.put("role", "user");
-        operationOutcomeMessage.put("content", "Here is the validation result: " + operationOutcomeContent.toString());
-        messages.add(operationOutcomeMessage);
-
-        // Add the messages array to the request payload
-        jsonForRequest.set("messages", messages);
-
-        // Add optional parameters
-        jsonForRequest.put("max_tokens", 500);
-        jsonForRequest.put("temperature", 1);
-
         String requestString = "Here is the FHIR resource: " + fhirResourceContent.toString() + "\n";
         requestString += "Here is the validation result: " + operationOutcomeContent.toString();
 
-        // Convert the JSON payload to a string
         return requestString;
-        //return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonForRequest);
     }
 
     /**
