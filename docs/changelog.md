@@ -1,6 +1,7 @@
-2025/xx/xx Unreleased
+2025/xx/xx Release 4.1.0 Unreleased
 
 - Fix handling of UTF-8 content in the validator GUI [#363](https://github.com/ahdis/matchbox/issues/363)
+- FML: support resolve() for source thx to @mrunibe 
 
 2025/03/19 Release 4.0.0
 
