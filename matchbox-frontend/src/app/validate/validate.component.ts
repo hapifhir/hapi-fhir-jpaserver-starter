@@ -544,7 +544,7 @@ export class ValidateComponent implements AfterViewInit {
         });
         this.updateProfileFilter();
       }
-      if (parameter.name == 'llmProvider') {
+      if (parameter.name == 'llmProvider' && parameter.extension) {
         this.showAIAnalyzeButton = true;
       }
     });
