@@ -295,20 +295,7 @@ public class ValidationProvider {
 
 			// Add slice info to diagnostics
 			if (message.hasSliceInfo() && message.sliceHtml != null) {
-
-				List<String> liElements = new ArrayList<>();
-				String html = message.sliceHtml;
-				int startIndex = 0;
-				while ((startIndex = html.indexOf("<li>", startIndex)) != -1) {
-					int endIndex = html.indexOf("</li>", startIndex);
-					if (endIndex != -1) {
-						String content = html.substring(startIndex + 4, endIndex).trim();
-						liElements.add(content);
-						startIndex = endIndex + 5;
-					}
-				}
-
-				List<String> sliceInfo = engine.filterSlicingMessages(liElements.toArray(new String[0]));
+				List<String> sliceInfo = engine.filterSlicingMessages(message.sliceHtml);
 				if (!sliceInfo.isEmpty()) {
 					final var newDiagnostics = new StringBuilder();
 					newDiagnostics.append(issue.getDiagnostics());

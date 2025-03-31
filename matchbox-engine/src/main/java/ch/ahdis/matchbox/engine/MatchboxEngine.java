@@ -1086,12 +1086,22 @@ public class MatchboxEngine extends ValidationEngine {
 	/**
 	 * Filters the given list of slices messages by removing those that match the suppressed warning/information patterns.
 	 *
-	 * @param messages The list of messages to filter.
+	 * @param htmlMessage The htmlMEssage to filter.
 	 * @return The filtered list of messages.
 	 */
-	public List<String> filterSlicingMessages(final String[] messages) {
+	public List<String> filterSlicingMessages(final String htmlMessage) {
+		List<String> liElements = new ArrayList<>();
+		int startIndex = 0;
+		while ((startIndex = htmlMessage.indexOf("<li>", startIndex)) != -1) {
+			int endIndex = htmlMessage.indexOf("</li>", startIndex);
+			if (endIndex != -1) {
+				String content = htmlMessage.substring(startIndex + 4, endIndex).trim();
+				liElements.add(content);
+				startIndex = endIndex + 5;
+			}
+		}
 		final List<Pattern> ignoredPatterns = this.compileSuppressedWarnInfoPatterns();
-		return Arrays.asList(messages).stream()
+		return liElements.stream()
 			.filter(message -> {
 				return ignoredPatterns.parallelStream().noneMatch(pattern -> pattern.matcher(message).find());
 			})
