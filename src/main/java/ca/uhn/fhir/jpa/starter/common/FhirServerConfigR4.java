@@ -39,30 +39,19 @@ public class FhirServerConfigR4 {
 		if (values.size() == 1 && "*".equalsIgnoreCase(values.iterator().next().getSystem())) {
 			var remoteSystem = values.iterator().next();
 			theValidationSupport.addValidationSupport(
-					0, new RemoteTerminologyServiceValidationSupport(theFhirContext, remoteSystem.getUrl()) {
-						@Override
-						public CodeValidationResult validateCode(
-								ValidationSupportContext theValidationSupportContext,
-								ConceptValidationOptions theOptions,
-								String theCodeSystem,
-								String theCode,
-								String theDisplay,
-								String theValueSetUrl) {
-							return super.validateCode(
-									theValidationSupportContext,
-									theOptions,
-									theCodeSystem,
-									theCode,
-									theDisplay,
-									theValueSetUrl);
-						}
-					});
+					0, new RemoteTerminologyServiceValidationSupport(theFhirContext, remoteSystem.getUrl()));
 			return theValidationSupport;
 
 			// If there are multiple remote terminology services, then add each one to the validation chain
 		} else {
 			values.forEach((remoteSystem) -> theValidationSupport.addValidationSupport(
 					0, new RemoteTerminologyServiceValidationSupport(theFhirContext, remoteSystem.getUrl()) {
+						@Override
+						public boolean isCodeSystemSupported(
+								ValidationSupportContext theValidationSupportContext, String theSystem) {
+							return remoteSystem.getSystem().equalsIgnoreCase(theSystem);
+						}
+
 						@Override
 						public CodeValidationResult validateCode(
 								ValidationSupportContext theValidationSupportContext,
