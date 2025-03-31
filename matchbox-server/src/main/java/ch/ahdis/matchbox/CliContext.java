@@ -906,7 +906,6 @@ public class CliContext {
         ", analyzeOutcomeWithAI=" + analyzeOutcomeWithAI +
         ", llmProvider='" + llmProvider + '\'' +
         ", modelName='" + modelName + '\'' +
-        ", apiKey='" + apiKey + '\'' +
         ", checkIpsCodes=" + checkIpsCodes +
         ", bundle=" + bundle +
         '}';
@@ -967,7 +966,6 @@ public class CliContext {
   addExtension(ext, "analyzeOutcomeWithAI", new BooleanType(this.analyzeOutcomeWithAI));
   addExtension(ext, "llmProvider", new StringType(this.llmProvider));
   addExtension(ext, "modelName", new StringType(this.modelName));
-  addExtension(ext, "apiKey", new StringType(this.apiKey));
 	addExtension(ext, "check-ips-codes", new BooleanType(this.checkIpsCodes));
 	addExtension(ext, "bundle", new StringType(this.bundle));
   for( var extension : this.extensions) {
