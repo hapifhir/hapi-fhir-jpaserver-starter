@@ -18,8 +18,9 @@ They can be set in the Spring configuration (e.g. `application.properties`/`appl
 | `matchbox.fhir.context.suppressWarnInfo` | `{}`          | The list of warnings/infos to suppress in validation reports. See [_Suppress warning/information-level issues in validation_](validation.md#suppress-warnings). |
 | `matchbox.fhir.context.httpReadOnly`     | `false`       | Whether the server is in read-only mode or not. See the section [_Read-only mode_](#read-only) below.                                                           |
 | `matchbox.fhir.context.extensions`       | `any`         | The list of domains allowed in extensions while validating resources; `any` will allow all extensions.                                                          |
+| `matchbox.fhir.context.analyzeOutcomeWithAI`       | `false`         | Whether the validation outcome should be analyzed by a LLM or not. Requires the LLM parameters to be correctly set.                                                          |
 | `matchbox.fhir.context.llm.provider`       |          | The LLM provider used for the AI analysis of validation.                                                          |
-| `matchbox.fhir.context.llm.model`       |          | The LLM model used for the AI analysis of validation.                                                          |
+| `matchbox.fhir.context.llm.modelName`       |          | The LLM model used for the AI analysis of validation.                                                          |
 | `matchbox.fhir.context.llm.apiKey`       |          | Your API key for the desired LLM provider.                                                          |
 
 See an example of configuration, to show the expected format:
@@ -39,7 +40,7 @@ matchbox:
       llm:
         provider: anthropic
         modelName: claude-3-5-sonnet-20241022
-        apiKey: sk-ant-api03-abc123
+        apiKey: sk-xxx
 
 ```
 

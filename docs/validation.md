@@ -74,7 +74,7 @@ matchbox:
       #llm:
       #  provider: anthropic
       #  modelName: claude-3-5-sonnet-20241022
-      #  apiKey: sk-ant-api03-abc123
+      #  apiKey: sk-xxx
 ```
 
 | Parameter             | Card  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
