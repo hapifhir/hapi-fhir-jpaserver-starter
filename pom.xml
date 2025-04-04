@@ -6,6 +6,7 @@
     <properties>
         <java.version>17</java.version>
         <hapi.fhir.jpa.server.starter.revision>1</hapi.fhir.jpa.server.starter.revision>
+        <clinical-reasoning.version>3.19.0</clinical-reasoning.version>
     </properties>
 
     <!-- one-liner to take you to the cloud with settings form the application.yaml file: -->
@@ -113,9 +114,9 @@
         </dependency>
         <!-- This dependency includes the JPA CQL Server -->
         <dependency>
-            <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>hapi-fhir-storage-cr</artifactId>
-            <version>${project.parent.version}</version>
+            <groupId>org.opencds.cqf.fhir</groupId>
+            <artifactId>cqf-fhir-cr-hapi</artifactId>
+            <version>${clinical-reasoning.version}</version>
         </dependency>
         <!-- This dependency includes the JPA MDM Server -->
         <dependency>
