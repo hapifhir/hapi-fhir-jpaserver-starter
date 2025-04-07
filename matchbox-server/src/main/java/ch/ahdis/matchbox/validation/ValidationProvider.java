@@ -235,7 +235,14 @@ public class ValidationProvider {
 		log.debug("Validation time: {}", sw);
 
 		var oo = this.getOperationOutcome(sha3Hex, messages, profile, engine, millis, cliContext);
-		if (aiAnalyze) {
+		boolean hasError = false;
+		for (final ValidationMessage message : messages) {
+			if (message.getLevel() == ValidationMessage.IssueSeverity.ERROR || message.getLevel() == ValidationMessage.IssueSeverity.FATAL) {
+				hasError = true;
+				break;
+			}
+		}
+		if (aiAnalyze || hasError) {
 			try {
 				LLMConnector openAIConnector = LLMConnector.getConnector(cliContext);
 				String json = FhirContext.forR5().newJsonParser().setPrettyPrint(true).encodeResourceToString(oo);
