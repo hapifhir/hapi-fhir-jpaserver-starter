@@ -119,11 +119,11 @@ public class BundleValidator extends BaseValidator {
                 for (String profile : profiles) {
                   StructureDefinition defn = context.fetchResource(StructureDefinition.class, profile);
                   if (defn != null) {
-                    if (validator().isCrumbTrails()) {
+//                    if (validator().isCrumbTrails()) {
                       res.addMessage(signpost(errors, NO_RULE_DATE, IssueType.INFORMATIONAL, res.line(), res.col(),
                           stack.getLiteralPath(), I18nConstants.VALIDATION_VAL_PROFILE_SIGNPOST_BUNDLE_PARAM,
                           defn.getUrl()));
-                    }
+//                    }
                     stack.resetIds();
                     ok = validator().startInner(hostContext, errors, res, res, defn, rstack, false, pct, mode, false)
                         && ok;
