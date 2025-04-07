@@ -18,7 +18,10 @@ import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
+import dev.langchain4j.model.googleai.GoogleAiEmbeddingModel;
+import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 import dev.langchain4j.model.huggingface.HuggingFaceChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 
@@ -88,6 +91,13 @@ public class LLMConnector {
                     .modelName(MODEL_NAME)
                     .build();
                 break;
+            case "google":
+                model = GoogleAiGeminiChatModel.builder()
+                    .apiKey(API_KEY)
+                    .modelName(MODEL_NAME)
+                    .build();
+                break;
+
             default:
                 throw new IllegalArgumentException("Unsupported LLM provider: " + LLM_PROVIDER);
         }
@@ -120,8 +130,13 @@ public class LLMConnector {
             saveStringToFile(requestBody);
 
             chatMemory.add(UserMessage.from(requestBody));
-            ChatResponse response = model.chat(chatMemory.messages());
-            
+            ChatRequest request = ChatRequest.builder()
+                    .messages(chatMemory.messages())
+                    .build();
+            ChatResponse response = model.chat(request);
+
+            System.out.println("Input Tokens: " + response.tokenUsage().inputTokenCount());
+            System.out.println("Output Tokens: " + response.tokenUsage().outputTokenCount());
             resetChatMemory();
             // clean and return the LLMs response
             return cleanResult(response.aiMessage().text(), requestBody);
