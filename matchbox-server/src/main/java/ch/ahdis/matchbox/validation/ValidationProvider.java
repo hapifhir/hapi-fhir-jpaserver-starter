@@ -135,6 +135,9 @@ public class ValidationProvider {
 		// get al list of all JsonProperty of cliContext with return values property name and property type
 		List<Field> cliContextProperties = cliContext.getValidateEngineParameters();
 
+		// get default value for aiAnalyzeOutcomeWithAI set in properties
+		boolean aiAnalyzeDefault = cliContext.getAnalyzeOutcomeWithAI();
+
 		// check for each cliContextProperties if it is in the request parameter
 		for (final Field field : cliContextProperties) {
 			final String cliContextProperty = field.getName();
@@ -168,9 +171,6 @@ public class ValidationProvider {
 			return this.getOoForError("The 'profile' parameter must be provided");
 		}
 		String profile = theRequest.getParameter("profile");
-
-		// Check if AI parameter is set
-		boolean aiAnalyze = cliContext.getAnalyzeOutcomeWithAI();
 
 		boolean reload = false;
 		if (theRequest.getParameter("reload") != null) {
@@ -235,11 +235,20 @@ public class ValidationProvider {
 		log.debug("Validation time: {}", sw);
 
 		var oo = this.getOperationOutcome(sha3Hex, messages, profile, engine, millis, cliContext);
+
+		boolean aiAnalyze = false;
+		// check if the request ai analyze parameter is set to true or false
+		if (theRequest.getParameter("analyzeOutcomeWithAI") != null) {
+			aiAnalyze = Boolean.parseBoolean(theRequest.getParameter("analyzeOutcomeWithAI"));
+		}
+
 		boolean hasError = false;
-		for (final ValidationMessage message : messages) {
-			if (message.getLevel() == ValidationMessage.IssueSeverity.ERROR || message.getLevel() == ValidationMessage.IssueSeverity.FATAL) {
-				hasError = true;
-				break;
+		if (aiAnalyzeDefault) {
+			for (final ValidationMessage message : messages) {
+				if (message.getLevel() == ValidationMessage.IssueSeverity.ERROR || message.getLevel() == ValidationMessage.IssueSeverity.FATAL) {
+					hasError = true;
+					break;
+				}
 			}
 		}
 		if (aiAnalyze || hasError) {
@@ -250,7 +259,8 @@ public class ValidationProvider {
 				oo = this.addAIIssueToOperationOutcome(oo, aiResult);
 			} catch (Exception e) {
 				log.error("Error during AI analysis", e);
-				return this.getOoForError("Error during AI analysis: %s".formatted(e.getMessage()));
+				// add the error to the OperationOutcome, so the client still gets the validation result
+				oo = this.addExceptionToOperationOutcome(oo, e);
 			}
 		}
 
@@ -497,6 +507,20 @@ public class ValidationProvider {
         	details.setText("AI Analyze of the Operation Outcome");
 			issue.setDetails(details);
 	
+			return outcome;
+		}
+		throw new IllegalArgumentException("Provided resource is not an OperationOutcome.");
+	}
+
+	public IBaseResource addExceptionToOperationOutcome(IBaseResource resource, Exception e) {
+		if (resource instanceof OperationOutcome) {
+			var outcome = (OperationOutcome) resource;
+			
+			var issue = outcome.addIssue();
+			issue.setSeverity(OperationOutcome.IssueSeverity.ERROR);
+			issue.setCode(OperationOutcome.IssueType.EXCEPTION);
+			issue.setDiagnostics(e.getLocalizedMessage());
+
 			return outcome;
 		}
 		throw new IllegalArgumentException("Provided resource is not an OperationOutcome.");
