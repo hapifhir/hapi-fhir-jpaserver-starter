@@ -18,7 +18,8 @@ They can be set in the Spring configuration (e.g. `application.properties`/`appl
 | `matchbox.fhir.context.suppressWarnInfo` | `{}`          | The list of warnings/infos to suppress in validation reports. See [_Suppress warning/information-level issues in validation_](validation.md#suppress-warnings). |
 | `matchbox.fhir.context.httpReadOnly`     | `false`       | Whether the server is in read-only mode or not. See the section [_Read-only mode_](#read-only) below.                                                           |
 | `matchbox.fhir.context.extensions`       | `any`         | The list of domains allowed in extensions while validating resources; `any` will allow all extensions.                                                          |
-| `matchbox.fhir.context.analyzeOutcomeWithAI`       | `false`         | Whether the validation outcome should be analyzed by a LLM or not. Requires the LLM parameters to be correctly set.                                                          |
+| `matchbox.fhir.context.analyzeOutcomeWithAI`       |          | Whether the validation outcome should be analyzed by a LLM or not. Requires the LLM parameters to be correctly set.                                                          |
+| `matchbox.fhir.context.analyzeOutcomeWithAIOnError`       |          | Whether the validation outcome should be analyzed by a LLM, when it includes `error` or `fatal` issues, or not. Requires the LLM parameters to be correctly set.                                                          |
 | `matchbox.fhir.context.llm.provider`       |          | The LLM provider used for the AI analysis of validation.                                                          |
 | `matchbox.fhir.context.llm.modelName`       |          | The LLM model used for the AI analysis of validation.                                                          |
 | `matchbox.fhir.context.llm.apiKey`       |          | Your API key for the desired LLM provider.                                                          |
@@ -37,6 +38,7 @@ matchbox:
         ch.fhir.ig.ch-elm:
           - "regex:Binding for path (.+) has no source, so can't be checked"
           - "regex:None of the codings provided are in the value set 'Observation Interpretation Codes'(.*)"
+      analyzeOutcomeWithAIOnError: true
       llm:
         provider: anthropic
         modelName: claude-3-5-sonnet-20241022
@@ -153,4 +155,18 @@ Supported LLMs:
 | [OpenAI](https://openai.com/index/openai-api/) (`openai`)     | `gpt-4o-mini`               | `gpt-3.5-turbo`, `gpt-4`, `gpt-4o`, `gpt-4o-mini`                                                              |
 | [Anthropic](https://www.anthropic.com/api) (`anthropic`)| `claude-3-5-sonnet-20241022`         | `claude-3-5-sonnet-20241022`, `claude-3-5-haiku-20241022`, `claude-3-sonnet-20240229`, `claude-3-opus-20240229`|
 
-To use this feature, `analyzeOutcomeWithAI` must be set to `true` by the user in the validation settings.
+To use this feature, `analyzeOutcomeWithAI` or `analyzeOutcomeWithAIOnError` must be set to `true` by the user in the validation settings.
+
+Setting `analyzeOutcomeWithAIOnError` to `true` will perform the AI analysis on all validations that include issues labeled `error` or `fatal`. Setting `analyzeOutcomeWithAI` to `false` will overwrite `analyzeOutcomeWithAIOnError` and the analysis is not performed. Check the following table for an overview.
+
+| analyzeOutcomeWithAIOnError | analyzeOutcomeWithAI | Errors in validation | Perform analysis |
+| --------------------------- | -------------------- | -------------------- | ---------------- |
+| `false`                       | `false`                | \-                   | no            |
+| `false`                       | \-                   | \-                   | no            |
+| `false`                       | `true`                 | \-                   | yes             |
+| `true`                        | `false`                | no                | no            |
+| `true`                        | `false`                | yes                 | no            |
+| `true`                        | \-                   | no                | no            |
+| `true`                        | \-                   | yes                 | yes             |
+| `true`                        | `true`                 | no                | yes             |
+| `true`                        | `true`                 | yes                 | yes             |

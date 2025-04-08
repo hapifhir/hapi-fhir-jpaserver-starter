@@ -71,6 +71,7 @@ matchbox:
       suppressWarnInfo:
         hl7.fhir.r4.core#4.0.1:
         #- "Constraint failed: dom-6:"
+      #analyzeOutcomeWithAIOnError: true
       #llm:
       #  provider: anthropic
       #  modelName: claude-3-5-sonnet-20241022
