@@ -206,8 +206,8 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 					.setUse(Enumerations.OperationParameterUse.IN)
 					.setMin(0)
 					.setMax("1")
-					.setType(field.getType().equals(boolean.class) ? Enumerations.FHIRTypes.BOOLEAN : Enumerations.FHIRTypes.STRING)
-					.addExtension("http://matchbox.health/validationDefaultValue", field.getType().equals(boolean.class) ? new BooleanType((Boolean) field.get(cliContext)) : new StringType((String) field.get(cliContext)));
+					.setType(field.getType().equals(boolean.class) || field.getType().equals(Boolean.class) ? Enumerations.FHIRTypes.BOOLEAN : Enumerations.FHIRTypes.STRING)
+					.addExtension("http://matchbox.health/validationDefaultValue", field.getType().equals(boolean.class) || field.getType().equals(Boolean.class) ? new BooleanType((Boolean) field.get(cliContext)) : new StringType((String) field.get(cliContext)));
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

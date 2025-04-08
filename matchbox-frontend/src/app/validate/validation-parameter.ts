@@ -9,9 +9,9 @@ export class ValidationParameterDefinition {
     this.formControl = new UntypedFormControl();
     if (this.param.extension) {
       if (this.param.type == "boolean") {
-        this.formControl.setValue(param.extension[0].valueBoolean)
+        this.formControl.setValue(param.extension[0].valueBoolean);
       } else {
-        this.formControl.setValue(param.extension[0].valueString)
+        this.formControl.setValue(param.extension[0].valueString);
       }
     }
   }

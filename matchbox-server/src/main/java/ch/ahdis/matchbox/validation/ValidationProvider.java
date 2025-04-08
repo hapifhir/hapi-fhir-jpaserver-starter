@@ -135,9 +135,6 @@ public class ValidationProvider {
 		// get al list of all JsonProperty of cliContext with return values property name and property type
 		List<Field> cliContextProperties = cliContext.getValidateEngineParameters();
 
-		// get default value for aiAnalyzeOutcomeWithAI set in properties
-		boolean aiAnalyzeDefault = cliContext.getAnalyzeOutcomeWithAI();
-
 		// check for each cliContextProperties if it is in the request parameter
 		for (final Field field : cliContextProperties) {
 			final String cliContextProperty = field.getName();
@@ -145,7 +142,7 @@ public class ValidationProvider {
 				try {
 					final String value = theRequest.getParameter(cliContextProperty);
 					// currently only handles boolean or String
-					if (field.getType() == boolean.class) {
+					if (field.getType() == boolean.class || field.getType() == Boolean.class) {
 						BeanUtils.setProperty(cliContext, cliContextProperty, Boolean.parseBoolean(value));
 					} else {
 						BeanUtils.setProperty(cliContext, cliContextProperty, value);
@@ -236,14 +233,16 @@ public class ValidationProvider {
 
 		var oo = this.getOperationOutcome(sha3Hex, messages, profile, engine, millis, cliContext);
 
-		boolean aiAnalyze = false;
+		Boolean aiAnalyze = null;
 		// check if the request ai analyze parameter is set to true or false
 		if (theRequest.getParameter("analyzeOutcomeWithAI") != null) {
 			aiAnalyze = Boolean.parseBoolean(theRequest.getParameter("analyzeOutcomeWithAI"));
 		}
 
+		Boolean aiAnalyzeOnError = cliContext.getAnalyzeOutcomeWithAIOnError();
+
 		boolean hasError = false;
-		if (aiAnalyzeDefault) {
+		if (aiAnalyzeOnError != null && aiAnalyzeOnError) {
 			for (final ValidationMessage message : messages) {
 				if (message.getLevel() == ValidationMessage.IssueSeverity.ERROR || message.getLevel() == ValidationMessage.IssueSeverity.FATAL) {
 					hasError = true;
@@ -251,7 +250,7 @@ public class ValidationProvider {
 				}
 			}
 		}
-		if (aiAnalyze || hasError) {
+		if ((aiAnalyze != null && aiAnalyze) || (aiAnalyze == null && aiAnalyzeOnError != null && aiAnalyzeOnError && hasError)) {
 			try {
 				LLMConnector openAIConnector = LLMConnector.getConnector(cliContext);
 				String json = FhirContext.forR5().newJsonParser().setPrettyPrint(true).encodeResourceToString(oo);
