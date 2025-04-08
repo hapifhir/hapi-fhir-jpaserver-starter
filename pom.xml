@@ -20,7 +20,7 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <version>8.1.0-SNAPSHOT</version>
+        <version>8.1.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
@@ -133,6 +133,12 @@
           <groupId>ca.uhn.hapi.fhir</groupId>
           <artifactId>hapi-fhir-server-cds-hooks</artifactId>
           <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-converter</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
         <!-- This dependency includes the OpenAPI Server -->
         <dependency>
