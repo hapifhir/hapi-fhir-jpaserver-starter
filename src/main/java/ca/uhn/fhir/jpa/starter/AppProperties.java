@@ -695,7 +695,7 @@ public class AppProperties {
 		return this.enable_task_pre_expand_value_sets;
 	}
 
-	public void setEnable_task_pre_expand_value_setss(Boolean enable_task_pre_expand_value_sets) {
+	public void setEnable_task_pre_expand_value_sets(Boolean enable_task_pre_expand_value_sets) {
 		this.enable_task_pre_expand_value_sets = enable_task_pre_expand_value_sets;
 	}
 
