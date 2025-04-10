@@ -59,6 +59,7 @@ public class AppProperties {
 	private Integer inline_resource_storage_below_size = 0;
 	private Boolean bulk_export_enabled = false;
 	private Boolean bulk_import_enabled = false;
+	private boolean patient_merge_enabled = false;
 	private Boolean default_pretty_print = true;
 	private Integer default_page_size = 20;
 	private Integer max_binary_size = null;
@@ -476,6 +477,14 @@ public class AppProperties {
 
 	public void setBulk_import_enabled(Boolean bulk_import_enabled) {
 		this.bulk_import_enabled = bulk_import_enabled;
+	}
+
+	public boolean getPatient_merge_enabled() {
+		return patient_merge_enabled;
+	}
+
+	public void setPatient_merge_enabled(Boolean patient_merge_enabled) {
+		this.patient_merge_enabled = patient_merge_enabled;
 	}
 
 	public EncodingEnum getDefault_encoding() {
