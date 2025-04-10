@@ -59,6 +59,7 @@ public class AppProperties {
 	private Integer inline_resource_storage_below_size = 0;
 	private Boolean bulk_export_enabled = false;
 	private Boolean bulk_import_enabled = false;
+	private boolean patient_merge_enabled = false;
 	private Boolean default_pretty_print = true;
 	private Integer default_page_size = 20;
 	private Integer max_binary_size = null;
@@ -105,6 +106,7 @@ public class AppProperties {
 	private Integer pre_expand_value_sets_default_count = 1000;
 	private Integer pre_expand_value_sets_max_count = 1000;
 	private Integer maximum_expansion_size = 1000;
+
 
 	public List<String> getCustomInterceptorClasses() {
 		return custom_interceptor_classes;
@@ -478,6 +480,14 @@ public class AppProperties {
 		this.bulk_import_enabled = bulk_import_enabled;
 	}
 
+	public boolean getPatient_merge_enabled() {
+		return patient_merge_enabled;
+	}
+
+	public void setPatient_merge_enabled(Boolean patient_merge_enabled) {
+		this.patient_merge_enabled = patient_merge_enabled;
+	}
+
 	public EncodingEnum getDefault_encoding() {
 		return default_encoding;
 	}
@@ -722,6 +732,8 @@ public class AppProperties {
 	public void setMaximum_expansion_size(Integer maximum_expansion_size) {
 		this.maximum_expansion_size = maximum_expansion_size;
 	}
+
+
 
 	public static class Cors {
 		private Boolean allow_Credentials = true;
