@@ -107,7 +107,6 @@ public class AppProperties {
 	private Integer pre_expand_value_sets_max_count = 1000;
 	private Integer maximum_expansion_size = 1000;
 
-
 	public List<String> getCustomInterceptorClasses() {
 		return custom_interceptor_classes;
 	}
@@ -732,8 +731,6 @@ public class AppProperties {
 	public void setMaximum_expansion_size(Integer maximum_expansion_size) {
 		this.maximum_expansion_size = maximum_expansion_size;
 	}
-
-
 
 	public static class Cors {
 		private Boolean allow_Credentials = true;
