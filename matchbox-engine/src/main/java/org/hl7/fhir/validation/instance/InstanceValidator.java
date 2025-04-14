@@ -3014,6 +3014,18 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       String value = element.getNamedChildValue("value", false);
       ok = rule(errors, NO_RULE_DATE, IssueType.CODEINVALID, element.line(), element.col(), path, value == null || isAbsolute(value), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_IDENTIFIER_IETF_SYSTEM_VALUE, value) && ok; 
     }
+    if ("https://tools.ietf.org/html/rfc4122".equals(system)) {
+      String value = element.getNamedChildValue("value", false);
+      if (value != null) {
+        if (value.startsWith("urn:uuid:")) {
+          warning(errors, NO_RULE_DATE, IssueType.CODEINVALID, element.line(), element.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_IDENTIFIER_IETF_SYSTEM_WRONG_3, value);
+        } else if (UUIDUtilities.isValidUUID(value)) {
+          warning(errors, NO_RULE_DATE, IssueType.CODEINVALID, element.line(), element.col(), path, false,  I18nConstants.TYPE_SPECIFIC_CHECKS_DT_IDENTIFIER_IETF_SYSTEM_WRONG_2, value);
+        } else {
+          ok = rule(errors, NO_RULE_DATE, IssueType.CODEINVALID, element.line(), element.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_IDENTIFIER_IETF_SYSTEM_WRONG_1, value) && ok;
+        }
+      }
+    }
     return ok;
   }
 
@@ -3201,7 +3213,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
           ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, Utilities.isAbsoluteUrl(url), 
               node.isContained() ? I18nConstants.TYPE_SPECIFIC_CHECKS_CANONICAL_CONTAINED : I18nConstants.TYPE_SPECIFIC_CHECKS_CANONICAL_ABSOLUTE, url) && ok;                  
         } else if (!e.getProperty().getDefinition().getPath().equals("Bundle.entry.fullUrl")) { // we don't check fullUrl here; it's not a reference, it's a definition. It'll get checked as part of checking the bundle
-          ok = validateReference(valContext, errors, path, type, context, e, url) && ok;
+          ok = validateReference(valContext, errors, path, type, context, e, parentNode == null ? null : parentNode.getElement(), url) && ok;
         }
       }
       if (type.equals(ID) && !"Resource.id".equals(context.getBase().getPath())) {
@@ -3537,45 +3549,59 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     return Utilities.escapeJson(s);
   }
 
-  public boolean validateReference(ValidationContext valContext, List<ValidationMessage> errors, String path, String type, ElementDefinition context, Element e, String url) {
+  public boolean validateReference(ValidationContext valContext, List<ValidationMessage> errors, String path, String type, ElementDefinition context, Element e, Element parent, String url) {
     boolean ok = true;
+    boolean internal = false;
+    String eurl = parent != null && parent.fhirType().equals("Extension") ? parent.getNamedChildValue("url") : null;
     ReferenceDestinationType refType = ReferenceDestinationType.EXTERNAL;
     if (url.startsWith("#")) {
       valContext.getInternalRefs().add(url.substring(1));
       refType = ReferenceDestinationType.CONTAINED;
+      internal = true;
     }
     // now, do we check the URI target?
     if (fetcher != null && !type.equals("uuid")) {
       boolean found;
       try {
-        found = isDefinitionURL(url) || (settings.isAllowExamples() && (url.contains("example.org") || url.contains("acme.com")) || url.contains("acme.org")) /* || (url.startsWith("http://hl7.org/fhir/tools")) */ || 
-            SpecialExtensions.isKnownExtension(url) || isXverUrl(url);
-        if (!found) {
-          found = fetcher.resolveURL(this, valContext, path, url, type, type.equals("canonical"));
+        if (url.startsWith("#")) {
+          Set<String> refs = new HashSet<>();
+          int count = countTargetMatches(valContext.getRootResource(), url.substring(1), true, "$", refs);
+          found = count > 0;
+        } else {
+          found = isDefinitionURL(url) || (settings.isAllowExamples() && isExampleUrl(url)) /* || (url.startsWith("http://hl7.org/fhir/tools")) */ || 
+              SpecialExtensions.isKnownExtension(url) || isXverUrl(url) || SIDUtilities.isKnownSID(url) || isKnownNamespaceUri(url) || isRfcRef(url);
+          if (!found) {
+            found = fetcher.resolveURL(this, valContext, path, url, type, type.equals("canonical"), context.getByType(type) != null ? context.getByType(type).getTargetProfile() : null);
+          }
         }
       } catch (IOException e1) {
         found = false;
       }
       if (!found) {
         if (type.equals("canonical")) {
-          ReferenceValidationPolicy rp = policyAdvisor.policyForReference(this, valContext, path, url, refType);
-          if (rp == ReferenceValidationPolicy.CHECK_EXISTS || rp == ReferenceValidationPolicy.CHECK_EXISTS_AND_TYPE) {
-            ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_CANONICAL_RESOLVE, url) && ok;
+          if (isExampleUrl(url) && isAllowExamples()) {
+            // nothing - these do need to resolve
           } else {
-            hint(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_CANONICAL_RESOLVE, url);
+            ReferenceValidationPolicy rp = policyAdvisor.policyForReference(this, valContext, path, url, refType);
+            if (rp == ReferenceValidationPolicy.CHECK_EXISTS || rp == ReferenceValidationPolicy.CHECK_EXISTS_AND_TYPE || internal) {
+              ok = warningOrError(isKnownSpace(url), errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_CANONICAL_RESOLVE, url) && ok;
+            } else if (isExampleUrl(url)) {
+              ok = rule(errors, "2025-04-03", IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_URL_EXAMPLE, url) && ok;
+            } else {
+              hint(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_CANONICAL_RESOLVE, url);
+            }
           }
-				} else {
-					// matchbox patch #233 - should allow unknown extension references if parameter set and only put as a warning
-					if (e.getProperty().getDefinition().getPath().equals("Extension.url") && this.allowUnknownExtension(url)) {
-						warning(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_URL_RESOLVE, url);
         } else {
-          if (url.contains("hl7.org") || url.contains("fhir.org")) {
+          if (isExampleUrl(url) && isAllowExamples()) {
+            // nothing - these do need to resolve
+          } else if (isExemptPathForUrlChecking(context, isAbsolute(url), eurl)) {
+            // nothing
+          } else if (isKnownSpace(url) || internal) {
             ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_URL_RESOLVE, url) && ok;;
-          } else if (url.contains("example.org") || url.contains("acme.com")) {
+          } else if (isExampleUrl(url)) {
             ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_URL_EXAMPLE, url) && ok;;
           } else {
             warning(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_URL_RESOLVE, url);
-						}
           }
         }
       } else {
@@ -3594,7 +3620,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
                 r = this.context.fetchResource(Resource.class, url);
               }
               if (r == null) {
-                warning(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, rp != ReferenceValidationPolicy.CHECK_VALID, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_CANONICAL_RESOLVE_NC, url);                    
+                warningOrError(internal, errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, rp != ReferenceValidationPolicy.CHECK_VALID, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_CANONICAL_RESOLVE_NC, url);                    
               } else if (rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, isCorrectCanonicalType(r, context), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_CANONICAL_TYPE, url, r.fhirType(), listExpectedCanonicalTypes(context))) {
                 if (rp == ReferenceValidationPolicy.CHECK_VALID) {
                   // todo....
@@ -3619,6 +3645,42 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       }
     }
     return ok;
+  }
+
+  private boolean isRfcRef(String url) {
+    return url != null && Utilities.startsWithInList(url, "https://tools.ietf.org/html/rfc", "http://tools.ietf.org/html/rfc") && Utilities.isInteger(url.substring(url.indexOf("rfc")+3));
+  }
+
+  private boolean isKnownNamespaceUri(String url) {
+    return Utilities.existsInList(url, "urn:hl7-org:v3", "urn:hl7-org:sdtc", "http://unstats.un.org/unsd/methods/m49/m49.htm");
+  }
+
+  private boolean isExemptPathForUrlChecking(ElementDefinition context, boolean absolute, String eurl) {
+    if (!context.hasBase()) {
+      return false;
+    }
+    if (Utilities.existsInList(eurl, "http://hl7.org/fhir/tools/StructureDefinition/ig-page-name")) {
+      return true;
+    }
+    if (absolute) {
+      return Utilities.existsInList(context.getBase().getPath(),
+          "ImplementationGuide.definition.page.source[x]", "ImplementationGuide.definition.page.name",  "ImplementationGuide.definition.page.name[x]",
+          "Requirements.statement.satisfiedBy", 
+          "StructureDefinition.type", "ElementDefinition.fixed[x]", "ElementDefinition.pattern[x]", "ImplementationGuide.dependsOn.uri"
+          );
+      
+    } else {
+      return Utilities.existsInList(context.getBase().getPath(),
+          "Extension.url", // extension urls are validated elsewhere
+         "ImplementationGuide.definition.page.source[x]", "ImplementationGuide.definition.page.name", "ImplementationGuide.definition.page.name[x]",
+         "Requirements.statement.satisfiedBy", 
+         "StructureDefinition.type", "ElementDefinition.fixed[x]", "ElementDefinition.pattern[x]"
+         );
+    }
+  }
+
+  private boolean isKnownSpace(String url) {
+    return url.startsWith("http://hl7.org/fhir") || url.startsWith("http://terminology.hl7.org") || url.startsWith("http://fhir.org/guides");
   }
 
   private Set<String> listExpectedCanonicalTypes(ElementDefinition context) {
@@ -5448,7 +5510,8 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
           anyFound = true;
       }
       if (!anyFound) {
-          throw new DefinitionException(context.formatMessagePlural(slicer.getSlicing().getDiscriminator().size(), I18nConstants.Could_not_match_discriminator_for_slice_in_profile, discriminators, ed.getId(), profile.getVersionedUrl(), discriminators));
+          throw new DefinitionException(context.formatMessagePlural(slicer.getSlicing().getDiscriminator().size(), I18nConstants.Could_not_match_discriminator_for_slice_in_profile, 
+              CommaSeparatedStringBuilder.join("|", discriminators), ed.getId(), profile.getVersionedUrl(), discriminators));
       }
 
       try {

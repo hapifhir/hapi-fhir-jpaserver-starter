@@ -1160,7 +1160,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       return res;
     }
     if (res.getErrorClass() == TerminologyServiceErrorClass.INTERNAL_ERROR || isNoTerminologyServer() || res.getErrorClass() == TerminologyServiceErrorClass.VALUESET_UNKNOWN) { // this class is created specifically to say: don't consult the server
-      return new ValueSetExpansionOutcome(res.getError(), res.getErrorClass(), false);
+      return res;
     }
 
     // if that failed, we try to expand on the server
@@ -1512,7 +1512,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
         issues.add(iss);
         return new ValidationResult(IssueSeverity.FATAL, e.getMessage(), e.getError(), issues);
       } catch (Exception e) {
-//        e.printStackTrace();
+//        e.printStackTrace();!
         localError = e.getMessage();
       }
     }
@@ -1520,6 +1520,8 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     if (localError != null && !terminologyClientManager.hasClient()) {
       if (unknownSystems.size() > 0) {
         return new ValidationResult(IssueSeverity.ERROR, localError, TerminologyServiceErrorClass.CODESYSTEM_UNSUPPORTED, issues).setUnknownSystems(unknownSystems);
+      } else if (type == TerminologyServiceErrorClass.INTERNAL_ERROR) {
+        return new ValidationResult(IssueSeverity.FATAL, localError, TerminologyServiceErrorClass.INTERNAL_ERROR, issues);
       } else {
         return new ValidationResult(IssueSeverity.ERROR, localError, TerminologyServiceErrorClass.UNKNOWN, issues);
       }
@@ -3698,24 +3700,31 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     }
     return res;
   }
+  
   public void setLocale(Locale locale) {
     super.setLocale(locale);
-    if (expParameters != null && locale != null) {
-      for (ParametersParameterComponent p : expParameters.getParameter()) {
-        if ("displayLanguage".equals(p.getName())) {
-          if (p.hasUserData(UserDataNames.auto_added_parameter)) {
-            p.setValue(new CodeType(locale.toLanguageTag()));
-            return;
-          } else {
-            // user supplied, we leave it alone
-            return ;
+    if (locale != null) {
+      String lt = locale.toLanguageTag();
+      if ("und".equals(lt)) {
+        throw new FHIRException("The locale "+locale.toString()+" is not valid");
+      }
+      if (expParameters != null) {
+        for (ParametersParameterComponent p : expParameters.getParameter()) {
+          if ("displayLanguage".equals(p.getName())) {
+            if (p.hasUserData(UserDataNames.auto_added_parameter)) {
+              p.setValue(new CodeType(lt));
+              return;
+            } else {
+              // user supplied, we leave it alone
+              return ;
+            }
           }
         }
+        ParametersParameterComponent p = expParameters.addParameter();
+        p.setName("displayLanguage");
+        p.setValue(new CodeType(lt));
+        p.setUserData(UserDataNames.auto_added_parameter, true);
       }
-      ParametersParameterComponent p = expParameters.addParameter();
-      p.setName("displayLanguage");
-      p.setValue(new CodeType(locale.toLanguageTag()));
-      p.setUserData(UserDataNames.auto_added_parameter, true);
     }
   }
 }

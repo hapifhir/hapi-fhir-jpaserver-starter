@@ -17,6 +17,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r5.conformance.R5ExtensionsLoader;
 import org.hl7.fhir.r5.terminologies.CodeSystemUtilities;
+import org.hl7.fhir.r5.terminologies.client.TerminologyClientContext;
 import org.hl7.fhir.r5.utils.validation.constants.ReferenceValidationPolicy;
 import org.hl7.fhir.utilities.FhirPublication;
 import org.hl7.fhir.validation.cli.services.StandAloneValidatorFetcher;
@@ -491,7 +492,9 @@ public class MatchboxEngineSupport {
 			validator.getContext().setNoTerminologyServer(false);
 
 			try {
-				// Currently all terminology clients are to R4 for versin greater than R4
+				TerminologyClientContext.setAllowNonConformantServers(true);
+				TerminologyClientContext.setCanAllowNonConformantServers(true);
+				// Currently all terminology clients are to R4 for version greater than R4
 				final String txver = validator.setTerminologyServer(cli.getTxServer(), cli.getTxLog(), FhirPublication.R4, cli.isTxUseEcosystem());
 				log.debug("Version of the terminology server: {}", txver);
 			} catch (final Exception e) {

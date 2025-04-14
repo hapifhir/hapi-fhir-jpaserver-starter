@@ -648,6 +648,8 @@ public class NpmPackage {
   }
 
   public void loadFile(String n, byte[] data) throws IOException {
+    // work around a bug: 
+    n = n.replace("//", "/");
     String dir = n.contains("/") ? n.substring(0, n.lastIndexOf("/")) : "$root";
     if (dir.startsWith("package/")) {
       dir = dir.substring(8);
