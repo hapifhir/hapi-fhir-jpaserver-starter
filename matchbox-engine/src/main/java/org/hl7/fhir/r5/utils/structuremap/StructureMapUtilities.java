@@ -649,7 +649,8 @@ public class StructureMapUtilities {
     fp.setupValidation(ValidationPolicy.EVERYTHING);     
     List<ValidationMessage> errors = new ArrayList<ValidationMessage>();
     Element res = fp.parse(errors, Utilities.stripBOM(text));
-    if (res == null) {
+    // matchbox patch FML lexer errors swallowed #367
+    if (res == null || errors.size() > 0) {
       Log.error(errors.toString());
       throw new FHIRException("Unable to parse Map Source for "+srcName + " Details "+errors.toString());
     }

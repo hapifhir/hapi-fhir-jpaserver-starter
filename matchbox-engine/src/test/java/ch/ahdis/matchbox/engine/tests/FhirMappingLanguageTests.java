@@ -1317,4 +1317,16 @@ class FhirMappingLanguageTests {
 		assertEquals(1,  comp.getSection().get(1).getSection().size());
 	}
 
+	@Test
+	void testParseFailWithError() throws FHIRException, IOException {
+		MatchboxEngine engine = new MatchboxEngine(FhirMappingLanguageTests.engine);
+		try {
+			StructureMap sm = engine.parseMap(getFileAsStringFromResources("/map-with-error.map"));
+			assertTrue(sm == null);
+		} catch (FHIRException e) {
+			// should fail
+		}
+	}
+
+
 }

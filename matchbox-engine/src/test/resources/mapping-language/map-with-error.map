@@ -1,0 +1,25 @@
+map "http://example.org/StructureMap/Bundle2Composition" = "Bundle2Composition"
+
+uses "http://hl7.org/fhir/StructureDefinition/Bundle" alias Bundle as source
+uses "http://hl7.org/fhir/StructureDefinition/DiagnosticReport" alias DiagnosticReport as source
+uses "http://hl7.org/fhir/StructureDefinition/Observation" alias Observation as source
+
+uses "http://hl7.org/fhir/StructureDefinition/Composition" alias Composition as target
+uses "http://hl7.org/fhir/StructureDefinition/Section" alias Section as target
+
+
+group bundle(source bundle : Bundle, target composition: Composition) {
+  bundle.entry as entry where $this.resource.ofType(FHIR.DiagnosticReport) -> composition.section as section then {
+    entry.resource as report -> section.title = ('lab report ' & %report.id) then {
+      report.result as result then {
+        result log('Reference: ' & %result.reference) -> evaluate(result, resolve()) as observation,
+          section.section as subsection then labResult(observation, subsection) /* "result" */;
+      };
+    };
+  };
+}
+
+group labResult(source observation : Observation, target section: Section) {
+  observation.id as id -> section.title = ('lab result ' & %id);
+  observation.code as code -> section.code = code;
+}
