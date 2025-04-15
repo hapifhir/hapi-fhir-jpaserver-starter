@@ -14,7 +14,6 @@ import {StructureDefinition} from './structure-definition';
 import {ToastrService} from 'ngx-toastr';
 import {ValidationCodeEditor} from "./validation-code-editor";
 import {Base64} from 'js-base64';
-import { HttpClient } from '@angular/common/http';
 
 const INDENT_SPACES = 2;
 
@@ -34,7 +33,6 @@ export class ValidateComponent implements AfterViewInit {
 
   // About the server
   client: FhirClient;
-  capabilityStatement: fhir.r4.CapabilityStatement | null = null;
   installedIgs: Set<string> = new Set<string>();
   supportedProfiles: Map<string, StructureDefinition> = new Map<string, StructureDefinition>();
   validatorSettings: Map<string, ValidationParameterDefinition> = new Map<string, ValidationParameterDefinition>();
@@ -62,7 +60,6 @@ export class ValidateComponent implements AfterViewInit {
     data: FhirConfigService,
     private cd: ChangeDetectorRef,
     private toastr: ToastrService,
-    private httpClient: HttpClient,
   ) {
     this.client = data.getFhirClient();
 
@@ -200,29 +197,23 @@ export class ValidateComponent implements AfterViewInit {
       if (this.package != null) {
         const result = pako.inflate(new Uint8Array(this.package));
         const dataSource = new Array<ValidationEntry>();
-        let fhirVersion: string = null;
-        let ig: string = null;
         const pointer = this;
         untar(result.buffer).then(
-          function (extractedFiles) {
+          (_) => {
             // onSuccess
             dataSource.forEach((entry) => {
               pointer.validationEntries.unshift(entry);
               pointer.runValidation(entry);
             });
           },
-          function (err) {
+          (err) => {
             // onError
             this.showErrorToast('Unexpected error', err);
             console.error(err);
           },
-          function (extractedFile: ITarEntry) {
+          (extractedFile: ITarEntry) => {
             // onProgress
             if (extractedFile.name?.indexOf('package.json') >= 0) {
-              let decoder = new TextDecoder('utf-8');
-              let res = JSON.parse(decoder.decode(extractedFile.buffer));
-              fhirVersion = res['fhirVersions'][0];
-              ig = res['name'] + '#' + res['version'];
             }
             if (extractedFile.name?.indexOf('example') >= 0 && extractedFile.name?.indexOf('.index.json') == -1) {
               let name = extractedFile.name;
@@ -235,7 +226,7 @@ export class ValidateComponent implements AfterViewInit {
               let decoder = new TextDecoder('utf-8');
               let res = JSON.parse(decoder.decode(extractedFile.buffer)) as fhir.r4.Resource;
               let profiles = res.meta?.profile;
-              // maybe better add ig as a parmeter, we assume now that ig version is equal to canonical version
+              // maybe better add ig as a parameter, we assume now that ig version is equal to canonical version
               let entry = new ValidationEntry(name, JSON.stringify(res, null, 2), 'application/fhir+json', profiles, this.getCurrentValidationSettings());
               dataSource.push(entry);
             }
