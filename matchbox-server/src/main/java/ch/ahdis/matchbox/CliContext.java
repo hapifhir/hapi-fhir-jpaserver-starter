@@ -58,7 +58,7 @@ public class CliContext {
   @JsonProperty("recursive")
   private boolean recursive = false;
   @JsonProperty("showMessagesFromReferences")
-  private boolean showMessagesFromReferences = false;
+  private boolean showMessagesFromReferences = true;
   @JsonProperty("doDebug")
   private boolean doDebug = false;
   @JsonProperty("assumeValidRestReferences")

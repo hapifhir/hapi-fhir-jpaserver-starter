@@ -1,3 +1,7 @@
+2025/04/xx Release 4.0.2
+
+- matchbox validation: make showMessagesFromReferences default to true [#370](https://github.com/ahdis/matchbox/issues/370)
+
 2025/04/15 Release 4.0.1
 
 - Fix handling of UTF-8 content in the validator GUI [#363](https://github.com/ahdis/matchbox/issues/363)
