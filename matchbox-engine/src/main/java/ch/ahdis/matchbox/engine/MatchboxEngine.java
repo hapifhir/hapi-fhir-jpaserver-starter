@@ -1091,13 +1091,22 @@ public class MatchboxEngine extends ValidationEngine {
 	 */
 	public List<String> filterSlicingMessages(final String htmlMessage) {
 		List<String> liElements = new ArrayList<>();
-		int startIndex = 0;
-		while ((startIndex = htmlMessage.indexOf("<li>", startIndex)) != -1) {
-			int endIndex = htmlMessage.indexOf("</li>", startIndex);
-			if (endIndex != -1) {
-				String content = htmlMessage.substring(startIndex + 4, endIndex).trim();
-				liElements.add(content);
-				startIndex = endIndex + 5;
+		if (htmlMessage == null) {
+			return liElements;
+		}
+		String[] uls = htmlMessage.split("<ul>");
+		// Parent:        This element does not match any known slice defined in the profile http://hl7.org/fhir/uv/ips/StructureDefinition/Bundle-uv-ips|2.0.0-ballot (this may not be a problem, but you should check that it's not intended to match a slice)
+		// First Message: This element does not match any known slice Defined in the profile http://hl7.org/fhir/uv/ips/StructureDefinition/Bundle-uv-ips|2.0.0-ballot (this may not be a problem, but you should check that it's not intended to match a slice)
+		for (int ul=1; ul<uls.length; ++ul) { // we ignore the first because it as repetition of the origin message 
+			String[] lis = uls[ul].split("<li>");
+			for (String li: lis) {
+				if (li.length()>0) {
+					String linoclose = li.replaceAll("</li>", "");
+					String ulnoclose = linoclose.replaceAll("</ul>", "");
+					if (ulnoclose.trim().length()>0) {
+						liElements.add(ulnoclose);
+					}
+				}
 			}
 		}
 		final List<Pattern> ignoredPatterns = this.compileSuppressedWarnInfoPatterns();
