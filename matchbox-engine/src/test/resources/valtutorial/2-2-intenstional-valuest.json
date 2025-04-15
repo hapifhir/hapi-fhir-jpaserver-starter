@@ -1,0 +1,46 @@
+{
+  "resourceType" : "Condition",
+  "id" : "CaveatDeviceCardiacPacemaker",
+  "meta" : {
+    "profile" : ["http://fhir.ch/ig/ch-rad-order/StructureDefinition/ch-rad-order-caveat-condition"]
+  },
+  "extension" : [{
+    "url" : "http://fhir.ch/ig/ch-rad-order/StructureDefinition/ch-rad-order-caveat-type",
+    "valueCoding" : {
+      "system" : "http://snomed.info/sct",
+      "code" : "397578001",
+      "display" : "Device in situ (finding)"
+    }
+  },
+  {
+    "url" : "http://fhir.ch/ig/ch-rad-order/StructureDefinition/ch-rad-order-qualifier-value",
+    "valueCoding" : {
+      "system" : "http://snomed.info/sct",
+      "code" : "52101004",
+      "display" : "Present (qualifier value)"
+    }
+  }],
+  "clinicalStatus" : {
+    "coding" : [{
+      "system" : "http://terminology.hl7.org/CodeSystem/condition-clinical",
+      "code" : "active"
+    }]
+  },
+  "category" : [{
+    "coding" : [{
+      "system" : "http://terminology.hl7.org/CodeSystem/condition-category",
+      "code" : "problem-list-item",
+      "display" : "Problem List Item"
+    }]
+  }],
+  "code" : {
+    "coding" : [{
+      "system" : "http://snomed.info/sct",
+      "code" : "444444444",
+      "display" : "notinvalueset"
+    }]
+  },
+  "subject" : {
+    "reference" : "Patient/SUfferer"
+  }
+}
