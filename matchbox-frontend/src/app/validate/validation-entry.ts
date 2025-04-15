@@ -36,10 +36,14 @@ export class ValidationEntry {
     }
     this.date = new Date();
 
-    if (this.mimetype === 'application/fhir+json') {
-      this.extractJsonInfo();
-    } else {
-      this.extractXmlInfo();
+    try {
+      if (this.mimetype === 'application/fhir+json') {
+        this.extractJsonInfo();
+      } else {
+        this.extractXmlInfo();
+      }
+    } catch (e) {
+      console.error('Error parsing resource to validate: ', e);
     }
 
     if (this.profiles && this.profiles.length) {
