@@ -194,6 +194,7 @@ The following parameters are supported:
 |------------------|------------------------------------------------------------------------|
 | `resource`       | The resource to validate, encoded as base64url. Required.              |
 | `profile`        | The profile to use for validation. Optional.                           |
+| `filename`       | The filename to use for the resource. Optional.                        |
 | Other parameters | Any parameter supported by the FHIR API or the `CliContext`. Optional. |
 
 The only required parameter is `resource`.

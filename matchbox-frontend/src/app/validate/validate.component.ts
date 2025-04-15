@@ -575,7 +575,13 @@ export class ValidateComponent implements AfterViewInit {
       if (resource.startsWith('<')) {
         contentType = 'application/fhir+xml';
       }
-      const extension = contentType.split('+')[1];
+
+      let filename: string;
+      if (searchParams.has('filename')) {
+        filename = searchParams.get('filename');
+      } else {
+        filename = `provided.${contentType.split('+')[1]}`;
+      }
 
       for (const [key, value] of searchParams) {
         if (key === 'resource' || key === 'profile') {
@@ -586,7 +592,7 @@ export class ValidateComponent implements AfterViewInit {
         }
       }
 
-      this.validateResource(`provided.${extension}`, resource, contentType, !hasSetProfile);
+      this.validateResource(filename, resource, contentType, !hasSetProfile);
       this.toastr.info('Validation', 'The validation of your resource has started', {
         closeButton: true,
         timeOut: 3000,
