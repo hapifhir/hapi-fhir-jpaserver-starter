@@ -167,9 +167,15 @@ export class ValidateComponent implements AfterViewInit {
           }
         }
       }
-      this.validationEntries.unshift(entry);
-      this.show(entry);
-      this.runValidation(entry);
+
+      if (entry.selectedProfile) {
+        this.validationEntries.unshift(entry);
+        this.show(entry);
+        this.runValidation(entry);
+      } else {
+        this.showWarnToast('No profile selected', 'Please select a profile for validation');
+      }
+
     } catch (error) {
       this.showErrorToast('Error parsing the file', error.message);
       if (entry) {
@@ -504,6 +510,19 @@ export class ValidateComponent implements AfterViewInit {
    */
   private showErrorToast(title: string, message: string) {
     this.toastr.error(message, title, {
+      closeButton: true,
+      timeOut: 5000,
+    });
+  }
+
+  /**
+   * Show a warning toast message.
+   * @param title the toast title.
+   * @param message the toast message.
+   * @private
+   */
+  private showWarnToast(title: string, message: string) {
+    this.toastr.warning(message, title, {
       closeButton: true,
       timeOut: 5000,
     });
