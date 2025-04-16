@@ -75,6 +75,10 @@ export class ValidateComponent implements AfterViewInit {
         },
       });
 
+    // Check for query string parameters in the current URL.
+    // They may contain a validation request
+    this.analyzeUrlForValidation();
+
     // Wait for the two requests to complete
     Promise.all([validateOperationDefinitionPromise, implementationGuidesPromise])
       .then((values: [fhir.r4.OperationDefinition, fhir.r4.Bundle]) => {
@@ -88,10 +92,6 @@ export class ValidateComponent implements AfterViewInit {
           .map((ig: fhir.r4.ImplementationGuide) => `${ig.packageId}#${ig.version}`)
           .sort()
           .forEach((ig) => this.installedIgs.add(ig));
-
-        // Check for query string parameters in the current URL.
-        // They may contain a validation request
-        this.analyzeUrlForValidation();
       })
       .catch((error) => {
         this.showErrorToast('Network error', error.message);
@@ -568,9 +568,10 @@ export class ValidateComponent implements AfterViewInit {
   /**
    * Analyzes the current URL to detect if there is a validation request in the search parameters ('resource',
    * 'profile', others).
+   * It runs before the component has fully loaded, so we can't compare the profile with the list of supported profiles.
    * @private
    */
-  private analyzeUrlForValidation(): void {
+  private async analyzeUrlForValidation(): Promise<void> {
     if (!window.location.hash) {
       return;
     }
@@ -578,15 +579,8 @@ export class ValidateComponent implements AfterViewInit {
     if (searchParams.has('resource')) {
       let hasSetProfile = false;
       if (searchParams.has('profile')) {
-        const profile = <string>searchParams.get('profile');
-        if (this.supportedProfiles.has(profile)) {
-          // The canonical exists as-is in the list of supported profiles
-          this.selectedProfile = profile;
-          hasSetProfile = true;
-        } else {
-          this.showErrorToast('Unknown profile', `The profile '${profile}' is unknown to this server. Please choose another profile from the list.`);
-          return;
-        }
+        this.selectedProfile = <string>searchParams.get('profile');
+        hasSetProfile = true;
       }
 
       const resource = Base64.decode(searchParams.get('resource'));
@@ -603,7 +597,7 @@ export class ValidateComponent implements AfterViewInit {
       }
 
       for (const [key, value] of searchParams) {
-        if (key === 'resource' || key === 'profile') {
+        if (key === 'resource' || key === 'profile' || key === 'filename') {
           continue;
         }
         if (this.validatorSettings.has(key)) {
