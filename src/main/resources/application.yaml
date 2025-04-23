@@ -7,8 +7,8 @@ spring:
    mail:
       host: smtp.gmail.com
       port: 587
-      username: sushantk@apra.in
-      password: gcso flpx sscx cnmc
+      username:
+      password:
       properties:
          mail:
             smtp:
@@ -91,7 +91,7 @@ rabbitmq:
          name: email_routing_key
 
 report:
-   email: sushantk@apra.in,skspider619@gmail.com
+   email:
    env: V2
    cron: "0 * * * * *"
 
