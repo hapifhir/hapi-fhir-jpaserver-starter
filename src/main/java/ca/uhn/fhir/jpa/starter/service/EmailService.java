@@ -5,11 +5,17 @@ import lombok.Setter;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMailMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Value;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.ByteArrayInputStream;
 
 @Service
 public class EmailService {
@@ -27,15 +33,31 @@ public class EmailService {
 	@RabbitListener(queues = "${rabbitmq.queue.email.name}")
 	public void sendEmailRabbit(EmailDetails emailDetails) {
 		try {
-			SimpleMailMessage mailMsg = new SimpleMailMessage();
-			mailMsg.setFrom(emailSender);
-			mailMsg.setTo(emailDetails.getRecipient());
-			mailMsg.setText(emailDetails.getMessageBody());
-			mailMsg.setSubject(emailDetails.getSubject());
+			if(emailDetails.getAttachment() != null && emailDetails.getAttachmentName() != null){
+				MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+				MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
-			javaMailSender.send(mailMsg);
-			logger.info("Mail sent successfully using RabbitMQ to {}", emailDetails.getRecipient());
-		} catch (MailException e) {
+				helper.setFrom(emailSender);
+				helper.setTo(emailDetails.getRecipient());
+				helper.setSubject(emailDetails.getSubject());
+				helper.setText(emailDetails.getMessageBody());
+
+				helper.addAttachment(emailDetails.getAttachmentName(),
+					() -> new ByteArrayInputStream(emailDetails.getAttachment()));
+
+				javaMailSender.send(mimeMessage);
+				logger.info("Mail with attachment sent successfully using RabbitMQ to {}", emailDetails.getRecipient());
+			} else {
+				SimpleMailMessage mailMsg = new SimpleMailMessage();
+				mailMsg.setFrom(emailSender);
+				mailMsg.setTo(emailDetails.getRecipient());
+				mailMsg.setText(emailDetails.getMessageBody());
+				mailMsg.setSubject(emailDetails.getSubject());
+
+				javaMailSender.send(mailMsg);
+				logger.info("Mail sent successfully using RabbitMQ to {}", emailDetails.getRecipient());
+			}
+		} catch (MailException | MessagingException e) {
 			logger.error("Sending mail failed to {} due to: {}", emailDetails.getRecipient(), e.getMessage(), e);
 		}
 	}
@@ -46,6 +68,8 @@ public class EmailService {
 		private String recipient;
 		private String messageBody;
 		private String subject;
+		private byte[] attachment;
+		private String attachmentName;
 
 		public EmailDetails() {}
 
@@ -53,6 +77,14 @@ public class EmailService {
 			this.recipient = recipient;
 			this.messageBody = messageBody;
 			this.subject = subject;
+		}
+
+		public EmailDetails(String recipient, String messageBody, String subject, byte[] attachment, String attachmentName) {
+			this.recipient = recipient;
+			this.messageBody = messageBody;
+			this.subject = subject;
+			this.attachment = attachment;
+			this.attachmentName = attachmentName;
 		}
 	}
 }
