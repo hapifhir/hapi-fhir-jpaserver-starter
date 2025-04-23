@@ -42,15 +42,15 @@ public class EmailUserService {
 
 	@Scheduled(cron = "${report.cron}")
 	public void sendWeeklyFacilitySummary() {
-//		LocalDate today = LocalDate.now();
-//		LocalDate previousMonday = today.minusWeeks(1).with(DayOfWeek.MONDAY);
-//		LocalDate previousSunday = previousMonday.with(DayOfWeek.SUNDAY);
-//
-//		String startDate = previousMonday.format(DateTimeFormatter.ISO_LOCAL_DATE);
-//		String endDate = previousSunday.format(DateTimeFormatter.ISO_LOCAL_DATE);
+		LocalDate today = LocalDate.now();
+		LocalDate previousMonday = today.minusWeeks(1).with(DayOfWeek.MONDAY);
+		LocalDate previousSunday = previousMonday.with(DayOfWeek.SUNDAY);
 
-		String startDate = "2025-04-07";
-		String endDate = "2025-04-13";
+		String startDate = previousMonday.format(DateTimeFormatter.ISO_LOCAL_DATE);
+		String endDate = previousSunday.format(DateTimeFormatter.ISO_LOCAL_DATE);
+
+//		String startDate = "2025-04-07";
+//		String endDate = "2025-04-13";
 		String dateRange = startDate + " to " + endDate;
 
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
