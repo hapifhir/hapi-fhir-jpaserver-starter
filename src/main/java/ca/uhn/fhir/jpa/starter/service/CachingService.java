@@ -25,6 +25,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.Function;
 
 @Import(AppProperties.class)
 @Service
@@ -43,555 +44,586 @@ public class CachingService {
 	private static final int MAX_RETRY = 6;
 
 	private static final long DELAY = 3600000;
-	
+
+
+
+	private <T, U, K> void cacheDataGeneric(
+		NotificationDataSource notificationDataSource,
+		List<T> items,
+		String orgId,
+		Date date,
+		LinkedHashMap<K, String> mapOfIdToMd5,
+		Function<T, K> idExtractor,
+		Function<T, String> orgIdExtractor,
+		Function<T, String> valueExtractor,
+		List<U> fallbackItems,
+		Function<U, K> fallbackIdExtractor,
+		double fallbackValue
+	) {
+		if (items != null) {
+			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<>();
+			ArrayList<CacheEntity> cacheEntitiesForUpdate = new ArrayList<>();
+
+			items.forEach(item -> {
+				OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
+					@Override
+					public void doIt() {
+						List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(idExtractor.apply(item)), orgIdExtractor.apply(item));
+						if (cacheEntities.isEmpty()) {
+							CacheEntity cacheEntity = new CacheEntity(
+								orgIdExtractor.apply(item),
+								mapOfIdToMd5.get(idExtractor.apply(item)),
+								date,
+								Double.valueOf(valueExtractor.apply(item)),
+								Date.valueOf(LocalDate.now())
+							);
+							cacheEntitiesForInsert.add(cacheEntity);
+						} else {
+							CacheEntity cacheEntity = cacheEntities.get(0);
+							cacheEntity.setValue(Double.valueOf(valueExtractor.apply(item)));
+							cacheEntitiesForUpdate.add(cacheEntity);
+						}
+					}
+				});
+			});
+
+			notificationDataSource.insertObjects(cacheEntitiesForInsert);
+			notificationDataSource.updateObjects(cacheEntitiesForUpdate);
+		} else {
+			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<>();
+
+			fallbackItems.forEach(item -> {
+				List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(fallbackIdExtractor.apply(item)), orgId);
+				if (cacheEntities.isEmpty()) {
+					CacheEntity cacheEntity = new CacheEntity(
+						orgId,
+						mapOfIdToMd5.get(fallbackIdExtractor.apply(item)),
+						date,
+						fallbackValue,
+						Date.valueOf(LocalDate.now())
+					);
+					cacheEntitiesForInsert.add(cacheEntity);
+				}
+			});
+
+			notificationDataSource.insertObjects(cacheEntitiesForInsert);
+		}
+	}
+
+	@Async("asyncTaskExecutor")
+	private <T, U, K> void cacheDataAsyncGeneric(
+		NotificationDataSource notificationDataSource,
+		List<T> items,
+		String orgId,
+		Date date,
+		LinkedHashMap<K, String> mapOfIdToMd5,
+		Function<T, K> idExtractor,
+		Function<T, String> orgIdExtractor,
+		Function<T, String> valueExtractor,
+		List<U> fallbackItems,
+		Function<U, K> fallbackIdExtractor,
+		double fallbackValue
+	){
+		if(items !=null) {
+			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<>();
+			ArrayList<CacheEntity> cacheEntitiesForUpdate = new ArrayList<>();
+
+			for (T item : items) {
+				OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
+					@Override
+					public void doIt() {
+						List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(idExtractor.apply(item)), orgIdExtractor.apply(item));
+						if (cacheEntities.isEmpty()) {
+							CacheEntity cacheEntity = new CacheEntity(
+								orgIdExtractor.apply(item),
+								mapOfIdToMd5.get(idExtractor.apply(item)),
+								date,
+								Double.valueOf(valueExtractor.apply(item)),
+								Date.valueOf(LocalDate.now())
+							);
+							cacheEntitiesForInsert.add(cacheEntity);
+						} else {
+							CacheEntity cacheEntity = cacheEntities.get(0);
+							cacheEntity.setValue(Double.valueOf(valueExtractor.apply(item)));
+							cacheEntitiesForUpdate.add(cacheEntity);
+						}
+					}
+				});
+			}
+			notificationDataSource.insertObjects(cacheEntitiesForInsert);
+			notificationDataSource.updateObjects(cacheEntitiesForUpdate);
+		} else {
+			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<>();
+
+			for(U item : fallbackItems) {
+				List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date,mapOfIdToMd5.get(fallbackIdExtractor.apply(item)),orgId);
+				if(cacheEntities.isEmpty()){
+					CacheEntity cacheEntity = new CacheEntity(
+						orgId,
+						mapOfIdToMd5.get(fallbackIdExtractor.apply(item)),
+						date,
+						fallbackValue,
+						Date.valueOf(LocalDate.now())
+					);
+					cacheEntitiesForInsert.add(cacheEntity);
+				}
+			}
+			notificationDataSource.insertObjects(cacheEntitiesForInsert);
+		}
+	}
+
+
 	public void cacheData(String orgId, Date startDate, List<IndicatorItem>indicators, int count, Map<String, List<ScoreCardItem>> map,String filterString) {
 	   long start = System.nanoTime();
 
 		notificationDataSource = NotificationDataSource.getInstance();
 		LinkedHashMap<Integer, String> mapOfIdToMd5 = new LinkedHashMap<>();
 		for (IndicatorItem item : indicators) {
-			mapOfIdToMd5.put(item.getId(),Utils.md5Bytes((item.getFhirPath().getExpression()+item.getId()+filterString).getBytes(StandardCharsets.UTF_8)));
+			mapOfIdToMd5.put(item.getId(), Utils.md5Bytes((item.getFhirPath().getExpression() + item.getId() + filterString).getBytes(StandardCharsets.UTF_8)));
 		}
-			List<ScoreCardItem> data = map.get(startDate.toLocalDate().toString());
-			final Date date = (Date) startDate.clone();
-			if(data!=null) {
-				ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-				ArrayList<CacheEntity> cacheEntitiesForUpdate = new ArrayList<CacheEntity>();
-				 data.forEach(item -> {
-					OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
-					    @Override public void doIt() {
-							List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getIndicatorId()), item.getOrgId());
-					    	if (cacheEntities.isEmpty()) {
-								CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(item.getIndicatorId()), date, Double.valueOf(item.getValue()),Date.valueOf(LocalDate.now()));
-								cacheEntitiesForInsert.add(cacheEntity);
-							} else {
-								CacheEntity cacheEntity = cacheEntities.get(0);
-								cacheEntity.setValue(Double.valueOf(item.getValue()));
-								cacheEntitiesForUpdate.add(cacheEntity);
-							}   
-					    }
-					});
-				});		
-				   notificationDataSource.insertObjects(cacheEntitiesForInsert);
-				   notificationDataSource.updateObjects(cacheEntitiesForUpdate);
-			}
-			else {
-				ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-				indicators.forEach(item -> {
-					OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
-					    @Override public void doIt() {
-					    	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getId()), orgId);
-					    	if (cacheEntities.isEmpty()) {
-								CacheEntity cacheEntity = new CacheEntity(orgId, mapOfIdToMd5.get(item.getId()), date, Double.valueOf(-1),Date.valueOf(LocalDate.now()));
-								cacheEntitiesForInsert.add(cacheEntity);
-						}
-					  }
-					});
-					
-				});
-				notificationDataSource.insertObjects(cacheEntitiesForInsert);
-			}
-		   long end = System.nanoTime();
-		   double diff = (end-start);
-//		   logger.warn("CACHE DATA "+String.valueOf(diff));
+
+		List<ScoreCardItem> data = map.get(startDate.toLocalDate().toString());
+		final Date date = (Date) startDate.clone();
+
+		cacheDataGeneric(notificationDataSource, data, orgId, date, mapOfIdToMd5, ScoreCardItem::getIndicatorId, ScoreCardItem::getOrgId, ScoreCardItem::getValue, indicators, IndicatorItem::getId, -1.0);
+
+		long end = System.nanoTime();
+		double diff = (end - start) / 1_000_000.0;;
+		logger.warn("-- Time for Caching Score card  "+String.valueOf(diff));
 	}
 
 	public void cacheDataForBarChart(String orgId, Date startDate, List<BarChartDefinition> barCharts,int count,Map<String, List<BarChartItemDataCollection>> map,String filterString) {
+		long start = System.nanoTime();
+
 		notificationDataSource = NotificationDataSource.getInstance();
 		LinkedHashMap<String, String> mapOfIdToMd5 = new LinkedHashMap<>();
+		List<BarComponentWrapper> fallbackItems = new ArrayList<>();
+
 		for (BarChartDefinition barChart : barCharts) {
-			for(BarChartItemDefinition barChartItem: barChart.getBarChartItemDefinitions()) {
-				for(BarComponent barComponent:barChartItem.getBarComponentList()) {
-					mapOfIdToMd5.put(String.valueOf(barChart.getId())+" "+String.valueOf(barChartItem.getId())+" "+String.valueOf(barComponent.getId()),Utils.getMd5KeyForLineCacheMd5WithCategory((barComponent.getFhirPath().getExpression()+filterString), barComponent.getBarChartItemId(), barChart.getId(),barChart.getCategoryId()));
+			for (BarChartItemDefinition barChartItem : barChart.getBarChartItemDefinitions()) {
+				for (BarComponent barComponent : barChartItem.getBarComponentList()) {
+					String key = String.valueOf(barChart.getId()) + " " + String.valueOf(barChartItem.getId()) + " " + String.valueOf(barComponent.getId());
+					mapOfIdToMd5.put(key, Utils.getMd5KeyForLineCacheMd5WithCategory(
+						barComponent.getFhirPath().getExpression() + filterString,
+						barComponent.getBarChartItemId(),
+						barChart.getId(),
+						barChart.getCategoryId()
+					));
+					fallbackItems.add(new BarComponentWrapper(barComponent, barChart.getId(), barChartItem.getId()));
 				}
 			}
-
 		}
 
-			List<BarChartItemDataCollection> data = map.get(startDate.toLocalDate().toString());
-			final Date date = (Date) startDate.clone();
-			if (data != null) {
-				ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-				ArrayList<CacheEntity> cacheEntitiesForUpdate = new ArrayList<CacheEntity>();
-			    data.forEach(barChartItemCollection -> {
-			        barChartItemCollection.getData().forEach(barComponentCategory -> {
-						  barComponentCategory.getBarComponentData().stream().forEach(barComponent -> {
-							  OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
-								  @Override
-								  public void doIt() {
-									  List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(barChartItemCollection.getChartId()) + " " + String.valueOf(barComponentCategory.getId()) + " " + String.valueOf(barComponent.getId())), orgId);
-									  if (cacheEntities.isEmpty()) {
-										  CacheEntity cacheEntityForPatient = new CacheEntity(orgId, mapOfIdToMd5.get(String.valueOf(barChartItemCollection.getChartId()) + " " + String.valueOf(barComponentCategory.getId()) + " " + String.valueOf(barComponent.getId())), date, Double.valueOf(barComponent.getValue()), Date.valueOf(LocalDate.now()));
-										  cacheEntitiesForInsert.add(cacheEntityForPatient);
+		List<BarChartItemDataCollection> data = map.get(startDate.toLocalDate().toString());
+		final Date date = (Date) startDate.clone();
 
-									  } else {
-										  CacheEntity cacheEntityForPatient = cacheEntities.get(0);
-										  cacheEntityForPatient.setValue(Double.valueOf(barComponent.getValue()));
-										  cacheEntitiesForUpdate.add(cacheEntityForPatient);
-									  }
-								  }
-							  });
-						  });
-					  });
-			    });
-		    	notificationDataSource.insertObjects(cacheEntitiesForInsert);
-		    	notificationDataSource.updateObjects(cacheEntitiesForUpdate);
-			} else {
-				ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-			    barCharts.forEach(chart -> {
-			        chart.getBarChartItemDefinitions().forEach(itemDef -> {
-			            itemDef.getBarComponentList().forEach(barComponent -> {
-			                OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
-			                    @Override
-			                    public void doIt() {
-			                    	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(chart.getId()) + " " + String.valueOf(itemDef.getId()) + " " + String.valueOf(barComponent.getId())), orgId);
-				                    if (cacheEntities.isEmpty()) {
-				                        CacheEntity cacheEntityForPatient = new CacheEntity(orgId, mapOfIdToMd5.get(String.valueOf(chart.getId()) + " " + String.valueOf(itemDef.getId()) + " " + String.valueOf(barComponent.getId())), date, Double.valueOf(0), Date.valueOf(LocalDate.now()));
-				                        cacheEntitiesForInsert.add(cacheEntityForPatient);
-				                    }
-			                    }
-			                });
-			            });
-			        });
-			    });
-                notificationDataSource.insertObjects(cacheEntitiesForInsert);
-			}
+		List<BarComponentDataWrapper> flatBarComponentData = new ArrayList<>();
+		if (data != null) {
+			data.forEach(collection -> {
+				collection.getData().forEach(category -> {
+					category.getBarComponentData().forEach(barComponentData -> {
+						flatBarComponentData.add(new BarComponentDataWrapper(
+							barComponentData,
+							collection.getChartId(),
+							category.getId()
+						));
+					});
+				});
+			});
+		}
 
+		cacheDataGeneric(notificationDataSource, flatBarComponentData, orgId, date, mapOfIdToMd5,
+			wrapper -> String.valueOf(wrapper.chartId) + " " + String.valueOf(wrapper.categoryId) + " " + String.valueOf(wrapper.data.getId()),
+			wrapper -> orgId, // BarComponentData may not have getOrgId, using orgId
+			wrapper -> wrapper.data.getValue(),
+			fallbackItems,
+			wrapper -> String.valueOf(wrapper.chartId) + " " + String.valueOf(wrapper.barChartItemId) + " " + String.valueOf(wrapper.component.getId()),
+			0.0
+		);
+
+		long end = System.nanoTime();
+		double diff = (end - start) / 1_000_000.0;;
+		logger.warn("-- Time for Caching BarChart  "+String.valueOf(diff));
 	}
 
 	public void cacheTabularData(String orgId, Date startDate, List<TabularItem> indicators,int count,Map<String, List<ScoreCardItem>> map,String filterString) {
+		long start = System.nanoTime();
 
 		notificationDataSource = NotificationDataSource.getInstance();
 		LinkedHashMap<Integer, String> mapOfIdToMd5 = new LinkedHashMap<>();
 		for (TabularItem item : indicators) {
-			mapOfIdToMd5.put(item.getId(),Utils.md5Bytes((item.getFhirPath().getExpression()+filterString).getBytes(StandardCharsets.UTF_8)));
+			mapOfIdToMd5.put(item.getId(), Utils.md5Bytes((item.getFhirPath().getExpression() + filterString).getBytes(StandardCharsets.UTF_8)));
 		}
-		
-			List<ScoreCardItem> data = map.get(startDate.toLocalDate().toString());
-			final Date date = (Date) startDate.clone();
-			if(data!=null) {
-				ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-				ArrayList<CacheEntity> cacheEntitiesForUpdate = new ArrayList<CacheEntity>();
-				 data.forEach(item -> {
-					OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
-					    @Override public void doIt() {
-					List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getIndicatorId()), item.getOrgId());
-					if (cacheEntities.isEmpty()) {
-						CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(item.getIndicatorId()), date, Double.valueOf(item.getValue()),Date.valueOf(LocalDate.now()));
-						cacheEntitiesForInsert.add(cacheEntity);
-					} else {
-						CacheEntity cacheEntity = cacheEntities.get(0);
-						cacheEntity.setValue(Double.valueOf(item.getValue()));
-						cacheEntitiesForUpdate.add(cacheEntity);
-					}
-					    }
-					});
-				});	
-				 notificationDataSource.insertObjects(cacheEntitiesForInsert);
-			    	notificationDataSource.updateObjects(cacheEntitiesForUpdate);
-			}
-			else {
-				ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-				indicators.forEach(item -> {
-					OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
-					    @Override public void doIt() {
-					    	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getId()),orgId);
-							if (cacheEntities.isEmpty()) {
-								CacheEntity cacheEntity = new CacheEntity(orgId, mapOfIdToMd5.get(item.getId()), date, Double.valueOf(0),Date.valueOf(LocalDate.now()));
-								cacheEntitiesForInsert.add(cacheEntity);
-							}
-					    }
-					});
-				});
-                notificationDataSource.insertObjects(cacheEntitiesForInsert);
-			}
 
+		List<ScoreCardItem> data = map.get(startDate.toLocalDate().toString());
+		final Date date = (Date) startDate.clone();
+
+		cacheDataGeneric(notificationDataSource, data, orgId, date, mapOfIdToMd5, ScoreCardItem::getIndicatorId, ScoreCardItem::getOrgId, ScoreCardItem::getValue, indicators, TabularItem::getId, 0.0);
+
+		long end = System.nanoTime();
+		double diff = (end - start) / 1_000_000.0;;
+		logger.warn("-- Time for Caching TabularData  "+String.valueOf(diff));
 	}
 
 	public void cachePieChartData(String orgId, Date startDate, List<PieChartDefinition> pieChartDefinitions,int count,Map<String, List<PieChartItemDataCollection>> map,String filterString){
+		long start = System.nanoTime();
 
 		notificationDataSource = NotificationDataSource.getInstance();
 		LinkedHashMap<String, String> mapOfIdToMd5 = new LinkedHashMap<>();
+		List<PieChartCategoryWrapper> fallbackItems = new ArrayList<>();
 
-		for(PieChartDefinition pieChartDefinition : pieChartDefinitions) {
+		for (PieChartDefinition pieChartDefinition : pieChartDefinitions) {
+			String categoryId = pieChartDefinition.getCategoryId();
 			for (PieChartCategoryDefinition pieChartItem : pieChartDefinition.getItem()) {
-				mapOfIdToMd5.put(String.valueOf(pieChartItem.getId()) + pieChartDefinition.getCategoryId(), Utils.md5Bytes((pieChartItem.getFhirPath().getExpression() + filterString + pieChartDefinition.getCategoryId()).getBytes(StandardCharsets.UTF_8)));
+				String key = String.valueOf(pieChartItem.getId()) + categoryId;
+				mapOfIdToMd5.put(key, Utils.md5Bytes((pieChartItem.getFhirPath().getExpression() + filterString + categoryId).getBytes(StandardCharsets.UTF_8)));
+				fallbackItems.add(new PieChartCategoryWrapper(pieChartItem, categoryId));
 			}
 		}
 
 		List<PieChartItemDataCollection> data = map.get(startDate.toLocalDate().toString());
 		final Date date = (Date) startDate.clone();
-		if(data!=null) {
-			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-			ArrayList<CacheEntity> cacheEntitiesForUpdate = new ArrayList<CacheEntity>();
-			 data.forEach(item -> {
-					 item.getData().forEach(pieChartItem -> {
-						 OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
-							 @Override
-							 public void doIt() {
-								 List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(pieChartItem.getId()) + item.getCategoryId()), pieChartItem.getOrgId());
-								 if (cacheEntities.isEmpty()) {
-									 CacheEntity cacheEntity = new CacheEntity(pieChartItem.getOrgId(), mapOfIdToMd5.get(String.valueOf(pieChartItem.getId()) + item.getCategoryId()), date, Double.valueOf(pieChartItem.getValue()), Date.valueOf(LocalDate.now()));
-									 cacheEntitiesForInsert.add(cacheEntity);
 
-								 } else {
-									 CacheEntity cacheEntity = cacheEntities.get(0);
-									 cacheEntity.setValue(Double.valueOf(pieChartItem.getValue()));
-									 cacheEntitiesForUpdate.add(cacheEntity);
-								 }
-							 }
-						 });
-					 });
-				 });
-			 notificationDataSource.insertObjects(cacheEntitiesForInsert);
-			 notificationDataSource.updateObjects(cacheEntitiesForUpdate);
-		}
-		else {
-			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-			pieChartDefinitions.forEach(pieChartDefinition -> {
-				pieChartDefinition.getItem().forEach( item -> {
-				OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
-				    @Override public void doIt() {
-				    	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(item.getId()) + pieChartDefinition.getCategoryId()), orgId);
-						if(cacheEntities.isEmpty()){
-							CacheEntity cacheEntity = new CacheEntity(orgId, mapOfIdToMd5.get(String.valueOf(item.getId()) + pieChartDefinition.getCategoryId()), date, Double.valueOf(0),Date.valueOf(LocalDate.now()));
-							cacheEntitiesForInsert.add(cacheEntity);
-						}
-				    }
+		List<PieChartItemWrapper> flatPieChartItems = new ArrayList<>();
+		if (data != null) {
+			data.forEach(collection -> {
+				String categoryId = collection.getCategoryId();
+				collection.getData().forEach(pieChartItem -> {
+					flatPieChartItems.add(new PieChartItemWrapper(pieChartItem, categoryId));
 				});
 			});
-				});
-            notificationDataSource.insertObjects(cacheEntitiesForInsert);
 		}
+
+		cacheDataGeneric(notificationDataSource, flatPieChartItems, orgId, date, mapOfIdToMd5,
+			wrapper -> String.valueOf(wrapper.item.getId()) + wrapper.categoryId,
+			wrapper -> wrapper.item.getOrgId(),
+			wrapper -> wrapper.item.getValue(),
+			fallbackItems,
+			wrapper -> String.valueOf(wrapper.categoryDefinition.getId()) + wrapper.categoryId,
+			0.0
+		);
+
+		long end = System.nanoTime();
+		double diff = (end - start) / 1_000_000.0;;
+		logger.warn("-- Time for Caching PieChart  "+String.valueOf(diff));
 	}
 
 	public void cacheDataLineChart(String orgId, Date startDate, List<LineChart> lineCharts,int count,Map<String, List<LineChartItemCollection>> map,String filterString) {
-
+		long start = System.nanoTime();
+		
 		notificationDataSource = NotificationDataSource.getInstance();
 		LinkedHashMap<String, String> mapOfIdToMd5 = new LinkedHashMap<>();
+		List<LineChartItemDefinitionWrapper> fallbackItems = new ArrayList<>();
+
 		for (LineChart lineChart : lineCharts) {
-			for(LineChartItemDefinition lineDefinition: lineChart.getLineChartItemDefinitions()) {
-				mapOfIdToMd5.put(String.valueOf(lineChart.getId())+" "+String.valueOf(lineDefinition.getId()), Utils.getMd5KeyForLineCacheMd5WithCategory(lineDefinition.getFhirPath().getExpression()+filterString, lineDefinition.getId(), lineChart.getId(),lineChart.getCategoryId()));
+			int chartId = lineChart.getId();
+			for (LineChartItemDefinition lineDefinition : lineChart.getLineChartItemDefinitions()) {
+				String key = String.valueOf(chartId) + " " + String.valueOf(lineDefinition.getId());
+				mapOfIdToMd5.put(key, Utils.getMd5KeyForLineCacheMd5WithCategory(
+					lineDefinition.getFhirPath().getExpression() + filterString,
+					lineDefinition.getId(),
+					chartId,
+					lineChart.getCategoryId()
+				));
+				fallbackItems.add(new LineChartItemDefinitionWrapper(lineDefinition, chartId));
 			}
 		}
 
 		List<LineChartItemCollection> data = map.get(startDate.toLocalDate().toString());
 		final Date date = (Date) startDate.clone();
-		if (data != null) {
-			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-			ArrayList<CacheEntity> cacheEntitiesForUpdate = new ArrayList<CacheEntity>();
-		    data.forEach(lineChartItemCollection -> {
-		        lineChartItemCollection.getValue().forEach(lineChartItem -> {
-		            OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
-		                @Override
-		                public void doIt() {
-		                    List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(lineChartItemCollection.getChartId()) + " " + String.valueOf(lineChartItem.getLineId())), orgId);
-		                    if (cacheEntities.isEmpty()) {
-		                        CacheEntity cacheEntity = new CacheEntity(orgId, mapOfIdToMd5.get(String.valueOf(lineChartItemCollection.getChartId()) + " " + String.valueOf(lineChartItem.getLineId())), date, Double.valueOf(lineChartItem.getValue()), Date.valueOf(LocalDate.now()));
-		    					cacheEntitiesForInsert.add(cacheEntity);
 
-		                    } else {
-		                        CacheEntity cacheEntity = cacheEntities.get(0);
-		                        cacheEntity.setValue(Double.valueOf(lineChartItem.getValue()));
-		                        cacheEntitiesForUpdate.add(cacheEntity);
-		                    }
-		                }
-		            });
-		        });
-		    });
-		    notificationDataSource.insertObjects(cacheEntitiesForInsert);
-			notificationDataSource.updateObjects(cacheEntitiesForUpdate);
-		} else {
-			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-		    lineCharts.forEach(chart -> {
-		        chart.getLineChartItemDefinitions().forEach(lineChartItemDefinition -> {
-		            OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
-		                @Override
-		                public void doIt() {
-		                	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(chart.getId()) + " " + String.valueOf(lineChartItemDefinition.getId())), orgId);
-		                    if (cacheEntities.isEmpty()) {
-			                    CacheEntity cacheEntity = new CacheEntity(orgId, mapOfIdToMd5.get(String.valueOf(chart.getId()) + " " + String.valueOf(lineChartItemDefinition.getId())), date, Double.valueOf(0), Date.valueOf(LocalDate.now()));
-			                    cacheEntitiesForInsert.add(cacheEntity);
-		                    }
-		                }
-		            });
-		        });
-		    });
-            notificationDataSource.insertObjects(cacheEntitiesForInsert);
+		List<LineChartItemWrapper> flatLineChartItems = new ArrayList<>();
+		if (data != null) {
+			data.forEach(collection -> {
+				int chartId = collection.getChartId();
+				collection.getValue().forEach(lineChartItem -> {
+					flatLineChartItems.add(new LineChartItemWrapper(lineChartItem, chartId));
+				});
+			});
 		}
+
+		cacheDataGeneric(notificationDataSource, flatLineChartItems, orgId, date, mapOfIdToMd5,
+			wrapper -> String.valueOf(wrapper.chartId) + " " + String.valueOf(wrapper.item.getLineId()),
+			wrapper -> orgId, // LineChartItem may not have getOrgId, using orgId
+			wrapper -> wrapper.item.getValue(),
+			fallbackItems,
+			wrapper -> String.valueOf(wrapper.chartId) + " " + String.valueOf(wrapper.definition.getId()),
+			0.0
+		);
+
+		long end = System.nanoTime();
+		double diff = (end - start) / 1_000_000.0;;
+		logger.warn("-- Time for Caching LineChart  "+String.valueOf(diff));
 	}
 	
 	@Async("asyncTaskExecutor")
 	public void cacheData(String orgId, Date date, List<IndicatorItem> indicators,String filterString) {
-//		logger.warn("-- Caching started for Score card chart data batch number "+String.valueOf(count));
 		long startTime = System.nanoTime();
 
 		notificationDataSource = NotificationDataSource.getInstance();
 		LinkedHashMap<Integer, String> mapOfIdToMd5 = new LinkedHashMap<>();
 		for (IndicatorItem item : indicators) {
-			mapOfIdToMd5.put(item.getId(),Utils.md5Bytes((item.getFhirPath().getExpression()+item.getId()+filterString).getBytes(StandardCharsets.UTF_8)));
+			mapOfIdToMd5.put(item.getId(),Utils.md5Bytes((item.getFhirPath().getExpression() + filterString).getBytes(StandardCharsets.UTF_8)));
 		}
 		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
-		List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator().getFacilityData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), indicators, Collections.emptyList()).get(date.toLocalDate().toString());
-		if(data!=null) {
-			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-			ArrayList<CacheEntity> cacheEntitiesForUpdate = new ArrayList<CacheEntity>();
-			for (ScoreCardItem item : data) {
-				OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
-				    @Override public void doIt() {
-				    	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getIndicatorId()), item.getOrgId());
-						if (cacheEntities.isEmpty()) {
-							CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(item.getIndicatorId()), date, Double.valueOf(item.getValue()),Date.valueOf(LocalDate.now()));
-							cacheEntitiesForInsert.add(cacheEntity);
-						} else {
-							CacheEntity cacheEntity = cacheEntities.get(0);
-							cacheEntity.setValue(Double.valueOf(item.getValue()));
-							cacheEntitiesForUpdate.add(cacheEntity);
-						}
-				    }
-				});	
-			}	
-			 	notificationDataSource.insertObjects(cacheEntitiesForInsert);
-				notificationDataSource.updateObjects(cacheEntitiesForUpdate);
-		}else {
-			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-			for (IndicatorItem item : indicators) {
-				OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
-				    @Override public void doIt() {
-				    	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getId()), orgId);
-				    	if (cacheEntities.isEmpty()) {
-							CacheEntity cacheEntity = new CacheEntity(orgId, mapOfIdToMd5.get(item.getId()), date, Double.valueOf(-1),Date.valueOf(LocalDate.now()));
-							cacheEntitiesForInsert.add(cacheEntity);
-						}    
-				    }
-				});	
-			}
-            notificationDataSource.insertObjects(cacheEntitiesForInsert);
-		}
+		List<ScoreCardItem> data = ReportGeneratorFactory.INSTANCE.reportGenerator()
+			.getFacilityData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), indicators, Collections.emptyList())
+			.get(date.toLocalDate().toString());
+
+		cacheDataAsyncGeneric(notificationDataSource, data, orgId, date, mapOfIdToMd5, ScoreCardItem::getIndicatorId, ScoreCardItem::getOrgId, ScoreCardItem::getValue, indicators, IndicatorItem::getId, -1.0);
+
 		long endTime = System.nanoTime();
-		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+		long diff = (endTime - startTime);
+		logger.warn("-- Time for Caching Async cacheData  "+String.valueOf(diff));
 	}
 	
 	@Async("asyncTaskExecutor")
 	public void cacheDataForBarChart(String orgId, Date date, List<BarChartDefinition> barCharts,int count,String filterString) {
-//		logger.warn("-- Caching started for Bar chart data batch number "+String.valueOf(count));
 		long startTime = System.nanoTime();
 
 		notificationDataSource = NotificationDataSource.getInstance();
 		LinkedHashMap<String, String> mapOfIdToMd5 = new LinkedHashMap<>();
+		List<BarComponentWrapper> fallbackItems = new ArrayList<>();
 		for (BarChartDefinition barChart : barCharts) {
-			for(BarChartItemDefinition barChartItem: barChart.getBarChartItemDefinitions()) {
-				for(BarComponent barComponent:barChartItem.getBarComponentList()) {
-					mapOfIdToMd5.put(String.valueOf(barChart.getId())+" "+String.valueOf(barChartItem.getId())+" "+String.valueOf(barComponent.getId()),Utils.getMd5KeyForLineCacheMd5WithCategory(barComponent.getFhirPath().getExpression()+filterString, barComponent.getBarChartItemId(), barChart.getId(),barChart.getCategoryId()));
+			int chartId = barChart.getId();
+			for (BarChartItemDefinition barChartItem : barChart.getBarChartItemDefinitions()) {
+				int barChartItemId = barChartItem.getId();
+				for (BarComponent barComponent : barChartItem.getBarComponentList()) {
+					String key = String.valueOf(chartId) + " " + String.valueOf(barChartItemId) + " " + String.valueOf(barComponent.getId());
+					mapOfIdToMd5.put(key, Utils.getMd5KeyForLineCacheMd5WithCategory(
+						barComponent.getFhirPath().getExpression() + filterString,
+						barComponent.getBarChartItemId(),
+						chartId,
+						barChart.getCategoryId()
+					));
+					fallbackItems.add(new BarComponentWrapper(barComponent, chartId, barChartItemId));
 				}
 			}
-
 		}
-		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
-		List<BarChartItemDataCollection> barChartItemCollections = ReportGeneratorFactory.INSTANCE.reportGenerator().getBarChartData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), barCharts, Collections.emptyList()).get(date.toLocalDate().toString());
-		if(barChartItemCollections!=null) {
-			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-			ArrayList<CacheEntity> cacheEntitiesForUpdate = new ArrayList<CacheEntity>();
-			for (BarChartItemDataCollection barChartItemCollection : barChartItemCollections) {
-				for(BarComponentCategory barComponentCategory: barChartItemCollection.getData()) {
-					for(BarComponentData barComponent: barComponentCategory.getBarComponentData())
-					OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
-						@Override public void doIt() {
-							List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(barChartItemCollection.getChartId())+" "+String.valueOf(barComponentCategory.getId())+" "+String.valueOf(barComponent.getId())), orgId);
-							if (cacheEntities.isEmpty()) {
-								CacheEntity cacheEntityForPatient = new CacheEntity(orgId, mapOfIdToMd5.get(String.valueOf(barChartItemCollection.getChartId())+" "+String.valueOf(barComponentCategory.getId())+" "+String.valueOf(barComponent.getId())), date, Double.valueOf(barComponent.getValue()),Date.valueOf(LocalDate.now()));
-								cacheEntitiesForInsert.add(cacheEntityForPatient);
 
-							} else {
-								CacheEntity cacheEntityForPatient = cacheEntities.get(0);
-								cacheEntityForPatient.setValue(Double.valueOf(barComponent.getValue()));
-								cacheEntitiesForUpdate.add(cacheEntityForPatient);
-							}
-						}
-					});
-				}
-			}
-			notificationDataSource.insertObjects(cacheEntitiesForInsert);
-			notificationDataSource.updateObjects(cacheEntitiesForUpdate);
-		}else {
-			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-			for (BarChartDefinition item : barCharts) {
-				for(BarChartItemDefinition itemDef: item.getBarChartItemDefinitions()) {
-					for(BarComponent barComponent:itemDef.getBarComponentList()) {
-						List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(item.getId()) + " " + String.valueOf(itemDef.getId()) + " " + String.valueOf(barComponent.getId())), orgId);
-						if (cacheEntities.isEmpty()) {
-							CacheEntity cacheEntityForPatient = new CacheEntity(orgId, mapOfIdToMd5.get(String.valueOf(item.getId()) + " " + String.valueOf(itemDef.getId()) + " " + String.valueOf(barComponent.getId())), date, Double.valueOf(0), Date.valueOf(LocalDate.now()));
-							cacheEntitiesForInsert.add(cacheEntityForPatient);
-						}
+		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
+		List<BarChartItemDataCollection> barChartItemCollections = ReportGeneratorFactory.INSTANCE.reportGenerator()
+			.getBarChartData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), barCharts, Collections.emptyList())
+			.get(date.toLocalDate().toString());
+
+		List<BarComponentDataWrapper> flatBarComponentData = new ArrayList<>();
+		if (barChartItemCollections != null) {
+			for (BarChartItemDataCollection collection : barChartItemCollections) {
+				int chartId = collection.getChartId();
+				for (BarComponentCategory category : collection.getData()) {
+					int categoryId = category.getId();
+					for (BarComponentData data : category.getBarComponentData()) {
+						flatBarComponentData.add(new BarComponentDataWrapper(data, chartId, categoryId));
 					}
 				}
 			}
-			notificationDataSource.insertObjects(cacheEntitiesForInsert);
 		}
+
+		cacheDataAsyncGeneric(notificationDataSource, flatBarComponentData, orgId, date, mapOfIdToMd5,
+			item -> String.valueOf(item.chartId) + " " + String.valueOf(item.data.getBarChartItemId()) + " " + String.valueOf(item.data.getId()),
+			item -> orgId, // BarComponentData does not have getOrgId, using orgId
+			item -> item.data.getValue(),
+			fallbackItems,
+			item -> String.valueOf(item.chartId) + " " + String.valueOf(item.barChartItemId) + " " + String.valueOf(item.component.getId()),
+			0.0
+		);
+
 		long endTime = System.nanoTime();
-		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+		long diff = (endTime - startTime);
+		logger.warn("-- Time for Caching Async Barchar  "+String.valueOf(diff));
 	}
+
+	// Wrapper class for BarComponentData
+	private static class BarComponentDataWrapper {
+		final BarComponentData data;
+		final int chartId;
+		final int categoryId;
+
+		BarComponentDataWrapper(BarComponentData data, int chartId, int categoryId) {
+			this.data = data;
+			this.chartId = chartId;
+			this.categoryId = categoryId;
+		}
+	}
+
+	// Wrapper class for BarComponent
+	private static class BarComponentWrapper {
+		final BarComponent component;
+		final int chartId;
+		final int barChartItemId;
+
+		BarComponentWrapper(BarComponent component, int chartId, int barChartItemId) {
+			this.component = component;
+			this.chartId = chartId;
+			this.barChartItemId = barChartItemId;
+		}
+	}
+
 	@Async("asyncTaskExecutor")
 	public void cacheTabularData(String orgId, Date date, List<TabularItem> indicators,int count,String filterString) {
-//		logger.warn("-- Caching started for Tabular data batch number "+String.valueOf(count));
 		long startTime = System.nanoTime();
 
 		notificationDataSource = NotificationDataSource.getInstance();
 		LinkedHashMap<Integer, String> mapOfIdToMd5 = new LinkedHashMap<>();
 		for (TabularItem item : indicators) {
-			mapOfIdToMd5.put(item.getId(),Utils.md5Bytes((item.getFhirPath().getExpression()+filterString).getBytes(StandardCharsets.UTF_8)));
+			mapOfIdToMd5.put(item.getId(),Utils.md5Bytes((item.getFhirPath().getExpression() + filterString).getBytes(StandardCharsets.UTF_8)));
 		}
 		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
-		List<ScoreCardItem> scoreCardItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getTabularData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), indicators, Collections.emptyList()).get(date.toLocalDate().toString());
-		if(scoreCardItems!=null) {
-			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-			ArrayList<CacheEntity> cacheEntitiesForUpdate = new ArrayList<CacheEntity>();
-			for (ScoreCardItem item : scoreCardItems) {
-				OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
-				    @Override public void doIt() {
-				    	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getIndicatorId()), item.getOrgId());
-						if (cacheEntities.isEmpty()) {
-							CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(item.getIndicatorId()), date, Double.valueOf(item.getValue()),Date.valueOf(LocalDate.now()));
-							cacheEntitiesForInsert.add(cacheEntity);
-						} else {
-							CacheEntity cacheEntity = cacheEntities.get(0);
-							cacheEntity.setValue(Double.valueOf(item.getValue()));
-							cacheEntitiesForUpdate.add(cacheEntity);
-						}	
-				    }
-				});	
-			}
-			notificationDataSource.insertObjects(cacheEntitiesForInsert);
-			notificationDataSource.updateObjects(cacheEntitiesForUpdate);
-		}else {
-			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-			for (TabularItem item : indicators) {
-				List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(item.getId()),orgId);
-				if (cacheEntities.isEmpty()) {
-					CacheEntity cacheEntity = new CacheEntity(orgId, mapOfIdToMd5.get(item.getId()), date, Double.valueOf(0),Date.valueOf(LocalDate.now()));
-					cacheEntitiesForInsert.add(cacheEntity);
-				}    
-			}
-			notificationDataSource.insertObjects(cacheEntitiesForInsert);
-		}
+		List<ScoreCardItem> scoreCardItems = ReportGeneratorFactory.INSTANCE.reportGenerator()
+			.getTabularData(fhirClientProvider,orgId,new DateRange(date.toString(),date.toString()),indicators,Collections.emptyList())
+			.get(date.toLocalDate().toString());
+
+		cacheDataAsyncGeneric(notificationDataSource, scoreCardItems, orgId, date, mapOfIdToMd5, ScoreCardItem::getIndicatorId, ScoreCardItem::getOrgId, ScoreCardItem::getValue, indicators, TabularItem::getId, 0.0);
+
 		long endTime = System.nanoTime();
-		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+		long diff = (endTime - startTime);
+		logger.warn("-- Time for Caching Async TabularData  "+String.valueOf(diff));
 	}
 
 	@Async("asyncTaskExecutor")
 	public void cachePieChartData(String orgId, Date date, List<PieChartDefinition> pieChartDefinitions,int count,String filterString){
-//		logger.warn("-- Caching started for PieChart data batch number "+String.valueOf(count));
+		
 		long startTime = System.nanoTime();
 
 		notificationDataSource = NotificationDataSource.getInstance();
 		LinkedHashMap<String, String> mapOfIdToMd5 = new LinkedHashMap<>();
-
+		List<PieChartCategoryWrapper> fallbackItems = new ArrayList<>();
 		for (PieChartDefinition pieChartDefinition : pieChartDefinitions) {
 			if (pieChartDefinition != null) {
+				String categoryId = pieChartDefinition.getCategoryId();
 				for (PieChartCategoryDefinition pieChartItem : pieChartDefinition.getItem()) {
-					String key = pieChartItem.getFhirPath().getExpression() + filterString + pieChartDefinition.getCategoryId();
-					mapOfIdToMd5.put(String.valueOf(pieChartItem.getId()) + pieChartDefinition.getCategoryId(), Utils.md5Bytes(key.getBytes(StandardCharsets.UTF_8)));
+					String key = String.valueOf(pieChartItem.getId()) + categoryId;
+					mapOfIdToMd5.put(key, Utils.md5Bytes((pieChartItem.getFhirPath().getExpression() + filterString + categoryId).getBytes(StandardCharsets.UTF_8)));
+					fallbackItems.add(new PieChartCategoryWrapper(pieChartItem, categoryId));
 				}
 			}
 		}
 
 		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
-		List<PieChartItemDataCollection> pieChartItems = ReportGeneratorFactory.INSTANCE.reportGenerator().getPieChartData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), pieChartDefinitions, Collections.emptyList()).get(date.toLocalDate().toString());
-		if(pieChartItems!=null) {
-			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-			ArrayList<CacheEntity> cacheEntitiesForUpdate = new ArrayList<CacheEntity>();
-			for (PieChartItemDataCollection pieChartItem: pieChartItems) {
-				for (PieChartItem item : pieChartItem.getData()) {
-					OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
-						@Override
-						public void doIt() {
-							List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(item.getId()) + pieChartItem.getCategoryId()), item.getOrgId());
-							if (cacheEntities.isEmpty()) {
-								CacheEntity cacheEntity = new CacheEntity(item.getOrgId(), mapOfIdToMd5.get(String.valueOf(item.getId()) + pieChartItem.getCategoryId()), date, Double.valueOf(item.getValue()), Date.valueOf(LocalDate.now()));
-								cacheEntitiesForInsert.add(cacheEntity);
-							} else {
-								CacheEntity cacheEntity = cacheEntities.get(0);
-								cacheEntity.setValue(Double.valueOf(item.getValue()));
-								cacheEntitiesForUpdate.add(cacheEntity);
-							}
-						}
-					});
+		List<PieChartItemDataCollection> pieChartItems = ReportGeneratorFactory.INSTANCE.reportGenerator()
+			.getPieChartData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), pieChartDefinitions, Collections.emptyList())
+			.get(date.toLocalDate().toString());
+
+		List<PieChartItemWrapper> flatPieChartItems = new ArrayList<>();
+		if (pieChartItems != null) {
+			for (PieChartItemDataCollection collection : pieChartItems) {
+				String categoryId = collection.getCategoryId();
+				for (PieChartItem item : collection.getData()) {
+					flatPieChartItems.add(new PieChartItemWrapper(item, categoryId));
 				}
 			}
-			notificationDataSource.insertObjects(cacheEntitiesForInsert);
-			notificationDataSource.updateObjects(cacheEntitiesForUpdate);
-		}else {
-			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-			for (PieChartDefinition pieChartDefinition : pieChartDefinitions) {
-				for (PieChartCategoryDefinition item : pieChartDefinition.getItem()) {
-					List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(item.getId()) + pieChartDefinition.getCategoryId()), orgId);
-					if (cacheEntities.isEmpty()) {
-						CacheEntity cacheEntity = new CacheEntity(orgId, mapOfIdToMd5.get(String.valueOf(item.getId()) + pieChartDefinition.getCategoryId()), date, Double.valueOf(0), Date.valueOf(LocalDate.now()));
-						cacheEntitiesForInsert.add(cacheEntity);
-					}
-				}
-			}
-			notificationDataSource.insertObjects(cacheEntitiesForInsert);
 		}
+
+		cacheDataAsyncGeneric(notificationDataSource, flatPieChartItems, orgId, date, mapOfIdToMd5,
+			item -> String.valueOf(item.item.getId()) + item.categoryId,
+			item -> item.item.getOrgId(),
+			item -> item.item.getValue(),
+			fallbackItems,
+			item -> String.valueOf(item.categoryDefinition.getId()) + item.categoryId,
+			0.0
+		);
+
 		long endTime = System.nanoTime();
-		long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+		long diff = (endTime - startTime);
+		logger.warn("-- Time for Caching Async PieChart  "+String.valueOf(diff));
+	}
+
+	// Wrapper class for PieChartItem
+	private static class PieChartItemWrapper {
+		final PieChartItem item;
+		final String categoryId;
+
+		PieChartItemWrapper(PieChartItem item, String categoryId) {
+			this.item = item;
+			this.categoryId = categoryId;
+		}
+	}
+
+	// Wrapper class for PieChartCategoryDefinition
+	private static class PieChartCategoryWrapper {
+		final PieChartCategoryDefinition categoryDefinition;
+		final String categoryId;
+
+		PieChartCategoryWrapper(PieChartCategoryDefinition categoryDefinition, String categoryId) {
+			this.categoryDefinition = categoryDefinition;
+			this.categoryId = categoryId;
+		}
 	}
 	
 	@Async("asyncTaskExecutor")
 	public void cacheDataLineChart(String orgId, Date date, List<LineChart> lineCharts,int count,String filterString) {
-//		logger.warn("-- Caching started for Line data batch number "+String.valueOf(count));
 		long startTime = System.nanoTime();
 
 		notificationDataSource = NotificationDataSource.getInstance();
 		LinkedHashMap<String, String> mapOfIdToMd5 = new LinkedHashMap<>();
+		List<LineChartItemDefinitionWrapper> fallbackItems = new ArrayList<>();
 		for (LineChart lineChart : lineCharts) {
-			for(LineChartItemDefinition lineDefinition: lineChart.getLineChartItemDefinitions()) {
-				mapOfIdToMd5.put(String.valueOf(lineChart.getId())+" "+String.valueOf(lineDefinition.getId()), Utils.getMd5KeyForLineCacheMd5WithCategory(lineDefinition.getFhirPath().getExpression()+filterString, lineDefinition.getId(), lineChart.getId(),lineChart.getCategoryId()));
+			int chartId = lineChart.getId();
+			for (LineChartItemDefinition lineDefinition : lineChart.getLineChartItemDefinitions()) {
+				String key = String.valueOf(chartId) + " " + String.valueOf(lineDefinition.getId());
+				mapOfIdToMd5.put(key, Utils.getMd5KeyForLineCacheMd5WithCategory(
+					lineDefinition.getFhirPath().getExpression() + filterString,
+					lineDefinition.getId(),
+					chartId,
+					lineChart.getCategoryId()
+				));
+				fallbackItems.add(new LineChartItemDefinitionWrapper(lineDefinition, chartId));
 			}
 		}
-		
+
 		FhirClientProvider fhirClientProvider = new FhirClientProviderImpl((GenericClient) fhirClientAuthenticatorService.getFhirClient());
-		List<LineChartItemCollection> lineChartItemCollections = ReportGeneratorFactory.INSTANCE.reportGenerator().getLineChartData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), lineCharts, Collections.emptyList()).get(date.toLocalDate().toString());
-		if(lineChartItemCollections!=null) {
-			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-			ArrayList<CacheEntity> cacheEntitiesForUpdate = new ArrayList<CacheEntity>();
-			for (LineChartItemCollection lineChartItemCollection : lineChartItemCollections) {
-				for(LineChartItem lineChartItem: lineChartItemCollection.getValue()) {
-					OperationHelper.doWithRetry(MAX_RETRY, new Operation() {
-					    @Override public void doIt() {
-					    	List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(lineChartItemCollection.getChartId())+" "+String.valueOf(lineChartItem.getLineId())), orgId);
-							if (cacheEntities.isEmpty()) {
-								CacheEntity cacheEntity = new CacheEntity(orgId,mapOfIdToMd5.get(String.valueOf(lineChartItemCollection.getChartId())+" "+String.valueOf(lineChartItem.getLineId())), date, Double.valueOf(lineChartItem.getValue()),Date.valueOf(LocalDate.now()));
-								cacheEntitiesForInsert.add(cacheEntity);
-							} else {
-								CacheEntity cacheEntity = cacheEntities.get(0);
-								cacheEntity.setValue(Double.valueOf(lineChartItem.getValue()));
-								cacheEntitiesForUpdate.add(cacheEntity);
-							}	
-					    }
-					});		
+		List<LineChartItemCollection> lineChartItemCollections = ReportGeneratorFactory.INSTANCE.reportGenerator()
+			.getLineChartData(fhirClientProvider, orgId, new DateRange(date.toString(), date.toString()), lineCharts, Collections.emptyList())
+			.get(date.toLocalDate().toString());
+
+		List<LineChartItemWrapper> flatLineChartItems = new ArrayList<>();
+		if (lineChartItemCollections != null) {
+			for (LineChartItemCollection collection : lineChartItemCollections) {
+				int chartId = collection.getChartId();
+				for (LineChartItem item : collection.getValue()) {
+					flatLineChartItems.add(new LineChartItemWrapper(item, chartId));
 				}
 			}
-			notificationDataSource.insertObjects(cacheEntitiesForInsert);
-			notificationDataSource.updateObjects(cacheEntitiesForUpdate);
 		}
-		else {
-			ArrayList<CacheEntity> cacheEntitiesForInsert = new ArrayList<CacheEntity>();
-			for (LineChart item : lineCharts) {
-				for(LineChartItemDefinition lineChartItemDefinition:item.getLineChartItemDefinitions()) {
-		            List<CacheEntity> cacheEntities = notificationDataSource.getCacheByDateIndicatorAndOrgId(date, mapOfIdToMd5.get(String.valueOf(item.getId()) + " " + String.valueOf(lineChartItemDefinition.getId())), orgId);
-                    if (cacheEntities.isEmpty()) {
-	                    CacheEntity cacheEntity = new CacheEntity(orgId, mapOfIdToMd5.get(String.valueOf(item.getId()) + " " + String.valueOf(lineChartItemDefinition.getId())), date, Double.valueOf(0), Date.valueOf(LocalDate.now()));
-	                    cacheEntitiesForInsert.add(cacheEntity);
-                    }  	
-				}
-			}
-			notificationDataSource.insertObjects(cacheEntitiesForInsert);
+
+		cacheDataAsyncGeneric(notificationDataSource, flatLineChartItems, orgId, date, mapOfIdToMd5,
+			item -> String.valueOf(item.chartId) + " " + String.valueOf(item.item.getLineId()),
+			item -> orgId, // LineChartItem does not have getOrgId, using orgId
+			item -> item.item.getValue(),
+			fallbackItems,
+			item -> String.valueOf(item.chartId) + " " + String.valueOf(item.definition.getId()),
+			0.0
+		);
+
+		long endTime = System.nanoTime();
+		long diff = (endTime - startTime);
+		logger.warn("-- Time for Caching Async LineData  "+String.valueOf(diff));
+	}
+
+	// Wrapper class for LineChartItem
+	private static class LineChartItemWrapper {
+		final LineChartItem item;
+		final int chartId;
+
+		LineChartItemWrapper(LineChartItem item, int chartId) {
+			this.item = item;
+			this.chartId = chartId;
+		}
+	}
+
+	// Wrapper class for LineChartItemDefinition
+	private static class LineChartItemDefinitionWrapper {
+		final LineChartItemDefinition definition;
+		final int chartId;
+
+		LineChartItemDefinitionWrapper(LineChartItemDefinition definition, int chartId) {
+			this.definition = definition;
+			this.chartId = chartId;
 		}
 	}
 
 	public void cacheMapData (Date date, Set<Map.Entry<String, Map<String, PositionData>>> dateResponseMap, ArrayList<MapCacheEntity> resultToCache, ArrayList<MapCacheEntity> resultToUpdateCache) {
-		logger.warn("-- Adding items to insert or update map cache for "+date);
+
 		for (Map.Entry<String, Map<String, PositionData>> entry: dateResponseMap){
 			String orgId = entry.getKey().substring(13);
 			for (Map.Entry<String, PositionData> positionDataEntry : entry.getValue().entrySet()) {
@@ -620,7 +652,7 @@ public class CachingService {
 				}
 			}
 		}
-		logger.warn("-- Caching started for Map Data");
+
 		notificationDataSource.insertObjects(resultToCache);
 		notificationDataSource.updateObjects(resultToUpdateCache);
 	}

@@ -22,7 +22,10 @@ import ca.uhn.fhir.jpa.starter.model.PatientIdentifierEntity;
 import ca.uhn.fhir.jpa.starter.model.ReportType;
 import ca.uhn.fhir.jpa.starter.model.ScoreCardIndicatorItem;
 import ca.uhn.fhir.jpa.starter.model.ScoreCardResponseItem;
+import ca.uhn.fhir.model.dstu2.composite.CodeableConceptDt;
+import ca.uhn.fhir.model.dstu2.composite.CodingDt;
 import ca.uhn.fhir.rest.api.MethodOutcome;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
@@ -68,33 +71,23 @@ import com.iprd.report.model.definition.TabularItem;
 import com.iprd.report.model.definition.MapCodes;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.val;
+import lombok.var;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.flywaydb.core.internal.util.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.JDBCException;
 import org.hibernate.engine.jdbc.ClobProxy;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.Address;
-import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.*;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryRequestComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleLinkComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.hl7.fhir.r4.model.Bundle.HTTPVerb;
-import org.hl7.fhir.r4.model.ContactPoint;
-import org.hl7.fhir.r4.model.Encounter;
-import org.hl7.fhir.r4.model.Extension;
-import org.hl7.fhir.r4.model.Identifier;
-import org.hl7.fhir.r4.model.Location;
 import org.hl7.fhir.r4.model.Location.LocationPositionComponent;
-import org.hl7.fhir.r4.model.Organization;
-import org.hl7.fhir.r4.model.Patient;
-import org.hl7.fhir.r4.model.Practitioner;
-import org.hl7.fhir.r4.model.PractitionerRole;
-import org.hl7.fhir.r4.model.Resource;
-import org.hl7.fhir.r4.model.ResourceType;
-import org.hl7.fhir.r4.model.StringType;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.resource.GroupResource;
 import org.keycloak.admin.client.resource.RealmResource;
@@ -206,11 +199,213 @@ public class HelperService {
 	LinkedHashMap<String, List<OrgItem>> mapOfOrgHierarchy;
 	private String lga;
 
+	private static final String SYSTEM_ORG_TYPE = "https://www.iprdgroup.com/ValueSet/OrganizationType/tags";
+	private static final String SYSTEM_ORGANIZATION_PHYSICAL_TYPE = "http://hl7.org/fhir/ValueSet/organization-type";
+	private static final String CODE_CLINIC = "prov";
+	private static final String CODE_GOVT = "govt";
+
 	@PostConstruct
 	public void init() {
 		dashboardEnvToConfigMap = dashboardEnvironmentConfig.getDashboardEnvToConfigMap();
 		mapOfIdsAndOrgIdToChildrenMapPair = new LinkedHashMap<String, Pair<List<String>, LinkedHashMap<String, List<String>>>>();
 		mapOfOrgHierarchy = new LinkedHashMap<String, List<OrgItem>>();
+	}
+
+	public List<OrgHierarchy> getAllOrgHierarchies() {
+		try {
+			List<OrgHierarchy> hierarchies = new ArrayList<>();
+			IGenericClient client = fhirClientAuthenticatorService.getFhirClient();
+
+			Bundle bundle;
+			try {
+				bundle = client.search()
+					.forResource(Organization.class)
+					.include(Organization.INCLUDE_PARTOF.asNonRecursive())
+					.count(100)
+					.returnBundle(Bundle.class)
+					.execute();
+				logger.warn("Fetched bundle with {} entries", bundle.getEntry().size());
+			} catch (Exception e) {
+				logger.warn("Primary query with _include=Organization:partof failed: {}", ExceptionUtils.getStackTrace(e));
+				bundle = client.search()
+					.forResource(Organization.class)
+					.count(100)
+					.returnBundle(Bundle.class)
+					.execute();
+				logger.warn("Fallback query fetched bundle with {} entries", bundle.getEntry().size());
+			}
+
+			while (bundle != null) {
+				Map<String, Organization> orgMap = new HashMap<>();
+				long wardCount = bundle.getEntry().stream()
+					.map(entry -> (Organization) entry.getResource())
+					.filter(org -> determineOrgLevel(org).equals("ward"))
+					.count();
+				logger.info("Bundle contains {} wards", wardCount);
+
+				for (Bundle.BundleEntryComponent entry : bundle.getEntry()) {
+					Organization org = (Organization) entry.getResource();
+					orgMap.put(org.getIdElement().getIdPart(), org);
+				}
+
+				for (Bundle.BundleEntryComponent entry : bundle.getEntry()) {
+					Organization org = (Organization) entry.getResource();
+					String orgId = org.getIdElement().getIdPart();
+					String level = determineOrgLevel(org);
+					String parentId = org.hasPartOf() ? org.getPartOf().getReferenceElement().getIdPart() : null;
+
+					String countryParent = null;
+					String stateParent = null;
+					String lgaParent = null;
+					String wardParent = null;
+
+					if ("facility".equals(level)) {
+						wardParent = parentId;
+						Organization ward = parentId != null ? orgMap.get(parentId) : null;
+						if (parentId == null) {
+							logger.error("Facility {} has no partOf reference", orgId);
+						} else if (ward == null) {
+							logger.error("Facility {} has invalid wardParent: {} (not found in orgMap)", orgId, parentId);
+						} else if (ward.hasPartOf()) {
+							lgaParent = ward.getPartOf().getReferenceElement().getIdPart();
+							Organization lga = orgMap.get(lgaParent);
+							if (lga != null && lga.hasPartOf()) {
+								stateParent = lga.getPartOf().getReferenceElement().getIdPart();
+								Organization state = orgMap.get(stateParent);
+								if (state != null && state.hasPartOf()) {
+									countryParent = state.getPartOf().getReferenceElement().getIdPart();
+								}
+							}
+						}
+					} else if ("ward".equals(level)) {
+						lgaParent = parentId;
+						if (parentId == null) {
+							logger.error("Ward {} has no partOf reference", orgId);
+						} else {
+							Organization lga = orgMap.get(parentId);
+							if (lga == null) {
+								logger.error("Ward {} has invalid lgaParent: {} (not found in orgMap)", orgId, parentId);
+							} else if (lga.hasPartOf()) {
+								stateParent = lga.getPartOf().getReferenceElement().getIdPart();
+								Organization state = orgMap.get(stateParent);
+								if (state != null && state.hasPartOf()) {
+									countryParent = state.getPartOf().getReferenceElement().getIdPart();
+								}
+							}
+						}
+					} else if ("lga".equals(level)) {
+						stateParent = parentId;
+						Organization state = parentId != null ? orgMap.get(parentId) : null;
+						if (parentId == null) {
+							logger.error("LGA {} has no partOf reference", orgId);
+						} else if (state == null) {
+							logger.error("LGA {} has invalid stateParent: {} (not found in orgMap)", orgId, parentId);
+						} else if (state.hasPartOf()) {
+							countryParent = state.getPartOf().getReferenceElement().getIdPart();
+						}
+					} else if ("state".equals(level)) {
+						countryParent = parentId;
+					}
+
+					hierarchies.add(new OrgHierarchy(orgId, level, countryParent, stateParent, lgaParent, wardParent));
+				}
+
+				if (bundle.getLink(Bundle.LINK_NEXT) != null) {
+					bundle = client.loadPage().next(bundle).execute();
+					logger.warn("Fetched next bundle page with {} entries", bundle.getEntry().size());
+				} else {
+					bundle = null;
+				}
+			}
+
+			hierarchies.stream()
+				.filter(h -> "ward".equals(h.getLevel()))
+				.forEach(h -> logger.info("Ward: {}", h.toString()));
+			return hierarchies;
+		} catch (Exception e) {
+			logger.error("Failed to fetch OrgHierarchy from FHIR: {}", ExceptionUtils.getStackTrace(e));
+			return Collections.emptyList();
+		}
+	}
+
+	private String determineOrgLevel(Organization org) {
+		String orgId = org.getIdElement().getIdPart();
+		String orgName = org.getName() != null ? org.getName() : "unknown";
+
+		// Step 1: Check Meta tag for OrgType
+		if (org.hasMeta() && !org.getMeta().getTag().isEmpty()) {
+			for (Coding tag : org.getMeta().getTag()) {
+				if (SYSTEM_ORG_TYPE.equals(tag.getSystem()) && tag.hasCode()) {
+					String code = tag.getCode().toUpperCase();
+					switch (code) {
+						case "COUNTRY":
+							return "country";
+						case "STATE":
+							return "state";
+						case "LGA":
+							return "lga";
+						case "WARD":
+							return "ward";
+						case "FACILITY":
+							return "facility";
+						default:
+							logger.warn("Unrecognized OrgType tag for org {} (name={}): {}", orgId, orgName, code);
+					}
+				}
+			}
+		}
+
+		// Step 2: Fallback to type codings for non-standard organi
+		if (org.hasType() && !org.getType().isEmpty()) {
+			for (CodeableConcept type : org.getType()) {
+				if (type.hasCoding()) {
+					for (Coding coding : type.getCoding()) {
+						if (coding.hasCode() && coding.hasSystem()) {
+							String code = coding.getCode().toLowerCase();
+							String system = coding.getSystem();
+
+							if (SYSTEM_ORGANIZATION_PHYSICAL_TYPE.equals(system)) {
+								if (CODE_CLINIC.equals(code)) {
+									return "facility";
+								} else if (CODE_GOVT.equals(code)) {
+									logger.debug("GOVT code found for org {} (name={}), but no Meta tag; unable to determine precise level", orgId, orgName);
+									continue;
+								}
+							}
+
+							if (Arrays.asList("country", "state", "lga", "ward", "facility").contains(code)) {
+								return code;
+							}
+							if (Arrays.asList("prov", "provider", "clinic", "healthcare").contains(code)) {
+								return "facility";
+							}
+							if (Arrays.asList("ward_level").contains(code)) {
+								return "ward";
+							}
+						}
+					}
+				}
+			}
+			logger.warn("No valid coding found for org {} (name={})", orgId, orgName);
+		}
+
+		logger.warn("No Meta tag or valid type found for org {} (name={})", orgId, orgName);
+		return "unknown";
+	}
+
+	public String getOrganizationName(String orgId) {
+		try {
+			Organization org = fhirClientAuthenticatorService.getFhirClient()
+				.read()
+				.resource(Organization.class)
+				.withId(orgId)
+				.execute();
+			String name = org != null ? org.getName() : null;
+			return name;
+		} catch (Exception e) {
+			logger.warn("Failed to resolve name for orgId {}: {}", orgId, ExceptionUtils.getStackTrace(e));
+			return null;
+		}
 	}
 
 	public Pair<List<String>, LinkedHashMap<String, List<String>>> fetchIdsAndOrgIdToChildrenMapPair(String orgId) {
@@ -396,7 +591,7 @@ public class HelperService {
 
 			if (null != groupId) {
 				logger.warn("facility UUID = "+ facilityUID );
-				 updateKeycloakGroupAndResource(clinicData, groupId, 0);
+				updateKeycloakGroupAndResource(clinicData, groupId, 0);
 			} else {
 				Organization existingCountry = getExistingOrganizationFromFHIRServer(countryName);
 				if (existingCountry != null) {
@@ -640,7 +835,7 @@ public class HelperService {
 			.execute();
 
 		if (bundle != null && !bundle.getEntry().isEmpty()) {
-			 return (Location) bundle.getEntry().get(0).getResource();
+			return (Location) bundle.getEntry().get(0).getResource();
 
 		}
 		return null;

@@ -53,6 +53,35 @@
         </repository>
     </repositories>
     <dependencies>
+        <!-- OpenCSV -->
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.9</version>
+        </dependency>
+
+        <!-- HAPI FHIR R4 Structures -->
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-structures-r4</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- HAPI FHIR Client -->
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-api</artifactId>
@@ -612,8 +641,8 @@
                 <version>3.8.1</version>
                 <configuration>
                     <release>8</release>
-                    <source>9</source>
-                    <target>9</target>
+                    <source>8</source>
+                    <target>8</target>
                 </configuration>
             </plugin>
 
