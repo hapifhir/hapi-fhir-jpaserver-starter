@@ -156,8 +156,8 @@ public class FhirServerConfigCommon {
 
 		jpaStorageSettings.setPreExpandValueSets(appProperties.getPre_expand_value_sets());
 		jpaStorageSettings.setEnableTaskPreExpandValueSets(appProperties.getEnable_task_pre_expand_value_sets());
-		jpaStorageSettings.setPreExpandValueSetsDefaultCount(appProperties.getPre_expand_value_sets_default_count());
 		jpaStorageSettings.setPreExpandValueSetsMaxCount(appProperties.getPre_expand_value_sets_max_count());
+		jpaStorageSettings.setPreExpandValueSetsDefaultCount(appProperties.getPre_expand_value_sets_default_count());
 		jpaStorageSettings.setMaximumExpansionSize(appProperties.getMaximum_expansion_size());
 
 		jpaStorageSettings.setIndexMissingFields(
