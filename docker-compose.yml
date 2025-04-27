@@ -1,25 +1,80 @@
-version: "3"
+# services:
+#   hapi-fhir-jpaserver-start:
+#     build: .
+#     container_name: hapi-fhir-jpaserver-start
+#     restart: on-failure
+#     environment:
+#       SPRING_DATASOURCE_URL: "jdbc:postgresql://hapi-fhir-postgres:5432/hapi"
+#       SPRING_DATASOURCE_USERNAME: "admin"
+#       SPRING_DATASOURCE_PASSWORD: "admin"
+#       SPRING_DATASOURCE_DRIVERCLASSNAME: "org.postgresql.Driver"
+#     ports:
+#       - "8080:8080"
+#     depends_on:
+#       hapi-fhir-postgres:
+#         condition: service_healthy
+#   hapi-fhir-postgres:
+#     image: postgres:15-alpine
+#     container_name: hapi-fhir-postgres
+#     restart: always
+#     environment:
+#       POSTGRES_DB: "hapi"
+#       POSTGRES_USER: "admin"
+#       POSTGRES_PASSWORD: "admin"
+#     volumes:
+#       - hapi-fhir-postgres:/var/lib/postgresql/data
+#     healthcheck:
+#       test: ["CMD-SHELL", "pg_isready -U admin -d hapi"]
+#       interval: 10s
+#       timeout: 5s
+#       retries: 5
+# volumes:
+#   hapi-fhir-postgres:
+
+
+# This is the version of the Docker Compose file format (implicit latest)
+
+# This is the version of the Docker Compose file format (implicit latest)
+
 services:
+  # First service: The HAPI FHIR server application
   hapi-fhir-jpaserver-start:
-    build: .
-    container_name: hapi-fhir-jpaserver-start
-    restart: on-failure
+    build: .                                  # Build using the Dockerfile in current directory
+    container_name: hapi-fhir-jpaserver-start # Name for the container
+    restart: on-failure                       # Restart policy: restart if container fails
     environment:
+      # Database connection settings passed as environment variables
       SPRING_DATASOURCE_URL: "jdbc:postgresql://hapi-fhir-postgres:5432/hapi"
       SPRING_DATASOURCE_USERNAME: "admin"
       SPRING_DATASOURCE_PASSWORD: "admin"
       SPRING_DATASOURCE_DRIVERCLASSNAME: "org.postgresql.Driver"
     ports:
-      - "8080:8080"
+      - "8080:8080"                           # Map container port 8080 to host port 8080
+    depends_on:
+      # This ensures the database is fully ready before starting the server
+      hapi-fhir-postgres:
+        condition: service_healthy            # Wait until the health check passes
+
+  # Second service: The PostgreSQL database
   hapi-fhir-postgres:
-    image: postgres:15-alpine
-    container_name: hapi-fhir-postgres
-    restart: always
+    image: postgres:15-alpine                 # Use this specific PostgreSQL image
+    container_name: hapi-fhir-postgres        # Name for the container
+    restart: always                           # Always restart this container
     environment:
+      # Database configuration settings
       POSTGRES_DB: "hapi"
       POSTGRES_USER: "admin"
       POSTGRES_PASSWORD: "admin"
     volumes:
+      # Store database data in a persistent volume
       - hapi-fhir-postgres:/var/lib/postgresql/data
+    healthcheck:
+      # Check if PostgreSQL is ready to accept connections
+      test: ["CMD-SHELL", "pg_isready -U admin -d hapi"]
+      interval: 10s                           # Run check every 10 seconds
+      timeout: 5s                             # Give check 5 seconds to complete
+      retries: 5                              # Retry up to 5 times
+
+# Define the volume for persistent data storage
 volumes:
-  hapi-fhir-postgres:
+  hapi-fhir-postgres:                         # Named volume for PostgreSQL data

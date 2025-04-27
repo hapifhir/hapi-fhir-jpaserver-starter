@@ -34,16 +34,17 @@ spring:
     check-location: false
     baselineOnMigrate: true
   datasource:
-    url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driverClassName: org.h2.Driver
-    max-active: 15
+    url: 'jdbc:postgresql://localhost:5432/hapi'
+    username: admin
+    password: admin
+    driverClassName: org.postgresql.Driver
 
     # database connection pool size
     hikari:
       maximum-pool-size: 10
   jpa:
+    hibernate:
+      ddl-auto: update
     properties:
       hibernate.format_sql: false
       hibernate.show_sql: false
@@ -59,7 +60,7 @@ spring:
       # ca.uhn.fhir.jpa.model.dialect.HapiFhirSQLServerDialect
       # ca.uhn.fhir.jpa.model.dialect.HapiFhirMySQLDialect (Deprecated!)
       #########################################
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
       #########################################
       #      hibernate.hbm2ddl.auto: update
       #      hibernate.jdbc.batch_size: 20
@@ -69,6 +70,7 @@ spring:
       #      hibernate.cache.use_minimal_puts: false
       ###    These settings will enable fulltext search with lucene or elastic
       hibernate.search.enabled: false
+    
   ### lucene parameters
   #      hibernate.search.backend.type: lucene
   #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
