@@ -2,6 +2,7 @@
 
 - matchbox validation: html tags in result [#371](https://github.com/ahdis/matchbox/issues/371)
 - matchbox validation: make showMessagesFromReferences default to true [#370](https://github.com/ahdis/matchbox/issues/370)
+- matchbox validation: fix exception during ai validation [#375](https://github.com/ahdis/matchbox/issues/375)
 
 2025/04/15 Release 4.0.1
 
