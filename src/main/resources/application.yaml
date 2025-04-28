@@ -7,8 +7,8 @@ spring:
    mail:
       host: smtp.gmail.com
       port: 587
-      username:
-      password:
+      username: #email address of sender
+      password: #password from the google app passwords (16 characters)
       properties:
          mail:
             smtp:
@@ -91,9 +91,9 @@ rabbitmq:
          name: email_routing_key
 
 report:
-   email:
+   email: #receipients mail
    env: V2
-   cron: "0 * * * * *"
+   cron: "0 0 10 ? * MON"
 
 
 logging:
@@ -129,24 +129,25 @@ hapi:
 #      hibernate.search.backend.directory.type: local-filesystem
 #      hibernate.search.backend.directory.root: target/lucenefiles
 #      hibernate.search.backend.lucene_version: lucene_current
-      envs: C:\Users\developer\Impact_Health_Workspace\anc-oyo\data\hapi\envs
-      notification_datasource_config_path: C:\Users\developer\Impact_Health_Workspace\anc-oyo\data\hapi\notificationDataSourceConfig.xml
-      anc_config_file: C:\Users\developer\Impact_Health_Workspace\anc-oyo\data\hapi\anc_config.json
-      filters_config_file: C:\Users\developer\Impact_Health_Workspace\anc-oyo\data\hapi\filters_config.json
-      daily_and_summary_config_file: C:\Users\developer\Impact_Health_Workspace\anc-oyo\data\hapi\daily_and_summary_config.json
-      pie_config_file: C:\Users\developer\Impact_Health_Workspace\anc-oyo\data\hapi\pie_config.json
-      gcp_credential_file_path: C:\Users\developer\Impact_Health_Workspace\anc-oyo\data\hapi\gcpCredential.json
-      sql_screen_time_file_path: C:\Users\developer\Impact_Health_Workspace\anc-oyo\data\hapi\sql_screen_time.txt
-      line_chart_definitions_file: C:\Users\developer\Impact_Health_Workspace\anc-oyo\data\hapi\chart_definition.json
-      tabular_config_file: C:\Users\developer\Impact_Health_Workspace\anc-oyo\data\hapi\tabular_config.json
-      analytics_config_file: C:\Users\developer\Impact_Health_Workspace\anc-oyo\data\hapi\analytics_config.json
-      pk_file: C:\Users\developer\Impact_Health_Workspace\anc-oyo\data\hapi\android.txt
-      dashboard_public_key_file: C:\Users\developer\Impact_Health_Workspace\anc-oyo\data\hapi\android.txt
+      envs: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\envs
+      notification_datasource_config_path: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\notificationDataSourceConfig.xml
+      anc_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\anc_config.json
+      filters_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\filters_config.json
+      daily_and_summary_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\daily_and_summary_config.json
+      pie_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\pie_config.json
+      gcp_credential_file_path: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\gcpCredential.json
+      sql_screen_time_file_path: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\sql_screen_time.txt
+      line_chart_definitions_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\chart_definition.json
+      tabular_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\tabular_config.json
+      analytics_config_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\analytics_config.json
+      pk_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\android.txt
+      dashboard_public_key_file: C:\Users\Kashyap\bkp\source\repos\anc-oyo\data\hapi\android.txt
       organization_ids_for_caching:
         - "c91ee7cd-f994-4771-8863-3713e6e52e98"
         - "b759ff8c-e659-4adf-adc3-8bdc17733b14"
       envs_for_caching:
-        - "V2"
+         - "impact-health-v1"
+         - "impact-health-v2"
       dev_user_role: dev
       facility_batch_size: 70
       executor_core_pool_size: 4
@@ -162,7 +163,7 @@ hapi:
       fhir_hapi_client_id: fhir-hapi-server
       fhir_hapi_client_secret: xyz
       keycloak_username: managegroup
-      keycloak_password: 12345
+      keycloak_password: 123456
       aws_access_key:  
       aws_secret_key:
       sms_password: password

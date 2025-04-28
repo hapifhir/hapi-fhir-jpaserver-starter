@@ -6,6 +6,8 @@ import com.iprd.report.model.data.ScoreCardItem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class EmailUserService {
+
+
+	private static final Logger logger = LoggerFactory.getLogger(EmailUserService.class);
 
 	private final EmailService emailService;
 	private final RabbitTemplate rabbitTemplate;
@@ -211,7 +216,7 @@ public class EmailUserService {
 						"Weekly_Facility_Summary_" + startDate + "_to_" + endDate + ".csv"
 					)
 				);
-				log.info("Weekly summary email with CSV attachment sent to: {} for {} facilities", email, facilityHierarchies.size());
+				logger.warn("Weekly summary email with CSV attachment sent to: {} for {} facilities", email, facilityHierarchies.size());
 			} catch (Exception e) {
 				log.error("Failed to send summary email to {}: {}", email, ExceptionUtils.getStackTrace(e));
 			}

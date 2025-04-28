@@ -39,9 +39,9 @@ public class CachingService {
 	DashboardEnvironmentConfig dashboardEnvironmentConfig;
 	@Autowired
 	FhirClientAuthenticatorService fhirClientAuthenticatorService;
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(CachingService.class);
-	private static final int MAX_RETRY = 6;
+		private static final int MAX_RETRY = 6;
 
 	private static final long DELAY = 3600000;
 
@@ -189,7 +189,7 @@ public class CachingService {
 
 		long end = System.nanoTime();
 		double diff = (end - start) / 1_000_000.0;;
-		logger.warn("-- Time for Caching Score card  "+String.valueOf(diff));
+//		logger.warn("-- Time for Caching Score card  "+String.valueOf(diff));
 	}
 
 	public void cacheDataForBarChart(String orgId, Date startDate, List<BarChartDefinition> barCharts,int count,Map<String, List<BarChartItemDataCollection>> map,String filterString) {
@@ -243,7 +243,7 @@ public class CachingService {
 
 		long end = System.nanoTime();
 		double diff = (end - start) / 1_000_000.0;;
-		logger.warn("-- Time for Caching BarChart  "+String.valueOf(diff));
+//		logger.warn("-- Time for Caching BarChart  "+String.valueOf(diff));
 	}
 
 	public void cacheTabularData(String orgId, Date startDate, List<TabularItem> indicators,int count,Map<String, List<ScoreCardItem>> map,String filterString) {
@@ -262,7 +262,7 @@ public class CachingService {
 
 		long end = System.nanoTime();
 		double diff = (end - start) / 1_000_000.0;;
-		logger.warn("-- Time for Caching TabularData  "+String.valueOf(diff));
+//		logger.warn("-- Time for Caching TabularData  "+String.valueOf(diff));
 	}
 
 	public void cachePieChartData(String orgId, Date startDate, List<PieChartDefinition> pieChartDefinitions,int count,Map<String, List<PieChartItemDataCollection>> map,String filterString){
@@ -305,12 +305,12 @@ public class CachingService {
 
 		long end = System.nanoTime();
 		double diff = (end - start) / 1_000_000.0;;
-		logger.warn("-- Time for Caching PieChart  "+String.valueOf(diff));
+//		logger.warn("-- Time for Caching PieChart  "+String.valueOf(diff));
 	}
 
 	public void cacheDataLineChart(String orgId, Date startDate, List<LineChart> lineCharts,int count,Map<String, List<LineChartItemCollection>> map,String filterString) {
 		long start = System.nanoTime();
-		
+
 		notificationDataSource = NotificationDataSource.getInstance();
 		LinkedHashMap<String, String> mapOfIdToMd5 = new LinkedHashMap<>();
 		List<LineChartItemDefinitionWrapper> fallbackItems = new ArrayList<>();
@@ -353,9 +353,9 @@ public class CachingService {
 
 		long end = System.nanoTime();
 		double diff = (end - start) / 1_000_000.0;;
-		logger.warn("-- Time for Caching LineChart  "+String.valueOf(diff));
+//		logger.warn("-- Time for Caching LineChart  "+String.valueOf(diff));
 	}
-	
+
 	@Async("asyncTaskExecutor")
 	public void cacheData(String orgId, Date date, List<IndicatorItem> indicators,String filterString) {
 		long startTime = System.nanoTime();
@@ -374,9 +374,9 @@ public class CachingService {
 
 		long endTime = System.nanoTime();
 		long diff = (endTime - startTime);
-		logger.warn("-- Time for Caching Async cacheData  "+String.valueOf(diff));
+//		logger.warn("-- Time for Caching Async cacheData  "+String.valueOf(diff));
 	}
-	
+
 	@Async("asyncTaskExecutor")
 	public void cacheDataForBarChart(String orgId, Date date, List<BarChartDefinition> barCharts,int count,String filterString) {
 		long startTime = System.nanoTime();
@@ -430,7 +430,7 @@ public class CachingService {
 
 		long endTime = System.nanoTime();
 		long diff = (endTime - startTime);
-		logger.warn("-- Time for Caching Async Barchar  "+String.valueOf(diff));
+//		logger.warn("-- Time for Caching Async Barchar  "+String.valueOf(diff));
 	}
 
 	// Wrapper class for BarComponentData
@@ -477,12 +477,12 @@ public class CachingService {
 
 		long endTime = System.nanoTime();
 		long diff = (endTime - startTime);
-		logger.warn("-- Time for Caching Async TabularData  "+String.valueOf(diff));
+//		logger.warn("-- Time for Caching Async TabularData  "+String.valueOf(diff));
 	}
 
 	@Async("asyncTaskExecutor")
 	public void cachePieChartData(String orgId, Date date, List<PieChartDefinition> pieChartDefinitions,int count,String filterString){
-		
+
 		long startTime = System.nanoTime();
 
 		notificationDataSource = NotificationDataSource.getInstance();
@@ -525,7 +525,7 @@ public class CachingService {
 
 		long endTime = System.nanoTime();
 		long diff = (endTime - startTime);
-		logger.warn("-- Time for Caching Async PieChart  "+String.valueOf(diff));
+//		logger.warn("-- Time for Caching Async PieChart  "+String.valueOf(diff));
 	}
 
 	// Wrapper class for PieChartItem
@@ -549,7 +549,7 @@ public class CachingService {
 			this.categoryId = categoryId;
 		}
 	}
-	
+
 	@Async("asyncTaskExecutor")
 	public void cacheDataLineChart(String orgId, Date date, List<LineChart> lineCharts,int count,String filterString) {
 		long startTime = System.nanoTime();
@@ -597,7 +597,7 @@ public class CachingService {
 
 		long endTime = System.nanoTime();
 		long diff = (endTime - startTime);
-		logger.warn("-- Time for Caching Async LineData  "+String.valueOf(diff));
+//		logger.warn("-- Time for Caching Async LineData  "+String.valueOf(diff));
 	}
 
 	// Wrapper class for LineChartItem
