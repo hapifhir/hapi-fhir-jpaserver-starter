@@ -128,9 +128,6 @@ public class LLMConnector {
             ObjectNode operationOutcomeContent = (ObjectNode) objectMapper.readTree(operationOutcome);
             String requestBody = createRequestBody(fhirResourceContent, operationOutcomeContent);
 
-            // write the whole LLM-Input-String to a File for later Tokenizer-analysis
-            saveStringToFile(requestBody);
-
             chatMemory.add(UserMessage.from(requestBody));
             ChatRequest request = ChatRequest.builder()
                     .messages(chatMemory.messages())
@@ -170,23 +167,5 @@ public class LLMConnector {
         requestString += "Here is the validation result: " + operationOutcomeContent.toString();
 
         return requestString;
-    }
-
-    /**
-     * Simple method to save a String to a File. Used to save the LLM-Input to analyze the Nr. of tokens later.
-     * @param str The given String.
-     * @throws IOException          if an I/ O error occurs when sending or receiving
-     */
-    private void saveStringToFile(String str) throws IOException {
-        // Get current date and time
-        LocalDateTime now = LocalDateTime.now();
-
-        // Format the date and time
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
-        String timestamp = now.format(formatter);
-
-        File file = File.createTempFile("Input", "_" + timestamp, new File("C:/Users/noaju/Dev/openai_data"));
-        Path filePath = file.toPath();
-        Files.write(filePath, str.getBytes());
     }
 }
