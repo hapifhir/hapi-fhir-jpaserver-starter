@@ -40,7 +40,7 @@ public class EnvironmentHelper {
 			properties.put(strippedKey, entry.getValue().toString());
 		}
 
-		// also check for JPA properterties set as environment variables, this is slightly hacky and doesn't cover all
+		// also check for JPA properties set as environment variables, this is slightly hacky and doesn't cover all
 		// the naming conventions Springboot allows
 		// but there doesn't seem to be a better/deterministic way to get these properties when they are set as ENV
 		// variables and this at least provides
