@@ -39,12 +39,10 @@ public class CachingService {
 	DashboardEnvironmentConfig dashboardEnvironmentConfig;
 	@Autowired
 	FhirClientAuthenticatorService fhirClientAuthenticatorService;
-
 	private static final Logger logger = LoggerFactory.getLogger(CachingService.class);
-		private static final int MAX_RETRY = 6;
+	private static final int MAX_RETRY = 6;
 
 	private static final long DELAY = 3600000;
-
 
 
 	private <T, U, K> void cacheDataGeneric(

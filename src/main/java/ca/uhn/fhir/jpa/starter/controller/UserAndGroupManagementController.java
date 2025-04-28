@@ -48,7 +48,6 @@ import java.util.ArrayList;
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 
-
 @CrossOrigin(origins = {"http://localhost:3000/", "http://testhost.dashboard:3000/", "https://oclink.io/", "https://opencampaignlink.org/"}, maxAge = 3600, allowCredentials = "true")
 @RestController
 @RequestMapping("/iprd")
