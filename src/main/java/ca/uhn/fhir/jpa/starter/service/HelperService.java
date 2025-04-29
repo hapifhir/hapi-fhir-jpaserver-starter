@@ -339,7 +339,6 @@ public class HelperService {
 		String orgId = org.getIdElement().getIdPart();
 		String orgName = org.getName() != null ? org.getName() : "unknown";
 
-		// Step 1: Check Meta tag for OrgType
 		if (org.hasMeta() && !org.getMeta().getTag().isEmpty()) {
 			for (Coding tag : org.getMeta().getTag()) {
 				if (SYSTEM_ORG_TYPE.equals(tag.getSystem()) && tag.hasCode()) {
@@ -362,7 +361,6 @@ public class HelperService {
 			}
 		}
 
-		// Step 2: Fallback to type codings for non-standard organi
 		if (org.hasType() && !org.getType().isEmpty()) {
 			for (CodeableConcept type : org.getType()) {
 				if (type.hasCoding()) {
