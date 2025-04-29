@@ -1,11 +1,11 @@
 package ca.uhn.fhir.jpa.starter.cr;
 
-import ca.uhn.fhir.cr.config.dstu3.ApplyOperationConfig;
-import ca.uhn.fhir.cr.config.dstu3.CrDstu3Config;
-import ca.uhn.fhir.cr.config.dstu3.DataRequirementsOperationConfig;
-import ca.uhn.fhir.cr.config.dstu3.EvaluateOperationConfig;
-import ca.uhn.fhir.cr.config.dstu3.PackageOperationConfig;
 import ca.uhn.fhir.jpa.starter.annotations.OnDSTU3Condition;
+import org.opencds.cqf.fhir.cr.hapi.config.dstu3.ApplyOperationConfig;
+import org.opencds.cqf.fhir.cr.hapi.config.dstu3.CrDstu3Config;
+import org.opencds.cqf.fhir.cr.hapi.config.dstu3.DataRequirementsOperationConfig;
+import org.opencds.cqf.fhir.cr.hapi.config.dstu3.EvaluateOperationConfig;
+import org.opencds.cqf.fhir.cr.hapi.config.dstu3.PackageOperationConfig;
 import org.springframework.context.annotation.*;
 
 @Configuration
