@@ -54,12 +54,12 @@ jobs:
         if: always()
         run: |
           echo "===== Highlighted Server Errors ====="
-          if grep -E 'ERROR|Exception|WARN' logs/server.log > /dev/null; then
-            grep -E 'ERROR|Exception|WARN' logs/server.log | while read -r line; do
+          if grep 'ERROR' logs/server.log > /dev/null; then
+            grep 'ERROR' logs/server.log | while read -r line; do
               echo "::error::${line}"
             done
           else
-            echo "No errors or exceptions found in server logs."
+            echo "No errors found in server logs."
           fi
 
       - name: Upload server logs
