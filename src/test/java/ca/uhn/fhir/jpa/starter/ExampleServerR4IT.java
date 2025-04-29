@@ -70,7 +70,7 @@ import static org.opencds.cqf.fhir.utility.r4.Parameters.stringPart;
 	// when running in a spring boot environment
 	"spring.main.allow-bean-definition-overriding=true",
 	"hapi.fhir.remote_terminology_service.snomed.system=http://snomed.info/sct",
-	"hapi.fhir.remote_terminology_service.snomed.url=http://tx.fhir.org/r4"
+	"hapi.fhir.remote_terminology_service.snomed.url=https://tx.fhir.org/r4"
 })
 class ExampleServerR4IT implements IServerSupport {
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR4IT.class);
