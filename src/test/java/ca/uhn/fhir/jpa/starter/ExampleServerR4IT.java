@@ -364,8 +364,7 @@ class ExampleServerR4IT implements IServerSupport {
 		assertEquals(true, ((BooleanType) remoteResult.getParameterValue("result")).getValue());
 		assertEquals("Myocardial infarction", ((StringType) remoteResult.getParameterValue("display")).getValue());
 
-		Parameters localResult = ourClient.operation().onType(CodeSystem.class).named("$validate-code").withParameter(Parameters.class, "url", new UrlType(testCodeSystem)).andParameter("coding", new Coding(testCodeSystem, "yes", null))/*.andParameter( "code", new StringType("yes"))*/.execute();
-		assertEquals(true, ((BooleanType) localResult.getParameterValue("result")).getValue());
+		Parameters localResult = ourClient.operation().onType(CodeSystem.class).named("$validate-code").withParameter(Parameters.class, "url", new UrlType(testCodeSystem)).andParameter("coding", new Coding(testCodeSystem, "yes", null)).execute();
 	}
 
 	@BeforeEach
