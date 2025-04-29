@@ -1,8 +1,5 @@
 package ca.uhn.fhir.jpa.starter.cr;
 
-import ca.uhn.fhir.cr.common.CodeCacheResourceChangeListener;
-import ca.uhn.fhir.cr.common.CqlThreadFactory;
-import ca.uhn.fhir.cr.common.ElmCacheResourceChangeListener;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.cache.IResourceChangeListenerRegistry;
 import ca.uhn.fhir.jpa.cache.ResourceChangeListenerRegistryInterceptor;
@@ -19,6 +16,9 @@ import org.opencds.cqf.cql.engine.runtime.Code;
 import org.opencds.cqf.fhir.cql.EvaluationSettings;
 import org.opencds.cqf.fhir.cql.engine.retrieve.RetrieveSettings;
 import org.opencds.cqf.fhir.cql.engine.terminology.TerminologySettings;
+import org.opencds.cqf.fhir.cr.hapi.common.CodeCacheResourceChangeListener;
+import org.opencds.cqf.fhir.cr.hapi.common.CqlThreadFactory;
+import org.opencds.cqf.fhir.cr.hapi.common.ElmCacheResourceChangeListener;
 import org.opencds.cqf.fhir.cr.measure.CareGapsProperties;
 import org.opencds.cqf.fhir.cr.measure.MeasureEvaluationOptions;
 import org.opencds.cqf.fhir.utility.ValidationProfile;
