@@ -74,15 +74,17 @@ public class ModuleConfigurationPrefetchSvc extends CdsPrefetchSvc {
 			CdsPrefetchDaoSvc theResourcePrefetchDao,
 			CdsPrefetchFhirClientSvc theResourcePrefetchFhirClient,
 			ICdsHooksDaoAuthorizationSvc theCdsHooksDaoAuthorizationSvc,
+			FhirContext theFhirContext,
 			IInterceptorBroadcaster theInterceptorBroadcaster) {
 		super(
 				theCdsResolutionStrategySvc,
 				theResourcePrefetchDao,
 				theResourcePrefetchFhirClient,
 				theCdsHooksDaoAuthorizationSvc,
+				theFhirContext,
 				theInterceptorBroadcaster);
 		myResourcePrefetchFhirClient = theResourcePrefetchFhirClient;
-		fhirContext = theResourcePrefetchDao.getFhirContext();
+		fhirContext = theFhirContext;
 	}
 
 	@Override
