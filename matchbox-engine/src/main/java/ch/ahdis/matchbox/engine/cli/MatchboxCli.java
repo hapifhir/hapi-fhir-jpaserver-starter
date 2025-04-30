@@ -41,10 +41,10 @@ import org.hl7.fhir.utilities.TimeTracker;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.validation.Scanner;
-import org.hl7.fhir.validation.cli.model.CliContext;
-import org.hl7.fhir.validation.cli.utils.Display;
-import org.hl7.fhir.validation.cli.utils.EngineMode;
-import org.hl7.fhir.validation.cli.utils.Params;
+import org.hl7.fhir.validation.service.model.ValidationContext;
+import org.hl7.fhir.validation.service.utils.Display;
+import org.hl7.fhir.validation.service.utils.EngineMode;
+import org.hl7.fhir.validation.cli.Params;
 import org.hl7.fhir.validation.testexecutor.TestExecutor;
 import org.hl7.fhir.validation.testexecutor.TestExecutorParams;
 
@@ -117,7 +117,7 @@ public class MatchboxCli {
       System.setProperty(JAVA_DISABLED_PROXY_SCHEMES, "");
     }
 
-    CliContext cliContext = Params.loadCliContext(args);
+    ValidationContext validationContext = Params.loadValidationContext(args);
 
     FileFormat.checkCharsetAndWarnIfNotUTF8(System.out);
 
@@ -128,7 +128,7 @@ public class MatchboxCli {
     }
     else {
       Display.printCliParamsAndInfo(args);
-      doValidation(tt, tts, cliContext);
+      doValidation(tt, tts, validationContext);
     }
   }
 
@@ -155,7 +155,7 @@ public class MatchboxCli {
       || Params.hasParam(args, "/?"));
   }
 
-  private static void doValidation(TimeTracker tt, TimeTracker.Session tts, CliContext cliContext) throws Exception {
+  private static void doValidation(TimeTracker tt, TimeTracker.Session tts, ValidationContext cliContext) throws Exception {
     if (cliContext.getSv() == null) {
       cliContext.setSv(matchboxService.determineVersion(cliContext));
     }

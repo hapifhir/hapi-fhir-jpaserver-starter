@@ -6,7 +6,7 @@
     <parent>
         <artifactId>matchbox</artifactId>
         <groupId>health.matchbox</groupId>
-        <version>4.0.1</version>
+        <version>4.0.2</version>
     </parent>
 
     <artifactId>matchbox-engine</artifactId>

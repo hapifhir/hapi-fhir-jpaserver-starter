@@ -80,7 +80,7 @@ import org.hl7.fhir.utilities.xhtml.XhtmlNode;
 import org.hl7.fhir.validation.IgLoader;
 import org.hl7.fhir.validation.ValidationEngine;
 import org.hl7.fhir.validation.ValidatorUtils;
-import org.hl7.fhir.validation.cli.services.PassiveExpiringSessionCache;
+import org.hl7.fhir.validation.service.PassiveExpiringSessionCache;
 import org.hl7.fhir.validation.instance.InstanceValidator;
 
 import ch.ahdis.matchbox.engine.cli.VersionUtil;

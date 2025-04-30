@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.hl7.fhir.validation.ValidationEngine;
-import org.hl7.fhir.validation.cli.services.PassiveExpiringSessionCache;
+import org.hl7.fhir.validation.service.PassiveExpiringSessionCache;
 
 /**
  * @author Oliver Egger

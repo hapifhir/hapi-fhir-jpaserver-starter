@@ -35,7 +35,6 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -45,7 +44,17 @@ import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -61,7 +70,6 @@ import org.apache.commons.compress.compressors.gzip.GzipParameters;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.utilities.ByteProvider;
 import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
-import org.hl7.fhir.utilities.StringPair;
 import org.hl7.fhir.utilities.FileUtilities;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
@@ -785,18 +793,18 @@ public class NpmPackage {
   }
 
   public List<String> listResources(String... types) throws IOException {
-    return listResources(Utilities.strings(types));
+    return listResources(Utilities.stringSet(types));
   }
   
   public List<String> listResourcesinFolder(String folder, String... types) throws IOException {
-    return listResourcesInFolder(folder, Utilities.strings(types));
+    return listResourcesInFolder(folder, Utilities.stringSet(types));
   }
   
-  public List<String> listResources(List<String> types) throws IOException {
+  public List<String> listResources(Set<String> types) throws IOException {
     return listResourcesInFolder("package", types);
   }
   
-  public List<String> listResourcesInFolder(String folderName, List<String> types) throws IOException {
+  public List<String> listResourcesInFolder(String folderName, Set<String> types) throws IOException {
     List<String> res = new ArrayList<String>();
     NpmPackageFolder folder = folders.get(folderName);
     if (types.size() == 0) {
@@ -842,16 +850,16 @@ public class NpmPackage {
   }
 
   public List<PackageResourceInformation> listIndexedResources(String... types) throws IOException {
-    return listIndexedResources(Utilities.strings(types));
+    return listIndexedResources(Utilities.stringSet(types));
   }
   
-  public List<PackageResourceInformation> listIndexedResources(List<String> types) throws IOException {
+  public List<PackageResourceInformation> listIndexedResources(Set<String> types) throws IOException {
     List<PackageResourceInformation> res = new ArrayList<PackageResourceInformation>();
     for (NpmPackageFolder folder : folders.values()) {
       JsonObject index = folder.index();
       if (index != null) {
         for (JsonObject fi : index.getJsonObjects("files")) {
-          if (Utilities.existsInList(fi.asString("resourceType"), types) || types.isEmpty()) {
+          if (types.contains(fi.asString("resourceType")) || types.isEmpty()) {
             res.add(new PackageResourceInformation(folder.folder == null ? "@"+folder.getFolderName() : folder.folder.getAbsolutePath(), fi));
           }
         }
@@ -1184,6 +1192,9 @@ public class NpmPackage {
     NpmPackageFolder f = folders.get("example");
     if (f == null) {
       f = folders.get("package/example");      
+    }
+    if (f == null) {
+      f = folders.get("package\\example");      
     }
     if (f != null) {
       JsonArray files = f.index().getJsonArray("files");

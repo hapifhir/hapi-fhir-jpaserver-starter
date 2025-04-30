@@ -43,24 +43,24 @@ import org.hl7.fhir.validation.IgLoader;
 import org.hl7.fhir.validation.ValidationEngine;
 import org.hl7.fhir.validation.ValidationRecord;
 import org.hl7.fhir.validation.ValidatorUtils;
-import org.hl7.fhir.validation.cli.model.CliContext;
-import org.hl7.fhir.validation.cli.model.FileInfo;
-import org.hl7.fhir.validation.cli.model.ValidationOutcome;
-import org.hl7.fhir.validation.cli.model.ValidationRequest;
-import org.hl7.fhir.validation.cli.model.ValidationResponse;
-import org.hl7.fhir.validation.cli.renderers.CSVRenderer;
-import org.hl7.fhir.validation.cli.renderers.DefaultRenderer;
-import org.hl7.fhir.validation.cli.renderers.ESLintCompactRenderer;
-import org.hl7.fhir.validation.cli.renderers.NativeRenderer;
-import org.hl7.fhir.validation.cli.renderers.ValidationOutputRenderer;
-import org.hl7.fhir.validation.cli.services.DisabledValidationPolicyAdvisor;
-import org.hl7.fhir.validation.cli.services.HTMLOutputGenerator;
-import org.hl7.fhir.validation.cli.services.IPackageInstaller;
-import org.hl7.fhir.validation.cli.services.PassiveExpiringSessionCache;
-import org.hl7.fhir.validation.cli.services.SessionCache;
-import org.hl7.fhir.validation.cli.services.StandAloneValidatorFetcher;
-import org.hl7.fhir.validation.cli.utils.EngineMode;
-import org.hl7.fhir.validation.cli.utils.VersionSourceInformation;
+import org.hl7.fhir.validation.service.model.ValidationContext;
+import org.hl7.fhir.validation.service.model.FileInfo;
+import org.hl7.fhir.validation.service.model.ValidationOutcome;
+import org.hl7.fhir.validation.service.model.ValidationRequest;
+import org.hl7.fhir.validation.service.model.ValidationResponse;
+import org.hl7.fhir.validation.service.renderers.CSVRenderer;
+import org.hl7.fhir.validation.service.renderers.DefaultRenderer;
+import org.hl7.fhir.validation.service.renderers.ESLintCompactRenderer;
+import org.hl7.fhir.validation.service.renderers.NativeRenderer;
+import org.hl7.fhir.validation.service.renderers.ValidationOutputRenderer;
+import org.hl7.fhir.validation.service.DisabledValidationPolicyAdvisor;
+import org.hl7.fhir.validation.service.HTMLOutputGenerator;
+import org.hl7.fhir.validation.service.IPackageInstaller;
+import org.hl7.fhir.validation.service.PassiveExpiringSessionCache;
+import org.hl7.fhir.validation.service.SessionCache;
+import org.hl7.fhir.validation.service.StandAloneValidatorFetcher;
+import org.hl7.fhir.validation.service.utils.EngineMode;
+import org.hl7.fhir.validation.service.utils.VersionSourceInformation;
 import org.hl7.fhir.validation.instance.advisor.BasePolicyAdvisorForFullValidation;
 
 import ch.ahdis.matchbox.engine.CdaMappingEngine;
@@ -90,18 +90,18 @@ public class MatchboxService {
   }
 
   public ValidationResponse validateSources(ValidationRequest request) throws Exception {
-    if (request.getCliContext().getSv() == null) {
-      String sv = determineVersion(request.getCliContext(), request.sessionId);
-      request.getCliContext().setSv(sv);
+    if (request.getValidationContext().getSv() == null) {
+      String sv = determineVersion(request.getValidationContext(), request.sessionId);
+      request.getValidationContext().setSv(sv);
     }
 
-    String definitions = VersionUtilities.packageForVersion(request.getCliContext().getSv()) + "#" + VersionUtilities.getCurrentVersion(request.getCliContext().getSv());
+    String definitions = VersionUtilities.packageForVersion(request.getValidationContext().getSv()) + "#" + VersionUtilities.getCurrentVersion(request.getValidationContext().getSv());
 
-    String sessionId = initializeValidator(request.getCliContext(), definitions, new TimeTracker(), request.sessionId);
+    String sessionId = initializeValidator(request.getValidationContext(), definitions, new TimeTracker(), request.sessionId);
     ValidationEngine validator = sessionCache.fetchSessionValidatorEngine(sessionId);
 
-    if (request.getCliContext().getProfiles().size() > 0) {
-      System.out.println("  .. validate " + request.listSourceFiles() + " against " + request.getCliContext().getProfiles().toString());
+    if (request.getValidationContext().getProfiles().size() > 0) {
+      System.out.println("  .. validate " + request.listSourceFiles() + " against " + request.getValidationContext().getProfiles().toString());
     } else {
       System.out.println("  .. validate " + request.listSourceFiles());
     }
@@ -111,7 +111,7 @@ public class MatchboxService {
     for (FileInfo fp : request.getFilesToValidate()) {
       List<ValidationMessage> messages = new ArrayList<>();
       validator.validate(fp.getFileContent().getBytes(), Manager.FhirFormat.getFhirFormat(fp.getFileType()),
-        request.getCliContext().getProfiles(), messages);
+        request.getValidationContext().getProfiles(), messages);
       ValidationOutcome outcome = new ValidationOutcome().setFileInfo(fp);
       messages.forEach(outcome::addMessage);
       response.addOutcome(outcome);
@@ -120,37 +120,37 @@ public class MatchboxService {
     return response;
   }
 
-  public VersionSourceInformation scanForVersions(CliContext cliContext) throws Exception {
+  public VersionSourceInformation scanForVersions(ValidationContext validationContext) throws Exception {
     VersionSourceInformation versions = new VersionSourceInformation();
     IgLoader igLoader = new IgLoader(
       new FilesystemPackageCacheManager.Builder().build(),
       new SimpleWorkerContext.SimpleWorkerContextBuilder().fromNothing(),
       null);
-    for (String src : cliContext.getIgs()) {
-      igLoader.scanForIgVersion(src, cliContext.isRecursive(), versions);
+    for (String src : validationContext.getIgs()) {
+      igLoader.scanForIgVersion(src, validationContext.isRecursive(), versions);
     }
-    igLoader.scanForVersions(cliContext.getSources(), versions);
+    igLoader.scanForVersions(validationContext.getSources(), versions);
     return versions;
   }
 
-  public void validateSources(CliContext cliContext, ValidationEngine validator) throws Exception {
+  public void validateSources(ValidationContext validationContext, ValidationEngine validator) throws Exception {
     long start = System.currentTimeMillis();
     List<ValidationRecord> records = new ArrayList<>();
 	  List<ValidatorUtils.SourceFile> refs = new ArrayList<>();
-    Resource r = validator.validate(cliContext.getSources(), cliContext.getProfiles(), refs, records, null, true, 0,
+    Resource r = validator.validate(validationContext.getSources(), validationContext.getProfiles(), refs, records, null, true, 0,
 												true);
     MemoryMXBean mbean = ManagementFactory.getMemoryMXBean();
     System.out.println("Done. " + validator.getContext().clock().report()+". Memory = "+Utilities.describeSize(mbean.getHeapMemoryUsage().getUsed()+mbean.getNonHeapMemoryUsage().getUsed()));
     System.out.println();
 
     PrintStream dst = null;
-    if (cliContext.getOutput() == null) {
+    if (validationContext.getOutput() == null) {
       dst = System.out;
     } else {
-      dst = new PrintStream(new FileOutputStream(cliContext.getOutput()));
+      dst = new PrintStream(new FileOutputStream(validationContext.getOutput()));
     }
 
-    ValidationOutputRenderer renderer = makeValidationOutputRenderer(cliContext);
+    ValidationOutputRenderer renderer = makeValidationOutputRenderer(validationContext);
     renderer.setOutput(dst);
     renderer.setCrumbTrails(validator.isCrumbTrails());
     renderer.setShowMessageIds(validator.isShowMessageIds());
@@ -180,17 +180,17 @@ public class MatchboxService {
       renderer.finish();
     }
     
-    if (cliContext.getOutput() != null) {
+    if (validationContext.getOutput() != null) {
       dst.close();
     }
 
-    if (cliContext.getHtmlOutput() != null) {
+    if (validationContext.getHtmlOutput() != null) {
       String html = new HTMLOutputGenerator(records).generate(System.currentTimeMillis() - start);
-      FileUtilities.stringToFile(html, cliContext.getHtmlOutput());
-      System.out.println("HTML Summary in " + cliContext.getHtmlOutput());
+      FileUtilities.stringToFile(html, validationContext.getHtmlOutput());
+      System.out.println("HTML Summary in " + validationContext.getHtmlOutput());
     }
 
-    if (cliContext.isShowTerminologyRouting()) {
+    if (validationContext.isShowTerminologyRouting()) {
       System.out.println("");
       System.out.println("Terminology Routing Dump ---------------------------------------");
       if (validator.getContext().getTxClientManager().getInternalLog().isEmpty()) {
@@ -215,15 +215,15 @@ public class MatchboxService {
     return error;    
   }
 
-  private ValidationOutputRenderer makeValidationOutputRenderer(CliContext cliContext) {
-    String style = cliContext.getOutputStyle();
+  private ValidationOutputRenderer makeValidationOutputRenderer(ValidationContext validationContext) {
+    String style = validationContext.getOutputStyle();
     // adding to this list? 
     // Must document the option at https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator#UsingtheFHIRValidator-ManagingOutput
     // if you're going to make a PR, document the link where the outputstyle is documented, along with a sentence that describes it, in the PR notes 
     if (Utilities.noString(style)) {
-      if (cliContext.getOutput() == null) {
+      if (validationContext.getOutput() == null) {
         return new DefaultRenderer();        
-      } else if (cliContext.getOutput().endsWith(".json")) {
+      } else if (validationContext.getOutput().endsWith(".json")) {
         return new NativeRenderer(FhirFormat.JSON);
       } else {
         return new NativeRenderer(FhirFormat.XML);
@@ -242,72 +242,72 @@ public class MatchboxService {
     }
   }
 
-  public void convertSources(CliContext cliContext, ValidationEngine validator) throws Exception {
+  public void convertSources(ValidationContext validationContext, ValidationEngine validator) throws Exception {
 
-      if (!((cliContext.getOutput() == null) ^ (cliContext.getOutputSuffix() == null))) {
+      if (!((validationContext.getOutput() == null) ^ (validationContext.getOutputSuffix() == null))) {
         throw new Exception("Convert requires one of {-output, -outputSuffix} parameter to be set");
       }
 
-      List<String> sources = cliContext.getSources();
-      if ((sources.size() == 1) && (cliContext.getOutput() != null)) {
+      List<String> sources = validationContext.getSources();
+      if ((sources.size() == 1) && (validationContext.getOutput() != null)) {
         System.out.println(" ...convert");
-        validator.convert(sources.get(0), cliContext.getOutput());
+        validator.convert(sources.get(0), validationContext.getOutput());
       } else {
-        if (cliContext.getOutputSuffix() == null) {
+        if (validationContext.getOutputSuffix() == null) {
           throw new Exception("Converting multiple/wildcard sources requires a -outputSuffix parameter to be set");
         }
         for (int i = 0; i < sources.size(); i++) {
-            String output = sources.get(i) + "." + cliContext.getOutputSuffix();
+            String output = sources.get(i) + "." + validationContext.getOutputSuffix();
             validator.convert(sources.get(i), output);
             System.out.println(" ...convert [" + i +  "] (" + sources.get(i) + " to " + output + ")");
         }
       }
   }
 
-  public void evaluateFhirpath(CliContext cliContext, ValidationEngine validator) throws Exception {
-    System.out.println(" ...evaluating " + cliContext.getFhirpath());
-    System.out.println(validator.evaluateFhirPath(cliContext.getSources().get(0), cliContext.getFhirpath()));
+  public void evaluateFhirpath(ValidationContext validationContext, ValidationEngine validator) throws Exception {
+    System.out.println(" ...evaluating " + validationContext.getFhirpath());
+    System.out.println(validator.evaluateFhirPath(validationContext.getSources().get(0), validationContext.getFhirpath()));
   }
 
-  public void generateSnapshot(CliContext cliContext, ValidationEngine validator) throws Exception {
+  public void generateSnapshot(ValidationContext validationContext, ValidationEngine validator) throws Exception {
 
-      if (!((cliContext.getOutput() == null) ^ (cliContext.getOutputSuffix() == null))) {
+      if (!((validationContext.getOutput() == null) ^ (validationContext.getOutputSuffix() == null))) {
         throw new Exception("Snapshot generation requires one of {-output, -outputSuffix} parameter to be set");
       }
 
-      List<String> sources = cliContext.getSources();
-      if ((sources.size() == 1) && (cliContext.getOutput() != null)) {
-        StructureDefinition r = validator.snapshot(sources.get(0), cliContext.getSv());
+      List<String> sources = validationContext.getSources();
+      if ((sources.size() == 1) && (validationContext.getOutput() != null)) {
+        StructureDefinition r = validator.snapshot(sources.get(0), validationContext.getSv());
         System.out.println(" ...generated snapshot successfully");
-        validator.handleOutput(r, cliContext.getOutput(), cliContext.getSv());
+        validator.handleOutput(r, validationContext.getOutput(), validationContext.getSv());
       } else {
-        if (cliContext.getOutputSuffix() == null) {
+        if (validationContext.getOutputSuffix() == null) {
           throw new Exception("Snapshot generation for multiple/wildcard sources requires a -outputSuffix parameter to be set");
         }
         for (int i = 0; i < sources.size(); i++) {
-          StructureDefinition r = validator.snapshot(sources.get(i), cliContext.getSv());
-          String output = sources.get(i) + "." + cliContext.getOutputSuffix();
-          validator.handleOutput(r, output, cliContext.getSv());
+          StructureDefinition r = validator.snapshot(sources.get(i), validationContext.getSv());
+          String output = sources.get(i) + "." + validationContext.getOutputSuffix();
+          validator.handleOutput(r, output, validationContext.getSv());
           System.out.println(" ...generated snapshot [" + i +  "] successfully (" + sources.get(i) + " to " + output + ")");
         }
       }
 
   }
 
-  public void generateNarrative(CliContext cliContext, ValidationEngine validator) throws Exception {
-    Resource r = validator.generate(cliContext.getSources().get(0), cliContext.getSv());
+  public void generateNarrative(ValidationContext validationContext, ValidationEngine validator) throws Exception {
+    Resource r = validator.generate(validationContext.getSources().get(0), validationContext.getSv());
     System.out.println(" ...generated narrative successfully");
-    if (cliContext.getOutput() != null) {
-      validator.handleOutput(r, cliContext.getOutput(), cliContext.getSv());
+    if (validationContext.getOutput() != null) {
+      validator.handleOutput(r, validationContext.getOutput(), validationContext.getSv());
     }
   }
 
-  public void transform(CliContext cliContext, ValidationEngine validator) throws Exception {
-    if (cliContext.getSources().size() > 1)
-      throw new Exception("Can only have one source when doing a transform (found " + cliContext.getSources() + ")");
-    if (cliContext.getTxServer() == null)
+  public void transform(ValidationContext validationContext, ValidationEngine validator) throws Exception {
+    if (validationContext.getSources().size() > 1)
+      throw new Exception("Can only have one source when doing a transform (found " + validationContext.getSources() + ")");
+    if (validationContext.getTxServer() == null)
       throw new Exception("Must provide a terminology server when doing a transform");
-    if (cliContext.getMap() == null)
+    if (validationContext.getMap() == null)
       throw new Exception("Must provide a map when doing a transform");
     try {
       ContextUtilities cu = new ContextUtilities(validator.getContext());
@@ -317,12 +317,12 @@ public class MatchboxService {
             cu.generateSnapshot(sd);
         }
       }
-      validator.setMapLog(cliContext.getMapLog());
-      org.hl7.fhir.r5.elementmodel.Element r = validator.transform(cliContext.getSources().get(0), cliContext.getMap());
+      validator.setMapLog(validationContext.getMapLog());
+      org.hl7.fhir.r5.elementmodel.Element r = validator.transform(validationContext.getSources().get(0), validationContext.getMap());
       System.out.println(" ...success");
-      if (cliContext.getOutput() != null) {
-        FileOutputStream s = new FileOutputStream(cliContext.getOutput());
-        if (cliContext.getOutput() != null && cliContext.getOutput().endsWith(".json"))
+      if (validationContext.getOutput() != null) {
+        FileOutputStream s = new FileOutputStream(validationContext.getOutput());
+        if (validationContext.getOutput() != null && validationContext.getOutput().endsWith(".json"))
           new org.hl7.fhir.r5.elementmodel.JsonParser(validator.getContext()).compose(r, s, IParser.OutputStyle.PRETTY, null);
         else
           new org.hl7.fhir.r5.elementmodel.XmlParser(validator.getContext()).compose(r, s, IParser.OutputStyle.PRETTY, null);
@@ -334,12 +334,12 @@ public class MatchboxService {
     }
   }
 
-  public void compile(CliContext cliContext, ValidationEngine validator) throws Exception {
-    if (cliContext.getSources().size() > 0)
-      throw new Exception("Cannot specify sources when compling transform (found " + cliContext.getSources() + ")");
-    if (cliContext.getMap() == null)
+  public void compile(ValidationContext validationContext, ValidationEngine validator) throws Exception {
+    if (validationContext.getSources().size() > 0)
+      throw new Exception("Cannot specify sources when compling transform (found " + validationContext.getSources() + ")");
+    if (validationContext.getMap() == null)
       throw new Exception("Must provide a map when compiling a transform");
-    if (cliContext.getOutput() == null)
+    if (validationContext.getOutput() == null)
       throw new Exception("Must provide an output name when compiling a transform");
     try {
       ContextUtilities cu = new ContextUtilities(validator.getContext());
@@ -349,11 +349,11 @@ public class MatchboxService {
             cu.generateSnapshot(sd);
         }
       }
-      validator.setMapLog(cliContext.getMapLog());
-      StructureMap map = validator.compile(cliContext.getMap());
+      validator.setMapLog(validationContext.getMapLog());
+      StructureMap map = validator.compile(validationContext.getMap());
       if (map == null)
-        throw new Exception("Unable to locate map " + cliContext.getMap());
-      validator.handleOutput(map, cliContext.getOutput(), validator.getVersion());
+        throw new Exception("Unable to locate map " + validationContext.getMap());
+      validator.handleOutput(map, validationContext.getOutput(), validator.getVersion());
       System.out.println(" ...success");
     } catch (Exception e) {
       System.out.println(" ...Failure: " + e.getMessage());
@@ -361,34 +361,34 @@ public class MatchboxService {
     }
   }
 
-  public void transformVersion(CliContext cliContext, ValidationEngine validator) throws Exception {
-    if (cliContext.getSources().size() > 1) {
-      throw new Exception("Can only have one source when converting versions (found " + cliContext.getSources() + ")");
+  public void transformVersion(ValidationContext validationContext, ValidationEngine validator) throws Exception {
+    if (validationContext.getSources().size() > 1) {
+      throw new Exception("Can only have one source when converting versions (found " + validationContext.getSources() + ")");
     }
-    if (cliContext.getTargetVer() == null) {
+    if (validationContext.getTargetVer() == null) {
       throw new Exception("Must provide a map when converting versions");
     }
-    if (cliContext.getOutput() == null) {
+    if (validationContext.getOutput() == null) {
       throw new Exception("Must nominate an output when converting versions");
     }
     try {
-      if (cliContext.getMapLog() != null) {
-        validator.setMapLog(cliContext.getMapLog());
+      if (validationContext.getMapLog() != null) {
+        validator.setMapLog(validationContext.getMapLog());
       }
-      byte[] r = validator.transformVersion(cliContext.getSources().get(0), cliContext.getTargetVer(), cliContext.getOutput().endsWith(".json") ? Manager.FhirFormat.JSON : Manager.FhirFormat.XML, cliContext.getCanDoNative());
+      byte[] r = validator.transformVersion(validationContext.getSources().get(0), validationContext.getTargetVer(), validationContext.getOutput().endsWith(".json") ? Manager.FhirFormat.JSON : Manager.FhirFormat.XML, validationContext.getCanDoNative());
       System.out.println(" ...success");
-      FileUtilities.bytesToFile(r, cliContext.getOutput());
+      FileUtilities.bytesToFile(r, validationContext.getOutput());
     } catch (Exception e) {
       System.out.println(" ...Failure: " + e.getMessage());
       e.printStackTrace();
     }
   }
 
-  public MatchboxEngine initializeValidator(CliContext cliContext, String definitions, TimeTracker tt) throws Exception {
-    return (MatchboxEngine) sessionCache.fetchSessionValidatorEngine(initializeValidator(cliContext, definitions, tt, null));
+  public MatchboxEngine initializeValidator(ValidationContext validationContext, String definitions, TimeTracker tt) throws Exception {
+    return (MatchboxEngine) sessionCache.fetchSessionValidatorEngine(initializeValidator(validationContext, definitions, tt, null));
   }
 
-  public String initializeValidator(CliContext cliContext, String definitions, TimeTracker tt, String sessionId) throws Exception {
+  public String initializeValidator(ValidationContext validationContext, String definitions, TimeTracker tt, String sessionId) throws Exception {
     tt.milestone();
 
 	 // getSessionIds() does the same thing as sessionCache.removeExpiredSessions() (protected access)
@@ -398,55 +398,55 @@ public class MatchboxService {
       if (sessionId != null) {
         System.out.println("No such cached session exists for session id " + sessionId + ", re-instantiating validator.");
       }
-      System.out.println("  Initializing CdaMappingEngine for FHIR Version " + cliContext.getSv());
+      System.out.println("  Initializing CdaMappingEngine for FHIR Version " + validationContext.getSv());
       
       CdaMappingEngine validator = new CdaMappingEngine.CdaMappingEngineBuilder().getCdaEngineR4();
       sessionId = sessionCache.cacheSession(validator);
 
-      validator.setDebug(cliContext.isDoDebug());
-      validator.getContext().setLogger(new SystemOutLoggingService(cliContext.isDoDebug()));
-      for (String src : cliContext.getIgs()) {
-        validator.getIgLoader().loadIg(validator.getIgs(), validator.getBinaries(), src, cliContext.isRecursive());
+      validator.setDebug(validationContext.isDoDebug());
+      validator.getContext().setLogger(new SystemOutLoggingService(validationContext.isDoDebug()));
+      for (String src : validationContext.getIgs()) {
+        validator.getIgLoader().loadIg(validator.getIgs(), validator.getBinaries(), src, validationContext.isRecursive());
       }
-      validator.setQuestionnaireMode(cliContext.getQuestionnaireMode());
-      validator.setLevel(cliContext.getLevel());
-      validator.setDoNative(cliContext.isDoNative());
-      validator.setHintAboutNonMustSupport(cliContext.isHintAboutNonMustSupport());
-      for (String s : cliContext.getExtensions()) {
+      validator.setQuestionnaireMode(validationContext.getQuestionnaireMode());
+      validator.setLevel(validationContext.getLevel());
+      validator.setDoNative(validationContext.isDoNative());
+      validator.setHintAboutNonMustSupport(validationContext.isHintAboutNonMustSupport());
+      for (String s : validationContext.getExtensions()) {
         if ("any".equals(s)) {
           validator.setAnyExtensionsAllowed(true);
         } else {          
           validator.getExtensionDomains().add(s);
         }
       }
-      validator.setLanguage(cliContext.getLang());
-      validator.setLocale(cliContext.getLocale());
-      validator.setSnomedExtension(cliContext.getSnomedCTCode());
-      validator.setDisplayWarnings(cliContext.isDisplayWarnings());
-      validator.setAssumeValidRestReferences(cliContext.isAssumeValidRestReferences());
-      validator.setShowMessagesFromReferences(cliContext.isShowMessagesFromReferences());
-      validator.setDoImplicitFHIRPathStringConversion(cliContext.isDoImplicitFHIRPathStringConversion());
-      validator.setHtmlInMarkdownCheck(cliContext.getHtmlInMarkdownCheck());
-      validator.setNoExtensibleBindingMessages(cliContext.isNoExtensibleBindingMessages());
-      validator.setNoUnicodeBiDiControlChars(cliContext.isNoUnicodeBiDiControlChars());
-      validator.setNoInvariantChecks(cliContext.isNoInvariants());
-      validator.setWantInvariantInMessage(cliContext.isWantInvariantsInMessages());
-      validator.setSecurityChecks(cliContext.isSecurityChecks());
-      validator.setCrumbTrails(cliContext.isCrumbTrails());
-      validator.setForPublication(cliContext.isForPublication());
-      validator.setShowTimes(cliContext.isShowTimes());
-      validator.setAllowExampleUrls(cliContext.isAllowExampleUrls());
-      if (!cliContext.isDisableDefaultResourceFetcher()) {
+      validator.setLanguage(validationContext.getLang());
+      validator.setLocale(validationContext.getLocale());
+      validator.setSnomedExtension(validationContext.getSnomedCTCode());
+      validator.setDisplayWarnings(validationContext.isDisplayWarnings());
+      validator.setAssumeValidRestReferences(validationContext.isAssumeValidRestReferences());
+      validator.setShowMessagesFromReferences(validationContext.isShowMessagesFromReferences());
+      validator.setDoImplicitFHIRPathStringConversion(validationContext.isDoImplicitFHIRPathStringConversion());
+      validator.setHtmlInMarkdownCheck(validationContext.getHtmlInMarkdownCheck());
+      validator.setNoExtensibleBindingMessages(validationContext.isNoExtensibleBindingMessages());
+      validator.setNoUnicodeBiDiControlChars(validationContext.isNoUnicodeBiDiControlChars());
+      validator.setNoInvariantChecks(validationContext.isNoInvariants());
+      validator.setWantInvariantInMessage(validationContext.isWantInvariantsInMessages());
+      validator.setSecurityChecks(validationContext.isSecurityChecks());
+      validator.setCrumbTrails(validationContext.isCrumbTrails());
+      validator.setForPublication(validationContext.isForPublication());
+      validator.setShowTimes(validationContext.isShowTimes());
+      validator.setAllowExampleUrls(validationContext.isAllowExampleUrls());
+      if (!validationContext.isDisableDefaultResourceFetcher()) {
           StandAloneValidatorFetcher fetcher = new StandAloneValidatorFetcher(validator.getPcm(), validator.getContext(), validator);
           validator.setFetcher(fetcher);
           validator.getContext().setLocator(fetcher);
           validator.setPolicyAdvisor(fetcher);
-          if (cliContext.isCheckReferences()) {
+          if (validationContext.isCheckReferences()) {
             fetcher.setReferencePolicy(ReferenceValidationPolicy.CHECK_VALID);
           } else {
             fetcher.setReferencePolicy(ReferenceValidationPolicy.IGNORE);
           }
-          fetcher.setResolutionContext(cliContext.getResolutionContext());
+          fetcher.setResolutionContext(validationContext.getResolutionContext());
         } else {
           validator.setPolicyAdvisor(new ValidationPolicyAdvisor(ReferenceValidationPolicy.CHECK_VALID));
           // https://github.com/ahdis/matchbox/issues/334
@@ -454,10 +454,10 @@ public class MatchboxService {
 //          validator.setPolicyAdvisor(fetcher);
 //          refpol = ReferenceValidationPolicy.CHECK_TYPE_IF_EXISTS;
       }
-      validator.getBundleValidationRules().addAll(cliContext.getBundleValidationRules());
-      validator.setJurisdiction(CodeSystemUtilities.readCoding(cliContext.getJurisdiction()));
+      validator.getBundleValidationRules().addAll(validationContext.getBundleValidationRules());
+      validator.setJurisdiction(CodeSystemUtilities.readCoding(validationContext.getJurisdiction()));
       
-//      TerminologyCache.setNoCaching(cliContext.isNoInternalCaching());
+//      TerminologyCache.setNoCaching(validationContext.isNoInternalCaching());
       validator.prepare(); // generate any missing snapshots
       System.out.println(" go (" + tt.milestone() + ")");
     } else {
@@ -469,16 +469,16 @@ public class MatchboxService {
 
   
 
-  public String determineVersion(CliContext cliContext) throws Exception {
-    return determineVersion(cliContext, null);
+  public String determineVersion(ValidationContext validationContext) throws Exception {
+    return determineVersion(validationContext, null);
   }
 
-  public String determineVersion(CliContext cliContext, String sessionId) throws Exception {
-    if (cliContext.getMode() != EngineMode.VALIDATION) {
+  public String determineVersion(ValidationContext validationContext, String sessionId) throws Exception {
+    if (validationContext.getMode() != EngineMode.VALIDATION) {
       return "current";
     }
     System.out.println("Scanning for versions (no -version parameter):");
-    VersionSourceInformation versions = scanForVersions(cliContext);
+    VersionSourceInformation versions = scanForVersions(validationContext);
     for (String s : versions.getReport()) {
       if (!s.equals("(nothing found)")) {
         System.out.println("  " + s);
