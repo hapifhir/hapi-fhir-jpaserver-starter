@@ -76,7 +76,6 @@ import org.hibernate.JDBCException;
 import org.hibernate.engine.jdbc.ClobProxy;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.*;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryRequestComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleLinkComponent;
@@ -95,6 +94,10 @@ import org.hl7.fhir.r4.model.PractitionerRole;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.hl7.fhir.r4.model.StringType;
+import org.hl7.fhir.r4.model.Address;
+import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.Coding;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.resource.GroupResource;
 import org.keycloak.admin.client.resource.RealmResource;
@@ -227,32 +230,27 @@ public class HelperService {
 			try {
 				bundle = client.search()
 					.forResource(Organization.class)
-					.include(Organization.INCLUDE_PARTOF.asNonRecursive())
-					.count(100)
+					.include(Organization.INCLUDE_PARTOF.asRecursive())
 					.returnBundle(Bundle.class)
 					.execute();
-				logger.warn("Fetched bundle with {} entries", bundle.getEntry().size());
+				logger.info("Fetched bundle with {} entries", bundle.getEntry().size());
 			} catch (Exception e) {
 				logger.warn("Primary query with _include=Organization:partof failed: {}", ExceptionUtils.getStackTrace(e));
 				bundle = client.search()
 					.forResource(Organization.class)
-					.count(100)
 					.returnBundle(Bundle.class)
 					.execute();
-				logger.warn("Fallback query fetched bundle with {} entries", bundle.getEntry().size());
+				logger.info("Fallback query fetched bundle with {} entries", bundle.getEntry().size());
 			}
 
 			while (bundle != null) {
 				Map<String, Organization> orgMap = new HashMap<>();
-				long wardCount = bundle.getEntry().stream()
-					.map(entry -> (Organization) entry.getResource())
-					.filter(org -> determineOrgLevel(org).equals("ward"))
-					.count();
-				logger.info("Bundle contains {} wards", wardCount);
 
 				for (Bundle.BundleEntryComponent entry : bundle.getEntry()) {
 					Organization org = (Organization) entry.getResource();
-					orgMap.put(org.getIdElement().getIdPart(), org);
+					String orgId = org.getIdElement().getIdPart();
+					orgMap.put(orgId, org);
+					logger.debug("Added org to map: {} (name={})", orgId, org.getName());
 				}
 
 				for (Bundle.BundleEntryComponent entry : bundle.getEntry()) {
@@ -270,64 +268,74 @@ public class HelperService {
 						wardParent = parentId;
 						Organization ward = parentId != null ? orgMap.get(parentId) : null;
 						if (parentId == null) {
-							logger.error("Facility {} has no partOf reference", orgId);
+							logger.warn("Facility {} has no partOf reference", orgId);
+							continue;
 						} else if (ward == null) {
-							logger.error("Facility {} has invalid wardParent: {} (not found in orgMap)", orgId, parentId);
-						} else if (ward.hasPartOf()) {
-							lgaParent = ward.getPartOf().getReferenceElement().getIdPart();
-							Organization lga = orgMap.get(lgaParent);
-							if (lga != null && lga.hasPartOf()) {
-								stateParent = lga.getPartOf().getReferenceElement().getIdPart();
-								Organization state = orgMap.get(stateParent);
-								if (state != null && state.hasPartOf()) {
-									countryParent = state.getPartOf().getReferenceElement().getIdPart();
+							logger.warn("Facility {} has invalid wardParent: {} (not found in orgMap)", orgId, parentId);
+							continue;
+						} else {
+							lgaParent = ward.hasPartOf() ? ward.getPartOf().getReferenceElement().getIdPart() : null;
+							Organization lga = lgaParent != null ? orgMap.get(lgaParent) : null;
+							if (lgaParent == null) {
+								logger.warn("Ward {} for facility {} has no LGA parent", wardParent, orgId);
+								continue;
+							} else if (lga == null) {
+								logger.warn("Facility {} has invalid lgaParent: {} (not found in orgMap)", orgId, lgaParent);
+								continue;
+							} else {
+								stateParent = lga.hasPartOf() ? lga.getPartOf().getReferenceElement().getIdPart() : null;
+								Organization state = stateParent != null ? orgMap.get(stateParent) : null;
+								if (stateParent == null) {
+									logger.warn("LGA {} for facility {} has no state parent", lgaParent, orgId);
+									continue;
+								} else if (state == null) {
+									logger.warn("Facility {} has invalid stateParent: {} (not found in orgMap)", orgId, stateParent);
+									continue;
+								} else {
+									countryParent = state.hasPartOf() ? state.getPartOf().getReferenceElement().getIdPart() : null;
 								}
 							}
 						}
 					} else if ("ward".equals(level)) {
 						lgaParent = parentId;
-						if (parentId == null) {
-							logger.error("Ward {} has no partOf reference", orgId);
-						} else {
-							Organization lga = orgMap.get(parentId);
-							if (lga == null) {
-								logger.error("Ward {} has invalid lgaParent: {} (not found in orgMap)", orgId, parentId);
-							} else if (lga.hasPartOf()) {
-								stateParent = lga.getPartOf().getReferenceElement().getIdPart();
-								Organization state = orgMap.get(stateParent);
-								if (state != null && state.hasPartOf()) {
-									countryParent = state.getPartOf().getReferenceElement().getIdPart();
-								}
-							}
+						Organization lga = parentId != null ? orgMap.get(parentId) : null;
+						if (parentId == null || lga == null) {
+							logger.warn("Ward {} has invalid or missing lgaParent: {}", orgId, parentId);
+							continue;
 						}
+						stateParent = lga.hasPartOf() ? lga.getPartOf().getReferenceElement().getIdPart() : null;
+						Organization state = stateParent != null ? orgMap.get(stateParent) : null;
+						if (stateParent == null || state == null) {
+							logger.warn("Ward {} has invalid or missing stateParent: {}", orgId, stateParent);
+							continue;
+						}
+						countryParent = state.hasPartOf() ? state.getPartOf().getReferenceElement().getIdPart() : null;
 					} else if ("lga".equals(level)) {
 						stateParent = parentId;
 						Organization state = parentId != null ? orgMap.get(parentId) : null;
-						if (parentId == null) {
-							logger.error("LGA {} has no partOf reference", orgId);
-						} else if (state == null) {
-							logger.error("LGA {} has invalid stateParent: {} (not found in orgMap)", orgId, parentId);
-						} else if (state.hasPartOf()) {
-							countryParent = state.getPartOf().getReferenceElement().getIdPart();
+						if (parentId == null || state == null) {
+							logger.warn("LGA {} has invalid or missing stateParent: {}", orgId, parentId);
+							continue;
 						}
+						countryParent = state.hasPartOf() ? state.getPartOf().getReferenceElement().getIdPart() : null;
 					} else if ("state".equals(level)) {
 						countryParent = parentId;
 					}
 
 					hierarchies.add(new OrgHierarchy(orgId, level, countryParent, stateParent, lgaParent, wardParent));
+					logger.debug("Added hierarchy: orgId={}, level={}, country={}, state={}, lga={}, ward={}",
+						orgId, level, countryParent, stateParent, lgaParent, wardParent);
 				}
 
 				if (bundle.getLink(Bundle.LINK_NEXT) != null) {
 					bundle = client.loadPage().next(bundle).execute();
-					logger.warn("Fetched next bundle page with {} entries", bundle.getEntry().size());
+					logger.info("Fetched next bundle page with {} entries", bundle.getEntry().size());
 				} else {
 					bundle = null;
 				}
 			}
 
-			hierarchies.stream()
-				.filter(h -> "ward".equals(h.getLevel()))
-				.forEach(h -> logger.info("Ward: {}", h.toString()));
+			logger.info("Total hierarchies fetched: {}", hierarchies.size());
 			return hierarchies;
 		} catch (Exception e) {
 			logger.error("Failed to fetch OrgHierarchy from FHIR: {}", ExceptionUtils.getStackTrace(e));

@@ -5,7 +5,6 @@ import lombok.Setter;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
@@ -46,7 +45,7 @@ public class EmailService {
 					() -> new ByteArrayInputStream(emailDetails.getAttachment()));
 
 				javaMailSender.send(mimeMessage);
-				logger.info("Mail with attachment sent successfully using RabbitMQ to {}", emailDetails.getRecipient());
+				logger.info("Mail with attachment sent successfully to {}", emailDetails.getRecipient());
 			} else {
 				SimpleMailMessage mailMsg = new SimpleMailMessage();
 				mailMsg.setFrom(emailSender);
@@ -55,7 +54,7 @@ public class EmailService {
 				mailMsg.setSubject(emailDetails.getSubject());
 
 				javaMailSender.send(mailMsg);
-				logger.info("Mail sent successfully using RabbitMQ to {}", emailDetails.getRecipient());
+				logger.info("Mail sent successfully  to {}", emailDetails.getRecipient());
 			}
 		} catch (MailException | MessagingException e) {
 			logger.error("Sending mail failed to {} due to: {}", emailDetails.getRecipient(), e.getMessage(), e);
@@ -72,12 +71,6 @@ public class EmailService {
 		private String attachmentName;
 
 		public EmailDetails() {}
-
-		public EmailDetails(String recipient, String messageBody, String subject) {
-			this.recipient = recipient;
-			this.messageBody = messageBody;
-			this.subject = subject;
-		}
 
 		public EmailDetails(String recipient, String messageBody, String subject, byte[] attachment, String attachmentName) {
 			this.recipient = recipient;

@@ -73,12 +73,13 @@ spring:
          hibernate.jdbc.batch_size: 20
          hibernate.javax.cache.missing_cache_strategy: create
          hibernate.cache.use_query_cache: true
-         hibernate.cache.use_second_level_cache: true   
+         hibernate.cache.use_second_level_cache: true
 #      hibernate.hbm2ddl.auto: update
    batch:
 #      hibernate.jdbc.batch_size: 20
       job:
          enabled: false
+
 rabbitmq:
    queue:
       email:
@@ -94,7 +95,8 @@ report:
    email: #receipients mail
    env: V2
    cron: "0 0 10 ? * MON"
-
+   email-subject: "Weekly Facility Summary Report ({startDate} to {endDate})"
+   email-attachment-name: "Weekly_Facility_Summary_{startDate}_to_{endDate}.csv"
 
 logging:
    level:
@@ -107,7 +109,7 @@ logging:
 tus-server:
    file-directory: Images
    context-path: /api/upload
-   
+
 hapi:
    fhir:
       hyperSpectral_bucket_name : ""
@@ -164,7 +166,7 @@ hapi:
       fhir_hapi_client_secret: xyz
       keycloak_username: managegroup
       keycloak_password: 123456
-      aws_access_key:  
+      aws_access_key:
       aws_secret_key:
       sms_password: password
       fhir_user: kjois@iprdgroup.com

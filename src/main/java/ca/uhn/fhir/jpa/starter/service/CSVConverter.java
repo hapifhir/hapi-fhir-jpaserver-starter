@@ -3,36 +3,39 @@ package ca.uhn.fhir.jpa.starter.service;
 import com.opencsv.CSVWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ca.uhn.fhir.jpa.starter.DashboardConfigContainer;
+import ca.uhn.fhir.jpa.starter.model.IndicatorColumn;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
+@Component
 public class CSVConverter {
 	private static final Logger logger = LoggerFactory.getLogger(CSVConverter.class);
 
-	private static final List<String> INDICATOR_COLUMNS = Arrays.asList(
-		"Patient Registration",
-		"ANC Registration",
-		"Schedule Appointment",
-		"Postnatal",
-		"Antenatal",
-		"Labour and Delivery",
-		"Birth Register",
-		"Child Immunization",
-		"Family Planning",
-		"Tetanus Diphtheria",
-		"Child Growth Monitoring",
-		"In-Patients",
-		"Community Immunization",
-		"Out-Patients"
-	);
+	@Autowired
+	private Map<String, DashboardConfigContainer> dashboardEnvToConfigMap;
 
-	public static byte[] convertReportToCSV(List<ReportEntry> reportEntries) {
+	@Value("${report.env}")
+	private String reportEnv;
+
+	public byte[] convertReportToCSV(List<ReportEntry> reportEntries) {
 		try {
+
+			DashboardConfigContainer configContainer = dashboardEnvToConfigMap.getOrDefault(reportEnv, new DashboardConfigContainer());
+			List<IndicatorColumn> indicatorColumns = configContainer.getIndicatorColumns();
+			if (indicatorColumns == null || indicatorColumns.isEmpty()) {
+				logger.error("No indicator columns found for environment: {}", reportEnv);
+				return new byte[0];
+			}
+
 			List<String[]> csvRows = new ArrayList<>();
 
 			List<String> header = new ArrayList<>();
@@ -42,11 +45,10 @@ public class CSVConverter {
 			header.add("ward");
 			header.add("facility");
 
-			for (String indicator : INDICATOR_COLUMNS) {
-				header.add(indicator.replace(" ", "_"));
+			for (IndicatorColumn indicator : indicatorColumns) {
+				header.add(indicator.getName().replace(" ", "_"));
 			}
 			csvRows.add(header.toArray(new String[0]));
-
 
 			for (ReportEntry entry : reportEntries) {
 				List<String> row = new ArrayList<>();
@@ -56,9 +58,9 @@ public class CSVConverter {
 				row.add(entry.getWard());
 				row.add(entry.getFacility());
 
-
-				for (String indicator : INDICATOR_COLUMNS) {
-					String value = entry.getIndicatorValues().getOrDefault(indicator, "0");
+				Map<String, String> indicatorValues = entry.getIndicatorValues();
+				for (IndicatorColumn indicator : indicatorColumns) {
+					String value = indicatorValues.getOrDefault(indicator.getName(), "0");
 					if (value.equals("No data found") || value.startsWith("Error: ")) {
 						value = "0";
 					}
