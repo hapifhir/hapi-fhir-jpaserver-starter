@@ -158,13 +158,13 @@ hapi:
     ### Flag is true by default. This flag filters resources during package installation, allowing only those resources with a valid status (e.g. active) to be installed.
     #    validate_resource_status_for_package_upload: false 
     #    install_transitive_ig_dependencies: true
-#    implementationguides:
+    #implementationguides:
     ###    example from registry (packages.fhir.org)
     #  swiss:
     #    name: swiss.mednet.fhir
     #    version: 0.8.0
-#        reloadExisting: false
-#        installMode: STORE_AND_INSTALL
+    #    reloadExisting: false
+    #    installMode: STORE_AND_INSTALL
     #      example not from registry
     #      ips_1_0_0:
     #        packageUrl: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
@@ -202,7 +202,7 @@ hapi:
     advanced_lucene_indexing: false
     bulk_export_enabled: false
     bulk_import_enabled: false
-    patient-merge-enabled: true
+    #patient-merge-enabled: true
     #    language_search_parameter_enabled: true
     #    enforce_referential_integrity_on_delete: false
     # This is an experimental feature, and does not fully support _total and other FHIR features.
