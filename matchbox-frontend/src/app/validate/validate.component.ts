@@ -100,7 +100,8 @@ export class ValidateComponent implements AfterViewInit {
     this.editor = new ValidationCodeEditor(ace.edit('editor'), INDENT_SPACES);
 
     // Check for query string parameters in the current URL.
-    // They may contain a validation request
+    // They may contain a validation request.
+    // This call is placed here because it depends on the `editor` instance being initialized above.
     this.analyzeUrlForValidation();
   }
 
