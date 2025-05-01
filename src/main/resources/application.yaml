@@ -3,6 +3,9 @@ server:
   #  servlet:
   #    context-path: /example/path
   port: 8080
+  tomcat:
+    # allow | as a separator in the URL
+    relaxed-query-chars: "|"
 #Adds the option to go to eg. http://localhost:8080/actuator/health for seeing the running configuration
 #see https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
 management:
@@ -237,6 +240,7 @@ hapi:
     #      allow_references_across_partitions: false
     #      partitioning_include_in_search_hashes: false
     #      conditional_create_duplicate_identifiers_enabled: false
+    #      request_tenant_partitioning_mode: true
     cors:
       allow_Credentials: true
       # These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-

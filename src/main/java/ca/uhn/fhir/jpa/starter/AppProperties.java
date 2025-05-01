@@ -865,7 +865,7 @@ public class AppProperties {
 		private Boolean database_partition_mode_enabled = false;
 		private Boolean patient_id_partitioning_mode = false;
 		private Integer default_partition_id = 0;
-		private boolean request_tenant_partitioning_mode;
+		private boolean request_tenant_partitioning_mode = true;
 
 		public boolean isRequest_tenant_partitioning_mode() {
 			return request_tenant_partitioning_mode;
