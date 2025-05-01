@@ -1,3 +1,7 @@
+Unreleased
+
+- Fix error thrown when opening a validation link in the GUI [#379](https://github.com/ahdis/matchbox/issues/379)
+
 2025/05/01 Release 4.0.2
 
 - matchbox validation: html tags in result [#371](https://github.com/ahdis/matchbox/issues/371)

@@ -75,10 +75,6 @@ export class ValidateComponent implements AfterViewInit {
         },
       });
 
-    // Check for query string parameters in the current URL.
-    // They may contain a validation request
-    this.analyzeUrlForValidation();
-
     // Wait for the two requests to complete
     Promise.all([validateOperationDefinitionPromise, implementationGuidesPromise])
       .then((values: [fhir.r4.OperationDefinition, fhir.r4.Bundle]) => {
@@ -102,6 +98,10 @@ export class ValidateComponent implements AfterViewInit {
   ngAfterViewInit() {
     // Initializes the code editor, after the DOM is ready
     this.editor = new ValidationCodeEditor(ace.edit('editor'), INDENT_SPACES);
+
+    // Check for query string parameters in the current URL.
+    // They may contain a validation request
+    this.analyzeUrlForValidation();
   }
 
   /**
@@ -178,6 +178,7 @@ export class ValidateComponent implements AfterViewInit {
 
     } catch (error) {
       this.showErrorToast('Error parsing the file', error.message);
+      console.error(error);
       if (entry) {
         entry.result = OperationResult.fromMatchboxError(
           'Error while processing the resource for' + ' validation: ' + error.message
