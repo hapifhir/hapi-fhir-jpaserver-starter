@@ -5,7 +5,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <hapi.fhir.jpa.server.starter.revision>2</hapi.fhir.jpa.server.starter.revision>
+        <hapi.fhir.jpa.server.starter.revision>1</hapi.fhir.jpa.server.starter.revision>
         <clinical-reasoning.version>3.20.0</clinical-reasoning.version>
     </properties>
 
@@ -20,7 +20,7 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <version>8.1.4-SNAPSHOT</version>
+        <version>8.1.6-SNAPSHOT</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
