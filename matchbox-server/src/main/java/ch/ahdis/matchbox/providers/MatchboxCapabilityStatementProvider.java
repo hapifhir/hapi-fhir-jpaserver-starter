@@ -13,20 +13,17 @@ import ca.uhn.fhir.util.TerserUtil;
 import ch.ahdis.matchbox.CliContext;
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
+import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IIdType;
-import org.hl7.fhir.r5.model.BooleanType;
-import org.hl7.fhir.r5.model.CapabilityStatement;
-import org.hl7.fhir.r5.model.DataType;
-import org.hl7.fhir.r5.model.Enumerations;
-import org.hl7.fhir.r5.model.OperationDefinition;
-import org.hl7.fhir.r5.model.StringType;
+import org.hl7.fhir.r5.model.*;
 
 import java.lang.reflect.Field;
+import java.util.function.Consumer;
 
 import static ch.ahdis.matchbox.packages.MatchboxJpaPackageCache.structureDefinitionIsValidatable;
 
@@ -95,11 +92,13 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 			} else if (baseType instanceof final org.hl7.fhir.r4.model.StringType stringTypeR4) {
 				type = stringTypeR4.getValueNotNull();
 				interaction =
-					new org.hl7.fhir.r4.model.CapabilityStatement.ResourceInteractionComponent(new org.hl7.fhir.r4.model.Enumeration<>(new org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteractionEnumFactory(),
-																																				org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteraction.READ));
+					new org.hl7.fhir.r4.model.CapabilityStatement.ResourceInteractionComponent(new org.hl7.fhir.r4.model.Enumeration<>(
+						new org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteractionEnumFactory(),
+						org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteraction.READ));
 				interactionSearch =
-					new org.hl7.fhir.r4.model.CapabilityStatement.ResourceInteractionComponent(new org.hl7.fhir.r4.model.Enumeration<>(new org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteractionEnumFactory(),
-																																				org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteraction.SEARCHTYPE));
+					new org.hl7.fhir.r4.model.CapabilityStatement.ResourceInteractionComponent(new org.hl7.fhir.r4.model.Enumeration<>(
+						new org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteractionEnumFactory(),
+						org.hl7.fhir.r4.model.CapabilityStatement.TypeRestfulInteraction.SEARCHTYPE));
 			} else if (baseType instanceof final org.hl7.fhir.r4b.model.StringType stringTypeR4B) {
 				type = stringTypeR4B.getValueNotNull();
 				interaction =
@@ -136,25 +135,29 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 																final RequestDetails theRequestDetails) {
 		final var baseResource = super.readOperationDefinition(theId, theRequestDetails);
 
+		final Consumer<OperationDefinition> updateOperationDefinition = opDefR5 -> {
+			switch (opDefR5.getName()) {
+				case VALIDATE_OPERATION_NAME -> this.updateValidateOperationDefinition(opDefR5);
+				case QuestionnaireResponseExtractProvider.OPERATION_NAME -> QuestionnaireResponseExtractProvider.updateOperationDefinition(opDefR5);
+				default -> {
+					// Do nothing
+				}
+			}
+		};
+
 		if (baseResource instanceof final OperationDefinition opDefR5) {
 			// In R5 mode
-			if (VALIDATE_OPERATION_NAME.equals(opDefR5.getName())) {
-				this.updateValidateOperationDefinition(opDefR5);
-			}
+			updateOperationDefinition.accept(opDefR5);
 			return baseResource;
 		} else if (baseResource instanceof final org.hl7.fhir.r4b.model.OperationDefinition opDefR4B) {
 			// In R4B mode: convert to R5, update, and convert back to R4B
 			final var opDefR5 = (OperationDefinition) VersionConvertorFactory_43_50.convertResource(opDefR4B);
-			if (VALIDATE_OPERATION_NAME.equals(opDefR5.getName())) {
-				this.updateValidateOperationDefinition(opDefR5);
-			}
+			updateOperationDefinition.accept(opDefR5);
 			return VersionConvertorFactory_43_50.convertResource(opDefR5);
 		} else if (baseResource instanceof final org.hl7.fhir.r4.model.OperationDefinition opDefR4) {
 			// In R4 mode: convert to R5, update, and convert back to R4
 			final var opDefR5 = (OperationDefinition) VersionConvertorFactory_40_50.convertResource(opDefR4);
-			if (VALIDATE_OPERATION_NAME.equals(opDefR5.getName())) {
-				this.updateValidateOperationDefinition(opDefR5);
-			}
+			updateOperationDefinition.accept(opDefR5);
 			return VersionConvertorFactory_40_50.convertResource(opDefR5);
 		}
 		// Only fail if the base resource is not R4, R4B or R5
@@ -207,7 +210,9 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 					.setMin(0)
 					.setMax("1")
 					.setType(field.getType().equals(boolean.class) || field.getType().equals(Boolean.class) ? Enumerations.FHIRTypes.BOOLEAN : Enumerations.FHIRTypes.STRING)
-					.addExtension("http://matchbox.health/validationDefaultValue", field.getType().equals(boolean.class) || field.getType().equals(Boolean.class) ? new BooleanType((Boolean) field.get(cliContext)) : new StringType((String) field.get(cliContext)));
+					.addExtension("http://matchbox.health/validationDefaultValue",
+									  field.getType().equals(boolean.class) || field.getType().equals(Boolean.class) ? new BooleanType(
+										  (Boolean) field.get(cliContext)) : new StringType((String) field.get(cliContext)));
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -223,6 +228,5 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 			.setMin(0)
 			.setMax("1")
 			.setType(Enumerations.FHIRTypes.STRING);
-
 	}
 }

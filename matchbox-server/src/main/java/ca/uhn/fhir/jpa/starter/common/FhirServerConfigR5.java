@@ -15,6 +15,7 @@ import ch.ahdis.matchbox.mappinglanguage.StructureMapListProvider;
 import ch.ahdis.matchbox.packages.ImplementationGuideProviderR5;
 import ch.ahdis.matchbox.providers.*;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResourceProvider;
+import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import ch.ahdis.matchbox.validation.ValidationProvider;
 import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR5;
@@ -61,8 +62,8 @@ public class FhirServerConfigR5 {
 	}
 
 	@Bean
-	public QuestionnaireResponseExtractProviderR5 questionnaireResponseProvider() {
-		return new QuestionnaireResponseExtractProviderR5();
+	public QuestionnaireResponseExtractProviderR5 questionnaireResponseProvider(final MatchboxEngineSupport matchboxEngineSupport) {
+		return new QuestionnaireResponseExtractProviderR5(matchboxEngineSupport);
 	}
 
 	@Bean(name = "myImplementationGuideDaoR5")

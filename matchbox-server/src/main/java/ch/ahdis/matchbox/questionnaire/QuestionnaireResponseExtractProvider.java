@@ -1,102 +1,215 @@
 package ch.ahdis.matchbox.questionnaire;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Set;
-
-import jakarta.servlet.ServletOutputStream;
+import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
+import ch.ahdis.matchbox.engine.MatchboxEngine;
+import ch.ahdis.matchbox.util.HttpRequestWrapper;
+import ch.ahdis.matchbox.util.MatchboxEngineSupport;
+import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.hl7.fhir.r5.elementmodel.*;
+import org.hl7.fhir.r5.elementmodel.Element;
+import org.hl7.fhir.r5.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.hl7.fhir.r5.model.Extension;
-import org.hl7.fhir.r5.formats.IParser.OutputStyle;
-import org.hl7.fhir.r5.model.Questionnaire;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.rest.api.Constants;
-import ca.uhn.fhir.rest.server.RestfulServerUtils;
-import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
-import ch.ahdis.matchbox.util.MatchboxEngineSupport;
-import ch.ahdis.matchbox.engine.MatchboxEngine;
+import java.io.IOException;
+import java.util.Optional;
 
 /**
- * $extract Operation for QuestionnaireResponse Resource
- *s
+ * $extract Operation for QuestionnaireResponse Resources
  */
-public class QuestionnaireResponseExtractProvider  {
-	
-  protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(QuestionnaireResponseExtractProvider.class);
+public class QuestionnaireResponseExtractProvider {
+	protected static final Logger log =
+		LoggerFactory.getLogger(QuestionnaireResponseExtractProvider.class);
 
+	public static final String OPERATION_NAME = "Extract";
+	public static final String PARAM_IN_QUESTIONNAIRE_RESPONSE = "questionnaire-response";
+	public static final String PARAM_IN_QUESTIONNAIRE = "questionnaire";
+	public static final String PARAM_OUT_RETURN = "return";
+	public static final String PARAM_OUT_ISSUES = "issues";
 
-  public final static String TARGET_STRUCTURE_MAP = "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap";
+	public static final String TARGET_STRUCTURE_MAP = "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap";
 
-  @Autowired
-  protected FhirContext myFhirCtx;
-           
-	@Autowired
-	protected MatchboxEngineSupport matchboxEngineSupport;
+	private final MatchboxEngineSupport matchboxEngineSupport;
 
+	@Nullable
+	private MatchboxEngine defaultEngine;
 
-   public void extract(org.hl7.fhir.r5.elementmodel.Element src, HttpServletRequest theServletRequest, HttpServletResponse theServletResponse) throws IOException {
-    Set<String> highestRankedAcceptValues = RestfulServerUtils
-    .parseAcceptHeaderAndReturnHighestRankedOptions(theServletRequest);
+	public QuestionnaireResponseExtractProvider(final MatchboxEngineSupport matchboxEngineSupport) {
+		this.matchboxEngineSupport = matchboxEngineSupport;
+	}
 
-    String responseContentType = Constants.CT_FHIR_XML_NEW;
-    if (highestRankedAcceptValues.contains(Constants.CT_FHIR_JSON_NEW)) {
-      responseContentType = Constants.CT_FHIR_JSON_NEW;
-    }
-    // patch for fhir-kit-client https://github.com/Vermonster/fhir-kit-client/pull/143
-    if (highestRankedAcceptValues.contains(Constants.CT_FHIR_JSON)) {
-      responseContentType = Constants.CT_FHIR_JSON_NEW;
-    }
+	public void extract(final HttpServletRequest theServletRequest,
+							  final HttpServletResponse theServletResponse) throws IOException {
+		final var httpWrapper = new HttpRequestWrapper(theServletRequest, theServletResponse, this.getDefaultEngine());
 
-    // get canonical URL of questionnaire
-    String questionnaireUri = src.getChildValue("questionnaire");
-    if (questionnaireUri == null)
-      throw new UnprocessableEntityException("No questionnaire canonical URL given.");
+		final var parsedRequest = this.parseRequest(httpWrapper);
+		final String questionnaireUri = parsedRequest.questionnaireResponse().getQuestionnaire();
+		if (questionnaireUri == null) {
+			throw new UnprocessableEntityException("No questionnaire canonical URL given.");
+		}
 
+		final MatchboxEngine matchboxEngine;
+		final Questionnaire questionnaire;
+		if (parsedRequest.questionnaire() != null) {
+			if (!questionnaireUri.equals(parsedRequest.questionnaire().getUrl())) {
+				throw new UnprocessableEntityException(
+					"Questionnaire canonical URL in QuestionnaireResponse does not match questionnaire given in parameters");
+			}
 
-    MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(questionnaireUri, null, true, false);
-    if (matchboxEngine == null)
-      throw new UnprocessableEntityException(
-          "Could not get matchbox-engine with questionnaire with canonical URL '" + questionnaireUri + "'");
+			// Create a new engine
+			matchboxEngine = this.matchboxEngineSupport.getMatchboxEngine(null, null, true, false);
+			if (matchboxEngine == null) {
+				throw new UnprocessableEntityException(
+					"Could not initialize a new matchbox-engine");
+			}
 
-   
-    Questionnaire questionnaire = (Questionnaire) matchboxEngine.getCanonicalResource(questionnaireUri, "5.0.0");
-    if (questionnaire == null)
-      throw new UnprocessableEntityException(
-          "Could not fetch questionnaire with canonical URL '" + questionnaireUri + "'");
+			questionnaire = parsedRequest.questionnaire();
+		} else {
+			matchboxEngine = this.matchboxEngineSupport.getMatchboxEngine(questionnaireUri, null, true, false);
+			if (matchboxEngine == null) {
+				throw new UnprocessableEntityException(
+					"Could not get matchbox-engine with questionnaire with canonical URL '" + questionnaireUri + "'");
+			}
 
-    // get targetStructureMap extension from questionnaire
-    Extension targetStructureMapExtension = questionnaire.getExtensionByUrl(TARGET_STRUCTURE_MAP);
-    if (targetStructureMapExtension == null)
-      throw new UnprocessableEntityException("No sdc-questionnaire-targetStructureMap extension found in resource");
-    String mapUrl = targetStructureMapExtension.getValue().primitiveValue();
-    
-    org.hl7.fhir.r5.model.StructureMap map  = matchboxEngine.getContext().fetchResource(org.hl7.fhir.r5.model.StructureMap.class, mapUrl);
-    if (map == null) {
-        throw new UnprocessableEntityException("Map not available with canonical url "+mapUrl);
-    }
+			// Let's find the Questionnaire in the engine
+			questionnaire = (Questionnaire) matchboxEngine.getCanonicalResource(questionnaireUri, "5.0.0");
+			if (questionnaire == null) {
+				throw new UnprocessableEntityException(
+					"Could not fetch questionnaire with canonical URL '" + questionnaireUri + "'");
+			}
+		}
 
-    org.hl7.fhir.r5.elementmodel.Element r = matchboxEngine.transform(src, map.getUrl(), null);
-     
-    theServletResponse.setContentType(responseContentType);
-    theServletResponse.setCharacterEncoding("UTF-8");
+		// Get targetStructureMap extension from questionnaire
+		final Extension targetStructureMapExtension = questionnaire.getExtensionByUrl(TARGET_STRUCTURE_MAP);
+		if (targetStructureMapExtension == null) {
+			throw new UnprocessableEntityException("No sdc-questionnaire-targetStructureMap extension found in resource");
+		}
+		final String mapUrl = targetStructureMapExtension.getValue().primitiveValue();
 
-    ServletOutputStream output = theServletResponse.getOutputStream();
-    try {
-      if (output != null) {
-        if (responseContentType.equals(Constants.CT_FHIR_JSON_NEW))
-          new org.hl7.fhir.r5.elementmodel.JsonParser(matchboxEngine.getContext()).compose(r, output, OutputStyle.PRETTY, null);
-        else
-          new org.hl7.fhir.r5.elementmodel.XmlParser(matchboxEngine.getContext()).compose(r, output, OutputStyle.PRETTY, null);
-      }
-    } catch(org.hl7.fhir.exceptions.FHIRException e) {
-      log.error("Transform exception", e);
-      output.write("Exception during Transform".getBytes(StandardCharsets.UTF_8));
-    }
-    theServletResponse.getOutputStream().close();
-  }
+		final var objectConverter = new ObjectConverter(matchboxEngine.getContext());
+		final var questionnaireResponseElement = objectConverter.convert(parsedRequest.questionnaireResponse());
+		final Element result = matchboxEngine.transform(questionnaireResponseElement, mapUrl, null);
 
+		httpWrapper.writeResponse(result);
+	}
+
+	/**
+	 * Parse the $extract request.
+	 */
+	private ExtractRequest parseRequest(final HttpRequestWrapper httpWrapper) {
+		switch (httpWrapper.parseBodyAsResource()) {
+			case Parameters parameters -> {
+				final var questionnaireResponse = this.getParameterResourceByName(parameters,
+																										PARAM_IN_QUESTIONNAIRE_RESPONSE,
+																										QuestionnaireResponse.class);
+				final var questionnaire = this.getParameterResourceByName(parameters,
+																							 PARAM_IN_QUESTIONNAIRE,
+																							 Questionnaire.class);
+
+				if (questionnaireResponse == null) {
+					throw new UnprocessableEntityException(
+						"Missing QuestionnaireResponse resource in parameter 'questionnaire-response' of $extract operation");
+				}
+				return new ExtractRequest(questionnaireResponse, questionnaire);
+			}
+			case QuestionnaireResponse questionnaireResponse -> {
+				return new ExtractRequest(questionnaireResponse, null);
+			}
+			case null, default -> throw new UnprocessableEntityException(
+					"Invalid body resource type for $extract operation. Expected 'Parameters' or 'QuestionnaireResponse'");
+		}
+	}
+
+	/**
+	 * Returns the default engine of this server.
+	 */
+	private MatchboxEngine getDefaultEngine() {
+		if (this.defaultEngine == null) {
+			this.defaultEngine = this.matchboxEngineSupport.getMatchboxEngine("default", null, true, false);
+		}
+		return this.defaultEngine;
+	}
+
+	/**
+	 * A helper method to get a resource from the parameters.
+	 */
+	@Nullable
+	private <T extends Resource> T getParameterResourceByName(final Parameters parameters,
+															 final String name,
+															 final Class<T> expectedResourceType) {
+		return Optional.ofNullable(parameters.getParameter(name))
+			.map(Parameters.ParametersParameterComponent::getResource)
+			.filter(expectedResourceType::isInstance)
+			.map(expectedResourceType::cast)
+			.orElse(null);
+	}
+
+	/**
+	 * A parsed request for the $extract operation.
+	 *
+	 * @param questionnaireResponse The questionnaire response to extract from
+	 * @param questionnaire         The questionnaire definition, if unknown from the server
+	 */
+	record ExtractRequest(QuestionnaireResponse questionnaireResponse,
+								 @Nullable Questionnaire questionnaire) {
+	}
+
+	/**
+	 * Updates an R5 OperationDefinition with the parameters required for the $extract operation.
+	 * Based on https://build.fhir.org/ig/HL7/sdc/OperationDefinition-QuestionnaireResponse-extract.html
+	 */
+	public static void updateOperationDefinition(final OperationDefinition extractOperationDefinition) {
+		extractOperationDefinition.setDescription(
+			"""
+				The Extract operation takes a completed QuestionnaireResponse and  converts it to a FHIR resource or \
+				Bundle of resources by using metadata embedded in the Questionnaire the QuestionnaireResponse is based on. \
+				The extracted resources might include Observations, MedicationStatements and other standard FHIR resources \
+				which can then be shared and manipulated.  When invoking the $extract operation, care should be taken that \
+				the submitted QuestionnaireResponse is itself valid.  If not, the extract operation could fail (with \
+				appropriate OperationOutcomes) or, more problematic, might succeed but provide incorrect output.""");
+		extractOperationDefinition.setComment("The QuestionnaireResponse must identify a Questionnaire instance " +
+															  "containing appropriate metadata to allow extraction.");
+
+		extractOperationDefinition.addParameter()
+			.setName(PARAM_IN_QUESTIONNAIRE_RESPONSE)
+			.setUse(Enumerations.OperationParameterUse.IN)
+			.setMin(1) // required because we only support the operation on type, not on instance
+			.setMax("1")
+			.setDocumentation("The QuestionnaireResponse to extract data from.")
+			.setType(Enumerations.FHIRTypes.RESOURCE);
+		extractOperationDefinition.addParameter()
+			.setName(PARAM_IN_QUESTIONNAIRE)
+			.setUse(Enumerations.OperationParameterUse.IN)
+			.setMin(0)
+			.setMax("1")
+			.setDocumentation("Matchbox extension. The Questionnaire resource, if unknown from the server.")
+			.setType(Enumerations.FHIRTypes.RESOURCE);
+
+		extractOperationDefinition.addParameter()
+			.setName(PARAM_OUT_RETURN)
+			.setUse(Enumerations.OperationParameterUse.OUT)
+			.setMin(0)
+			.setMax("1")
+			.setDocumentation(
+				"""
+					The resulting FHIR resource produced after extracting data. This will either be a single resource or a \
+					Transaction Bundle that contains multiple resources.  The operations in the Bundle might be creates, \
+					updates and/or conditional versions of both depending on the nature of the extraction mappings.""")
+			.setType(Enumerations.FHIRTypes.RESOURCE);
+		extractOperationDefinition.addParameter()
+			.setName(PARAM_OUT_ISSUES)
+			.setUse(Enumerations.OperationParameterUse.OUT)
+			.setMin(0)
+			.setMax("1")
+			.setDocumentation(
+				"""
+					A list of hints and warnings about problems encountered while extracting the resource(s) from the \
+					QuestionnaireResponse. If there was nothing to extract, a 'success' OperationOutcome is returned with \
+					a warning and/or information messages. In situations where the input is invalid or the operation \
+					otherwise fails to complete successfully, a normal 'erroneous' OperationOutcome would be returned (as \
+					happens with all operations) indicating what the issue was.""")
+			.setType(Enumerations.FHIRTypes.OPERATIONOUTCOME);
+	}
 }

@@ -7,6 +7,7 @@ import ch.ahdis.matchbox.providers.ConceptMapResourceProvider;
 import ch.ahdis.matchbox.packages.ImplementationGuideProviderR4B;
 import ch.ahdis.matchbox.terminology.CodeSystemCodeValidationProvider;
 import ch.ahdis.matchbox.terminology.ValueSetCodeValidationProvider;
+import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -61,8 +62,8 @@ public class FhirServerConfigR4B {
   }
 
   @Bean
-  public QuestionnaireResponseExtractProviderR4B questionnaireResponseProvider() {
-    return new QuestionnaireResponseExtractProviderR4B();
+  public QuestionnaireResponseExtractProviderR4B questionnaireResponseProvider(final MatchboxEngineSupport matchboxEngineSupport) {
+    return new QuestionnaireResponseExtractProviderR4B(matchboxEngineSupport);
   }
 
   @Bean(name = "myImplementationGuideDaoR4B")

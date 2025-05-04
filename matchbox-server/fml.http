@@ -1,4 +1,4 @@
-@host = http://localhost:8080/matchbox/fhir
+@host = http://localhost:8080/matchboxv3/fhir
 #@host = https://test.ahdis.ch/matchbox/fhir
 ### @host = https://test.ahdis.ch/matchboxv3/fhir
 
@@ -139,7 +139,7 @@ Content-Type: application/fhir+xml
 
 ### Verify created Questionnaire
 GET {{host}}/Questionnaire/qrpatientsex
-Accept: application/fhir+xml;fhirVersion=4.0
+Accept: application/fhir+json;fhirVersion=4.0
 
 
 ### SDDC Extraction (QuesitonnaireResponse contains link to questionnaire, which contains link to StructureMap)
@@ -167,6 +167,75 @@ Content-Type: application/fhir+json;fhirVersion=4.0
           ]
         }
       ]
+    }
+  ]
+}
+
+### SDDC Extraction (QuesitonnaireResponse contains link to questionnaire, which contains link to StructureMap)
+POST {{host}}/QuestionnaireResponse/$extract
+Accept: application/fhir+json;fhirVersion=4.0
+Content-Type: application/fhir+json;fhirVersion=4.0
+
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "questionnaire-response",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "qrpatientsexeresponse",
+        "questionnaire": "http://ahdis.ch/matchbox/fml/qrpatientsex",
+        "status": "in-progress",
+        "item": [
+          {
+            "linkId": "patient",
+            "text": "Patient",
+            "item": [
+              {
+                "linkId": "patient.sex",
+                "text": "Geschlecht",
+                "answer": [
+                  {
+                    "valueString": "female"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "questionnaire",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "qrpatientsex",
+        "meta": {
+          "lastUpdated": "2025-05-04T05:55:01.165+02:00"
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap",
+            "valueCanonical": "http://ahdis.ch/matchbox/fml/qr2patgender"
+          }
+        ],
+        "url": "http://ahdis.ch/matchbox/fml/qrpatientsex",
+        "version": "0.1.0",
+        "name": "QuestionnairePatientSexExtractDemo",
+        "title": "QuestionnairePatientSex - ExtractDemor",
+        "status": "active",
+        "subjectType": [
+          "Patient"
+        ],
+        "copyright": "CC-BY-SA-4.0",
+        "item": [
+          {
+            "linkId": "patient.sex",
+            "text": "Geschlecht",
+            "type": "string"
+          }
+        ]
+      }
     }
   ]
 }
