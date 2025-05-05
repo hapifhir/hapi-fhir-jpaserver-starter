@@ -2,7 +2,7 @@ package ch.ahdis.matchbox.questionnaire;
 
 import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
-import ch.ahdis.matchbox.util.HttpRequestWrapper;
+import ch.ahdis.matchbox.util.http.HttpRequestWrapper;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
@@ -92,7 +92,7 @@ public class QuestionnaireResponseExtractProvider {
 		final var questionnaireResponseElement = objectConverter.convert(parsedRequest.questionnaireResponse());
 		final Element result = matchboxEngine.transform(questionnaireResponseElement, mapUrl, null);
 
-		httpWrapper.writeResponse(result);
+		httpWrapper.writeResponse(objectConverter.convert(result));
 	}
 
 	/**
