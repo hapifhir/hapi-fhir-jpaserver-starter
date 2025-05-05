@@ -33,16 +33,13 @@ public class QuestionnaireResponseExtractProvider {
 
 	private final MatchboxEngineSupport matchboxEngineSupport;
 
-	@Nullable
-	private MatchboxEngine defaultEngine;
-
 	public QuestionnaireResponseExtractProvider(final MatchboxEngineSupport matchboxEngineSupport) {
 		this.matchboxEngineSupport = matchboxEngineSupport;
 	}
 
 	public void extract(final HttpServletRequest theServletRequest,
 							  final HttpServletResponse theServletResponse) throws IOException {
-		final var httpWrapper = new HttpRequestWrapper(theServletRequest, theServletResponse, this.getDefaultEngine());
+		final var httpWrapper = new HttpRequestWrapper(theServletRequest, theServletResponse);
 
 		final var parsedRequest = this.parseRequest(httpWrapper);
 		final String questionnaireUri = parsedRequest.questionnaireResponse().getQuestionnaire();
@@ -120,16 +117,6 @@ public class QuestionnaireResponseExtractProvider {
 			case null, default -> throw new UnprocessableEntityException(
 					"Invalid body resource type for $extract operation. Expected 'Parameters' or 'QuestionnaireResponse'");
 		}
-	}
-
-	/**
-	 * Returns the default engine of this server.
-	 */
-	private MatchboxEngine getDefaultEngine() {
-		if (this.defaultEngine == null) {
-			this.defaultEngine = this.matchboxEngineSupport.getMatchboxEngine("default", null, true, false);
-		}
-		return this.defaultEngine;
 	}
 
 	/**

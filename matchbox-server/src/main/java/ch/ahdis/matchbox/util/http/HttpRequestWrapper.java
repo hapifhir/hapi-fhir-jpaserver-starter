@@ -2,18 +2,15 @@ package ch.ahdis.matchbox.util.http;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
-import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
 import ch.ahdis.matchbox.util.CrossVersionResourceUtils;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.hl7.fhir.r5.elementmodel.Element;
 import org.hl7.fhir.r5.model.Resource;
 import org.hl7.fhir.utilities.VersionUtilities;
 import org.springframework.http.MediaType;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -32,7 +29,6 @@ public class HttpRequestWrapper {
 
 	private final HttpServletRequest request;
 	private final HttpServletResponse response;
-	private final MatchboxEngine defaultEngine;
 
 	// Request properties
 	private final byte[] requestBody;
@@ -45,12 +41,10 @@ public class HttpRequestWrapper {
 
 	public HttpRequestWrapper(
 		final HttpServletRequest request,
-		final HttpServletResponse response,
-		final MatchboxEngine defaultEngine
+		final HttpServletResponse response
 	) throws IOException {
 		this.request = request;
 		this.response = response;
-		this.defaultEngine = defaultEngine;
 
 		final var defaultVersion = FhirVersionEnum.R4; // todo
 
@@ -84,15 +78,6 @@ public class HttpRequestWrapper {
 			default -> throw new MatchboxUnsupportedFhirVersionException("HttpRequestWrapper.parseBodyAsResource",
 																							 this.requestVersion);
 		};
-	}
-
-	@Nullable
-	public Element parseBodyAsElement() throws IOException {
-		if (this.requestFormat == null || !this.requestFormat.isResourceFormat()) {
-			return null;
-		}
-		final var parser = this.requestFormat.getElementParser(this.defaultEngine.getContext());
-		return parser.parseSingle(new ByteArrayInputStream(this.requestBody), null);
 	}
 
 	public void writeResponse(final Resource resource) throws IOException {
