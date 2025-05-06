@@ -124,9 +124,7 @@ public class LLMConnector {
             return "API Key not found. Please set the matchbox.fhir.context.llm.apiKey configuration parameter.";
         }
         try {
-            ObjectNode fhirResourceContent = (ObjectNode) objectMapper.readTree(resource);
-            ObjectNode operationOutcomeContent = (ObjectNode) objectMapper.readTree(operationOutcome);
-            String requestBody = createRequestBody(fhirResourceContent, operationOutcomeContent);
+            String requestBody = createRequestBody(resource, operationOutcome);
 
             chatMemory.add(UserMessage.from(requestBody));
             ChatRequest request = ChatRequest.builder()
@@ -161,7 +159,7 @@ public class LLMConnector {
      * @param operationOutcomeContent The ObjectNode received from the calling method containing the validation result (OperationOutcome).
      * @return The request string for the LLM.
      */
-    private static String createRequestBody(ObjectNode fhirResourceContent, ObjectNode operationOutcomeContent)
+    private static String createRequestBody(Object fhirResourceContent, Object operationOutcomeContent)
             throws IOException, InterruptedException {
         String requestString = "Here is the FHIR resource: " + fhirResourceContent.toString() + "\n";
         requestString += "Here is the validation result: " + operationOutcomeContent.toString();
