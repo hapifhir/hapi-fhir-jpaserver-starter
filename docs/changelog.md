@@ -1,5 +1,6 @@
-Unreleased
+2025/05/XX Release 4.0.3
 
+- matchbox validation: fix ai analysis of xml resources [#378](https://github.com/ahdis/matchbox/issues/378)
 - Fix error thrown when opening a validation link in the GUI [#379](https://github.com/ahdis/matchbox/issues/379)
 
 2025/05/01 Release 4.0.2
