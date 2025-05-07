@@ -18,17 +18,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IIdType;
-import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.DateType;
-import org.hl7.fhir.r4.model.IdType;
-import org.hl7.fhir.r4.model.Measure;
-import org.hl7.fhir.r4.model.MeasureReport;
-import org.hl7.fhir.r4.model.Observation;
-import org.hl7.fhir.r4.model.Parameters;
-import org.hl7.fhir.r4.model.Patient;
-import org.hl7.fhir.r4.model.Period;
-import org.hl7.fhir.r4.model.StringType;
-import org.hl7.fhir.r4.model.Subscription;
+import org.hl7.fhir.r4.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -74,10 +64,14 @@ import static org.opencds.cqf.fhir.utility.r4.Parameters.stringPart;
 	"hapi.fhir.implementationguides.dk-core.name=hl7.fhir.dk.core",
 	"hapi.fhir.implementationguides.dk-core.version=1.1.0",
 	"hapi.fhir.auto_create_placeholder_reference_targets=true",
+	"hibernate.search.enabled=true",
 	// Override is currently required when using MDM as the construction of the MDM
 	// beans are ambiguous as they are constructed multiple places. This is evident
 	// when running in a spring boot environment
-	"spring.main.allow-bean-definition-overriding=true"})
+	"spring.main.allow-bean-definition-overriding=true",
+	"hapi.fhir.remote_terminology_service.snomed.system=http://snomed.info/sct",
+	"hapi.fhir.remote_terminology_service.snomed.url=https://tx.fhir.org/r4"
+})
 class ExampleServerR4IT implements IServerSupport {
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR4IT.class);
 	private IGenericClient ourClient;
@@ -356,6 +350,21 @@ class ExampleServerR4IT implements IServerSupport {
 			}
 		}
 		assertTrue(foundDobChange);
+	}
+
+	@Test
+	void testValidateRemoteTerminology() {
+
+		String testCodeSystem = "http://foo/cs";
+		String testValueSet = "http://foo/vs";
+		ourClient.create().resource(new CodeSystem().setUrl(testCodeSystem).addConcept(new CodeSystem.ConceptDefinitionComponent().setCode("yes")).addConcept(new CodeSystem.ConceptDefinitionComponent().setCode("no"))).execute();
+		ourClient.create().resource(new ValueSet().setUrl(testValueSet).setCompose(new ValueSet.ValueSetComposeComponent().addInclude(new ValueSet.ConceptSetComponent().setSystem(testValueSet)))).execute();
+
+		Parameters remoteResult = ourClient.operation().onType(ValueSet.class).named("$validate-code").withParameter(Parameters.class, "code", new StringType("22298006")).andParameter("system", new UriType("http://snomed.info/sct")).execute();
+		assertEquals(true, ((BooleanType) remoteResult.getParameterValue("result")).getValue());
+		assertEquals("Myocardial infarction", ((StringType) remoteResult.getParameterValue("display")).getValue());
+
+		Parameters localResult = ourClient.operation().onType(CodeSystem.class).named("$validate-code").withParameter(Parameters.class, "url", new UrlType(testCodeSystem)).andParameter("coding", new Coding(testCodeSystem, "yes", null)).execute();
 	}
 
 	@BeforeEach
