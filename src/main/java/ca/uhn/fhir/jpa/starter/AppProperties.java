@@ -108,6 +108,8 @@ public class AppProperties {
 	private Integer pre_expand_value_sets_max_count = 1000;
 	private Integer maximum_expansion_size = 1000;
 
+	private Map<String, RemoteSystem> remote_terminology_service = null;
+
 	public List<String> getCustomInterceptorClasses() {
 		return custom_interceptor_classes;
 	}
@@ -734,6 +736,14 @@ public class AppProperties {
 		this.maximum_expansion_size = maximum_expansion_size;
 	}
 
+	public Map<String, RemoteSystem> getRemoteTerminologyServicesMap() {
+		return remote_terminology_service;
+	}
+
+	public void setRemote_terminology_service(Map<String, RemoteSystem> remote_terminology_service) {
+		this.remote_terminology_service = remote_terminology_service;
+	}
+
 	public static class Cors {
 		private Boolean allow_Credentials = true;
 		private List<String> allowed_origin = List.of("*");
@@ -866,7 +876,7 @@ public class AppProperties {
 		private Boolean database_partition_mode_enabled = false;
 		private Boolean patient_id_partitioning_mode = false;
 		private Integer default_partition_id = 0;
-		private boolean request_tenant_partitioning_mode;
+		private boolean request_tenant_partitioning_mode = true;
 
 		public boolean isRequest_tenant_partitioning_mode() {
 			return request_tenant_partitioning_mode;
@@ -927,6 +937,27 @@ public class AppProperties {
 
 		public void setRequest_tenant_partitioning_mode(boolean theRequest_tenant_partitioning_mode) {
 			request_tenant_partitioning_mode = theRequest_tenant_partitioning_mode;
+		}
+	}
+
+	public static class RemoteSystem {
+		private String system;
+		private String url;
+
+		public String getSystem() {
+			return system;
+		}
+
+		public void setSystem(String system) {
+			this.system = system;
+		}
+
+		public String getUrl() {
+			return url;
+		}
+
+		public void setUrl(String url) {
+			this.url = url;
 		}
 	}
 

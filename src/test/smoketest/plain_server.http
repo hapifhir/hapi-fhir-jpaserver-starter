@@ -206,6 +206,7 @@ GET http://{{host}}/fhir/Patient/{{batch_patient_id}}/$everything
 
 ### Extended Operations - validate
 # https://hapifhir.io/hapi-fhir/docs/server_plain/rest_operations_operations.html
+# @timeout 180   # wait up to 2 minutes for the validate response
 POST http://{{host}}/fhir/Patient/{{batch_patient_id}}/$validate
 
 > {%

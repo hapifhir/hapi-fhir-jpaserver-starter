@@ -20,22 +20,51 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout project
-      uses: actions/checkout@v4
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: 17
-        distribution: zulu
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml -Dmaven.test.skip=true
-    - name: Docker Pull HTTP client
-      run: docker pull jetbrains/intellij-http-client
-    - name: Start server with jetty
-      run: |
-        mvn -P jetty spring-boot:run & export JPA_PROCESS=$!
-        sleep 80
-    - name: Execute smoke tests
-      run: docker run --rm -v $PWD:/workdir --add-host host.docker.internal:host-gateway jetbrains/intellij-http-client -D src/test/smoketest/plain_server.http --env-file src/test/smoketest/http-client.env.json --env default
+      - name: Checkout project
+        uses: actions/checkout@v4
 
-    
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: zulu
+
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml -Dmaven.test.skip=true
+
+      - name: Docker Pull HTTP client
+        run: docker pull jetbrains/intellij-http-client
+
+      - name: Start server with jetty
+        run: |
+          mkdir -p logs
+          mvn -P jetty spring-boot:run | tee logs/server.log &
+          sleep 80
+
+      - name: Execute smoke tests
+        run: docker run --rm -v $PWD:/workdir --add-host host.docker.internal:host-gateway jetbrains/intellij-http-client -D src/test/smoketest/plain_server.http --env-file src/test/smoketest/http-client.env.json --env default
+
+      - name: Show last server logs
+        if: always()
+        run: |
+          echo "===== Last 200 Lines of Server Log ====="
+          tail -n 200 logs/server.log || true    
+
+      - name: Highlight server errors
+        if: always()
+        run: |
+          echo "===== Highlighted Server Errors ====="
+          if grep 'ERROR' logs/server.log > /dev/null; then
+            grep 'ERROR' logs/server.log | while read -r line; do
+              echo "::error::${line}"
+            done
+          else
+            echo "No errors found in server logs."
+          fi
+
+      - name: Upload server logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-logs
+          path: logs/server.log
