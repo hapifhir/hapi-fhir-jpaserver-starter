@@ -39,7 +39,7 @@ public class QuestionnaireResponseExtractProvider {
 
 	public void extract(final HttpServletRequest theServletRequest,
 							  final HttpServletResponse theServletResponse) throws IOException {
-		final var httpWrapper = new HttpRequestWrapper(theServletRequest, theServletResponse);
+		final var httpWrapper = this.matchboxEngineSupport.createWrapper(theServletRequest, theServletResponse);
 
 		final var parsedRequest = this.parseRequest(httpWrapper);
 		final String questionnaireUri = parsedRequest.questionnaireResponse().getQuestionnaire();

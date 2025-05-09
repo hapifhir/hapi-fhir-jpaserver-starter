@@ -29,8 +29,7 @@ hapi:
 matchbox:
   fhir:
     context:
-      fhirVersion: 4.0.1
-      xVersion: true      
+      xVersion: true
       onlyOneEngine: true
       txServer: http://tx.fhir.org
       llm:

@@ -5,6 +5,7 @@ import java.util.*;
 import javax.annotation.Nullable;
 
 import ca.uhn.fhir.batch2.model.*;
+import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.jpa.config.JpaConfig;
 import ch.ahdis.matchbox.CliContext;
@@ -24,6 +25,7 @@ import ch.ahdis.matchbox.terminology.ValueSetCodeValidationProvider;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
@@ -66,7 +68,6 @@ import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.searchparam.MatchUrlService;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.common.StarterJpaConfig;
-import ca.uhn.fhir.jpa.validation.JpaValidationSupportChain;
 import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
@@ -257,8 +258,10 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	}
 	
 	@Bean
-	public MatchboxEngineSupport getMatchboxEngineSupport(final MatchboxFhirContextProperties matchboxFhirContextProperties) {
-		return new MatchboxEngineSupport(matchboxFhirContextProperties);
+	public MatchboxEngineSupport getMatchboxEngineSupport(final MatchboxFhirContextProperties matchboxFhirContextProperties,
+																			final CliContext cliContext,
+																			@Value("${hapi.fhir.fhir_version}") final FhirVersionEnum serverFhirVersion) {
+		return new MatchboxEngineSupport(matchboxFhirContextProperties, cliContext, serverFhirVersion);
 	}
 
 	@Bean

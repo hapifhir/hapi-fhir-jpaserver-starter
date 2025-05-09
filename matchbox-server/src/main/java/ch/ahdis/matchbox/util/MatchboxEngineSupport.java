@@ -1,6 +1,7 @@
 package ch.ahdis.matchbox.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 import ch.ahdis.matchbox.CliContext;
@@ -8,9 +9,13 @@ import ch.ahdis.matchbox.EngineLoggingService;
 import ch.ahdis.matchbox.config.MatchboxFhirContextProperties;
 import ch.ahdis.matchbox.engine.exception.IgLoadException;
 import ch.ahdis.matchbox.engine.exception.MatchboxEngineCreationException;
+import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
 import ch.ahdis.matchbox.engine.exception.TerminologyServerException;
 
 import ch.ahdis.matchbox.packages.IgLoaderFromJpaPackageCache;
+import ch.ahdis.matchbox.util.http.HttpRequestWrapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -22,6 +27,7 @@ import org.hl7.fhir.r5.utils.validation.constants.ReferenceValidationPolicy;
 import org.hl7.fhir.utilities.FhirPublication;
 import org.hl7.fhir.validation.service.StandAloneValidatorFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -50,8 +56,7 @@ public class MatchboxEngineSupport {
 
 	@Autowired
 	private DaoRegistry myDaoRegistry;
-  
-	
+
 	@Autowired
 	private INpmPackageVersionResourceDao myPackageVersionResourceDao;
 	
@@ -67,18 +72,33 @@ public class MatchboxEngineSupport {
 	@Autowired(required = false)
 	private IBinaryStorageSvc myBinaryStorageSvc;
 
-	@Autowired
 	private CliContext cliContext;
 
 	private final MatchboxFhirContextProperties matchboxFhirContextProperties;
 
-	public MatchboxEngineSupport(final MatchboxFhirContextProperties matchboxFhirContextProperties) {
+	private final FhirVersionEnum serverFhirVersion;
+
+	public MatchboxEngineSupport(final MatchboxFhirContextProperties matchboxFhirContextProperties,
+										  final CliContext cliContext,
+										  @Value("${hapi.fhir.fhir_version}") final FhirVersionEnum serverFhirVersion) {
 		this.sessionCache = new EngineSessionCache();
 		this.matchboxFhirContextProperties = Objects.requireNonNull(matchboxFhirContextProperties);
+		this.serverFhirVersion = serverFhirVersion;
+		this.cliContext = cliContext;
+		this.cliContext.setFhirVersion(this.serverFhirVersion.getFhirVersionString());
 	}
 
 	public CliContext getClientContext() {
 		return this.cliContext;
+	}
+
+	public FhirVersionEnum getServerFhirVersion() {
+		return this.serverFhirVersion;
+	}
+
+	public HttpRequestWrapper createWrapper(final HttpServletRequest request,
+														 final HttpServletResponse response) throws IOException {
+		return new HttpRequestWrapper(request, response, this.serverFhirVersion);
 	}
 
 	public NpmPackageVersionResourceEntity loadPackageAssetByUrl(String theCanonicalUrl) {
@@ -266,7 +286,7 @@ public class MatchboxEngineSupport {
 		}
 		if (mainEngine == null) {
 			CliContext cliContextMain = new CliContext(this.cliContext);
-			if (cliContextMain.getFhirVersion().equals("4.0.1")) {
+			if (this.serverFhirVersion == FhirVersionEnum.R4) {
 				log.debug("Preconfigure FHIR R4");
 			    mainEngine = new MatchboxEngineBuilder().withXVersion(cliContextMain.getXVersion()).getEngineR4();
 				try {
@@ -292,7 +312,7 @@ public class MatchboxEngineSupport {
 				}
 				log.debug("Load R5 Specials types");
 				this.configureValidationEngine(mainEngine, cliContextMain);
-			} else if (cliContextMain.getFhirVersion().equals("4.3.0")) {
+			} else if (this.serverFhirVersion == FhirVersionEnum.R4B) {
 				log.debug("Preconfigure FHIR R4B");
 			    mainEngine = new MatchboxEngineBuilder().withXVersion(cliContextMain.getXVersion()).getEngineR4B();
 				mainEngine.setIgLoader(new IgLoaderFromJpaPackageCache(mainEngine.getPcm(),
@@ -305,7 +325,7 @@ public class MatchboxEngineSupport {
 				this.myBinaryStorageSvc,
 				this.myTxManager));
 				this.configureValidationEngine(mainEngine, cliContextMain);
-			} else if (cliContextMain.getFhirVersion().equals("5.0.0")) {
+			} else if (this.serverFhirVersion == FhirVersionEnum.R5) {
 				log.debug("Preconfigure FHIR R5");
 			    mainEngine = new MatchboxEngineBuilder().withXVersion(cliContextMain.getXVersion()).getEngineR5();
 				mainEngine.setIgLoader(new IgLoaderFromJpaPackageCache(mainEngine.getPcm(),
@@ -318,6 +338,8 @@ public class MatchboxEngineSupport {
 				this.myBinaryStorageSvc,
 				this.myTxManager));
 				this.configureValidationEngine(mainEngine, cliContextMain);
+			} else {
+				throw new MatchboxUnsupportedFhirVersionException("getMatchboxEngineNotSynchronized", this.serverFhirVersion);
 			}
 			cliContextMain.setIg(this.getFhirCorePackage(cliContextMain));
 
@@ -624,5 +646,13 @@ public class MatchboxEngineSupport {
 		}
 		// Otherwise, add it as a simple string pattern
 		engine.addSuppressedWarnInfo(pattern);
+	}
+
+	public INpmPackageVersionResourceDao getMyPackageVersionResourceDao() {
+		return this.myPackageVersionResourceDao;
+	}
+
+	public PlatformTransactionManager getMyTxManager() {
+		return this.myTxManager;
 	}
 }

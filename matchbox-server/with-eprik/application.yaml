@@ -42,7 +42,6 @@ hapi:
 matchbox:
   fhir:
     context:
-      fhirVersion: 4.0.1
 #      txServer: http://tx.fhir.org
       txServer: http://localhost:18002/eprik-fhir/camel/tx/r4/
       onlyOneEngine: true

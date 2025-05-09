@@ -2,6 +2,8 @@
 
 - matchbox validation: fix ai analysis of xml resources [#378](https://github.com/ahdis/matchbox/issues/378)
 - Fix error thrown when opening a validation link in the GUI [#379](https://github.com/ahdis/matchbox/issues/379)
+- Remove `matchbox.fhir.context.fhirVersion`, use `hapi.fhir.fhir_version` instead [#382](https://github.com/ahdis/matchbox/issues/382)
+- API: Matchbox is more respectful of the 'Accept' header (format and FHIR version) [#382](https://github.com/ahdis/matchbox/issues/382)
 
 2025/05/01 Release 4.0.2
 

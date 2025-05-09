@@ -13,7 +13,6 @@ hapi:
 matchbox:
   fhir:
     context:
-      fhirVersion: 4.3.0
       txServer: http://localhost:${server.port}/matchboxv3/fhir
       suppressWarnInfo:
         hl7.fhir.r4b.core#4.0.1:

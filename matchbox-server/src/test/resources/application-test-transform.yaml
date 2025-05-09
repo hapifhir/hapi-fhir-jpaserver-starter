@@ -6,8 +6,7 @@ matchbox:
   fhir:
     context:
       onlyOneEngine: true
-      fhirVersion: 4.0.1
-      xVersion: true      
+      xVersion: true
 
 spring:
   datasource:

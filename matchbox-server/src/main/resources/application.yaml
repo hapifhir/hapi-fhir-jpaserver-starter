@@ -73,7 +73,6 @@ hapi:
 matchbox:
   fhir:
     context:
-      fhirVersion: 4.0.1
       txServer: n/a
 #      xVersion: true
 #      onlyOneEngine: true

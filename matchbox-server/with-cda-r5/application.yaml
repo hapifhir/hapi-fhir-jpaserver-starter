@@ -26,6 +26,5 @@ hapi:
 matchbox:
   fhir:
     context:
-      fhirVersion: 5.0.0
       txServer: http://tx.fhir.org
       onlyOneEngine: true

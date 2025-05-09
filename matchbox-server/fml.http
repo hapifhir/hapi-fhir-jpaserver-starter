@@ -173,8 +173,8 @@ Content-Type: application/fhir+json;fhirVersion=4.0
 
 ### SDDC Extraction (QuesitonnaireResponse contains link to questionnaire, which contains link to StructureMap)
 POST {{host}}/QuestionnaireResponse/$extract
-Accept: application/fhir+json;fhirVersion=4.0
-Content-Type: application/fhir+json;fhirVersion=4.0
+Accept: application/fhir+json;fhirVersion=4.3
+Content-Type: application/fhir+json;fhirVersion=4.3
 
 {
   "resourceType": "Parameters",

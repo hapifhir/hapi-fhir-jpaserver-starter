@@ -41,12 +41,11 @@ public class HttpRequestWrapper {
 
 	public HttpRequestWrapper(
 		final HttpServletRequest request,
-		final HttpServletResponse response
+		final HttpServletResponse response,
+		final FhirVersionEnum defaultVersion
 	) throws IOException {
 		this.request = request;
 		this.response = response;
-
-		final var defaultVersion = FhirVersionEnum.R4; // todo
 
 		// Parse the request Content-Type header
 		//   - The format may be null if there's no content in the request

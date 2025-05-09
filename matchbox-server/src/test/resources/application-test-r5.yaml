@@ -13,7 +13,6 @@ hapi:
 matchbox:
   fhir:
     context:
-      fhirVersion: 5.0.0
       txServer: http://localhost:${server.port}/matchboxv3/fhir
 spring:
   datasource:

@@ -90,8 +90,7 @@ public class MappingLanguageInterceptor extends InterceptorAdapter {
 			log.debug("processing text/fhir mapping - converting to json");
 
 			FhirVersionEnum requestedFhirVersion = this.extractFhirVersion(contentType);
-			final FhirVersionEnum mainEngineFhirVersion =
-				FhirVersionEnum.forVersionString(this.matchboxEngineSupport.getClientContext().getFhirVersion());
+			final FhirVersionEnum mainEngineFhirVersion = this.matchboxEngineSupport.getServerFhirVersion();
 
 			if (requestedFhirVersion != null && this.matchboxEngineSupport.getClientContext().getOnlyOneEngine()) {
 				// If the onlyOneEngine mode is enabled, check that it's the same FHIR version

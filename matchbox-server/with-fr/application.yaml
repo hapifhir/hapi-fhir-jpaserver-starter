@@ -20,7 +20,6 @@ hapi:
 matchbox:
   fhir:
     context:
-      fhirVersion: 4.0.1
       txServer: https://smt.esante.gouv.fr/fhir/
       txLog: tx.html
       txUseEcosystem: false

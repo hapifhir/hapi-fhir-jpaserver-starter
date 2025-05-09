@@ -142,9 +142,8 @@ public class FhirServerConfigR4B {
   }
 
   @Bean
-  public StructureMapListProvider structureMapListProvider(final INpmPackageVersionResourceDao npmPackageVersionResourceDao,
-                                                           final PlatformTransactionManager myTxManager) {
-    return new StructureMapListProvider(npmPackageVersionResourceDao, myTxManager);
+  public StructureMapListProvider structureMapListProvider(final MatchboxEngineSupport matchboxEngineSupport) {
+    return new StructureMapListProvider(matchboxEngineSupport);
   }
 
 
