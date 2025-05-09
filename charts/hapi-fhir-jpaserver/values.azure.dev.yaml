@@ -1,0 +1,60 @@
+replicaCount: 1
+
+image:
+  registry: docker.io
+  repository: hapiproject/hapi
+  tag: "v8.0.0-1@sha256:9fbac7b012b4be91ba481e7008f1353ede4598bc99a36f3902b8abf873e70ed8"
+  pullPolicy: IfNotPresent
+
+ingress:
+  enabled: true
+  tls:
+    - secretName: fhir-server-autonomize-dev-tls
+      hosts:
+        - fhir.sprint.autonomize.dev
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+  hosts:
+    - host: fhir.sprint.autonomize.dev
+      paths:
+        - /
+      pathType: Prefix
+
+  
+# -- configure the FHIR server's resource requests and limits
+resources:
+  limits:
+    cpu: 1000m
+    memory: 2048Mi
+  requests:
+    cpu: 300m
+    memory: 512Mi  
+
+externalDatabase:
+  # -- external database host used with `postgresql.enabled=false`
+  host: autonomize-database-1002.cwpqzu4drrfr.us-east-1.rds.amazonaws.com
+  # -- database port number
+  port: 5432
+  # -- username for the external database
+  user: postgres
+  # -- database password
+  password: "7HrX26sHIZz8yffytPc0"
+  # -- name of an existing secret resource containing the DB password in the `existingSecretKey` key
+  existingSecret: ""
+  # -- name of the key inside the `existingSecret`
+  existingSecretKey: "postgresql-password"
+  # -- database name
+  database: altais-fhir
+
+
+serviceAccount:
+  # -- Specifies whether a service account should be created.
+  create: false
+  name: "genesis-platform-sa"
+  # -- Automatically mount a ServiceAccount's API credentials?
+  automount: true
+
