@@ -26,23 +26,25 @@ const INDENT_SPACES = 2;
 export class ValidateComponent implements AfterViewInit {
   readonly AUTO_IG_SELECTION = 'AUTOMATIC';
   readonly CodeEditorContent = CodeEditorContent;
+  readonly Array = Array;
 
   // Validation history
-  validationEntries: ValidationEntry[] = new Array<ValidationEntry>();
+  validationEntries: ValidationEntry[] = [];
   selectedEntry: ValidationEntry | null = null;
 
   // About the server
   client: FhirClient;
-  installedIgs: Set<string> = new Set<string>();
-  supportedProfiles: Map<string, StructureDefinition> = new Map<string, StructureDefinition>();
-  validatorSettings: Map<string, ValidationParameterDefinition> = new Map<string, ValidationParameterDefinition>();
+  installedIgs: Set<string> = new Set();
+  supportedProfiles: Map<string, StructureDefinition> = new Map();
+  validatorSettings: Map<string, ValidationParameterDefinition> = new Map();
 
   // The input form
-  filteredProfiles: Set<StructureDefinition> = new Set<StructureDefinition>();
+  filteredProfiles: Set<StructureDefinition> = new Set();
   profileFilter: string = '';
   selectedIg: string = this.AUTO_IG_SELECTION;
   selectedProfile: string;
   profileControl: FormControl = new FormControl<string>(null, Validators.required);
+  profileLocked: boolean = false;
 
   // Code editor
   editor: ValidationCodeEditor;
@@ -102,7 +104,7 @@ export class ValidateComponent implements AfterViewInit {
     // Check for query string parameters in the current URL.
     // They may contain a validation request.
     // This call is placed here because it depends on the `editor` instance being initialized above.
-    this.analyzeUrlForValidation();
+    this.analyzeUrlForValidation().then();
   }
 
   /**
@@ -129,7 +131,7 @@ export class ValidateComponent implements AfterViewInit {
       reader.onload = () => {
         // need to run CD since file load runs outside of zone
         this.cd.markForCheck();
-        this.validateResource(droppedBlob.blob.name, <string>reader.result, droppedBlob.contentType, true);
+        this.validateResource(droppedBlob.blob.name, <string>reader.result, droppedBlob.contentType, !this.profileLocked);
       };
     } catch (error) {
       this.showErrorToast('Unexpected error', error.message);
@@ -144,32 +146,29 @@ export class ValidateComponent implements AfterViewInit {
     let entry: ValidationEntry;
     try {
       // Try to parse the resource to extract information
-      entry = new ValidationEntry(filename, content, contentType, null, this.getCurrentValidationSettings());
+      entry = new ValidationEntry(filename, content, contentType, this.getCurrentValidationSettings());
       this.currentResource = new UploadedFile(
         filename,
         contentType,
         content,
         entry.resourceType
       );
-      if (selectBestProfile && entry.selectedProfile) {
-        // Auto-select the right profile in the form select
-        if (this.supportedProfiles.has(entry.selectedProfile)) {
-          // The canonical exists as-is in the list of supported profiles
-          this.selectedProfile = entry.selectedProfile;
-        } else {
-          // The canonical doesn't exist as-is in the list of supported profiles, but it may be present with its
-          // version as suffix
-          const versionedCanonical = `${entry.selectedProfile}|`;
-          for (let [key, _] of this.supportedProfiles) {
-            if (key.startsWith(versionedCanonical)) {
-              this.selectedProfile = key;
-              break;
-            }
+      if (selectBestProfile) {
+        var profileSet = false;
+        for (const profile of entry.extractedProfiles) {
+          if (this.supportedProfiles.has(profile)) {
+            this.selectedProfile = profile;
+            profileSet = true;
+            break;
           }
         }
+        if (!profileSet) {
+          this.selectedProfile = 'http://hl7.org/fhir/StructureDefinition/' + entry.resourceType;
+        }
       }
+      entry.validationProfile = this.selectedProfile;
 
-      if (entry.selectedProfile) {
+      if (entry.validationProfile) {
         this.validationEntries.unshift(entry);
         this.show(entry);
         this.runValidation(entry);
@@ -232,10 +231,8 @@ export class ValidateComponent implements AfterViewInit {
                 name = name.substring('example/'.length);
               }
               let decoder = new TextDecoder('utf-8');
-              let res = JSON.parse(decoder.decode(extractedFile.buffer)) as fhir.r4.Resource;
-              let profiles = res.meta?.profile;
               // maybe better add ig as a parameter, we assume now that ig version is equal to canonical version
-              let entry = new ValidationEntry(name, JSON.stringify(res, null, 2), 'application/fhir+json', profiles, this.getCurrentValidationSettings());
+              let entry = new ValidationEntry(name, decoder.decode(extractedFile.buffer), 'application/fhir+json', this.getCurrentValidationSettings());
               dataSource.push(entry);
             }
           }
@@ -259,11 +256,11 @@ export class ValidateComponent implements AfterViewInit {
    * @param entry the entry to validate.
    */
   runValidation(entry: ValidationEntry) {
-    if (this.selectedProfile != null) {
-      if (!entry.profiles.includes(this.selectedProfile)) {
-        entry.profiles.push(this.selectedProfile);
+    if (this.selectedProfile != null && !this.profileLocked) {
+      if (!entry.extractedProfiles.includes(this.selectedProfile)) {
+        entry.extractedProfiles.push(this.selectedProfile);
       }
-      entry.selectedProfile = this.selectedProfile;
+      entry.validationProfile = this.selectedProfile;
     }
 
     if (this.selectedIg != this.AUTO_IG_SELECTION) {
@@ -274,14 +271,14 @@ export class ValidateComponent implements AfterViewInit {
       }
     }
 
-    if (!entry.selectedProfile) {
+    if (!entry.validationProfile) {
       this.showErrorToast('Validation failed', 'No profile was selected');
       console.error("No profile selected, won't run validation");
       return;
     }
 
     const searchParams = new URLSearchParams();
-    searchParams.set('profile', entry.selectedProfile);
+    searchParams.set('profile', entry.validationProfile);
     if (entry.ig) {
       searchParams.set('ig', entry.ig);
     }
@@ -372,8 +369,8 @@ export class ValidateComponent implements AfterViewInit {
       this.currentResource.filename,
       this.currentResource.content,
       this.currentResource.contentType,
-      [this.selectedProfile],
-      this.getCurrentValidationSettings()
+      this.getCurrentValidationSettings(),
+      this.selectedProfile
     );
     if (this.selectedIg != this.AUTO_IG_SELECTION) {
       entry.ig = this.selectedIg;
@@ -391,8 +388,8 @@ export class ValidateComponent implements AfterViewInit {
       this.currentResource.filename,
       this.currentResource.content,
       this.currentResource.contentType,
-      [this.selectedProfile],
-      settings
+      settings,
+      this.selectedProfile
     );
     if (this.selectedIg != this.AUTO_IG_SELECTION) {
       entry.ig = this.selectedIg;
@@ -447,7 +444,7 @@ export class ValidateComponent implements AfterViewInit {
 
     const hashParams = new URLSearchParams();
     hashParams.set('resource', Base64.encodeURI(entry.resource));
-    hashParams.set('profile', entry.selectedProfile);
+    hashParams.set('profile', entry.validationProfile);
     if (entry.ig) {
       hashParams.set('ig', entry.ig);
     }
@@ -607,7 +604,7 @@ export class ValidateComponent implements AfterViewInit {
         }
       }
 
-      this.validateResource(filename, resource, contentType, !hasSetProfile);
+      this.validateResource(filename, resource, contentType, !hasSetProfile && !this.profileLocked);
       this.toastr.info('Validation', 'The validation of your resource has started', {
         closeButton: true,
         timeOut: 3000,

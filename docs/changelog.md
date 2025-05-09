@@ -1,3 +1,7 @@
+Unreleased
+
+- Validation GUI: allow locking the profile selection [#385](https://github.com/ahdis/matchbox/issues/385)
+
 2025/05/09 Release 4.0.3
 
 - matchbox validation: fix ai analysis of xml resources [#378](https://github.com/ahdis/matchbox/issues/378)

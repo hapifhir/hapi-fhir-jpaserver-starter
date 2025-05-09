@@ -5,28 +5,36 @@
   min-width: 1400px;
   width: 100%;
 }
+
 button.setting {
   float: right;
+
   mat-icon {
     vertical-align: middle;
   }
 }
+
 p.current {
   margin: 10px 0;
+
   span {
     font-weight: 500;
   }
 }
+
 mat-hint {
   color: #7db99e;
 }
+
 p.error {
   color: variables.$issue-error;
   margin-top: 20px;
+
   mat-icon {
     vertical-align: middle;
   }
 }
+
 .row {
   display: flex;
   flex-direction: row;
@@ -35,6 +43,7 @@ p.error {
   min-width: 1400px;
   width: 100%;
   justify-content: space-evenly;
+
   & > div {
     width: 46%;
   }
@@ -54,9 +63,11 @@ table {
   .selected {
     background: #d8f1e6;
   }
+
   .mat-row {
     cursor: pointer;
   }
+
   td.issues {
     font-size: 12px;
     line-height: 12px;
@@ -71,21 +82,26 @@ table {
       &.error {
         color: variables.$issue-error;
       }
+
       &.warning {
         color: variables.$issue-warning;
       }
+
       &.info {
         color: variables.$issue-info;
       }
     }
   }
+
   td.actions {
     mat-icon {
       font-size: 24px;
+
       &.delete {
         color: variables.$issue-error;
         margin-right: .2em;
       }
+
       &.copy {
         color: #4ab183;
       }
@@ -113,11 +129,13 @@ table {
 .card-maps {
   padding: 8px 16px;
 }
+
 .row-full-height .card-maps {
   height: 96vh;
   max-height: 96vh;
   overflow-y: auto;
 }
+
 #editor {
   height: calc(100% - 50px);
 }
@@ -139,6 +157,7 @@ table {
     padding-right: 6px;
     overflow: hidden;
   }
+
   .ig {
     display: block;
     float: right;
@@ -146,6 +165,7 @@ table {
     color: #7bc7a5;
   }
 }
+
 .profile-select-option-line2 {
   clear: right;
   display: inline-block;
@@ -164,11 +184,13 @@ table {
 mat-option:nth-child(odd) {
   background-color: #f9f9f9;
 }
+
 mat-option {
   padding: 4px 8px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   line-height: normal;
 }
+
 ::ng-deep .mdc-list-item__primary-text {
   width: 100%;
 }
@@ -186,5 +208,40 @@ mat-option {
     border-bottom: 3px solid variables.$green-primary;
     cursor: default;
     color: #000;
+  }
+}
+
+.buttons {
+  margin: 20px 0 10px 10px;
+}
+
+.profile-lock {
+  float: right;
+  display: block;
+  width: 150px;
+  line-height: 3em;
+
+  mat-icon {
+    cursor: pointer;
+    vertical-align: middle;
+    margin-right: 5px;
+    color: #7099bd;
+  }
+
+  span {
+    cursor: help;
+    text-decoration: underline dashed;
+  }
+
+  &.locked {
+    span {
+      color: variables.$issue-error;
+    }
+  }
+
+  &.unlocked {
+    span {
+      color: #6eb394;
+    }
   }
 }
