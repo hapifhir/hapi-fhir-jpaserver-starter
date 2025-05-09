@@ -6,7 +6,6 @@ import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
 import ca.uhn.fhir.jpa.model.entity.NpmPackageVersionResourceEntity;
-import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.rest.annotation.*;
@@ -22,8 +21,10 @@ import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import ch.ahdis.matchbox.CliContext;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
+import ch.ahdis.matchbox.util.CrossVersionResourceUtils;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import ch.ahdis.matchbox.util.MatchboxServerUtils;
+import ch.ahdis.matchbox.util.http.MatchboxFhirFormat;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
@@ -32,6 +33,9 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IDomainResource;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.MetadataResource;
+import org.hl7.fhir.r5.model.BooleanType;
+import org.hl7.fhir.r5.model.CanonicalType;
+import org.hl7.fhir.r5.model.StringType;
 import org.quartz.DisallowConcurrentExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -51,9 +55,6 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 
 	@Autowired
 	protected MatchboxEngineSupport matchboxEngineSupport;
-
-	@Autowired
-	AppProperties appProperties;
 
 	@Autowired
 	private INpmPackageVersionResourceDao myPackageVersionResourceDao;
@@ -107,40 +108,40 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 	) throws IOException {
 		final var httpWrapper = this.matchboxEngineSupport.createWrapper(theServletRequest, theServletResponse);
 		if ("ImplementationGuide".equals(resourceType)) {
-				return new TransactionTemplate(myTxManager).execute(tx -> {
-					final int offset = (theOffset == null ? 0 : theOffset);
-					final int count = (theCount == null ? 10000 : theCount);
-					Slice<NpmPackageVersionResourceEntity> outcome = null;
+			return new TransactionTemplate(myTxManager).execute(tx -> {
+				final int offset = (theOffset == null ? 0 : theOffset);
+				final int count = (theCount == null ? 10000 : theCount);
+				Slice<NpmPackageVersionResourceEntity> outcome = null;
 
-					if (the_id != null) {
-						String pid = the_id.getValuesAsQueryTokens().getFirst().getValuesAsQueryTokens().getFirst().getValue();
-						outcome = myPackageVersionResourceDao.findByResourceTypeById(PageRequest.of(offset, count),
-																										 resourceType,
-																										 Long.parseLong(pid));
-					} else {
-						if (theUrl != null) {
-							String url = theUrl.getValuesAsQueryTokens().getFirst().getValuesAsQueryTokens().getFirst().getValue();
-							if (theCanonicalVersion != null) {
-								String canonicalVersion = theCanonicalVersion.getValuesAsQueryTokens().getFirst()
-									.getValuesAsQueryTokens().getFirst().getValue();
-								outcome = myPackageVersionResourceDao.findByResourceTypeByCanonicalByCanonicalVersion(
-									PageRequest.of(offset, count), resourceType, url, canonicalVersion);
-							} else {
-								outcome = myPackageVersionResourceDao
-									.findByResourceTypeByCanoncial(PageRequest.of(offset, count), resourceType, url);
-							}
+				if (the_id != null) {
+					String pid = the_id.getValuesAsQueryTokens().getFirst().getValuesAsQueryTokens().getFirst().getValue();
+					outcome = myPackageVersionResourceDao.findByResourceTypeById(PageRequest.of(offset, count),
+																									 resourceType,
+																									 Long.parseLong(pid));
+				} else {
+					if (theUrl != null) {
+						String url = theUrl.getValuesAsQueryTokens().getFirst().getValuesAsQueryTokens().getFirst().getValue();
+						if (theCanonicalVersion != null) {
+							String canonicalVersion = theCanonicalVersion.getValuesAsQueryTokens().getFirst()
+								.getValuesAsQueryTokens().getFirst().getValue();
+							outcome = myPackageVersionResourceDao.findByResourceTypeByCanonicalByCanonicalVersion(
+								PageRequest.of(offset, count), resourceType, url, canonicalVersion);
 						} else {
-							outcome = myPackageVersionResourceDao.findByResourceType(PageRequest.of(offset, count),
-																										resourceType);
+							outcome = myPackageVersionResourceDao
+								.findByResourceTypeByCanoncial(PageRequest.of(offset, count), resourceType, url);
 						}
+					} else {
+						outcome = myPackageVersionResourceDao.findByResourceType(PageRequest.of(offset, count),
+																									resourceType);
 					}
+				}
 
-					SimpleBundleProvider bundleProvider = new SimpleBundleProvider(
-						outcome.stream().map(this::loadPackageEntityAdjustId).toList());
-					bundleProvider.setCurrentPageOffset(offset);
-					bundleProvider.setCurrentPageSize(count);
-					return bundleProvider;
-				});
+				final var resources = outcome.stream().map(this::loadPackageEntityAdjustId).toList();
+				final SimpleBundleProvider bundleProvider = httpWrapper.makeBundleProvider(resources);
+				bundleProvider.setCurrentPageOffset(offset);
+				bundleProvider.setCurrentPageSize(count);
+				return bundleProvider;
+			});
 		}
 
 		if (cliContext.getOnlyOneEngine()) {
@@ -158,203 +159,63 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 					resources.addAll(matchboxEngine.getContext().fetchResourcesByType(classR5));
 				}
 
-				switch (getFhirVersion(this.cliContext.getFhirVersion())) {
-					case "4.0.1":
-						return new SimpleBundleProvider(
-							resources.stream().map(VersionConvertorFactory_40_50::convertResource).collect(Collectors.toList()));
-					case "4.3.0":
-						return new SimpleBundleProvider(
-							resources.stream().map(VersionConvertorFactory_43_50::convertResource).collect(Collectors.toList()));
-					case "5.0.0":
-						return new SimpleBundleProvider(
-							resources.stream().collect(Collectors.toList()));
-				}
+				return httpWrapper.makeBundleProviderFromR5(resources);
 			}
 		}
 		return null;
 	}
 
-	/**
-	 * Returns the list of installed StructureDefinitions, as a list of R5 CanonicalTypes.
-	 */
-	public List<org.hl7.fhir.r5.model.CanonicalType> getCanonicalsR5() {
-		return new TransactionTemplate(myTxManager).execute(tx -> {
-			final var page = PageRequest.of(0, 2147483646);
-
-			// Find the IDs of the current StructureDefinitions.
-			final var currentEntityIds =
-				this.myPackageVersionResourceDao.findCurrentByResourceType(page, this.resourceType)
-					.stream()
-					.map(NpmPackageVersionResourceEntity::getId)
-					.collect(Collectors.toUnmodifiableSet());
-
-			return this.myPackageVersionResourceDao.findByResourceType(page, this.resourceType)
-				.stream()
-				.peek(entity -> {
-					// NB: getCanonicalVersion() may be null is rare cases, but getPackageVersion().getVersionId() should not
-					if (entity.getCanonicalVersion() == null) {
-						entity.setCanonicalVersion(entity.getPackageVersion().getVersionId());
-					}
-				})
-				// Sort the StructureDefinitions by canonical URL first, and then by version
-				.sorted(Comparator
-							  .comparing(NpmPackageVersionResourceEntity::getCanonicalUrl)
-							  .thenComparing(NpmPackageVersionResourceEntity::getCanonicalVersion))
-				.map(entity -> {
-					final var canonical = new org.hl7.fhir.r5.model.CanonicalType(entity.getCanonicalUrl());
-					// Add custom extensions to the CanonicalType to store additional information
-					addExtension(canonical, "ig-id",
-									 new org.hl7.fhir.r5.model.StringType(entity.getPackageVersion().getPackageId()));
-					addExtension(canonical, "ig-version",
-									 new org.hl7.fhir.r5.model.StringType(entity.getCanonicalVersion()));
-					addExtension(canonical, "ig-current",
-									 new org.hl7.fhir.r5.model.BooleanType(currentEntityIds.contains(entity.getId())));
-					addExtension(canonical, "sd-canonical", new org.hl7.fhir.r5.model.StringType(entity.getCanonicalUrl()));
-					if (entity.getFilename() != null && !entity.getFilename().isBlank()) {
-						addExtension(canonical, "sd-title", new org.hl7.fhir.r5.model.StringType(entity.getFilename()));
-					} else {
-						addExtension(canonical, "sd-title", new org.hl7.fhir.r5.model.StringType(entity.getCanonicalUrl()));
-					}
-					return canonical;
-				})
-				.toList();
-		});
-	}
-
-	public List<NpmPackageVersionResourceEntity> getPackageResources() {
-		return new TransactionTemplate(this.myTxManager).execute(tx -> {
-			return myPackageVersionResourceDao
-				.findByResourceType(PageRequest.of(0, 2147483646), resourceType).stream().toList();
-		});
-	}
-
-	public List<NpmPackageVersionResourceEntity> getCurrentPackageResources() {
-		return new TransactionTemplate(this.myTxManager).execute(tx -> {
-			return myPackageVersionResourceDao
-				.findCurrentByResourceType(PageRequest.of(0, 2147483646), resourceType).stream().toList();
-		});
-	}
-
-	protected IBaseResource loadPackageEntityAdjustId(NpmPackageVersionResourceEntity contents) {
-		IBaseResource resource = loadPackageEntity(contents);
-		if (resource != null) {
-			resource.setId(contents.getId());
-		}
-		return resource;
-	}
-
-	public org.hl7.fhir.r5.model.CanonicalResource getCanonical(IBaseResource theResource) {
-		if (classR4.isInstance(theResource)) {
-			R4 r4 = classR4.cast(theResource);
-			return (org.hl7.fhir.r5.model.CanonicalResource) VersionConvertorFactory_40_50.convertResource(r4);
-		}
-		if (classR4B.isInstance(theResource)) {
-			R4B r4b = classR4B.cast(theResource);
-			return (org.hl7.fhir.r5.model.CanonicalResource) VersionConvertorFactory_43_50.convertResource(r4b);
-		}
-		if (classR5.isInstance(theResource)) {
-			R5 r5 = classR5.cast(theResource);
-			return r5;
-		}
-		log.error("FHIR version not supported for resource " + theResource.fhirType() + ": " + theResource.getIdElement().getIdPart() + " : " + theResource.getStructureFhirVersionEnum());
-		return null;
-	}
-
-	private IBaseResource loadPackageEntity(NpmPackageVersionResourceEntity contents) {
-		try {
-			final var binary = MatchboxServerUtils.getBinaryFromId(contents.getResourceBinary().getId(), myDaoRegistry);
-			final byte[] resourceContentsBytes = MatchboxServerUtils.fetchBlobFromBinary(binary, myBinaryStorageSvc,
-																												  myCtx);
-			final String resourceContents = new String(resourceContentsBytes, StandardCharsets.UTF_8);
-			return switch (contents.getFhirVersion()) {
-				case R4 -> new org.hl7.fhir.r4.formats.JsonParser().parse(resourceContents);
-				case R4B -> new org.hl7.fhir.r4b.formats.JsonParser().parse(resourceContents);
-				case R5 -> new org.hl7.fhir.r5.formats.JsonParser().parse(resourceContents);
-				default -> {
-					log.error("FHIR version not support for loading form matchbox case ");
-					throw new RuntimeException(Msg.code(1305) + "Failed to load package resource " + contents);
-				}
-			};
-		} catch (Exception e) {
-			throw new RuntimeException(Msg.code(1305) + "Failed to load package resource " + contents, e);
-		}
-	}
-
 	@Read(version = false)
-	public IBaseResource read(HttpServletRequest theServletRequest,
-									  @IdParam IIdType theId,
-									  RequestDetails theRequestDetails) {
-		try {
-			return new TransactionTemplate(myTxManager).execute(tx -> {
+	public IBaseResource read(final HttpServletRequest theServletRequest,
+									  @IdParam final IIdType theId,
+									  final RequestDetails theRequestDetails) {
+		return new TransactionTemplate(myTxManager).execute(tx -> {
+			CliContext cliContext = new CliContext(this.cliContext);
 
-																					 CliContext cliContext = new CliContext(this.cliContext);
+			final int offset = 0;
+			final int count = 1;
+			Slice<NpmPackageVersionResourceEntity> outcome = null;
+			outcome = myPackageVersionResourceDao.findByResourceTypeById(PageRequest.of(offset, count),
+																							 resourceType,
+																							 theId.getIdPartAsLong());
+			if (outcome != null && outcome.getSize() == 1) {
+				NpmPackageVersionResourceEntity res = outcome.toList().getFirst();
+				IBaseResource resource = (IBaseResource) loadPackageEntityAdjustId(outcome.toList().getFirst());
+				cliContext.setFhirVersion(getFhirVersion(resource));
 
-																					 final int offset = 0;
-																					 final int count = 1;
-																					 Slice<NpmPackageVersionResourceEntity> outcome = null;
-																					 String pid = theId.getIdPart();
-																					 // check if pid is a long number
-																					 if (pid.matches("\\d+")) {
-																						 outcome = myPackageVersionResourceDao.findByResourceTypeById(PageRequest.of(offset, count),
-																																										  resourceType,
-																																										  Long.parseLong(pid));
-																					 }
-																					 if (outcome != null && outcome.getSize() == 1) {
-																						 NpmPackageVersionResourceEntity res = outcome.toList().get(0);
-																						 IBaseResource resource = (IBaseResource) loadPackageEntityAdjustId(outcome.toList().get(0));
-																						 cliContext.setFhirVersion(getFhirVersion(resource));
+				String url = "null";
+				if (classR4.isInstance(resource)) {
+					R4 r = classR4.cast(resource);
+					url = r.getUrl();
+				}
+				if (classR4B.isInstance(resource)) {
+					R4B r = classR4B.cast(resource);
+					url = r.getUrl();
+				}
+				if (classR5.isInstance(resource)) {
+					R5 r = classR5.cast(resource);
+					url = r.getUrl();
+				}
 
-																						 String url = "null";
-																						 if (classR4.isInstance(resource)) {
-																							 R4 r = classR4.cast(resource);
-																							 url = r.getUrl();
-																						 }
-																						 if (classR4B.isInstance(resource)) {
-																							 R4B r = classR4B.cast(resource);
-																							 url = r.getUrl();
-																						 }
-																						 if (classR5.isInstance(resource)) {
-																							 R5 r = classR5.cast(resource);
-																							 url = r.getUrl();
-																						 }
-
-																						 // if is current we check if already loaded in a own engine and might be updated
-																						 // in the cache
-																						 if (res.getPackageVersion().isCurrentVersion() || cliContext.getOnlyOneEngine()) {
-																							 MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(url, cliContext,
-																																															 false, false);
-																							 if (matchboxEngine != null) {
-																								 IBaseResource update = matchboxEngine.getCanonicalResource(url, getFhirVersion(resource));
-																								 if (update != null) {
-																									 return update;
-																								 }
-																							 }
-																						 }
-																						 return loadPackageEntityAdjustId(outcome.toList().get(0));
-																					 } else {
-																						 return matchboxEngineSupport.getCachedResource(resourceType, pid);
-																					 }
-																				 }
-			);
-		} finally {
-		}
-	}
-
-	public String getFhirVersion(IBaseResource theResource) {
-		return getFhirVersion(theResource.getStructureFhirVersionEnum().getFhirVersionString());
-	}
-
-	public String getFhirVersion(String fhirVersionDetailed) {
-		if (fhirVersionDetailed.startsWith("4.0")) {
-			return "4.0.1";
-		}
-		if (fhirVersionDetailed.startsWith("4.3")) {
-			return "4.3.0";
-		}
-		if (fhirVersionDetailed.startsWith("5")) {
-			return "5.0.0";
-		}
-		return fhirVersionDetailed;
+				// if is current we check if already loaded in a own engine and might be updated
+				// in the cache
+				if (res.getPackageVersion().isCurrentVersion() || cliContext.getOnlyOneEngine()) {
+					MatchboxEngine matchboxEngine = matchboxEngineSupport.getMatchboxEngine(url,
+																													cliContext,
+																													false,
+																													false);
+					if (matchboxEngine != null) {
+						IBaseResource update = matchboxEngine.getCanonicalResource(url, getFhirVersion(resource));
+						if (update != null) {
+							return update;
+						}
+					}
+				}
+				return loadPackageEntityAdjustId(outcome.toList().getFirst());
+			} else {
+				return matchboxEngineSupport.getCachedResource(resourceType, theId.getIdPart());
+			}
+		});
 	}
 
 	@Create()
@@ -366,7 +227,7 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 		String url = null;
 
 		CliContext cliContext = new CliContext(this.cliContext);
-		cliContext.setFhirVersion(getFhirVersion(theResource));
+		cliContext.setFhirVersion(theResource.getStructureFhirVersionEnum().getFhirVersionString());
 		if (cliContext.getOnlyOneEngine()) {
 
 			if (classR4.isInstance(theResource)) {
@@ -498,6 +359,111 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 		}
 	}
 
+	/**
+	 * Returns the list of installed StructureDefinitions, as a list of R5 CanonicalTypes.
+	 */
+	public List<org.hl7.fhir.r5.model.CanonicalType> getCanonicalsR5() {
+		return new TransactionTemplate(myTxManager).execute(tx -> {
+			final var page = PageRequest.of(0, 2147483646);
+
+			// Find the IDs of the current StructureDefinitions.
+			final var currentEntityIds =
+				this.myPackageVersionResourceDao.findCurrentByResourceType(page, this.resourceType)
+					.stream()
+					.map(NpmPackageVersionResourceEntity::getId)
+					.collect(Collectors.toUnmodifiableSet());
+
+			return this.myPackageVersionResourceDao.findByResourceType(page, this.resourceType)
+				.stream()
+				.peek(entity -> {
+					// NB: getCanonicalVersion() may be null is rare cases, but getPackageVersion().getVersionId() should not
+					if (entity.getCanonicalVersion() == null) {
+						entity.setCanonicalVersion(entity.getPackageVersion().getVersionId());
+					}
+				})
+				// Sort the StructureDefinitions by canonical URL first, and then by version
+				.sorted(Comparator
+							  .comparing(NpmPackageVersionResourceEntity::getCanonicalUrl)
+							  .thenComparing(NpmPackageVersionResourceEntity::getCanonicalVersion))
+				.map(entity -> {
+					final var canonical = new CanonicalType(entity.getCanonicalUrl());
+					// Add custom extensions to the CanonicalType to store additional information
+					addExtension(canonical, "ig-id", new StringType(entity.getPackageVersion().getPackageId()));
+					addExtension(canonical, "ig-version", new StringType(entity.getCanonicalVersion()));
+					addExtension(canonical, "ig-current", new BooleanType(currentEntityIds.contains(entity.getId())));
+					addExtension(canonical, "sd-canonical", new StringType(entity.getCanonicalUrl()));
+					if (entity.getFilename() != null && !entity.getFilename().isBlank()) {
+						addExtension(canonical, "sd-title", new StringType(entity.getFilename()));
+					} else {
+						addExtension(canonical, "sd-title", new StringType(entity.getCanonicalUrl()));
+					}
+					return canonical;
+				})
+				.toList();
+		});
+	}
+
+	public String getFhirVersion(IBaseResource theResource) {
+		return getFhirVersion(theResource.getStructureFhirVersionEnum().getFhirVersionString());
+	}
+
+	public String getFhirVersion(String fhirVersionDetailed) {
+		if (fhirVersionDetailed.startsWith("4.0")) {
+			return "4.0.1";
+		}
+		if (fhirVersionDetailed.startsWith("4.3")) {
+			return "4.3.0";
+		}
+		if (fhirVersionDetailed.startsWith("5")) {
+			return "5.0.0";
+		}
+		return fhirVersionDetailed;
+	}
+
+	public List<NpmPackageVersionResourceEntity> getPackageResources() {
+		return new TransactionTemplate(this.myTxManager).execute(tx -> this.myPackageVersionResourceDao
+			.findByResourceType(PageRequest.of(0, 2147483646), resourceType).stream().toList()
+		);
+	}
+
+	protected IBaseResource loadPackageEntityAdjustId(final NpmPackageVersionResourceEntity contents) {
+		final IBaseResource resource = loadPackageEntity(contents);
+		if (resource != null) {
+			resource.setId(contents.getId());
+		}
+		return resource;
+	}
+
+	public org.hl7.fhir.r5.model.CanonicalResource getCanonical(final IBaseResource theResource) {
+		if (classR4.isInstance(theResource)) {
+			R4 r4 = classR4.cast(theResource);
+			return (org.hl7.fhir.r5.model.CanonicalResource) VersionConvertorFactory_40_50.convertResource(r4);
+		}
+		if (classR4B.isInstance(theResource)) {
+			R4B r4b = classR4B.cast(theResource);
+			return (org.hl7.fhir.r5.model.CanonicalResource) VersionConvertorFactory_43_50.convertResource(r4b);
+		}
+		if (classR5.isInstance(theResource)) {
+			R5 r5 = classR5.cast(theResource);
+			return r5;
+		}
+		log.error("FHIR version not supported for resource " + theResource.fhirType() + ": " + theResource.getIdElement().getIdPart() + " : " + theResource.getStructureFhirVersionEnum());
+		return null;
+	}
+
+	private IBaseResource loadPackageEntity(final NpmPackageVersionResourceEntity contents) {
+		try {
+			final var binary = MatchboxServerUtils.getBinaryFromId(contents.getResourceBinary().getId(), myDaoRegistry);
+			final byte[] resourceContentsBytes = MatchboxServerUtils.fetchBlobFromBinary(binary, myBinaryStorageSvc,
+																												  myCtx);
+			final String resourceContents = new String(resourceContentsBytes, StandardCharsets.UTF_8);
+			return CrossVersionResourceUtils.getHapiParser(MatchboxFhirFormat.JSON, contents.getFhirVersion())
+				.parseResource(resourceContents);
+		} catch (Exception e) {
+			throw new RuntimeException(Msg.code(1305) + "Failed to load package resource " + contents, e);
+		}
+	}
+
 	@Override
 	public Class<? extends IBaseResource> getResourceType() {
 		return switch (this.myCtx.getVersion().getVersion()) {
@@ -508,5 +474,4 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 																							 this.myCtx.getVersion().getVersion());
 		};
 	}
-
 }

@@ -46,7 +46,7 @@ public class CrossVersionResourceUtils {
 	public static void serializeR5AsR4(final Resource resource,
 												  final MatchboxFhirFormat format,
 												  final Writer writer) throws IOException {
-		final var parser = getParser(format, FhirVersionEnum.R4);
+		final var parser = getHapiParser(format, FhirVersionEnum.R4);
 		parser.setPrettyPrint(true);
 		parser.encodeResourceToWriter(VersionConvertorFactory_40_50.convertResource(resource), writer);
 	}
@@ -54,7 +54,7 @@ public class CrossVersionResourceUtils {
 	public static void serializeR5AsR4b(final Resource resource,
 											  	   final MatchboxFhirFormat format,
 												   final Writer writer) throws IOException {
-		final var parser = getParser(format, FhirVersionEnum.R4B);
+		final var parser = getHapiParser(format, FhirVersionEnum.R4B);
 		parser.setPrettyPrint(true);
 		parser.encodeResourceToWriter(VersionConvertorFactory_43_50.convertResource(resource), writer);
 	}
@@ -62,19 +62,29 @@ public class CrossVersionResourceUtils {
 	public static void serializeR5(final Resource resource,
 											 final MatchboxFhirFormat format,
 											 final Writer writer) throws IOException {
-		final var parser = getParser(format, FhirVersionEnum.R5);
+		final var parser = getHapiParser(format, FhirVersionEnum.R5);
 		parser.setPrettyPrint(true);
 		parser.encodeResourceToWriter(resource, writer);
+	}
+
+	public static org.hl7.fhir.r4.model.Resource convertResource(final org.hl7.fhir.r4b.model.Resource resource) {
+		// Is there a better way of doing this?
+		return VersionConvertorFactory_40_50.convertResource(VersionConvertorFactory_43_50.convertResource(resource));
+	}
+
+	public static org.hl7.fhir.r4b.model.Resource convertResource(final org.hl7.fhir.r4.model.Resource resource) {
+		// Is there a better way of doing this?
+		return VersionConvertorFactory_43_50.convertResource(VersionConvertorFactory_40_50.convertResource(resource));
 	}
 
 	private static <T extends IBaseResource> T parseResource(final byte[] resource,
 																			   final MatchboxFhirFormat format,
 																			   final FhirVersionEnum version,
 																	  	 	   final Class<T> resourceType) {
-		return resourceType.cast(getParser(format, version).parseResource(new ByteArrayInputStream(resource)));
+		return resourceType.cast(getHapiParser(format, version).parseResource(new ByteArrayInputStream(resource)));
 	}
 
-	private static IParser getParser(final MatchboxFhirFormat format, final FhirVersionEnum version) {
+	public static IParser getHapiParser(final MatchboxFhirFormat format, final FhirVersionEnum version) {
 		return switch (format) {
 			case JSON -> FhirContext.forCached(version).newJsonParser();
 			case XML -> FhirContext.forCached(version).newXmlParser();

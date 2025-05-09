@@ -1,18 +1,23 @@
 package ch.ahdis.matchbox.util.http;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.rest.server.SimpleBundleProvider;
 import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
 import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
 import ch.ahdis.matchbox.util.CrossVersionResourceUtils;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
+import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
+import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r5.model.Resource;
 import org.hl7.fhir.utilities.VersionUtilities;
 import org.springframework.http.MediaType;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -79,6 +84,7 @@ public class HttpRequestWrapper {
 		};
 	}
 
+	// Write an R5 resource in the response, in the request format and FHIR version.
 	public void writeResponse(final Resource resource) throws IOException {
 		this.response.setContentType("%s;%s=%s".formatted(
 			this.responseFormat.getContentType(),
@@ -95,6 +101,64 @@ public class HttpRequestWrapper {
 			default -> throw new MatchboxUnsupportedFhirVersionException("HttpRequestWrapper.writeResponse",
 																							 this.responseVersion);
 		}
+	}
+
+	// Initialize and return a BundleProvider, convert a list of R5 resources to the requested FHIR version.
+	public SimpleBundleProvider makeBundleProviderFromR5(final List<Resource> resources) {
+		 final var convertedResources = switch (this.responseVersion) {
+			case R4 -> resources
+						.parallelStream()
+						.map(VersionConvertorFactory_40_50::convertResource)
+						.toList();
+			case R4B -> resources
+					.parallelStream()
+					.map(VersionConvertorFactory_43_50::convertResource)
+					.toList();
+			case R5 -> resources;
+			default -> throw new MatchboxUnsupportedFhirVersionException("HttpRequestWrapper.makeBundleProviderFromR5",
+																							 this.responseVersion);
+		};
+		return new SimpleBundleProvider(convertedResources);
+	}
+
+	// Initialize and return a BundleProvider, convert a list of base resources to the requested FHIR version.
+	// Preferably use makeBundleProviderFromR5 instead.
+	public SimpleBundleProvider makeBundleProvider(final List<IBaseResource> resources) {
+		final List<? extends IBaseResource> convertedResources = switch (this.responseVersion) {
+			case R4 -> resources
+				.parallelStream()
+				.map(resource -> switch (resource) {
+					case org.hl7.fhir.r4.model.Resource r4Resource -> r4Resource;
+					case org.hl7.fhir.r4b.model.Resource r4bResource -> CrossVersionResourceUtils.convertResource(r4bResource);
+					case Resource r5Resource -> VersionConvertorFactory_40_50.convertResource(r5Resource);
+					default -> throw new MatchboxUnsupportedFhirVersionException("HttpRequestWrapper.makeBundleProvider.R4",
+																									 this.responseVersion);
+				})
+				.toList();
+			case R4B -> resources
+				.parallelStream()
+				.map(resource -> switch (resource) {
+					case org.hl7.fhir.r4.model.Resource r4Resource -> CrossVersionResourceUtils.convertResource(r4Resource);
+					case org.hl7.fhir.r4b.model.Resource r4bResource -> r4bResource;
+					case Resource r5Resource -> VersionConvertorFactory_43_50.convertResource(r5Resource);
+					default -> throw new MatchboxUnsupportedFhirVersionException("HttpRequestWrapper.makeBundleProvider.R4B",
+																									 this.responseVersion);
+				})
+				.toList();
+			case R5 -> resources
+				.parallelStream()
+				.map(resource -> switch (resource) {
+					case org.hl7.fhir.r4.model.Resource r4Resource -> VersionConvertorFactory_40_50.convertResource(r4Resource);
+					case org.hl7.fhir.r4b.model.Resource r4bResource -> VersionConvertorFactory_43_50.convertResource(r4bResource);
+					case Resource r5Resource -> r5Resource;
+					default -> throw new MatchboxUnsupportedFhirVersionException("HttpRequestWrapper.makeBundleProvider.R5",
+																									 this.responseVersion);
+				})
+				.toList();
+			default -> throw new MatchboxUnsupportedFhirVersionException("HttpRequestWrapper.makeBundleProvider",
+																							 this.responseVersion);
+		};
+		return new SimpleBundleProvider(convertedResources);
 	}
 
 	/**
