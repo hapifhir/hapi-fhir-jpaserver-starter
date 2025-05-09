@@ -1,6 +1,9 @@
 package ch.ahdis.matchbox.questionnaire;
 
+import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
 import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
+import ch.ahdis.matchbox.CliContext;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ch.ahdis.matchbox.util.http.HttpRequestWrapper;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
@@ -26,6 +29,7 @@ public class QuestionnaireResponseExtractProvider {
 	public static final String OPERATION_NAME = "Extract";
 	public static final String PARAM_IN_QUESTIONNAIRE_RESPONSE = "questionnaire-response";
 	public static final String PARAM_IN_QUESTIONNAIRE = "questionnaire";
+	public static final String PARAM_IN_STRUCTURE_MAP = "structure-map";
 	public static final String PARAM_OUT_RETURN = "return";
 	public static final String PARAM_OUT_ISSUES = "issues";
 
@@ -85,6 +89,10 @@ public class QuestionnaireResponseExtractProvider {
 		}
 		final String mapUrl = targetStructureMapExtension.getValue().primitiveValue();
 
+		if (parsedRequest.structureMap() != null) {
+			matchboxEngine.getContext().cacheResource(parsedRequest.structureMap());
+		}
+
 		final var objectConverter = new ObjectConverter(matchboxEngine.getContext());
 		final var questionnaireResponseElement = objectConverter.convert(parsedRequest.questionnaireResponse());
 		final Element result = matchboxEngine.transform(questionnaireResponseElement, mapUrl, null);
@@ -109,10 +117,19 @@ public class QuestionnaireResponseExtractProvider {
 					throw new UnprocessableEntityException(
 						"Missing QuestionnaireResponse resource in parameter 'questionnaire-response' of $extract operation");
 				}
-				return new ExtractRequest(questionnaireResponse, questionnaire);
+
+				// Try to extract a StructureMap from the Parameters (as a resource or as an FML string)
+				StructureMap structureMap = this.getParameterResourceByName(parameters,
+																								PARAM_IN_STRUCTURE_MAP,
+																								StructureMap.class);
+				if (structureMap == null && parameters.getParameterValue(PARAM_IN_STRUCTURE_MAP) instanceof final StringType fml) {
+					structureMap = this.parseFml(fml.getValueNotNull());
+				}
+
+				return new ExtractRequest(questionnaireResponse, questionnaire, structureMap);
 			}
 			case QuestionnaireResponse questionnaireResponse -> {
-				return new ExtractRequest(questionnaireResponse, null);
+				return new ExtractRequest(questionnaireResponse, null, null);
 			}
 			case null, default -> throw new UnprocessableEntityException(
 					"Invalid body resource type for $extract operation. Expected 'Parameters' or 'QuestionnaireResponse'");
@@ -134,13 +151,28 @@ public class QuestionnaireResponseExtractProvider {
 	}
 
 	/**
+	 * Parse an R5 StructureMap from a FML string.
+	 */
+	private StructureMap parseFml(final String fml) {
+		try {
+			final var cliContext = new CliContext(this.matchboxEngineSupport.getClientContext());
+			cliContext.setFhirVersion(FhirVersionEnum.R5.getFhirVersionString());
+			final var tempEngine = this.matchboxEngineSupport.getMatchboxEngine(null, cliContext, true, false);
+			return tempEngine.parseMapR5(fml);
+		} catch (final Exception e) {
+			throw new InvalidRequestException("Unable to parse the FML language", e);
+		}
+	}
+
+	/**
 	 * A parsed request for the $extract operation.
 	 *
 	 * @param questionnaireResponse The questionnaire response to extract from
 	 * @param questionnaire         The questionnaire definition, if unknown from the server
 	 */
 	record ExtractRequest(QuestionnaireResponse questionnaireResponse,
-								 @Nullable Questionnaire questionnaire) {
+								 @Nullable Questionnaire questionnaire,
+								 @Nullable StructureMap structureMap) {
 	}
 
 	/**
@@ -153,8 +185,8 @@ public class QuestionnaireResponseExtractProvider {
 				The Extract operation takes a completed QuestionnaireResponse and  converts it to a FHIR resource or \
 				Bundle of resources by using metadata embedded in the Questionnaire the QuestionnaireResponse is based on. \
 				The extracted resources might include Observations, MedicationStatements and other standard FHIR resources \
-				which can then be shared and manipulated.  When invoking the $extract operation, care should be taken that \
-				the submitted QuestionnaireResponse is itself valid.  If not, the extract operation could fail (with \
+				which can then be shared and manipulated. When invoking the $extract operation, care should be taken that \
+				the submitted QuestionnaireResponse is itself valid. If not, the extract operation could fail (with \
 				appropriate OperationOutcomes) or, more problematic, might succeed but provide incorrect output.""");
 		extractOperationDefinition.setComment("The QuestionnaireResponse must identify a Questionnaire instance " +
 															  "containing appropriate metadata to allow extraction.");
@@ -165,14 +197,29 @@ public class QuestionnaireResponseExtractProvider {
 			.setMin(1) // required because we only support the operation on type, not on instance
 			.setMax("1")
 			.setDocumentation("The QuestionnaireResponse to extract data from.")
-			.setType(Enumerations.FHIRTypes.RESOURCE);
+			.setType(Enumerations.FHIRTypes.QUESTIONNAIRERESPONSE);
 		extractOperationDefinition.addParameter()
 			.setName(PARAM_IN_QUESTIONNAIRE)
 			.setUse(Enumerations.OperationParameterUse.IN)
 			.setMin(0)
 			.setMax("1")
 			.setDocumentation("Matchbox extension. The Questionnaire resource, if unknown from the server.")
-			.setType(Enumerations.FHIRTypes.RESOURCE);
+			.setType(Enumerations.FHIRTypes.QUESTIONNAIRE);
+		extractOperationDefinition.addParameter()
+			.setName(PARAM_IN_STRUCTURE_MAP)
+			.setUse(Enumerations.OperationParameterUse.IN)
+			.setMin(0)
+			.setMax("1")
+			.setDocumentation("Matchbox extension. The StructureMap resource, if unknown from the server.")
+			.setType(Enumerations.FHIRTypes.STRUCTUREMAP)
+			.addAllowedType(Enumerations.FHIRTypes.STRING);
+		extractOperationDefinition.addParameter()
+			.setName(PARAM_IN_STRUCTURE_MAP)
+			.setUse(Enumerations.OperationParameterUse.IN)
+			.setMin(0)
+			.setMax("1")
+			.setDocumentation("Matchbox extension. The StructureMap as a FML string, if unknown from the server.")
+			.setType(Enumerations.FHIRTypes.STRING);
 
 		extractOperationDefinition.addParameter()
 			.setName(PARAM_OUT_RETURN)

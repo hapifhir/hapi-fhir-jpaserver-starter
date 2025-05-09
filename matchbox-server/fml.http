@@ -171,7 +171,7 @@ Content-Type: application/fhir+json;fhirVersion=4.0
   ]
 }
 
-### SDDC Extraction (QuesitonnaireResponse contains link to questionnaire, which contains link to StructureMap)
+### SDDC Extraction with QuestionnaireResponse, Questionnaire and StructureMap (as a resource)
 POST {{host}}/QuestionnaireResponse/$extract
 Accept: application/fhir+json;fhirVersion=4.3
 Content-Type: application/fhir+json;fhirVersion=4.3
@@ -236,8 +236,198 @@ Content-Type: application/fhir+json;fhirVersion=4.3
           }
         ]
       }
+    }, {
+      "name": "structure-map",
+      "resource": {
+        "resourceType": "StructureMap",
+        "id": "qr2patgender",
+        "meta": {
+          "lastUpdated": "2025-05-09T14:42:05.571+02:00"
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><pre>/// url = &quot;http://ahdis.ch/matchbox/fml/qr2patgender&quot;\r\n/// name = &quot;qr2patgender&quot;\r\n/// title = &quot;null&quot;\r\n/// status = &quot;draft&quot;\r\n\r\nuses &quot;http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse&quot; alias QuestionnaireResponse as source\r\nuses &quot;http://hl7.org/fhir/StructureDefinition/Patient&quot; alias Patient as target\r\n\r\ngroup QuestionnaireResponse(source src : QuestionnaireResponse, target tgt : Patient) {\r\n  src.item as item -&gt; tgt as patient then item(item, patient);\r\n}\r\n\r\ngroup item(source src, target tgt : Patient) {\r\n  src.item as item where linkId.value in ('patient.sex') -&gt; tgt.gender = (item.answer.valueString);\r\n}\r\n\r\n</pre></div>"
+        },
+        "url": "http://ahdis.ch/matchbox/fml/qr2patgender",
+        "name": "qr2patgender",
+        "status": "draft",
+        "structure": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse",
+            "mode": "source",
+            "alias": "QuestionnaireResponse"
+          },
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/Patient",
+            "mode": "target",
+            "alias": "Patient"
+          }
+        ],
+        "group": [
+          {
+            "name": "QuestionnaireResponse",
+            "typeMode": "none",
+            "input": [
+              {
+                "name": "src",
+                "type": "QuestionnaireResponse",
+                "mode": "source"
+              },
+              {
+                "name": "tgt",
+                "type": "Patient",
+                "mode": "target"
+              }
+            ],
+            "rule": [
+              {
+                "name": "item",
+                "source": [
+                  {
+                    "context": "src",
+                    "element": "item",
+                    "variable": "item"
+                  }
+                ],
+                "target": [
+                  {
+                    "contextType": "variable",
+                    "variable": "patient",
+                    "transform": "copy",
+                    "parameter": [
+                      {
+                        "valueId": "tgt"
+                      }
+                    ]
+                  }
+                ],
+                "dependent": [
+                  {
+                    "name": "item",
+                    "variable": [
+                      "item",
+                      "patient"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "item",
+            "typeMode": "none",
+            "input": [
+              {
+                "name": "src",
+                "mode": "source"
+              },
+              {
+                "name": "tgt",
+                "type": "Patient",
+                "mode": "target"
+              }
+            ],
+            "rule": [
+              {
+                "name": "item",
+                "source": [
+                  {
+                    "context": "src",
+                    "element": "item",
+                    "variable": "item",
+                    "condition": "linkId.value in ('patient.sex')"
+                  }
+                ],
+                "target": [
+                  {
+                    "context": "tgt",
+                    "contextType": "variable",
+                    "element": "gender",
+                    "transform": "evaluate",
+                    "parameter": [
+                      {
+                        "valueString": "item.answer.valueString"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }
 
+### SDDC Extraction with QuestionnaireResponse, Questionnaire and StructureMap (as a FML string)
+POST {{host}}/QuestionnaireResponse/$extract
+Accept: application/fhir+json;fhirVersion=5.0
+Content-Type: application/fhir+json;fhirVersion=5.0
 
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "questionnaire-response",
+      "resource": {
+        "resourceType": "QuestionnaireResponse",
+        "id": "qrpatientsexeresponse",
+        "questionnaire": "http://ahdis.ch/matchbox/fml/qrpatientsex",
+        "status": "in-progress",
+        "item": [
+          {
+            "linkId": "patient",
+            "text": "Patient",
+            "item": [
+              {
+                "linkId": "patient.sex",
+                "text": "Geschlecht",
+                "answer": [
+                  {
+                    "valueString": "female"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "questionnaire",
+      "resource": {
+        "resourceType": "Questionnaire",
+        "id": "qrpatientsex",
+        "meta": {
+          "lastUpdated": "2025-05-04T05:55:01.165+02:00"
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-targetStructureMap",
+            "valueCanonical": "http://ahdis.ch/matchbox/fml/qr2patgender"
+          }
+        ],
+        "url": "http://ahdis.ch/matchbox/fml/qrpatientsex",
+        "version": "0.1.0",
+        "name": "QuestionnairePatientSexExtractDemo",
+        "title": "QuestionnairePatientSex - ExtractDemor",
+        "status": "active",
+        "subjectType": [
+          "Patient"
+        ],
+        "copyright": "CC-BY-SA-4.0",
+        "item": [
+          {
+            "linkId": "patient.sex",
+            "text": "Geschlecht",
+            "type": "string"
+          }
+        ]
+      }
+    }, {
+      "name": "structure-map",
+      "valueString": "map \"http://ahdis.ch/matchbox/fml/qr2patgender\" = \"qr2patgender\" \nuses \"http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse\" alias QuestionnaireResponse as source \nuses \"http://hl7.org/fhir/StructureDefinition/Patient\" alias Patient as target \ngroup QuestionnaireResponse(source src : QuestionnaireResponse, target tgt : Patient) { \nsrc.item as item -> tgt as patient then item(item, patient); \n} \ngroup item(source src, target tgt: Patient) { \nsrc.item as item where linkId.value in ('patient.sex') -> tgt.gender = (item.answer.valueString); \n}"
+    }
+  ]
+}
