@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --configuration development",
+    "start": "ng serve --configuration development --verbose",
     "build": "ng build --configuration production",
     "build-matchbox": "ng build --configuration production --verbose --output-path ../matchbox-server/src/main/resources/static",
     "test": "ng test",
