@@ -1,4 +1,4 @@
-package org.hl7.fhir.validation.cli;
+package org.hl7.fhir.validation.cli.param;
 
 import java.io.File;
 import java.io.IOException;

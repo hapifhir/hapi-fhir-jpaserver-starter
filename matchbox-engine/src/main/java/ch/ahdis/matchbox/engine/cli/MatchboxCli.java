@@ -44,7 +44,7 @@ import org.hl7.fhir.validation.Scanner;
 import org.hl7.fhir.validation.service.model.ValidationContext;
 import org.hl7.fhir.validation.service.utils.Display;
 import org.hl7.fhir.validation.service.utils.EngineMode;
-import org.hl7.fhir.validation.cli.Params;
+import org.hl7.fhir.validation.cli.param.Params;
 import org.hl7.fhir.validation.testexecutor.TestExecutor;
 import org.hl7.fhir.validation.testexecutor.TestExecutorParams;
 
