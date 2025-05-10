@@ -231,7 +231,7 @@ public class StarterJpaConfig {
 
 
 	@Bean
-	@ConditionalOnProperty(prefix = "hapi.fhir", name = "cors")
+	@ConditionalOnProperty(prefix = "hapi.fhir.cors", name = "enabled", havingValue = "true")
 	public CorsInterceptor corsInterceptor(AppProperties appProperties) {
 		// Define your CORS configuration. This is an example
 		// showing a typical setup. You should customize this
