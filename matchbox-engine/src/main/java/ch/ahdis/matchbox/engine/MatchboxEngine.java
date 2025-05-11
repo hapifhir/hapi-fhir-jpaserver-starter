@@ -520,8 +520,42 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @throws IOException   IO Exception
 	 */
 	public Resource transformToFhir(String input, boolean inputJson, String mapUri) throws FHIRException, IOException {
-		String transformedXml = transform(input, inputJson, mapUri, false);
+		String transformedXml = transform(input, inputJson, mapUri, false, null);
 		return new org.hl7.fhir.r4.formats.XmlParser().parse(transformedXml);
+	}
+
+	/**
+	 * Transforms an input with the map identified by the uri to the output defined
+	 * by the map
+	 * 
+	 * @param input     content to be transformed
+	 * @param inputJson true if input is in json (if false xml is expected)
+	 * @param mapUri    canonical url of StructureMap
+	 * @param traceToParameter if the transformation debug log should be traced to a parameter
+	 * @return FHIR resource
+	 * @throws FHIRException FHIR Exception
+	 * @throws IOException   IO Exception
+	 */
+	public Resource transformToFhir(String input, boolean inputJson, String mapUri, Parameters.ParametersParameterComponent traceToParameter) throws FHIRException, IOException {
+		String transformedXml = transform(input, inputJson, mapUri, false, traceToParameter);
+		return new org.hl7.fhir.r4.formats.XmlParser().parse(transformedXml);
+	}
+
+		/**
+	 * Transforms an input with the map identified by the uri to the output defined
+	 * by the map
+	 * 
+	 * @param input      source in UTF-8 format
+	 * @param inputJson  if input is in json (or xml)
+	 * @param mapUri     map to use for transformation
+	 * @param outputJson if output is formatted as json (or xml)
+	 * @param traceToParameter if the transformation debug log should be traced to a parameter	 * @return transformed input as string
+	 * @throws FHIRException FHIR Exception
+	 * @throws IOException   IO Exception
+	 */
+	public String transform(String input, boolean inputJson, String mapUri, boolean outputJson)
+			throws FHIRException, IOException {
+		return transform(input, inputJson, mapUri, outputJson, null);	
 	}
 
 	/**
@@ -532,11 +566,12 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @param inputJson  if input is in json (or xml)
 	 * @param mapUri     map to use for transformation
 	 * @param outputJson if output is formatted as json (or xml)
+	 * @param traceToParameter if the transformation debug log should be traced to a parameter
 	 * @return transformed input as string
 	 * @throws FHIRException FHIR Exception
 	 * @throws IOException   IO Exception
 	 */
-	public String transform(String input, boolean inputJson, String mapUri, boolean outputJson)
+	public String transform(String input, boolean inputJson, String mapUri, boolean outputJson, Parameters.ParametersParameterComponent traceToParameter)
 			throws FHIRException, IOException {
 		log.info("Start transform: " + mapUri);
 
@@ -550,7 +585,7 @@ public class MatchboxEngine extends ValidationEngine {
 		}
 
 		Element transformed = transform(ByteProvider.forBytes(input.getBytes("UTF-8")), (inputJson ? FhirFormat.JSON : FhirFormat.XML),
-												  mapUri, context);
+												  mapUri, context, traceToParameter);
 		ByteArrayOutputStream boas = new ByteArrayOutputStream();
 		if (outputJson)
 			new org.hl7.fhir.r5.elementmodel.JsonParser(context).compose(transformed, boas,
@@ -573,7 +608,8 @@ public class MatchboxEngine extends ValidationEngine {
 	public org.hl7.fhir.r5.elementmodel.Element transform(final ByteProvider source,
 																			final FhirFormat cntType,
 																			final String mapUri,
-																			final SimpleWorkerContext targetContext)
+																			final SimpleWorkerContext targetContext,
+																			Parameters.ParametersParameterComponent traceToParameter)
 			throws FHIRException, IOException {
 		SimpleWorkerContext context = this.getContext();
 
@@ -595,7 +631,7 @@ public class MatchboxEngine extends ValidationEngine {
 			parser.setLogical(sd);
 		}
 		org.hl7.fhir.r5.elementmodel.Element src = parser.parseSingle(new ByteArrayInputStream(source.getBytes()), null);
-		return transform(src, mapUri, targetContext);
+		return transform(src, mapUri, targetContext, traceToParameter);
 	}
 
 	/**
@@ -659,11 +695,12 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @throws FHIRException
 	 * @throws IOException
 	 */
-	public org.hl7.fhir.r5.elementmodel.Element transform(org.hl7.fhir.r5.elementmodel.Element src,  String mapUri, SimpleWorkerContext targetContext)
+	public org.hl7.fhir.r5.elementmodel.Element transform(org.hl7.fhir.r5.elementmodel.Element src,  String mapUri, SimpleWorkerContext targetContext, Parameters.ParametersParameterComponent traceToParameter)
 			throws FHIRException, IOException {
 		SimpleWorkerContext context = this.getContext();
 		List<Base> outputs = new ArrayList<>();
 		TransformSupportServices tss = new TransformSupportServices(targetContext!=null ? targetContext : context, outputs);
+		tss.setTraceToParameter(traceToParameter);
 		StructureMapUtilities scu = new MatchboxStructureMapUtilities(context, tss, this);
 		StructureMap map = context.fetchResource(StructureMap.class, mapUri);
 		if (map == null) {

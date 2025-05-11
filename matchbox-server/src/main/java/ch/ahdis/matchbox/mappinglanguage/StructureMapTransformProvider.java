@@ -101,6 +101,7 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
 		final String body = new String(theServletRequest.getInputStream().readAllBytes()).trim();
 		@Nullable String resource = null;
 		
+
 		EncodingEnum encoding = EncodingEnum.forContentType(theServletRequest.getContentType());
 		if (encoding == null) {
 			encoding = EncodingEnum.detectEncoding(body);
@@ -212,16 +213,23 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
 			final var responseContentType = this.parseRequestedResponseType(theServletRequest);
 			theServletResponse.setContentType(responseContentType);
 
+			final var resultParameters = new Parameters();
+			var debugParameter = theServletRequest.getParameter("debug");
+			Parameters.ParametersParameterComponent traceToParameter = null;
+			if ("true".equalsIgnoreCase(debugParameter)) {
+				traceToParameter = resultParameters.addParameter();
+				traceToParameter.setName("trace");
+			}
+
 			final var transformed = matchboxEngine.transform(resource,
 																			 encoding == EncodingEnum.JSON,
 																			 map.getUrl(),
-																			 responseContentType.contains("json"));
+																			 responseContentType.contains("json"), 
+																			 traceToParameter);
 
 			// if the debug=true flag is on the input, instead wrap this output in a Parameters resource
 			// and return it
-			var debugParameter = theServletRequest.getParameter("debug");
 			if ("true".equalsIgnoreCase(debugParameter)) {
-				final var resultParameters = new Parameters();
 				// var outcome = parameters.addParameter();
 				// outcome.setName("outcome");
 				resultParameters.addParameter("result", new StringType(transformed));

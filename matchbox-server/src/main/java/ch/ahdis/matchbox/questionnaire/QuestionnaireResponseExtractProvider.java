@@ -95,7 +95,7 @@ public class QuestionnaireResponseExtractProvider {
 
 		final var objectConverter = new ObjectConverter(matchboxEngine.getContext());
 		final var questionnaireResponseElement = objectConverter.convert(parsedRequest.questionnaireResponse());
-		final Element result = matchboxEngine.transform(questionnaireResponseElement, mapUrl, null);
+		final Element result = matchboxEngine.transform(questionnaireResponseElement, mapUrl, null, null);
 
 		httpWrapper.writeResponse(objectConverter.convert(result));
 	}

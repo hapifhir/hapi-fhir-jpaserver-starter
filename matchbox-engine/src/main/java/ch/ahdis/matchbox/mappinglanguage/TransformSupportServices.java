@@ -28,11 +28,15 @@ import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.model.Base;
 import org.hl7.fhir.r5.model.Coding;
+import org.hl7.fhir.r5.model.Parameters;
+import org.hl7.fhir.r5.model.StringType;
 import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.utils.structuremap.ITransformerServices;
 import org.hl7.fhir.utilities.Utilities;
 
 public class TransformSupportServices implements ITransformerServices {
+
+  private Parameters.ParametersParameterComponent traceToParameter;
 
   private List<Base> outputs;
   private IWorkerContext context;
@@ -42,6 +46,7 @@ public class TransformSupportServices implements ITransformerServices {
     this.context = worker;
     this.outputs = outputs;
   }
+
 
   // matchbox patch https://github.com/ahdis/matchbox/issues/264
   @Override
@@ -56,6 +61,10 @@ public class TransformSupportServices implements ITransformerServices {
       throw new FHIRException("Unable to create type "+name);
     } 
     return Manager.build(context, sd, profileUtilities);
+  }
+
+  public void setTraceToParameter(Parameters.ParametersParameterComponent traceToParameter) {
+    this.traceToParameter = traceToParameter;
   }
 
   @Override
@@ -93,7 +102,13 @@ public class TransformSupportServices implements ITransformerServices {
 
   @Override
   public void log(String message) {
-    log.info(message);
-  }
-
+     if (traceToParameter != null) {
+        Parameters.ParametersParameterComponent traceValue = traceToParameter.addPart();
+        traceValue.setName("debug");
+        traceValue.setValue(new StringType(message));
+      } else {
+        log.info(message);
+      }
+    }
+    
 }
