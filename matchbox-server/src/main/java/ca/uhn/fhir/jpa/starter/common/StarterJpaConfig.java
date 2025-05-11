@@ -15,6 +15,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.http.HttpHeaders;
@@ -62,6 +63,7 @@ import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.IStaleSearchDeletingSvc;
 import ca.uhn.fhir.jpa.search.StaleSearchDeletingSvcImpl;
 import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.util.EnvironmentHelper;
 import ca.uhn.fhir.jpa.util.ResourceCountCache;
 import ca.uhn.fhir.mdm.dao.IMdmLinkDao;
@@ -229,9 +231,8 @@ public class StarterJpaConfig {
 		return new MdmLinkDaoJpaImpl();
 	}
 
-
 	@Bean
-	@ConditionalOnProperty(prefix = "hapi.fhir.cors", name = "enabled", havingValue = "true")
+	@Conditional(OnCorsPresent.class)
 	public CorsInterceptor corsInterceptor(AppProperties appProperties) {
 		// Define your CORS configuration. This is an example
 		// showing a typical setup. You should customize this
