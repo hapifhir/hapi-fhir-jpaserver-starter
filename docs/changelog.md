@@ -1,3 +1,7 @@
+2025/05/11 Release 4.0.4
+
+- integrate with https://fhirpath-lab.com/FhirPath [#390](https://github.com/ahdis/matchbox/issues/390) thx to @brianpos
+
 2025/05/09 Release 4.0.3
 
 - matchbox validation: fix ai analysis of xml resources [#378](https://github.com/ahdis/matchbox/issues/378)
