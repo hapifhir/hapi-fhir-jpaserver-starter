@@ -549,7 +549,7 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @param inputJson  if input is in json (or xml)
 	 * @param mapUri     map to use for transformation
 	 * @param outputJson if output is formatted as json (or xml)
-	 * @param traceToParameter if the transformation debug log should be traced to a parameter	 * @return transformed input as string
+	 * @return transformed input as string
 	 * @throws FHIRException FHIR Exception
 	 * @throws IOException   IO Exception
 	 */
