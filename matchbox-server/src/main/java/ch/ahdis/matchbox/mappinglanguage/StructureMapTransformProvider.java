@@ -219,8 +219,8 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
 
 			// if the debug=true flag is on the input, instead wrap this output in a Parameters resource
 			// and return it
-			var debugParemeters = theServletRequest.getParameterValues("debug");
-			if (debugParemeters != null && debugParemeters.length > 0) {
+			var debugParameter = theServletRequest.getParameter("debug");
+			if ("true".equalsIgnoreCase(debugParameter)) {
 				final var resultParameters = new Parameters();
 				// var outcome = parameters.addParameter();
 				// outcome.setName("outcome");
