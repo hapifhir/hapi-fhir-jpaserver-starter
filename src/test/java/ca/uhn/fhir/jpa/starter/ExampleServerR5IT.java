@@ -11,12 +11,7 @@ import jakarta.websocket.ContainerProvider;
 import jakarta.websocket.Session;
 import jakarta.websocket.WebSocketContainer;
 import org.hl7.fhir.instance.model.api.IIdType;
-import org.hl7.fhir.r5.model.Bundle;
-import org.hl7.fhir.r5.model.Enumerations;
-import org.hl7.fhir.r5.model.Observation;
-import org.hl7.fhir.r5.model.Patient;
-import org.hl7.fhir.r5.model.Subscription;
-import org.hl7.fhir.r5.model.SubscriptionTopic;
+import org.hl7.fhir.r5.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +31,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
      "spring.datasource.url=jdbc:h2:mem:dbr5",
      "hapi.fhir.fhir_version=r5",
 	  "hapi.fhir.cr_enabled=false",
-	  "hapi.fhir.subscription.websocket_enabled=true"
+	  "hapi.fhir.subscription.websocket_enabled=true",
+	  "hapi.fhir.remote_terminology_service.snomed.system=http://snomed.info/sct",
+	  "hapi.fhir.remote_terminology_service.snomed.url=https://tx.fhir.org/r5"
   })
 public class ExampleServerR5IT {
 
@@ -155,6 +152,22 @@ public class ExampleServerR5IT {
      */
     ourClient.delete().resourceById(mySubscriptionId).execute();
   }
+
+
+	@Test
+	void testValidateRemoteTerminology() {
+
+		String testCodeSystem = "http://foo/cs";
+		String testValueSet = "http://foo/vs";
+		ourClient.create().resource(new CodeSystem().setUrl(testCodeSystem).addConcept(new CodeSystem.ConceptDefinitionComponent().setCode("yes")).addConcept(new CodeSystem.ConceptDefinitionComponent().setCode("no"))).execute();
+		ourClient.create().resource(new ValueSet().setUrl(testValueSet).setCompose(new ValueSet.ValueSetComposeComponent().addInclude(new ValueSet.ConceptSetComponent().setSystem(testValueSet)))).execute();
+
+		Parameters remoteResult = ourClient.operation().onType(ValueSet.class).named("$validate-code").withParameter(Parameters.class, "code", new StringType("22298006")).andParameter("system", new UriType("http://snomed.info/sct")).execute();
+		assertEquals(true, ((BooleanType) remoteResult.getParameterValue("result")).getValue());
+		assertEquals("Myocardial infarction", ((StringType) remoteResult.getParameterValue("display")).getValue());
+
+		Parameters localResult = ourClient.operation().onType(CodeSystem.class).named("$validate-code").withParameter(Parameters.class, "url", new UrlType(testCodeSystem)).andParameter("coding", new Coding(testCodeSystem, "yes", null)).execute();
+	}
 
   @BeforeEach
   void beforeEach() {
