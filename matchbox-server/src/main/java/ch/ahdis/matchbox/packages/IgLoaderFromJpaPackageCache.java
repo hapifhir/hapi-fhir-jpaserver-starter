@@ -176,26 +176,26 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 
 		switch (FhirVersionEnum.forVersionString(this.getVersion())) {
 			case R4, R4B -> {
-				if (src.startsWith("hl7.terminology.") && !PACKAGE_R4_TERMINOLOGY.equals(src)) {
-					log.debug("Replacing '{}' with '{}'", src, PACKAGE_R4_TERMINOLOGY);
+				if (src.startsWith("hl7.terminology#6.3.0") || PACKAGE_R4_TERMINOLOGY.equals(src)) {
+					log.debug("Use '{}' with '{}'", src, PACKAGE_R4_TERMINOLOGY);
 					loadIg(igs, binaries, PACKAGE_R4_TERMINOLOGY, recursive);
 					return;
 				}
-				if (src.startsWith("hl7.terminology#")) {
-					log.debug("Replacing '{}' with '{}'", src, PACKAGE_R4_TERMINOLOGY);
-					loadIg(igs, binaries, PACKAGE_R4_TERMINOLOGY, recursive);
+				if (src.startsWith("hl7.fhir.uv.extensions#5.2.0") || PACKAGE_R4_UV_EXTENSIONS.equals(src)) {
+					log.debug("Use '{}' with '{}'", src, PACKAGE_R4_UV_EXTENSIONS);
+					loadIg(igs, binaries, PACKAGE_R4_UV_EXTENSIONS, recursive);
 					return;
 				}
 			}
 			case R5 -> {
-				if (src.startsWith("hl7.terminology.") && !PACKAGE_R5_TERMINOLOGY.equals(src)) {
-					log.debug("Replacing '{}' with '{}'", src, PACKAGE_R5_TERMINOLOGY);
+				if (src.startsWith("hl7.terminology#6.3.0") || PACKAGE_R5_TERMINOLOGY.equals(src)) {
+					log.debug("Use '{}' with '{}'", src, PACKAGE_R5_TERMINOLOGY);
 					loadIg(igs, binaries, PACKAGE_R5_TERMINOLOGY, recursive);
 					return;
 				}
-				if (src.startsWith("hl7.terminology#")) {
-					log.debug("Replacing '{}' with '{}'", src, PACKAGE_R5_TERMINOLOGY);
-					loadIg(igs, binaries, PACKAGE_R5_TERMINOLOGY, recursive);
+				if (src.startsWith("hl7.fhir.uv.extensions#5.2.0") || PACKAGE_R5_UV_EXTENSIONS.equals(src)) {
+					log.debug("Use '{}' with '{}'", src, PACKAGE_R5_UV_EXTENSIONS);
+					loadIg(igs, binaries, PACKAGE_R5_UV_EXTENSIONS, recursive);
 					return;
 				}
 			}
@@ -211,11 +211,6 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 			final var replace = "ch.fhir.ig.ch-epr-term#2.0.x";
 			log.debug("Replacing 'ch.fhir.ig.ch-epr-term#current' with '{}'", replace);
 			loadIg(igs, binaries, replace, recursive);
-			return;
-		}
-		if (src.startsWith("hl7.fhir.uv.extensions") && !PACKAGE_UV_EXTENSIONS.equals(src)) {
-			log.debug("Replacing '{}' with '{}'", src, PACKAGE_UV_EXTENSIONS);
-			loadIg(igs, binaries, PACKAGE_UV_EXTENSIONS, recursive);
 			return;
 		}
 		if (getContext().getLoadedPackages().contains(src)) {

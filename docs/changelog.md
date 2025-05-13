@@ -1,6 +1,8 @@
-2025/05/11 Release 4.0.4
+2025/05/13 Release 4.0.4
 
 - integrate with https://fhirpath-lab.com/FhirPath [#390](https://github.com/ahdis/matchbox/issues/390) thx to @brianpos
+- Validation Error: http://hl7.org/fhir/StructureDefinition/annotationType [#389](https://github.com/ahdis/matchbox/issues/389)
+- hl7.terminology 6.3.0 replace for hl7.terminology 6.2.0 [#384](https://github.com/ahdis/matchbox/issues/384)
 
 2025/05/09 Release 4.0.3
 

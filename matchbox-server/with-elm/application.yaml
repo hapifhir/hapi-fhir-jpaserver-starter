@@ -12,15 +12,15 @@ hapi:
         url: classpath:/hl7.fhir.r4.core.tgz
       fhir_terminology:
         name: hl7.terminology.r4
-        version: 6.2.0
-        url: classpath:/hl7.terminology.r4#6.2.0.tgz
+        version: 6.3.0
+        url: classpath:/hl7.terminology.r4#6.3.0.tgz
       fhir_extensions:
-        name: hl7.fhir.uv.extensions
-        version: 1.0.0
-        url: classpath:/hl7.fhir.uv.extensions#1.0.0.tgz
+        name: hl7.fhir.uv.extensions.r4
+        version: 5.2.0
+        url: classpath:/hl7.fhir.uv.extensions.r4#5.2.0.tgz
       ch_elm:
         name: ch.fhir.ig.ch-elm
-        version: 1.9.0-ci-build
+        version: 1.9.1
         url: https://build.fhir.org/ig/ahdis/ch-elm/package.tgz
     staticLocation: file:/apps/
 matchbox:
