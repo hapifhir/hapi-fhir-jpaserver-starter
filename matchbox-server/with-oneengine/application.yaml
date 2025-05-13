@@ -10,6 +10,11 @@ spring:
     max-active: 15
     hikari:
       maximum-pool-size: 10
+  ai:
+    mcp:
+      server:
+        name: matchbox-mcp
+        version: 0.0.1
 hapi:
   fhir:
     server_address: http://localhost:8080/matchboxv3/fhir
@@ -34,6 +39,7 @@ matchbox:
       txServer: http://tx.fhir.org
       llm:
         provider: openai
-        modelName: gpt-3.5-turbo
+        modelName: gpt-4o-mini
         apiKey: sk-xxx
+
 

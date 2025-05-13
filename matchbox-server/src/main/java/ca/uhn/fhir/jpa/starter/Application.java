@@ -1,10 +1,15 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ch.ahdis.matchbox.config.MatchboxStaticResourceConfig;
+import ch.ahdis.matchbox.modelcontextprotocol.ValidationService;
 import ch.ahdis.matchbox.spring.MatchboxEventListener;
 import ch.ahdis.matchbox.terminology.RegistryWs;
 import ch.ahdis.matchbox.validation.gazelle.GazelleValidationWs;
 
+import java.util.List;
+
+import org.springframework.ai.tool.ToolCallback;
+import org.springframework.ai.tool.ToolCallbacks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;
@@ -25,7 +30,11 @@ import ca.uhn.fhir.rest.server.RestfulServer;
 import ch.ahdis.matchbox.config.MatchboxJpaConfig;
 
 @ServletComponentScan(basePackageClasses = {RestfulServer.class})
-@SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class})
+@SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class},
+                        scanBasePackages = {
+                          "ca.uhn.fhir.jpa.starter",
+                          "ch.ahdis.matchbox.modelcontextprotocol"
+                        })
 @Import({
 	MdmConfig.class,
 	MatchboxJpaConfig.class,
@@ -63,6 +72,11 @@ public class Application extends SpringBootServletInitializer {
     servletRegistrationBean.setLoadOnStartup(1);
 
     return servletRegistrationBean;
+  }
+
+  @Bean
+  public List<ToolCallback> matchboxTools(ValidationService validationService) {
+    return List.of(ToolCallbacks.from(validationService));
   }
 
 }

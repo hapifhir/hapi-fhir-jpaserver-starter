@@ -228,6 +228,11 @@
             <artifactId>langchain4j-google-ai-gemini</artifactId>
             <version>1.0.0-beta1</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-mcp-server-spring-boot-starter</artifactId>
+            <version>1.0.0-M6</version>
+        </dependency>
     </dependencies>
 
     <build>

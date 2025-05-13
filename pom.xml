@@ -404,6 +404,14 @@
                 <version>${spring_version}</version>
             </dependency>
             <dependency>
+                <groupId>io.modelcontextprotocol.sdk</groupId>
+                <artifactId>mcp</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>io.modelcontextprotocol.sdk</groupId>
+                <artifactId>mcp-spring-webmvc</artifactId>
+            </dependency>
+            <dependency>
                 <groupId>org.awaitility</groupId>
                 <artifactId>awaitility</artifactId>
                 <version>${awaitility_version}</version>
