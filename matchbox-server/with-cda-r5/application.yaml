@@ -16,7 +16,7 @@ hapi:
       fhir_extensions:
         name: hl7.fhir.uv.extensions.r5
         version: 5.2.0
-        url: classpath:/hl7.fhir.uv.extensions.r4#5.2y.0.tgz
+        url: classpath:/hl7.fhir.uv.extensions.r5#5.2.0.tgz
       cda:
         name: hl7.cda.uv.core
         version: 2.0.0-sd-202406-matchbox-patch
