@@ -38,13 +38,13 @@ resources:
 
 externalDatabase:
   # -- external database host used with `postgresql.enabled=false`
-  host: autonomize-database-1002.cwpqzu4drrfr.us-east-1.rds.amazonaws.com
+  host: xxxxxxxx
   # -- database port number
   port: 5432
   # -- username for the external database
   user: postgres
   # -- database password
-  password: "7HrX26sHIZz8yffytPc0"
+  password: "XXXXXXX"
   # -- name of an existing secret resource containing the DB password in the `existingSecretKey` key
   existingSecret: ""
   # -- name of the key inside the `existingSecret`
