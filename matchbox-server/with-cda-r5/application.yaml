@@ -9,14 +9,14 @@ hapi:
         name: hl7.fhir.r5.core
         version: 5.0.0
         url: classpath:/hl7.fhir.r5.core.tgz
-      fhir_terminology:
-        name: hl7.terminology.r5
-        version: 6.3.0
-        url: classpath:/hl7.terminology.r5#6.3.0.tgz
       fhir_extensions:
         name: hl7.fhir.uv.extensions.r5
         version: 5.2.0
         url: classpath:/hl7.fhir.uv.extensions.r5#5.2.0.tgz
+      fhir_terminology:
+        name: hl7.terminology.r5
+        version: 6.3.0
+        url: classpath:/hl7.terminology.r5#6.3.0.tgz
       cda:
         name: hl7.cda.uv.core
         version: 2.0.0-sd-202406-matchbox-patch
