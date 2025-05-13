@@ -1,9 +1,11 @@
 replicaCount: 1
 
+# sprintregistry.azurecr.io/hapi-server:0.0.1
+
 image:
-  registry: docker.io
-  repository: hapiproject/hapi
-  tag: "v8.0.0-1@sha256:9fbac7b012b4be91ba481e7008f1353ede4598bc99a36f3902b8abf873e70ed8"
+  registry: sprintregistry.azurecr.io
+  repository: hapi-server
+  tag: "0.0.1"
   pullPolicy: IfNotPresent
 
 ingress:
