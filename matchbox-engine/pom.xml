@@ -41,6 +41,14 @@
             <groupId>org.fhir</groupId>
             <artifactId>ucum</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.commonmark</groupId>
+            <artifactId>commonmark</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.commonmark</groupId>
+            <artifactId>commonmark-ext-gfm-tables</artifactId>
+        </dependency>
 
         <!-- Manual upgrade of Jackson -->
         <dependency>

@@ -60,6 +60,7 @@
         <spring_boot_version>3.2.10</spring_boot_version>
         <testcontainers_version>1.19.4</testcontainers_version>
         <ucum_version>1.0.10</ucum_version>
+        <ucum_version>1.0.10</ucum_version>
 
         <!-- The following properties are linked to HAPI-FHIR, which hasn't attributed version properties -->
         <awaitility_version>4.2.0</awaitility_version>
@@ -67,6 +68,7 @@
         <beanutils_version>1.9.4</beanutils_version>
 
 
+        <org_commonmark_version>0.21.0</org_commonmark_version>
         <!-- The following section closely matches the one of HAPI-FHIR (for easier version comparison/upgrade).
              Only re-used dependencies are listed here.
              https://github.com/hapifhir/org.hl7.fhir.core/blob/master/pom.xml -->
@@ -160,6 +162,16 @@
                 <groupId>org.fhir</groupId>
                 <artifactId>ucum</artifactId>
                 <version>${ucum_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.commonmark</groupId>
+                <artifactId>commonmark</artifactId>
+                <version>${org_commonmark_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.commonmark</groupId>
+                <artifactId>commonmark-ext-gfm-tables</artifactId>
+                <version>${org_commonmark_version}</version>
             </dependency>
             <dependency>
                 <groupId>ca.uhn.hapi.fhir</groupId>

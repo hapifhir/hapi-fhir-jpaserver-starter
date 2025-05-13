@@ -177,24 +177,24 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 		switch (FhirVersionEnum.forVersionString(this.getVersion())) {
 			case R4, R4B -> {
 				if (src.startsWith("hl7.terminology#6.3.0") || PACKAGE_R4_TERMINOLOGY.equals(src)) {
-					log.debug("Use '{}' with '{}'", src, PACKAGE_R4_TERMINOLOGY);
+					log.debug("Requesting to load '{}', loading from classpath '{}' instead'", src, PACKAGE_R4_TERMINOLOGY);
 					loadIg(igs, binaries, PACKAGE_R4_TERMINOLOGY, recursive);
 					return;
 				}
 				if (src.startsWith("hl7.fhir.uv.extensions#5.2.0") || PACKAGE_R4_UV_EXTENSIONS.equals(src)) {
-					log.debug("Use '{}' with '{}'", src, PACKAGE_R4_UV_EXTENSIONS);
+					log.debug("Requesting to load '{}', loading from classpath '{}' instead'", src, PACKAGE_R4_UV_EXTENSIONS);
 					loadIg(igs, binaries, PACKAGE_R4_UV_EXTENSIONS, recursive);
 					return;
 				}
 			}
 			case R5 -> {
 				if (src.startsWith("hl7.terminology#6.3.0") || PACKAGE_R5_TERMINOLOGY.equals(src)) {
-					log.debug("Use '{}' with '{}'", src, PACKAGE_R5_TERMINOLOGY);
+					log.debug("Requesting to load '{}', loading from classpath '{}' instead'", src, PACKAGE_R5_TERMINOLOGY);
 					loadIg(igs, binaries, PACKAGE_R5_TERMINOLOGY, recursive);
 					return;
 				}
 				if (src.startsWith("hl7.fhir.uv.extensions#5.2.0") || PACKAGE_R5_UV_EXTENSIONS.equals(src)) {
-					log.debug("Use '{}' with '{}'", src, PACKAGE_R5_UV_EXTENSIONS);
+					log.debug("Requesting to load '{}', loading from classpath '{}' instead'", src, PACKAGE_R5_UV_EXTENSIONS);
 					loadIg(igs, binaries, PACKAGE_R5_UV_EXTENSIONS, recursive);
 					return;
 				}
@@ -234,9 +234,9 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 				return null;
 			}
 			for (final String dependency : npm.dependencies()) {
-				if (id.startsWith("hl7.terminology")) {
+				if (id.startsWith("hl7.terminology") && src.startsWith("hl7.fhir")) {
 					// FHIR Core should be loaded manually, see MatchboxEngineSupport.getMatchboxEngineNotSynchronized()
-					log.info("Ignoring dependency '{}' for '{}'", dependency, id);
+					log.info("Ignoring dependency '{}' for '{}', circular dependency", dependency, id);
 					continue;
 				}
 				log.debug("Loading depending package " + dependency + " for "+src);

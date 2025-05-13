@@ -280,7 +280,7 @@ public class MatchboxEngine extends ValidationEngine {
 									new SimpleWorkerContextBuilder().fromPackage(NpmPackage.fromPackage(getClass().getResourceAsStream("/hl7.fhir.r4.core.tgz")), ValidatorUtils.loaderForVersion("4.0.1"), false));
 			}
 			catch (final Exception e) { throw new MatchboxEngineCreationException(e); } 
-			log.info("loaded hl7.fhir.r4.core#4.0.1");
+			log.info("loaded hl7.fhir.r4.core#4.0.1 from classpath");
 			engine.setVersion(FhirPublication.R4.toCode());
 			try {
 				engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_TERMINOLOGY));
@@ -308,6 +308,7 @@ public class MatchboxEngine extends ValidationEngine {
 			engine.setPcm(this.getFilesystemPackageCacheManager());
 			engine.setPolicyAdvisor(new ValidationPolicyAdvisor(ReferenceValidationPolicy.CHECK_VALID));
 			engine.setAllowExampleUrls(true);
+			log.info("engine R4 initialized");
 			return engine;
 		}
 
@@ -324,6 +325,7 @@ public class MatchboxEngine extends ValidationEngine {
 			try { engine = new MatchboxEngine(new SimpleWorkerContextBuilder().fromPackage(NpmPackage.fromPackage(getClass().getResourceAsStream("/hl7.fhir.r4b.core.tgz")), ValidatorUtils.loaderForVersion("4.3.0"), false));
 			}
 			catch (final Exception e) { throw new MatchboxEngineCreationException(e); } 
+			log.info("loaded hl7.fhir.r4b.core#4.3.0 from classpath");
 			engine.setVersion(FhirPublication.R4B.toCode());
 			try {
 				engine.loadPackage(this.getNpmPackageStream(PACKAGE_R4_TERMINOLOGY));
@@ -351,6 +353,7 @@ public class MatchboxEngine extends ValidationEngine {
 			engine.setPcm(this.getFilesystemPackageCacheManager());
 			engine.setPolicyAdvisor(new ValidationPolicyAdvisor(ReferenceValidationPolicy.CHECK_VALID));
 			engine.setAllowExampleUrls(true);
+			log.info("engine R4B initialized");
 			return engine;
 		}
 
@@ -367,6 +370,7 @@ public class MatchboxEngine extends ValidationEngine {
 			try { engine = new MatchboxEngine(createR5WorkerContext());
 			}
 			catch (final Exception e) { throw new MatchboxEngineCreationException(e); } 
+			log.info("loaded hl7.fhir.r5.core#5.0.0 from classpath");
 			engine.setVersion(FhirPublication.R5.toCode());
 			try {
 				engine.loadPackage(this.getNpmPackageStream(PACKAGE_R5_TERMINOLOGY));
@@ -396,6 +400,7 @@ public class MatchboxEngine extends ValidationEngine {
 
 			engine.getContext().setPackageTracker(engine);
 			engine.setPcm(this.getFilesystemPackageCacheManager());
+			log.info("engine R5 initialized");
 			return engine;
 		}
 
@@ -472,6 +477,7 @@ public class MatchboxEngine extends ValidationEngine {
 
 		@NonNull
 		private InputStream getNpmPackageStream(final String packageName) {
+			log.info("loaded "+packageName+" from classpath");
 			return Objects.requireNonNull(getClass().getResourceAsStream("/%s.tgz".formatted(packageName)));
 		}
 

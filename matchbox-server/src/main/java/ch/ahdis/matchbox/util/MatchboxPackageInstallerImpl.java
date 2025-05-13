@@ -153,12 +153,8 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 	public PackageInstallOutcomeJson install(PackageInstallationSpec theInstallationSpec)
 			throws ImplementationGuideInstallationException {
 
-		theInstallationSpec.addDependencyExclude("hl7.terminology.r4");
-		theInstallationSpec.addDependencyExclude("hl7.terminology.r5");
 		theInstallationSpec.addDependencyExclude("hl7.fhir.r4.core");  // terminology has a dependency to hl7.fhir.core.r4
 		theInstallationSpec.addDependencyExclude("hl7.fhir.cda");  // used as dev
-		theInstallationSpec.addDependencyExclude("hl7.fhir.uv.extensions.r4"); // terminology has a dependency to hl7.fhir.core.r4
-		theInstallationSpec.addDependencyExclude("hl7.fhir.uv.extensions.r5"); 
 		PackageInstallOutcomeJson retVal = new PackageInstallOutcomeJson();
 		if (enabled) {
 			try {

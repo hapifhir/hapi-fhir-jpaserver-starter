@@ -145,8 +145,6 @@ public class ImplementationGuideProviderR5 extends ImplementationGuideResourcePr
 				.addDependencyExclude("hl7.fhir.r4.core")
 				.addDependencyExclude("hl7.fhir.r4b.core")
 				.addDependencyExclude("hl7.fhir.r5.core")
-				.addDependencyExclude("hl7.terminology")
-				.addDependencyExclude("hl7.terminology.r5")
 				.addDependencyExclude("hl7.fhir.r5.examples");
 	}
 
