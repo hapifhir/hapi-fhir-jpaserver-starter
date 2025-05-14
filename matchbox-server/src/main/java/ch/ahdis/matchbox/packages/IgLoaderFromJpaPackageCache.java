@@ -275,7 +275,7 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 								CanonicalResource m = (CanonicalResource) r;
 								String url = m.getUrl();
 								if (this.getContext().hasResource(r.getClass(), url)) {
-									log.error("Duplicate canonical resource: " + r.getClass().getName() + " from package " +pi.name() + "#" + pi.version() + " with url " + url);
+									log.debug("Duplicate canonical resource: " + r.getClass().getName() + " from package " +pi.name() + "#" + pi.version() + " with url " + url);
 								} else {
 									this.getContext().cacheResource(r);
 								}
