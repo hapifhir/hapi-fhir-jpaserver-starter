@@ -6,10 +6,6 @@ home: https://github.com/hapifhir/hapi-fhir-jpaserver-starter
 sources:
   - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
 dependencies:
-  - name: postgresql
-    version: 16.5.5
-    repository: oci://registry-1.docker.io/bitnamicharts
-    condition: postgresql.enabled
   - name: common
     repository: oci://registry-1.docker.io/bitnamicharts
     version: 2.30.0

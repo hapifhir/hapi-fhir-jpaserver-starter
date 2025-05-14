@@ -59,6 +59,7 @@ service:
 ingress:
   # -- whether to create an Ingress to expose the FHIR server HTTP endpoint
   enabled: false
+  className: "nginx"
   # -- provide any additional annotations which may be required. Evaluated as a template.
   annotations:
     {}
@@ -118,7 +119,7 @@ postgresql:
   # -- enable an included PostgreSQL DB.
   # see <https://github.com/bitnami/charts/tree/master/bitnami/postgresql> for details
   # if set to `false`, the values under `externalDatabase` are used
-  enabled: true
+  enabled: false
   auth:
     # -- name for a custom database to create
     database: "fhir"
