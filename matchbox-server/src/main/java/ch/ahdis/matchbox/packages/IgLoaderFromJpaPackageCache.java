@@ -176,25 +176,25 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 
 		switch (FhirVersionEnum.forVersionString(this.getVersion())) {
 			case R4, R4B -> {
-				if (src.startsWith("hl7.terminology#6.3.0") || PACKAGE_R4_TERMINOLOGY.equals(src)) {
-					log.debug("Requesting to load '{}', loading from classpath '{}' instead'", src, PACKAGE_R4_TERMINOLOGY);
+				if (src.startsWith("hl7.terminology#6.3.0")) {
+					log.info("Requesting to load '{}', loading '{}' instead'", src, PACKAGE_R4_TERMINOLOGY);
 					loadIg(igs, binaries, PACKAGE_R4_TERMINOLOGY, recursive);
 					return;
 				}
-				if (src.startsWith("hl7.fhir.uv.extensions#5.2.0") || PACKAGE_R4_UV_EXTENSIONS.equals(src)) {
-					log.debug("Requesting to load '{}', loading from classpath '{}' instead'", src, PACKAGE_R4_UV_EXTENSIONS);
+				if (src.startsWith("hl7.fhir.uv.extensions#5.2.0")) {
+					log.info("Requesting to load '{}', loading '{}' instead'", src, PACKAGE_R4_UV_EXTENSIONS);
 					loadIg(igs, binaries, PACKAGE_R4_UV_EXTENSIONS, recursive);
 					return;
 				}
 			}
 			case R5 -> {
-				if (src.startsWith("hl7.terminology#6.3.0") || PACKAGE_R5_TERMINOLOGY.equals(src)) {
-					log.debug("Requesting to load '{}', loading from classpath '{}' instead'", src, PACKAGE_R5_TERMINOLOGY);
+				if (src.startsWith("hl7.terminology#6.3.0")) {
+					log.info("Requesting to load '{}', loading from classpath '{}' instead'", src, PACKAGE_R5_TERMINOLOGY);
 					loadIg(igs, binaries, PACKAGE_R5_TERMINOLOGY, recursive);
 					return;
 				}
-				if (src.startsWith("hl7.fhir.uv.extensions#5.2.0") || PACKAGE_R5_UV_EXTENSIONS.equals(src)) {
-					log.debug("Requesting to load '{}', loading from classpath '{}' instead'", src, PACKAGE_R5_UV_EXTENSIONS);
+				if (src.startsWith("hl7.fhir.uv.extensions#5.2.0")) {
+					log.info("Requesting to load '{}', loading from classpath '{}' instead'", src, PACKAGE_R5_UV_EXTENSIONS);
 					loadIg(igs, binaries, PACKAGE_R5_UV_EXTENSIONS, recursive);
 					return;
 				}
@@ -203,22 +203,22 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 																							 this.myCtx.getVersion().getVersion());
 		};
 		if (src.equals("hl7.fhir.cda#dev")) {
-			log.debug("Replacing 'hl7.fhir.cda#dev' with '{}'", PACKAGE_CDA_UV_CORE);
+			log.info("Replacing 'hl7.fhir.cda#dev' with '{}'", PACKAGE_CDA_UV_CORE);
 			loadIg(igs, binaries, PACKAGE_CDA_UV_CORE, recursive);
 			return;
 		}
 		if (src.equals("ch.fhir.ig.ch-epr-term#current")) {
 			final var replace = "ch.fhir.ig.ch-epr-term#2.0.x";
-			log.debug("Replacing 'ch.fhir.ig.ch-epr-term#current' with '{}'", replace);
+			log.info("Replacing 'ch.fhir.ig.ch-epr-term#current' with '{}'", replace);
 			loadIg(igs, binaries, replace, recursive);
 			return;
 		}
 		if (getContext().getLoadedPackages().contains(src)) {
-			log.debug("Package '{}' already in context", src);
+			log.info("Package '{}' already in context", src);
 			return;
 		}
 		if (this.getVersion()!=null && getVersion().equals("5.0.0") && (src.startsWith("hl7.fhir.r4.core") || src.startsWith("hl7.fhir.uv.extensions.r4")) ) {
-			log.debug("do not load r4 in a r5 context: '{}'", src);
+			log.info("do not load r4 in a r5 context: '{}'", src);
 			return;
 		}
 		new TransactionTemplate(myTxManager).execute(tx -> {
@@ -245,14 +245,14 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 				} catch (FHIRException | IOException e) {
 					throw new RuntimeException(Msg.code(1305) + "Failed to load dependency " + dependency);
 				}
-				log.debug("Finished loading depending package " + dependency + " for "+ src);
+				log.info("Finished loading depending package " + dependency + " for "+ src);
 			}
 			// use above version because of potential .x version we resolve in the cache
 			version = npm.version();
 			Optional<NpmPackageVersionEntity> npmPackage = myNpmPackageVersionDao.findByPackageIdAndVersion(id, version);
 			if (npmPackage.isPresent()) {
 				int count = 0;
-				log.debug("Loading package " + src);
+				log.info("Loading package " + src);
 
 				// this way we have 0.5 seconds per 100 resources (eg hl7.fhir.r4.core has 15 seconds for 3128 resources)
 				NpmPackage pi = this.loadPackage(npmPackage.get());
@@ -293,7 +293,7 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 					return null;
 				}
 
-				log.debug("Finished loading " + count + " conformance resources for package " + pi.name() + "#" + pi.version());
+				log.info("Finished loading " + count + " conformance resources for package " + pi.name() + "#" + pi.version());
 
 				// with hsql or psql this slow around 7 seconds per 100 resources (oe dev)
 				// machine)

@@ -108,12 +108,12 @@ public class GazelleApiR4Test extends AbstractGazelleTest {
 		String sessionIdFirst = getSessionId(report);
 
 		assertEquals(0, countValidationFailures(report));
-		assertEquals("matchbox.health.test.ig.r4#0.1.0", getIg(report));
+		assertEquals("matchbox.health.test.ig.r4#0.2.0", getIg(report));
 
-		report = this.client.validate(resource, profileMatchbox + "|0.1.0");
+		report = this.client.validate(resource, profileMatchbox + "|0.2.0");
 		String sessionIdThird = getSessionId(report);
 		assertEquals(0, countValidationFailures(report));
-		assertEquals("matchbox.health.test.ig.r4#0.1.0", getIg(report));
+		assertEquals("matchbox.health.test.ig.r4#0.2.0", getIg(report));
 		assertEquals(sessionIdFirst, sessionIdThird);
 
 		// validate with the profile and the ig version, has an internal business version 9.9.9
@@ -121,13 +121,13 @@ public class GazelleApiR4Test extends AbstractGazelleTest {
 		report = this.client.validate(resource, profileMatchbox);
 		String sessionIdForth = getSessionId(report);
 		assertEquals(0, countValidationFailures(report));
-		assertEquals("matchbox.health.test.ig.r4#0.1.0", getIg(report));
+		assertEquals("matchbox.health.test.ig.r4#0.2.0", getIg(report));
 		assertEquals(sessionIdFirst, sessionIdForth);
 
-		report = this.client.validate(resource, profileMatchbox + "|0.1.0");
+		report = this.client.validate(resource, profileMatchbox + "|0.2.0");
 		String sessionIdFifth = getSessionId(report);
 		assertEquals(0, countValidationFailures(report));
-		assertEquals("matchbox.health.test.ig.r4#0.1.0", getIg(report));
+		assertEquals("matchbox.health.test.ig.r4#0.2.0", getIg(report));
 		assertEquals(sessionIdFirst, sessionIdFifth);
 	}
 
