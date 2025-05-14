@@ -202,6 +202,7 @@ hapi:
     advanced_lucene_indexing: false
     bulk_export_enabled: false
     bulk_import_enabled: false
+    #patient-merge-enabled: true
     #    language_search_parameter_enabled: true
     #    enforce_referential_integrity_on_delete: false
     # This is an experimental feature, and does not fully support _total and other FHIR features.
@@ -321,7 +322,6 @@ hapi:
     #      responses_enabled: true
     #    binary_storage_enabled: true
     inline_resource_storage_below_size: 4000
-#    bulk_export_enabled: true
 #    subscription:
 #      resthook_enabled: true
 #      websocket_enabled: false
