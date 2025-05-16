@@ -22,6 +22,7 @@ import ca.uhn.fhir.jpa.starter.model.PatientIdentifierEntity;
 import ca.uhn.fhir.jpa.starter.model.ReportType;
 import ca.uhn.fhir.jpa.starter.model.ScoreCardIndicatorItem;
 import ca.uhn.fhir.jpa.starter.model.ScoreCardResponseItem;
+import ca.uhn.fhir.model.dstu2.composite.CodingDt;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
@@ -219,191 +220,6 @@ public class HelperService {
 		dashboardEnvToConfigMap = dashboardEnvironmentConfig.getDashboardEnvToConfigMap();
 		mapOfIdsAndOrgIdToChildrenMapPair = new LinkedHashMap<String, Pair<List<String>, LinkedHashMap<String, List<String>>>>();
 		mapOfOrgHierarchy = new LinkedHashMap<String, List<OrgItem>>();
-	}
-
-	public List<OrgHierarchy> getAllOrgHierarchies() {
-		try {
-			List<OrgHierarchy> hierarchies = new ArrayList<>();
-			IGenericClient client = fhirClientAuthenticatorService.getFhirClient();
-
-			Bundle bundle;
-			try {
-				bundle = client.search()
-					.forResource(Organization.class)
-					.include(Organization.INCLUDE_PARTOF.asRecursive())
-					.returnBundle(Bundle.class)
-					.execute();
-				logger.info("Fetched bundle with {} entries", bundle.getEntry().size());
-			} catch (Exception e) {
-				logger.warn("Primary query with _include=Organization:partof failed: {}", ExceptionUtils.getStackTrace(e));
-				bundle = client.search()
-					.forResource(Organization.class)
-					.returnBundle(Bundle.class)
-					.execute();
-				logger.info("Fallback query fetched bundle with {} entries", bundle.getEntry().size());
-			}
-
-			while (bundle != null) {
-				Map<String, Organization> orgMap = new HashMap<>();
-
-				for (Bundle.BundleEntryComponent entry : bundle.getEntry()) {
-					Organization org = (Organization) entry.getResource();
-					String orgId = org.getIdElement().getIdPart();
-					orgMap.put(orgId, org);
-					logger.debug("Added org to map: {} (name={})", orgId, org.getName());
-				}
-
-				for (Bundle.BundleEntryComponent entry : bundle.getEntry()) {
-					Organization org = (Organization) entry.getResource();
-					String orgId = org.getIdElement().getIdPart();
-					String level = determineOrgLevel(org);
-					String parentId = org.hasPartOf() ? org.getPartOf().getReferenceElement().getIdPart() : null;
-
-					String countryParent = null;
-					String stateParent = null;
-					String lgaParent = null;
-					String wardParent = null;
-
-					if ("facility".equals(level)) {
-						wardParent = parentId;
-						Organization ward = parentId != null ? orgMap.get(parentId) : null;
-						if (parentId == null) {
-							logger.warn("Facility {} has no partOf reference", orgId);
-							continue;
-						} else if (ward == null) {
-							logger.warn("Facility {} has invalid wardParent: {} (not found in orgMap)", orgId, parentId);
-							continue;
-						} else {
-							lgaParent = ward.hasPartOf() ? ward.getPartOf().getReferenceElement().getIdPart() : null;
-							Organization lga = lgaParent != null ? orgMap.get(lgaParent) : null;
-							if (lgaParent == null) {
-								logger.warn("Ward {} for facility {} has no LGA parent", wardParent, orgId);
-								continue;
-							} else if (lga == null) {
-								logger.warn("Facility {} has invalid lgaParent: {} (not found in orgMap)", orgId, lgaParent);
-								continue;
-							} else {
-								stateParent = lga.hasPartOf() ? lga.getPartOf().getReferenceElement().getIdPart() : null;
-								Organization state = stateParent != null ? orgMap.get(stateParent) : null;
-								if (stateParent == null) {
-									logger.warn("LGA {} for facility {} has no state parent", lgaParent, orgId);
-									continue;
-								} else if (state == null) {
-									logger.warn("Facility {} has invalid stateParent: {} (not found in orgMap)", orgId, stateParent);
-									continue;
-								} else {
-									countryParent = state.hasPartOf() ? state.getPartOf().getReferenceElement().getIdPart() : null;
-								}
-							}
-						}
-					} else if ("ward".equals(level)) {
-						lgaParent = parentId;
-						Organization lga = parentId != null ? orgMap.get(parentId) : null;
-						if (parentId == null || lga == null) {
-							logger.warn("Ward {} has invalid or missing lgaParent: {}", orgId, parentId);
-							continue;
-						}
-						stateParent = lga.hasPartOf() ? lga.getPartOf().getReferenceElement().getIdPart() : null;
-						Organization state = stateParent != null ? orgMap.get(stateParent) : null;
-						if (stateParent == null || state == null) {
-							logger.warn("Ward {} has invalid or missing stateParent: {}", orgId, stateParent);
-							continue;
-						}
-						countryParent = state.hasPartOf() ? state.getPartOf().getReferenceElement().getIdPart() : null;
-					} else if ("lga".equals(level)) {
-						stateParent = parentId;
-						Organization state = parentId != null ? orgMap.get(parentId) : null;
-						if (parentId == null || state == null) {
-							logger.warn("LGA {} has invalid or missing stateParent: {}", orgId, parentId);
-							continue;
-						}
-						countryParent = state.hasPartOf() ? state.getPartOf().getReferenceElement().getIdPart() : null;
-					} else if ("state".equals(level)) {
-						countryParent = parentId;
-					}
-
-					hierarchies.add(new OrgHierarchy(orgId, level, countryParent, stateParent, lgaParent, wardParent));
-					logger.debug("Added hierarchy: orgId={}, level={}, country={}, state={}, lga={}, ward={}",
-						orgId, level, countryParent, stateParent, lgaParent, wardParent);
-				}
-
-				if (bundle.getLink(Bundle.LINK_NEXT) != null) {
-					bundle = client.loadPage().next(bundle).execute();
-					logger.info("Fetched next bundle page with {} entries", bundle.getEntry().size());
-				} else {
-					bundle = null;
-				}
-			}
-
-			logger.info("Total hierarchies fetched: {}", hierarchies.size());
-			return hierarchies;
-		} catch (Exception e) {
-			logger.error("Failed to fetch OrgHierarchy from FHIR: {}", ExceptionUtils.getStackTrace(e));
-			return Collections.emptyList();
-		}
-	}
-
-	private String determineOrgLevel(Organization org) {
-		String orgId = org.getIdElement().getIdPart();
-		String orgName = org.getName() != null ? org.getName() : "unknown";
-
-		if (org.hasMeta() && !org.getMeta().getTag().isEmpty()) {
-			for (Coding tag : org.getMeta().getTag()) {
-				if (SYSTEM_ORG_TYPE.equals(tag.getSystem()) && tag.hasCode()) {
-					String code = tag.getCode().toUpperCase();
-					switch (code) {
-						case "COUNTRY":
-							return "country";
-						case "STATE":
-							return "state";
-						case "LGA":
-							return "lga";
-						case "WARD":
-							return "ward";
-						case "FACILITY":
-							return "facility";
-						default:
-							logger.warn("Unrecognized OrgType tag for org {} (name={}): {}", orgId, orgName, code);
-					}
-				}
-			}
-		}
-
-		if (org.hasType() && !org.getType().isEmpty()) {
-			for (CodeableConcept type : org.getType()) {
-				if (type.hasCoding()) {
-					for (Coding coding : type.getCoding()) {
-						if (coding.hasCode() && coding.hasSystem()) {
-							String code = coding.getCode().toLowerCase();
-							String system = coding.getSystem();
-
-							if (SYSTEM_ORGANIZATION_PHYSICAL_TYPE.equals(system)) {
-								if (CODE_CLINIC.equals(code)) {
-									return "facility";
-								} else if (CODE_GOVT.equals(code)) {
-									logger.debug("GOVT code found for org {} (name={}), but no Meta tag; unable to determine precise level", orgId, orgName);
-									continue;
-								}
-							}
-
-							if (Arrays.asList("country", "state", "lga", "ward", "facility").contains(code)) {
-								return code;
-							}
-							if (Arrays.asList("prov", "provider", "clinic", "healthcare").contains(code)) {
-								return "facility";
-							}
-							if (Arrays.asList("ward_level").contains(code)) {
-								return "ward";
-							}
-						}
-					}
-				}
-			}
-			logger.warn("No valid coding found for org {} (name={})", orgId, orgName);
-		}
-
-		logger.warn("No Meta tag or valid type found for org {} (name={})", orgId, orgName);
-		return "unknown";
 	}
 
 	public String getOrganizationName(String orgId) {
@@ -1675,33 +1491,86 @@ public class HelperService {
 		ListIterator<String> orgIdIterator = orgIdList.listIterator();
 
 		LinkedHashMap<String, List<String>> mapOfIdToChildren = new LinkedHashMap<>();
+		Set<String> validFacilityTypes = new HashSet<>(Arrays.asList("facility", "prov", "clinic", "healthcare", "provider"));
 
 		while (orgIdIterator.hasNext()) {
 			String tempOrgId = orgIdIterator.next();
 			List<String> childrenList = new ArrayList<>();
-			getOrganizationsPartOf(childrenList, FhirClientAuthenticatorService.serverBase
-				+ "/Organization?partof=Organization/" + tempOrgId + "&_elements=id");
+			String query = FhirClientAuthenticatorService.serverBase
+				+ "/Organization?partof=Organization/" + tempOrgId + "&_elements=id,meta,type,partof";
+			try {
+				getOrganizationsPartOf(childrenList, query);
+				logger.debug("Children for org ID {}: {}", tempOrgId, childrenList);
+			} catch (Exception e) {
+				logger.error("Failed to fetch children for org ID {}: {}", tempOrgId, ExceptionUtils.getStackTrace(e));
+				continue;
+			}
+
 			childrenList.forEach(item -> {
 				orgIdIterator.add(item);
 				orgIdIterator.previous();
 			});
 
-			if (childrenList.isEmpty()) {
+			String orgType = getOrganizationType(tempOrgId);
+			if (orgType != null && validFacilityTypes.contains(orgType)) {
 				facilityOrgIdList.add(tempOrgId);
 			}
 
 			mapOfIdToChildren.put(tempOrgId, childrenList);
-
-			mapOfIdToChildren.forEach((id, children) -> {
-				if (children.contains(tempOrgId)) {
-					List<String> prevChild = mapOfIdToChildren.get(id);
-					prevChild.addAll(childrenList);
-					mapOfIdToChildren.put(id, prevChild);
-				}
-			});
 		}
 
 		return new Pair<>(facilityOrgIdList, mapOfIdToChildren);
+	}
+
+	public String getOrganizationType(String orgId) {
+		try {
+			Organization org = fhirClientAuthenticatorService.getFhirClient()
+				.read()
+				.resource(Organization.class)
+				.withId(orgId)
+				.execute();
+
+			if (org.hasMeta() && !org.getMeta().getTag().isEmpty()) {
+				for (Coding tag : org.getMeta().getTag()) {
+					if (SYSTEM_ORG_TYPE.equals(tag.getSystem()) && tag.hasCode()) {
+						logger.debug("Found meta tag for org {}: system={}, code={}",
+							orgId, tag.getSystem(), tag.getCode());
+						switch (tag.getCode().toUpperCase()) {
+							case "COUNTRY": return "country";
+							case "STATE": return "state";
+							case "LGA": return "lga";
+							case "WARD": return "ward";
+							case "FACILITY": return "facility";
+							default:
+								logger.debug("Unrecognized meta tag for org {}: {}", orgId, tag.getCode());
+						}
+					}
+				}
+			}
+
+			if (org.hasType() && !org.getType().isEmpty()) {
+				for (Coding coding : org.getType().get(0).getCoding()) {
+					if (coding.hasCode()) {
+						String code = coding.getCode().toLowerCase();
+						logger.debug("Found type coding for org {}: code={}", orgId, code);
+						if (Arrays.asList("country", "state", "lga", "ward", "facility").contains(code)) {
+							return code;
+						}
+						if (Arrays.asList("prov", "provider", "clinic", "healthcare").contains(code)) {
+							return "facility";
+						}
+						if ("govt".equals(code)) {
+							return "state";
+						}
+					}
+				}
+			}
+			logger.warn("No valid meta tag or type for org ID: {}", orgId);
+			return null;
+		} catch (Exception e) {
+			logger.error("Failed to fetch type for org ID {}: {}", orgId, ExceptionUtils.getStackTrace(e));
+			return null;
+		}
 	}
 
 	private List<String> getFacilityOrgIds(String orgId) {

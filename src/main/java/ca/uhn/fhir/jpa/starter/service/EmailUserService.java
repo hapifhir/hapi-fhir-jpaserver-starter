@@ -2,7 +2,6 @@ package ca.uhn.fhir.jpa.starter.service;
 
 import ca.uhn.fhir.jpa.starter.DashboardConfigContainer;
 import ca.uhn.fhir.jpa.starter.model.IndicatorColumn;
-import ca.uhn.fhir.jpa.starter.model.OrgHierarchy;
 import ca.uhn.fhir.jpa.starter.model.ReportType;
 import com.iprd.report.model.data.ScoreCardItem;
 import lombok.RequiredArgsConstructor;
@@ -17,16 +16,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import android.util.Pair;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
+import java.util.HashMap;
 
 @Slf4j
 @Service
@@ -57,17 +52,16 @@ public class EmailUserService {
 	@Value("${report.email-attachment-name}")
 	private String emailAttachmentNameTemplate;
 
+	@Value("${report.top-level-org-id}")
+	private List<String> topLevelOrgIds;
+
 	@Autowired
 	private Map<String, DashboardConfigContainer> dashboardEnvToConfigMap;
 
 	@Scheduled(cron = "${report.cron}")
 	public void sendWeeklyFacilitySummary() {
-		LocalDate today = LocalDate.now();
-		LocalDate previousMonday = today.minusWeeks(1).with(DayOfWeek.MONDAY);
-		LocalDate previousSunday = previousMonday.with(DayOfWeek.SUNDAY);
-
-		String startDate = previousMonday.format(DateTimeFormatter.ISO_LOCAL_DATE);
-		String endDate = previousSunday.format(DateTimeFormatter.ISO_LOCAL_DATE);
+		String startDate = "2025-04-21";
+		String endDate = "2025-04-26";
 		String dateRange = startDate + " to " + endDate;
 
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
@@ -87,123 +81,230 @@ public class EmailUserService {
 			indicatorMap.put(indicator.getId(), indicator.getName());
 		}
 
-		List<OrgHierarchy> allHierarchies;
-		try {
-			allHierarchies = helperService.getAllOrgHierarchies();
-		} catch (Exception e) {
-			logger.error("Failed to fetch Organization: {}", ExceptionUtils.getStackTrace(e));
+		if (topLevelOrgIds == null || topLevelOrgIds.isEmpty()) {
+			logger.error("No top-level organization IDs configured in report.top-level-org-id");
 			return;
 		}
 
-		if (allHierarchies.isEmpty()) {
-			logger.error("No Organization found in FHIR");
-			return;
-		}
-
-		List<OrgHierarchy> facilityHierarchies = allHierarchies.stream()
-			.filter(h -> "facility".equals(h.getLevel()))
-			.collect(Collectors.toList());
-
-		if (facilityHierarchies.isEmpty()) {
-			logger.error("No facilities found in FHIR");
-			return;
-		}
-
-		List<ReportEntry> reportEntries = new ArrayList<>();
-		StringBuilder messageBody = new StringBuilder();
-		messageBody.append(String.format("Weekly Facility Summary Report from %s to %s", startDate, endDate));
-
-		for (OrgHierarchy facilityHierarchy : facilityHierarchies) {
-			String facilityId = facilityHierarchy.getOrgId();
-			String facilityName = getValidOrganizationName(facilityId, "facility");
-			String wardName = getValidOrganizationName(facilityHierarchy.getWardParent(), "ward");
-			String lgaName = getValidOrganizationName(facilityHierarchy.getLgaParent(), "lga");
-			String stateName = getValidOrganizationName(facilityHierarchy.getStateParent(), "state");
-
-			if (!isValidName(facilityName) || !isValidName(wardName) || !isValidName(lgaName) || stateName == null || stateName.trim().isEmpty()) {
-				logger.warn("Skipping facility {} due to invalid organization names: facility={}, ward={}, lga={}, state={}",
-					facilityId, facilityName, wardName, lgaName, stateName);
+		for (String topLevelOrgId : topLevelOrgIds) {
+			Pair<List<String>, LinkedHashMap<String, List<String>>> facilityData;
+			try {
+				facilityData = helperService.getFacilityIdsAndOrgIdToChildrenMapPair(topLevelOrgId);
+			} catch (Exception e) {
+				logger.error("Failed to fetch facility IDs and hierarchy for org ID {}: {}", topLevelOrgId, ExceptionUtils.getStackTrace(e));
 				continue;
 			}
 
-			Map<String, String> indicatorValues = new LinkedHashMap<>();
-			indicatorMap.values().forEach(name -> indicatorValues.put(name, "0"));
+			List<String> facilityIds = facilityData.first;
+			LinkedHashMap<String, List<String>> orgIdToChildrenMap = facilityData.second;
 
-			try {
-				LinkedHashMap<String, String> cleanedFilters = new LinkedHashMap<>(filters);
-				cleanedFilters.remove("from");
-				cleanedFilters.remove("to");
-				cleanedFilters.remove("lga");
-				cleanedFilters.remove("env");
-				cleanedFilters.remove("type");
+			if (facilityIds.isEmpty()) {
+				logger.error("No facilities found in FHIR for top-level org ID: {}", topLevelOrgId);
+				continue;
+			}
 
-				ResponseEntity<?> response = helperService.processDataForReport(
-					startDate, endDate, type, cleanedFilters, reportEnv, facilityId, isAnonymizationEnabled);
+			Map<String, String> orgIdToNameCache = new HashMap<>();
+			List<ReportEntry> reportEntries = new ArrayList<>();
+			String stateName = getValidOrganizationName(topLevelOrgId, "state", orgIdToNameCache);
+			if (!isValidName(stateName)) {
+				logger.error("Invalid state name for org ID: {}", topLevelOrgId);
+				continue;
+			}
 
-				if (response.getStatusCode().is2xxSuccessful() && response.getBody() instanceof List) {
-					@SuppressWarnings("unchecked")
-					List<ScoreCardItem> scoreCardItems = (List<ScoreCardItem>) response.getBody();
-					if (scoreCardItems != null && !scoreCardItems.isEmpty()) {
-						updateIndicatorValues(scoreCardItems, indicatorMap, indicatorValues, facilityName);
-					} else {
-						logger.warn("No ScoreCardItems found for facility: {}", facilityName);
-					}
-				} else {
-					logger.error("Error response from processDataForReport for facility {}: {}", facilityName, response.getBody());
-					indicatorMap.values().forEach(name -> indicatorValues.put(name, "Error: " + (response.getBody() != null ? response.getBody().toString() : "Unknown error")));
+			StringBuilder messageBody = new StringBuilder();
+			messageBody.append(String.format("Weekly Facility Summary Report for %s from %s to %s", stateName, startDate, endDate));
+
+			for (String facilityId : facilityIds) {
+				String facilityName = getValidOrganizationName(facilityId, "facility", orgIdToNameCache);
+				if (!isValidName(facilityName)) {
+					logger.warn("Skipping facility {} due to invalid name", facilityId);
+					continue;
 				}
-			} catch (Exception e) {
-				logger.error("Failed to process facility {}: {}", facilityName, ExceptionUtils.getStackTrace(e));
-				indicatorMap.values().forEach(name -> indicatorValues.put(name, "Error: " + e.getMessage()));
+
+				Map<String, String> hierarchy = findParentHierarchy(facilityId, orgIdToChildrenMap);
+				String stateId = hierarchy.get("state");
+				String lgaId = hierarchy.get("lga");
+				String wardId = hierarchy.get("ward");
+
+				String stateNameHierarchy = getValidOrganizationName(stateId, "state", orgIdToNameCache);
+				String lgaName = getValidOrganizationName(lgaId, "lga", orgIdToNameCache);
+				String wardName = getValidOrganizationName(wardId, "ward", orgIdToNameCache);
+
+				if (stateNameHierarchy == null) {
+					stateNameHierarchy = "N/A";
+					logger.warn("No valid state name for facility ID: {}", facilityId);
+				}
+				if (lgaName == null) {
+					lgaName = "N/A";
+					logger.debug("No valid LGA name for facility ID: {}", facilityId);
+				}
+				if (wardName == null) {
+					wardName = "N/A";
+					logger.debug("No valid ward name for facility ID: {}", facilityId);
+				}
+
+				logger.info("Facility {} hierarchy - State: {}, LGA: {}, Ward: {}",
+					facilityName, stateNameHierarchy, lgaName, wardName);
+
+				Map<String, String> indicatorValues = new LinkedHashMap<>();
+				indicatorMap.values().forEach(name -> indicatorValues.put(name, "0"));
+
+				try {
+					LinkedHashMap<String, String> cleanedFilters = new LinkedHashMap<>(filters);
+					cleanedFilters.remove("from");
+					cleanedFilters.remove("to");
+					cleanedFilters.remove("lga");
+					cleanedFilters.remove("env");
+					cleanedFilters.remove("type");
+
+					ResponseEntity<?> response = helperService.processDataForReport(
+						startDate, endDate, type, cleanedFilters, reportEnv, facilityId, isAnonymizationEnabled);
+					logger.debug("Report response for facility {}: Status={}, Body={}",
+						facilityName, response.getStatusCode(), response.getBody());
+
+					if (response.getStatusCode().is2xxSuccessful() && response.getBody() instanceof List) {
+						@SuppressWarnings("unchecked")
+						List<ScoreCardItem> scoreCardItems = (List<ScoreCardItem>) response.getBody();
+						logger.debug("ScoreCardItems for facility {}: {}", facilityName, scoreCardItems);
+						if (scoreCardItems != null && !scoreCardItems.isEmpty()) {
+							updateIndicatorValues(scoreCardItems, indicatorMap, indicatorValues, facilityName);
+						} else {
+							logger.warn("No ScoreCardItems found for facility: {}", facilityName);
+						}
+					} else {
+						logger.error("Error response from processDataForReport for facility {}: {}", facilityName, response.getBody());
+						indicatorMap.values().forEach(name -> indicatorValues.put(name, "Error: " + (response.getBody() != null ? response.getBody().toString() : "Unknown error")));
+					}
+				} catch (Exception e) {
+					logger.error("Failed to process facility {}: {}", facilityName, ExceptionUtils.getStackTrace(e));
+					indicatorMap.values().forEach(name -> indicatorValues.put(name, "Error: " + e.getMessage()));
+				}
+
+				reportEntries.add(new ReportEntry(dateRange, stateNameHierarchy, lgaName, wardName, facilityName, indicatorValues));
 			}
 
-			reportEntries.add(new ReportEntry(dateRange, stateName, lgaName, wardName, facilityName, indicatorValues));
-		}
-
-		byte[] csvAttachment = csvConverter.convertReportToCSV(reportEntries);
-
-		String emailSubject = emailSubjectTemplate.replace("{startDate}", startDate).replace("{endDate}", endDate);
-		String attachmentName = emailAttachmentNameTemplate.replace("{startDate}", startDate).replace("{endDate}", endDate);
-
-		if (reportEmails == null || reportEmails.isEmpty()) {
-			logger.error("No valid email addresses configured in reportEmails");
-			return;
-		}
-
-		for (String email : reportEmails) {
-			if (!StringUtils.hasText(email)) {
-				logger.warn("Skipping invalid email address: {}", email);
+			if (reportEntries.isEmpty()) {
+				logger.warn("No report entries generated for state: {}", stateName);
 				continue;
 			}
-			try {
-				rabbitTemplate.convertAndSend(
-					emailExchange,
-					emailRoutingKey,
-					new EmailService.EmailDetails(
-						email,
-						messageBody.toString(),
-						emailSubject,
-						csvAttachment,
-						attachmentName
-					)
-				);
-				logger.info("Weekly summary email with CSV attachment sent to: {} for {} facilities", email, reportEntries.size());
-			} catch (Exception e) {
-				logger.error("Failed to send summary email to {}: {}", email, ExceptionUtils.getStackTrace(e));
+
+			byte[] csvAttachment = csvConverter.convertReportToCSV(reportEntries);
+
+			String emailSubject = emailSubjectTemplate
+				.replace("{startDate}", startDate)
+				.replace("{endDate}", endDate)
+				.replace("{state}", stateName);
+			String attachmentName = emailAttachmentNameTemplate
+				.replace("{state}", stateName)
+				.replace("{startDate}", startDate)
+				.replace("{endDate}", endDate);
+
+			if (reportEmails == null || reportEmails.isEmpty()) {
+				logger.error("No valid email addresses configured in reportEmails for state: {}", stateName);
+				continue;
+			}
+
+			for (String email : reportEmails) {
+				if (!StringUtils.hasText(email)) {
+					logger.warn("Skipping invalid email address: {} for state: {}", email, stateName);
+					continue;
+				}
+				try {
+					rabbitTemplate.convertAndSend(
+						emailExchange,
+						emailRoutingKey,
+						new EmailListener.EmailDetails(
+							email,
+							messageBody.toString(),
+							emailSubject,
+							csvAttachment,
+							attachmentName
+						)
+					);
+				} catch (Exception e) {
+					logger.error("Failed to send summary email to {} for state {}: {}", email, stateName, ExceptionUtils.getStackTrace(e));
+				}
 			}
 		}
 	}
 
-	private String getValidOrganizationName(String orgId, String level) {
+	private Map<String, String> findParentHierarchy(String facilityId, LinkedHashMap<String, List<String>> orgIdToChildrenMap) {
+		Map<String, String> hierarchy = new HashMap<>();
+		String currentId = facilityId;
+		int maxIterations = 10;
+
+		for (int i = 0; i < maxIterations && currentId != null; i++) {
+			String parentId = null;
+			for (Map.Entry<String, List<String>> entry : orgIdToChildrenMap.entrySet()) {
+				if (entry.getValue().contains(currentId)) {
+					parentId = entry.getKey();
+					break;
+				}
+			}
+			if (parentId == null) {
+				logger.debug("No parent found for ID: {}", currentId);
+				break;
+			}
+
+			String parentType = helperService.getOrganizationType(parentId);
+			logger.debug("Parent ID: {}, Type: {}", parentId, parentType);
+
+			String level = mapOrgTypeToLevel(parentType);
+			if (level != null) {
+				hierarchy.put(level, parentId);
+				logger.debug("Mapped parent ID {} to level: {}", parentId, level);
+			} else {
+				logger.debug("No level mapped for type: {}", parentType);
+			}
+
+			currentId = parentId;
+		}
+
+		if (!hierarchy.containsKey("state")) {
+			logger.warn("No state found in hierarchy for facility ID: {}", facilityId);
+		}
+		if (!hierarchy.containsKey("lga")) {
+			logger.warn("No LGA found in hierarchy for facility ID: {}", facilityId);
+		}
+		if (!hierarchy.containsKey("ward")) {
+			logger.warn("No ward found in hierarchy for facility ID: {}", facilityId);
+		}
+		logger.debug("Hierarchy for facility {}: {}", facilityId, hierarchy);
+		return hierarchy;
+	}
+
+	private String mapOrgTypeToLevel(String orgType) {
+		if (orgType == null) {
+			return null;
+		}
+		switch (orgType.toLowerCase()) {
+			case "state":
+			case "govt":
+				return "state";
+			case "lga":
+				return "lga";
+			case "ward":
+				return "ward";
+			default:
+				logger.debug("Skipping organization type: {}", orgType);
+				return null;
+		}
+	}
+
+	private String getValidOrganizationName(String orgId, String level, Map<String, String> nameCache) {
 		if (orgId == null) {
 			logger.warn("Null {} ID provided", level);
 			return null;
+		}
+		if (nameCache.containsKey(orgId)) {
+			return nameCache.get(orgId);
 		}
 		String name = helperService.getOrganizationName(orgId);
 		if (name == null || name.trim().isEmpty()) {
 			logger.warn("No valid name found for {} ID: {}", level, orgId);
 			return null;
 		}
+		nameCache.put(orgId, name);
 		return name;
 	}
 

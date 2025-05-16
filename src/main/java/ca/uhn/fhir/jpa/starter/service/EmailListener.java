@@ -17,15 +17,15 @@ import javax.mail.internet.MimeMessage;
 import java.io.ByteArrayInputStream;
 
 @Service
-public class EmailService {
-	private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
+public class EmailListener {
+	private static final Logger logger = LoggerFactory.getLogger(EmailListener.class);
 	private final JavaMailSender javaMailSender;
 
 	@Value("${spring.mail.username}")
 	private String emailSender;
 
 
-	public EmailService(JavaMailSender javaMailSender) {
+	public EmailListener(JavaMailSender javaMailSender) {
 		this.javaMailSender = javaMailSender;
 	}
 
