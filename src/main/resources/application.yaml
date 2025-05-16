@@ -293,6 +293,18 @@ hapi:
     #    max_page_size: 200
     #    retain_cached_searches_mins: 60
     #    reuse_cached_search_results_millis: 60000
+    # The remote_terminology_service block is commented out by default because it requires external terminology service endpoints.
+    # Uncomment and configure the block below if you need to enable remote terminology validation or mapping.
+    #remote_terminology_service:
+    #  all:
+    #    system: '*'
+    #    url: 'https://tx.fhir.org/r4/'
+    #  snomed:
+    #    system: 'http://snomed.info/sct'
+    #    url: 'https://tx.fhir.org/r4/'
+    #  loinc:
+    #    system: 'http://loinc.org'
+    #    url: 'https://hapi.fhir.org/baseR4/'
     tester:
       home:
         name: Local Tester

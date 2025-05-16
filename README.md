@@ -357,11 +357,10 @@ It is recommended to deploy a case-sensitive database prior to running HAPI FHIR
 Custom interceptors can be registered with the server by including the property `hapi.fhir.custom-interceptor-classes`. This will take a comma separated list of fully-qualified class names which will be registered with the server.
 Interceptors will be discovered in one of two ways:
 
-1) discovered from the Spring application context as existing Beans (can be used in conjunction with `hapi.fhir.custom-bean-packages`) or registered with Spring via other methods
+1) From the Spring application context as existing Beans (can be used in conjunction with `hapi.fhir.custom-bean-packages`) or registered with Spring via other methods
+2) Classes will be instantiated via reflection if no matching Bean is found
 
-or
-
-2) classes will be instantiated via reflection if no matching Bean is found
+Interceptors can also be registered manually through `RestfulServer.registerInterceptor`. Take note that any interceptor registered in this way _will not fire_ for non-REST operations, e.g. creation through a DAO. To trigger in this case, you need to register your interceptors on the `IInterceptorService` bean.
 
 ## Adding custom operations(providers)
 Custom operations(providers) can be registered with the server by including the property `hapi.fhir.custom-provider-classes`. This will take a comma separated list of fully-qualified class names which will be registered with the server.
