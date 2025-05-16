@@ -17,6 +17,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import android.util.Pair;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -60,8 +64,12 @@ public class EmailUserService {
 
 	@Scheduled(cron = "${report.cron}")
 	public void sendWeeklyFacilitySummary() {
-		String startDate = "2025-04-21";
-		String endDate = "2025-04-26";
+		LocalDate today = LocalDate.now();
+		LocalDate previousMonday = today.minusWeeks(1).with(DayOfWeek.MONDAY);
+		LocalDate previousSunday = previousMonday.with(DayOfWeek.SUNDAY);
+
+		String startDate = previousMonday.format(DateTimeFormatter.ISO_LOCAL_DATE);
+		String endDate = previousSunday.format(DateTimeFormatter.ISO_LOCAL_DATE);
 		String dateRange = startDate + " to " + endDate;
 
 		LinkedHashMap<String, String> filters = new LinkedHashMap<>();
