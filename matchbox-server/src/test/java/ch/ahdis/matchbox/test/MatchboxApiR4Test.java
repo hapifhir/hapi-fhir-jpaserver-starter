@@ -262,6 +262,34 @@ class MatchboxApiR4Test {
 	}
 
 	@Test
+	void validateIgnoreError() {
+
+		String patient = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" + //
+						"<RelatedPerson xmlns=\"http://hl7.org/fhir\">\r\n" + //
+						"    <extension url=\"http://hl7.org/fhir/StructureDefinition/patient-citizenship\">\r\n" + //
+						"        <extension url=\"code\">\r\n" + //
+						"            <valueCodeableConcept>\r\n" + //
+						"                <coding>\r\n" + //
+						"                    <system value=\"urn:iso:std:iso:3166\"/>\r\n" + //
+						"                    <code value=\"CH\"/>\r\n" + //
+						"                    <display value=\"Switzerland\"/>\r\n" + //
+						"                </coding>\r\n" + //
+						"            </valueCodeableConcept>\r\n" + //
+						"        </extension>\r\n" + //
+						"    </extension>\r\n" + //
+						"    <patient>\r\n" + //
+						"        <display value=\"Ungeborenes Kind\"/>\r\n" + //
+						"    </patient>\r\n" + //
+						"</RelatedPerson>";
+
+		IBaseOperationOutcome operationOutcome = this.validationClient.validate(patient,
+																										"http://hl7.org/fhir/StructureDefinition/RelatedPerson");
+		assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
+
+
+	}
+
+	@Test
 	void validateEhs419Gazelle() throws Exception {
 		ValidationReport report = this.validateWithGazelle(getContent("ehs-419.json"),
 																			"http://hl7.org/fhir/StructureDefinition/Patient");

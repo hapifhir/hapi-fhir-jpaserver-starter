@@ -1,5 +1,6 @@
-2025/XX/XX Release 4.0.5
+2025/05/xx Release 4.0.5
 - Add MCP Server integration [#398] (https://github.com/ahdis/matchbox/issues/398)
+- suppress error messages for known issues [#395](https://github.com/ahdis/matchbox/issues/395)
 
 2025/05/13 Release 4.0.4
 

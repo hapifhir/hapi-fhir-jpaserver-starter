@@ -611,11 +611,17 @@ public class MatchboxEngineSupport {
 		final Map<String, List<String>> suppressedWarnings =
 			Objects.requireNonNullElseGet(this.matchboxFhirContextProperties.getSuppressWarnInfo(),
 													HashMap::new);
+		final Map<String, List<String>> suppressedError =
+			Objects.requireNonNullElseGet(this.matchboxFhirContextProperties.getSuppressError(),
+													HashMap::new);
 		if (cli.getOnlyOneEngine()) {
 			// If we only have one engine, then ignore all warnings that are defined in the configuration file
 			suppressedWarnings.values().stream()
 				.flatMap(List::stream)
 				.forEach(pattern -> this.addSuppressedWarnInfoToEngine(pattern, validator));
+			suppressedError.values().stream()
+				.flatMap(List::stream)
+				.forEach(pattern -> this.addSuppressedErrorToEngine(pattern, validator));		
 		} else {
 			// Otherwise, only ignore the warnings that are defined for the IGs that have been loaded in the engine
 			// Note: we remove the hash in the package, because the hash is also removed when reading the YAML
@@ -625,6 +631,8 @@ public class MatchboxEngineSupport {
 				.forEach(ig -> {
 					suppressedWarnings.getOrDefault(ig, Collections.emptyList())
 						.forEach(pattern -> this.addSuppressedWarnInfoToEngine(pattern, validator));
+					suppressedError.getOrDefault(ig, Collections.emptyList())
+						.forEach(pattern -> this.addSuppressedErrorToEngine(pattern, validator));
 				});
 
 			validator.getContext().getLoadedPackages().stream().filter(pkg -> pkg.contains("#"))
@@ -632,6 +640,8 @@ public class MatchboxEngineSupport {
 				.forEach(ig -> {
 					suppressedWarnings.getOrDefault(ig, Collections.emptyList())
 						.forEach(pattern -> this.addSuppressedWarnInfoToEngine(pattern, validator));
+					suppressedError.getOrDefault(ig, Collections.emptyList())
+						.forEach(pattern -> this.addSuppressedErrorToEngine(pattern, validator));
 				});
 		}
 		log.debug("Added {} suppressed warnings for these IGs", validator.getSuppressedWarnInfoPatterns().size());
@@ -646,6 +656,17 @@ public class MatchboxEngineSupport {
 		}
 		// Otherwise, add it as a simple string pattern
 		engine.addSuppressedWarnInfo(pattern);
+	}
+
+	private void addSuppressedErrorToEngine(final @NonNull String pattern,
+															 final @NonNull MatchboxEngine engine) {
+		String pathMessageid[] = pattern.split("!");
+		if (pathMessageid.length == 2) {
+			engine.addSuppressedError(pathMessageid[0], pathMessageid[1]);
+			return;
+		} else {
+			log.error("Error in the configuration file, the pattern {} is not valid, it should be path!messageId", pattern);
+		}
 	}
 
 	public INpmPackageVersionResourceDao getMyPackageVersionResourceDao() {

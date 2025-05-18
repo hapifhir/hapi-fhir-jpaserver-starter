@@ -16,7 +16,7 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "matchbox.fhir.context")
 public class MatchboxFhirContextProperties {
 
-	private @Nullable Map<String, List<String>> suppressWarnInfo;
+	private @Nullable Map<String, List<String>> suppressWarnInfo, suppressError;
 
 	public @Nullable Map<String, List<String>> getSuppressWarnInfo() {
 		return this.suppressWarnInfo;
@@ -24,5 +24,13 @@ public class MatchboxFhirContextProperties {
 
 	public void setSuppressWarnInfo(final @Nullable Map<String, List<String>> suppressWarnInfo) {
 		this.suppressWarnInfo = suppressWarnInfo;
+	}
+
+	public @Nullable Map<String, List<String>> getSuppressError() {
+		return this.suppressError;
+	}
+
+	public void setSuppressError(final @Nullable Map<String, List<String>> suppressError) {
+		this.suppressError = suppressError;
 	}
 }

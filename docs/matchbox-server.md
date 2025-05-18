@@ -16,6 +16,7 @@ They can be set in the Spring configuration (e.g. `application.properties`/`appl
 | `matchbox.fhir.context.onlyOneEngine`    | `false`       | Forces the server to initialize only one engine. See the section [_Only one engine_](#only-one-engine) below.                                                   |
 | `matchbox.fhir.context.xVersion`         | `false`       | Allows to transform resources between FHIR versions. See the section [_Transforming resources between FHIR versions_](#transform-cross-version) below.          |
 | `matchbox.fhir.context.suppressWarnInfo` | `{}`          | The list of warnings/infos to suppress in validation reports. See [_Suppress warning/information-level issues in validation_](validation.md#suppress-warnings). |
+| `matchbox.fhir.context.suppressError` | `{}`          | The list of errors to suppress in validation reports. See [_Suppress error-level issues in validation_](validation.md#suppress-errors). |
 | `matchbox.fhir.context.httpReadOnly`     | `false`       | Whether the server is in read-only mode or not. See the section [_Read-only mode_](#read-only) below.                                                           |
 | `matchbox.fhir.context.extensions`       | `any`         | The list of domains allowed in extensions while validating resources; `any` will allow all extensions.                                                          |
 | `matchbox.fhir.context.analyzeOutcomeWithAI`       |          | Whether the validation outcome should be analyzed by a LLM or not. Requires the LLM parameters to be correctly set.                                                          |
@@ -91,8 +92,9 @@ It provides the following advantages:
 
 - It lowers the memory and CPU consumption, as a single engine is shared among all requests.
 - It speeds up the response time, as the engine is already initialized and ready to use.
+- You con overwrite conformance resources (e.g. update StructureMaps, ConceptMaps)
 
-It is helpful to enable this mode when the server is used in a production environment (e.g. as a validation server).
+It is helpful to enable this mode when the server is used in a development environment (e.g. as a validation server or for FML map development).
 
 Disabling this mode is recommended when more context separation is required, in particular when dealing with the 
 following situations:

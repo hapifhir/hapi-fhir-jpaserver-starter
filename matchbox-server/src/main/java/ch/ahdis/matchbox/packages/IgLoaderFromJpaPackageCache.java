@@ -207,9 +207,9 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 			loadIg(igs, binaries, PACKAGE_CDA_UV_CORE, recursive);
 			return;
 		}
-		if (src.equals("ch.fhir.ig.ch-epr-term#current")) {
-			final var replace = "ch.fhir.ig.ch-epr-term#2.0.x";
-			log.info("Replacing 'ch.fhir.ig.ch-epr-term#current' with '{}'", replace);
+		if (src.equals("ch.fhir.ig.ch-term#current")) {
+			final var replace = "ch.fhir.ig.ch-term#3.1.x";
+			log.info("Replacing 'ch.fhir.ig.ch-term#current' with '{}'", replace);
 			loadIg(igs, binaries, replace, recursive);
 			return;
 		}

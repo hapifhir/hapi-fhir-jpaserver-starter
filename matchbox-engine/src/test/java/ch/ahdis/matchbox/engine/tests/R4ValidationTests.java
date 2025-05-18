@@ -31,12 +31,14 @@ class R4ValidationTests {
 	private final MatchboxEngine engine;
 	private final String careplanRaw;
 	private final String measureRaw;
+	private final String relatedPerson;
 
 	public R4ValidationTests() throws IOException, URISyntaxException {
 		this.engine = this.getEngine();
 		//this.engine.setTerminologyServer("http://tx.fhir.org", null, FhirPublication.R4);
 		this.careplanRaw = this.loadSample("careplan.xml");
 		this.measureRaw = this.loadSample("measure.xml");
+		this.relatedPerson = this.loadSample("RelatedPerson-BiologicalFather.json");
 	}
 
 	/**
@@ -77,7 +79,20 @@ class R4ValidationTests {
  		assertTrue(errors.get(0).getDetails().getText().startsWith("The value provided ('non-existent-code') was not " +
 																						  "found in the value set 'PublicationStatus'"));
 	}
-	
+
+	/**
+	 * Test that errors can be ignored
+	 *
+	 */
+	@Test
+	void testIngoreErrors() throws Exception {
+		final var errors = this.expectInvalid(this.relatedPerson, Manager.FhirFormat.JSON, "http://hl7.org/fhir/StructureDefinition/RelatedPerson");
+		assertEquals(1, errors.size());
+ 		assertTrue(errors.get(0).getDetails().getText().startsWith("The extension http://hl7.org/fhir/StructureDefinition/patient-citizenship is not allowed to be used at this point (allowed = e:Patient; this element is [RelatedPerson])"));
+		engine.addSuppressedError("RelatedPerson", "Extension_EXTP_Context_Wrong");
+ 		expectValid(this.relatedPerson, Manager.FhirFormat.JSON, "http://hl7.org/fhir/StructureDefinition/RelatedPerson");
+	}
+
 	/**
 	 * Test the validation of a code from a value set that expands urn:ietf:bcp:13.
 	 *
