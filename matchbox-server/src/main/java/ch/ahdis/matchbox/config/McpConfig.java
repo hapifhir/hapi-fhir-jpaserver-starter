@@ -17,6 +17,17 @@ import io.modelcontextprotocol.server.transport.WebMvcSseServerTransportProvider
 public class McpConfig {
     
     @Bean
+    public WebMvcSseServerTransportProvider webMvcSseServerTransportProvider(ObjectMapper mapper) {
+        return new WebMvcSseServerTransportProvider(mapper, "/matchbox/sse");
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> mcpRouterFunction(WebMvcSseServerTransportProvider transportProvider) {
+        return transportProvider.getRouterFunction();
+    }
+
+/* 
+    @Bean
     public HttpServletSseServerTransportProvider servletSseServerTransportProvider() {
         return new HttpServletSseServerTransportProvider(new ObjectMapper(), "/mcp/message");
     }
@@ -25,5 +36,5 @@ public class McpConfig {
     public ServletRegistrationBean customServletBean(HttpServletSseServerTransportProvider transportProvider) {
         return new ServletRegistrationBean(transportProvider);
     }
-    
+    */
 }
