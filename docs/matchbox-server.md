@@ -92,7 +92,7 @@ It provides the following advantages:
 
 - It lowers the memory and CPU consumption, as a single engine is shared among all requests.
 - It speeds up the response time, as the engine is already initialized and ready to use.
-- You con overwrite conformance resources (e.g. update StructureMaps, ConceptMaps)
+- You can overwrite conformance resources (e.g. update StructureMaps, ConceptMaps)
 
 It is helpful to enable this mode when the server is used in a development environment (e.g. as a validation server or for FML map development).
 
