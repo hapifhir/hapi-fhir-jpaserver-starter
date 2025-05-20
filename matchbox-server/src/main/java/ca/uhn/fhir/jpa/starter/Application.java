@@ -1,15 +1,15 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ch.ahdis.matchbox.config.MatchboxStaticResourceConfig;
+import ch.ahdis.matchbox.config.McpConfig;
 import ch.ahdis.matchbox.modelcontextprotocol.ValidationService;
 import ch.ahdis.matchbox.spring.MatchboxEventListener;
 import ch.ahdis.matchbox.terminology.RegistryWs;
 import ch.ahdis.matchbox.validation.gazelle.GazelleValidationWs;
+import io.modelcontextprotocol.server.transport.HttpServletSseServerTransportProvider;
 
-import java.util.List;
-
-import org.springframework.ai.tool.ToolCallback;
-import org.springframework.ai.tool.ToolCallbacks;
+import org.springframework.ai.tool.ToolCallbackProvider;
+import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;
@@ -22,6 +22,10 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.servlet.function.RouterFunction;
+import org.springframework.web.servlet.function.ServerResponse;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
 import ca.uhn.fhir.jpa.starter.common.FhirServerConfigR4;
@@ -42,7 +46,8 @@ import ch.ahdis.matchbox.config.MatchboxJpaConfig;
 	MatchboxEventListener.class,
 	GazelleValidationWs.class,
   RegistryWs.class,
-  MatchboxStaticResourceConfig.class})
+  MatchboxStaticResourceConfig.class,
+  McpConfig.class})
 public class Application extends SpringBootServletInitializer {
 
   public static void main(String[] args) {
@@ -75,8 +80,8 @@ public class Application extends SpringBootServletInitializer {
   }
 
   @Bean
-  public List<ToolCallback> matchboxTools(ValidationService validationService) {
-    return List.of(ToolCallbacks.from(validationService));
+  public ToolCallbackProvider matchboxTools(ValidationService validationService) {
+    return MethodToolCallbackProvider.builder().toolObjects(validationService).build();
   }
 
 }

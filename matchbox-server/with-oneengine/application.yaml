@@ -2,6 +2,8 @@ server:
   servlet:
     context-path: /matchbox
 spring:
+  main:
+    web-application-type: servlet
   datasource:
     url: "jdbc:h2:mem:validate-r4"
     username: sa
@@ -15,6 +17,12 @@ spring:
       server:
         name: matchbox-mcp
         version: 0.0.1
+        stdio: false
+        type: SYNC
+        sse-message-endpoint: /mcp/message
+        resource-change-notification: true
+        tool-change-notification: true
+        prompt-change-notification: true
 hapi:
   fhir:
     server_address: http://localhost:8080/matchboxv3/fhir
@@ -41,5 +49,8 @@ matchbox:
         provider: openai
         modelName: gpt-4o-mini
         apiKey: sk-xxx
+logging:
+  file:
+    name: ./mcp-server.log
 
 
