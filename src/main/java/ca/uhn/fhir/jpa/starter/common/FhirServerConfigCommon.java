@@ -253,6 +253,10 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_size());
 		jpaStorageSettings.setBundleBatchPoolSize(appProperties.getBundle_batch_pool_max_size());
 
+		// Set store meta source information
+		ourLog.info("Server configured to Store Meta Source:" + appProperties.getStore_meta_source_information());
+		jpaStorageSettings.setStoreMetaSourceInformation(appProperties.getStore_meta_source_information());
+
 		storageSettings(appProperties, jpaStorageSettings);
 		return jpaStorageSettings;
 	}
