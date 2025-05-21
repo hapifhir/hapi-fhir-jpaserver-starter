@@ -47,6 +47,9 @@ public class ValidationPolicyAdvisor extends BasePolicyAdvisorForFullValidation 
         if (messagesToIgnore.contains(new PathAndMessageId(path, messageId))) {
             return true;
         }
+        if (messagesToIgnore.contains(new PathAndMessageId("*", messageId))) {
+            return true;
+        }
         return false;
     }
     
