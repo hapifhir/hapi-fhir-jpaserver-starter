@@ -29,6 +29,26 @@ spring:
   web:
     resources:
       static-locations: classpath:/static/browser/
+  ai:
+    mcp:
+      server:
+        enabled: false
+        name: matchbox-mcp
+        version: ${project.version}
+        # These 3 paths have been carefully crafted, change them at your own risk!
+        base-url: ../
+        sse-endpoint: mcp/sse
+        sse-message-endpoint: mcp/message
+        stdio: false
+        type: SYNC
+        tool-change-notification: true
+        resource-change-notification: false
+        prompt-change-notification: false
+        capabilities:
+          tool: true
+          resource: false
+          prompt: false
+          completion: false
 server:
   servlet:
     context-path: /matchboxv3

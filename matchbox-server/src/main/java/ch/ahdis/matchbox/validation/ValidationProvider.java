@@ -55,8 +55,8 @@ import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.hl7.fhir.r5.model.UriType;
 import org.hl7.fhir.r5.utils.OperationOutcomeUtilities;
 import org.hl7.fhir.r5.utils.ToolingExtensions;
-import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
+import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -78,7 +78,7 @@ import java.util.List;
 import static ch.ahdis.matchbox.util.MatchboxServerUtils.addExtension;
 
 /**
- * Operation $validate
+ * The HAPI provider of the operation $validate
  */
 public class ValidationProvider {
 
@@ -494,32 +494,30 @@ public class ValidationProvider {
 	}
 
 	public IBaseResource addAIIssueToOperationOutcome(IBaseResource resource, String aiResponse) {
-		if (resource instanceof OperationOutcome) {
-			var outcome = (OperationOutcome) resource;
-			
-			var issue = outcome.addIssue();
-			issue.setSeverity(OperationOutcome.IssueSeverity.INFORMATION);
-			issue.setCode(OperationOutcome.IssueType.INFORMATIONAL);
-			issue.setDiagnostics(aiResponse);
-			issue.addExtension().setUrl("http://hl7.org/fhir/StructureDefinition/rendering-style").setValue(new StringType("markdown"));
-			CodeableConcept details = new CodeableConcept();
-        	details.setText("AI Analyze of the Operation Outcome");
-			issue.setDetails(details);
-	
+		if (resource instanceof final OperationOutcome outcome) {
+			final var details = new CodeableConcept();
+			details.setText("AI Analyze of the Operation Outcome");
+
+			outcome.addIssue()
+				.setSeverity(OperationOutcome.IssueSeverity.INFORMATION)
+				.setCode(OperationOutcome.IssueType.INFORMATIONAL)
+				.setDiagnostics(aiResponse)
+				.setDetails(details)
+				.addExtension()
+					.setUrl("http://hl7.org/fhir/StructureDefinition/rendering-style")
+					.setValue(new StringType("markdown"));
+
 			return outcome;
 		}
 		throw new IllegalArgumentException("Provided resource is not an OperationOutcome.");
 	}
 
 	public IBaseResource addExceptionToOperationOutcome(IBaseResource resource, Exception e) {
-		if (resource instanceof OperationOutcome) {
-			var outcome = (OperationOutcome) resource;
-			
-			var issue = outcome.addIssue();
-			issue.setSeverity(OperationOutcome.IssueSeverity.ERROR);
-			issue.setCode(OperationOutcome.IssueType.EXCEPTION);
-			issue.setDiagnostics(e.getLocalizedMessage());
-
+		if (resource instanceof final OperationOutcome outcome) {
+			outcome.addIssue()
+				.setSeverity(OperationOutcome.IssueSeverity.ERROR)
+				.setCode(OperationOutcome.IssueType.EXCEPTION)
+				.setDiagnostics(e.getLocalizedMessage());
 			return outcome;
 		}
 		throw new IllegalArgumentException("Provided resource is not an OperationOutcome.");
