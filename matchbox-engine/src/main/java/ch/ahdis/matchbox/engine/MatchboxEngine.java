@@ -1166,11 +1166,11 @@ public class MatchboxEngine extends ValidationEngine {
 	 * <p>
 	 * Implementation note: The text is Regex-escaped before being added to the list.
 	 *
-	 * @param path The path to add.
-	 * @param messageId The messageId to add.
+	 * @param messageId The messageId to check.
+	 * @param regexPath The regexPath to check.
 	 */
-	public void addSuppressedError(final @NonNull String path, final @NonNull String messageId) {
-		((ch.ahdis.matchbox.engine.ValidationPolicyAdvisor) getPolicyAdvisor()).addSuppressedError(path, messageId);
+	public void addSuppressedError(final @NonNull String messageId, final @NonNull String regexPath) {
+		((ch.ahdis.matchbox.engine.ValidationPolicyAdvisor) getPolicyAdvisor()).addSuppressedError(messageId, regexPath);
 	}
 
 	/**

@@ -1,7 +1,11 @@
 package ch.ahdis.matchbox.engine;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -14,8 +18,9 @@ import org.hl7.fhir.validation.instance.InstanceValidator;
 public class ValidationPolicyAdvisor extends BasePolicyAdvisorForFullValidation {
 
 	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ValidationPolicyAdvisor.class);
-    private final Set<PathAndMessageId> messagesToIgnore = new HashSet<>();
-
+    
+    // This is a map of messageId to a list of regex paths that should be ignored
+    private final Map<String, List<String>> messagesToIgnore = new HashMap<>();
 		
     public ValidationPolicyAdvisor(ReferenceValidationPolicy refpol) {
         super(refpol);
@@ -43,52 +48,36 @@ public class ValidationPolicyAdvisor extends BasePolicyAdvisorForFullValidation 
     @Override
     public boolean isSuppressMessageId(String path, String messageId) {
         log.debug("Checking suppression for path: {} messageId: {}", path, messageId);
-        // Check if this specific path+messageId combination should be ignored
-        if (messagesToIgnore.contains(new PathAndMessageId(path, messageId))) {
-            return true;
-        }
-        if (messagesToIgnore.contains(new PathAndMessageId("*", messageId))) {
-            return true;
+        List<String> pathsToCheck = messagesToIgnore.get(messageId);
+        if (pathsToCheck != null && !pathsToCheck.isEmpty()) {
+            for (String pathToCheck : pathsToCheck) {
+                if (path.matches(pathToCheck)) {
+                    return true;
+                }
+            }
         }
         return false;
     }
     
-    public void addSuppressedError(String path, String messageId) {
-        if (path != null && messageId != null) {
-            messagesToIgnore.add(new PathAndMessageId(path, messageId));
-            log.debug("Added message to ignore - path: {} messageId: {}", path, messageId);
+    /**
+     * Add a messageId to the list of messages that should be ignored for a given path.
+     * 
+     * @param messageId The messageId to ignore, see 
+     * @param regexPath The regex to check the path against
+     */
+    public void addSuppressedError(String messageId, String regexPath) {
+        List<String> messagesToCheck = messagesToIgnore.get(messageId);
+        if (messagesToCheck == null) {
+            List<String> newList = new ArrayList<>();
+            newList.add(regexPath);
+            messagesToIgnore.put(messageId, newList);
+        } else {
+            messagesToCheck.add(regexPath);
         }
     }
     
     public void clearErrorMessagesToIgnore() {
       messagesToIgnore.clear();
     }
-
-    /**
-     * Helper class for storing path and messageId combinations with proper equals/hashCode
-     */
-    private static class PathAndMessageId {
-        private final String path;
-        private final String messageId;
-        
-        public PathAndMessageId(String path, String messageId) {
-            this.path = path;
-            this.messageId = messageId;
-        }
-        
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            PathAndMessageId that = (PathAndMessageId) o;
-            return Objects.equals(path, that.path) && Objects.equals(messageId, that.messageId);
-        }
-        
-        @Override
-        public int hashCode() {
-            return Objects.hash(path, messageId);
-        }
-    }
-
 
 }

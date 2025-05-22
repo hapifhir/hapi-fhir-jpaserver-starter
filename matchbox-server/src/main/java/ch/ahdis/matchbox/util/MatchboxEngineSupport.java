@@ -658,15 +658,20 @@ public class MatchboxEngineSupport {
 		engine.addSuppressedWarnInfo(pattern);
 	}
 
+	/**
+	 * Adds a suppressed error pattern to the engine.
+	 *
+	 * @param pattern messageId:regexPath
+	 * @param engine  The engine to add the pattern to.
+	 */
 	private void addSuppressedErrorToEngine(final @NonNull String pattern,
 															 final @NonNull MatchboxEngine engine) {
-		String pathMessageid[] = pattern.split("!");
+		String pathMessageid[] = pattern.split(":",2);
 		if (pathMessageid.length == 2) {
 			engine.addSuppressedError(pathMessageid[0], pathMessageid[1]);
 			return;
-		} else {
-			log.error("Error in the configuration file, the pattern {} is not valid, it should be path!messageId", pattern);
 		}
+		engine.addSuppressedError(pattern, ".*");
 	}
 
 	public INpmPackageVersionResourceDao getMyPackageVersionResourceDao() {

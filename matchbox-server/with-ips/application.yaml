@@ -27,4 +27,5 @@ matchbox:
       txServer: http://tx.fhir.org
       suppressError:
         hl7.fhir.uv.ips:
-          - "*!Type_Specific_Checks_DT_URL_Resolve"
+          - "Type_Specific_Checks_DT_URL_Resolve:.*extension.*url"
+          - "Type_Specific_Checks_DT_URL_Resolve:.*coding.*system"

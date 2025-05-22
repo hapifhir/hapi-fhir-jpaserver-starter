@@ -35,7 +35,7 @@ matchbox:
           - "regex:Entry '(.+)' isn't reachable by traversing forwards from the Composition"
       suppressError:
         hl7.fhir.r4.core#4.0.1:
-          - "RelatedPerson!Extension_EXTP_Context_Wrong"
+          - "Extension_EXTP_Context_Wrong!RelatedPerson"
       xVersion: true
 spring:
   datasource:

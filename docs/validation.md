@@ -99,7 +99,7 @@ See configuration parameters in [Matchbox Server](matchbox-server.md#configurati
 #### Suppress warning/information-level issues in validation {: #suppress-warnings}
 
 The validation client can suppress warning/information-level issues that are not relevant for the validation.
-Validation issues to be suppressed are defined in the configuration file, per Implementation Guide and version.
+Validation issues to be suppressed are defined in the configuration file, per Implementation Guide and optional version.
 
 To match by exact substring, simply add the message to the list.
 To match by regex pattern, add the prefix `regex:` to the message.
@@ -112,16 +112,27 @@ matchbox:
       suppressWarnInfo:
         hl7.fhir.r4.core#4.0.1:
           - "Constraint failed: dom-6:"
-        ch.fhir.ig.ch-elm#1.0.0:
+        ch.fhir.ig.ch-elm:
           - "regex:Binding for path (.+).ofType\(Coding\) has no source, so can't be checked"
 ```
 
 #### Suppress error issues in validation {: #suppress-errors}
 
 The validation client can suppress error issues that are not relevant for the validation.
-Validation issues to be suppressed are defined in the configuration file, per Implementation Guide and version.
+Validation issues to be suppressed are defined in the configuration file, per Implementation Guide and optional version.
 
-You need to provide the path in the resource and the [message](https://github.com/hapifhir/org.hl7.fhir.core/blob/master/org.hl7.fhir.utilities/src/main/java/org/hl7/fhir/utilities/i18n/I18nConstants.java) where the error is suprressed. The path (optional) and messageId neets to be concatenated by a the ! charachter, e.g: "path!messageId". If the mesasgeId should be suppressed on any path, use the charachter * as path.
+You need to provide the [messageId](https://github.com/hapifhir/org.hl7.fhir.core/blob/master/org.hl7.fhir.utilities/src/main/java/org/hl7/fhir/utilities/i18n/I18nConstants.java) to indicate the error which should be suppressed. An optional regex for the path where the error happened in the resouces can be added. The regex needs to be added after the ':' character, e.g: "messageId:regex".
+
+If you wan't to match the errors with unknown extensions you see error messages like this: 
+
+```
+Bundle.entry[17].resource/Patient/e5ZHnklVuYuT85PnDVOepOg3/.extension[6].url:
+URL value 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-sex' does not resolve 
+```
+
+the following combination will exclude all unknown extensions:
+
+Type_Specific_Checks_DT_URL_Resolve:.*extension.*url
 
 Example of configuration file:
 ```yaml
@@ -130,8 +141,8 @@ matchbox:
     context:
       suppressError:
         hl7.fhir.r4.core#4.0.1:
-          - "RelatedPerson!Extension_EXTP_Context_Wrong"
-          - "*!Type_Specific_Checks_DT_URL_Resolve"
+          - "Extension_EXTP_Context_Wrong:RelatedPerson"
+          - "Type_Specific_Checks_DT_URL_Resolve:.*extension.*url"
 
 ```
 
