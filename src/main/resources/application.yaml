@@ -97,6 +97,7 @@ report:
    cron: "0 0 10 ? * MON"
    email-subject: "Weekly Facility Summary Report ({startDate} to {endDate})"
    email-attachment-name: "Weekly_Facility_Summary_{startDate}_to_{endDate}.csv"
+   top-level-org-id: #top org ids
 
 logging:
    level:
