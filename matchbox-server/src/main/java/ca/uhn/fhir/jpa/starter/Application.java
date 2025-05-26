@@ -6,7 +6,6 @@ import ch.ahdis.matchbox.spring.MatchboxEventListener;
 import ch.ahdis.matchbox.terminology.RegistryWs;
 import ch.ahdis.matchbox.validation.gazelle.GazelleValidationWs;
 
-import io.modelcontextprotocol.server.transport.WebMvcSseServerTransportProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;

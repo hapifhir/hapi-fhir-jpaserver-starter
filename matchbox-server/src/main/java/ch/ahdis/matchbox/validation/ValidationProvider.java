@@ -56,7 +56,6 @@ import org.hl7.fhir.r5.model.UriType;
 import org.hl7.fhir.r5.utils.OperationOutcomeUtilities;
 import org.hl7.fhir.r5.utils.ToolingExtensions;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
-import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -489,7 +488,7 @@ public class ValidationProvider {
 			m.setCol(0);
 			m.setLine(0);
 			messages.add(m);
-		} 
+		}
 		return messages;
 	}
 
