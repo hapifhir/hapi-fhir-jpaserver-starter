@@ -38,7 +38,7 @@ public class JpaHibernatePropertiesProvider extends HibernatePropertiesProvider 
 					.getDeclaredConstructor()
 					.newInstance();
 		} catch (Exception e) {
-			logger.info("Looking up optimized HAPI adjusted dialect failed");
+			logger.error("Looking up optimized HAPI adjusted dialect failed", e);
 		}
 		dialect = temporaryDialect;
 	}
