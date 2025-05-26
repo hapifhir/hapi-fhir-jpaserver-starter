@@ -31,6 +31,8 @@ import ca.uhn.fhir.jpa.interceptor.UserRequestRetryVersionConflictsInterceptor;
 import ca.uhn.fhir.jpa.interceptor.validation.RepositoryValidatingInterceptor;
 import ca.uhn.fhir.jpa.ips.provider.IpsOperationProvider;
 import ca.uhn.fhir.jpa.model.config.SubscriptionSettings;
+import ca.uhn.fhir.jpa.packages.AdditionalResourcesParser;
+import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
 import ca.uhn.fhir.jpa.provider.DaoRegistryResourceSupportedSvc;
 import ca.uhn.fhir.jpa.provider.DiffProvider;
@@ -48,7 +50,7 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
-import ca.uhn.fhir.jpa.starter.ig.AdditionalResourceInstaller;
+import ca.uhn.fhir.jpa.starter.ig.ExtendedPackageInstallationSpec;
 import ca.uhn.fhir.jpa.starter.ig.IImplementationGuideOperationProvider;
 import ca.uhn.fhir.jpa.starter.util.EnvironmentHelper;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
@@ -77,6 +79,7 @@ import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
 import jakarta.persistence.EntityManagerFactory;
+import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -96,10 +99,8 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.web.cors.CorsConfiguration;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
+import java.util.*;
 import javax.sql.DataSource;
 
 import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory.ENABLE_REPOSITORY_VALIDATING_INTERCEPTOR;
@@ -209,17 +210,18 @@ public class StarterJpaConfig {
 	public IPackageInstallerSvc packageInstaller(
 			AppProperties appProperties,
 			IPackageInstallerSvc packageInstallerSvc,
-			AdditionalResourceInstaller additionalResourceInstaller,
 			Batch2JobRegisterer batch2JobRegisterer,
 			FhirContext fhirContext,
-			TransactionProcessor transactionProcessor) {
+			TransactionProcessor transactionProcessor,
+			IHapiPackageCacheManager iHapiPackageCacheManager)
+			throws IOException {
 
 		batch2JobRegisterer.start();
 
 		if (appProperties.getImplementationGuides() != null) {
-			var guides = appProperties.getImplementationGuides();
-			for (var guidesEntry : guides.entrySet()) {
-				var packageInstallationSpec = guidesEntry.getValue();
+			Map<String, ExtendedPackageInstallationSpec> guides = appProperties.getImplementationGuides();
+			for (Map.Entry<String, ExtendedPackageInstallationSpec> guidesEntry : guides.entrySet()) {
+				ExtendedPackageInstallationSpec packageInstallationSpec = guidesEntry.getValue();
 				if (appProperties.getInstall_transitive_ig_dependencies()) {
 
 					packageInstallationSpec
@@ -231,10 +233,13 @@ public class StarterJpaConfig {
 
 				packageInstallerSvc.install(packageInstallationSpec);
 
-				var extraResources = packageInstallationSpec.getAdditionalResourceFolders();
+				Set<String> extraResources = packageInstallationSpec.getAdditionalResourceFolders();
+				packageInstallationSpec.setPackageContents(iHapiPackageCacheManager
+						.loadPackageContents(packageInstallationSpec.getName(), packageInstallationSpec.getVersion())
+						.getBytes());
 
 				if (extraResources != null && !extraResources.isEmpty()) {
-					var transaction = additionalResourceInstaller.collectAdditionalResources(
+					IBaseBundle transaction = AdditionalResourcesParser.bundleAdditionalResources(
 							extraResources, packageInstallationSpec, fhirContext);
 					transactionProcessor.transaction(
 							new SystemRequestDetails().setRequestPartitionId(RequestPartitionId.defaultPartition()),
