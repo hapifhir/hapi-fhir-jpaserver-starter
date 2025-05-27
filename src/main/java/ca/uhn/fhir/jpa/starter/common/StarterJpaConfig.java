@@ -40,6 +40,7 @@ import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
 import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
 import ca.uhn.fhir.jpa.provider.ValueSetOperationProvider;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
+import ca.uhn.fhir.jpa.provider.merge.PatientMergeProvider;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.IStaleSearchDeletingSvc;
 import ca.uhn.fhir.jpa.search.StaleSearchDeletingSvcImpl;
@@ -285,6 +286,7 @@ public class StarterJpaConfig {
 			BulkDataImportProvider bulkDataImportProvider,
 			ValueSetOperationProvider theValueSetOperationProvider,
 			ReindexProvider reindexProvider,
+			PatientMergeProvider patientMergeProvider,
 			Optional<RepositoryValidatingInterceptor> repositoryValidatingInterceptor,
 			IPackageInstallerSvc packageInstallerSvc,
 			ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc,
@@ -473,6 +475,10 @@ public class StarterJpaConfig {
 
 		if (appProperties.getUserRequestRetryVersionConflictsInterceptorEnabled()) {
 			fhirServer.registerInterceptor(new UserRequestRetryVersionConflictsInterceptor());
+		}
+
+		if (appProperties.getPatient_merge_enabled()) {
+			fhirServer.registerProvider(patientMergeProvider);
 		}
 
 		// register custom providers
