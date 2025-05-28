@@ -34,6 +34,7 @@ public class AppProperties {
 	private Boolean mdm_enabled = false;
 	private String mdm_rules_json_location = "mdm-rules.json";
 	private boolean advanced_lucene_indexing = false;
+	private boolean search_index_full_text_enabled = false;
 	private boolean enable_index_of_type = false;
 	private Boolean allow_cascading_deletes = false;
 	private Boolean allow_contains_searches = true;
@@ -282,6 +283,14 @@ public class AppProperties {
 
 	public void setAdvanced_lucene_indexing(boolean theAdvanced_lucene_indexing) {
 		advanced_lucene_indexing = theAdvanced_lucene_indexing;
+	}
+
+	public boolean getSearch_index_full_text_enabled() {
+		return this.search_index_full_text_enabled;
+	}
+
+	public void setSearch_index_full_text_enabled(boolean theSearch_index_full_text_enabled) {
+		search_index_full_text_enabled = theSearch_index_full_text_enabled;
 	}
 
 	public Boolean getAllow_cascading_deletes() {

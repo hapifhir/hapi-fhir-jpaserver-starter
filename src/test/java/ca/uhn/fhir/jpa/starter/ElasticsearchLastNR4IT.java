@@ -52,6 +52,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
     "hapi.fhir.lastn_enabled=true",
 	 "hapi.fhir.store_resource_in_lucene_index_enabled=true",
 	 "hapi.fhir.advanced_lucene_indexing=true",
+	 "hapi.fhir.search_index_full_text_enabled=true",
 
     "elasticsearch.enabled=true",
 	  "hapi.fhir.cr_enabled=false",
