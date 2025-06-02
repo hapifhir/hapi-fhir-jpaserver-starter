@@ -23,15 +23,16 @@ public class JpaHibernatePropertiesProvider extends HibernatePropertiesProvider 
 
 	public JpaHibernatePropertiesProvider(LocalContainerEntityManagerFactoryBean theEntityManagerFactory) {
 		String dialectClass =
-			(String) theEntityManagerFactory.getJpaPropertyMap().get("hibernate.dialect");
+				(String) theEntityManagerFactory.getJpaPropertyMap().get("hibernate.dialect");
 		if (isNotBlank(dialectClass)) {
 			myDialect = ReflectionUtil.newInstanceOrReturnNull(dialectClass, Dialect.class);
 		} else {
-			ourLog.warn("'hibernate.dialect' not set in application configuration! Please explicitly specify a valid HAPI FHIR hibernate dialect.");
+			ourLog.warn(
+					"'hibernate.dialect' not set in application configuration! Please explicitly specify a valid HAPI FHIR hibernate dialect.");
 			DataSource connection = theEntityManagerFactory.getDataSource();
 			try (Connection dbConnection = connection.getConnection()) {
 				myDialect = new StandardDialectResolver()
-					.resolveDialect(new DatabaseMetaDataDialectResolutionInfoAdapter(dbConnection.getMetaData()));
+						.resolveDialect(new DatabaseMetaDataDialectResolutionInfoAdapter(dbConnection.getMetaData()));
 			} catch (SQLException sqlException) {
 				throw new ConfigurationException(sqlException.getMessage(), sqlException);
 			}
