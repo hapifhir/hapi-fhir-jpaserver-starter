@@ -1,0 +1,24 @@
+---
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: eks.amazonaws.com/nodegroup
+              operator: In
+              values:
+                - sensitive_workload_node_group
+
+tolerations:
+  - effect: NoSchedule
+    key: airbyte_workload
+    operator: Equal
+    value: "true"
+  - effect: NoSchedule
+    key: airflow_workload
+    operator: Equal
+    value: "true"
+  - effect: NoSchedule
+    key: sensitive_workload
+    operator: Equal
+    value: "true"

@@ -5,10 +5,12 @@ on: [push]
 jobs:
   deploy_to_testing:
     name: Deploy HAPI FHIR server to ${{ matrix.environment }} environment
-    if: ${{ github.ref == 'refs/heads/master'}}
+    # if: ${{ github.ref == 'refs/heads/master'}}
+    if: ${{ github.ref == 'refs/heads/chore-specify-node-scheduling-options'}}
     strategy:
       matrix:
-        environment: [testing, staging, prod]
+        # environment: [testing, staging, prod]
+        environment: [staging]
 
     runs-on: ubuntu-latest
     environment:
@@ -67,6 +69,7 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
           DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+          ENVIRONMENT: ${{ matrix.environment }}
 
         shell: bash
         run: cd deploy/ && cat deploy.sh && sh deploy.sh

@@ -23,5 +23,7 @@ helm upgrade \
     --wait \
     --timeout 300s \
     -f ../charts/hapi-fhir-jpaserver/values.yaml \
+    -f ../charts/hapi-fhir-jpaserver/instances/${ENVIRONMENT}.yaml \
+    --dry-run
     hapi-fhir-test \
     ../charts/hapi-fhir-jpaserver
