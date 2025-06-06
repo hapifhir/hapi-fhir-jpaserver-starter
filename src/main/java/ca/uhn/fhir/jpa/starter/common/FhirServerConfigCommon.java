@@ -178,6 +178,7 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setAllowMultipleDelete(appProperties.getAllow_multiple_delete());
 		jpaStorageSettings.setAllowExternalReferences(appProperties.getAllow_external_references());
 		jpaStorageSettings.setSchedulingDisabled(!appProperties.getDao_scheduling_enabled());
+		jpaStorageSettings.setIndexStorageOptimized(appProperties.getIndex_storage_optimized());
 		jpaStorageSettings.setMatchUrlCacheEnabled(appProperties.getMatch_url_cache_enabled());
 		jpaStorageSettings.setDeleteEnabled(appProperties.getDelete_enabled());
 		jpaStorageSettings.setDeleteExpungeEnabled(appProperties.getDelete_expunge_enabled());

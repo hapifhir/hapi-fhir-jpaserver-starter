@@ -194,6 +194,8 @@ hapi:
     #    delete_expunge_enabled: true
     #    match_url_cache_enabled: false
     #    enable_repository_validating_interceptor: true
+    ### Reduce the size used by search indexes by not tagging every row with the resource type and parameter name (this setting makes manual inspection of the database more difficult, but does not impact HAPI FHIR functionality in any way)
+    #    index_storage_optimized: false
     #    enable_index_missing_fields: false
     #    enable_index_of_type: true
     #    enable_index_contained_resource: false

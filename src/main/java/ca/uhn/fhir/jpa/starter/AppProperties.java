@@ -111,6 +111,7 @@ public class AppProperties {
 
 	private Map<String, RemoteSystem> remote_terminology_service = null;
 	private Boolean match_url_cache_enabled = false;
+	private Boolean index_storage_optimized = false;
 
 	public List<String> getCustomInterceptorClasses() {
 		return custom_interceptor_classes;
@@ -751,6 +752,14 @@ public class AppProperties {
 
 	public void setMatch_url_cache_enabled(boolean theMatchUrlCacheEnabled) {
 		match_url_cache_enabled = theMatchUrlCacheEnabled;
+	}
+
+	public boolean getIndex_storage_optimized() {
+		return defaultIfNull(index_storage_optimized, false);
+	}
+
+	public void setIndex_storage_optimized(boolean theIndex_storage_optimized) {
+		index_storage_optimized = theIndex_storage_optimized;
 	}
 
 	public static class Cors {
