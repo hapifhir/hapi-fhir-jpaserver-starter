@@ -291,14 +291,15 @@ public class FhirServerConfigCommon {
 			retVal.setConditionalCreateDuplicateIdentifiersEnabled(
 					appProperties.getPartitioning().getConditional_create_duplicate_identifiers_enabled());
 
-			ourLog.info("""
+			ourLog.info(
+					"""
 					Partitioning is enabled on this server. Settings:
 					 * Database Partition Mode Enabled: {}
 					 * Default Partition ID           : {}
 					 * Cross-Partition References     : {}""",
-				databasePartitionModeEnabled,
-				defaultPartitionId,
-				retVal.getAllowReferencesAcrossPartitions());
+					databasePartitionModeEnabled,
+					defaultPartitionId,
+					retVal.getAllowReferencesAcrossPartitions());
 
 		} else {
 			ourLog.info("Partitioning is not enabled on this server");
