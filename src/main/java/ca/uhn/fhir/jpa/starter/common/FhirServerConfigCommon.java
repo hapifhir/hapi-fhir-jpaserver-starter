@@ -16,6 +16,8 @@ import ca.uhn.fhir.rest.server.mail.MailConfig;
 import ca.uhn.fhir.rest.server.mail.MailSvc;
 import com.google.common.base.Strings;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +38,7 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 @EnableTransactionManagement
 public class FhirServerConfigCommon {
 
-	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(FhirServerConfigCommon.class);
+	private static final Logger ourLog = LoggerFactory.getLogger(FhirServerConfigCommon.class);
 
 	public FhirServerConfigCommon(AppProperties appProperties) {
 		ourLog.info("Server configured to " + (appProperties.getAllow_contains_searches() ? "allow" : "deny")
@@ -176,6 +178,8 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setAllowMultipleDelete(appProperties.getAllow_multiple_delete());
 		jpaStorageSettings.setAllowExternalReferences(appProperties.getAllow_external_references());
 		jpaStorageSettings.setSchedulingDisabled(!appProperties.getDao_scheduling_enabled());
+		jpaStorageSettings.setMatchUrlCacheEnabled(appProperties.getMatch_url_cache_enabled());
+		jpaStorageSettings.setDeleteEnabled(appProperties.getDelete_enabled());
 		jpaStorageSettings.setDeleteExpungeEnabled(appProperties.getDelete_expunge_enabled());
 		jpaStorageSettings.setExpungeEnabled(appProperties.getExpunge_enabled());
 		jpaStorageSettings.setLanguageSearchParameterEnabled(appProperties.getLanguage_search_parameter_enabled());
@@ -286,6 +290,18 @@ public class FhirServerConfigCommon {
 			}
 			retVal.setConditionalCreateDuplicateIdentifiersEnabled(
 					appProperties.getPartitioning().getConditional_create_duplicate_identifiers_enabled());
+
+			ourLog.info("""
+					Partitioning is enabled on this server. Settings:
+					 * Database Partition Mode Enabled: {}
+					 * Default Partition ID           : {}
+					 * Cross-Partition References     : {}""",
+				databasePartitionModeEnabled,
+				defaultPartitionId,
+				retVal.getAllowReferencesAcrossPartitions());
+
+		} else {
+			ourLog.info("Partitioning is not enabled on this server");
 		}
 
 		return retVal;
