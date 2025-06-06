@@ -106,7 +106,8 @@ public class AppProperties {
 	private Integer pre_expand_value_sets_default_count = 1000;
 	private Integer pre_expand_value_sets_max_count = 1000;
 	private Integer maximum_expansion_size = 1000;
-	private JpaStorageSettings.StoreMetaSourceInformationEnum store_meta_source_information = JpaStorageSettings.StoreMetaSourceInformationEnum.NONE;
+	private JpaStorageSettings.StoreMetaSourceInformationEnum store_meta_source_information =
+			JpaStorageSettings.StoreMetaSourceInformationEnum.NONE;
 
 	private Map<String, RemoteSystem> remote_terminology_service = null;
 
@@ -739,10 +740,10 @@ public class AppProperties {
 		return store_meta_source_information;
 	}
 
-	public void setStore_meta_source_information(JpaStorageSettings.StoreMetaSourceInformationEnum store_meta_source_information) {
+	public void setStore_meta_source_information(
+			JpaStorageSettings.StoreMetaSourceInformationEnum store_meta_source_information) {
 		this.store_meta_source_information = store_meta_source_information;
 	}
-
 
 	public static class Cors {
 		private Boolean allow_Credentials = true;
