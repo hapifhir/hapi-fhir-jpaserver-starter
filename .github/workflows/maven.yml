@@ -28,3 +28,5 @@ jobs:
         distribution: zulu
     - name: Build with Maven
       run: mvn -B package --file pom.xml verify
+      env:
+        MAVEN_OPTS: "-Xmx2g"
