@@ -67,6 +67,7 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
           DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+          ENVIRONMENT: ${{ matrix.environment }}
 
         shell: bash
         run: cd deploy/ && cat deploy.sh && sh deploy.sh

@@ -7,6 +7,7 @@ kubectl create namespace $NAMESPACE || true
 
 helm upgrade \
     --install \
+    --atomic \
     --debug \
     --create-namespace \
     --namespace "${NAMESPACE}" \
@@ -23,5 +24,6 @@ helm upgrade \
     --wait \
     --timeout 300s \
     -f ../charts/hapi-fhir-jpaserver/values.yaml \
+    -f ../charts/hapi-fhir-jpaserver/instances/${ENVIRONMENT}.yaml \
     hapi-fhir-test \
     ../charts/hapi-fhir-jpaserver
