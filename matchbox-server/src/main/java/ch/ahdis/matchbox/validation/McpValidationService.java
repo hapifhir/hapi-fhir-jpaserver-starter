@@ -35,7 +35,6 @@ public class McpValidationService {
 												  @ToolParam(description = "The FHIR profile to use") final String profile) {
 		// 1. Get a Matchbox engine for the given profile
 		final MatchboxEngine engine;
-		//cliContext.setAnalyzeOutcomeWithAI(false);
 		try {
 			engine = this.matchboxEngineSupport.getMatchboxEngine(profile, cliContext, true, false);
 		} catch (final Exception e) {
