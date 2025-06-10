@@ -406,10 +406,12 @@
             <dependency>
                 <groupId>io.modelcontextprotocol.sdk</groupId>
                 <artifactId>mcp</artifactId>
+                <version>0.10.0</version>
             </dependency>
             <dependency>
                 <groupId>io.modelcontextprotocol.sdk</groupId>
                 <artifactId>mcp-spring-webmvc</artifactId>
+                <version>0.10.0</version>
             </dependency>
             <dependency>
                 <groupId>org.awaitility</groupId>
