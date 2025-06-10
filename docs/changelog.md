@@ -1,3 +1,6 @@
+2025/XX/XX Release 4.0.5
+- Add MCP Server integration [#398] (https://github.com/ahdis/matchbox/issues/398)
+
 2025/05/13 Release 4.0.4
 
 - integrate with https://fhirpath-lab.com/FhirPath [#390](https://github.com/ahdis/matchbox/issues/390) thx to @brianpos
