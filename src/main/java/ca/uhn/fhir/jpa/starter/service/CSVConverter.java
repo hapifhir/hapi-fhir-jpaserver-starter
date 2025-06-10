@@ -1,12 +1,12 @@
 package ca.uhn.fhir.jpa.starter.service;
 
+import ca.uhn.fhir.jpa.starter.ReportProperties;
 import com.opencsv.CSVWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ca.uhn.fhir.jpa.starter.DashboardConfigContainer;
 import ca.uhn.fhir.jpa.starter.model.IndicatorColumn;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
@@ -23,16 +23,15 @@ public class CSVConverter {
 	@Autowired
 	private Map<String, DashboardConfigContainer> dashboardEnvToConfigMap;
 
-	@Value("${report.env}")
-	private String reportEnv;
+	@Autowired
+	private ReportProperties reportProperties;
 
 	public byte[] convertReportToCSV(List<ReportEntry> reportEntries) {
 		try {
-
-			DashboardConfigContainer configContainer = dashboardEnvToConfigMap.getOrDefault(reportEnv, new DashboardConfigContainer());
+			DashboardConfigContainer configContainer = dashboardEnvToConfigMap.getOrDefault(reportProperties.getEnv(), new DashboardConfigContainer());
 			List<IndicatorColumn> indicatorColumns = configContainer.getIndicatorColumns();
 			if (indicatorColumns == null || indicatorColumns.isEmpty()) {
-				logger.error("No indicator columns found for environment: {}", reportEnv);
+				logger.error("No indicator columns found for environment: {}", reportProperties.getEnv());
 				return new byte[0];
 			}
 

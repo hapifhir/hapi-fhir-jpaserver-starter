@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter.service;
 
+import ca.uhn.fhir.jpa.starter.MailProperties;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.mail.MailException;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -21,9 +22,8 @@ public class EmailListener {
 	private static final Logger logger = LoggerFactory.getLogger(EmailListener.class);
 	private final JavaMailSender javaMailSender;
 
-	@Value("${spring.mail.username}")
-	private String emailSender;
-
+	@Autowired
+	private MailProperties mailProperties;
 
 	public EmailListener(JavaMailSender javaMailSender) {
 		this.javaMailSender = javaMailSender;
@@ -36,7 +36,7 @@ public class EmailListener {
 				MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 				MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
-				helper.setFrom(emailSender);
+				helper.setFrom(mailProperties.getUsername());
 				helper.setTo(emailDetails.getRecipient());
 				helper.setSubject(emailDetails.getSubject());
 				helper.setText(emailDetails.getMessageBody());
@@ -48,7 +48,7 @@ public class EmailListener {
 				logger.info("Mail with attachment sent successfully to {}", emailDetails.getRecipient());
 			} else {
 				SimpleMailMessage mailMsg = new SimpleMailMessage();
-				mailMsg.setFrom(emailSender);
+				mailMsg.setFrom(mailProperties.getUsername());
 				mailMsg.setTo(emailDetails.getRecipient());
 				mailMsg.setText(emailDetails.getMessageBody());
 				mailMsg.setSubject(emailDetails.getSubject());

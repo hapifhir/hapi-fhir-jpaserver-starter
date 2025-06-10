@@ -22,9 +22,7 @@ import ca.uhn.fhir.jpa.starter.model.PatientIdentifierEntity;
 import ca.uhn.fhir.jpa.starter.model.ReportType;
 import ca.uhn.fhir.jpa.starter.model.ScoreCardIndicatorItem;
 import ca.uhn.fhir.jpa.starter.model.ScoreCardResponseItem;
-import ca.uhn.fhir.model.dstu2.composite.CodingDt;
 import ca.uhn.fhir.rest.api.MethodOutcome;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
@@ -97,7 +95,6 @@ import org.hl7.fhir.r4.model.ResourceType;
 import org.hl7.fhir.r4.model.StringType;
 import org.hl7.fhir.r4.model.Address;
 import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.resource.GroupResource;
@@ -214,6 +211,8 @@ public class HelperService {
 	private static final String SYSTEM_ORGANIZATION_PHYSICAL_TYPE = "http://hl7.org/fhir/ValueSet/organization-type";
 	private static final String CODE_CLINIC = "prov";
 	private static final String CODE_GOVT = "govt";
+	private static final List<String> VALID_ORG_TYPES = Arrays.asList("country", "state", "lga", "ward", "facility");
+	private static final List<String> FACILITY_SYNONYMS = Arrays.asList("prov", "provider", "clinic", "healthcare");
 
 	@PostConstruct
 	public void init() {
@@ -1553,10 +1552,10 @@ public class HelperService {
 					if (coding.hasCode()) {
 						String code = coding.getCode().toLowerCase();
 						logger.debug("Found type coding for org {}: code={}", orgId, code);
-						if (Arrays.asList("country", "state", "lga", "ward", "facility").contains(code)) {
+						if (VALID_ORG_TYPES.contains(code)) {
 							return code;
 						}
-						if (Arrays.asList("prov", "provider", "clinic", "healthcare").contains(code)) {
+						if (FACILITY_SYNONYMS.contains(code)) {
 							return "facility";
 						}
 						if ("govt".equals(code)) {

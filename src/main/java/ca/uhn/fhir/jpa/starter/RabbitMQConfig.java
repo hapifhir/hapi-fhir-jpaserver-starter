@@ -5,7 +5,7 @@ import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.amqp.core.Queue;
@@ -14,23 +14,22 @@ import org.springframework.amqp.core.Binding;
 @Configuration
 public class RabbitMQConfig {
 
-	@Value("${rabbitmq.queue.email.name}") private String emailQueue;
-	@Value("${rabbitmq.exchange.email.name}") private String emailExchange;
-	@Value("${rabbitmq.binding.email.name}")  private String	emailRoutingKey;
+	@Autowired
+	private RabbitMQProperties rabbitMQProperties;
 
 	@Bean
 	public Queue emailQueue(){
-		return new Queue(emailQueue);
+		return new Queue(rabbitMQProperties.getQueue().getEmail().getName());
 	}
 
 	@Bean
 	public TopicExchange emailExchange(){
-		return new TopicExchange(emailExchange);
+		return new TopicExchange(rabbitMQProperties.getExchange().getEmail().getName());
 	}
 
 	@Bean
 	public Binding emailBinding(){
-		return BindingBuilder.bind(emailQueue()).to(emailExchange()).with(emailRoutingKey);
+		return BindingBuilder.bind(emailQueue()).to(emailExchange()).with(rabbitMQProperties.getBinding().getEmail().getName());
 	}
 
 	@Bean
