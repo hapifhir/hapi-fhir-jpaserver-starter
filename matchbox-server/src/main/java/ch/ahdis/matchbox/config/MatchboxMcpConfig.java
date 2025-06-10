@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
         prefix = "spring.ai.mcp.server",
         name = {"enabled"},
         havingValue = "true",
-        matchIfMissing = true
+        matchIfMissing = false
 )
 public class MatchboxMcpConfig {
 
