@@ -33,6 +33,17 @@ public class McpValidationService {
 	@Tool(name = "validateResource", description = "Validate a FHIR resource against a profile")
 	public List<ValidationMessage> mcpToolGetValidation(@ToolParam(description = "The FHIR resource to validate (JSON or XML)") final String resource,
 												  @ToolParam(description = "The FHIR profile to use") final String profile) {
+		// Check if the parameters are empty
+		if (resource == null || resource.isBlank()) {
+			return List.of(new ValidationMessage()
+				.setLevel(ValidationMessage.IssueSeverity.ERROR)
+				.setMessage("Resource to validate must not be empty"));
+		}
+		if (profile == null || profile.isBlank()) {
+			return List.of(new ValidationMessage()
+				.setLevel(ValidationMessage.IssueSeverity.ERROR)
+				.setMessage("Profile to validate against must not be empty"));
+		}
 		// 1. Get a Matchbox engine for the given profile
 		final MatchboxEngine engine;
 		try {
