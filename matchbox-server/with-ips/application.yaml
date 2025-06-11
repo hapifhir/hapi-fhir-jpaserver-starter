@@ -18,13 +18,15 @@ hapi:
         name: hl7.terminology.r4
         version: 6.3.0
         url: classpath:/hl7.terminology.r4#6.3.0.tgz
-      ch-ips:
-        name: hl7.fhir.uv.ips
-        version: 1.1.0
+      ips:
+         name: hl7.fhir.uv.ips
+         version: 1.1.0
+         url: https://hl7.org/fhir/uv/ips/package.tgz
 matchbox:
   fhir:
     context:
       txServer: http://tx.fhir.org
+      httpReadOnly: true
       suppressError:
         hl7.fhir.uv.ips:
           - "Type_Specific_Checks_DT_URL_Resolve:.*extension.*url"

@@ -137,18 +137,31 @@ public class ValidationProvider {
 		// check for each cliContextProperties if it is in the request parameter
 		for (final Field field : cliContextProperties) {
 			final String cliContextProperty = field.getName();
-			if (theRequest.getParameter(cliContextProperty) != null) {
-				try {
-					final String value = theRequest.getParameter(cliContextProperty);
-					// currently only handles boolean or String
-					if (field.getType() == boolean.class || field.getType() == Boolean.class) {
-						BeanUtils.setProperty(cliContext, cliContextProperty, Boolean.parseBoolean(value));
-					} else {
-						BeanUtils.setProperty(cliContext, cliContextProperty, value);
+			if (field.getType() == String[].class) {
+				if (theRequest.getParameterValues(cliContextProperty) != null) {
+					try {
+						final String[] value = theRequest.getParameterValues(cliContextProperty);
+  						field.setAccessible(true);
+            			field.set(cliContext, value);
+					} catch (final IllegalAccessException e) {
+						log.error("error setting property %s to %s".formatted(cliContextProperty,
+																								theRequest.getParameter(cliContextProperty)));
 					}
-				} catch (final IllegalAccessException | InvocationTargetException e) {
-					log.error("error setting property %s to %s".formatted(cliContextProperty,
-																							theRequest.getParameter(cliContextProperty)));
+				}
+			} else {
+				if (theRequest.getParameter(cliContextProperty) != null) {
+					try {
+						final String value = theRequest.getParameter(cliContextProperty);
+						// currently only handles boolean or String
+						if (field.getType() == boolean.class || field.getType() == Boolean.class) {
+							BeanUtils.setProperty(cliContext, cliContextProperty, Boolean.parseBoolean(value));
+						} else {
+							BeanUtils.setProperty(cliContext, cliContextProperty, value);
+						}
+					} catch (final IllegalAccessException | InvocationTargetException e) {
+						log.error("error setting property %s to %s".formatted(cliContextProperty,
+																								theRequest.getParameter(cliContextProperty)));
+					}
 				}
 			}
 		}
@@ -156,11 +169,6 @@ public class ValidationProvider {
 		// Check if the IG should be auto-installed
 		if (!cliContext.isHttpReadOnly()) {
 			this.ensureIgIsInstalled(theRequest.getParameter("ig"), theRequest.getParameter("profile"));
-		}
-
-		if (theRequest.getParameter("extensions") != null) {
-			String extensions = theRequest.getParameter("extensions");
-			cliContext.setExtensions(new ArrayList<>(Arrays.asList(extensions.split(","))));
 		}
 
 		if (theRequest.getParameter("profile") == null) {
@@ -318,6 +326,12 @@ public class ValidationProvider {
 			for (final String pkg : engine.getContext().getLoadedPackages()) {
 				addExtension(ext, "package", new StringType(pkg));
 			}
+			for (final String suppressedWarning : engine.getSuppressedWarnInfoPatterns()) {
+				addExtension(ext, "suppressedWarning", new StringType(suppressedWarning));
+			}		
+			for (final String suppressedError : engine.getSuppressedErrors()) {
+				addExtension(ext, "suppressedError", new StringType(suppressedError));
+			}		
 		}
 
 		// Map the SingleValidationMessages to OperationOutcomeIssue

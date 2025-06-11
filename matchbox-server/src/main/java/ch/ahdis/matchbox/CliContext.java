@@ -1,6 +1,5 @@
 package ch.ahdis.matchbox;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -43,13 +42,46 @@ public class CliContext {
   private boolean doNative = false;
 
   @JsonProperty("extensions")
-  public List<String> getExtensions() {
+  public String[] getExtensions() {
     return extensions;
   }
 
   @JsonProperty("extensions")
-  public CliContext setExtensions(List<String> extensions) {
+  public CliContext setExtensions(String[] extensions) {
     this.extensions = extensions;
+    return this;
+  }
+
+  @JsonProperty("suppressWarnInfos")
+  public String[] getSuppressWarnInfos() {
+    return this.suppressWarnInfos;
+  }
+
+  @JsonProperty("suppressWarnInfos")
+  public CliContext setSuppressWarnInfos(String[] suppressWarnInfos) {
+    this.suppressWarnInfos = suppressWarnInfos;
+    return this;
+  }
+
+  @JsonProperty("suppressErrors")
+  public String[] getSuppressErrors() {
+    return this.suppressErrors;
+  }
+
+  @JsonProperty("suppressErrors")
+  public CliContext setSuppressErrors(String[] suppressErrors) {
+    this.suppressErrors = suppressErrors;
+    return this;
+  }
+
+  @JsonProperty("igs")
+  public String[] getIgs() {
+    return this.igs;
+  }
+
+  @JsonProperty("igs")
+  public CliContext setIgs(String[] igs) {
+    this.igs = igs;
     return this;
   }
 
@@ -117,9 +149,17 @@ public class CliContext {
   private String fhirVersion = null;
 
   @JsonProperty("extensions")
-  private List<String> extensions = new ArrayList<String>();
-  // @JsonProperty("igs")
-  // private List<String> igs = new ArrayList<String>();
+  private String[] extensions = null;
+
+  @JsonProperty("suppressWarnInfos")
+  private String[] suppressWarnInfos = null;
+
+  @JsonProperty("suppressErrors")
+  private String[] suppressErrors = null;
+
+  @JsonProperty("igs")
+  private String[] igs = null;
+
   @JsonProperty("ig")
   private String ig = null;
 
@@ -206,20 +246,40 @@ public class CliContext {
   @JsonProperty("llmProvider")
   private String llmProvider;
 
+  @JsonProperty("llmProvider")
   public String getLlmProvider() {
     return llmProvider;
   }
 
-  private String modelName;
-
-  public String getModelName() {
-    return modelName;
+  @JsonProperty("llmProvider")
+  public void setLlmProvider(String llmProvider) {
+    this.llmProvider = llmProvider;
   }
 
-  private String apiKey;
+  @JsonProperty("llmModelName")
+  private String llmModelName;
 
-  public String getApiKey() {
-    return apiKey;
+    @JsonProperty("llmModelName")
+  public String getLlmModelName() {
+    return llmModelName;
+  }
+
+  @JsonProperty("llmModelName")
+  public void setLlmModelName(String llmModelName) {
+    this.llmModelName = llmModelName;
+  }
+
+  @JsonProperty("llmApiKey")
+  private String llmApiKey;
+
+  @JsonProperty("llmApiKey")
+  public void setLlmApiKey(String llmApiKey) {
+    this.llmApiKey = llmApiKey;
+  }
+
+  @JsonProperty("llmApiKey")
+  public String getLlmApiKey() {
+    return this.llmApiKey;
   }
   
   @JsonProperty("check-references")
@@ -242,6 +302,11 @@ public class CliContext {
 
   @Autowired
   public CliContext(Environment environment) {
+    this.extensions = environment.getProperty("matchbox.fhir.context.extensions", String[].class, new String[]{"any"});
+    this.llmApiKey = environment.getProperty("matchbox.fhir.context.llm.apiKey", String.class);
+    this.llmModelName = environment.getProperty("matchbox.fhir.context.llm.modelName", String.class);
+    this.llmProvider = environment.getProperty("matchbox.fhir.context.llm.provider", String.class);
+
     // get al list of all JsonProperty of cliContext with return values property
     // name and property type
     List<Field> cliContextProperties = getValidateEngineParameters();
@@ -266,13 +331,9 @@ public class CliContext {
     this.igsPreloaded = environment.getProperty("matchbox.fhir.context.igsPreloaded", String[].class);
     this.onlyOneEngine = environment.getProperty("matchbox.fhir.context.onlyOneEngine", Boolean.class, false);
     this.httpReadOnly = environment.getProperty("matchbox.fhir.context.httpReadOnly", Boolean.class, false);
-    this.extensions = Arrays.asList(environment.getProperty("matchbox.fhir.context.extensions", String[].class, new String[]{"any"}));
     this.xVersion = environment.getProperty("matchbox.fhir.context.xVersion", Boolean.class, false);
     this.analyzeOutcomeWithAI = environment.getProperty("matchbox.fhir.context.analyzeOutcomeWithAI", Boolean.class, null);
     this.analyzeOutcomeWithAIOnError = environment.getProperty("matchbox.fhir.context.analyzeOutcomeWithAIOnError", Boolean.class, null);
-    this.llmProvider = environment.getProperty("matchbox.fhir.context.llm.provider", String.class);
-    this.modelName = environment.getProperty("matchbox.fhir.context.llm.modelName", String.class);
-    this.apiKey = environment.getProperty("matchbox.fhir.context.llm.apiKey", String.class);
   }
 
   public CliContext(CliContext other) {
@@ -291,13 +352,15 @@ public class CliContext {
     this.igsPreloaded = other.igsPreloaded;
     this.onlyOneEngine = other.onlyOneEngine;
     this.httpReadOnly = other.httpReadOnly;
-    this.extensions = other.extensions;
     this.xVersion = other.xVersion;
     this.analyzeOutcomeWithAI = other.analyzeOutcomeWithAI;
     this.analyzeOutcomeWithAIOnError = other.analyzeOutcomeWithAIOnError;
     this.llmProvider = other.llmProvider;
-    this.modelName = other.modelName;
-    this.apiKey = other.apiKey;
+    this.llmModelName = other.llmModelName;
+    this.llmApiKey = other.llmApiKey;
+    this.suppressErrors = other.suppressErrors;
+    this.suppressWarnInfos = other.suppressWarnInfos;
+    this.igs = other.igs;
   }
 
   @JsonProperty("ig")
@@ -309,29 +372,6 @@ public class CliContext {
   public void setIg(String ig) {
     this.ig = ig;
   }
-
-  // @JsonProperty("igs")
-  // public void setIgs(List<String> igs) {
-  // this.igs = igs;
-  // }
-
-  // @JsonProperty("igs")
-  // public List<String> getIgs() {
-  // return igs;
-  // }
-
-  // @JsonProperty("igs")
-  // public void setIgs(List<String> igs) {
-  // this.igs = igs;
-  // }
-
-  // public CliContext addIg(String ig) {
-  // if (this.igs == null) {
-  // this.igs = new ArrayList<>();
-  // }
-  // this.igs.add(ig);
-  // return this;
-  // }
 
   @JsonProperty("questionnaire")
   public QuestionnaireMode getQuestionnaireMode() {
@@ -769,6 +809,7 @@ public class CliContext {
     if (!(o instanceof final CliContext that))
       return false;
     return doNative == that.doNative
+        && Arrays.equals(extensions, that.extensions)
         && hintAboutNonMustSupport == that.hintAboutNonMustSupport
         && recursive == that.recursive
         && showMessagesFromReferences == that.showMessagesFromReferences
@@ -812,16 +853,18 @@ public class CliContext {
         && Objects.equals(resolutionContext, that.resolutionContext)
         && disableDefaultResourceFetcher == that.disableDefaultResourceFetcher
         && Objects.equals(llmProvider, that.llmProvider)
-        && Objects.equals(modelName, that.modelName)
-        && Objects.equals(apiKey, that.apiKey)
+        && Objects.equals(llmModelName, that.llmModelName)
+        && Objects.equals(llmApiKey, that.llmApiKey)
         && checkIpsCodes == that.checkIpsCodes
-        && Objects.equals(bundle, that.bundle);
+        && Objects.equals(bundle, that.bundle)
+        && Arrays.equals(suppressErrors, that.suppressErrors)
+        && Arrays.equals(suppressWarnInfos, that.suppressWarnInfos)
+        && Arrays.equals(igs, that.igs);
   }
 
   @Override
   public int hashCode() {
     int result = Objects.hash(doNative,
-        extensions,
         hintAboutNonMustSupport,
         recursive,
         showMessagesFromReferences,
@@ -863,11 +906,15 @@ public class CliContext {
         resolutionContext,
         disableDefaultResourceFetcher,
         llmProvider,
-        modelName,
-        apiKey,
+        llmModelName,
+        llmApiKey,
         checkIpsCodes,
         bundle);
     result = 31 * result + Arrays.hashCode(igsPreloaded);
+    result = 31 * result + Arrays.hashCode(extensions);
+    result = 31 * result + Arrays.hashCode(suppressErrors);
+    result = 31 * result + Arrays.hashCode(suppressWarnInfos);
+    result = 31 * result + Arrays.hashCode(igs);    
     return result;
   }
 
@@ -875,7 +922,7 @@ public class CliContext {
   public String toString() {
     return "CliContext{" +
         "doNative=" + doNative +
-        ", extensions=" + extensions +
+        ", extensions=" + Arrays.toString(extensions) +
         ", hintAboutNonMustSupport=" + hintAboutNonMustSupport +
         ", recursive=" + recursive +
         ", showMessagesFromReferences=" + showMessagesFromReferences +
@@ -920,9 +967,12 @@ public class CliContext {
         ", analyzeOutcomeWithAI=" + analyzeOutcomeWithAI +
         ", analyzeOutcomeWithAIOnError=" + analyzeOutcomeWithAIOnError +
         ", llmProvider='" + llmProvider + '\'' +
-        ", modelName='" + modelName + '\'' +
-        ", checkIpsCodes=" + checkIpsCodes +
-        ", bundle=" + bundle +
+        ", llmModelName='" + llmModelName + '\'' +
+        ", checkIpsCodes='" + checkIpsCodes + '\'' +
+        ", bundle='" + bundle  + '\'' +
+        ", suppressErrors=" + Arrays.toString(suppressErrors) +
+        ", suppressWarnInfos=" + Arrays.toString(suppressWarnInfos) +
+        ", igs=" + Arrays.toString(igs) +
         '}';
   }
 
@@ -935,57 +985,64 @@ public class CliContext {
 	}
 
   public void addContextToExtension(final Extension ext) {
-	addExtension(ext, "ig", new StringType(this.ig));
-	addExtension(ext, "hintAboutNonMustSupport", new BooleanType(this.hintAboutNonMustSupport));
-	addExtension(ext, "recursive", new BooleanType(this.recursive));
+    addExtension(ext, "ig", new StringType(this.ig));
+    addExtension(ext, "hintAboutNonMustSupport", new BooleanType(this.hintAboutNonMustSupport));
+    addExtension(ext, "recursive", new BooleanType(this.recursive));
 
-	addExtension(ext, "showMessagesFromReferences", new BooleanType(this.showMessagesFromReferences));
-	addExtension(ext, "doDebug", new BooleanType(this.doDebug));
-	addExtension(ext, "assumeValidRestReferences", new BooleanType(this.assumeValidRestReferences));
-	addExtension(ext, "canDoNative", new BooleanType(this.canDoNative));
-	addExtension(ext, "noExtensibleBindingMessages", new BooleanType(this.noExtensibleBindingMessages));
-	addExtension(ext, "noUnicodeBiDiControlChars", new BooleanType(this.noUnicodeBiDiControlChars));
-	addExtension(ext, "noInvariants", new BooleanType(this.noInvariants));
-	addExtension(ext, "displayIssuesAreWarnings", new BooleanType(this.displayIssuesAreWarnings));
-	addExtension(ext, "wantInvariantsInMessages", new BooleanType(this.wantInvariantsInMessages));
-	addExtension(ext, "doImplicitFHIRPathStringConversion", new BooleanType(this.doImplicitFHIRPathStringConversion));
-	// addExtension(ext, "htmlInMarkdownCheck", new BooleanType(this.htmlInMarkdownCheck == HtmlInMarkdownCheck.ERROR));
+    addExtension(ext, "showMessagesFromReferences", new BooleanType(this.showMessagesFromReferences));
+    addExtension(ext, "doDebug", new BooleanType(this.doDebug));
+    addExtension(ext, "assumeValidRestReferences", new BooleanType(this.assumeValidRestReferences));
+    addExtension(ext, "canDoNative", new BooleanType(this.canDoNative));
+    addExtension(ext, "noExtensibleBindingMessages", new BooleanType(this.noExtensibleBindingMessages));
+    addExtension(ext, "noUnicodeBiDiControlChars", new BooleanType(this.noUnicodeBiDiControlChars));
+    addExtension(ext, "noInvariants", new BooleanType(this.noInvariants));
+    addExtension(ext, "displayIssuesAreWarnings", new BooleanType(this.displayIssuesAreWarnings));
+    addExtension(ext, "wantInvariantsInMessages", new BooleanType(this.wantInvariantsInMessages));
+    addExtension(ext, "doImplicitFHIRPathStringConversion", new BooleanType(this.doImplicitFHIRPathStringConversion));
+    // addExtension(ext, "htmlInMarkdownCheck", new BooleanType(this.htmlInMarkdownCheck == HtmlInMarkdownCheck.ERROR));
 
-	addExtension(ext, "securityChecks", new BooleanType(this.securityChecks));
-	addExtension(ext, "crumbTrails", new BooleanType(this.crumbTrails));
-	addExtension(ext, "forPublication", new BooleanType(this.forPublication));
-	addExtension(ext, "showMessageIds", new BooleanType(this.showMessageIds));
-	addExtension(ext, "showTerminologyRouting", new BooleanType(this.showTerminologyRouting));
-	addExtension(ext, "clearTxCache", new BooleanType(this.clearTxCache));
-	addExtension(ext, "httpReadOnly", new BooleanType(this.httpReadOnly));
-	addExtension(ext, "allowExampleUrls", new BooleanType(this.allowExampleUrls));
-	addExtension(ext, "txServer", new UriType(this.txServer));
-	addExtension(ext, "txServerCache", new BooleanType(this.txServerCache));
-  addExtension(ext, "txLog", new StringType(this.txLog));
-  addExtension(ext, "txUseEcosystem", new BooleanType(this.txUseEcosystem));
-	addExtension(ext, "lang", new StringType(this.lang));
-	addExtension(ext, "snomedCT", new StringType(this.snomedCT));
-	addExtension(ext, "fhirVersion", new StringType(this.fhirVersion));
-	addExtension(ext, "xVersion", new BooleanType(this.xVersion));
-	addExtension(ext, "onlyOneEngine", new BooleanType(this.onlyOneEngine));
-	addExtension(ext, "ig", new StringType(this.ig));
-	// addExtension(ext, "questionnaireMode", new BooleanType(this.questionnaireMode));
-	// addExtension(ext, "level", new BooleanType(this.level));
-	// addExtension(ext, "mode", new BooleanType(this.mode));
-	addExtension(ext, "locale", new StringType(this.locale));
-	// addExtension(ext, "locations", new StringType(this.locations));
-	addExtension(ext, "jurisdiction", new StringType(this.jurisdiction));
-	addExtension(ext, "check-references", new BooleanType(this.checkReferences));
-	addExtension(ext, "resolution-context", new StringType(this.resolutionContext));
-	addExtension(ext, "disableDefaultResourceFetcher", new BooleanType(this.disableDefaultResourceFetcher));
-  addExtension(ext, "analyzeOutcomeWithAI", new BooleanType(this.analyzeOutcomeWithAI));
-  addExtension(ext, "analyzeOutcomeWithAIOnError", new BooleanType(this.analyzeOutcomeWithAIOnError));
-  addExtension(ext, "llmProvider", new StringType(this.llmProvider));
-  addExtension(ext, "modelName", new StringType(this.modelName));
-	addExtension(ext, "check-ips-codes", new BooleanType(this.checkIpsCodes));
-	addExtension(ext, "bundle", new StringType(this.bundle));
-  for( var extension : this.extensions) {
-    addExtension(ext, "extensions", new StringType(extension));
-  }
+    addExtension(ext, "securityChecks", new BooleanType(this.securityChecks));
+    addExtension(ext, "crumbTrails", new BooleanType(this.crumbTrails));
+    addExtension(ext, "forPublication", new BooleanType(this.forPublication));
+    addExtension(ext, "showMessageIds", new BooleanType(this.showMessageIds));
+    addExtension(ext, "showTerminologyRouting", new BooleanType(this.showTerminologyRouting));
+    addExtension(ext, "clearTxCache", new BooleanType(this.clearTxCache));
+    addExtension(ext, "httpReadOnly", new BooleanType(this.httpReadOnly));
+    addExtension(ext, "allowExampleUrls", new BooleanType(this.allowExampleUrls));
+    addExtension(ext, "txServer", new UriType(this.txServer));
+    addExtension(ext, "txServerCache", new BooleanType(this.txServerCache));
+    addExtension(ext, "txLog", new StringType(this.txLog));
+    addExtension(ext, "txUseEcosystem", new BooleanType(this.txUseEcosystem));
+    addExtension(ext, "lang", new StringType(this.lang));
+    addExtension(ext, "snomedCT", new StringType(this.snomedCT));
+    addExtension(ext, "fhirVersion", new StringType(this.fhirVersion));
+    addExtension(ext, "xVersion", new BooleanType(this.xVersion));
+    addExtension(ext, "onlyOneEngine", new BooleanType(this.onlyOneEngine));
+    addExtension(ext, "ig", new StringType(this.ig));
+    // addExtension(ext, "questionnaireMode", new BooleanType(this.questionnaireMode));
+    // addExtension(ext, "level", new BooleanType(this.level));
+    // addExtension(ext, "mode", new BooleanType(this.mode));
+    addExtension(ext, "locale", new StringType(this.locale));
+    // addExtension(ext, "locations", new StringType(this.locations));
+    addExtension(ext, "jurisdiction", new StringType(this.jurisdiction));
+    addExtension(ext, "check-references", new BooleanType(this.checkReferences));
+    addExtension(ext, "resolution-context", new StringType(this.resolutionContext));
+    addExtension(ext, "disableDefaultResourceFetcher", new BooleanType(this.disableDefaultResourceFetcher));
+    addExtension(ext, "analyzeOutcomeWithAI", new BooleanType(this.analyzeOutcomeWithAI));
+    addExtension(ext, "analyzeOutcomeWithAIOnError", new BooleanType(this.analyzeOutcomeWithAIOnError));
+    addExtension(ext, "llmProvider", new StringType(this.llmProvider));
+    addExtension(ext, "llmModelName", new StringType(this.llmModelName));
+    addExtension(ext, "check-ips-codes", new BooleanType(this.checkIpsCodes));
+    addExtension(ext, "bundle", new StringType(this.bundle));
+    if (this.extensions != null && this.extensions.length > 0) {
+      for( var extension : this.extensions) {
+        addExtension(ext, "extensions", new StringType(extension));
+      }    
+    }
+    if (this.igs != null && this.igs.length > 0) {
+      for( var ig : this.igs) {
+        addExtension(ext, "igs", new StringType(ig));
+      }    
+    }
   }
 }

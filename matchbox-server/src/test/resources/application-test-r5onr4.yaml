@@ -25,6 +25,7 @@ hapi:
 matchbox:
   fhir:
     context:
+      httpReadOnly: true
       txServer: http://localhost:${server.port}/matchboxv3/fhir
 spring:
   datasource:

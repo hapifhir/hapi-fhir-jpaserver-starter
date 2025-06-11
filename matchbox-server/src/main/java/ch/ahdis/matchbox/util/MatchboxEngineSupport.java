@@ -207,6 +207,11 @@ public class MatchboxEngineSupport {
 		if (ig != null) {
 			try {
 				validator.getIgLoader().loadIg(validator.getIgs(), validator.getBinaries(), ig, true);
+				if (cliContext.getIgs()!=null) {
+					for (final String igCp : cliContext.getIgs()) {
+						validator.getIgLoader().loadIg(validator.getIgs(), validator.getBinaries(), igCp, true);
+					}
+				}
 			} catch (final Exception e){
 				throw new IgLoadException(e);
 			}
@@ -546,11 +551,15 @@ public class MatchboxEngineSupport {
 		validator.setDoNative(cli.isDoNative());
 		validator.setHintAboutNonMustSupport(cli.isHintAboutNonMustSupport());
 		validator.setAnyExtensionsAllowed(false);
-		for (String s : cli.getExtensions()) {
-			if ("any".equals(s)) {
-				validator.setAnyExtensionsAllowed(true);
-			} else {	
-				validator.getExtensionDomains().add(s);
+		if (cli.getExtensions() == null ) {
+			validator.setAnyExtensionsAllowed(false);
+		} else {
+			for (String s : cli.getExtensions()) {
+				if ("any".equals(s)) {
+					validator.setAnyExtensionsAllowed(true);
+				} else {	
+					validator.getExtensionDomains().add(s);
+				}
 			}
 		}
 		validator.setLanguage(cli.getLang());
@@ -614,37 +623,58 @@ public class MatchboxEngineSupport {
 		final Map<String, List<String>> suppressedError =
 			Objects.requireNonNullElseGet(this.matchboxFhirContextProperties.getSuppressError(),
 													HashMap::new);
+
+		boolean apiDefinedWarnInfos = cli.getSuppressWarnInfos() != null;
+		boolean apiDefinedErrors = cli.getSuppressErrors() != null;
+
+		if (apiDefinedWarnInfos) {
+			Arrays.stream(cli.getSuppressWarnInfos())
+				.forEach(pattern -> this.addSuppressedWarnInfoToEngine(pattern, validator));
+			log.info("Suppressing info/warnings over API, not using configuration file");
+		}		
+		if (apiDefinedErrors) {
+			Arrays.stream(cli.getSuppressErrors())
+				.forEach(pattern -> this.addSuppressedErrorToEngine(pattern, validator));
+			log.info("Suppressing error over API, not using configuration file");
+		}
+
 		if (cli.getOnlyOneEngine()) {
 			// If we only have one engine, then ignore all warnings that are defined in the configuration file
-			suppressedWarnings.values().stream()
-				.flatMap(List::stream)
-				.forEach(pattern -> this.addSuppressedWarnInfoToEngine(pattern, validator));
-			suppressedError.values().stream()
-				.flatMap(List::stream)
-				.forEach(pattern -> this.addSuppressedErrorToEngine(pattern, validator));		
+			if (!apiDefinedWarnInfos) {
+				suppressedWarnings.values().stream()
+					.flatMap(List::stream)
+					.forEach(pattern -> this.addSuppressedWarnInfoToEngine(pattern, validator));
+			}
+			if (!apiDefinedErrors) {
+				suppressedError.values().stream()
+					.flatMap(List::stream)
+					.forEach(pattern -> this.addSuppressedErrorToEngine(pattern, validator));
+			}		
 		} else {
 			// Otherwise, only ignore the warnings that are defined for the IGs that have been loaded in the engine
 			// Note: we remove the hash in the package, because the hash is also removed when reading the YAML
 			//       configuration file.
-			validator.getContext().getLoadedPackages().stream()
-				.map(pkg -> pkg.replace("#", ""))
-				.forEach(ig -> {
-					suppressedWarnings.getOrDefault(ig, Collections.emptyList())
-						.forEach(pattern -> this.addSuppressedWarnInfoToEngine(pattern, validator));
-					suppressedError.getOrDefault(ig, Collections.emptyList())
-						.forEach(pattern -> this.addSuppressedErrorToEngine(pattern, validator));
-				});
-
-			validator.getContext().getLoadedPackages().stream().filter(pkg -> pkg.contains("#"))
-				.map(pkg -> pkg.substring(0, pkg.indexOf("#")))
-				.forEach(ig -> {
-					suppressedWarnings.getOrDefault(ig, Collections.emptyList())
-						.forEach(pattern -> this.addSuppressedWarnInfoToEngine(pattern, validator));
-					suppressedError.getOrDefault(ig, Collections.emptyList())
-						.forEach(pattern -> this.addSuppressedErrorToEngine(pattern, validator));
-				});
+			if (!apiDefinedWarnInfos) {
+				validator.getContext().getLoadedPackages().stream()
+					.map(pkg -> pkg.replace("#", ""))
+					.forEach(ig -> {
+						suppressedWarnings.getOrDefault(ig, Collections.emptyList())
+							.forEach(pattern -> this.addSuppressedWarnInfoToEngine(pattern, validator));
+						suppressedError.getOrDefault(ig, Collections.emptyList())
+							.forEach(pattern -> this.addSuppressedErrorToEngine(pattern, validator));
+					});
+			}
+			if (!apiDefinedErrors) {
+				validator.getContext().getLoadedPackages().stream().filter(pkg -> pkg.contains("#"))
+					.map(pkg -> pkg.substring(0, pkg.indexOf("#")))
+					.forEach(ig -> {
+						suppressedWarnings.getOrDefault(ig, Collections.emptyList())
+							.forEach(pattern -> this.addSuppressedWarnInfoToEngine(pattern, validator));
+						suppressedError.getOrDefault(ig, Collections.emptyList())
+							.forEach(pattern -> this.addSuppressedErrorToEngine(pattern, validator));
+					});
+			}
 		}
-		log.debug("Added {} suppressed warnings for these IGs", validator.getSuppressedWarnInfoPatterns().size());
 	}
 
 	private void addSuppressedWarnInfoToEngine(final @NonNull String pattern,

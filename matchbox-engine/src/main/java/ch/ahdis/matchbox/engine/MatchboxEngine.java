@@ -1201,6 +1201,13 @@ public class MatchboxEngine extends ValidationEngine {
 	}
 
 	/**
+	 * Returns the list of suppressed validation error issues.
+	 */
+	public List<String> getSuppressedErrors() {
+		return ((ch.ahdis.matchbox.engine.ValidationPolicyAdvisor) getPolicyAdvisor()).getSuppressedErrorMessages();
+	}
+
+	/**
 	 * Compiles the list of suppressed validation warning/information-level issues into a list of {@link Pattern}.
 	 */
 	protected List<Pattern> compileSuppressedWarnInfoPatterns() {

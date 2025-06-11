@@ -63,8 +63,8 @@ public class LLMConnector {
     private LLMConnector(CliContext cliContext) {
         objectMapper = new ObjectMapper();
         LLM_PROVIDER = cliContext.getLlmProvider();
-        MODEL_NAME = cliContext.getModelName();
-        API_KEY = cliContext.getApiKey();
+        MODEL_NAME = cliContext.getLlmModelName();
+        API_KEY = cliContext.getLlmApiKey();
         initializeChatModel();
     }
 

@@ -75,6 +75,14 @@ public class ValidationPolicyAdvisor extends BasePolicyAdvisorForFullValidation 
             messagesToCheck.add(regexPath);
         }
     }
+
+    /** returns all error regex pattern to ignore for the messagesId */
+    public List<String> getSuppressedErrorMessages() {
+        return messagesToIgnore.entrySet().stream()
+            .flatMap(entry -> entry.getValue().stream()
+            .map(regex -> entry.getKey() + ":" + regex))
+            .collect(java.util.stream.Collectors.toList());
+    }
     
     public void clearErrorMessagesToIgnore() {
       messagesToIgnore.clear();

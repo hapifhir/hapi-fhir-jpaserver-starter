@@ -27,7 +27,7 @@ export class AppComponent {
     if (base === 'http://localhost:4200') {
       console.log('note: using local dev mag system for ' + location.origin);
       // You can also use /proxy/testahdisch
-      fhirConfigService.changeFhirMicroService('http://localhost:4200/proxy/localhost/matchbox/fhir');
+      fhirConfigService.changeFhirMicroService('http://localhost:8080/matchboxv3/fhir');
     } else {
       const url: string = (window as any).MATCHBOX_BASE_PATH + '/fhir';
       fhirConfigService.changeFhirMicroService(url);

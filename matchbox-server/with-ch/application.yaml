@@ -18,18 +18,15 @@ hapi:
         name: hl7.terminology.r4
         version: 6.3.0
         url: classpath:/hl7.terminology.r4#6.3.0.tgz
-      ch-term:
-        name: ch.fhir.ig.ch-term
-        version: 3.1.0
-        url: https://fhir.ch/ig/ch-term/package.tgz
-      ch-emed:
+      ch-core:
         name: ch.fhir.ig.ch-core
         version: 6.0.0-ballot 
-        url: https://build.fhir.org/ig/hl7ch/ch-core/package.tgz
+        url: https://fhir.ch/ig/ch-core/package.tgz
 matchbox:
   fhir:
     context:
 #      txServer: http://tx.fhir.org
+      httpReadOnly: true
       txServer: http://localhost:${server.port}/matchboxv3/fhir
       suppressWarnInfo:
         hl7.fhir.r4.core#4.0.1:

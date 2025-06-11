@@ -16,6 +16,7 @@ import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionExceptio
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
+import org.hl7.fhir.r5.model.OperationDefinition.OperationDefinitionParameterComponent;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -204,15 +205,28 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 		for (final Field field : cliContextProperties) {
 			field.setAccessible(true);
 			try {
-				validateOperationDefinition.addParameter()
+				OperationDefinitionParameterComponent component = validateOperationDefinition.addParameter()
 					.setName(field.getName())
 					.setUse(Enumerations.OperationParameterUse.IN)
 					.setMin(0)
-					.setMax("1")
-					.setType(field.getType().equals(boolean.class) || field.getType().equals(Boolean.class) ? Enumerations.FHIRTypes.BOOLEAN : Enumerations.FHIRTypes.STRING)
-					.addExtension("http://matchbox.health/validationDefaultValue",
+					.setMax(field.getType().isArray() ? "*" : "1")
+					.setType(field.getType().equals(boolean.class) || field.getType().equals(Boolean.class) ? Enumerations.FHIRTypes.BOOLEAN : Enumerations.FHIRTypes.STRING);
+				if (field.getType().isArray()) {
+					String[] values = (String[]) field.get(cliContext);
+					if (values != null && values.length > 0) {
+						for (String value : values) {
+							if (value != null && !value.isBlank()) {
+								component.addExtension("http://matchbox.health/validationDefaultValue",
+									new StringType(value));
+							}
+						}
+					}
+				} else {
+					component.addExtension("http://matchbox.health/validationDefaultValue",
 									  field.getType().equals(boolean.class) || field.getType().equals(Boolean.class) ? new BooleanType(
-										  (Boolean) field.get(cliContext)) : new StringType((String) field.get(cliContext)));
+										  (Boolean) field.get(cliContext)) : 
+										  new StringType((String) field.get(cliContext)));				
+				}
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -222,11 +236,5 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 			}
 		}
 
-		validateOperationDefinition.addParameter()
-			.setName("extensions")
-			.setUse(Enumerations.OperationParameterUse.IN)
-			.setMin(0)
-			.setMax("1")
-			.setType(Enumerations.FHIRTypes.STRING);
 	}
 }

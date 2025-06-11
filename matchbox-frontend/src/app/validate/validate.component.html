@@ -81,9 +81,17 @@
 
     <ng-container *ngIf="showSettings">
       <div *ngFor="let setting of Array.from(validatorSettings.values()) | sortSettings" class="form-field-group">
-        <mat-form-field class="column50" *ngIf="setting.param.type !== 'boolean'">
+        <mat-form-field class="column50" *ngIf="setting.param.type === 'string' && setting.param.max === '1'">
           <mat-label>{{ setting.param.name }}</mat-label>
           <input [formControl]="setting.formControl" matInput/>
+        </mat-form-field>
+        <mat-form-field class="column50" *ngIf="setting.param.type === 'string' && setting.param.max === '*'">
+          <mat-label>{{ setting.param.name }}</mat-label>
+          <textarea [formControl]="setting.formControl" 
+            matInput 
+            cdkTextareaAutosize 
+            cdkAutosizeMinRows="3"
+            cdkAutosizeMaxRows="10"></textarea>        
         </mat-form-field>
         <mat-checkbox *ngIf="setting.param.type === 'boolean'" [formControl]="setting.formControl">
           {{ setting.param.name }}

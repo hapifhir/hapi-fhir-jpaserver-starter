@@ -285,7 +285,7 @@ export class ValidateComponent implements AfterViewInit {
 
     // Validation options
     for (const param of entry.validationParameters) {
-      searchParams.set(param.name, param.value);
+      searchParams.append(param.name, param.value);
     }
     entry.loading = true;
     this.client
@@ -495,7 +495,18 @@ export class ValidateComponent implements AfterViewInit {
     const parameters: ValidationParameter[] = [];
     for (const [_, setting] of this.validatorSettings) {
       if (setting.formControl.value != null && setting.formControl.value.toString().length > 0) {
-        parameters.push(new ValidationParameter(setting.param.name, setting.formControl.value.toString()));
+        const isTextarea = setting.param.type === 'string' && setting.param.max === '*';
+        if (isTextarea) {
+           const lines = setting.formControl.value.toString().split('\n');
+          // Filter out empty lines
+          const nonEmptyLines = lines.filter(line => line.trim().length > 0);
+          // Add each non-empty line as a separate parameter with the same name
+          for (const line of nonEmptyLines) {
+            parameters.push(new ValidationParameter(setting.param.name, line.trim()));
+          }          
+        } else {
+          parameters.push(new ValidationParameter(setting.param.name, setting.formControl.value.toString()));
+        }
       }
     }
     return parameters;
