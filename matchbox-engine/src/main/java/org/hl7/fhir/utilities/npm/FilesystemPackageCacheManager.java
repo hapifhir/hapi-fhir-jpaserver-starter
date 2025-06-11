@@ -382,6 +382,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
   }
 
   public String getLatestVersion(String id) throws IOException {
+    id = stripAlias(id);
     for (PackageServer nextPackageServer : getPackageServers()) {
       // special case:
       if (!(Utilities.existsInList(id, CommonPackages.ID_PUBPACK, "hl7.terminology.r5") && PackageServer.SECONDARY_SERVER.equals(nextPackageServer.getUrl()))) {
@@ -408,6 +409,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
   }
 
   public String getLatestVersionFromCache(String id) throws IOException {
+    id = stripAlias(id);
     for (String f : Utilities.reverseSorted(cacheFolder.list())) {
       File cf = ManagedFileAccess.file(Utilities.path(cacheFolder, f));
       if (cf.isDirectory()) {
@@ -458,9 +460,10 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
    * @throws IOException If the package cannot be removed
    */
   public void removePackage(String id, String version) throws IOException {
-    locks.getPackageLock(id + "#" + version).doWriteWithLock(() -> {
+    String sid = stripAlias(id);
+    locks.getPackageLock(sid + "#" + version).doWriteWithLock(() -> {
 
-      String f = Utilities.path(cacheFolder, id + "#" + version);
+      String f = Utilities.path(cacheFolder, sid + "#" + version);
         File ff = ManagedFileAccess.file(f);
         if (ff.exists()) {
           FileUtilities.atomicDeleteDirectory(f);
@@ -483,6 +486,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
    */
   @Override
   public NpmPackage loadPackageFromCacheOnly(String id, @Nullable String version) throws IOException {
+    id = stripAlias(id);
 
     if (!Utilities.noString(version) && version.startsWith("file:")) {
       return loadPackageFromFile(id, version.substring(5));
@@ -568,42 +572,43 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
    * Add an already fetched package to the cache
    */
   @Override
-  public NpmPackage addPackageToCache(final String id, final String version, final InputStream packageTgzInputStream, final String sourceDesc) throws IOException {
-// matchbox-engine PATCH, we do not want to load from a package server for hl7.fhir.xver-extension :
-  	if (CommonPackages.ID_XVER.equals(id)) {
+  public NpmPackage addPackageToCache(String id, final String version, final InputStream packageTgzInputStream, final String sourceDesc) throws IOException {
+    String sid = stripAlias(id);
+
+    // matchbox-engine PATCH, we do not want to load from a package server for hl7.fhir.xver-extension :
+  	if (CommonPackages.ID_XVER.equals(sid)) {
       NpmPackage npm = NpmPackage.fromPackage(packageTgzInputStream, sourceDesc, true);
       return npm;
   	}
 
-    if ("hl7.cda.uv.core".equals(id)) {
+    if ("hl7.cda.uv.core".equals(sid)) {
       NpmPackage npm = NpmPackage.fromPackage(packageTgzInputStream, sourceDesc, true);
       return npm;
   	}
-
-    checkValidVersionString(version, id);
-    return locks.getPackageLock(id + "#" + version).doWriteWithLock(() -> {
+    checkValidVersionString(version, sid);
+    return locks.getPackageLock(sid + "#" + version).doWriteWithLock(() -> {
 
       String tempDir = Utilities.generateUniqueRandomUUIDPath(cacheFolder.getAbsolutePath());
 
       NpmPackage extractedNpm = NpmPackage.extractFromTgz(packageTgzInputStream, sourceDesc, tempDir, minimalMemory);
 
       log("");
-      log("Installing " + id + "#" + version);
+      log("Installing " + sid + "#" + version);
 
-      if ((extractedNpm.name() != null && id != null && !id.equalsIgnoreCase(extractedNpm.name()))) {
-        if (!suppressErrors && (!id.equals("hl7.fhir.r5.core") && !id.equals("hl7.fhir.us.immds"))) {// temporary work around
-          throw new IOException("Attempt to import a mis-identified package. Expected " + id + ", got " + extractedNpm.name());
+      if ((extractedNpm.name() != null && sid != null && !sid.equalsIgnoreCase(extractedNpm.name()) && !sid.equalsIgnoreCase(extractedNpm.name()+"."+VersionUtilities.getNameForVersion(extractedNpm.fhirVersion())))) {
+        if (!suppressErrors && (!sid.equals("hl7.fhir.r5.core") && !sid.equals("hl7.fhir.us.immds"))) {// temporary work around
+          throw new IOException("Attempt to import a mis-identified package. Expected " + sid + ", got " + extractedNpm.name());
         }
       }
 
       NpmPackage npmPackage;
-      String packageRoot = Utilities.path(cacheFolder, id + "#" + version);
+      String packageRoot = Utilities.path(cacheFolder, sid + "#" + version);
       try {
-        if (!id.equals(extractedNpm.getNpm().asString("name")) || !version.equals(extractedNpm.getNpm().asString("version"))) {
-          if (!id.equals(extractedNpm.getNpm().asString("name"))) {
+        if (!sid.equals(extractedNpm.getNpm().asString("name")) || !version.equals(extractedNpm.getNpm().asString("version"))) {
+          if (!sid.equals(extractedNpm.getNpm().asString("name"))) {
             extractedNpm.getNpm().add("original-name", extractedNpm.getNpm().asString("name"));
             extractedNpm.getNpm().remove("name");
-            extractedNpm.getNpm().add("name", id);
+            extractedNpm.getNpm().add("name", sid);
           }
           if (!version.equals(extractedNpm.getNpm().asString("version"))) {
             extractedNpm.getNpm().add("original-version", extractedNpm.getNpm().asString("version"));
@@ -660,6 +665,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 
   @Override
   public String getPackageUrl(String packageId) throws IOException {
+    packageId = stripAlias(packageId);
     String result = super.getPackageUrl(packageId);
     if (result == null) {
       result = ciBuildClient.getPackageUrl(packageId);
@@ -692,6 +698,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 
   @Override
   public NpmPackage loadPackage(String id, String version) throws FHIRException, IOException {
+    id = stripAlias(id);
     //ok, try to resolve locally
 
     // MATCHBOX PATCH
@@ -929,6 +936,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 
 
   public boolean packageExists(String id, String ver) throws IOException {
+    id = stripAlias(id);
     if (packageInstalled(id, ver)) {
       return true;
     }
@@ -941,6 +949,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
   }
 
   public boolean packageInstalled(String id, String version) {
+    id = stripAlias(id);
     for (NpmPackage p : temporaryPackages) {
       if (p.name().equals(id) && ("current".equals(version) || "dev".equals(version) || p.version().equals(version))) {
         return true;

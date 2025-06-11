@@ -269,7 +269,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       "ul", "ol", "li", "dl", "dt", "dd", "pre", "table", "caption", "colgroup", "col", "thead", "tr", "tfoot", "tbody", "th", "td",
       "code", "samp", "img", "map", "area"));
   private static final HashSet<String> HTML_ATTRIBUTES = new HashSet<>(Arrays.asList(
-      "title", "style", "class", "id", "idref", "lang", "xml:lang", "dir", "accesskey", "tabindex",
+      "title", "style", "class", "id", "lang", "xml:lang", "dir", "accesskey", "tabindex",
       // tables
       "span", "width", "align", "valign", "char", "charoff", "abbr", "axis", "headers", "scope", "rowspan", "colspan"));
 
@@ -3199,10 +3199,15 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         }
 
         if (url != null && url.startsWith("urn:uuid:")) {
-          String s = url.substring(9);
+
+          String s = url;
           if (s.contains("#")) {
             s = s.substring(0, s.indexOf("#"));
           }
+          if (type.equals("canonical") && s.contains("|")) {
+            s = s.substring(0, s.lastIndexOf("|")); 
+          }
+          s = s.substring(9);
           ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, UUIDUtilities.isValidUUID(s), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_UUID_VALID, s) && ok;
         }
         if (url != null && url.startsWith("urn:oid:")) {
@@ -3437,13 +3442,13 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
           // check that no illegal elements and attributes have been used
           ok = checkInnerNames(errors, e, path, xhtml.getChildNodes(), false) && ok;
           ok = checkUrls(errors, e, path, xhtml.getChildNodes()) && ok;
-          ok = checkIdRefs(errors, e, path, xhtml, resource, node) && ok;
           if (true) {
             ok = checkReferences(valContext, errors, e, path, "div", xhtml, resource) && ok;
           }
           if (true) {
             ok = checkImageSources(valContext, errors, e, path, "div", xhtml, resource) && ok;
           }
+          checkMixedLangs(errors, e, path, xhtml.getChildNodes());
         }
       }
 
@@ -3600,12 +3605,16 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         } else {
           if (isExampleUrl(url) && isAllowExamples()) {
             // nothing - these do need to resolve
-          } else if (isExemptPathForUrlChecking(context, isAbsolute(url), eurl)) {
+          } else if (isExemptPathForUrlChecking(context, isAbsolute(url), eurl, e, true)) {
             // nothing
           } else if (isKnownSpace(url) || internal) {
             ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_URL_RESOLVE, url) && ok;;
           } else if (isExampleUrl(url)) {
             ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_URL_EXAMPLE, url) && ok;;
+          } else if (isExemptPathForUrlChecking(context, isAbsolute(url), eurl, e, false)) {
+            // nothing
+          } else if (isHintableElementForUrlChecking(path)) {
+            hint(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_URL_RESOLVE, url);
           } else {
             warning(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_URL_RESOLVE, url);
           }
@@ -3653,8 +3662,16 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     return ok;
   }
 
+  private boolean isHintableElementForUrlChecking(String path) {
+     if (Utilities.endsWithInList(path, ".meta.source")) {
+       return true;
+     } else {
+       return false;
+     }
+  }
+
   private boolean isCommunicationsUrl(String url) {
-    return Utilities.startsWithInList(url, "tel:");
+    return Utilities.startsWithInList(url, "tel:", "mailto:");
   }
 
   private boolean isKnownMappingUri(String url) {
@@ -3677,26 +3694,49 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     return Utilities.existsInList(url, "urn:hl7-org:v3", "urn:hl7-org:sdtc", "http://unstats.un.org/unsd/methods/m49/m49.htm");
   }
 
-  private boolean isExemptPathForUrlChecking(ElementDefinition context, boolean absolute, String eurl) {
+  private boolean isExemptPathForUrlChecking(ElementDefinition context, boolean absolute, String eurl, Element element, boolean exampleStep) {
     if (!context.hasBase()) {
       return false;
     }
     if (Utilities.existsInList(eurl, "http://hl7.org/fhir/tools/StructureDefinition/ig-page-name")) {
       return true;
     }
+    if ("Extension.value[x]".equals(context.getBase().getPath())) {
+      String ext = null;
+      Element p = element.getParentForValidator();
+      while (!Utilities.isAbsoluteUrl(ext) && p != null) {
+        if (p.fhirType().equals("Extension")) {
+          ext = p.getNamedChildValue("url");
+        }
+        p = p.getParentForValidator();
+      }
+      if (ext == null) {
+        return true;
+      } else {
+        
+        return Utilities.existsInList(ext, 
+            ToolingExtensions.EXT_TEXT_LINK  // we're going to check that elsewhere
+            );
+      }
+    }
+    if (exampleStep) {
+      return false;
+    }
+    
     if (absolute) {
       return Utilities.existsInList(context.getBase().getPath(),
           "ImplementationGuide.definition.page.source[x]", "ImplementationGuide.definition.page.name",  "ImplementationGuide.definition.page.name[x]",
-          "Requirements.statement.satisfiedBy", 
+          "Requirements.statement.satisfiedBy", "Bundle.entry.request.url",
+          "Attachment.url",
           "StructureDefinition.type", "ElementDefinition.fixed[x]", "ElementDefinition.pattern[x]", "ImplementationGuide.dependsOn.uri", "StructureDefinition.mapping.uri",
-          "MessageHeader.source.endpoint", "MessageHeader.source.endpoint[x]", "MessageHeader.destination.endpoint", "MessageHeader.destination.endpoint[x]"
-          );
+          "MessageHeader.source.endpoint", "MessageHeader.source.endpoint[x]", "MessageHeader.destination.endpoint", "MessageHeader.destination.endpoint[x]",
+          "QuestionnaireResponse.item.definition");
       
     } else {
       return Utilities.existsInList(context.getBase().getPath(),
           "Extension.url", // extension urls are validated elsewhere
          "ImplementationGuide.definition.page.source[x]", "ImplementationGuide.definition.page.name", "ImplementationGuide.definition.page.name[x]",
-         "Requirements.statement.satisfiedBy", 
+         "Requirements.statement.satisfiedBy", "Bundle.entry.request.url", 
          "StructureDefinition.type", "ElementDefinition.fixed[x]", "ElementDefinition.pattern[x]"
          );
     }
@@ -3960,25 +4000,6 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     return ok;
   }
 
-  private boolean checkIdRefs(List<ValidationMessage> errors, Element e, String path, XhtmlNode node, Element resource, NodeStack stack) {
-    boolean ok = true;
-    if (node.getNodeType() == NodeType.Element && node.getAttribute("idref") != null) {
-      String idref = node.getAttribute("idref");
-      int count = countFragmentMatches(resource, idref, stack);
-      if (count == 0) {
-        ok = warning(errors, "2023-12-01", IssueType.INVALID, e.line(), e.col(), path, idref == null, I18nConstants.XHTML_IDREF_NOT_FOUND, idref) && ok;                
-      } else if (count > 1) {
-        ok = rule(errors, "2023-12-01", IssueType.INVALID, e.line(), e.col(), path, idref == null, I18nConstants.XHTML_IDREF_NOT_MULTIPLE_MATCHES, idref) && ok;                
-      }
-    }
-    if (node.hasChildren()) {
-      for (XhtmlNode child : node.getChildNodes()) {
-        checkIdRefs(errors, e, path, child, resource, stack);
-      }        
-    }
-    return ok;
-  }
-
   private boolean checkUrls(List<ValidationMessage> errors, Element e, String path, List<XhtmlNode> list) {
     boolean ok = true;
     for (XhtmlNode node : list) {
@@ -4006,6 +4027,23 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       }
     }
     return ok;
+  }
+
+  private void checkMixedLangs(List<ValidationMessage> errors, Element e, String path, List<XhtmlNode> list) {
+    Set<String>langs = new HashSet<>();
+    boolean nonLangContent = false;
+    for (XhtmlNode node : list) {
+      if (node.getNodeType() == NodeType.Element && "div".equals(node.getName()) && isLangDiv(node)) {
+        langs.add(node.getAttribute("xml:lang"));
+      } else if(node.hasContent()) {
+        nonLangContent = true;
+      }
+    }
+    warning(errors, "2025-06-07", IssueType.BUSINESSRULE, e.line(), e.col(), path, langs.isEmpty() ||!nonLangContent, I18nConstants.XHTML_XHTML_MIXED_LANG, CommaSeparatedStringBuilder.join(", ", langs));
+  }
+
+  private boolean isLangDiv(XhtmlNode node) {
+    return node.hasAttribute("xml:lang");
   }
 
   private boolean checkPrimitiveBinding(ValidationContext valContext, List<ValidationMessage> errors, String path, String type, ElementDefinition elementContext, Element element, StructureDefinition profile, NodeStack stack) {
@@ -4321,6 +4359,183 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     ok = checkFixedValue(errors, path + ".numerator", focus.getNamedChild("numerator", false), fixed.getNumerator(), fixedSource, "numerator", focus, pattern, context) && ok;
     ok = checkFixedValue(errors, path + ".denominator", focus.getNamedChild("denominator", false), fixed.getDenominator(), fixedSource, "denominator", focus, pattern, context) && ok;
     return ok;
+  }
+
+  private boolean checkNarrative(ValidationContext valContext, List<ValidationMessage> errors, String path,Element element, Element resource, StructureDefinition profile,
+      ElementDefinition definition, String parentType, NodeStack stack, PercentageTracker pct, ValidationMode vmode) throws FHIRException {
+    boolean ok = true;
+    XhtmlNode div = element.hasChild("div") ? element.getNamedChild("div").getXhtml() : null;
+    if (definition.hasExtension(ToolingExtensions.EXT_NARRATIVE_SOURCE_CONTROL)) {
+      String level = ToolingExtensions.readStringExtension(definition, ToolingExtensions.EXT_NARRATIVE_SOURCE_CONTROL);
+      if (div != null) {
+        for (XhtmlNode x : div.getChildNodes()) {
+          if (x.hasContent()) {
+            if (!hasClass(x.getAttribute("class"), "generated", "boilerplate", "original")) {
+              switch (level) {
+              case "hint" : 
+              case "information" : 
+                hint(errors, "2025-06-07", IssueType.BUSINESSRULE, element.line(), element.col(), path,
+                    false, I18nConstants.XHTML_CONTROL_NO_SOURCE, Utilities.limitString(x.allText(), 30), profile);      
+              case "warning" : 
+                warning(errors, "2025-06-07", IssueType.BUSINESSRULE, element.line(), element.col(), path,
+                    false, I18nConstants.XHTML_CONTROL_NO_SOURCE, Utilities.limitString(x.allText(), 30), profile);      
+              case "error" :
+                ok = rule(errors, "2025-06-07", IssueType.BUSINESSRULE, element.line(), element.col(), path,
+                    false, I18nConstants.XHTML_CONTROL_NO_SOURCE, Utilities.limitString(x.allText(), 30), profile) && ok;      
+              }
+            }
+          }
+        }
+      }
+    }
+    if (definition.hasExtension(ToolingExtensions.EXT_NARRATIVE_LANGUAGE_CONTROL)) {
+      Set<String> langs = new HashSet<>();
+      for (XhtmlNode node : div.getChildNodes()) {
+        if (node.getNodeType() == NodeType.Element && "div".equals(node.getName()) && isLangDiv(node)) {
+          langs.add(node.getAttribute("xml:lang"));
+        }
+      }
+      for (Extension ext : definition.getExtensionsByUrl(ToolingExtensions.EXT_NARRATIVE_LANGUAGE_CONTROL)) {
+        if (ext.hasValue() && ext.getValue().primitiveValue() != null) {
+          String code = ext.getValue().primitiveValue();
+          switch (code) {
+          case "#no" : 
+            ok = rule(errors, "2025-06-07", IssueType.BUSINESSRULE, element.line(), element.col(), path,
+                langs.isEmpty(), I18nConstants.XHTML_CONTROL_NO_LANGS, CommaSeparatedStringBuilder.join(", ", langs), profile) && ok;
+            break;
+          case "#yes" : 
+            ok = rule(errors, "2025-06-07", IssueType.BUSINESSRULE, element.line(), element.col(), path,
+                !langs.isEmpty(), I18nConstants.XHTML_CONTROL_LANGS_REQUIRED, CommaSeparatedStringBuilder.join(", ", langs), profile) && ok;
+            break;
+          case "#resource" : 
+            String rl = resource.getNamedChildValue("language");
+            if (langs.isEmpty()) {
+              warning(errors, "2025-06-07", IssueType.BUSINESSRULE, element.line(), element.col(), path,
+                  !langs.isEmpty(), rl == null ? I18nConstants.XHTML_CONTROL_LANGS_NONE_NO_DEFAULT : I18nConstants.XHTML_CONTROL_LANGS_NONE, rl, profile);
+            } else if (rl == null) {
+              warning(errors, "2025-06-07", IssueType.BUSINESSRULE, element.line(), element.col(), path,
+                  !langs.isEmpty(), I18nConstants.XHTML_CONTROL_LANGS_NO_DEFAULT, CommaSeparatedStringBuilder.join(", ", langs), profile);
+              
+            } else {
+              ok = rule(errors, "2025-06-07", IssueType.BUSINESSRULE, element.line(), element.col(), path,
+                langs.contains(rl), I18nConstants.XHTML_CONTROL_LANGS_REQUIRED_DEF, rl, CommaSeparatedStringBuilder.join(", ", langs), profile) && ok;
+            }
+            break;
+         default : 
+            if (langs.isEmpty()) {
+              warning(errors, "2025-06-07", IssueType.BUSINESSRULE, element.line(), element.col(), path,
+                  !langs.isEmpty(), I18nConstants.XHTML_CONTROL_LANGS_NONE2, code, profile);
+            } else {
+              ok = rule(errors, "2025-06-07", IssueType.BUSINESSRULE, element.line(), element.col(), path,
+                langs.contains(code), I18nConstants.XHTML_CONTROL_LANGS_REQUIRED_LANG, code, CommaSeparatedStringBuilder.join(", ", langs), profile) && ok;
+            }
+          }
+        }
+      }
+    }
+    if (element.hasExtension(ToolingExtensions.EXT_TEXT_LINK)) {
+      if (div == null) {
+        ok = rule(errors, "2025-05-17", IssueType.STRUCTURE, element.line(), element.col(), path,
+            !Utilities.noString(element.getNamedChildValue("display", false)), I18nConstants.TEXT_LINK_NO_DIV) && ok;      
+      } else for (Element ex : element.getExtensions(ToolingExtensions.EXT_TEXT_LINK)) {
+        NodeStack estack = stack.push(ex, ex.getIndex(), definition, definition);  
+        for (Element htmlid : ex.getExtensions("htmlid")) {
+          String id = htmlid.getNamedChildValue("value");
+          if (!divHasId(div, id)) {
+            ok = rule(errors, "2025-05-17", IssueType.STRUCTURE, element.line(), element.col(), path,
+                !Utilities.noString(element.getNamedChildValue("display", false)), I18nConstants.TEXT_LINK_NO_ID, id) && ok;
+          }
+        }
+        String data = ex.getExtensionString("data");
+        String type = null;
+        if (data == null) {
+          ok = rule(errors, "2025-05-17", IssueType.STRUCTURE, element.line(), element.col(), path,
+              !Utilities.noString(element.getNamedChildValue("display", false)), I18nConstants.TEXT_LINK_NO_DATA) && ok;            
+        } else if (data.startsWith("#")) {
+          String idref = data.substring(1);
+          List<Element> matches = getFragmentMatches(resource, idref, stack);
+
+          if (matches.size() == 0) {
+            ok = rule(errors, "2025-05-17", IssueType.NOTFOUND, stack, false, I18nConstants.TEXT_LINK_DATA_NOT_FOUND, data) && ok;                
+          } else {
+            if (matches.size() > 1) {
+              ok = rule(errors, "2025-05-17", IssueType.INVALID, stack, false, I18nConstants.TEXT_LINK_DATA_MULTIPLE_MATCHES, data) && ok;
+            }
+            type = matches.get(0).fhirType();
+          } 
+        } else {
+          String fragment = null;
+          String url = null;
+          if (data.contains("#")) {
+            url = data.substring(0, data.indexOf("#"));
+            fragment = data.substring(data.indexOf("#")+1);
+          } else {
+            url = data;
+          }
+          List<Element> matches = getUrlMatches(resource, url, stack);
+          if (matches.size() == 0) {
+            ok = rule(errors, "2025-05-17", IssueType.NOTFOUND, stack, false, I18nConstants.TEXT_LINK_DATA_NOT_FOUND, data) && ok;                
+          } else {
+            if (matches.size() > 1) {
+              ok = rule(errors, "2025-05-17", IssueType.INVALID, stack, false, I18nConstants.TEXT_LINK_DATA_MULTIPLE_MATCHES, data) && ok;
+            }
+            type = matches.get(0).fhirType();
+            if (fragment != null) {
+              matches = getFragmentMatches(matches.get(0), fragment, stack);
+              if (matches.size() == 0) {
+                ok = rule(errors, "2025-05-17", IssueType.NOTFOUND, stack, false, I18nConstants.TEXT_LINK_DATA_NOT_FOUND, data) && ok;                
+              } else {
+                if (matches.size() > 1) {
+                  ok = rule(errors, "2025-05-17", IssueType.INVALID, stack, false, I18nConstants.TEXT_LINK_DATA_MULTIPLE_MATCHES, data) && ok;
+                }
+                type = matches.get(0).fhirType();
+              } 
+            }
+          } 
+        }
+        if (ex.hasExtension("selector")) {
+          String expression = ex.getExtensionString("selector");
+          try {
+            ExpressionNode expr = fpe.parse(expression);
+            if (type != null) {
+              fpe.check(null, resource.fhirType(), resource.fhirType(), type, expr);
+            }
+          } catch (Exception e) {
+            ok = rule(errors, "2025-05-17", IssueType.INVALID, stack, false, I18nConstants.TEXT_LINK_SELECTOR_INVALID, expression, e.getMessage()) && ok;            
+          }
+        }
+      }
+    }
+      /*
+
+    Complex Extension: Used to denote which portions of the narrative are linked to (usually, generated from) structured data in resources. This information might be used in several different ways, including translating and regenerating narrative in applications that are using/presenting the narrative.
+
+    html: string: The id attribute on an element in the xhtml narrative
+    data: uri: The id attribute on a resource element (#{id}, relative#{id} or https://absolute#{id})
+    selector: string: FHIRPath that selects a subset of the identified data. This sub-extension exists because in some circumstances, the specific data items are in resources where the constructor of the narrative can't introduce specific ids on the relevent elements
+    */
+    return ok;
+  }
+
+
+  private boolean hasClass(String clss, String string, String string2, String string3) {
+    if (clss == null) {
+      return false;
+    }
+    String[] s = clss.split("\\ ");
+    return Utilities.existsInList(clss, s);
+  }
+
+  private boolean divHasId(XhtmlNode node, String id) {
+    if (node.hasAttribute("id") && id.equals(node.getAttribute("id"))) {
+      return true;
+    }
+    for (XhtmlNode c : node.getChildNodes()) {
+      if (divHasId(c, id)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private boolean checkReference(ValidationContext valContext,
@@ -6421,6 +6636,11 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         if (xhtml != null) {
           String l = xhtml.getAttribute("lang");
           String xl = xhtml.getAttribute("xml:lang");
+          if (l == null && xl == null && allChildrenAreLangDivs(xhtml)) {
+            XhtmlNode ld = firstLangDiv(xhtml);
+            l = ld.getAttribute("lang");
+            xl = ld.getAttribute("xml:lang");
+          }
           if (l == null && xl == null) {
             warning(errors, NO_RULE_DATE, IssueType.BUSINESSRULE, div.line(), div.col(), stack.getLiteralPath(), false, I18nConstants.LANGUAGE_XHTML_LANG_MISSING1);
           } else {
@@ -6453,6 +6673,24 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       }
     }
     return ok;
+  }
+
+  private XhtmlNode firstLangDiv(XhtmlNode xhtml) {
+    for (XhtmlNode n : xhtml.getChildNodes()) {
+      if (isLangDiv(n)) {
+        return n;
+      }
+    }
+    return null;
+  }
+
+  private boolean allChildrenAreLangDivs(XhtmlNode xhtml) {
+    for (XhtmlNode n : xhtml.getChildNodes()) {
+      if (!isLangDiv(n) && n.hasContent()) {
+        return false;
+      }
+    }
+    return xhtml.getChildNodes().size() > 0;
   }
 
   private boolean validateCapabilityStatement(List<ValidationMessage> errors, Element cs, NodeStack stack) {
@@ -7020,6 +7258,8 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         checkDisplay = checkCodeableConcept(checkBindings ? errors : new ArrayList<>(), ei.getPath(), ei.getElement(), profile, checkDefn, localStack, bh);
         ok = (bh.ok() || !checkBindings) & ok;
         thisIsCodeableConcept = true;
+      } else if (type.equals("Narrative")) {
+        ok = checkNarrative(valContext, errors, ei.getPath(), ei.getElement(), resource, profile, checkDefn, actualType, localStack, pct, mode) && ok;
       } else if (type.equals("Reference")) {
         ok = checkReference(valContext, errors, ei.getPath(), ei.getElement(), profile, checkDefn, actualType, localStack, pct, mode) && ok;
         // We only check extensions if we're not in a complex extension or if the element we're dealing with is not defined as part of that complex extension

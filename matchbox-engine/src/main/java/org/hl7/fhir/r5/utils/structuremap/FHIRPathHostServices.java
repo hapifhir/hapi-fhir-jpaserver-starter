@@ -25,6 +25,7 @@ import java.util.List;
 public class FHIRPathHostServices implements FHIRPathEngine.IEvaluationContext {
 
   private final StructureMapUtilities structureMapUtilities;
+  // matchbox patch FML resolve() in Bundle #359
   private IEvaluationContext validationHostServices;
 
   public FHIRPathHostServices(StructureMapUtilities structureMapUtilities) {
@@ -75,7 +76,7 @@ public class FHIRPathHostServices implements FHIRPathEngine.IEvaluationContext {
 
   /**
    * we need to access the validation host services, we do this indirectly through matchboxengine
-   * 
+   * matchbox patch FML resolve() in Bundle #359
    * @return
    * @throws IOException
    */

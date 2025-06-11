@@ -40,7 +40,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.release>21</maven.compiler.release>
 
-        <fhir.core.version>6.5.21</fhir.core.version>
+        <fhir.core.version>6.5.25</fhir.core.version>
         <hapi.fhir.version>8.0.0</hapi.fhir.version>
 
 

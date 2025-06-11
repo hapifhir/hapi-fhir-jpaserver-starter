@@ -61,12 +61,14 @@ import java.util.zip.ZipInputStream;
 
 import javax.annotation.Nonnull;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipParameters;
+import org.apache.commons.lang3.Validate;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.utilities.ByteProvider;
 import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
@@ -93,6 +95,7 @@ import org.hl7.fhir.utilities.npm.PackageGenerator.PackageType;
  * @author Grahame Grieve
  *
  */
+@Slf4j
 public class NpmPackage {
 
   public interface ITransformingLoader {
@@ -109,15 +112,15 @@ public class NpmPackage {
   }
   
   public class PackageResourceInformation {
-    private String id;
-    private String resourceType;
-    private String url;
-    private String version;
-    private String filename;
-    private String supplements;
-    private String stype;
-    private String derivation;
-    private String content;
+    private final String id;
+    private final String resourceType;
+    private final String url;
+    private final String version;
+    private final String filename;
+    private final String supplements;
+    private final String stype;
+    private final String derivation;
+    private final String content;
     
     public PackageResourceInformation(String root, JsonObject fi) throws IOException {
       super();
@@ -174,9 +177,9 @@ public class NpmPackage {
   }
 
   public static class PackagedResourceFile {
-    private String folder;
-    private String filename;
-    private String resourceType;
+    private final String folder;
+    private final String filename;
+    private final String resourceType;
     protected PackagedResourceFile(String folder, String filename, String resourceType) {
       super();
       this.folder = folder;
@@ -215,7 +218,7 @@ public class NpmPackage {
   }
 
   public class NpmPackageFolder {
-    private String folderName;
+    private final String folderName;
     private Map<String, List<String>> types;
     private Map<String, byte[]> content;
     private JsonObject cachedIndex;
@@ -296,7 +299,7 @@ public class NpmPackage {
       return content;
     }
 
-    public byte[] fetchFile(String file) throws FileNotFoundException, IOException {
+    public byte[] fetchFile(String file) throws IOException {
       if (folder != null) {
         File f = ManagedFileAccess.file(Utilities.path(folder.getAbsolutePath(), file));
         if (f.exists()) {
@@ -309,7 +312,7 @@ public class NpmPackage {
       }
     }
 
-    public ByteProvider getProvider(String file) throws FileNotFoundException, IOException {
+    public ByteProvider getProvider(String file) throws IOException {
       if (folder != null) {
         File f = ManagedFileAccess.file(Utilities.path(folder.getAbsolutePath(), file));
         if (f.exists()) {
@@ -332,7 +335,7 @@ public class NpmPackage {
     }
 
     public String dump() {
-      return folderName + " ("+ (folder == null ? "null" : folder.toString())+")"+(minimalMemory ? "" : " | "+Boolean.toString(cachedIndex != null)+" | "+content.size()+" | "+types.size());
+      return folderName + " ("+ (folder == null ? "null" : folder.toString())+")"+(minimalMemory ? "" : " | " + (cachedIndex != null) + " | " + content.size() + " | " + types.size());
     }
 
     public void removeFile(String n) throws IOException {
@@ -377,7 +380,7 @@ public class NpmPackage {
 
   private String path;
   private JsonObject npm;
-  private Map<String, NpmPackageFolder> folders = new HashMap<>();
+  private final Map<String, NpmPackageFolder> folders = new HashMap<>();
   private boolean changedByLoader; // internal qa only!
   private Map<String, Object> userData;
   private boolean minimalMemory;
@@ -448,7 +451,7 @@ public class NpmPackage {
     return userData;
   }
 
-  public void loadFiles(String path, File source, String... exemptions) throws FileNotFoundException, IOException {
+  public void loadFiles(String path, File source, String... exemptions) throws IOException {
     this.npm = JsonParser.parseObject(FileUtilities.fileToString(Utilities.path(path, "package", "package.json")));
     this.path = path;
 
@@ -561,7 +564,7 @@ public class NpmPackage {
     try (TarArchiveInputStream tarIn = new TarArchiveInputStream(gzipIn)) {
       TarArchiveEntry entry;
 
-      while ((entry = (TarArchiveEntry) tarIn.getNextEntry()) != null) {
+      while ((entry = tarIn.getNextEntry()) != null) {
         String n = entry.getName();
         if (n.contains("/..") || n.contains("../")) {
           throw new RuntimeException("Entry with an illegal name: " + n);
@@ -573,7 +576,7 @@ public class NpmPackage {
           }
         } else {
           int count;
-          byte data[] = new byte[BUFFER_SIZE];
+          byte[] data = new byte[BUFFER_SIZE];
           String filename = Utilities.path(tempDir, n);
           String folder = FileUtilities.getDirectoryForFile(filename);
           FileUtilities.createDirectory(folder);
@@ -607,12 +610,15 @@ public class NpmPackage {
     } catch (Exception e) {
       throw new IOException("Error reading "+(desc == null ? "package" : desc)+": "+e.getMessage(), e);      
     }
+
+    boolean haveLoggedDotSlashPrefixWarning = false;
+
     try (TarArchiveInputStream tarIn = new TarArchiveInputStream(gzipIn)) {
       TarArchiveEntry entry;
 
       int i = 0;
       int c = 12;
-      while ((entry = (TarArchiveEntry) tarIn.getNextEntry()) != null) {
+      while ((entry = tarIn.getNextEntry()) != null) {
         i++;
         String n = entry.getName();
         if (n.contains("..")) {
@@ -620,13 +626,22 @@ public class NpmPackage {
         }
         if (entry.isDirectory()) {
           String dir = n.substring(0, n.length()-1);
+          // If resource paths in the TGZ file are prefixed with "./", be tolerant
+          // and strip that
+          if (dir.startsWith("./")) {
+            if (!haveLoggedDotSlashPrefixWarning) {
+              log.warn("The NPM file contains resource paths that are prefixed with \"./\". This is invalid and should be corrected in the source package.");
+              haveLoggedDotSlashPrefixWarning = true;
+            }
+            dir = dir.substring(2);
+          }
           if (dir.startsWith("package/")) {
             dir = dir.substring(8);
           }
           folders.put(dir, new NpmPackageFolder(dir));
         } else {
           int count;
-          byte data[] = new byte[BUFFER_SIZE];
+          byte[] data = new byte[BUFFER_SIZE];
           ByteArrayOutputStream fos = new ByteArrayOutputStream();
           try (BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER_SIZE)) {
             while ((count = tarIn.read(data, 0, BUFFER_SIZE)) != -1) {
@@ -640,15 +655,19 @@ public class NpmPackage {
           c++;
           System.out.print(".");
           if (c == 120) {
-            System.out.println("");
+            System.out.println();
             System.out.print("  ");
             c = 2;
           }
         }
       }
     } 
+    NpmPackageFolder packageFolder = folders.get("package");
+    Validate.notNull(packageFolder, "Package folder not found in NPM file");
+    byte[] packageJsonBytes = packageFolder.fetchFile("package.json");
+    Validate.notNull(packageJsonBytes, "package/package.json not found in NPM file");
     try {
-      npm = JsonParser.parseObject(folders.get("package").fetchFile("package.json"));
+      npm = JsonParser.parseObject(packageJsonBytes);
     } catch (Exception e) {
       throw new IOException("Error parsing "+(desc == null ? "" : desc+"#")+"package/package.json: "+e.getMessage(), e);
     }
@@ -656,7 +675,10 @@ public class NpmPackage {
   }
 
   public void loadFile(String n, byte[] data) throws IOException {
-    // work around a bug: 
+    if (n.startsWith("./")) {
+      n = n.substring(2);
+    }
+    // work around a bug:
     n = n.replace("//", "/");
     String dir = n.contains("/") ? n.substring(0, n.lastIndexOf("/")) : "$root";
     if (dir.startsWith("package/")) {
@@ -1266,7 +1288,7 @@ public class NpmPackage {
         n = "package/"+n;
       }
       NpmPackageIndexBuilder indexer = new NpmPackageIndexBuilder();
-      String filename = Utilities.path("[tmp]", "tmp-"+UUID.randomUUID().toString()+".db");
+      String filename = Utilities.path("[tmp]", "tmp-" + UUID.randomUUID() + ".db");
       indexer.start(filename);
       for (String s : folder.content.keySet()) {
         byte[] b = folder.content.get(s);
@@ -1516,10 +1538,7 @@ public class NpmPackage {
     if (npm.asBoolean("lazy-load")) {
       return true;
     }
-    if (!hasFile("other", "spec.internals") && folders.get("package").cachedIndex == null) {
-      return false;
-    }
-    return true;
+    return hasFile("other", "spec.internals") || folders.get("package").cachedIndex != null;
   }
 
   public boolean isNotForPublication() {

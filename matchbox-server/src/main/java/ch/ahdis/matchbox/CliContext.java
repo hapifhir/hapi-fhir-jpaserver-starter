@@ -306,6 +306,8 @@ public class CliContext {
     this.llmApiKey = environment.getProperty("matchbox.fhir.context.llm.apiKey", String.class);
     this.llmModelName = environment.getProperty("matchbox.fhir.context.llm.modelName", String.class);
     this.llmProvider = environment.getProperty("matchbox.fhir.context.llm.provider", String.class);
+    this.analyzeOutcomeWithAI = environment.getProperty("matchbox.fhir.context.analyzeOutcomeWithAI", Boolean.class, null);
+    this.analyzeOutcomeWithAIOnError = environment.getProperty("matchbox.fhir.context.analyzeOutcomeWithAIOnError", Boolean.class, null);
 
     // get al list of all JsonProperty of cliContext with return values property
     // name and property type
@@ -332,8 +334,6 @@ public class CliContext {
     this.onlyOneEngine = environment.getProperty("matchbox.fhir.context.onlyOneEngine", Boolean.class, false);
     this.httpReadOnly = environment.getProperty("matchbox.fhir.context.httpReadOnly", Boolean.class, false);
     this.xVersion = environment.getProperty("matchbox.fhir.context.xVersion", Boolean.class, false);
-    this.analyzeOutcomeWithAI = environment.getProperty("matchbox.fhir.context.analyzeOutcomeWithAI", Boolean.class, null);
-    this.analyzeOutcomeWithAIOnError = environment.getProperty("matchbox.fhir.context.analyzeOutcomeWithAIOnError", Boolean.class, null);
   }
 
   public CliContext(CliContext other) {

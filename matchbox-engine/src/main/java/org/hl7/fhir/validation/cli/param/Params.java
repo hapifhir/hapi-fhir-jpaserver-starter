@@ -66,6 +66,7 @@ public class Params {
   public static final String TRANSFORM = "-transform";
   public static final String FORMAT = "-format";
   public static final String LANG_TRANSFORM = "-lang-transform";
+  public static final String LANG_REGEN = "-lang-regen";
   public static final String EXP_PARAMS = "-expansion-parameters";
   public static final String NARRATIVE = "-narrative";
   public static final String SNAPSHOT = "-snapshot";
@@ -401,6 +402,11 @@ public class Params {
       } else if (args[i].equals(LANG_TRANSFORM)) {
         validationContext.setLangTransform(args[++i]);
         validationContext.setMode(EngineMode.LANG_TRANSFORM);
+      } else if (args[i].equals(LANG_REGEN)) {
+        validationContext.addLangRegenParam(args[++i]);
+        validationContext.addLangRegenParam(args[++i]);
+        validationContext.addLangRegenParam(args[++i]);
+        validationContext.setMode(EngineMode.LANG_REGEN);
       } else if (args[i].equals(EXP_PARAMS)) {
         validationContext.setExpansionParameters(args[++i]);
       } else if (args[i].equals(COMPILE)) {

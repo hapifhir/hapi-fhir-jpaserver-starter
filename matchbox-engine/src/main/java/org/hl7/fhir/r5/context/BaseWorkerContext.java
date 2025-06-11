@@ -1290,9 +1290,20 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     Bundle batch = new Bundle();
     batch.setType(BundleType.BATCH);
     Set<String> systems = findRelevantSystems(vs);
+    ValueSet lastvs = null;
     for (CodingValidationRequest codingValidationRequest : codes) {
       if (!codingValidationRequest.hasResult()) {
-        Parameters pIn = constructParameters(options, codingValidationRequest, vs == null ? codingValidationRequest.getVsObj() : vs);
+        Parameters pIn;
+        ValueSet wvs = vs == null ? codingValidationRequest.getVsObj() : vs;
+        if (wvs == null) {
+          pIn = constructParameters(options, codingValidationRequest, wvs);          
+        } else if (lastvs != wvs) {
+          pIn = constructParameters(options, codingValidationRequest, wvs.getVersionedUrl());
+          pIn.addParameter().setName("tx-resource").setResource(wvs);
+          lastvs = wvs;
+        } else {
+          pIn = constructParameters(options, codingValidationRequest, lastvs.getVersionedUrl());          
+        }
         setTerminologyOptions(options, pIn);
         BundleEntryComponent be = batch.addEntry();
         be.setResource(pIn);
@@ -1502,7 +1513,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
           return res;
         }
       } catch (VSCheckerException e) {
-        if (e.isWarning()) {
+        if (e.isWarning() || e.getType() == TerminologyServiceErrorClass.CODESYSTEM_UNSUPPORTED) {
           localWarning = e.getMessage();
         } else {  
           localError = e.getMessage();
@@ -1728,7 +1739,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       pIn.addParameter().setName("coding").setValue(codingValidationRequest.getCoding());
     }
     if (vsUrl != null) {
-      pIn.addParameter().setName("url").setValue(new CanonicalType(vsUrl));
+      pIn.addParameter().setName("url").setValue(new UriType(vsUrl));
     }
     pIn.addParameters(expParameters);
     return pIn;
