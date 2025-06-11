@@ -65,7 +65,7 @@
         <!-- The following properties are linked to HAPI-FHIR, which hasn't attributed version properties -->
         <awaitility_version>4.2.0</awaitility_version>
         <xmlunit_version>2.10.0</xmlunit_version>
-        <beanutils_version>1.9.4</beanutils_version>
+        <beanutils_version>1.11.0</beanutils_version>
 
 
         <org_commonmark_version>0.21.0</org_commonmark_version>
@@ -78,7 +78,7 @@
         <!-- Other dependencies we need -->
         <lombok_version>1.18.36</lombok_version>
         <tomcat_embed_version>10.1.39</tomcat_embed_version>
-        <postgresql_version>42.7.5</postgresql_version>
+        <postgresql_version>42.7.7</postgresql_version>
         <h2_version>2.3.232</h2_version>
         <jakarta_servlet_version>6.1.0</jakarta_servlet_version>
         <jaxb_api_version>2.3.1</jaxb_api_version>
