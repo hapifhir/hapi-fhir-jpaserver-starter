@@ -121,7 +121,7 @@ matchbox:
 The validation client can suppress error issues that are not relevant for the validation.
 Validation issues to be suppressed are defined in the configuration file, per Implementation Guide and optional version.
 
-You need to provide the [messageId](https://github.com/hapifhir/org.hl7.fhir.core/blob/master/org.hl7.fhir.utilities/src/main/java/org/hl7/fhir/utilities/i18n/I18nConstants.java) to indicate the error which should be suppressed. An optional regex for the path where the error happened in the resouces can be added. The regex needs to be added after the ':' character, e.g: "messageId:regex".
+You need to provide the [messageId](https://github.com/hapifhir/org.hl7.fhir.core/blob/master/org.hl7.fhir.utilities/src/main/java/org/hl7/fhir/utilities/i18n/I18nConstants.java) to indicate the error which should be suppressed. An optional regex for the path where the error happened in the resouces can be added. The regex needs to be added after the '@^' characters, e.g: "messageId@^regex".
 
 If you wan't to match the errors with unknown extensions you see error messages like this: 
 
@@ -132,7 +132,7 @@ URL value 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-sex' does not
 
 the following combination will exclude all unknown extensions:
 
-Type_Specific_Checks_DT_URL_Resolve:.*extension.*url
+Type_Specific_Checks_DT_URL_Resolve@^.*extension.*url
 
 Example of configuration file:
 ```yaml
@@ -141,8 +141,8 @@ matchbox:
     context:
       suppressError:
         hl7.fhir.r4.core#4.0.1:
-          - "Extension_EXTP_Context_Wrong:RelatedPerson"
-          - "Type_Specific_Checks_DT_URL_Resolve:.*extension.*url"
+          - "Extension_EXTP_Context_Wrong@^RelatedPerson"
+          - "Type_Specific_Checks_DT_URL_Resolve@^.*extension.*url"
 
 ```
 

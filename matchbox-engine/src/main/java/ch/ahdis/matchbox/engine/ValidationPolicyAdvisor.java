@@ -80,7 +80,7 @@ public class ValidationPolicyAdvisor extends BasePolicyAdvisorForFullValidation 
     public List<String> getSuppressedErrorMessages() {
         return messagesToIgnore.entrySet().stream()
             .flatMap(entry -> entry.getValue().stream()
-            .map(regex -> entry.getKey() + ":" + regex))
+            .map(regex -> entry.getKey() + "@^" + regex))
             .collect(java.util.stream.Collectors.toList());
     }
     

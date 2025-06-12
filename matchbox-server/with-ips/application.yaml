@@ -29,5 +29,5 @@ matchbox:
       httpReadOnly: true
       suppressError:
         hl7.fhir.uv.ips:
-          - "Type_Specific_Checks_DT_URL_Resolve:.*extension.*url"
-          - "Type_Specific_Checks_DT_URL_Resolve:.*coding.*system"
+          - "Type_Specific_Checks_DT_URL_Resolve@^.*extension.*url"
+          - "Type_Specific_Checks_DT_URL_Resolve@^.*coding.*system"
