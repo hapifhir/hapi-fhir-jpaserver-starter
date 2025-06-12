@@ -1,26 +1,35 @@
 version: "3"
+networks:
+  my-network:
+    driver: bridge
 services:
   hapi-fhir-jpaserver-start:
     build: .
+    networks:
+      - my-network
     container_name: hapi-fhir-jpaserver-start
     restart: on-failure
-    network_mode: bridge
+    depends_on:
+      - hapi-fhir-postgres
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:h2:file:./target/database/h2"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://172.21.0.2:5432/hapi"
       SPRING_DATASOURCE_USERNAME: "admin"
       SPRING_DATASOURCE_PASSWORD: "admin"
-      SPRING_DATASOURCE_DRIVERCLASSNAME: "org.h2.Driver"
+      SPRING_DATASOURCE_DRIVERCLASSNAME: "org.postgresql.Driver"
     ports:
       - "8080:8080"
-  # hapi-fhir-postgres:
-  #   image: postgres:15-alpine
-  #   container_name: hapi-fhir-postgres
-  #   restart: always
-  #   environment:
-  #     POSTGRES_DB: "hapi"
-  #     POSTGRES_USER: "admin"
-  #     POSTGRES_PASSWORD: "admin"
-  #   volumes:
-  #     - hapi-fhir-postgres:/var/lib/postgresql/data
-# volumes:
-#   hapi-fhir-postgres:
+  hapi-fhir-postgres:
+    image: postgres:15-alpine
+    networks:
+      - my-network
+    container_name: hapi-fhir-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: "hapi"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
+    volumes:
+      - hapi-fhir-postgres:/var/lib/postgresql/data
+volumes:
+  hapi-fhir-postgres:
+    driver: local
