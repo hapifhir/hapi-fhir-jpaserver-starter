@@ -4,22 +4,23 @@ services:
     build: .
     container_name: hapi-fhir-jpaserver-start
     restart: on-failure
+    network_mode: bridge
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://hapi-fhir-postgres:5432/hapi"
+      SPRING_DATASOURCE_URL: "jdbc:h2:file:./target/database/h2"
       SPRING_DATASOURCE_USERNAME: "admin"
       SPRING_DATASOURCE_PASSWORD: "admin"
-      SPRING_DATASOURCE_DRIVERCLASSNAME: "org.postgresql.Driver"
+      SPRING_DATASOURCE_DRIVERCLASSNAME: "org.h2.Driver"
     ports:
       - "8080:8080"
-  hapi-fhir-postgres:
-    image: postgres:15-alpine
-    container_name: hapi-fhir-postgres
-    restart: always
-    environment:
-      POSTGRES_DB: "hapi"
-      POSTGRES_USER: "admin"
-      POSTGRES_PASSWORD: "admin"
-    volumes:
-      - hapi-fhir-postgres:/var/lib/postgresql/data
-volumes:
-  hapi-fhir-postgres:
+  # hapi-fhir-postgres:
+  #   image: postgres:15-alpine
+  #   container_name: hapi-fhir-postgres
+  #   restart: always
+  #   environment:
+  #     POSTGRES_DB: "hapi"
+  #     POSTGRES_USER: "admin"
+  #     POSTGRES_PASSWORD: "admin"
+  #   volumes:
+  #     - hapi-fhir-postgres:/var/lib/postgresql/data
+# volumes:
+#   hapi-fhir-postgres:

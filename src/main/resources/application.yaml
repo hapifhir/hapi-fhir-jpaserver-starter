@@ -43,10 +43,10 @@ spring:
     baselineOnMigrate: true
     fail-on-missing-locations: false
   datasource:
-    #url: 'jdbc:h2:file:./target/database/h2'
-    url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
+    url: 'jdbc:h2:file:./target/database/h2'
+    # url: jdbc:postgresql://db:5432/hapi
+    username: admin
+    password: admin
     driverClassName: org.h2.Driver
     max-active: 15
 
