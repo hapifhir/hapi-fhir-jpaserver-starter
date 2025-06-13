@@ -1,4 +1,4 @@
-2025/06/xx Release 4.0.5
+2025/06/13 Release 4.0.5
 - Add MCP Server integration [#398](https://github.com/ahdis/matchbox/issues/398)
 - suppress error messages for known issues [#395](https://github.com/ahdis/matchbox/issues/395)
 - unknown extensions should not raise an error for validation (IPS) [#394](https://github.com/ahdis/matchbox/issues/394)
