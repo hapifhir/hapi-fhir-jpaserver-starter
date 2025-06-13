@@ -19,6 +19,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import ca.uhn.fhir.jpa.config.r4b.JpaR4BConfig;
 import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.jpa.starter.annotations.OnMatchboxOnlyOneEnginePresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4BCondition;
 import ca.uhn.fhir.jpa.validation.ValidatorPolicyAdvisor;
 import ca.uhn.fhir.jpa.validation.ValidatorResourceFetcher;
@@ -87,6 +88,7 @@ public class FhirServerConfigR4B {
   
   @Bean(name = "myQuestionnaireRpR4B")
   @Primary
+	@Conditional(OnMatchboxOnlyOneEnginePresent.class)
   public QuestionnaireResourceProvider rpQuestionnaireR4B() {
     QuestionnaireResourceProvider retVal;
     retVal = new QuestionnaireResourceProvider();
@@ -95,6 +97,7 @@ public class FhirServerConfigR4B {
   
   @Bean(name = "myValueSetRpR4B")
   @Primary
+	@Conditional(OnMatchboxOnlyOneEnginePresent.class)
   public ValueSetResourceProvider rpValueSetR4B() {
   	ValueSetResourceProvider retVal = new ValueSetResourceProvider();
     return retVal;
@@ -102,6 +105,7 @@ public class FhirServerConfigR4B {
 
   @Bean(name = "myCodeSystemRpR4B")
   @Primary
+	@Conditional(OnMatchboxOnlyOneEnginePresent.class)
   public CodeSystemResourceProvider rpCodeSystem4B() {
   	CodeSystemResourceProvider retVal = new CodeSystemResourceProvider();
     return retVal;
@@ -109,6 +113,7 @@ public class FhirServerConfigR4B {
   
   @Bean(name = "myConceptMapRpR4B")
   @Primary
+	@Conditional(OnMatchboxOnlyOneEnginePresent.class)
   public ConceptMapResourceProvider rpConceptMap4B() {
   	ConceptMapResourceProvider retVal = new ConceptMapResourceProvider();
     return retVal;
@@ -122,6 +127,7 @@ public class FhirServerConfigR4B {
   }
 
   @Bean(name = "myStructureMapDaoR4B")
+	@Conditional(OnMatchboxOnlyOneEnginePresent.class)
   public IFhirResourceDao<org.hl7.fhir.r4b.model.StructureMap> daoStructureMapR4() {
 
     ca.uhn.fhir.jpa.dao.BaseHapiFhirResourceDao<org.hl7.fhir.r4b.model.StructureMap> retVal;
@@ -133,6 +139,7 @@ public class FhirServerConfigR4B {
 
   @Bean(name = "myStructureMapRpR4B")
   @Primary
+	@Conditional(OnMatchboxOnlyOneEnginePresent.class)
   public ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider rpStructureMapR4B() {
   	StructureMapTransformProvider retVal;
     retVal = new StructureMapTransformProvider();

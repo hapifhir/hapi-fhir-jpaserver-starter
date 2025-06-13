@@ -104,7 +104,7 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	@Autowired(required = false)
 	QuestionnaireAssembleProviderR5 assembleProviderR5;
 
-	@Autowired
+	@Autowired(required = false)
 	QuestionnaireResourceProvider questionnaireProvider;
 
 	@Autowired(required = false)
@@ -131,13 +131,13 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	@Autowired
 	protected MatchboxEngineSupport matchboxEngineSupport;
 	
-	@Autowired
+	@Autowired(required = false)
 	protected ConceptMapResourceProvider conceptMapProvider;
 
-	@Autowired
+	@Autowired(required = false)
 	protected CodeSystemResourceProvider codeSystemProvider;
 
-	@Autowired
+	@Autowired(required = false)
 	protected ValueSetResourceProvider valueSetProvider;
 
 	@Autowired
@@ -161,10 +161,10 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	@Autowired(required = false)
 	private ImplementationGuideProviderR5 implementationGuideResourceProviderR5;
 
-	@Autowired
+	@Autowired(required = false)
 	private CodeSystemCodeValidationProvider codeSystemCodeValidationProvider;
 
-	@Autowired
+	@Autowired(required = false)
 	private ValueSetCodeValidationProvider valueSetCodeValidationProvider;
 
 	// removed GraphQlProvider
@@ -194,18 +194,24 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 		}
 		fhirServer.registerInterceptor(new MappingLanguageInterceptor(matchboxEngineSupport));
 		fhirServer.registerInterceptor(new ImplementationGuidePackageInterceptor(myPackageCacheManager, myFhirContext));
-		fhirServer.registerInterceptor(new MatchboxValidationInterceptor(this.myFhirContext, structureDefinitionProvider));
+		fhirServer.registerInterceptor(new MatchboxValidationInterceptor(this.myFhirContext));
+
 		fhirServer.registerInterceptor(new TerminologyCapabilitiesInterceptor());
-		fhirServer.registerProviders(this.validationProvider,
-											  this.questionnaireProvider,
-											  this.conceptMapProvider,
-											  this.codeSystemProvider,
-											  this.valueSetProvider,
-											  this.structureDefinitionProvider,
-											  this.codeSystemCodeValidationProvider,
-											  this.valueSetCodeValidationProvider,
-											  this.structureMapTransformProvider,
-											  this.structureMapListProvider);
+
+		Arrays.stream(new Object[] {
+			this.validationProvider,
+			this.questionnaireProvider,
+			this.conceptMapProvider,
+			this.codeSystemProvider,
+			this.valueSetProvider,
+			this.structureDefinitionProvider,
+			this.codeSystemCodeValidationProvider,
+			this.valueSetCodeValidationProvider,
+			this.structureMapTransformProvider,
+			this.structureMapListProvider
+		})
+		.filter(Objects::nonNull)
+		.forEach(fhirServer::registerProvider);
 
 		if (!this.getCliContext().isHttpReadOnly()) {
 			// The operation $install-npm-package is enabled if the httpReadOnly mode is disabled

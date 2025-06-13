@@ -7,6 +7,7 @@ import ca.uhn.fhir.jpa.dao.BaseHapiFhirResourceDao;
 import ca.uhn.fhir.jpa.dao.JpaResourceDao;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
 import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.jpa.starter.annotations.OnMatchboxOnlyOneEnginePresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnR5Condition;
 import ca.uhn.fhir.jpa.validation.ValidatorPolicyAdvisor;
 import ca.uhn.fhir.jpa.validation.ValidatorResourceFetcher;
@@ -86,6 +87,7 @@ public class FhirServerConfigR5 {
 
 	@Bean(name = "myQuestionnaireRpR5")
 	@Primary
+	@Conditional(OnMatchboxOnlyOneEnginePresent.class)
 	public QuestionnaireResourceProvider rpQuestionnaireR5() {
 		QuestionnaireResourceProvider retVal;
 		retVal = new  QuestionnaireResourceProvider();
@@ -94,6 +96,7 @@ public class FhirServerConfigR5 {
 
 	@Bean(name = "myValueSetRpR5")
 	@Primary
+	@Conditional(OnMatchboxOnlyOneEnginePresent.class)
 	public ValueSetResourceProvider rpValueSetR5() {
 		ValueSetResourceProvider retVal = new ValueSetResourceProvider();
 		return retVal;
@@ -101,6 +104,7 @@ public class FhirServerConfigR5 {
 
 	@Bean(name = "myCodeSystemRpR5")
 	@Primary
+	@Conditional(OnMatchboxOnlyOneEnginePresent.class)
 	public CodeSystemResourceProvider rpCodeSystem4() {
 		CodeSystemResourceProvider retVal = new CodeSystemResourceProvider();
 		return retVal;
@@ -108,6 +112,7 @@ public class FhirServerConfigR5 {
 
 	@Bean(name = "myConceptMapRpR5")
 	@Primary
+	@Conditional(OnMatchboxOnlyOneEnginePresent.class)
 	public ConceptMapResourceProvider rpConceptMap4() {
 		ConceptMapResourceProvider retVal = new ConceptMapResourceProvider();
 		return retVal;
@@ -121,6 +126,7 @@ public class FhirServerConfigR5 {
 	}
 
 	@Bean(name = "myStructureMapDaoR5")
+	@Conditional(OnMatchboxOnlyOneEnginePresent.class)
 	public IFhirResourceDao<StructureMap> daoStructureMapR5() {
 
 		BaseHapiFhirResourceDao<StructureMap> retVal;
@@ -132,6 +138,7 @@ public class FhirServerConfigR5 {
 
 	@Bean(name = "myStructureMapRpR5")
 	@Primary
+	@Conditional(OnMatchboxOnlyOneEnginePresent.class)
 	public StructureMapTransformProvider rpStructureMapR5() {
 		StructureMapTransformProvider retVal;
 		retVal = new StructureMapTransformProvider();

@@ -1,16 +1,8 @@
 package ch.ahdis.matchbox.validation.matchspark;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import ch.ahdis.matchbox.CliContext;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
@@ -34,8 +26,6 @@ public class LLMConnector {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LLMConnector.class);
 
-    private static LLMConnector INSTANCE;
-
     private static String LLM_PROVIDER;
     private static String MODEL_NAME;
     private static String API_KEY;
@@ -45,23 +35,17 @@ public class LLMConnector {
             "If you can not help with an issue, tell me." +
             "If there are no issues labeled 'fatal' or 'error' or 'warning', simply reply with: 'The resource is valid'. Nothing more. Else: keep your answer as short as possible. Return your full answer in markdown format.";
 
-    private final ObjectMapper objectMapper;
     private ChatLanguageModel model;
     private ChatMemory chatMemory;
 
     public static LLMConnector getConnector(CliContext cliContext) {
-        if (INSTANCE == null) {
-            INSTANCE = new LLMConnector(cliContext);
-        }
-
-        return INSTANCE;
+        return new LLMConnector(cliContext);
     }
 
     /**
      * Constructor for the OpenAIConnector.
      */
     private LLMConnector(CliContext cliContext) {
-        objectMapper = new ObjectMapper();
         LLM_PROVIDER = cliContext.getLlmProvider();
         MODEL_NAME = cliContext.getLlmModelName();
         API_KEY = cliContext.getLlmApiKey();

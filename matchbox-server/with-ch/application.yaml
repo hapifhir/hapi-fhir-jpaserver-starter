@@ -33,4 +33,4 @@ matchbox:
           - "Constraint failed: dom-6:"
       suppressError:
         hl7.fhir.r4.core#4.0.1:
-          - "Extension_EXTP_Context_Wrong:RelatedPerson"
+          - "Extension_EXTP_Context_Wrong@^RelatedPerson"

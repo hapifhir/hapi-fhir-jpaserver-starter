@@ -1,6 +1,5 @@
 package ch.ahdis.matchbox.interceptors;
 
-import ch.ahdis.matchbox.providers.StructureDefinitionResourceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,14 +16,12 @@ public class MatchboxValidationInterceptor {
 	private static final Logger ourLog = LoggerFactory.getLogger(MatchboxValidationInterceptor.class);
 
 	public FhirContext theContext;
-	public StructureDefinitionResourceProvider structureDefinitionResourceProvider;
-
+	
 	/**
 	 * Constructor
 	 */
-	public MatchboxValidationInterceptor(FhirContext theContext, StructureDefinitionResourceProvider structureDefinitionResourceProvider) {
+	public MatchboxValidationInterceptor(FhirContext theContext) {
 		this.theContext = theContext;
-		this.structureDefinitionResourceProvider = structureDefinitionResourceProvider;
 		ourLog.debug("Interceptor for adjusting capability statement");
 	}
 

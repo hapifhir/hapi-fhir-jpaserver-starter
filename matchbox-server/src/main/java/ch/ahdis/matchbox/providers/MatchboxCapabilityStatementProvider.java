@@ -81,6 +81,7 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 	@Override
 	protected void postProcess(FhirTerser theTerser, IBaseConformance theCapabilityStatement) {
 		final var resources = TerserUtil.getFieldByFhirPath(this.myFhirContext, "rest.resource", theCapabilityStatement);
+	
 		for (final IBase resource : resources) {
 			final var baseType = TerserUtil.getFirstFieldByFhirPath(this.myFhirContext, "type", resource);
 			final String type;
@@ -108,22 +109,24 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 					new org.hl7.fhir.r4b.model.CapabilityStatement.ResourceInteractionComponent(org.hl7.fhir.r4b.model.CapabilityStatement.TypeRestfulInteraction.SEARCHTYPE);
 			} else {
 				throw new MatchboxUnsupportedFhirVersionException("MatchboxCapabilityStatementProvider",
-																				  this.myFhirContext.getVersion().getVersion());
+																				this.myFhirContext.getVersion().getVersion());
 			}
 
-			if (!"ImplementationGuide".equals(type)) {
-				if (!cliContext.getOnlyOneEngine()) {
-					TerserUtil.clearField(myFhirContext, "interaction", resource);
-					if (!"QuestionnaireResponse".equals(type)) {
-						setField(myFhirContext, theTerser, "interaction", resource, interaction, interactionSearch);
-					}
-				}
-				TerserUtil.clearField(myFhirContext, "searchRevInclude", resource);
-				TerserUtil.clearField(myFhirContext, "searchInclude", resource);
-				IBase value = TerserUtil.newElement(myFhirContext, "boolean", "false");
-				setField(myFhirContext, theTerser, "conditionalCreate", resource, value);
-				setField(myFhirContext, theTerser, "conditionalUpdate", resource, value);
+			if (!cliContext.getOnlyOneEngine() && ("ImplementationGuide".equals(type))) {
+				TerserUtil.clearField(myFhirContext, "interaction", resource);
+				setField(myFhirContext, theTerser, "interaction", resource, interaction, interactionSearch);
 			}
+			if (!cliContext.getOnlyOneEngine() && ("StructureDefinition".equals(type) || "StructureMap".equals(type))) {
+				TerserUtil.clearField(myFhirContext, "interaction", resource);
+				TerserUtil.clearField(myFhirContext, "searchParam", resource);
+				TerserUtil.clearField(myFhirContext, "conditionalCreate", resource);
+				TerserUtil.clearField(myFhirContext, "conditionalUpdate", resource);
+			}
+			TerserUtil.clearField(myFhirContext, "searchRevInclude", resource);
+			TerserUtil.clearField(myFhirContext, "searchInclude", resource);
+			// IBase value = TerserUtil.newElement(myFhirContext, "boolean", "false");
+			// setField(myFhirContext, theTerser, "conditionalCreate", resource, value);
+			// setField(myFhirContext, theTerser, "conditionalUpdate", resource, value);
 		}
 	}
 
@@ -222,10 +225,12 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 						}
 					}
 				} else {
-					component.addExtension("http://matchbox.health/validationDefaultValue",
-									  field.getType().equals(boolean.class) || field.getType().equals(Boolean.class) ? new BooleanType(
-										  (Boolean) field.get(cliContext)) : 
-										  new StringType((String) field.get(cliContext)));				
+					if (!field.getName().equals("llmApiKey")) {
+						component.addExtension("http://matchbox.health/validationDefaultValue",
+										field.getType().equals(boolean.class) || field.getType().equals(Boolean.class) ? new BooleanType(
+											(Boolean) field.get(cliContext)) : 
+											new StringType((String) field.get(cliContext)));				
+					}
 				}
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block

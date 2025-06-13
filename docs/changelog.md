@@ -1,3 +1,7 @@
+2025/06/15 Release 4.0.6
+- fix capability statement for production mode [#399](https://github.com/ahdis/matchbox/issues/399)
+- allow llm api key to be set over gui [#392](https://github.com/ahdis/matchbox/issues/392)
+
 2025/06/13 Release 4.0.5
 - Add MCP Server integration [#398](https://github.com/ahdis/matchbox/issues/398)
 - suppress error messages for known issues [#395](https://github.com/ahdis/matchbox/issues/395)
