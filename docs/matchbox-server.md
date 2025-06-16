@@ -24,6 +24,7 @@ They can be set in the Spring configuration (e.g. `application.properties`/`appl
 | `matchbox.fhir.context.llm.provider`       |          | The LLM provider used for the AI analysis of validation.                                                          |
 | `matchbox.fhir.context.llm.modelName`       |          | The LLM model used for the AI analysis of validation.                                                          |
 | `matchbox.fhir.context.llm.apiKey`       |          | Your API key for the desired LLM provider.                                                          |
+| `spring.ai.mcp.server.enabled`       |          | Whether matchbox should be provided as MCP-Server or not.                                                          |
 
 See an example of configuration, to show the expected format:
 
