@@ -14,6 +14,7 @@ import ca.uhn.fhir.jpa.starter.service.NotificationDataSource;
 import ca.uhn.fhir.jpa.starter.service.HelperService;
 import ca.uhn.fhir.jpa.starter.service.BigQueryService;
 import ca.uhn.fhir.jpa.starter.service.QrService;
+import ca.uhn.fhir.jpa.starter.model.EmailScheduleEntity;
 import ca.uhn.fhir.parser.IParser;
 import com.iprd.fhir.utils.Validation;
 import com.iprd.report.OrgItem;
@@ -25,6 +26,7 @@ import org.keycloak.representations.idm.GroupRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +35,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
@@ -159,5 +163,23 @@ public class UserAndGroupManagementController {
 		oclQrRequest.setHumanReadableFlag(humanReadableFlag);
 		oclQrRequest.setErrorCorrectionLevelBits(errorCorrectionLevelBits);
 		return ResponseEntity.ok(qrService.getOclQr(oclQrRequest));
+	}
+
+	// Bulk import and update email schedules from CSV
+	@RequestMapping(method = RequestMethod.POST, value = "/emailBulkImport")
+	public ResponseEntity<LinkedHashMap<String, Object>> bulkImportEmailSchedules(@RequestParam("file") MultipartFile file) throws Exception {
+		return helperService.createAndUpdateEmailSchedules(file);
+	}
+
+	// Get all email schedules
+	@GetMapping("/emailSchedules")
+	public ResponseEntity<List<EmailScheduleEntity>> getAllEmailSchedules() {
+		return helperService.getAllEmailSchedules();
+	}
+
+	// Delete an email schedule by recipient email
+	@DeleteMapping("/deleteemail/{recipientEmail}")
+	public ResponseEntity<LinkedHashMap<String, Object>> deleteEmailScheduleByEmail(@PathVariable String recipientEmail) {
+		return helperService.deleteEmailScheduleByEmail(recipientEmail);
 	}
 }

@@ -48,7 +48,8 @@ public class NotificationDataSource {
 				.addAnnotatedClass(OrgHierarchy.class).addAnnotatedClass(OrgIndicatorAverageResult.class)
 				.addAnnotatedClass(CacheEntity.class).addAnnotatedClass(MapCacheEntity.class).addAnnotatedClass(ApiAsyncTaskEntity.class)
 				.addAnnotatedClass(EncounterIdEntity.class).addAnnotatedClass(PatientIdentifierEntity.class)
-				.addAnnotatedClass(LastSyncEntity.class).addAnnotatedClass(SMSInfo.class);
+				.addAnnotatedClass(LastSyncEntity.class).addAnnotatedClass(SMSInfo.class)
+				.addAnnotatedClass(EmailScheduleEntity.class);
 		sf = conf.buildSessionFactory();
 	}
 
@@ -786,5 +787,141 @@ public class NotificationDataSource {
 		return resultList;
 	}
 
+	public List<String> insertEmailSchedules(List<EmailScheduleEntity> emailSchedules) {
+		StatelessSession session = sf.openStatelessSession();
+		Transaction transaction = session.beginTransaction();
+		List<String> skippedRecords = new ArrayList<>();
+		try {
+			for (EmailScheduleEntity emailSchedule : emailSchedules) {
+				try {
+					session.insert(emailSchedule);
+				} catch (ConstraintViolationException e) {
+					skippedRecords.add("Duplicate entry skipped for email schedule: " + emailSchedule.getRecipientEmail());
+					logger.warn("Duplicate entry skipped for email schedule: " + emailSchedule.getRecipientEmail());
+				}
+			}
+			transaction.commit();
+		} catch (Exception e) {
+			logger.warn(ExceptionUtils.getStackTrace(e));
+			transaction.rollback();
+			throw e;
+		} finally {
+			session.close();
+		}
+		return skippedRecords;
+	}
+
+	public void updateEmailSchedules(List<EmailScheduleEntity> emailSchedules) {
+		StatelessSession session = sf.openStatelessSession();
+		Transaction transaction = session.beginTransaction();
+		try {
+			for (EmailScheduleEntity emailSchedule : emailSchedules) {
+				session.update(emailSchedule);
+			}
+			transaction.commit();
+		} catch (Exception e) {
+			logger.warn(ExceptionUtils.getStackTrace(e));
+			transaction.rollback();
+		} finally {
+			session.close();
+		}
+	}
+
+	public void delete(EmailScheduleEntity emailSchedule) {
+		StatelessSession session = sf.openStatelessSession();
+		Transaction transaction = session.beginTransaction();
+		try {
+			session.delete(emailSchedule);
+			transaction.commit();
+		} catch (Exception e) {
+			logger.warn(ExceptionUtils.getStackTrace(e));
+			transaction.rollback();
+			throw e;
+		} finally {
+			session.close();
+		}
+	}
+
+	public void deleteByRecipientEmail(String recipientEmail) {
+		StatelessSession session = sf.openStatelessSession();
+		Transaction transaction = session.beginTransaction();
+		try {
+			Query<?> query = session.createQuery("DELETE FROM EmailScheduleEntity WHERE recipientEmail = :param1");
+			query.setParameter("param1", recipientEmail);
+			query.executeUpdate();
+			transaction.commit();
+		} catch (Exception e) {
+			logger.warn("Failed to delete email schedule for recipient {}: {}", recipientEmail, ExceptionUtils.getStackTrace(e));
+			transaction.rollback();
+			throw e;
+		} finally {
+			session.close();
+		}
+	}
+
+	public EmailScheduleEntity getEmailScheduleById(Integer id) {
+		Session session = sf.openSession();
+		try {
+			Query<EmailScheduleEntity> query = session.createQuery(
+				"FROM EmailScheduleEntity WHERE id = :param1",
+				EmailScheduleEntity.class);
+			query.setParameter("param1", id);
+			return query.getSingleResult();
+		} catch (Exception e) {
+			logger.warn(ExceptionUtils.getStackTrace(e));
+			return null;
+		} finally {
+			session.close();
+		}
+	}
+
+	public List<EmailScheduleEntity> getEmailSchedulesByOrgId(String orgId) {
+		Session session = sf.openSession();
+		try {
+			String hql = orgId == null
+				? "FROM EmailScheduleEntity"
+				: "FROM EmailScheduleEntity WHERE orgId = :param1";
+			Query<EmailScheduleEntity> query = session.createQuery(hql, EmailScheduleEntity.class);
+			if (orgId != null) {
+				query.setParameter("param1", orgId);
+			}
+			return query.getResultList();
+		} catch (Exception e) {
+			logger.warn(ExceptionUtils.getStackTrace(e));
+			return Collections.emptyList();
+		} finally {
+			session.close();
+		}
+	}
+
+	public EmailScheduleEntity getEmailScheduleByRecipientEmail(String recipientEmail) {
+		Session session = sf.openSession();
+		try {
+			Query<EmailScheduleEntity> query = session.createQuery(
+				"FROM EmailScheduleEntity WHERE recipientEmail = :param1",
+				EmailScheduleEntity.class);
+			query.setParameter("param1", recipientEmail);
+			return query.getSingleResult();
+		} catch (Exception e) {
+			logger.warn(ExceptionUtils.getStackTrace(e));
+			return null;
+		} finally {
+			session.close();
+		}
+	}
+
+	public List<EmailScheduleEntity> getAllEmailSchedules() {
+		Session session = sf.openSession();
+		try {
+			Query<EmailScheduleEntity> query = session.createQuery("FROM EmailScheduleEntity", EmailScheduleEntity.class);
+			List<EmailScheduleEntity> resultList = query.getResultList();
+			return resultList;
+		} catch (Exception e) {
+			logger.warn("Failed to fetch email schedules: {}", ExceptionUtils.getStackTrace(e));
+			return Collections.emptyList();
+		} finally {
+			session.close();
+		}
+	}
 
 }

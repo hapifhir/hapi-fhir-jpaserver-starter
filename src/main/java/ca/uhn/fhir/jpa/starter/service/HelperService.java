@@ -22,6 +22,8 @@ import ca.uhn.fhir.jpa.starter.model.PatientIdentifierEntity;
 import ca.uhn.fhir.jpa.starter.model.ReportType;
 import ca.uhn.fhir.jpa.starter.model.ScoreCardIndicatorItem;
 import ca.uhn.fhir.jpa.starter.model.ScoreCardResponseItem;
+import ca.uhn.fhir.jpa.starter.model.BulkUploadEmailScheduleDetails;
+import ca.uhn.fhir.jpa.starter.model.EmailScheduleEntity;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.rest.gclient.ICriterion;
@@ -3460,6 +3462,149 @@ public class HelperService {
 			logger.warn(e.toString());
 		}
 		return null;
+	}
+
+	public ResponseEntity<LinkedHashMap<String, Object>> createAndUpdateEmailSchedules(MultipartFile file) throws Exception {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		List<String> invalidRecords = new ArrayList<>();
+		List<String> skippedRecords = new ArrayList<>();
+		List<EmailScheduleEntity> emailSchedulesToInsert = new ArrayList<>();
+		List<EmailScheduleEntity> emailSchedulesToUpdate = new ArrayList<>();
+		Set<String> processedEmails = new HashSet<>(); // Track processed emails to skip duplicates in CSV
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
+		String singleLine;
+		int iteration = 0;
+
+		while ((singleLine = bufferedReader.readLine()) != null) {
+			if (iteration == 0) {
+				iteration++;
+				continue; // Skip header row
+			}
+
+			String[] scheduleData = singleLine.split(",");
+			// Trim trailing empty columns
+			List<String> trimmedData = new ArrayList<>();
+			for (String datum : scheduleData) {
+				if (!trimmedData.isEmpty() || !datum.trim().isEmpty()) {
+					trimmedData.add(datum);
+				}
+			}
+			scheduleData = trimmedData.toArray(new String[0]);
+
+			if (!Validation.validateEmailScheduleCsvLine(scheduleData)) {
+				invalidRecords.add("Invalid CSV format at line " + (iteration + 1) + ": " + singleLine);
+				iteration++;
+				continue;
+			}
+
+			try {
+				BulkUploadEmailScheduleDetails scheduleDetails = new BulkUploadEmailScheduleDetails(scheduleData, false);
+				String recipientEmail = scheduleDetails.getRecipientEmail();
+
+				// Skip if email was already processed in this CSV
+				if (!processedEmails.add(recipientEmail)) {
+					skippedRecords.add("Duplicate email in CSV at line " + (iteration + 1) + ": " + recipientEmail);
+					iteration++;
+					continue;
+				}
+
+				// Check if schedule exists
+				EmailScheduleEntity existingSchedule = NotificationDataSource.getInstance().getEmailScheduleByRecipientEmail(recipientEmail);
+				EmailScheduleEntity emailSchedule = new EmailScheduleEntity(
+					scheduleDetails.getRecipientEmail(),
+					scheduleDetails.getScheduleType(),
+					scheduleDetails.getEmailSubject(),
+					scheduleDetails.getOrgId()
+				);
+
+				if (existingSchedule != null) {
+					// Update existing schedule
+					emailSchedule.setId(existingSchedule.getId());
+					emailSchedulesToUpdate.add(emailSchedule);
+				} else {
+					// Insert new schedule
+					emailSchedulesToInsert.add(emailSchedule);
+				}
+			} catch (IllegalArgumentException e) {
+				logger.warn("Invalid data at line {}: {}", iteration + 1, e.getMessage());
+				invalidRecords.add("Invalid data format at line " + (iteration + 1) + ": " + singleLine + " (" + e.getMessage() + ")");
+			}
+			iteration++;
+		}
+
+		// Process inserts
+		if (!emailSchedulesToInsert.isEmpty()) {
+			try {
+				List<String> insertResults = NotificationDataSource.getInstance().insertEmailSchedules(emailSchedulesToInsert);
+				skippedRecords.addAll(insertResults);
+			} catch (Exception e) {
+				logger.error("Failed to insert email schedules: {}", e.getMessage(), e);
+				map.put("error", "Failed to process bulk insert: " + e.getMessage());
+				map.put("taskStatus", "Failed");
+				return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+
+		// Process updates
+		if (!emailSchedulesToUpdate.isEmpty()) {
+			try {
+				NotificationDataSource.getInstance().updateEmailSchedules(emailSchedulesToUpdate);
+			} catch (Exception e) {
+				logger.error("Failed to update email schedules: {}", e.getMessage(), e);
+				map.put("error", "Failed to process bulk update: " + e.getMessage());
+				map.put("taskStatus", "Failed");
+				return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+
+		if (!invalidRecords.isEmpty()) {
+			map.put("invalidRecords", invalidRecords);
+		}
+		if (!skippedRecords.isEmpty()) {
+			map.put("skippedRecords", skippedRecords);
+		}
+		map.put("taskStatus", "Completed");
+		return new ResponseEntity<>(map, HttpStatus.OK);
+	}
+
+	// Delete an email schedule by recipient email
+	public ResponseEntity<LinkedHashMap<String, Object>> deleteEmailScheduleByEmail(String recipientEmail) {
+		LinkedHashMap<String, Object> response = new LinkedHashMap<>();
+
+		EmailScheduleEntity emailSchedule = NotificationDataSource.getInstance().getEmailScheduleByRecipientEmail(recipientEmail);
+		if (emailSchedule == null) {
+			logger.warn("No email schedule found for recipient email: {}", recipientEmail);
+			response.put("message", "Email schedule not found");
+			response.put("recipientEmail", recipientEmail);
+			response.put("status", "Not Found");
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		}
+
+		try {
+			NotificationDataSource.getInstance().deleteByRecipientEmail(recipientEmail);
+			response.put("message", "Successfully deleted email schedule");
+			response.put("recipientEmail", recipientEmail);
+			response.put("status", "Deleted");
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error("Failed to delete email schedule for recipient {}: {}", recipientEmail, e.getMessage(), e);
+			response.put("message", "Failed to delete email schedule");
+			response.put("recipientEmail", recipientEmail);
+			response.put("error", e.getMessage());
+			response.put("status", "Failed");
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	// Get all email schedules
+	public ResponseEntity<List<EmailScheduleEntity>> getAllEmailSchedules() {
+		try {
+			List<EmailScheduleEntity> emailSchedules = NotificationDataSource.getInstance().getAllEmailSchedules();
+			return new ResponseEntity<>(emailSchedules, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error("Failed to retrieve email schedules: {}", e.getMessage(), e);
+			return new ResponseEntity<>(Collections.emptyList(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@Getter

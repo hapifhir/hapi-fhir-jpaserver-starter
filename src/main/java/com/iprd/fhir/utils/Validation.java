@@ -24,7 +24,15 @@ public class Validation {
 	public static boolean validationDashboardUserCsvLine(String[] hcwCsvData) {
 		return hcwCsvData.length == 13;
 	}
-	
+
+	public static boolean validateEmailScheduleCsvLine(String[] data) {
+		if (data == null) {
+			return false;
+		}
+		// 4 columns for both bulk import and update: recipientEmail,scheduleType,emailSubject,orgId
+		return data.length == 4;
+	}
+
 	public static JWTPayload getJWTToken(String token) {
 		try {
 			String[] chunks = token.split("\\.");
