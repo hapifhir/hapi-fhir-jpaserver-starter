@@ -49,7 +49,7 @@ matchbox:
 Having set up the matchbox server in this way resources can be validated as usual in matchbox ([see Tutorial: validation](validation-tutorial.md)). The validation results will now additionally include an analysis by the LLM.
 
 In the matchbox UI it will be displayed as the top message returned by the validation:
-![AI Analyze of the Operation Outcome](assets/ai_analyze.png)
+![AI Analysis of the Operation Outcome](assets/ai_analyze.png)
 
 When using the APIs $validate operation the AI analysis will appear as an additional item in the issues list. The text is returned in markdown format for clearer readability when interpreting it. 
 
