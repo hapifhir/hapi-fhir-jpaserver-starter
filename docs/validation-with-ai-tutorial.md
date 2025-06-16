@@ -26,7 +26,7 @@ In addition to these parameters, the default behavior for the analysis can be de
 |`matchbox.fhir.context.analyzeOutcomeWithAI`| Whether the validation outcome should be analyzed by a LLM or not. Requires the LLM parameters to be correctly set. |
 | `matchbox.fhir.context.analyzeOutcomeWithAIOnError` | Whether the validation outcome should be analyzed by a LLM, when it includes error or fatal issues, or not. Requires the LLM parameters to be correctly set. |
 
-These parameters can be overridden at runtime during specific validations to adjust the behaviour for specific use cases.
+These parameters can be overridden at runtime during specific validations to adjust the behavior for specific use cases.
 Example configuration (API-Key must be replaced):
 
 ```yaml
