@@ -1,3 +1,6 @@
+2025/06/18 Release 4.0.7
+- fix security issues
+
 2025/06/15 Release 4.0.6
 - fix capability statement for production mode [#399](https://github.com/ahdis/matchbox/issues/399)
 - allow llm api key to be set over gui [#392](https://github.com/ahdis/matchbox/issues/392)
