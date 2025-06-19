@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.ClientIdStrategyEnum;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.IdStrategyEnum;
 import ca.uhn.fhir.jpa.model.entity.NormalizedQuantitySearchLevel;
@@ -34,6 +35,7 @@ public class AppProperties {
 	private Boolean mdm_enabled = false;
 	private String mdm_rules_json_location = "mdm-rules.json";
 	private boolean advanced_lucene_indexing = false;
+	private boolean search_index_full_text_enabled = false;
 	private boolean enable_index_of_type = false;
 	private Boolean allow_cascading_deletes = false;
 	private Boolean allow_contains_searches = true;
@@ -105,6 +107,8 @@ public class AppProperties {
 	private Integer pre_expand_value_sets_default_count = 1000;
 	private Integer pre_expand_value_sets_max_count = 1000;
 	private Integer maximum_expansion_size = 1000;
+	private JpaStorageSettings.StoreMetaSourceInformationEnum store_meta_source_information =
+			JpaStorageSettings.StoreMetaSourceInformationEnum.NONE;
 
 	private Map<String, RemoteSystem> remote_terminology_service = null;
 
@@ -282,6 +286,14 @@ public class AppProperties {
 
 	public void setAdvanced_lucene_indexing(boolean theAdvanced_lucene_indexing) {
 		advanced_lucene_indexing = theAdvanced_lucene_indexing;
+	}
+
+	public boolean getSearch_index_full_text_enabled() {
+		return this.search_index_full_text_enabled;
+	}
+
+	public void setSearch_index_full_text_enabled(boolean theSearch_index_full_text_enabled) {
+		search_index_full_text_enabled = theSearch_index_full_text_enabled;
 	}
 
 	public Boolean getAllow_cascading_deletes() {
@@ -731,6 +743,15 @@ public class AppProperties {
 
 	public void setRemote_terminology_service(Map<String, RemoteSystem> remote_terminology_service) {
 		this.remote_terminology_service = remote_terminology_service;
+	}
+
+	public JpaStorageSettings.StoreMetaSourceInformationEnum getStore_meta_source_information() {
+		return store_meta_source_information;
+	}
+
+	public void setStore_meta_source_information(
+			JpaStorageSettings.StoreMetaSourceInformationEnum store_meta_source_information) {
+		this.store_meta_source_information = store_meta_source_information;
 	}
 
 	public static class Cors {
