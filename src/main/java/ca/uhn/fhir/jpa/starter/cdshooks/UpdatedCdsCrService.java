@@ -1,12 +1,11 @@
 package ca.uhn.fhir.jpa.starter.cdshooks;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.repository.IRepository;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.api.server.cdshooks.CdsServiceRequestJson;
-import ca.uhn.hapi.fhir.cdshooks.api.ICdsConfigService;
 import org.hl7.fhir.instance.model.api.IBaseParameters;
 import org.hl7.fhir.instance.model.api.IPrimitiveType;
-import org.opencds.cqf.fhir.api.Repository;
 import org.opencds.cqf.fhir.cr.hapi.cdshooks.CdsCrService;
 import org.opencds.cqf.fhir.utility.adapter.IAdapterFactory;
 
@@ -16,8 +15,8 @@ public class UpdatedCdsCrService extends CdsCrService {
 	private final IAdapterFactory adapterFactory;
 
 	public UpdatedCdsCrService(
-			RequestDetails theRequestDetails, Repository theRepository, ICdsConfigService theCdsConfigService) {
-		super(theRequestDetails, theRepository, theCdsConfigService);
+		RequestDetails theRequestDetails, IRepository theRepository) {
+		super(theRequestDetails, theRepository);
 		adapterFactory = IAdapterFactory.forFhirContext(theRepository.fhirContext());
 	}
 
