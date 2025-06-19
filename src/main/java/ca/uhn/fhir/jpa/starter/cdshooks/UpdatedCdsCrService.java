@@ -14,8 +14,7 @@ import static org.opencds.cqf.fhir.utility.Constants.APPLY_PARAMETER_DATA;
 public class UpdatedCdsCrService extends CdsCrService {
 	private final IAdapterFactory adapterFactory;
 
-	public UpdatedCdsCrService(
-		RequestDetails theRequestDetails, IRepository theRepository) {
+	public UpdatedCdsCrService(RequestDetails theRequestDetails, IRepository theRepository) {
 		super(theRequestDetails, theRepository);
 		adapterFactory = IAdapterFactory.forFhirContext(theRepository.fhirContext());
 	}
