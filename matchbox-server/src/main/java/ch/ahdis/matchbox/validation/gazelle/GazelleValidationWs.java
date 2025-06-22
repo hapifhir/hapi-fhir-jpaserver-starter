@@ -14,6 +14,8 @@ import ch.ahdis.matchbox.validation.gazelle.models.metadata.Interface;
 import ch.ahdis.matchbox.validation.gazelle.models.metadata.RestBinding;
 import ch.ahdis.matchbox.validation.gazelle.models.metadata.Service;
 import ch.ahdis.matchbox.validation.gazelle.models.validation.*;
+
+import org.hl7.fhir.r5.model.StringType;
 import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.slf4j.Logger;
@@ -184,6 +186,12 @@ public class GazelleValidationWs {
 		for (final var pkg : engine.getContext().getLoadedPackages()) {
 			report.addAdditionalMetadata(new Metadata().setName("package").setValue(pkg));
 		}
+		for (final String suppressedWarning : engine.getSuppressedWarnInfoPatterns()) {
+			report.addAdditionalMetadata(new Metadata().setName("suppressedWarning").setValue(suppressedWarning));
+		}		
+		for (final String suppressedError : engine.getSuppressedErrors()) {
+			report.addAdditionalMetadata(new Metadata().setName("suppressedError").setValue(suppressedError));
+		}		
 		report.addAdditionalMetadata(new Metadata().setName("profile").setValue(structDef.getUrl()));
 		report.addAdditionalMetadata(new Metadata().setName("profileVersion").setValue(structDef.getVersion()));
 		report.addAdditionalMetadata(new Metadata().setName("profileDate").setValue(structDef.getDateElement().getValueAsString()));
@@ -194,11 +202,13 @@ public class GazelleValidationWs {
 			final var metadata = new Metadata();
 			metadata.setName(field.getName());
 			try {
-				metadata.setValue(String.valueOf(field.get(cliContext)));
+				if (field.get(cliContext)!=null) {
+					metadata.setValue(String.valueOf(field.get(cliContext)));
+					report.addAdditionalMetadata(metadata);
+				}
 			} catch (final IllegalAccessException exception) {
 				continue;
 			}
-			report.addAdditionalMetadata(metadata);
 		}
 
 		// Response: add the validation items (requests) to the response

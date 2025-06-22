@@ -5,7 +5,6 @@ import ch.ahdis.matchbox.validation.gazelle.models.validation.SeverityLevel;
 import ch.ahdis.matchbox.validation.gazelle.models.validation.ValidationReport;
 import ch.ahdis.matchbox.validation.gazelle.models.validation.ValidationTestResult;
 import ch.ahdis.matchbox.test.CompareUtil;
-import org.apache.jena.base.Sys;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -23,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Quentin Ligier
  **/
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@ContextConfiguration(classes = {Application.class})
+@ContextConfiguration(classes = { Application.class })
 @ActiveProfiles("test-r4")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
@@ -46,13 +45,13 @@ public class GazelleApiR4Test extends AbstractGazelleTest {
 	@Test
 	void validatePatientRawR4() throws Exception {
 		final String patient = """
-			<Patient xmlns="http://hl7.org/fhir">
-				<id value="example"/>
-				<text>
-					<status value="generated"/>
-					<div xmlns="http://www.w3.org/1999/xhtml">42 </div>
-				</text>
-			</Patient>""";
+				<Patient xmlns="http://hl7.org/fhir">
+					<id value="example"/>
+					<text>
+						<status value="generated"/>
+						<div xmlns="http://www.w3.org/1999/xhtml">42 </div>
+					</text>
+				</Patient>""";
 
 		ValidationReport report = this.client.validate(patient, "http://hl7.org/fhir/StructureDefinition/Patient");
 		assertEquals(0, countValidationFailures(report));
@@ -61,10 +60,11 @@ public class GazelleApiR4Test extends AbstractGazelleTest {
 		assertTrue(report.getReports().getFirst().getName().contains("first"));
 		assertEquals(1, report.getReports().getFirst().getAssertionReports().size());
 		assertEquals(ValidationTestResult.PASSED,
-						 report.getReports().getFirst().getAssertionReports().getFirst().getResult());
+				report.getReports().getFirst().getAssertionReports().getFirst().getResult());
 		assertEquals(SeverityLevel.INFO,
-						 report.getReports().getFirst().getAssertionReports().getFirst().getSeverity());
-		// TODO: why no "first" in the report? No link between the validation item and the assertion report?
+				report.getReports().getFirst().getAssertionReports().getFirst().getSeverity());
+		// TODO: why no "first" in the report? No link between the validation item and
+		// the assertion report?
 
 		report = this.client.validate(patient, "http://hl7.org/fhir/StructureDefinition/Bundle");
 		assertEquals(1, countValidationFailures(report));
@@ -74,13 +74,13 @@ public class GazelleApiR4Test extends AbstractGazelleTest {
 	@Test
 	void testSameSessionIdsForSameIg() throws Exception {
 		final String patient = """
-			<Patient xmlns="http://hl7.org/fhir">
-				<id value="example"/>
-				<text>
-					<status value="generated"/>
-					<div xmlns="http://www.w3.org/1999/xhtml">42 </div>
-				</text>
-			</Patient>""";
+				<Patient xmlns="http://hl7.org/fhir">
+					<id value="example"/>
+					<text>
+						<status value="generated"/>
+						<div xmlns="http://www.w3.org/1999/xhtml">42 </div>
+					</text>
+				</Patient>""";
 
 		ValidationReport report = this.client.validate(patient, "http://hl7.org/fhir/StructureDefinition/Patient");
 		final String sessionId1 = getSessionId(report);
@@ -94,12 +94,12 @@ public class GazelleApiR4Test extends AbstractGazelleTest {
 	@Test
 	void verifyIgVersioningGazelle() throws Exception {
 		final String resource = """
-			<Practitioner xmlns="http://hl7.org/fhir">
-				<identifier>
-					<system value="urn:oid:2.51.1.3"/>
-					<value value="7610000050719"/>
-				</identifier>
-			</Practitioner>""";
+				<Practitioner xmlns="http://hl7.org/fhir">
+					<identifier>
+						<system value="urn:oid:2.51.1.3"/>
+						<value value="7610000050719"/>
+					</identifier>
+				</Practitioner>""";
 
 		String profileMatchbox = "http://matchbox.health/ig/test/r4/StructureDefinition/practitioner-identifier-required";
 
@@ -116,7 +116,8 @@ public class GazelleApiR4Test extends AbstractGazelleTest {
 		assertEquals("matchbox.health.test.ig.r4#0.2.0", getIg(report));
 		assertEquals(sessionIdFirst, sessionIdThird);
 
-		// validate with the profile and the ig version, has an internal business version 9.9.9
+		// validate with the profile and the ig version, has an internal business
+		// version 9.9.9
 		profileMatchbox = "http://matchbox.health/ig/test/r4/StructureDefinition/practitioner-identifier-version-different-then-ig";
 		report = this.client.validate(resource, profileMatchbox);
 		String sessionIdForth = getSessionId(report);
@@ -135,7 +136,7 @@ public class GazelleApiR4Test extends AbstractGazelleTest {
 	// https://gazelle.ihe.net/jira/browse/EHS-431
 	void validateEhs431() throws Exception {
 		ValidationReport report = this.client.validate(getContent("ehs-431.json"),
-																	  "http://hl7.org/fhir/StructureDefinition/Bundle");
+				"http://hl7.org/fhir/StructureDefinition/Bundle");
 		assertEquals(1, countValidationFailures(report));
 	}
 
@@ -143,7 +144,7 @@ public class GazelleApiR4Test extends AbstractGazelleTest {
 	// https://gazelle.ihe.net/jira/browse/EHS-419
 	void validateEhs419() throws Exception {
 		ValidationReport report = this.client.validate(getContent("ehs-419.json"),
-																	  "http://hl7.org/fhir/StructureDefinition/Patient");
+				"http://hl7.org/fhir/StructureDefinition/Patient");
 		assertEquals(0, countValidationFailures(report));
 	}
 
@@ -151,8 +152,64 @@ public class GazelleApiR4Test extends AbstractGazelleTest {
 	// https://gazelle.ihe.net/jira/browse/EHS-831
 	void validateEhs831() throws Exception {
 		final ValidationReport report = this.client.validate(getContent("ehs-831.json"),
-																			  "http://hl7.org/fhir/StructureDefinition/Parameters");
+				"http://hl7.org/fhir/StructureDefinition/Parameters");
 		assertEquals(ValidationTestResult.PASSED, report.getOverallResult());
 		assertEquals(0, countValidationFailures(report));
 	}
+
+	@Test
+	void checkSuppressError() throws Exception {
+		final String patient = "<RelatedPerson xmlns=\"http://hl7.org/fhir\">\n" + //
+				"  <extension url=\"http://hl7.org/fhir/StructureDefinition/patient-citizenship\">\n" + //
+				"    <extension url=\"code\">\n" + //
+				"      <valueCodeableConcept>\n" + //
+				"        <coding>\n" + //
+				"          <system value=\"urn:iso:std:iso:3166\"/>\n" + //
+				"          <code value=\"CH\"/>\n" + //
+				"          <display value=\"Switzerland\"/>\n" + //
+				"        </coding>\n" + //
+				"      </valueCodeableConcept>\n" + //
+				"    </extension>\n" + //
+				"  </extension>\n" + //
+				"  <patient>\n" + //
+				"    <display value=\"none\"/>\n" + //
+				"  </patient>\n" + //
+				"</RelatedPerson>";
+
+		ValidationReport report = this.client.validate(patient,
+				"http://hl7.org/fhir/StructureDefinition/RelatedPerson");
+		assertEquals(0, countValidationFailures(report));
+		assertEquals(ValidationTestResult.PASSED, report.getOverallResult());
+		assertEquals("first", report.getValidationItems().getFirst().getItemId());
+		assertTrue(report.getReports().getFirst().getName().contains("first"));
+		assertEquals(1, report.getReports().getFirst().getAssertionReports().size());
+	}
+
+	@Test
+	void validateIgnoreErrorMatchboxTest() throws Exception {
+		String practitioner = "<Practitioner xmlns=\"http://hl7.org/fhir\">\n" + //
+				"    <extension url=\"http://hl7.org/fhir/StructureDefinition/unknown\">\n" + //
+				"        <valueCodeableConcept>\n" + //
+				"            <coding>\n" + //
+				"                <system value=\"urn:iso:std:iso:3166\" />\n" + //
+				"                <code value=\"CH\" />\n" + //
+				"                <display value=\"Switzerland\" />\n" + //
+				"            </coding>\n" + //
+				"        </valueCodeableConcept>\n" + //
+				"    </extension>\n" + //
+				"    <identifier>\n" + //
+				"        <system value=\"urn:oid:2.51.1.3\" />\n" + //
+				"        <value value=\"7610000050719\" />\n" + //
+				"    </identifier>\n" + //
+				"</Practitioner>";
+
+		ValidationReport report = this.client.validate(practitioner,
+				"http://matchbox.health/ig/test/r4/StructureDefinition/practitioner-identifier-required");
+		assertEquals(0, countValidationFailures(report));
+		assertEquals(ValidationTestResult.PASSED, report.getOverallResult());
+		assertEquals("first", report.getValidationItems().getFirst().getItemId());
+		assertTrue(report.getReports().getFirst().getName().contains("first"));
+		assertEquals(1, report.getReports().getFirst().getAssertionReports().size());
+	}
+
 }

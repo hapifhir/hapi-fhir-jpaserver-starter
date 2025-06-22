@@ -107,6 +107,15 @@
     },
     {
       "type": "java",
+      "name": "Launch Matchbox-Server (gazelle)",
+      "request": "launch",
+      "mainClass": "ca.uhn.fhir.jpa.starter.Application",
+      "projectName": "matchbox-server",
+      "vmArgs": "-Dspring.config.additional-location=file:with-gazelle/application.yaml",
+      "cwd": "${workspaceFolder}/matchbox-server"
+    },
+    {
+      "type": "java",
       "name": "Launch Matchbox-Server (one engine (dev))",
       "request": "launch",
       "mainClass": "ca.uhn.fhir.jpa.starter.Application",

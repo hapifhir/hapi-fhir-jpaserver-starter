@@ -1,0 +1,89 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /matchboxv3
+
+matchbox:
+  fhir:
+    context:
+      fhirVersion: 4.0.1
+      txServer: http://tx.fhir.org
+      httpReadOnly: true
+      suppressError:
+        hl7.fhir.r4.core#4.0.1:
+          - "Extension_EXTP_Context_Wrong@^RelatedPerson"
+        hl7.fhir.uv.ips:
+          - "Type_Specific_Checks_DT_URL_Resolve@^.*extension.*url"
+          - "Type_Specific_Checks_DT_URL_Resolve@^.*coding.*system"
+hapi:
+  fhir:
+    server_address: https://gazelle.ihe.net/matchboxv3/fhir
+    implementationguides:
+#      cda:
+#        url: https://github.com/ahdis/cda-core-2.0/releases/download/v0.0.3-dev/package.tgz
+#        name: hl7.fhir.cda
+#        version: 2.1.0
+#      cdach:
+#        url: http://build.fhir.org/ig/hl7ch/cda-fhir-maps/package.tgz
+#        name: ch.fhir.ig.cda-fhir-maps
+#        version: 0.3.0
+      fhir_r4_core:
+        name: hl7.fhir.r4.core
+        version: 4.0.1
+        url: classpath:/hl7.fhir.r4.core.tgz
+      fhir_r5_core:
+        name: hl7.fhir.r5.core
+        version: 5.0.0
+        url: classpath:/hl7.fhir.r5.core.tgz
+          #fhir_terminology:
+          #name: hl7.terminology
+          #version: 5.4.0
+          #url: classpath:/hl7.terminology#5.4.0.tgz
+      fhir_terminology:
+        name: hl7.terminology.r4
+        version: 6.3.0
+        url: classpath:/hl7.terminology.r4#6.3.0.tgz
+      fhir_extensions:
+        name: hl7.fhir.uv.extensions.r4
+        version: 5.2.0
+        url: classpath:/hl7.fhir.uv.extensions.r4#5.2.0.tgz
+      ips:
+        name: hl7.fhir.uv.ips
+        version: 1.1.0
+      ips100:
+        name: hl7.fhir.uv.ips
+        version: 1.0.0    
+      mhd:
+        name: ihe.iti.mhd
+        version: 4.2.1
+      pixm:
+        name: ihe.iti.pixm
+        version: 3.0.4
+      pdqm:
+        name: ihe.iti.pdqm
+        version: 3.0.0
+      balp:
+        name: ihe.iti.balp
+        version: 1.1.2
+#      quedm:
+#        name: ihe.pcc.qedm
+#        version: 0.0.1-current
+#        url: https://build.fhir.org/ig/oliveregger/QEDm/branches/oe_provenance/package.tgz
+      ira:
+        name: ihe.rad.ira
+        version: 1.0.0
+      imr:
+        name: ihe.rad.imr
+        version: 1.0.0
+      laboratory:
+        name: hl7.fhir.eu.laboratory
+        version: 0.1.0
+      ipa:
+        name: hl7.fhir.uv.ipa
+        version: 1.0.0
+      dsubm:
+        name: ihe.iti.dsubm
+        version: 1.0.0
+      svcm:
+        name: ihe.iti.svcm
+        version: 1.5.1

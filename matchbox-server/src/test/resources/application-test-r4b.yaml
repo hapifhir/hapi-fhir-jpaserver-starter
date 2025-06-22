@@ -16,9 +16,12 @@ matchbox:
       httpReadOnly: true
       txServer: http://localhost:${server.port}/matchboxv3/fhir
       suppressWarnInfo:
-        hl7.fhir.r4b.core#4.0.1:
+        hl7.fhir.r4b.core#4.3.0:
           - "Constraint failed: dom-6:"
           - "regex:Entry '(.+)' isn't reachable by traversing forwards from the Composition"
+      suppressError:
+        hl7.fhir.r4b.core#4.3.0:
+          - "Extension_EXTP_Context_Wrong@^RelatedPerson"
 spring:
   datasource:
     url: "jdbc:h2:mem:test-r4b"

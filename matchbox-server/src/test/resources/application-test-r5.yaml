@@ -15,6 +15,13 @@ matchbox:
     context:
       httpReadOnly: true
       txServer: http://localhost:${server.port}/matchboxv3/fhir
+      suppressWarnInfo:
+        hl7.fhir.r45.core#5.0.0:
+          - "Constraint failed: dom-6:"
+          - "regex:Entry '(.+)' isn't reachable by traversing forwards from the Composition"
+      suppressError:
+        hl7.fhir.r45.core#5.0.0:
+          - "Extension_EXTP_Context_Wrong@^RelatedPerson"
 spring:
   datasource:
     url: "jdbc:h2:mem:test-r5"

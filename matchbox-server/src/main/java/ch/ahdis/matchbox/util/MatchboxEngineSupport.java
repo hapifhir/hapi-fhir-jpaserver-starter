@@ -316,6 +316,7 @@ public class MatchboxEngineSupport {
 					throw new IgLoadException("Failed to load R5 specials", e);
 				}
 				log.debug("Load R5 Specials types");
+				cliContextMain.setIg(this.getFhirCorePackage(cliContextMain));
 				this.configureValidationEngine(mainEngine, cliContextMain);
 			} else if (this.serverFhirVersion == FhirVersionEnum.R4B) {
 				log.debug("Preconfigure FHIR R4B");
@@ -329,6 +330,7 @@ public class MatchboxEngineSupport {
 				this.myDaoRegistry,
 				this.myBinaryStorageSvc,
 				this.myTxManager));
+				cliContextMain.setIg(this.getFhirCorePackage(cliContextMain));
 				this.configureValidationEngine(mainEngine, cliContextMain);
 			} else if (this.serverFhirVersion == FhirVersionEnum.R5) {
 				log.debug("Preconfigure FHIR R5");
@@ -342,11 +344,11 @@ public class MatchboxEngineSupport {
 				this.myDaoRegistry,
 				this.myBinaryStorageSvc,
 				this.myTxManager));
+				cliContextMain.setIg(this.getFhirCorePackage(cliContextMain));
 				this.configureValidationEngine(mainEngine, cliContextMain);
 			} else {
 				throw new MatchboxUnsupportedFhirVersionException("getMatchboxEngineNotSynchronized", this.serverFhirVersion);
 			}
-			cliContextMain.setIg(this.getFhirCorePackage(cliContextMain));
 
 			log.info("Cached default engine forever {} with parameters {}",
 						(cliContextMain.getIg() != null ? "for " + cliContextMain.getIg() : ""),
@@ -660,16 +662,12 @@ public class MatchboxEngineSupport {
 					.forEach(ig -> {
 						suppressedWarnings.getOrDefault(ig, Collections.emptyList())
 							.forEach(pattern -> this.addSuppressedWarnInfoToEngine(pattern, validator));
-						suppressedError.getOrDefault(ig, Collections.emptyList())
-							.forEach(pattern -> this.addSuppressedErrorToEngine(pattern, validator));
 					});
 			}
 			if (!apiDefinedErrors) {
 				validator.getContext().getLoadedPackages().stream().filter(pkg -> pkg.contains("#"))
-					.map(pkg -> pkg.substring(0, pkg.indexOf("#")))
+					.map(pkg -> pkg.replace("#", ""))
 					.forEach(ig -> {
-						suppressedWarnings.getOrDefault(ig, Collections.emptyList())
-							.forEach(pattern -> this.addSuppressedWarnInfoToEngine(pattern, validator));
 						suppressedError.getOrDefault(ig, Collections.emptyList())
 							.forEach(pattern -> this.addSuppressedErrorToEngine(pattern, validator));
 					});

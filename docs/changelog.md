@@ -1,3 +1,6 @@
+2025/06/22 Release 4.0.8
+- suppressErrors not taken into account on gazelle interface [#405](https://github.com/ahdis/matchbox/issues/405)
+
 2025/06/18 Release 4.0.7
 - fix security issues
 

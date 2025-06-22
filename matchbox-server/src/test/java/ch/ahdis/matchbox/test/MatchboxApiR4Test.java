@@ -285,8 +285,31 @@ class MatchboxApiR4Test {
 		IBaseOperationOutcome operationOutcome = this.validationClient.validate(patient,
 																										"http://hl7.org/fhir/StructureDefinition/RelatedPerson");
 		assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
+	}
 
+	@Test
+	void validateIgnoreErrorMatchboxTest() throws Exception {
+		String practitioner = "<Practitioner xmlns=\"http://hl7.org/fhir\">\n" + //
+						"    <extension url=\"http://hl7.org/fhir/StructureDefinition/unknown\">\n" + //
+						"        <valueCodeableConcept>\n" + //
+						"            <coding>\n" + //
+						"                <system value=\"urn:iso:std:iso:3166\" />\n" + //
+						"                <code value=\"CH\" />\n" + //
+						"                <display value=\"Switzerland\" />\n" + //
+						"            </coding>\n" + //
+						"        </valueCodeableConcept>\n" + //
+						"    </extension>\n" + //
+						"    <identifier>\n" + //
+						"        <system value=\"urn:oid:2.51.1.3\" />\n" + //
+						"        <value value=\"7610000050719\" />\n" + //
+						"    </identifier>\n" + //
+						"</Practitioner>";
+		
+		IBaseOperationOutcome operationOutcome = this.validationClient.validate(practitioner,"http://matchbox.health/ig/test/r4/StructureDefinition/practitioner-identifier-required");
+		assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
 
+		ValidationReport report = this.validateWithGazelle(practitioner, "http://matchbox.health/ig/test/r4/StructureDefinition/practitioner-identifier-required");
+		assertEquals(0, getValidationFailures(report));
 	}
 
 	@Test

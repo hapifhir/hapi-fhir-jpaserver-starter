@@ -37,6 +37,11 @@ matchbox:
       suppressError:
         hl7.fhir.r4.core#4.0.1:
           - "Extension_EXTP_Context_Wrong@^RelatedPerson"
+        matchbox.health.test.ig.r4#0.2.0:
+          - "Type_Specific_Checks_DT_URL_Resolve@^.*extension.*url"
+          - "Type_Specific_Checks_DT_URL_Resolve@^.*coding.*system"
+          - "Extension_EXT_Unknown"
+          - "Extension_EXT_Unknown_NotHere"
       xVersion: true
 spring:
   datasource:
