@@ -173,8 +173,8 @@ public class UserAndGroupManagementController {
 
 	// Get all email schedules
 	@GetMapping("/emailSchedules")
-	public ResponseEntity<List<EmailScheduleEntity>> getAllEmailSchedules() {
-		return helperService.getAllEmailSchedules();
+	public ResponseEntity<List<EmailScheduleEntity>> getAllEmailSchedules(@RequestParam("adminOrg") String adminOrg) {
+		return helperService.getAllEmailSchedules(adminOrg);
 	}
 
 	// Delete an email schedule by recipient email

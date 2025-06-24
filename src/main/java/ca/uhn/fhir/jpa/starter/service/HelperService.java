@@ -3470,7 +3470,7 @@ public class HelperService {
 		List<String> skippedRecords = new ArrayList<>();
 		List<EmailScheduleEntity> emailSchedulesToInsert = new ArrayList<>();
 		List<EmailScheduleEntity> emailSchedulesToUpdate = new ArrayList<>();
-		Set<String> processedEmails = new HashSet<>(); // Track processed emails to skip duplicates in CSV
+		Set<String> processedEmails = new HashSet<>();
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 		String singleLine;
 		int iteration = 0;
@@ -3481,12 +3481,20 @@ public class HelperService {
 				continue; // Skip header row
 			}
 
-			String[] scheduleData = singleLine.split(",");
+			// Split CSV line, handling quoted fields
+			String[] scheduleData = parseCsvLine(singleLine);
+			if (scheduleData == null || scheduleData.length < 5) {
+				invalidRecords.add("Invalid CSV format at line " + (iteration + 1) + ": " + singleLine + " (Expected at least 5 fields)");
+				iteration++;
+				continue;
+			}
+
 			// Trim trailing empty columns
 			List<String> trimmedData = new ArrayList<>();
 			for (String datum : scheduleData) {
-				if (!trimmedData.isEmpty() || !datum.trim().isEmpty()) {
-					trimmedData.add(datum);
+				String cleaned = datum.trim().replaceAll("^\"|\"$", ""); // Strip surrounding quotes
+				if (!trimmedData.isEmpty() || !cleaned.isEmpty()) {
+					trimmedData.add(cleaned);
 				}
 			}
 			scheduleData = trimmedData.toArray(new String[0]);
@@ -3501,28 +3509,26 @@ public class HelperService {
 				BulkUploadEmailScheduleDetails scheduleDetails = new BulkUploadEmailScheduleDetails(scheduleData, false);
 				String recipientEmail = scheduleDetails.getRecipientEmail();
 
-				// Skip if email was already processed in this CSV
+				// Skip if email was already processed
 				if (!processedEmails.add(recipientEmail)) {
 					skippedRecords.add("Duplicate email in CSV at line " + (iteration + 1) + ": " + recipientEmail);
 					iteration++;
 					continue;
 				}
 
-				// Check if schedule exists
 				EmailScheduleEntity existingSchedule = NotificationDataSource.getInstance().getEmailScheduleByRecipientEmail(recipientEmail);
 				EmailScheduleEntity emailSchedule = new EmailScheduleEntity(
 					scheduleDetails.getRecipientEmail(),
 					scheduleDetails.getScheduleType(),
 					scheduleDetails.getEmailSubject(),
-					scheduleDetails.getOrgId()
+					scheduleDetails.getOrgId(),
+					scheduleDetails.getAdminOrg()
 				);
 
 				if (existingSchedule != null) {
-					// Update existing schedule
 					emailSchedule.setId(existingSchedule.getId());
 					emailSchedulesToUpdate.add(emailSchedule);
 				} else {
-					// Insert new schedule
 					emailSchedulesToInsert.add(emailSchedule);
 				}
 			} catch (IllegalArgumentException e) {
@@ -3567,6 +3573,31 @@ public class HelperService {
 		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
 
+	// Helper method to parse CSV line, handling quoted fields
+	private String[] parseCsvLine(String line) {
+		if (line == null || line.trim().isEmpty()) {
+			return null;
+		}
+		List<String> result = new ArrayList<>();
+		StringBuilder field = new StringBuilder();
+		boolean inQuotes = false;
+		for (int i = 0; i < line.length(); i++) {
+			char c = line.charAt(i);
+			if (c == '"') {
+				inQuotes = !inQuotes;
+				continue;
+			}
+			if (c == ',' && !inQuotes) {
+				result.add(field.toString());
+				field = new StringBuilder();
+				continue;
+			}
+			field.append(c);
+		}
+		result.add(field.toString()); // Add the last field
+		return result.toArray(new String[0]);
+	}
+
 	// Delete an email schedule by recipient email
 	public ResponseEntity<LinkedHashMap<String, Object>> deleteEmailScheduleByEmail(String recipientEmail) {
 		LinkedHashMap<String, Object> response = new LinkedHashMap<>();
@@ -3596,13 +3627,14 @@ public class HelperService {
 		}
 	}
 
-	// Get all email schedules
-	public ResponseEntity<List<EmailScheduleEntity>> getAllEmailSchedules() {
+
+	// Get all email schedules filtered by admin organization
+	public ResponseEntity<List<EmailScheduleEntity>> getAllEmailSchedules(String adminOrg) {
 		try {
-			List<EmailScheduleEntity> emailSchedules = NotificationDataSource.getInstance().getAllEmailSchedules();
+			List<EmailScheduleEntity> emailSchedules = NotificationDataSource.getInstance().getEmailSchedulesByAdminOrg(adminOrg);
 			return new ResponseEntity<>(emailSchedules, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Failed to retrieve email schedules: {}", e.getMessage(), e);
+			logger.error("Failed to retrieve email schedules for adminOrg {}: {}", adminOrg, e.getMessage(), e);
 			return new ResponseEntity<>(Collections.emptyList(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

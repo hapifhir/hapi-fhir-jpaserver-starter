@@ -924,4 +924,23 @@ public class NotificationDataSource {
 		}
 	}
 
+	// Get email schedules filtered by admin organization
+	public List<EmailScheduleEntity> getEmailSchedulesByAdminOrg(String adminOrg) {
+		Session session = sf.openSession();
+		try {
+			Query<EmailScheduleEntity> query = session.createQuery(
+				"FROM EmailScheduleEntity WHERE adminOrg = :adminOrg",
+				EmailScheduleEntity.class
+			);
+			query.setParameter("adminOrg", adminOrg);
+			List<EmailScheduleEntity> resultList = query.getResultList();
+			return resultList;
+		} catch (Exception e) {
+			logger.warn("Failed to fetch email schedules for adminOrg {}: {}", adminOrg, ExceptionUtils.getStackTrace(e));
+			return Collections.emptyList();
+		} finally {
+			session.close();
+		}
+	}
+
 }

@@ -27,10 +27,22 @@ public class Validation {
 
 	public static boolean validateEmailScheduleCsvLine(String[] data) {
 		if (data == null) {
+			logger.warn("Invalid CSV line: Data is null");
 			return false;
 		}
-		// 4 columns for both bulk import and update: recipientEmail,scheduleType,emailSubject,orgId
-		return data.length == 4;
+		// 5 columns expected: recipientEmail,scheduleType,emailSubject,orgId,adminOrg
+		if (data.length != 5) {
+			logger.warn("Invalid CSV line: Expected 5 columns (recipientEmail,scheduleType,emailSubject,orgId,adminOrg), got {}", data.length);
+			return false;
+		}
+		// Basic validation for non-empty values
+		for (int i = 0; i < data.length; i++) {
+			if (data[i] == null || data[i].trim().isEmpty()) {
+				logger.warn("Invalid CSV line: Column {} is empty or null", i);
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public static JWTPayload getJWTToken(String token) {

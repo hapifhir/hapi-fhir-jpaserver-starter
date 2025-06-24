@@ -23,6 +23,9 @@ public class EmailScheduleEntity {
 	@Column(name = "org_id", length = 50, nullable = false)
 	private String orgId;
 
+	@Column(name = "admin_org", length = 50, nullable = false)
+	private String adminOrg;
+
 	@Column(name = "created_at", nullable = false)
 	private Timestamp createdAt;
 
@@ -34,21 +37,23 @@ public class EmailScheduleEntity {
 		this.updatedAt = new Timestamp(System.currentTimeMillis());
 	}
 
-	public EmailScheduleEntity(String recipientEmail, String scheduleType, String emailSubject, String orgId) {
+	public EmailScheduleEntity(String recipientEmail, String scheduleType, String emailSubject, String orgId, String adminOrg) {
 		this.recipientEmail = recipientEmail;
 		this.scheduleType = scheduleType;
 		this.emailSubject = emailSubject;
 		this.orgId = orgId;
+		this.adminOrg = adminOrg;
 		this.createdAt = new Timestamp(System.currentTimeMillis());
 		this.updatedAt = new Timestamp(System.currentTimeMillis());
 	}
 
 	public EmailScheduleEntity(String recipientEmail, String scheduleType, String emailSubject, String orgId,
-										Timestamp createdAt, Timestamp updatedAt) {
+										String adminOrg, Timestamp createdAt, Timestamp updatedAt) {
 		this.recipientEmail = recipientEmail;
 		this.scheduleType = scheduleType;
 		this.emailSubject = emailSubject;
 		this.orgId = orgId;
+		this.adminOrg = adminOrg;
 		this.createdAt = createdAt != null ? createdAt : new Timestamp(System.currentTimeMillis());
 		this.updatedAt = updatedAt != null ? updatedAt : new Timestamp(System.currentTimeMillis());
 	}
@@ -91,6 +96,14 @@ public class EmailScheduleEntity {
 
 	public void setOrgId(String orgId) {
 		this.orgId = orgId;
+	}
+
+	public String getAdminOrg() {
+		return adminOrg;
+	}
+
+	public void setAdminOrg(String adminOrg) {
+		this.adminOrg = adminOrg;
 	}
 
 	public Timestamp getCreatedAt() {

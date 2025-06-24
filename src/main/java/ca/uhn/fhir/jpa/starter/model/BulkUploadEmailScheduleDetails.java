@@ -9,9 +9,10 @@ public class BulkUploadEmailScheduleDetails {
 	private String scheduleType;
 	private String emailSubject;
 	private String orgId;
+	private String adminOrg;
 
 	public BulkUploadEmailScheduleDetails(String[] scheduleData, boolean isUpdate) {
-		if (scheduleData == null || scheduleData.length < (isUpdate ? 5 : 4)) {
+		if (scheduleData == null || scheduleData.length < (isUpdate ? 6 : 5)) {
 			throw new IllegalArgumentException("Insufficient data for email schedule");
 		}
 		int offset = isUpdate ? 1 : 0;
@@ -33,6 +34,10 @@ public class BulkUploadEmailScheduleDetails {
 		this.orgId = scheduleData[offset + 3].trim();
 		if (!this.orgId.matches("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")) {
 			throw new IllegalArgumentException("Invalid orgId format: " + this.orgId);
+		}
+		this.adminOrg = scheduleData[offset + 4].trim();
+		if (!this.adminOrg.matches("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")) {
+			throw new IllegalArgumentException("Invalid adminOrg format: " + this.adminOrg);
 		}
 	}
 }
