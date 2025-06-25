@@ -4,6 +4,29 @@ server:
 spring:
    main:
       allow-circular-references: true
+   mail:
+      host: smtp.gmail.com
+      port: 587
+      username: #email address of sender
+      password: #password from the google app passwords (16 characters)
+      properties:
+         mail:
+            smtp:
+               auth: true
+               starttls:
+                  enable: true
+
+   rabbitmq:
+      host: localhost
+      port: 5672
+      username: guest
+      password: guest
+
+   logging:
+     level:
+       org.springframework.web: DEBUG
+       ca.uhn.fhir.jpa.starter: DEBUG
+
    flyway:
       enabled: false
       check-location: false
@@ -50,12 +73,32 @@ spring:
          hibernate.jdbc.batch_size: 20
          hibernate.javax.cache.missing_cache_strategy: create
          hibernate.cache.use_query_cache: true
-         hibernate.cache.use_second_level_cache: true   
+         hibernate.cache.use_second_level_cache: true
 #      hibernate.hbm2ddl.auto: update
    batch:
 #      hibernate.jdbc.batch_size: 20
       job:
          enabled: false
+
+rabbitmq:
+   queue:
+      email:
+         name: email_queue
+   exchange:
+      email:
+         name: email_exchange
+   binding:
+      email:
+         name: email_routing_key
+
+report:
+   email: #receipients mail
+   env: V2
+   cron: "0 0 10 ? * MON"
+   email-subject: "Weekly Facility Summary Report for {state} ({startDate} to {endDate})"
+   email-attachment-name: "Weekly_Facility_Summary_{state}_{startDate}_to_{endDate}.csv"
+   top-level-org-id: #top org ids
+
 logging:
    level:
       org:
@@ -67,7 +110,7 @@ logging:
 tus-server:
    file-directory: Images
    context-path: /api/upload
-   
+
 hapi:
    fhir:
       hyperSpectral_bucket_name : ""
@@ -106,8 +149,8 @@ hapi:
         - "c91ee7cd-f994-4771-8863-3713e6e52e98"
         - "b759ff8c-e659-4adf-adc3-8bdc17733b14"
       envs_for_caching:
-        - "impact-health-v1"
-        - "impact-health-v2"
+         - "impact-health-v1"
+         - "impact-health-v2"
       dev_user_role: dev
       facility_batch_size: 70
       executor_core_pool_size: 4
@@ -124,7 +167,7 @@ hapi:
       fhir_hapi_client_secret: xyz
       keycloak_username: managegroup
       keycloak_password: 123456
-      aws_access_key:  
+      aws_access_key:
       aws_secret_key:
       sms_password: password
       fhir_user: kjois@iprdgroup.com

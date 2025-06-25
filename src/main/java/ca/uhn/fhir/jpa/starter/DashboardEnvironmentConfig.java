@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import ca.uhn.fhir.jpa.starter.model.CategoryItem;
+import ca.uhn.fhir.jpa.starter.model.IndicatorColumn;
 import com.iprd.report.model.FilterItem;
 import ca.uhn.fhir.jpa.starter.model.ScoreCardIndicatorItem;
 import com.iprd.report.model.definition.BarChartDefinition;
@@ -124,6 +125,11 @@ public class DashboardEnvironmentConfig {
 						}
 						case MAP_DEFINITIONS: {
 							envConfigContainer.setMapCodes(new Gson().fromJson(reader, new TypeToken<List<MapCodes>>() {
+							}.getType()));
+							break;
+						}
+						case INDICATOR_COLUMNS: {
+							envConfigContainer.setIndicatorColumns(new Gson().fromJson(reader, new TypeToken<List<IndicatorColumn>>() {
 							}.getType()));
 							break;
 						}

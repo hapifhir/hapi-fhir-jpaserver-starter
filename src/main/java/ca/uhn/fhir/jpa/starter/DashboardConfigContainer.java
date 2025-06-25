@@ -3,6 +3,7 @@ package ca.uhn.fhir.jpa.starter;
 import java.util.List;
 
 import ca.uhn.fhir.jpa.starter.model.CategoryItem;
+import ca.uhn.fhir.jpa.starter.model.IndicatorColumn;
 import ca.uhn.fhir.jpa.starter.model.ScoreCardIndicatorItem;
 import com.iprd.report.model.FilterItem;
 import com.iprd.report.model.definition.LineChart;
@@ -89,6 +90,14 @@ public class DashboardConfigContainer {
 		this.mapCodes = mapCodes;
 	}
 
+	public List<IndicatorColumn> getIndicatorColumns() {
+		return indicatorColumns;
+	}
+
+	public void setIndicatorColumns(List<IndicatorColumn> indicatorColumns) {
+		this.indicatorColumns = indicatorColumns;
+	}
+
 	private List<FilterItem> filterItems;
 	private List<BarChartDefinition> barChartDefinitions;
 	private List<PieChartDefinition> pieChartDefinitions;
@@ -100,4 +109,5 @@ public class DashboardConfigContainer {
 	private List<ANCDailySummaryConfig> ancDailySummaryConfig;
 	private CategoryItem categoryItem;
 	private List<MapCodes> mapCodes;
+	private List<IndicatorColumn> indicatorColumns;
 }

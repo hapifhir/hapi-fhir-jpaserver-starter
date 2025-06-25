@@ -20,10 +20,12 @@ import static org.springframework.http.HttpMethod.*;
 @Configuration
 public class CustomSecurityConfigNoKC extends WebSecurityConfigurerAdapter {
 	private static final String CORS_ALLOWED_HEADERS =
-		"origin,content-type,accept,x-requested-with,Authorization,Access-Control-Allow-Credentials,kid";
-	private static final String opensrpAllowedSources =
-		"http://testhost.dashboard:3000/,http://localhost:3000/,https://oclink.io/,https://opencampaignlink.org/";
+            "origin,content-type,accept,x-requested-with,Authorization,Access-Control-Allow-Credentials,kid";
+
+	private String opensrpAllowedSources = "http://testhost.dashboard:3000/,http://localhost:3000/,https://oclink.io/,https://opencampaignlink.org/";
+
 	private static final long corsMaxAge = 3600;
+
 
 	@Autowired
 	AppProperties appProperties;

@@ -22,6 +22,8 @@ import ca.uhn.fhir.jpa.starter.model.PatientIdentifierEntity;
 import ca.uhn.fhir.jpa.starter.model.ReportType;
 import ca.uhn.fhir.jpa.starter.model.ScoreCardIndicatorItem;
 import ca.uhn.fhir.jpa.starter.model.ScoreCardResponseItem;
+import ca.uhn.fhir.jpa.starter.model.BulkUploadEmailScheduleDetails;
+import ca.uhn.fhir.jpa.starter.model.EmailScheduleEntity;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.impl.GenericClient;
 import ca.uhn.fhir.rest.gclient.ICriterion;
@@ -75,8 +77,6 @@ import org.hibernate.JDBCException;
 import org.hibernate.engine.jdbc.ClobProxy;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.Address;
-import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryRequestComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleLinkComponent;
@@ -95,6 +95,9 @@ import org.hl7.fhir.r4.model.PractitionerRole;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ResourceType;
 import org.hl7.fhir.r4.model.StringType;
+import org.hl7.fhir.r4.model.Address;
+import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.Coding;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.resource.GroupResource;
 import org.keycloak.admin.client.resource.RealmResource;
@@ -206,11 +209,33 @@ public class HelperService {
 	LinkedHashMap<String, List<OrgItem>> mapOfOrgHierarchy;
 	private String lga;
 
+	private static final String SYSTEM_ORG_TYPE = "https://www.iprdgroup.com/ValueSet/OrganizationType/tags";
+	private static final String SYSTEM_ORGANIZATION_PHYSICAL_TYPE = "http://hl7.org/fhir/ValueSet/organization-type";
+	private static final String CODE_CLINIC = "prov";
+	private static final String CODE_GOVT = "govt";
+	private static final List<String> VALID_ORG_TYPES = Arrays.asList("country", "state", "lga", "ward", "facility");
+	private static final List<String> FACILITY_SYNONYMS = Arrays.asList("prov", "provider", "clinic", "healthcare");
+
 	@PostConstruct
 	public void init() {
 		dashboardEnvToConfigMap = dashboardEnvironmentConfig.getDashboardEnvToConfigMap();
 		mapOfIdsAndOrgIdToChildrenMapPair = new LinkedHashMap<String, Pair<List<String>, LinkedHashMap<String, List<String>>>>();
 		mapOfOrgHierarchy = new LinkedHashMap<String, List<OrgItem>>();
+	}
+
+	public String getOrganizationName(String orgId) {
+		try {
+			Organization org = fhirClientAuthenticatorService.getFhirClient()
+				.read()
+				.resource(Organization.class)
+				.withId(orgId)
+				.execute();
+			String name = org != null ? org.getName() : null;
+			return name;
+		} catch (ResourceNotFoundException e) {
+			logger.warn("Failed to resolve name for orgId {}: {}", orgId, ExceptionUtils.getStackTrace(e));
+			return null;
+		}
 	}
 
 	public Pair<List<String>, LinkedHashMap<String, List<String>>> fetchIdsAndOrgIdToChildrenMapPair(String orgId) {
@@ -396,7 +421,7 @@ public class HelperService {
 
 			if (null != groupId) {
 				logger.warn("facility UUID = "+ facilityUID );
-				 updateKeycloakGroupAndResource(clinicData, groupId, 0);
+				updateKeycloakGroupAndResource(clinicData, groupId, 0);
 			} else {
 				Organization existingCountry = getExistingOrganizationFromFHIRServer(countryName);
 				if (existingCountry != null) {
@@ -640,7 +665,7 @@ public class HelperService {
 			.execute();
 
 		if (bundle != null && !bundle.getEntry().isEmpty()) {
-			 return (Location) bundle.getEntry().get(0).getResource();
+			return (Location) bundle.getEntry().get(0).getResource();
 
 		}
 		return null;
@@ -1467,33 +1492,86 @@ public class HelperService {
 		ListIterator<String> orgIdIterator = orgIdList.listIterator();
 
 		LinkedHashMap<String, List<String>> mapOfIdToChildren = new LinkedHashMap<>();
+		Set<String> validFacilityTypes = new HashSet<>(Arrays.asList("facility", "prov", "clinic", "healthcare", "provider"));
 
 		while (orgIdIterator.hasNext()) {
 			String tempOrgId = orgIdIterator.next();
 			List<String> childrenList = new ArrayList<>();
-			getOrganizationsPartOf(childrenList, FhirClientAuthenticatorService.serverBase
-				+ "/Organization?partof=Organization/" + tempOrgId + "&_elements=id");
+			String query = FhirClientAuthenticatorService.serverBase
+				+ "/Organization?partof=Organization/" + tempOrgId + "&_elements=id,meta,type,partof";
+			try {
+				getOrganizationsPartOf(childrenList, query);
+				logger.debug("Children for org ID {}: {}", tempOrgId, childrenList);
+			} catch (Exception e) {
+				logger.error("Failed to fetch children for org ID {}: {}", tempOrgId, ExceptionUtils.getStackTrace(e));
+				continue;
+			}
+
 			childrenList.forEach(item -> {
 				orgIdIterator.add(item);
 				orgIdIterator.previous();
 			});
 
-			if (childrenList.isEmpty()) {
+			String orgType = getOrganizationType(tempOrgId);
+			if (orgType != null && validFacilityTypes.contains(orgType)) {
 				facilityOrgIdList.add(tempOrgId);
 			}
 
 			mapOfIdToChildren.put(tempOrgId, childrenList);
-
-			mapOfIdToChildren.forEach((id, children) -> {
-				if (children.contains(tempOrgId)) {
-					List<String> prevChild = mapOfIdToChildren.get(id);
-					prevChild.addAll(childrenList);
-					mapOfIdToChildren.put(id, prevChild);
-				}
-			});
 		}
 
 		return new Pair<>(facilityOrgIdList, mapOfIdToChildren);
+	}
+
+	public String getOrganizationType(String orgId) {
+		try {
+			Organization org = fhirClientAuthenticatorService.getFhirClient()
+				.read()
+				.resource(Organization.class)
+				.withId(orgId)
+				.execute();
+
+			if (org.hasMeta() && !org.getMeta().getTag().isEmpty()) {
+				for (Coding tag : org.getMeta().getTag()) {
+					if (SYSTEM_ORG_TYPE.equals(tag.getSystem()) && tag.hasCode()) {
+						logger.debug("Found meta tag for org {}: system={}, code={}",
+							orgId, tag.getSystem(), tag.getCode());
+						switch (tag.getCode().toUpperCase()) {
+							case "COUNTRY": return "country";
+							case "STATE": return "state";
+							case "LGA": return "lga";
+							case "WARD": return "ward";
+							case "FACILITY": return "facility";
+							default:
+								logger.debug("Unrecognized meta tag for org {}: {}", orgId, tag.getCode());
+						}
+					}
+				}
+			}
+
+			if (org.hasType() && !org.getType().isEmpty()) {
+				for (Coding coding : org.getType().get(0).getCoding()) {
+					if (coding.hasCode()) {
+						String code = coding.getCode().toLowerCase();
+						logger.debug("Found type coding for org {}: code={}", orgId, code);
+						if (VALID_ORG_TYPES.contains(code)) {
+							return code;
+						}
+						if (FACILITY_SYNONYMS.contains(code)) {
+							return "facility";
+						}
+						if ("govt".equals(code)) {
+							return "state";
+						}
+					}
+				}
+			}
+			logger.warn("No valid meta tag or type for org ID: {}", orgId);
+			return null;
+		} catch (Exception e) {
+			logger.error("Failed to fetch type for org ID {}: {}", orgId, ExceptionUtils.getStackTrace(e));
+			return null;
+		}
 	}
 
 	private List<String> getFacilityOrgIds(String orgId) {
@@ -3384,6 +3462,187 @@ public class HelperService {
 			logger.warn(e.toString());
 		}
 		return null;
+	}
+
+	public ResponseEntity<LinkedHashMap<String, Object>> createAndUpdateEmailSchedules(MultipartFile file) throws Exception {
+		NotificationDataSource notificationDataSource = NotificationDataSource.getInstance();
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		List<String> invalidRecords = new ArrayList<>();
+		List<String> skippedRecords = new ArrayList<>();
+		List<EmailScheduleEntity> emailSchedulesToInsert = new ArrayList<>();
+		List<EmailScheduleEntity> emailSchedulesToUpdate = new ArrayList<>();
+		Set<String> processedEmails = new HashSet<>();
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
+		String singleLine;
+		int iteration = 0;
+
+		while ((singleLine = bufferedReader.readLine()) != null) {
+			if (iteration == 0) {
+				iteration++;
+				continue; // Skip header row
+			}
+
+			// Split CSV line, handling quoted fields
+			String[] scheduleData = parseCsvLine(singleLine);
+			if (scheduleData == null || scheduleData.length < 5) {
+				invalidRecords.add("Invalid CSV format at line " + (iteration + 1) + ": " + singleLine + " (Expected at least 5 fields)");
+				iteration++;
+				continue;
+			}
+
+			// Trim trailing empty columns
+			List<String> trimmedData = new ArrayList<>();
+			for (String datum : scheduleData) {
+				String cleaned = datum.trim().replaceAll("^\"|\"$", ""); // Strip surrounding quotes
+				if (!trimmedData.isEmpty() || !cleaned.isEmpty()) {
+					trimmedData.add(cleaned);
+				}
+			}
+			scheduleData = trimmedData.toArray(new String[0]);
+
+			if (!Validation.validateEmailScheduleCsvLine(scheduleData)) {
+				invalidRecords.add("Invalid CSV format at line " + (iteration + 1) + ": " + singleLine);
+				iteration++;
+				continue;
+			}
+
+			try {
+				BulkUploadEmailScheduleDetails scheduleDetails = new BulkUploadEmailScheduleDetails(scheduleData, false);
+				String recipientEmail = scheduleDetails.getRecipientEmail();
+
+				// Skip if email was already processed
+				if (!processedEmails.add(recipientEmail)) {
+					skippedRecords.add("Duplicate email in CSV at line " + (iteration + 1) + ": " + recipientEmail);
+					iteration++;
+					continue;
+				}
+
+				EmailScheduleEntity existingSchedule = notificationDataSource.getEmailScheduleByRecipientEmail(recipientEmail);
+				EmailScheduleEntity emailSchedule = new EmailScheduleEntity(
+					scheduleDetails.getRecipientEmail(),
+					scheduleDetails.getScheduleType(),
+					scheduleDetails.getEmailSubject(),
+					scheduleDetails.getOrgId(),
+					scheduleDetails.getAdminOrg()
+				);
+
+				if (existingSchedule != null) {
+					emailSchedule.setId(existingSchedule.getId());
+					emailSchedule.setCreatedAt(existingSchedule.getCreatedAt()); // Preserve original createdAt
+					emailSchedule.setUpdatedAt(new Timestamp(System.currentTimeMillis())); // Set updatedAt for update
+					emailSchedulesToUpdate.add(emailSchedule);
+				} else {
+					// createdAt is set in constructor, updatedAt is null
+					emailSchedulesToInsert.add(emailSchedule);
+				}
+			} catch (IllegalArgumentException e) {
+				logger.warn("Invalid data at line {}: {}", iteration + 1, e.getMessage());
+				invalidRecords.add("Invalid data format at line " + (iteration + 1) + ": " + singleLine + " (" + e.getMessage() + ")");
+			}
+			iteration++;
+		}
+
+		// Process inserts
+		if (!emailSchedulesToInsert.isEmpty()) {
+			try {
+				List<String> insertResults = notificationDataSource.insertEmailSchedules(emailSchedulesToInsert);
+				skippedRecords.addAll(insertResults);
+			} catch (Exception e) {
+				logger.error("Failed to insert email schedules: {}", e.getMessage(), e);
+				map.put("error", "Failed to process bulk insert: " + e.getMessage());
+				map.put("taskStatus", "Failed");
+				return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+
+		// Process updates
+		if (!emailSchedulesToUpdate.isEmpty()) {
+			try {
+				notificationDataSource.updateEmailSchedules(emailSchedulesToUpdate);
+			} catch (Exception e) {
+				logger.error("Failed to update email schedules: {}", e.getMessage(), e);
+				map.put("error", "Failed to process bulk update: " + e.getMessage());
+				map.put("taskStatus", "Failed");
+				return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+
+		if (!invalidRecords.isEmpty()) {
+			map.put("invalidRecords", invalidRecords);
+		}
+		if (!skippedRecords.isEmpty()) {
+			map.put("skippedRecords", skippedRecords);
+		}
+		map.put("taskStatus", "Completed");
+		return new ResponseEntity<>(map, HttpStatus.OK);
+	}
+
+	// Helper method to parse CSV line, handling quoted fields
+	private String[] parseCsvLine(String line) {
+		if (line == null || line.trim().isEmpty()) {
+			return null;
+		}
+		List<String> result = new ArrayList<>();
+		StringBuilder field = new StringBuilder();
+		boolean inQuotes = false;
+		for (int i = 0; i < line.length(); i++) {
+			char c = line.charAt(i);
+			if (c == '"') {
+				inQuotes = !inQuotes;
+				continue;
+			}
+			if (c == ',' && !inQuotes) {
+				result.add(field.toString());
+				field = new StringBuilder();
+				continue;
+			}
+			field.append(c);
+		}
+		result.add(field.toString()); // Add the last field
+		return result.toArray(new String[0]);
+	}
+
+	// Delete an email schedule by recipient email
+	public ResponseEntity<LinkedHashMap<String, Object>> deleteEmailScheduleByEmailAddress(String recipientEmail) {
+		NotificationDataSource notificationDataSource = NotificationDataSource.getInstance(); // Initialize NotificationDataSource
+		LinkedHashMap<String, Object> response = new LinkedHashMap<>();
+
+		EmailScheduleEntity emailSchedule = notificationDataSource.getEmailScheduleByRecipientEmail(recipientEmail);
+		if (emailSchedule == null) {
+			logger.warn("No email schedule found for recipient email: {}", recipientEmail);
+			response.put("message", "Email schedule not found");
+			response.put("recipientEmail", recipientEmail);
+			response.put("status", "Not Found");
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		}
+
+		try {
+			notificationDataSource.deleteByRecipientEmail(recipientEmail);
+			response.put("message", "Successfully deleted email schedule");
+			response.put("recipientEmail", recipientEmail);
+			response.put("status", "Deleted");
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error("Failed to delete email schedule for recipient {}: {}", recipientEmail, e.getMessage(), e);
+			response.put("message", "Failed to delete email schedule");
+			response.put("recipientEmail", recipientEmail);
+			response.put("error", e.getMessage());
+			response.put("status", "Failed");
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+
+	// Get all email schedules filtered by admin organization
+	public ResponseEntity<List<EmailScheduleEntity>> getAllEmailSchedules(String adminOrg) {
+		NotificationDataSource notificationDataSource = NotificationDataSource.getInstance(); // Initialize NotificationDataSource
+		try {
+			List<EmailScheduleEntity> emailSchedules = notificationDataSource.getEmailSchedulesByAdminOrg(adminOrg);
+			return new ResponseEntity<>(emailSchedules, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error("Failed to retrieve email schedules for adminOrg {}: {}", adminOrg, e.getMessage(), e);
+			return new ResponseEntity<>(Collections.emptyList(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@Getter
