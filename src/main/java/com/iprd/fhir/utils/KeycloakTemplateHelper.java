@@ -14,6 +14,8 @@ public class KeycloakTemplateHelper {
 	private static String LGA = "lga";
 	private static String WARD = "ward";
 	private static String FACILITY = "facility";
+	private static String WEB_USER = "web";
+	private static String MOBILE_USER = "mobile";
 
 	public static GroupRepresentation countryGroup(String name, String fhirResourceId) {
 		GroupRepresentation stateGroupRep = new GroupRepresentation();
@@ -96,6 +98,7 @@ public class KeycloakTemplateHelper {
 		user.singleAttribute("practitioner_id", practitionerId);
 		user.singleAttribute("practitioner_role_id", practitionerRoleId);
 		user.singleAttribute("argusoft_id", argusoftId);
+		user.singleAttribute("user_type", MOBILE_USER);
 		user.setEnabled(true);
 		return user;
 	}
@@ -124,6 +127,7 @@ public class KeycloakTemplateHelper {
 		user.singleAttribute("practitioner_role_id", practitionerRoleId);
 		user.singleAttribute("group_type", type);
 		user.singleAttribute("facilityUID", facilityUID);
+		user.singleAttribute("user_type", WEB_USER);
 		user.setEnabled(true);
 		return user;
 	}
