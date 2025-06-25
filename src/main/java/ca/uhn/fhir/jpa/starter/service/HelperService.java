@@ -232,7 +232,7 @@ public class HelperService {
 				.execute();
 			String name = org != null ? org.getName() : null;
 			return name;
-		} catch (Exception e) {
+		} catch (ResourceNotFoundException e) {
 			logger.warn("Failed to resolve name for orgId {}: {}", orgId, ExceptionUtils.getStackTrace(e));
 			return null;
 		}
