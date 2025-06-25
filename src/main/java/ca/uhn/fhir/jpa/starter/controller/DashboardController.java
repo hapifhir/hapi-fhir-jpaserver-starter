@@ -5,6 +5,7 @@ import ca.uhn.fhir.jpa.starter.ConfigDefinitionTypes;
 import ca.uhn.fhir.jpa.starter.DashboardEnvironmentConfig;
 import ca.uhn.fhir.jpa.starter.anonymization.AnonymizerContext;
 import ca.uhn.fhir.jpa.starter.model.AnalyticItem;
+import ca.uhn.fhir.jpa.starter.model.JWTPayload;
 import ca.uhn.fhir.jpa.starter.model.ReportType;
 import ca.uhn.fhir.jpa.starter.service.BigQueryService;
 import ca.uhn.fhir.jpa.starter.service.HelperService;
@@ -15,6 +16,7 @@ import org.hl7.fhir.r4.model.Organization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,11 +48,11 @@ public class DashboardController {
 	}
 
 
-		@RequestMapping(method = RequestMethod.GET, value = "/details")
+	@RequestMapping(method = RequestMethod.GET, value = "/details")
 	public ResponseEntity<?> getDetails(
-		@RequestHeader(name = "Authorization") String token,
-		@RequestParam("env") String env,
-		@RequestParam Map<String, String> allFilters
+			@RequestHeader(name = "Authorization") String token,
+			@RequestParam("env") String env,
+			@RequestParam Map<String, String> allFilters
 	) throws SQLException, IOException {
 		Boolean isAnonymizationEnabled = anonymizerContext.isAnonymized(token);
 		String organizationId = allFilters.get("lga");
@@ -72,8 +74,8 @@ public class DashboardController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/lastSyncTime")
 	public ResponseEntity<?> getLastSyncTime(
-		@RequestHeader(name = "Authorization") String token,
-		@RequestParam("env") String env){
+			@RequestHeader(name = "Authorization") String token,
+			@RequestParam("env") String env){
 
 		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
 		if (practitionerRoleId == null) {
@@ -84,8 +86,8 @@ public class DashboardController {
 	}
 	@RequestMapping(method = RequestMethod.GET, value = "/facilityLastSyncTime")
 	public ResponseEntity<?> getFacilityLastSyncTime(
-		@RequestParam("selectedOrganizationId") String selectedOrganizationId,
-		@RequestParam("env") String env) {
+			@RequestParam("selectedOrganizationId") String selectedOrganizationId,
+			@RequestParam("env") String env) {
 		return helperService.computeFacilitySyncTime(env, selectedOrganizationId);
 	}
 
@@ -93,9 +95,10 @@ public class DashboardController {
 	public ResponseEntity<?> getTableData(@PathVariable Long lastUpdated){
 		return helperService.getTableData(lastUpdated);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/organizations")
 	public ResponseEntity<?> organizations(@RequestHeader(name = "Authorization") String token) {
+
 		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
@@ -155,19 +158,20 @@ public class DashboardController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/organizationStructure")
 	public ResponseEntity<?> organizationStructure(
-		@RequestParam("orgId") String orgId,
-		@RequestParam("parentId") String parentId) {
+			@RequestParam("orgId") String orgId,
+			@RequestParam("parentId") String parentId) {
 		helperService.saveOrganizationStructure(orgId, parentId);
 		return ResponseEntity.ok("Data insertion into 'organization structure' table has started");
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/data")
 	public ResponseEntity<?> data(
-		@RequestHeader(name = "Authorization") String token,
-		@RequestParam("env") String env,
-		@RequestParam Map<String, String> allFilters
+			@RequestHeader(name = "Authorization") String token,
+			@RequestParam("env") String env,
+			@RequestParam Map<String, String> allFilters
 	) {
- 		String startDate = allFilters.get("from");
+
+		String startDate = allFilters.get("from");
 		String endDate = allFilters.get("to");
 		ReportType type = ReportType.valueOf(allFilters.get("type"));
 		Boolean isAnonymizationEnabled = anonymizerContext.isAnonymized(token);
@@ -187,11 +191,12 @@ public class DashboardController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/linechart")
 	public ResponseEntity<?> lineChart(
-		@RequestHeader(name = "Authorization") String token,
-		@RequestParam("env") String env,
-		@RequestParam("lga") String lga,
-		@RequestParam Map<String, String> allFilters
+			@RequestHeader(name = "Authorization") String token,
+			@RequestParam("env") String env,
+			@RequestParam("lga") String lga,
+			@RequestParam Map<String, String> allFilters
 	) {
+
 		String startDate = allFilters.get("from");
 		String endDate = allFilters.get("to");
 		ReportType type = ReportType.valueOf(allFilters.get("type"));
@@ -212,11 +217,12 @@ public class DashboardController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/pieChartData")
 	public ResponseEntity<?> pieChartData(
-		@RequestHeader(name = "Authorization") String token,
-		@RequestParam("env") String env,
-		@RequestParam("lga") String lga,
-		@RequestParam Map<String, String> allFilters
+			@RequestHeader(name = "Authorization") String token,
+			@RequestParam("env") String env,
+			@RequestParam("lga") String lga,
+			@RequestParam Map<String, String> allFilters
 	){
+
 		Boolean isAnonymizationEnabled = anonymizerContext.isAnonymized(token);
 		String startDate = allFilters.get("from");
 		String endDate = allFilters.get("to");
@@ -234,10 +240,10 @@ public class DashboardController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/tabularData")
 	public ResponseEntity<?> getTabularData(
-		@RequestHeader(name = "Authorization") String token,
-		@RequestParam("env") String env,
-		@RequestParam("lga") String lga,
-		@RequestParam Map<String, String> allFilters
+			@RequestHeader(name = "Authorization") String token,
+			@RequestParam("env") String env,
+			@RequestParam("lga") String lga,
+			@RequestParam Map<String, String> allFilters
 	) {
 		Boolean isAnonymizationEnabled = anonymizerContext.isAnonymized(token);
 		String startDate = allFilters.get("from");
@@ -257,20 +263,22 @@ public class DashboardController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/refreshMapToOrgId")
 	public ResponseEntity<?> refreshMapToOrgId(
-		@RequestHeader(name = "Authorization") String token,
-		@RequestParam("orgId") String orgId
+			@RequestHeader(name = "Authorization") String token,
+			@RequestParam("orgId") String orgId
 	) {
+
 		helperService.refreshMapForOrgId(orgId);
 		return ResponseEntity.ok("Refresh done");
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/barChartData")
 	public ResponseEntity<?> getBarChartData(
-		@RequestHeader(name = "Authorization") String token,
-		@RequestParam("env") String env,
-		@RequestParam("lga") String lga,
-		@RequestParam Map<String, String> allFilters
+			@RequestHeader(name = "Authorization") String token,
+			@RequestParam("env") String env,
+			@RequestParam("lga") String lga,
+			@RequestParam Map<String, String> allFilters
 	) {
+
 		Boolean isAnonymizationEnabled = anonymizerContext.isAnonymized(token);
 		String startDate = allFilters.get("from");
 		String endDate = allFilters.get("to");
@@ -290,6 +298,7 @@ public class DashboardController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/analytics")
 	public ResponseEntity<?> analytics(@RequestHeader(name = "Authorization") String token,@RequestParam("env") String env) {
+
 		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");
@@ -320,10 +329,10 @@ public class DashboardController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/maps")
 	public List<HelperService.MapResponse> getEncountersForMap(
-		@RequestHeader(name = "Authorization") String token,
-		@RequestParam ("lga") String orgId,
-		@RequestParam("from") String from,
-		@RequestParam("to") String to
+			@RequestHeader(name = "Authorization") String token,
+			@RequestParam ("lga") String orgId,
+			@RequestParam("from") String from,
+			@RequestParam("to") String to
 	) {
 		Boolean isAnonymizationEnabled = anonymizerContext.isAnonymized(token);
 		return helperService.getEncounterForMap(orgId, from, to, isAnonymizationEnabled);
@@ -331,11 +340,12 @@ public class DashboardController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/facilitySummaryData")
 	public ResponseEntity<?> getFacilitySummaryData(
-		@RequestHeader(name = "Authorization") String token,
-		@RequestParam("env") String env,
-		@RequestParam("lga") String lga,
-		@RequestParam Map<String, String> allFilters
+			@RequestHeader(name = "Authorization") String token,
+			@RequestParam("env") String env,
+			@RequestParam("lga") String lga,
+			@RequestParam Map<String, String> allFilters
 	) {
+
 		Boolean isAnonymizationEnabled = anonymizerContext.isAnonymized(token);
 		String startDate = allFilters.get("from");
 		String endDate = allFilters.get("to");
@@ -355,11 +365,12 @@ public class DashboardController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/cacheDashboardDataSequential")
 	public ResponseEntity<?> cacheDashboardDataSequential(
-		@RequestHeader(name = "Authorization") String token,
-		@RequestParam("from") String from,
-		@RequestParam("to") String to,
-		@RequestParam(value = "organizationId", required = false) String organizationId,
-		@RequestParam("env") String env) {
+			@RequestHeader(name = "Authorization") String token,
+			@RequestParam("from") String from,
+			@RequestParam("to") String to,
+			@RequestParam(value = "organizationId", required = false) String organizationId,
+			@RequestParam("env") String env) {
+
 		String practitionerRoleId = Validation.getJWTToken(token).getPractitionerRoleId();
 		if (practitionerRoleId == null) {
 			return ResponseEntity.ok("Error : Practitioner Role Id not found in token");

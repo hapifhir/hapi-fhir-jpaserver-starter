@@ -29,6 +29,16 @@ public class JWTPayload {
 	private String email;
 	private Boolean anonymization;
 	private List<String> clientRoles = new ArrayList<>();;
+	private String user_type;
+
+	public String getUser_type() {
+		return user_type;
+	}
+
+	public void setUser_type(String user_type) {
+		this.user_type = user_type;
+	}
+
 	public  List<String> getClientRoles() {
 		return clientRoles;
 	}
@@ -36,7 +46,7 @@ public class JWTPayload {
 	public void setClientRole( List<String> clientRoles) {
 		this.clientRoles = clientRoles;
 	}
-	
+
 	public float getExp() {
 		return exp;
 	}
