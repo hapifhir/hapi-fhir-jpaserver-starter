@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class BulkUploadEmailScheduleDetails {
+	private static final String UUID_REGEX = "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$";
 	private Integer id; // Only used for updates
 	private String recipientEmail;
 	private String scheduleType;
@@ -32,11 +33,11 @@ public class BulkUploadEmailScheduleDetails {
 			throw new IllegalArgumentException("Email subject cannot be empty");
 		}
 		this.orgId = scheduleData[offset + 3].trim();
-		if (!this.orgId.matches("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")) {
+		if (!this.orgId.matches(UUID_REGEX)) {
 			throw new IllegalArgumentException("Invalid orgId format: " + this.orgId);
 		}
 		this.adminOrg = scheduleData[offset + 4].trim();
-		if (!this.adminOrg.matches("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")) {
+		if (!this.adminOrg.matches(UUID_REGEX)) {
 			throw new IllegalArgumentException("Invalid adminOrg format: " + this.adminOrg);
 		}
 	}

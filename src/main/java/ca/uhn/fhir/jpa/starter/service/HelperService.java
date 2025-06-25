@@ -3465,6 +3465,7 @@ public class HelperService {
 	}
 
 	public ResponseEntity<LinkedHashMap<String, Object>> createAndUpdateEmailSchedules(MultipartFile file) throws Exception {
+		NotificationDataSource notificationDataSource = NotificationDataSource.getInstance();
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		List<String> invalidRecords = new ArrayList<>();
 		List<String> skippedRecords = new ArrayList<>();
@@ -3516,7 +3517,7 @@ public class HelperService {
 					continue;
 				}
 
-				EmailScheduleEntity existingSchedule = NotificationDataSource.getInstance().getEmailScheduleByRecipientEmail(recipientEmail);
+				EmailScheduleEntity existingSchedule = notificationDataSource.getEmailScheduleByRecipientEmail(recipientEmail);
 				EmailScheduleEntity emailSchedule = new EmailScheduleEntity(
 					scheduleDetails.getRecipientEmail(),
 					scheduleDetails.getScheduleType(),
@@ -3527,8 +3528,11 @@ public class HelperService {
 
 				if (existingSchedule != null) {
 					emailSchedule.setId(existingSchedule.getId());
+					emailSchedule.setCreatedAt(existingSchedule.getCreatedAt()); // Preserve original createdAt
+					emailSchedule.setUpdatedAt(new Timestamp(System.currentTimeMillis())); // Set updatedAt for update
 					emailSchedulesToUpdate.add(emailSchedule);
 				} else {
+					// createdAt is set in constructor, updatedAt is null
 					emailSchedulesToInsert.add(emailSchedule);
 				}
 			} catch (IllegalArgumentException e) {
@@ -3541,7 +3545,7 @@ public class HelperService {
 		// Process inserts
 		if (!emailSchedulesToInsert.isEmpty()) {
 			try {
-				List<String> insertResults = NotificationDataSource.getInstance().insertEmailSchedules(emailSchedulesToInsert);
+				List<String> insertResults = notificationDataSource.insertEmailSchedules(emailSchedulesToInsert);
 				skippedRecords.addAll(insertResults);
 			} catch (Exception e) {
 				logger.error("Failed to insert email schedules: {}", e.getMessage(), e);
@@ -3554,7 +3558,7 @@ public class HelperService {
 		// Process updates
 		if (!emailSchedulesToUpdate.isEmpty()) {
 			try {
-				NotificationDataSource.getInstance().updateEmailSchedules(emailSchedulesToUpdate);
+				notificationDataSource.updateEmailSchedules(emailSchedulesToUpdate);
 			} catch (Exception e) {
 				logger.error("Failed to update email schedules: {}", e.getMessage(), e);
 				map.put("error", "Failed to process bulk update: " + e.getMessage());
@@ -3599,10 +3603,11 @@ public class HelperService {
 	}
 
 	// Delete an email schedule by recipient email
-	public ResponseEntity<LinkedHashMap<String, Object>> deleteEmailScheduleByEmail(String recipientEmail) {
+	public ResponseEntity<LinkedHashMap<String, Object>> deleteEmailScheduleByEmailAddress(String recipientEmail) {
+		NotificationDataSource notificationDataSource = NotificationDataSource.getInstance(); // Initialize NotificationDataSource
 		LinkedHashMap<String, Object> response = new LinkedHashMap<>();
 
-		EmailScheduleEntity emailSchedule = NotificationDataSource.getInstance().getEmailScheduleByRecipientEmail(recipientEmail);
+		EmailScheduleEntity emailSchedule = notificationDataSource.getEmailScheduleByRecipientEmail(recipientEmail);
 		if (emailSchedule == null) {
 			logger.warn("No email schedule found for recipient email: {}", recipientEmail);
 			response.put("message", "Email schedule not found");
@@ -3612,7 +3617,7 @@ public class HelperService {
 		}
 
 		try {
-			NotificationDataSource.getInstance().deleteByRecipientEmail(recipientEmail);
+			notificationDataSource.deleteByRecipientEmail(recipientEmail);
 			response.put("message", "Successfully deleted email schedule");
 			response.put("recipientEmail", recipientEmail);
 			response.put("status", "Deleted");
@@ -3630,8 +3635,9 @@ public class HelperService {
 
 	// Get all email schedules filtered by admin organization
 	public ResponseEntity<List<EmailScheduleEntity>> getAllEmailSchedules(String adminOrg) {
+		NotificationDataSource notificationDataSource = NotificationDataSource.getInstance(); // Initialize NotificationDataSource
 		try {
-			List<EmailScheduleEntity> emailSchedules = NotificationDataSource.getInstance().getEmailSchedulesByAdminOrg(adminOrg);
+			List<EmailScheduleEntity> emailSchedules = notificationDataSource.getEmailSchedulesByAdminOrg(adminOrg);
 			return new ResponseEntity<>(emailSchedules, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error("Failed to retrieve email schedules for adminOrg {}: {}", adminOrg, e.getMessage(), e);

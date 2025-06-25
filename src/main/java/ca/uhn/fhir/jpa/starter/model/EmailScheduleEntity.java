@@ -29,12 +29,11 @@ public class EmailScheduleEntity {
 	@Column(name = "created_at", nullable = false)
 	private Timestamp createdAt;
 
-	@Column(name = "updated_at", nullable = false)
+	@Column(name = "updated_at", nullable = true)
 	private Timestamp updatedAt;
 
 	public EmailScheduleEntity() {
-		this.createdAt = new Timestamp(System.currentTimeMillis());
-		this.updatedAt = new Timestamp(System.currentTimeMillis());
+		// Required by JPA
 	}
 
 	public EmailScheduleEntity(String recipientEmail, String scheduleType, String emailSubject, String orgId, String adminOrg) {
@@ -44,18 +43,7 @@ public class EmailScheduleEntity {
 		this.orgId = orgId;
 		this.adminOrg = adminOrg;
 		this.createdAt = new Timestamp(System.currentTimeMillis());
-		this.updatedAt = new Timestamp(System.currentTimeMillis());
-	}
-
-	public EmailScheduleEntity(String recipientEmail, String scheduleType, String emailSubject, String orgId,
-										String adminOrg, Timestamp createdAt, Timestamp updatedAt) {
-		this.recipientEmail = recipientEmail;
-		this.scheduleType = scheduleType;
-		this.emailSubject = emailSubject;
-		this.orgId = orgId;
-		this.adminOrg = adminOrg;
-		this.createdAt = createdAt != null ? createdAt : new Timestamp(System.currentTimeMillis());
-		this.updatedAt = updatedAt != null ? updatedAt : new Timestamp(System.currentTimeMillis());
+		this.updatedAt = null;
 	}
 
 	public Integer getId() {

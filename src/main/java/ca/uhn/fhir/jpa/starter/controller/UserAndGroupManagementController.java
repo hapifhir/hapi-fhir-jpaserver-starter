@@ -178,8 +178,8 @@ public class UserAndGroupManagementController {
 	}
 
 	// Delete an email schedule by recipient email
-	@DeleteMapping("/deleteemail/{recipientEmail}")
+	@DeleteMapping("/deleteEmail/{recipientEmail}")
 	public ResponseEntity<LinkedHashMap<String, Object>> deleteEmailScheduleByEmail(@PathVariable String recipientEmail) {
-		return helperService.deleteEmailScheduleByEmail(recipientEmail);
+		return helperService.deleteEmailScheduleByEmailAddress(recipientEmail);
 	}
 }
