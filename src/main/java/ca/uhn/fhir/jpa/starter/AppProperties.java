@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
+
 @ConfigurationProperties(prefix = "hapi.fhir")
 @Configuration
 @EnableConfigurationProperties
@@ -46,6 +48,7 @@ public class AppProperties {
 	private Boolean mass_ingestion_mode_enabled = false;
 	private Boolean language_search_parameter_enabled = false;
 	private Boolean dao_scheduling_enabled = true;
+	private Boolean delete_enabled = true;
 	private Boolean delete_expunge_enabled = false;
 	private Boolean enable_index_missing_fields = false;
 	private Boolean enable_index_contained_resource = false;
@@ -111,6 +114,8 @@ public class AppProperties {
 			JpaStorageSettings.StoreMetaSourceInformationEnum.NONE;
 
 	private Map<String, RemoteSystem> remote_terminology_service = null;
+	private Boolean match_url_cache_enabled = false;
+	private Boolean index_storage_optimized = false;
 
 	public List<String> getCustomInterceptorClasses() {
 		return custom_interceptor_classes;
@@ -374,6 +379,14 @@ public class AppProperties {
 
 	public Boolean getDelete_expunge_enabled() {
 		return delete_expunge_enabled;
+	}
+
+	public boolean getDelete_enabled() {
+		return defaultIfNull(delete_enabled, true);
+	}
+
+	public void setDelete_enabled(boolean theDelete_enabled) {
+		delete_enabled = theDelete_enabled;
 	}
 
 	public void setDelete_expunge_enabled(Boolean delete_expunge_enabled) {
@@ -745,7 +758,23 @@ public class AppProperties {
 		this.remote_terminology_service = remote_terminology_service;
 	}
 
-	public JpaStorageSettings.StoreMetaSourceInformationEnum getStore_meta_source_information() {
+	public boolean getMatch_url_cache_enabled() {
+		return defaultIfNull(match_url_cache_enabled, false);
+	}
+
+	public void setMatch_url_cache_enabled(boolean theMatchUrlCacheEnabled) {
+		match_url_cache_enabled = theMatchUrlCacheEnabled;
+	}
+
+	public boolean getIndex_storage_optimized() {
+		return defaultIfNull(index_storage_optimized, false);
+	}
+
+	public void setIndex_storage_optimized(boolean theIndex_storage_optimized) {
+		index_storage_optimized = theIndex_storage_optimized;
+  }
+  
+  public JpaStorageSettings.StoreMetaSourceInformationEnum getStore_meta_source_information() {
 		return store_meta_source_information;
 	}
 
