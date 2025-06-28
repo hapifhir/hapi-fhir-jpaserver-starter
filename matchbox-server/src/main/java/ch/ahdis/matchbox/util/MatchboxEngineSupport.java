@@ -25,6 +25,9 @@ import org.hl7.fhir.r5.terminologies.CodeSystemUtilities;
 import org.hl7.fhir.r5.terminologies.client.TerminologyClientContext;
 import org.hl7.fhir.r5.utils.validation.constants.ReferenceValidationPolicy;
 import org.hl7.fhir.utilities.FhirPublication;
+import org.hl7.fhir.utilities.validation.ValidationOptions.R5BundleRelativeReferencePolicy;
+import org.hl7.fhir.validation.instance.advisor.BasePolicyAdvisorForFullValidation;
+import org.hl7.fhir.validation.service.DisabledValidationPolicyAdvisor;
 import org.hl7.fhir.validation.service.StandAloneValidatorFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -596,6 +599,8 @@ public class MatchboxEngineSupport {
 				validator.getBundleValidationRules().add(new org.hl7.fhir.r5.utils.validation.BundleValidationRule().setRule(rule).setProfile(profile));
 			}
 		}
+		validator.setR5BundleRelativeReferencePolicy(R5BundleRelativeReferencePolicy.fromCode(cli.getR5BundleRelativeReferencePolicy()));
+	    ReferenceValidationPolicy refpol = ReferenceValidationPolicy.CHECK_VALID;
 		if (!cli.isDisableDefaultResourceFetcher()) {
 			StandAloneValidatorFetcher fetcher = new StandAloneValidatorFetcher(validator.getPcm(), validator.getContext(),
 					validator);
@@ -609,12 +614,12 @@ public class MatchboxEngineSupport {
 			}
 			fetcher.setResolutionContext(cli.getResolutionContext());
 		} else {
-			validator.setPolicyAdvisor(new ValidationPolicyAdvisor(ReferenceValidationPolicy.CHECK_VALID));
-			// https://github.com/ahdis/matchbox/issues/334
-			// DisabledValidationPolicyAdvisor fetcher = new DisabledValidationPolicyAdvisor();
-			// validator.setPolicyAdvisor(fetcher);
-			// refpol = ReferenceValidationPolicy.CHECK_TYPE_IF_EXISTS;
+			DisabledValidationPolicyAdvisor fetcher = new DisabledValidationPolicyAdvisor();
+			validator.setPolicyAdvisor(fetcher);
+			refpol = ReferenceValidationPolicy.CHECK_TYPE_IF_EXISTS;
 		}
+		validator.getPolicyAdvisor().setPolicyAdvisor(new ValidationPolicyAdvisor(validator.getPolicyAdvisor() == null ? refpol : validator.getPolicyAdvisor().getReferencePolicy()));
+
 		validator.setJurisdiction(CodeSystemUtilities.readCoding(cli.getJurisdiction()));
 		// TerminologyCache.setNoCaching(cliContext.isNoInternalCaching());
 

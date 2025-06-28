@@ -285,6 +285,9 @@ public class CliContext {
   @JsonProperty("check-references")
   private boolean checkReferences = false;
 
+  @JsonProperty("r5-bundle-relative-reference-policy")
+  private String r5BundleRelativeReferencePolicy = "default";
+
   // @JsonProperty("showTimes")
   // private boolean showTimes = false;
 
@@ -802,6 +805,17 @@ public class CliContext {
     this.analyzeOutcomeWithAIOnError = analyzeOutcomeWithAIOnError;
   }
 
+  @JsonProperty("r5-bundle-relative-reference-policy")
+  public String getR5BundleRelativeReferencePolicy() {
+    return r5BundleRelativeReferencePolicy;
+  }
+
+  @JsonProperty("r5-bundle-relative-reference-policy")
+  public void setR5BundleRelativeReferencePolicy(String r5BundleRelativeReferencePolicy) {
+    this.r5BundleRelativeReferencePolicy = r5BundleRelativeReferencePolicy;
+  }
+
+
   @Override
   public boolean equals(final Object o) {
     if (this == o)
@@ -859,7 +873,8 @@ public class CliContext {
         && Objects.equals(bundle, that.bundle)
         && Arrays.equals(suppressErrors, that.suppressErrors)
         && Arrays.equals(suppressWarnInfos, that.suppressWarnInfos)
-        && Arrays.equals(igs, that.igs);
+        && Arrays.equals(igs, that.igs)
+        && Objects.equals(r5BundleRelativeReferencePolicy, that.r5BundleRelativeReferencePolicy);
   }
 
   @Override
@@ -909,7 +924,8 @@ public class CliContext {
         llmModelName,
         llmApiKey,
         checkIpsCodes,
-        bundle);
+        bundle,
+        r5BundleRelativeReferencePolicy);
     result = 31 * result + Arrays.hashCode(igsPreloaded);
     result = 31 * result + Arrays.hashCode(extensions);
     result = 31 * result + Arrays.hashCode(suppressErrors);
@@ -963,6 +979,7 @@ public class CliContext {
         ", httpReadOnly=" + httpReadOnly +
         ", checkReferences=" + checkReferences +
         ", resolutionContext=" + resolutionContext +
+        ", r5-bundle-relative-reference-policy='" + r5BundleRelativeReferencePolicy + '\'' +
         ", disableDefaultResourceFetcher=" + disableDefaultResourceFetcher +
         ", analyzeOutcomeWithAI=" + analyzeOutcomeWithAI +
         ", analyzeOutcomeWithAIOnError=" + analyzeOutcomeWithAIOnError +
@@ -1027,6 +1044,7 @@ public class CliContext {
     addExtension(ext, "jurisdiction", new StringType(this.jurisdiction));
     addExtension(ext, "check-references", new BooleanType(this.checkReferences));
     addExtension(ext, "resolution-context", new StringType(this.resolutionContext));
+    addExtension(ext, "r5-bundle-relative-reference-policy", new StringType(this.r5BundleRelativeReferencePolicy));
     addExtension(ext, "disableDefaultResourceFetcher", new BooleanType(this.disableDefaultResourceFetcher));
     addExtension(ext, "analyzeOutcomeWithAI", new BooleanType(this.analyzeOutcomeWithAI));
     addExtension(ext, "analyzeOutcomeWithAIOnError", new BooleanType(this.analyzeOutcomeWithAIOnError));

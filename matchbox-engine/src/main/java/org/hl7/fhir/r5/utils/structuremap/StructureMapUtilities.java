@@ -33,7 +33,7 @@ package org.hl7.fhir.r5.utils.structuremap;
 // remember group resolution
 // trace - account for which wasn't transformed in the source
 
-import net.sourceforge.plantuml.utils.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.hl7.fhir.exceptions.DefinitionException;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.FHIRFormatError;
@@ -102,6 +102,7 @@ import java.util.*;
  * @author Grahame Grieve
  */
 @MarkedToMoveToAdjunctPackage
+@Slf4j
 public class StructureMapUtilities {
 
   public static final String MAP_WHERE_CHECK = "map.where.check";
@@ -651,7 +652,7 @@ public class StructureMapUtilities {
     Element res = fp.parse(errors, Utilities.stripBOM(text));
     // matchbox patch FML lexer errors swallowed #367
     if (res == null || errors.size() > 0) {
-      Log.error(errors.toString());
+      log.error(errors.toString());
       throw new FHIRException("Unable to parse Map Source for "+srcName + " Details "+errors.toString());
     }
     ByteArrayOutputStream boas = new ByteArrayOutputStream();
@@ -688,9 +689,8 @@ public class StructureMapUtilities {
     if (debug) {
       if (getServices() != null)
         getServices().log(cnt);
-      else
-        System.out.println(cnt);
     }
+    log.debug(cnt);
   }
 
   /**

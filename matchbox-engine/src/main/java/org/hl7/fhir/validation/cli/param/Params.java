@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
 
+import lombok.extern.slf4j.Slf4j;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.terminologies.JurisdictionUtilities;
@@ -21,6 +22,7 @@ import org.hl7.fhir.validation.service.utils.EngineMode;
 import org.hl7.fhir.validation.service.utils.QuestionnaireMode;
 import org.hl7.fhir.validation.service.utils.ValidationLevel;
 
+@Slf4j
 public class Params {
 
   public static final String VERSION = "-version";
@@ -46,6 +48,8 @@ public class Params {
   public static final String CHECK_REFERENCES = "-check-references";
   public static final String RESOLUTION_CONTEXT = "-resolution-context";
   public static final String DEBUG = "-debug";
+  public static final String DEBUG_LOG = "-debug-log";
+  public static final String TRACE_LOG = "-trace-log";
   public static final String SCT = "-sct";
   public static final String RECURSE = "-recurse";
   public static final String SHOW_MESSAGES_FROM_REFERENCES = "-showReferenceMessages";
@@ -201,6 +205,10 @@ public class Params {
           throw new Error("Specified -html-output without indicating output file");
         else
           validationContext.setHtmlOutput(args[++i]);
+      } else if (args[i].equals(DEBUG_LOG)) {
+        i++;
+      } else if (args[i].equals(TRACE_LOG)) {
+        i++;
       } else if (args[i].equals(PROXY)) {
         i++; // ignore next parameter
       } else if (args[i].equals(PROXY_AUTH)) {
@@ -294,7 +302,8 @@ public class Params {
       } else if (args[i].equals(RESOLUTION_CONTEXT)) {
         validationContext.setResolutionContext(args[++i]);
       } else if (args[i].equals(DEBUG)) {
-        validationContext.setDoDebug(true);
+        //FIXME warm that debug now outputs to the log file
+        //validationContext.setDoDebug(true);
       } else if (args[i].equals(SCT)) {
         validationContext.setSnomedCT(args[++i]);
       } else if (args[i].equals(RECURSE)) {
@@ -664,7 +673,7 @@ public class Params {
         else {
           String s = args[++i];
           if (!s.startsWith("hl7.fhir.core-")) {
-            System.out.println("Load Package: " + s);
+            log.info("Load Package: " + s);
           }
         }
       }

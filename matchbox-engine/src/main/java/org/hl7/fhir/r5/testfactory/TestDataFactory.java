@@ -15,6 +15,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r5.context.IWorkerContext;
@@ -48,9 +49,8 @@ import org.hl7.fhir.utilities.json.JsonException;
 import org.hl7.fhir.utilities.json.model.JsonObject;
 import org.hl7.fhir.utilities.json.parser.JsonParser;
 
-import ca.uhn.fhir.context.support.IValidationSupport.ValueSetExpansionOutcome;
-
 @MarkedToMoveToAdjunctPackage
+@Slf4j
 public class TestDataFactory {
 
   public static class DataTable extends Base {
@@ -214,7 +214,7 @@ public class TestDataFactory {
   
   private String rootFolder;
   private LiquidEngine liquid;
-  private PrintStream log;
+  private PrintStream testLog;
   private IWorkerContext context;
   private String canonical;
   private FhirFormat format;
@@ -241,7 +241,7 @@ public class TestDataFactory {
     if (Utilities.noString(name)) {
       throw new FHIRException("Factory has no name");
     }
-    log = new PrintStream(new FileOutputStream(Utilities.path(logFolder, name+".log"))); 
+    testLog = new PrintStream(new FileOutputStream(Utilities.path(logFolder, name+".log")));
     format = "json".equals(details.asString("format")) ? FhirFormat.JSON : FhirFormat.XML;
   }
   
@@ -259,7 +259,7 @@ public class TestDataFactory {
       error("Factory "+getName()+" mode '"+mode+"' unknown");
     }
     log("finished successfully");
-    log.close();
+    testLog.close();
   }
   
 
@@ -291,7 +291,7 @@ public class TestDataFactory {
       }
       logDataScheme(tbl, tables);
       ProfileBasedFactory factory = new ProfileBasedFactory(fpe, localData.getAbsolutePath(), tbl, tables, details.forceArray("mappings"));
-      factory.setLog(log);
+      factory.setLog(testLog);
       factory.setTesting(testing);
       factory.setMarkProfile(details.asBoolean("mark-profile"));
       String purl = details.asString( "profile");
@@ -319,9 +319,9 @@ public class TestDataFactory {
         }
       }
     } catch (Exception e) {
-      System.out.println("Error running test factory '"+getName()+"': "+e.getMessage());
+      log.error("Error running test factory '"+getName()+"': "+e.getMessage());
       log("Error running test case '"+getName()+"': "+e.getMessage());
-      e.printStackTrace(log);
+      e.printStackTrace(testLog);
       throw new FHIRException(e);
     }
   }
@@ -397,12 +397,12 @@ public class TestDataFactory {
 
   private void error(String msg) throws IOException {
     log(msg);
-    log.close();
+    testLog.close();
     throw new FHIRException(msg);
   }
 
   private void log(String msg) throws IOException {
-    log.append(msg+"\r\n");    
+    testLog.append(msg+"\r\n");
   }
 
   public void executeLiquid() throws IOException {
@@ -434,9 +434,9 @@ public class TestDataFactory {
         }
       }
     } catch (Exception e) {
-      System.out.println("Error running test factory '"+getName()+"': "+e.getMessage());
+      log.error("Error running test factory '"+getName()+"': "+e.getMessage());
       log("Error running test case '"+getName()+"': "+e.getMessage());
-      e.printStackTrace(log);
+      e.printStackTrace(testLog);
       throw new FHIRException(e);
     }
   }

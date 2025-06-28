@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.With;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.utilities.*;
@@ -68,6 +69,7 @@ import ch.ahdis.matchbox.engine.MatchboxEngine;
  *
  * @author Grahame Grieve
  */
+@Slf4j
 public class FilesystemPackageCacheManager extends BasePackageCacheManager implements IPackageCacheManager {
 
   private final FilesystemPackageCacheManagerLocks locks;
@@ -248,7 +250,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
       if (file.getName().endsWith(".lock")) {
         if (locks.getCacheLock().canLockFileBeHeldByThisProcess(file)) {
           String packageDirectoryName = file.getName().substring(0, file.getName().length() - 5);
-          log("Detected potential incomplete package installed in cache: " + packageDirectoryName + ". Attempting to delete");
+          log.info("Detected potential incomplete package installed in cache: " + packageDirectoryName + ". Attempting to delete");
 
           File packageDirectory = ManagedFileAccess.file(Utilities.path(cacheFolder, packageDirectoryName));
           if (packageDirectory.exists()) {
@@ -256,7 +258,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
             packageDirectory.delete();
           }
           file.delete();
-          log("Deleted potential incomplete package: " + packageDirectoryName);
+          log.info("Deleted potential incomplete package: " + packageDirectoryName);
         }
       }
     }
@@ -592,8 +594,8 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 
       NpmPackage extractedNpm = NpmPackage.extractFromTgz(packageTgzInputStream, sourceDesc, tempDir, minimalMemory);
 
-      log("");
-      log("Installing " + sid + "#" + version);
+      log.info("");
+      log.info("Installing " + sid + "#" + version);
 
       if ((extractedNpm.name() != null && sid != null && !sid.equalsIgnoreCase(extractedNpm.name()) && !sid.equalsIgnoreCase(extractedNpm.name()+"."+VersionUtilities.getNameForVersion(extractedNpm.fhirVersion())))) {
         if (!suppressErrors && (!sid.equals("hl7.fhir.r5.core") && !sid.equals("hl7.fhir.us.immds"))) {// temporary work around
@@ -628,13 +630,13 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
           try {
             FileUtilities.clearDirectory(packageRoot);
           } catch (Throwable t) {
-            log("Unable to clear directory: " + packageRoot + ": " + t.getMessage() + " - this may cause problems later");
+            log.info("Unable to clear directory: " + packageRoot + ": " + t.getMessage() + " - this may cause problems later");
           }
           FileUtilities.renameDirectory(tempDir, packageRoot);
 
           npmPackage = loadPackageInfo(packageRoot);
 
-          log(" done.");
+          log.info(" done.");
         } else {
           FileUtilities.clearDirectory(tempDir);
           ManagedFileAccess.file(tempDir).delete();
@@ -644,7 +646,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
       } catch (Exception e) {
         try {
           // don't leave a half extracted package behind
-          log("Clean up package " + packageRoot + " because installation failed: " + e.getMessage());
+          log.info("Clean up package " + packageRoot + " because installation failed: " + e.getMessage());
           e.printStackTrace();
           FileUtilities.clearDirectory(packageRoot);
           ManagedFileAccess.file(packageRoot).delete();
@@ -655,12 +657,6 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
       }
       return npmPackage;
     }, lockParameters);
-  }
-
-  private void log(String s) {
-    if (!silent) {
-      System.out.println(s);
-    }
   }
 
   @Override
@@ -750,8 +746,8 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
       version = "current";
     }
 
-    log("Installing " + id + "#" + (version == null ? "?" : version) + " to the package cache");
-    log("  Fetching:");
+    log.info("Installing " + id + "#" + (version == null ? "?" : version) + " to the package cache");
+    log.info("  Fetching:");
 
     // nup, don't have it locally (or it's expired)
     FilesystemPackageCacheManager.InputStreamWithSrc source;
@@ -836,7 +832,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
     try {
       return ciBuildClient.isCurrent(id, npmPackage) ? npmPackage : null;
     } catch (Exception e) {
-      log("Unable to check package currency: " + id + ": " + id);
+      log.info("Unable to check package currency: " + id + ": " + id);
     }
     return npmPackage;
   }

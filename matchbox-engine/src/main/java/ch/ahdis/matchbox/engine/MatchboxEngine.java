@@ -64,6 +64,7 @@ import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.hl7.fhir.r5.utils.OperationOutcomeUtilities;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
 import org.hl7.fhir.r5.utils.validation.IResourceValidator;
+import org.hl7.fhir.r5.utils.validation.IValidationPolicyAdvisor;
 import org.hl7.fhir.r5.utils.validation.constants.ReferenceValidationPolicy;
 import org.hl7.fhir.utilities.ByteProvider;
 import org.hl7.fhir.utilities.FhirPublication;
@@ -1170,7 +1171,15 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @param regexPath The regexPath to check.
 	 */
 	public void addSuppressedError(final @NonNull String messageId, final @NonNull String regexPath) {
-		((ch.ahdis.matchbox.engine.ValidationPolicyAdvisor) getPolicyAdvisor()).addSuppressedError(messageId, regexPath);
+		IValidationPolicyAdvisor advisor = getPolicyAdvisor();
+		while(advisor != null && !(advisor instanceof ch.ahdis.matchbox.engine.ValidationPolicyAdvisor)) {
+			advisor = advisor.getPolicyAdvisor();
+		}
+		if (advisor != null) {
+			((ch.ahdis.matchbox.engine.ValidationPolicyAdvisor) advisor).addSuppressedError(messageId, regexPath);
+		} else {
+			log.error("ValidationPolicyAdvisor not found to add suppressed error for messageId: " + messageId + " and regexPath: " + regexPath);
+		}
 	}
 
 	/**
@@ -1204,7 +1213,14 @@ public class MatchboxEngine extends ValidationEngine {
 	 * Returns the list of suppressed validation error issues.
 	 */
 	public List<String> getSuppressedErrors() {
-		return ((ch.ahdis.matchbox.engine.ValidationPolicyAdvisor) getPolicyAdvisor()).getSuppressedErrorMessages();
+		IValidationPolicyAdvisor advisor = getPolicyAdvisor();
+		while(advisor != null && !(advisor instanceof ch.ahdis.matchbox.engine.ValidationPolicyAdvisor)) {
+			advisor = advisor.getPolicyAdvisor();
+		}
+		if (advisor != null) {
+			return ((ch.ahdis.matchbox.engine.ValidationPolicyAdvisor) advisor).getSuppressedErrorMessages();
+		}
+		return null;
 	}
 
 	/**
