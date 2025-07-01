@@ -86,13 +86,13 @@ public class EmailUserService {
 					String cronExpression;
 					switch (scheduleType) {
 						case "daily":
-							cronExpression = "0 0 10 * * *"; // 10:00 AM daily
+							cronExpression = "0 0 2 * * *"; // 2:00 AM daily
 							break;
 						case "weekly":
-							cronExpression = "0 0 11 * * MON"; // Monday 11:00 AM
+							cronExpression = "0 30 2 * * MON"; // Monday 2:30 AM
 							break;
 						case "monthly":
-							cronExpression = "0 30 10 1 * *"; // At 10:30 AM, on day 1 of the month
+							cronExpression = "0 45 2 1 * *"; // At 2:45 AM, on day 1 of the month
 							break;
 						default:
 							logger.warn("Invalid schedule type {} for ID {}, skipping schedule", scheduleType, s.getId());
