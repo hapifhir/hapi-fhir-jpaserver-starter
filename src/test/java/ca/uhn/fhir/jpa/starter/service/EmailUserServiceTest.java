@@ -104,7 +104,9 @@ class EmailUserServiceTest {
 			lenient().when(helperService.getOrganizationType(orgId)).thenReturn("state");
 		}
 
+
 		//assertDoesNotThrow(() -> emailUserService.sendWeeklyFacilitySummary());
+
 
 		verify(helperService, times(2)).getFacilityIdsAndOrgIdToChildrenMapPair(anyString());
 		verify(helperService, never()).processDataForReport(any(), any(), any(), any(), any(), any(), anyBoolean());
@@ -130,7 +132,9 @@ class EmailUserServiceTest {
 		setupProcessDataForReportMocks(true, facilityIds);
 		when(csvConverter.convertReportToCSV(anyList())).thenReturn(new byte[]{1, 2, 3});
 
+
 		//assertDoesNotThrow(() -> emailUserService.sendWeeklyFacilitySummary());
+
 
 		verify(helperService, times(2)).getFacilityIdsAndOrgIdToChildrenMapPair(anyString());
 		verify(helperService, times(1)).processDataForReport(
@@ -148,7 +152,10 @@ class EmailUserServiceTest {
 		setupProcessDataForReportMocks(false, facilityIds);
 		when(csvConverter.convertReportToCSV(anyList())).thenReturn(new byte[]{1, 2, 3});
 
+
 		//assertDoesNotThrow(() -> emailUserService.sendWeeklyFacilitySummary());
+
+
 
 		verify(helperService, times(2)).getFacilityIdsAndOrgIdToChildrenMapPair(anyString());
 		verify(helperService, times(3)).processDataForReport(
@@ -167,7 +174,9 @@ class EmailUserServiceTest {
 		setupProcessDataForReportMocks(true, facilityIds);
 		when(csvConverter.convertReportToCSV(anyList())).thenReturn(new byte[]{1, 2, 3});
 
+
 		//assertDoesNotThrow(() -> emailUserService.sendWeeklyFacilitySummary());
+
 
 		verify(helperService, times(2)).getFacilityIdsAndOrgIdToChildrenMapPair(anyString());
 		verify(helperService, times(3)).processDataForReport(
@@ -181,7 +190,9 @@ class EmailUserServiceTest {
 	void sendWeeklyFacilitySummary_emptyTopLevelOrgIds_noProcessing() {
 		ReflectionTestUtils.setField(emailUserService, "topLevelOrgIds", Collections.emptyList());
 
+
 		//assertDoesNotThrow(() -> emailUserService.sendWeeklyFacilitySummary());
+
 
 		verify(helperService, never()).getFacilityIdsAndOrgIdToChildrenMapPair(anyString());
 		verify(helperService, never()).processDataForReport(any(), any(), any(), any(), any(), any(), anyBoolean());
@@ -219,7 +230,9 @@ class EmailUserServiceTest {
 		lenient().when(helperService.getOrganizationName(TOP_LEVEL_ORG_IDS.get(1))).thenReturn("Test State 2");
 		lenient().when(helperService.getOrganizationType(TOP_LEVEL_ORG_IDS.get(1))).thenReturn("state");
 
+
 		//assertDoesNotThrow(() -> emailUserService.sendWeeklyFacilitySummary());
+
 
 		verify(helperService, times(2)).getFacilityIdsAndOrgIdToChildrenMapPair(anyString());
 		verify(helperService, never()).processDataForReport(any(), any(), any(), any(), any(), any(), anyBoolean());
@@ -233,7 +246,9 @@ class EmailUserServiceTest {
 		configContainer.setIndicatorColumns(Collections.emptyList());
 		when(dashboardEnvToConfigMap.getOrDefault(eq(REPORT_ENV), any())).thenReturn(configContainer);
 
+
 		//assertDoesNotThrow(() -> emailUserService.sendWeeklyFacilitySummary());
+
 
 		verify(helperService, never()).getFacilityIdsAndOrgIdToChildrenMapPair(anyString());
 		verify(helperService, never()).processDataForReport(any(), any(), any(), any(), any(), any(), anyBoolean());
@@ -261,7 +276,9 @@ class EmailUserServiceTest {
 		setupProcessDataForReportMocks(true, facilityIds);
 		when(csvConverter.convertReportToCSV(anyList())).thenReturn(new byte[]{1, 2, 3});
 
+
 		//assertDoesNotThrow(() -> emailUserService.sendWeeklyFacilitySummary());
+
 
 		verify(helperService, times(2)).getFacilityIdsAndOrgIdToChildrenMapPair(anyString());
 		verify(helperService, times(1)).processDataForReport(
@@ -293,7 +310,9 @@ class EmailUserServiceTest {
 		setupProcessDataForReportMocks(true, facilityIds);
 		when(csvConverter.convertReportToCSV(anyList())).thenReturn(new byte[]{1, 2, 3});
 
+
 		//assertDoesNotThrow(() -> emailUserService.sendWeeklyFacilitySummary());
+
 
 		verify(helperService, times(2)).getFacilityIdsAndOrgIdToChildrenMapPair(anyString());
 		verify(helperService, times(1)).processDataForReport(
