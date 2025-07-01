@@ -1,30 +1,81 @@
 package org.hl7.fhir.validation.instance.type;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.security.interfaces.ECPublicKey;
+import java.security.interfaces.RSAPublicKey;
+import java.text.ParseException;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.xml.security.c14n.CanonicalizationException;
+import org.apache.xml.security.c14n.InvalidCanonicalizerException;
+import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r5.elementmodel.Element;
+import org.hl7.fhir.r5.elementmodel.Manager;
+import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
+import org.hl7.fhir.r5.elementmodel.ParserBase;
+import org.hl7.fhir.r5.formats.IParser.OutputStyle;
 import org.hl7.fhir.r5.model.Base.ValidationMode;
 import org.hl7.fhir.r5.model.Enumerations.FHIRVersion;
 import org.hl7.fhir.r5.model.StructureDefinition;
+import org.hl7.fhir.r5.test.utils.CompareUtilities;
 import org.hl7.fhir.r5.utils.validation.BundleValidationRule;
+import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
+import org.hl7.fhir.utilities.MimeType;
 import org.hl7.fhir.utilities.Utilities;
 import org.hl7.fhir.utilities.VersionUtilities;
 import org.hl7.fhir.utilities.i18n.I18nConstants;
+import org.hl7.fhir.utilities.json.model.JsonObject;
+import org.hl7.fhir.utilities.json.parser.JsonParser;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.hl7.fhir.utilities.validation.ValidationMessage.IssueType;
+import org.hl7.fhir.utilities.xml.XMLUtil;
 import org.hl7.fhir.validation.BaseValidator;
 import org.hl7.fhir.validation.instance.InstanceValidator;
 import org.hl7.fhir.validation.instance.ResourcePercentageLogger;
+import org.hl7.fhir.validation.instance.utils.CertificateScanner;
+import org.hl7.fhir.validation.instance.utils.CertificateScanner.CertificateResult;
+import org.hl7.fhir.validation.instance.utils.DigitalSignatureSupport;
+import org.hl7.fhir.validation.instance.utils.DigitalSignatureSupport.DigitalSignatureWrapper;
 import org.hl7.fhir.validation.instance.utils.EntrySummary;
 import org.hl7.fhir.validation.instance.utils.NodeStack;
 import org.hl7.fhir.validation.instance.utils.ValidationContext;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSVerifier;
+import com.nimbusds.jose.crypto.ECDSAVerifier;
+import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jose.crypto.RSASSAVerifier;
+import com.nimbusds.jose.jwk.Curve;
+import com.nimbusds.jose.jwk.ECKey;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.util.Base64URL;
+import com.nimbusds.jwt.SignedJWT;
+
+@Slf4j
 public class BundleValidator extends BaseValidator {
   public class StringWithSource {
 
@@ -67,14 +118,14 @@ public class BundleValidator extends BaseValidator {
     this.serverBase = serverBase;
   }
 
-  public boolean validateBundle(List<ValidationMessage> errors, Element bundle, NodeStack stack, boolean checkSpecials, ValidationContext hostContext, ResourcePercentageLogger pct, ValidationMode mode) {
+  public boolean validateBundle(List<ValidationMessage> errors, Element bundle, NodeStack stack, boolean checkSpecials, ValidationContext hostContext, ResourcePercentageLogger pct, ValidationMode mode) throws FHIRException {
     boolean ok = true;
-    
+
     String type = bundle.getNamedChildValue(TYPE, false);
     type = StringUtils.defaultString(type);
     List<Element> entries = new ArrayList<Element>();
     bundle.getNamedChildren(ENTRY, entries);    
-    
+
     List<Element> links = new ArrayList<Element>();
     bundle.getNamedChildren(LINK, links);
     if (links.size() > 0) {
@@ -153,14 +204,14 @@ public class BundleValidator extends BaseValidator {
     Map<String, Integer> counter = new HashMap<>(); 
 
     boolean fullUrlOptional = Utilities.existsInList(type, "transaction", "transaction-response", "batch", "batch-response");
-    
+
     for (Element entry : entries) {
       NodeStack estack = stack.push(entry, count, null, null);
       String fullUrl = entry.getNamedChildValue(FULL_URL, false);
       String url = getCanonicalURLForEntry(entry);
       String id = getIdForEntry(entry);
       String rtype = getTypeForEntry(entry);
-      
+
       if (!Utilities.noString(fullUrl)) {
         if (Utilities.isAbsoluteUrl(fullUrl)) {
           if (rtype != null &&  fullUrl.matches(urlRegex)) {
@@ -207,9 +258,12 @@ public class BundleValidator extends BaseValidator {
         // also, while we're here, check the specials, since this doesn't happen anywhere else 
         ((InstanceValidator) parent).checkSpecials(hostContext, errors, res, rstack, true, pct, mode, true, ok);
       }
-      
+
       // todo: check specials
       count++;
+    }
+    if (bundle.hasChild("signature")) {
+      ok = validateSignature(errors, bundle, stack) && ok;
     }
     return ok;
   }
@@ -231,7 +285,7 @@ public class BundleValidator extends BaseValidator {
     default:
       return true; // unknown document type, deal with that elsewhere
     }
-//    rule(errors, "2022-12-09", IssueType.INVALID, l.line(), l.col(), stack.getLiteralPath(), false, I18nConstants.BUNDLE_LINK_UNKNOWN, );    
+    //    rule(errors, "2022-12-09", IssueType.INVALID, l.line(), l.col(), stack.getLiteralPath(), false, I18nConstants.BUNDLE_LINK_UNKNOWN, );    
   }
 
   private boolean validateDocumentLink(List<ValidationMessage> errors, Element bundle, List<Element> links, Element link, NodeStack stack, List<Element> entries) {
@@ -362,7 +416,7 @@ public class BundleValidator extends BaseValidator {
 
   private boolean checkSearchSet(List<ValidationMessage> errors, Element bundle, List<Element> entries, NodeStack stack) {
     boolean ok = true;
-    
+
     // warning: should have self link
     List<Element> links = new ArrayList<Element>();
     bundle.getNamedChildren(LINK, links);
@@ -640,8 +694,8 @@ public class BundleValidator extends BaseValidator {
    */
   private boolean handleSpecialCaseForLastUpdated(Element bundle, List<ValidationMessage> errors, NodeStack stack) {
     boolean ok = bundle.hasChild(META, false)
-      && bundle.getNamedChild(META, false).hasChild(LAST_UPDATED, false)
-      && bundle.getNamedChild(META, false).getNamedChild(LAST_UPDATED, false).hasValue();
+        && bundle.getNamedChild(META, false).hasChild(LAST_UPDATED, false)
+        && bundle.getNamedChild(META, false).getNamedChild(LAST_UPDATED, false).hasValue();
     ruleHtml(errors, NO_RULE_DATE, IssueType.REQUIRED, stack.getLiteralPath(), ok, I18nConstants.DOCUMENT_DATE_REQUIRED, I18nConstants.DOCUMENT_DATE_REQUIRED_HTML);
     return ok;
   }
@@ -658,7 +712,7 @@ public class BundleValidator extends BaseValidator {
       }
       i++;
     }
-    
+
     for (EntrySummary e : entryList) {
       List<StringWithSource> references = findReferences(e.getEntry());
       for (StringWithSource ref : references) {
@@ -697,16 +751,16 @@ public class BundleValidator extends BaseValidator {
                   stack.addToLiteralPath(ENTRY + '[' + (i + 1) + ']'), isExpectedToBeReverse(e.getResource().fhirType()), 
                   I18nConstants.BUNDLE_BUNDLE_ENTRY_REVERSE_MSG, (e.getEntry().getChildValue(FULL_URL) != null ? "'" + e.getEntry().getChildValue(FULL_URL) + "'" : ""));              
             } else {
-            // this was illegal up to R4B, but changed to be legal in R5
-            if (VersionUtilities.isR5VerOrLater(context.getVersion())) {
-              hint(errors, NO_RULE_DATE, IssueType.INFORMATIONAL, e.getEntry().line(), e.getEntry().col(), 
-                  stack.addToLiteralPath(ENTRY + '[' + (i + 1) + ']'), isExpectedToBeReverse(e.getResource().fhirType()), 
-                  I18nConstants.BUNDLE_BUNDLE_ENTRY_REVERSE_R5, (e.getEntry().getChildValue(FULL_URL) != null ? "'" + e.getEntry().getChildValue(FULL_URL) + "'" : ""));              
-            } else {
-              warning(errors, NO_RULE_DATE, IssueType.INVALID, e.getEntry().line(), e.getEntry().col(), 
-                stack.addToLiteralPath(ENTRY + '[' + (i + 1) + ']'), isExpectedToBeReverse(e.getResource().fhirType()), 
-                I18nConstants.BUNDLE_BUNDLE_ENTRY_REVERSE_R4, (e.getEntry().getChildValue(FULL_URL) != null ? "'" + e.getEntry().getChildValue(FULL_URL) + "'" : ""));
-            }
+              // this was illegal up to R4B, but changed to be legal in R5
+              if (VersionUtilities.isR5VerOrLater(context.getVersion())) {
+                hint(errors, NO_RULE_DATE, IssueType.INFORMATIONAL, e.getEntry().line(), e.getEntry().col(), 
+                    stack.addToLiteralPath(ENTRY + '[' + (i + 1) + ']'), isExpectedToBeReverse(e.getResource().fhirType()), 
+                    I18nConstants.BUNDLE_BUNDLE_ENTRY_REVERSE_R5, (e.getEntry().getChildValue(FULL_URL) != null ? "'" + e.getEntry().getChildValue(FULL_URL) + "'" : ""));              
+              } else {
+                warning(errors, NO_RULE_DATE, IssueType.INVALID, e.getEntry().line(), e.getEntry().col(), 
+                    stack.addToLiteralPath(ENTRY + '[' + (i + 1) + ']'), isExpectedToBeReverse(e.getResource().fhirType()), 
+                    I18nConstants.BUNDLE_BUNDLE_ENTRY_REVERSE_R4, (e.getEntry().getChildValue(FULL_URL) != null ? "'" + e.getEntry().getChildValue(FULL_URL) + "'" : ""));
+              }
             }
             foundRevLinks = true;
             visitLinked(visited, e);
@@ -823,31 +877,31 @@ public class BundleValidator extends BaseValidator {
   }
 
   // not used?
-//  private boolean followResourceLinks(Element entry, Map<String, Element> visitedResources, Map<Element, Element> candidateEntries, List<Element> candidateResources, List<ValidationMessage> errors, NodeStack stack) {
-//    return followResourceLinks(entry, visitedResources, candidateEntries, candidateResources, errors, stack, 0);
-//  }
-//
-//  private boolean followResourceLinks(Element entry, Map<String, Element> visitedResources, Map<Element, Element> candidateEntries, List<Element> candidateResources, List<ValidationMessage> errors, NodeStack stack, int depth) {
-//    boolean ok = true;
-//    Element resource = entry.getNamedChild(RESOURCE, false);
-//    if (visitedResources.containsValue(resource))
-//      return ok;
-//
-//    visitedResources.put(entry.getNamedChildValue(FULL_URL), resource);
-//
-//    String type = null;
-//    Set<String> references = findReferences(resource);
-//    for (String reference : references) {
-//      // We don't want errors when just retrieving the element as they will be caught (with better path info) in subsequent processing
-//      BooleanHolder bh = new BooleanHolder();
-//      IndexedElement r = getFromBundle(stack.getElement(), reference, entry.getChildValue(FULL_URL), new ArrayList<ValidationMessage>(), stack.addToLiteralPath("entry[" + candidateResources.indexOf(resource) + "]"), type, "transaction".equals(stack.getElement().getChildValue(TYPE)), bh);
-//      ok = ok && bh.ok();
-//      if (r != null && !visitedResources.containsValue(r.getMatch())) {
-//        followResourceLinks(candidateEntries.get(r.getMatch()), visitedResources, candidateEntries, candidateResources, errors, stack, depth + 1);
-//      }
-//    }
-//    return ok;
-//  }
+  //  private boolean followResourceLinks(Element entry, Map<String, Element> visitedResources, Map<Element, Element> candidateEntries, List<Element> candidateResources, List<ValidationMessage> errors, NodeStack stack) {
+  //    return followResourceLinks(entry, visitedResources, candidateEntries, candidateResources, errors, stack, 0);
+  //  }
+  //
+  //  private boolean followResourceLinks(Element entry, Map<String, Element> visitedResources, Map<Element, Element> candidateEntries, List<Element> candidateResources, List<ValidationMessage> errors, NodeStack stack, int depth) {
+  //    boolean ok = true;
+  //    Element resource = entry.getNamedChild(RESOURCE, false);
+  //    if (visitedResources.containsValue(resource))
+  //      return ok;
+  //
+  //    visitedResources.put(entry.getNamedChildValue(FULL_URL), resource);
+  //
+  //    String type = null;
+  //    Set<String> references = findReferences(resource);
+  //    for (String reference : references) {
+  //      // We don't want errors when just retrieving the element as they will be caught (with better path info) in subsequent processing
+  //      BooleanHolder bh = new BooleanHolder();
+  //      IndexedElement r = getFromBundle(stack.getElement(), reference, entry.getChildValue(FULL_URL), new ArrayList<ValidationMessage>(), stack.addToLiteralPath("entry[" + candidateResources.indexOf(resource) + "]"), type, "transaction".equals(stack.getElement().getChildValue(TYPE)), bh);
+  //      ok = ok && bh.ok();
+  //      if (r != null && !visitedResources.containsValue(r.getMatch())) {
+  //        followResourceLinks(candidateEntries.get(r.getMatch()), visitedResources, candidateEntries, candidateResources, errors, stack, depth + 1);
+  //      }
+  //    }
+  //    return ok;
+  //  }
 
 
   private List<StringWithSource> findReferences(Element start) {
@@ -926,5 +980,644 @@ public class BundleValidator extends BaseValidator {
       return t.equals(rtype) && Integer.toString(rcount).equals(index);
     }
   }
+
+  private JsonObject parseJsonOrError(List<ValidationMessage> errors, NodeStack stack, byte[] source, String msgId) {
+
+    JsonObject object = null;
+    try { 
+      object = JsonParser.parseObject(source);
+    } catch (Exception e) {
+      rule(errors, "2025-06-13", IssueType.INVALID, stack, false, msgId, e.getMessage());              
+    }
+    return object;
+  }
+  
+  private Document parseXmlOrError(List<ValidationMessage> errors, NodeStack stack, byte[] source, String msgId) {
+    Document dom = null;
+    try { 
+      dom = XMLUtil.parseToDom(source);
+    } catch (Exception e) {
+      rule(errors, "2025-06-13", IssueType.INVALID, stack, false, msgId, e.getMessage());              
+    }
+    return dom;
+  }
+
+  private boolean validateSignature(List<ValidationMessage> errors, Element bundle, NodeStack stack) throws FHIRException {
+    boolean ok = true;
+    Element signature  = bundle.getNamedChild("signature");
+    String sigFormat = signature.getNamedChildValue("sigFormat");
+    if (Utilities.noString(sigFormat)) {
+      hint(errors, "2025-06-13", IssueType.NOTSUPPORTED, stack, !signature.hasChild("data"), 
+          I18nConstants.BUNDLE_SIGNATURE_NO_SIG_FORMAT); 
+      
+      // but maybe we can validate it anyway?
+      if (signature.hasChild("data")) {
+        try {
+          byte[] data = Base64.decodeBase64(signature.getNamedChildValue("data"));
+          String d = new String(data);
+          if (Utilities.charCount(d,'.') == 2) {
+            data = Base64.decodeBase64(d.split("\\.")[0]);
+            d = new String(data);
+          }
+          JsonObject j = JsonParser.parseObject(d);
+          if (j.has("alg")) {
+            sigFormat = "application/jose";
+          }
+          hint(errors, "2025-06-13", IssueType.NOTSUPPORTED, stack, !signature.hasChild("data"), 
+              I18nConstants.BUNDLE_SIGNATURE_SIG_FORMAT_JOSE); 
+        } catch (Exception e) {
+          // nothing
+        }
+      }
+    } 
+
+    if (sigFormat != null) {
+      if (sigFormat.startsWith("image/") || Utilities.startsWithInList(sigFormat, "application/pdf")) {
+        // we ignore this - probably not a digital signature
+      } else if ("application/pkcs7-signature".equals(sigFormat)) {
+        String data = signature.getNamedChildValue("data");
+        if (data == null) {
+          hint(errors, "2025-06-13", IssueType.NOTFOUND, stack, false, I18nConstants.BUNDLE_SIGNATURE_NOT_CHECKED_DATA, sigFormat);              
+        } else {
+          String d = null;
+          if (!org.hl7.fhir.utilities.Base64.isBase64(data)) {
+            warning(errors, "2025-06-13", IssueType.INVALID, stack, false, I18nConstants.BUNDLE_SIGNATURE_NOT_CHECKED_DATA_B64);
+          } else {
+            d = new String(Base64.decodeBase64(data));
+          }
+          if (d != null) {
+            hint(errors, null, IssueType.INFORMATIONAL, stack, false, "Signature Verification is a work in progress. Feedback welcome at https://chat.fhir.org/#narrow/channel/179247-Security-and-Privacy/topic/Signature/with/524324965");                
+            ok = validateSignatureDigSig(errors, bundle, stack, signature, d) && ok;
+
+          }
+        }
+      } else if ("application/jose".equals(sigFormat)) {
+        String data = signature.getNamedChildValue("data");
+        if (data == null) {
+          hint(errors, "2025-06-13", IssueType.NOTFOUND, stack, false, I18nConstants.BUNDLE_SIGNATURE_NOT_CHECKED_DATA, sigFormat);              
+        } else {
+          String d = null;
+          if (!org.hl7.fhir.utilities.Base64.isBase64(data)) {
+            if (data.split("\\.").length == 3) {
+              d = data;
+              ok = rule(errors, "2025-06-13", IssueType.INVALID, stack, false, I18nConstants.BUNDLE_SIGNATURE_CHECKED_DATA_B64) && ok;
+            } else {
+              ok = rule(errors, "2025-06-13", IssueType.INVALID, stack, false, I18nConstants.BUNDLE_SIGNATURE_NOT_CHECKED_DATA_B64) && ok;
+            }
+          } else {
+            d = new String(Base64.decodeBase64(data));
+          }
+          if (d != null) {
+            hint(errors, null, IssueType.INFORMATIONAL, stack, false, "Signature Verification is a work in progress. Feedback welcome at https://chat.fhir.org/#narrow/channel/179247-Security-and-Privacy/topic/Signature/with/524324965");                
+            ok = validateSignatureJose(errors, bundle, stack, signature, d) && ok;
+          }
+        }
+      } else {
+        hint(errors, "2025-06-13", IssueType.NOTSUPPORTED, stack, false, I18nConstants.BUNDLE_SIGNATURE_NOT_CHECKED_KIND, sigFormat);      
+      }
+    }
+    return false;
+  }
+
+  private boolean validateSignatureJose(List<ValidationMessage> errors, Element bundle, NodeStack stack, Element signature, String d) {
+    boolean ok = true;
+    String[] parts = d.split("\\.");
+    JsonObject header = parseJsonOrError(errors, stack, Base64.decodeBase64(parts[0]), I18nConstants.BUNDLE_SIGNATURE_HEADER_PARSE);
+    String canon = null;
+    String kid = null;
+    boolean xml = false;
+    if (header == null) {
+      ok = false;
+    } else {
+      // we have several concerns here. The first is that we want to find 3 things in the signature:
+      // * the time of the signature
+      // * the certificate it was signed with 
+      // * the canonicalization
+      // 
+      // we can alternatively get these from 
+      // * Signature.when (and have to cross compare it)
+      // * the kid in the signature, and then we look up the certificate 
+      // * from the Signature.targetFormat (and have to cross compare it 
+      
+      // 1. Signature time
+      Element when = signature.getNamedChild("when");
+      String sigT = header.asString("sigT"); // JAdes signature time 
+      if (sigT == null && header.has("iat")) {
+        sigT = DateTimeFormatter.ISO_INSTANT.format(Instant.ofEpochSecond(Long.valueOf(header.asString("iat"))));
+      }
+      if (sigT == null) {
+        warning(errors, "2025-06-13", IssueType.NOTFOUND, stack, false, I18nConstants.BUNDLE_SIGNATURE_HEADER_NO_SIG_TIME); 
+      } 
+      if (when == null) {
+        rule(errors, "2025-06-13", IssueType.NOTFOUND, stack, false, I18nConstants.BUNDLE_SIGNATURE_NO_WHEN);        
+      } else if (sigT != null) { 
+        ok = rule(errors, "2025-06-13", IssueType.BUSINESSRULE, stack, sigT.equals(when.primitiveValue()), I18nConstants.BUNDLE_SIGNATURE_HEADER_WHEN_MISMATCH, sigT, when.primitiveValue()) && ok;                            
+      }
+
+      // 2. canonicalisation
+      Element tgtFmt = signature.getNamedChild("targetFormat");
+      String tcanon = null;
+      canon = header.asString("canon");
+      if (tgtFmt != null) {
+        try {
+          MimeType mt = new MimeType(tgtFmt.primitiveValue());       
+          xml = mt.getBase().contains("xml");
+          tcanon = mt.getParams().get("canonicalization");
+        } catch (Exception e) {
+           ok = rule(errors, "2025-06-13", IssueType.INVALID, stack, false, I18nConstants.BUNDLE_SIGNATURE_CANON_ERROR, tgtFmt.primitiveValue(), e.getMessage()) && ok;
+        }
+      }
+      String defCanon = "http://hl7.org/fhir/canonicalization/"+(xml ? "xml"  : "json");
+      if (canon == null) {
+        if (tcanon == null) {
+          canon = defCanon+("document".equals(bundle.getNamedChildValue("type")) ? "#document" : "");
+          hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_PAYLOAD_CANON_DEFAULT, canon);       
+        } else {
+          canon = tcanon;
+        }
+      } else { 
+        if (tcanon != null) {
+          warning(errors, "2025-06-13", IssueType.NOTFOUND, stack, canon.equals(tcanon), I18nConstants.BUNDLE_SIGNATURE_CANON_DIFF, canon, tcanon);
+        }
+        xml = canon.contains("xml");
+      }
+      
+      // 3. certificate 
+      // first, we try to extract the certificate from the signature 
+      X509Certificate cert = null;
+      JWK jwk = null;
+      if (header.has("x5c")) {
+        try {
+          String c = header.getJsonArray("x5c").get(0).asString();
+          byte[] b = Base64.decodeBase64(c);// der format
+          CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+          cert = (X509Certificate) certificateFactory.generateCertificate(new ByteArrayInputStream(b));
+          jwk = parseX509c(cert);
+        } catch (Exception e) {
+          ok = false;
+          rule(errors, "2025-06-13", IssueType.INVALID, stack, false, I18nConstants.BUNDLE_SIGNATURE_HEADER_X509_ERROR, e.getMessage());          
+        }
+      } else if (header.has("kid")) {
+        kid = header.asString("kid");
+        try {
+          CertificateScanner scanner = new CertificateScanner();
+          CertificateResult find = scanner.findCertificateByKid(settings.getCertificates(), settings.getCertificateFolders(), kid);
+          if (find == null) {
+            warning(errors, "2025-06-13", IssueType.NOTFOUND, stack, false, I18nConstants.BUNDLE_SIGNATURE_HEADER_CERT_NOT_FOUND, kid);
+          } else {
+            jwk = find.getJwk();
+            cert = find.getCertificate();
+          }
+          if (jwk == null) {
+            if (cert != null) {
+              jwk = parseX509c(cert);
+            } else {
+              warning(errors, "2025-06-13", IssueType.NOTFOUND, stack, false, I18nConstants.BUNDLE_SIGNATURE_HEADER_CERT_NOT_FOUND, kid);
+            }
+          }
+        } catch (Exception e) {
+          warning(errors, "2025-06-13", IssueType.NOTFOUND, stack, false, I18nConstants.BUNDLE_SIGNATURE_HEADER_CERT_NOT_FOUND_ERROR, kid, e.getMessage());
+
+        }
+      } else {
+        warning(errors, "2025-06-13", IssueType.NOTFOUND, stack, false, I18nConstants.BUNDLE_SIGNATURE_HEADER_NO_KID_OR_CERT); 
+      }
+
+      // who...
+      Element who = signature.getNamedChild("who"); 
+      boolean whoMatches = false;
+      if (cert != null && cert.getSubjectX500Principal() != null && cert.getSubjectX500Principal().getName() != null) {
+        Element id = who == null ? null : who.getNamedChild("identifier");
+        String idv = id == null ? null : id.getNamedChildValue("value");
+        Set<String> cnlist = DigitalSignatureSupport.getNamesFromCertificate(cert, settings.isDebug());
+        if (idv != null) {
+          whoMatches = cnlist.contains(idv);
+          hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, whoMatches, I18nConstants.BUNDLE_SIGNATURE_WHO_MISMATCH, idv, CommaSeparatedStringBuilder.joinWrapped(",", "'", "'", cnlist));
+        } else {
+          hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_WHO_RECOMMENDED, cert.getSubjectX500Principal().getName());          
+        }
+      } else if (who == null) {
+        hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_WHO_NO_INFO);          
+      } else {
+        hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_WHO_NOT_IN_CERT);          
+      }
+      
+      // payload:
+      if (!Utilities.noString(parts[1])) {
+        warning(errors, "2025-06-13", IssueType.VALUE, stack, false, I18nConstants.BUNDLE_SIGNATURE_PAYLOAD_PRESENT);
+      }
+      
+      if (jwk != null && canon != null) {
+        // try and verify
+      
+        byte[] toSign = null;
+        try {
+          toSign = makeSignableBundle(bundle, canon, xml);
+        } catch (Exception e) {
+          // nothing - this won't happen
+        }
+
+        // finally, we get to verifying the signature
+
+        try {
+          org.apache.commons.net.util.Base64.decodeBase64(parts[2]);
+        } catch (Exception e) {
+          ok = false;
+          rule(errors, "2025-06-13", IssueType.INVALID, stack, false, I18nConstants.BUNDLE_SIGNATURE_SIG_INVALID, e.getMessage());                            
+        }            
+        try {
+          String reconstituted = parts[0]+"."+Base64URL.encode(toSign)+"."+parts[2];
+          boolean verified = verifyJWT(reconstituted, jwk);
+          if (!verified) {
+            ok = false;
+            if (kid != null) {
+              rule(errors, "2025-06-13", IssueType.VALUE, stack, false, I18nConstants.BUNDLE_SIGNATURE_SIG_FAIL_KID, kid);
+            } else if (jwk.getKeyID() != null) {
+              rule(errors, "2025-06-13", IssueType.VALUE, stack, false, I18nConstants.BUNDLE_SIGNATURE_SIG_FAIL_CERT_ID, jwk.getKeyID());                
+            } else {
+              rule(errors, "2025-06-13", IssueType.VALUE, stack, false, I18nConstants.BUNDLE_SIGNATURE_SIG_FAIL_CERT);                
+            }
+            if (!Utilities.noString(parts[1])) {
+              byte[] signed = null;
+              try {
+                signed = org.apache.commons.net.util.Base64.decodeBase64(parts[1]);
+              } catch (Exception e) {
+                ok = false;
+                rule(errors, "2025-06-13", IssueType.VALUE, stack, false, I18nConstants.BUNDLE_SIGNATURE_PAYLOAD_INVALID, e.getMessage());                            
+              }
+              if (signed != null) {
+                if (!Arrays.equals(toSign, signed)) {
+                  rule(errors, "2025-06-13", IssueType.VALUE, stack, false, I18nConstants.BUNDLE_SIGNATURE_PAYLOAD_MISMATCH, toSign.length, signed.length);
+                  String diff;
+                  try { 
+                    JsonObject signedJ = parseJsonOrError(errors, stack, signed, I18nConstants.BUNDLE_SIGNATURE_PAYLOAD_INVALID_JSON);
+                    JsonObject toSignJ = parseJsonOrError(errors, stack, toSign, I18nConstants.BUNDLE_SIGNATURE_PAYLOAD_INVALID_JSON);
+                    diff = new CompareUtilities().compareObjects("payload", "$", toSignJ, signedJ);
+                    if (diff == null) {
+                      hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_PAYLOAD_JSON_MATCHES);                
+                    } else {
+                      hint(errors, "2025-06-13", IssueType.VALUE, stack, false, I18nConstants.BUNDLE_SIGNATURE_PAYLOAD_JSON_NO_MATCH, diff);                                
+                    }
+                  } catch (Exception e) {
+                    ok = false;
+                    rule(errors, "2025-06-13", IssueType.EXCEPTION, stack, false, I18nConstants.BUNDLE_SIGNATURE_PAYLOAD_INVALID_JSON, e.getMessage());                
+                  }
+                } else {
+                  String b64 = Base64URL.encode(toSign).toString();
+                  ok = rule(errors, "2025-06-13", IssueType.VALUE, stack, parts[1].equals(b64), I18nConstants.BUNDLE_SIGNATURE_PAYLOAD_BASE64_DIFF) & ok;
+                }
+              } 
+            }
+          } else {
+            hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_SIG_OK);   
+          }
+          if (cert != null) {
+            if (verified) {
+              hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_SIGNED_BY_VERIFIED, CommaSeparatedStringBuilder.join(",", Utilities.sorted(DigitalSignatureSupport.getNamesFromCertificate(cert, false))));              
+            } else {
+              hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_SIGNED_BY, CommaSeparatedStringBuilder.join(",", Utilities.sorted(DigitalSignatureSupport.getNamesFromCertificate(cert, false))));
+            }
+          }
+          if (sigT != null) {
+            if (verified) {
+              hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_SIGNED_AT_VERIFIED, sigT);              
+            } else {
+              hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_SIGNED_AT, sigT);
+            }
+          }
+
+        } catch (Exception e) {
+          ok = false;
+          rule(errors, "2025-06-13", IssueType.EXCEPTION, stack, false, I18nConstants.BUNDLE_SIGNATURE_SIG_ERROR, e.getMessage());                            
+        }            
+      } 
+
+    }
+    return ok;
+  }
+
+  
+  private byte[] makeSignableBundle(Element bundle, String canon, boolean xml) throws IOException, InvalidCanonicalizerException, CanonicalizationException, ParserConfigurationException, SAXException {
+    byte[] toSign;
+    ByteArrayOutputStream ba = new ByteArrayOutputStream();
+    // 1. signed with signature data
+    ParserBase p = Manager.makeParser(context, xml ? FhirFormat.XML :  FhirFormat.JSON);
+    if (canon.endsWith("#document")) {
+      p.setCanonicalFilter("Bundle.id", "Bundle.meta", "Bundle.signature");
+    } else {
+      p.setCanonicalFilter("Bundle.signature");
+    }
+    p.compose(bundle, ba, OutputStyle.CANONICAL, null);
+    toSign = ba.toByteArray();
+    return xml ? DigitalSignatureSupport.canonicalizeXml(new String(toSign, StandardCharsets.UTF_8), "http://www.w3.org/TR/2001/REC-xml-c14n-20010315") : toSign;
+  }
+
+  private JWK parseX509c(X509Certificate certificate) throws CertificateException {
+    // Extract the public key
+    PublicKey publicKey = certificate.getPublicKey();
+    
+    // Convert to JWK based on key type
+    JWK jwk;
+    if (publicKey instanceof RSAPublicKey) {
+        jwk = new RSAKey.Builder((RSAPublicKey) publicKey).build();
+    } else if (publicKey instanceof ECPublicKey) {
+      jwk = new ECKey.Builder(Curve.forECParameterSpec(
+          ((ECPublicKey) publicKey).getParams()), (ECPublicKey) publicKey)
+          .build();
+    } else {
+        throw new IllegalArgumentException("Unsupported key type: " + publicKey.getAlgorithm());
+    }
+    return jwk;
+  }
+
+  public boolean verifyJWT(String jwtString, JWK key) throws ParseException, JOSEException {
+    // Parse the JWT
+    SignedJWT signedJWT = SignedJWT.parse(jwtString);
+
+    // Create verifier based on key type
+    JWSVerifier verifier;
+    String keyType = key.getKeyType().toString();
+
+    switch (keyType) {
+    case "RSA":
+      verifier = new RSASSAVerifier(key.toRSAKey());
+      break;
+    case "EC":
+      verifier = new ECDSAVerifier(key.toECKey());
+      break;
+    case "oct":
+      verifier = new MACVerifier(key.toOctetSequenceKey());
+      break;
+    default:
+      throw new IllegalArgumentException("Unsupported key type: " + keyType);
+    }
+
+    // Verify the signature
+    return signedJWT.verify(verifier);
+  }
+
+  private boolean validateSignatureDigSig(List<ValidationMessage> errors, Element bundle, NodeStack stack, Element signature, String d) {
+    boolean ok = true;
+    Document dom = null;
+    try {
+      dom = XMLUtil.parseToDom(d, true);
+    } catch (Exception e) {
+      ok = false;
+      rule(errors, "2025-06-13", IssueType.INVALID, stack, false, I18nConstants.BUNDLE_SIGNATURE_DIGSIG_INVALID, e.getMessage());   
+    }
+    
+    String canon = null;
+    boolean xml = false;
+    if (dom == null) {
+      ok = false;
+    } else {
+      DigitalSignatureWrapper dsig = new DigitalSignatureWrapper(dom.getDocumentElement());
+      // we have several concerns here. The first is that we want to find 3 things in the signature:
+      // * the time of the signature
+      // * the certificate it was signed with 
+      // * the canonicalization
+      // 
+      // we can alternatively get these from 
+      // * Signature.when (and have to cross compare it)
+      // * the kid in the signature, and then we look up the certificate 
+      // * from the Signature.targetFormat (and have to cross compare it 
+      
+      // 1. Signature time
+      Instant instant = null;
+      Element when = signature.getNamedChild("when");
+      String sigT = dsig.getDigSigTime();  
+      if (sigT == null) {
+        warning(errors, "2025-06-13", IssueType.NOTFOUND, stack, false, I18nConstants.BUNDLE_SIGNATURE_DIGSIG_NO_SIG_TIME); 
+      } else {
+        instant = Instant.parse(sigT);
+      }
+      if (when == null) {
+        rule(errors, "2025-06-13", IssueType.NOTFOUND, stack, false, I18nConstants.BUNDLE_SIGNATURE_NO_WHEN);        
+      } else if (sigT != null) { 
+        ok = rule(errors, "2025-06-13", IssueType.BUSINESSRULE, stack, sigT.equals(when.primitiveValue()), I18nConstants.BUNDLE_SIGNATURE_DIGSIG_WHEN_MISMATCH, sigT, when.primitiveValue()) && ok;                            
+      }
+
+      // 2. canonicalisation
+      Element tgtFmt = signature.getNamedChild("targetFormat");
+      String tcanon = null;
+      canon = dsig.getDigSigCanonicalization();
+      if (tgtFmt != null) {
+        try {
+          MimeType mt = new MimeType(tgtFmt.primitiveValue());       
+          xml = mt.getBase().contains("xml");
+          tcanon = mt.getParams().get("canonicalization");
+        } catch (Exception e) {
+           ok = rule(errors, "2025-06-13", IssueType.INVALID, stack, false, I18nConstants.BUNDLE_SIGNATURE_CANON_ERROR, tgtFmt.primitiveValue(), e.getMessage()) && ok;
+        }
+      }
+      String defCanon = "http://hl7.org/fhir/canonicalization/"+(xml ? "xml"  : "json");
+      if (canon == null) {
+        if (tcanon == null) {
+          canon = defCanon+("document".equals(bundle.getNamedChildValue("type")) ? "#document" : "");
+          hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_PAYLOAD_CANON_DEFAULT, canon);       
+        } else {
+          canon = tcanon;
+        }
+      } else { 
+        if (tcanon != null) {
+          warning(errors, "2025-06-13", IssueType.NOTFOUND, stack, canon.equals(tcanon), I18nConstants.BUNDLE_SIGNATURE_CANON_DIFF, canon, tcanon);
+        }
+        xml = canon.contains("xml");
+      }
+      
+      // 3. certificate 
+      // first, we try to extract the certificate from the signature 
+      X509Certificate cert = null;
+      JWK jwk = null;
+      org.w3c.dom.Element x5c = dsig.getDigSigX509();
+      if (x5c != null) {
+        try {
+          String c = x5c.getTextContent();
+          byte[] b = Base64.decodeBase64(c);// der format
+          CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+          cert = (X509Certificate) certificateFactory.generateCertificate(new ByteArrayInputStream(b));
+          jwk = parseX509c(cert);
+        } catch (Exception e) {
+          ok = false;
+          rule(errors, "2025-06-13", IssueType.INVALID, stack, false, I18nConstants.BUNDLE_SIGNATURE_DIGSIG_X509_ERROR, e.getMessage());          
+        }
+      } else {
+        warning(errors, "2025-06-13", IssueType.NOTFOUND, stack, false, I18nConstants.BUNDLE_SIGNATURE_DIGSIG_NO_CERT); 
+      }
+
+      // who...
+      Element who = signature.getNamedChild("who"); 
+      boolean whoMatches = false;
+      String idv = null;
+      if (cert != null && cert.getSubjectX500Principal() != null && cert.getSubjectX500Principal().getName() != null) {
+        Element id = who == null ? null : who.getNamedChild("identifier");
+        idv = id == null ? null : id.getNamedChildValue("value");
+        Set<String> cnlist = DigitalSignatureSupport.getNamesFromCertificate(cert, settings.isDebug());
+        if (idv != null) {
+          whoMatches = cnlist.contains(idv);
+          hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, whoMatches, I18nConstants.BUNDLE_SIGNATURE_WHO_MISMATCH, idv, CommaSeparatedStringBuilder.joinWrapped(",", "'", "'", cnlist));
+        } else {
+          hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_WHO_RECOMMENDED, cert.getSubjectX500Principal().getName());          
+        }
+      } else if (who == null) {
+        hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_WHO_NO_INFO);          
+      } else {
+        hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_WHO_NOT_IN_CERT);          
+      }
+      
+      // now, check the digital signature references 
+      List<org.w3c.dom.Element> references = dsig.getDigSigReferences();
+      if (references.isEmpty()) {
+        ok = rule(errors, "2025-06-13", IssueType.NOTSUPPORTED, stack, false, I18nConstants.BUNDLE_SIGNATURE_DIGSIG_NO_REFERENCES) && ok;                  
+      } else if (references.size() > 2) {
+        ok = rule(errors, "2025-06-13", IssueType.NOTSUPPORTED, stack, false, I18nConstants.BUNDLE_SIGNATURE_DIGSIG_REFERENCES_TOO_MANY, references.size()) && ok;                  
+      } else if (references.size() == 2) {
+        ok = rule(errors, "2025-06-13", IssueType.NOTSUPPORTED, stack, "#".equals(references.get(0).getAttribute("URI")), I18nConstants.BUNDLE_SIGNATURE_DIGSIG_REFERENCE_NOT_UNDERSTOOD, references.get(0).getAttribute("URI")) && ok;        
+        dsig.setContentReference(references.get(0));
+        ok = rule(errors, "2025-06-13", IssueType.NOTSUPPORTED, stack, "http://uri.etsi.org/01903#SignedProperties".equals(references.get(1).getAttribute("Type")), I18nConstants.BUNDLE_SIGNATURE_DIGSIG_REFERENCE_TYPE_NOT_UNDERSTOOD, references.get(1).getAttribute("Type")) && ok;
+        dsig.setXadesReference(references.get(1));
+      } else {
+        dsig.setContentReference(references.get(0));
+        ok = rule(errors, "2025-06-13", IssueType.NOTSUPPORTED, stack, "#".equals(references.get(0).getAttribute("URI")), I18nConstants.BUNDLE_SIGNATURE_DIGSIG_REFERENCE_NOT_UNDERSTOOD, references.get(0).getAttribute("URI")) && ok;
+      }
+      
+      
+      if (jwk != null && canon != null) {
+        // try and verify
+      
+        byte[] toSign = null;
+        try {
+          toSign = makeSignableBundle(bundle, canon, xml);
+        } catch (Exception e) {
+          // nothing - this won't happen
+        }
+
+        String signatureValueText = dsig.getDigSigSigValue();
+        ok = rule(errors, "2025-06-13", IssueType.NOTFOUND, stack, signatureValueText != null, I18nConstants.BUNDLE_SIGNATURE_DIGSIG_NO_SV) && ok;
+        byte[] signatureBytes = null;
+        try {
+          signatureBytes = signatureValueText == null ? null : org.apache.commons.net.util.Base64.decodeBase64(signatureValueText);
+        } catch (Exception e) {
+          ok = false;
+          rule(errors, "2025-06-13", IssueType.INVALID, stack, false, I18nConstants.BUNDLE_SIGNATURE_DIGSIG_INVALID, e.getMessage());                            
+        }            
+        try {
+          boolean verified = verifyDigSig(errors, stack, cert, jwk, dsig.getDigSigAlg(), canon, toSign, signatureBytes, instant, dsig, "with");
+          if (!verified) {
+            ok = false;
+            rule(errors, "2025-06-13", IssueType.VALUE, stack, false, I18nConstants.BUNDLE_SIGNATURE_SIG_FAIL_CERT); 
+            
+            String sb = dsig.getDigSigSigned();
+            if (sb != null) {
+              byte[] signed = null;
+              try {
+                signed = org.apache.commons.net.util.Base64.decodeBase64(sb);
+              } catch (Exception e) {
+                ok = false;
+                rule(errors, "2025-06-13", IssueType.VALUE, stack, false, I18nConstants.BUNDLE_SIGNATURE_DIGSIG_SIGNED_INVALID, e.getMessage());                            
+              }
+              if (signed != null) {
+                if (!Arrays.equals(toSign, signed)) {
+                  rule(errors, "2025-06-13", IssueType.VALUE, stack, false, I18nConstants.BUNDLE_SIGNATURE_DIGSIG_SIGNED_MISMATCH, toSign.length, signed.length);
+                  String diff;
+                  try { 
+                    Document signedX = parseXmlOrError(errors, stack, signed, I18nConstants.BUNDLE_SIGNATURE_DIGSIG_SIGNED_INVALID_XML);
+                    Document toSignX = parseXmlOrError(errors, stack, toSign, I18nConstants.BUNDLE_SIGNATURE_DIGSIG_SIGNED_INVALID_XML);
+                    diff = new CompareUtilities().compareElements("payload", "$", toSignX.getDocumentElement(), signedX.getDocumentElement());
+                    if (diff == null) {
+                      hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_DIGSIG_SIGNED_XML_MATCHES);                
+                    } else {
+                      hint(errors, "2025-06-13", IssueType.VALUE, stack, false, I18nConstants.BUNDLE_SIGNATURE_DIGSIG_SIGNED_XML_NO_MATCH, diff);                                
+                    }
+                  } catch (Exception e) {
+                    ok = false;
+                    rule(errors, "2025-06-13", IssueType.EXCEPTION, stack, false, I18nConstants.BUNDLE_SIGNATURE_DIGSIG_SIGNED_INVALID_XML, e.getMessage());                
+                  }
+                } else {
+                  hint(errors, "2025-06-13", IssueType.VALUE, stack, false, I18nConstants.BUNDLE_SIGNATURE_DIGSIG_SIGNED_SAME);
+                }
+              } 
+            }
+          } else {
+            hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_SIG_OK);   
+          }
+          if (cert != null) {
+            if (idv == null) {
+              hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_SIGNED_BY, cert.getSubjectX500Principal().getName());              
+            } else  if (whoMatches) {
+              hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_SIGNED_BY_VERIFIED, idv);
+            } else {
+              hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_SIGNED_BY, idv);
+            }
+          }
+          if ((when != null) || (instant != null && dsig.getXadesReference() != null)) {
+            hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_SIGNED_AT_VERIFIED, when.primitiveValue());
+          } else if (sigT != null) {
+            hint(errors, "2025-06-13", IssueType.INFORMATIONAL, stack, false, I18nConstants.BUNDLE_SIGNATURE_SIGNED_AT, sigT);                
+          }
+
+        } catch (Exception e) {
+          ok = false;
+          rule(errors, "2025-06-13", IssueType.EXCEPTION, stack, false, I18nConstants.BUNDLE_SIGNATURE_SIG_ERROR, e.getMessage());                            
+        }            
+      } 
+
+    }
+    return ok;
+  }
+
+  private boolean verifyDigSig(List<ValidationMessage> errors, NodeStack stack, X509Certificate cert, JWK jwk, String alg, String canon, byte[] toSign, byte[] signatureBytes, Instant instant, DigitalSignatureWrapper dsig, String name) {
+    try {
+      String actualDigest = DigitalSignatureSupport.getDigest(toSign, "debug-"+name);
+      String expectedDigest = XMLUtil.getNamedChildText(dsig.getContentReference(), "DigestValue");
+      rule(errors, "2025-06-13", IssueType.VALUE, stack, actualDigest.equals(expectedDigest), I18nConstants.BUNDLE_SIGNATURE_SIG_DIGEST_MISMATCH, actualDigest, expectedDigest); 
+
+      byte[] xc = null;
+      if (dsig.getXadesReference() != null) {
+        xc = DigitalSignatureSupport.canonicalizeXml(fixNS(dsig.getXadesSignable()), "http://www.w3.org/2001/10/xml-exc-c14n#");
+        actualDigest = DigitalSignatureSupport.getDigest(xc, "debug-xades");
+        expectedDigest = XMLUtil.getNamedChildText(dsig.getXadesReference(), "DigestValue");            
+        rule(errors, "2025-06-13", IssueType.VALUE, stack, actualDigest.equals(expectedDigest), I18nConstants.BUNDLE_SIGNATURE_SIG_DIGEST_MISMATCH_XADES, actualDigest, expectedDigest); 
+      }
+      byte[] signedInfoBytes = DigitalSignatureSupport.buildSignInfoXades(cert, toSign, canon, xc, "check-"+name).getSignable();
+
+      // Map XML DSig algorithm to Java algorithm
+      String javaAlgorithm;
+      switch (alg) {
+      case "http://www.w3.org/2000/09/xmldsig#rsa-sha1":
+        javaAlgorithm = "SHA1withRSA";
+        break;
+      case "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256":
+        javaAlgorithm = "SHA256withRSA";
+        break;
+      case "http://www.w3.org/2001/04/xmldsig-more#rsa-sha512":
+        javaAlgorithm = "SHA512withRSA";
+        break;
+      default:
+        rule(errors, "2025-06-13", IssueType.VALUE, stack, false, I18nConstants.BUNDLE_SIGNATURE_SIG_FAIL_CERT); 
+        log.error("Unsupported signature algorithm: " + alg);
+        return false;
+      }
+      // Verify the signature
+      Signature sig = Signature.getInstance(javaAlgorithm);
+      sig.initVerify(cert.getPublicKey());
+      sig.update(signedInfoBytes);
+
+      return sig.verify(signatureBytes);
+
+    } catch (Exception e) {
+      rule(errors, "2025-06-13", IssueType.INVALID, stack, false, I18nConstants.BUNDLE_SIGNATURE_DIGSIG_SIG_ERROR, e.getMessage());  
+      return false;
+    }
+  }
+
+  private org.w3c.dom.Element fixNS(org.w3c.dom.Element x) {
+    if (x.getNamespaceURI() != null) {
+      String ns = x.getNamespaceURI();
+      
+    }
+    return x;
+  }
+
 
 }

@@ -354,17 +354,21 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
   private boolean tlogging = true;
   private IWorkerContextManager.ICanonicalResourceLocator locator;
   protected String userAgent;
+  protected ContextUtilities cutils;
+  private List<String> suppressedMappings;
 
   protected BaseWorkerContext() throws FileNotFoundException, IOException, FHIRException {
     setValidationMessageLanguage(getLocale());
     clock = new TimeTracker();
     initLang();
+    cutils = new ContextUtilities(this, suppressedMappings);
   }
 
   protected BaseWorkerContext(Locale locale) throws FileNotFoundException, IOException, FHIRException {
     this.setLocale(locale);
     clock = new TimeTracker();
     initLang();
+    cutils = new ContextUtilities(this, suppressedMappings);
   }
 
   protected BaseWorkerContext(CanonicalResourceManager<CodeSystem> codeSystems, CanonicalResourceManager<ValueSet> valueSets, CanonicalResourceManager<ConceptMap> maps, CanonicalResourceManager<StructureDefinition> profiles,
@@ -378,6 +382,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     this.guides = guides;
     clock = new TimeTracker();
     initLang();
+    cutils = new ContextUtilities(this, suppressedMappings);
   }
 
   private void initLang() throws IOException {
@@ -438,6 +443,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       userAgent = other.userAgent;
       terminologyClientManager.copy(other.terminologyClientManager);
       cachingAllowed = other.cachingAllowed;
+      suppressedMappings = other.suppressedMappings;
     }
   }
   
@@ -446,8 +452,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
     cacheResourceFromPackage(r, null);  
   }
   
-
-  public void registerResourceFromPackage(CanonicalResourceProxy r, PackageInformation packageInfo) throws FHIRException {    
+  public void registerResourceFromPackage(CanonicalResourceProxy r, PackageInformation packageInfo) throws FHIRException {
     PackageHackerR5.fixLoadedResource(r, packageInfo);
 
     synchronized (lock) {
@@ -3171,7 +3176,7 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
 
        // structureDefinition.setGeneratingSnapshot(true);
         try {
-          new ContextUtilities(this).generateSnapshot(structureDefinition);
+          cutils.generateSnapshot(structureDefinition);
         } finally {
           //structureDefinition.setGeneratingSnapshot(false);
         }
@@ -3750,4 +3755,43 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
       }
     }
   }
+  
+  @Override
+  public OperationOutcome validateTxResource(ValidationOptions options, Resource resource) {
+    if (resource instanceof ValueSet) {
+      ValueSet vs = (ValueSet) resource;
+      Set<String> systems = findRelevantSystems(vs);
+      TerminologyClientContext tc = terminologyClientManager.chooseServer(vs, systems, false);
+      if (tc == null) {
+        throw new FHIRException(formatMessage(I18nConstants.ATTEMPT_TO_USE_TERMINOLOGY_SERVER_WHEN_NO_TERMINOLOGY_SERVER_IS_AVAILABLE));
+      }
+      for (ConceptSetComponent inc : vs.getCompose().getInclude()) {
+        codeSystemsUsed.add(inc.getSystem());
+      }
+      for (ConceptSetComponent inc : vs.getCompose().getExclude()) {
+        codeSystemsUsed.add(inc.getSystem());
+      }
+
+      txLog("$validate ValueSet on "+tc.getAddress());
+      if (txLog != null) {
+        txLog.clearLastId();
+      }
+      return tc.getClient().validateResource(vs);
+    }
+    return null;
+  }
+
+
+  public List<String> getSuppressedMappings() {
+    return suppressedMappings;
+  }
+
+  public void setSuppressedMappings(List<String> suppressedMappings) {
+    this.suppressedMappings = suppressedMappings;
+  }
+
+  public ContextUtilities getCutils() {
+    return cutils;
+  }
+
 }

@@ -1,6 +1,7 @@
-2025/06/25 Release 4.0.9
+2025/07/01 Release 4.0.9
 - unable to resolve resource with reference [#409](https://github.com/ahdis/matchbox/issues/409)
-- disableDefaultResource Fetcher provokes an error [#408](https://github.com/ahdis/matchbox/issues/408)
+- disableDefautlResource Fetcher provokes an error [#408](https://github.com/ahdis/matchbox/issues/408)
+- update org.hl7.fhir.core 6.5.27 [#411](https://github.com/ahdis/matchbox/issues/411)
 
 2025/06/22 Release 4.0.8
 - suppressErrors not taken into account on gazelle interface [#405](https://github.com/ahdis/matchbox/issues/405)
