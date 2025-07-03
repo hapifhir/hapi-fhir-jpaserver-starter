@@ -4,7 +4,12 @@ public class IndicatorColumn {
 	private int id;
 	private String name;
 
-	public int getId() {
+	public IndicatorColumn(int i, String name) {
+		this.id = i;
+		this.name = name;
+	}
+
+    public int getId() {
 		return id;
 	}
 
