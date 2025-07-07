@@ -191,7 +191,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- If you are using HAPI narrative generation, you will need to include Thymeleaf as well. Otherwise the following can be omitted. -->
+        <!-- If you are using HAPI narrative generation, you will need to include Thymeleaf as well. Otherwise, the following can be omitted. -->
         <dependency>
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf</artifactId>

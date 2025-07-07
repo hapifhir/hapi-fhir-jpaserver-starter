@@ -188,14 +188,12 @@ public class EnvironmentHelper {
 	public static Map<String, Object> getAllProperties(PropertySource<?> aPropSource) {
 		Map<String, Object> result = new HashMap<>();
 
-		if (aPropSource instanceof CompositePropertySource) {
-			CompositePropertySource cps = (CompositePropertySource) aPropSource;
+		if (aPropSource instanceof CompositePropertySource cps) {
 			cps.getPropertySources().forEach(ps -> addAll(result, getAllProperties(ps)));
 			return result;
 		}
 
-		if (aPropSource instanceof EnumerablePropertySource<?>) {
-			EnumerablePropertySource<?> ps = (EnumerablePropertySource<?>) aPropSource;
+		if (aPropSource instanceof EnumerablePropertySource<?> ps) {
 			Arrays.asList(ps.getPropertyNames()).forEach(key -> result.put(key, ps.getProperty(key)));
 			return result;
 		}

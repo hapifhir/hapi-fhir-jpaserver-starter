@@ -179,9 +179,7 @@ public class ModuleConfigurationPrefetchSvc extends CdsPrefetchSvc {
 			return true;
 		}
 		if (resource instanceof IBaseBundle) {
-			return BundleUtil.toListOfEntries(fhirContext, (IBaseBundle) resource)
-							.size()
-					> 0;
+			return !BundleUtil.toListOfEntries(fhirContext, (IBaseBundle) resource).isEmpty();
 		}
 		return false;
 	}
