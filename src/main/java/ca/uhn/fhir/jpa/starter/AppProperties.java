@@ -772,9 +772,9 @@ public class AppProperties {
 
 	public void setIndex_storage_optimized(boolean theIndex_storage_optimized) {
 		index_storage_optimized = theIndex_storage_optimized;
-  }
-  
-  public JpaStorageSettings.StoreMetaSourceInformationEnum getStore_meta_source_information() {
+	}
+
+	public JpaStorageSettings.StoreMetaSourceInformationEnum getStore_meta_source_information() {
 		return store_meta_source_information;
 	}
 
