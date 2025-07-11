@@ -6,7 +6,7 @@ server:
   tomcat:
     # allow | as a separator in the URL
     relaxed-query-chars: "|"
-#Adds the option to go to eg. http://localhost:8080/actuator/health for seeing the running configuration
+#Adds the option to go to e.g. http://localhost:8080/actuator/health for seeing the running configuration
 #see https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
 management:
   #The following configuration will enable the actuator endpoints at /actuator/health, /actuator/info, /actuator/prometheus, /actuator/metrics. For security purposes, only /actuator/health is enabled by default.
@@ -14,7 +14,7 @@ management:
     enabled-by-default: false
     web:
       exposure:
-        include: 'health' # or e.g. 'info,health,prometheus,metrics' or '*' for all'
+        include: 'health' # or e.g. 'info,health,prometheus,metrics' or '*' for all
   endpoint:
     info:
       enabled: true
@@ -269,12 +269,12 @@ hapi:
     
     # comma-separated list of fully qualified interceptor classes. 
     # classes listed here will be fetched from the Spring context when combined with 'custom-bean-packages', 
-    # or will be instantiated via reflection using an no-arg contructor; then registered with the server  
+    # or will be instantiated via reflection using a no-arg contructor; then registered with the server
     #custom-interceptor-classes:  
 
     # comma-separated list of fully qualified provider classes. 
     # classes listed here will be fetched from the Spring context when combined with 'custom-bean-packages', 
-    # or will be instantiated via reflection using an no-arg contructor; then registered with the server  
+    # or will be instantiated via reflection using a no-arg contructor; then registered with the server
     #custom-provider-classes:  
     # specify what should be stored in meta.source based on StoreMetaSourceInformationEnum defaults to NONE
     # store_meta_source_information: NONE

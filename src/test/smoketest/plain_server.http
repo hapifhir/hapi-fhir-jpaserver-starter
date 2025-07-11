@@ -81,13 +81,13 @@ Content-Type: application/json
         client.assert(resourceType === "Bundle", "Expected 'Bundle' but received '" + resourceType + "'");
     });
     client.test("All patient additions successful", function() {
-        for (var index = 0; index < response.body.entry.length; index++) {
+        for (let index = 0; index < response.body.entry.length; index++) {
             client.assert(response.body.entry[index].response.status === "201 Created", "Expected '201 Created' for patient index " + index + " but received '" + response.body.entry[index].response.status + "'");
         }
     });
     const batch_patient_location = response.body.entry[0].response.location;
     const indexOfHistory = batch_patient_location.lastIndexOf("/_history");
-    var trimmed_location = batch_patient_location.substring(0, indexOfHistory);
+    let trimmed_location = batch_patient_location.substring(0, indexOfHistory);
     trimmed_location = trimmed_location.replace("Patient/", "")
     client.global.set("batch_patient_id", trimmed_location);
 %}
