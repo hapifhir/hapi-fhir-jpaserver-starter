@@ -30,6 +30,7 @@ import static org.opencds.cqf.fhir.cr.hapi.config.test.TestCdsHooksConfig.CDS_HO
 @Configurable
 public class CdsHooksServlet extends HttpServlet {
 	private static final Logger logger = LoggerFactory.getLogger(CdsHooksServlet.class);
+
 	@Serial
 	private static final long serialVersionUID = 1L;
 

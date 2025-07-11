@@ -39,28 +39,39 @@ public class FhirServerConfigCommon {
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(FhirServerConfigCommon.class);
 
 	public FhirServerConfigCommon(AppProperties appProperties) {
-		ourLog.info("Server configured to {} contains searches",
-			appProperties.getAllow_contains_searches() ? "allow" : "deny");
-		ourLog.info("Server configured to {} multiple deletes",
-			appProperties.getAllow_multiple_delete() ? "allow" : "deny");
-		ourLog.info("Server configured to {} external references",
-			appProperties.getAllow_external_references() ? "allow" : "deny");
-		ourLog.info("Server configured to {} DAO scheduling",
-			appProperties.getDao_scheduling_enabled() ? "enable" : "disable");
-		ourLog.info("Server configured to {} delete expunges",
-			appProperties.getDelete_expunge_enabled() ? "enable" : "disable");
+		ourLog.info(
+				"Server configured to {} contains searches",
+				appProperties.getAllow_contains_searches() ? "allow" : "deny");
+		ourLog.info(
+				"Server configured to {} multiple deletes",
+				appProperties.getAllow_multiple_delete() ? "allow" : "deny");
+		ourLog.info(
+				"Server configured to {} external references",
+				appProperties.getAllow_external_references() ? "allow" : "deny");
+		ourLog.info(
+				"Server configured to {} DAO scheduling",
+				appProperties.getDao_scheduling_enabled() ? "enable" : "disable");
+		ourLog.info(
+				"Server configured to {} delete expunges",
+				appProperties.getDelete_expunge_enabled() ? "enable" : "disable");
 		ourLog.info("Server configured to {} expunges", appProperties.getExpunge_enabled() ? "enable" : "disable");
-		ourLog.info("Server configured to {} overriding default search params",
-			appProperties.getAllow_override_default_search_params() ? "allow" : "deny");
-		ourLog.info("Server configured to {} auto-creating placeholder references",
+		ourLog.info(
+				"Server configured to {} overriding default search params",
+				appProperties.getAllow_override_default_search_params() ? "allow" : "deny");
+		ourLog.info(
+				"Server configured to {} auto-creating placeholder references",
 				appProperties.getAuto_create_placeholder_reference_targets() ? "allow" : "disable");
-		ourLog.info("Server configured to auto-version references at paths {}",
+		ourLog.info(
+				"Server configured to auto-version references at paths {}",
 				appProperties.getAuto_version_reference_at_paths());
 
 		if (appProperties.getSubscription().getEmail() != null) {
-			AppProperties.Subscription.Email email = appProperties.getSubscription().getEmail();
-			ourLog.info("Server is configured to enable email with host '{}' and port {}", email.getHost(),
-				email.getPort());
+			AppProperties.Subscription.Email email =
+					appProperties.getSubscription().getEmail();
+			ourLog.info(
+					"Server is configured to enable email with host '{}' and port {}",
+					email.getHost(),
+					email.getPort());
 			ourLog.info("Server will use '{}' as the from email address", email.getFrom());
 
 			if (!Strings.isNullOrEmpty(email.getUsername())) {
@@ -84,16 +95,19 @@ public class FhirServerConfigCommon {
 			ourLog.info("Indexed on contained resource enabled");
 		}
 
-		ourLog.info("Server configured to {} value set pre-expansion",
-			appProperties.getPre_expand_value_sets() ? "enable" : "disable");
-		ourLog.info("Server configured to {} value set pre-expansion task",
-			appProperties.getEnable_task_pre_expand_value_sets() ? "enable" : "disable");
-		ourLog.info("Server configured for pre-expand value set default count of {}",
+		ourLog.info(
+				"Server configured to {} value set pre-expansion",
+				appProperties.getPre_expand_value_sets() ? "enable" : "disable");
+		ourLog.info(
+				"Server configured to {} value set pre-expansion task",
+				appProperties.getEnable_task_pre_expand_value_sets() ? "enable" : "disable");
+		ourLog.info(
+				"Server configured for pre-expand value set default count of {}",
 				appProperties.getPre_expand_value_sets_default_count());
-		ourLog.info("Server configured for pre-expand value set max count of {}",
+		ourLog.info(
+				"Server configured for pre-expand value set max count of {}",
 				appProperties.getPre_expand_value_sets_max_count());
-		ourLog.info("Server configured for maximum expansion size of {}",
-				appProperties.getMaximum_expansion_size());
+		ourLog.info("Server configured for maximum expansion size of {}", appProperties.getMaximum_expansion_size());
 	}
 
 	@Bean
@@ -183,7 +197,8 @@ public class FhirServerConfigCommon {
 
 		Integer maxFetchSize = appProperties.getMax_page_size();
 		jpaStorageSettings.setFetchSizeDefaultMaximum(maxFetchSize);
-		ourLog.info("Server configured to have a maximum fetch size of {}",
+		ourLog.info(
+				"Server configured to have a maximum fetch size of {}",
 				maxFetchSize == Integer.MAX_VALUE ? "'unlimited'" : maxFetchSize);
 
 		Long reuseCachedSearchResultsMillis = appProperties.getReuse_cached_search_results_millis();
@@ -226,14 +241,16 @@ public class FhirServerConfigCommon {
 		// Set and/or recommend default Server ID Strategy of UUID when using the ANY Client ID Strategy
 		if (appProperties.getClient_id_strategy() == JpaStorageSettings.ClientIdStrategyEnum.ANY) {
 			if (appProperties.getServer_id_strategy() == null) {
-				ourLog.info("Defaulting server to use '{}' Server ID Strategy when using the '{}' Client ID Strategy",
-					JpaStorageSettings.IdStrategyEnum.UUID,
-					JpaStorageSettings.ClientIdStrategyEnum.ANY);
+				ourLog.info(
+						"Defaulting server to use '{}' Server ID Strategy when using the '{}' Client ID Strategy",
+						JpaStorageSettings.IdStrategyEnum.UUID,
+						JpaStorageSettings.ClientIdStrategyEnum.ANY);
 				appProperties.setServer_id_strategy(JpaStorageSettings.IdStrategyEnum.UUID);
 			} else if (appProperties.getServer_id_strategy() != JpaStorageSettings.IdStrategyEnum.UUID) {
-				ourLog.warn("WARNING: '{}' Server ID Strategy is highly recommended when using the '{}' Client ID Strategy",
-					JpaStorageSettings.IdStrategyEnum.UUID,
-					JpaStorageSettings.ClientIdStrategyEnum.ANY);
+				ourLog.warn(
+						"WARNING: '{}' Server ID Strategy is highly recommended when using the '{}' Client ID Strategy",
+						JpaStorageSettings.IdStrategyEnum.UUID,
+						JpaStorageSettings.ClientIdStrategyEnum.ANY);
 			}
 		}
 		if (appProperties.getServer_id_strategy() != null) {
