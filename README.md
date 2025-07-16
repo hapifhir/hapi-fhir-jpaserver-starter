@@ -71,8 +71,8 @@ or
 ### Configurable base image:
 
 ```bash
-cd matchbox-server
 mvn package -DskipTests
+cd matchbox-server
 docker build -t matchbox .
 docker run -d --name matchbox -p 8080:8080 -v /Users/oegger/Documents/github/matchbox/matchbox-server/with-settings:/config matchbox
 ```
