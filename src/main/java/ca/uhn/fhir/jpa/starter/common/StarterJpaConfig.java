@@ -248,7 +248,7 @@ public class StarterJpaConfig {
 
 		List<String> allAllowedCORSOrigins = appProperties.getCors().getAllowed_origin();
 		allAllowedCORSOrigins.forEach(config::addAllowedOriginPattern);
-		ourLog.info("CORS allows the following origins: " + String.join(", ", allAllowedCORSOrigins));
+		ourLog.info("CORS allows the following origins: {}", String.join(", ", allAllowedCORSOrigins));
 
 		config.addExposedHeader("Location");
 		config.addExposedHeader("Content-Location");
@@ -467,9 +467,7 @@ public class StarterJpaConfig {
 		registerCustomInterceptors(fhirServer, appContext, appProperties.getCustomInterceptorClasses());
 
 		// register the IPS Provider
-		if (!theIpsOperationProvider.isEmpty()) {
-			fhirServer.registerProvider(theIpsOperationProvider.get());
-		}
+		theIpsOperationProvider.ifPresent(fhirServer::registerProvider);
 
 		if (appProperties.getUserRequestRetryVersionConflictsInterceptorEnabled()) {
 			fhirServer.registerInterceptor(new UserRequestRetryVersionConflictsInterceptor());
@@ -500,7 +498,7 @@ public class StarterJpaConfig {
 				throw new ConfigurationException("Interceptor class was not found on classpath: " + className, e);
 			}
 
-			// first check if the class a Bean in the app context
+			// first check if the class is a Bean in the app context
 			Object interceptor = null;
 			try {
 				interceptor = theAppContext.getBean(clazz);
@@ -541,7 +539,7 @@ public class StarterJpaConfig {
 				throw new ConfigurationException("Provider class was not found on classpath: " + className, e);
 			}
 
-			// first check if the class a Bean in the app context
+			// first check if the class is a Bean in the app context
 			Object provider = null;
 			try {
 				provider = theAppContext.getBean(clazz);

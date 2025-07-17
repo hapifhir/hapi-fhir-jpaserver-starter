@@ -17,12 +17,10 @@ import org.hl7.fhir.r4.model.Bundle.HTTPVerb;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
@@ -100,44 +98,41 @@ public class ParallelUpdatesVersionConflictTest {
 		List<Callable<Integer>> callables = new ArrayList<>();
 		for (int i = 0; i < threadCnt; i++) {
 			final int cnt = i;
-			Callable<Integer> callable = new Callable<>() {
-				@Override
-				public Integer call() throws Exception {
-					Patient pat = new Patient();
-					//make sure to change something so the server doesnt short circuit on a no-op
-					pat.addName().setFamily("fam-" + cnt);
-					pat.setId(patientId);
+			Callable<Integer> callable = () -> {
+				Patient pat = new Patient();
+				//make sure to change something so the server doesn't short circuit on a no-op
+				pat.addName().setFamily("fam-" + cnt);
+				pat.setId(patientId);
 
-					if( useBundles) {
-						Bundle b = new Bundle();
-						b.setType(BundleType.TRANSACTION);
-						BundleEntryComponent bec = b.addEntry();
-						bec.setResource(pat);
-						//bec.setFullUrl("Patient/" + patId);
-						Bundle.BundleEntryRequestComponent req = bec.getRequest();
-						req.setUrl("Patient/" + patientId);
-						req.setMethod(HTTPVerb.PUT);
-						bec.setRequest(req);
+				if( useBundles) {
+					Bundle b = new Bundle();
+					b.setType(BundleType.TRANSACTION);
+					BundleEntryComponent bec = b.addEntry();
+					bec.setResource(pat);
+					//bec.setFullUrl("Patient/" + patId);
+					Bundle.BundleEntryRequestComponent req = bec.getRequest();
+					req.setUrl("Patient/" + patientId);
+					req.setMethod(HTTPVerb.PUT);
+					bec.setRequest(req);
 
-						Bundle returnBundle = client.transaction().withBundle(b)
-							.withAdditionalHeader(headerName, "retry; max-retries=10")
-							.execute();
+					Bundle returnBundle = client.transaction().withBundle(b)
+						.withAdditionalHeader(headerName, "retry; max-retries=10")
+						.execute();
 
-						String statusString = returnBundle.getEntryFirstRep().getResponse().getStatus();
-						ourLog.trace("statusString->{}", statusString);
-						try {
-							return Integer.parseInt(statusString.substring(0,3));
-						}catch(NumberFormatException nfe) {
-							return 500;
-						}
+					String statusString = returnBundle.getEntryFirstRep().getResponse().getStatus();
+					ourLog.trace("statusString->{}", statusString);
+					try {
+						return Integer.parseInt(statusString.substring(0,3));
+					}catch(NumberFormatException nfe) {
+						return 500;
 					}
-					else {
-						MethodOutcome outcome = client.update().resource(pat).withId(patientId)
-							.withAdditionalHeader(headerName, "retry; max-retries=10")
-							.execute();
-						ourLog.trace("updated patient: " + outcome.getResponseStatusCode());
-						return outcome.getResponseStatusCode();
-					}
+				}
+				else {
+					MethodOutcome outcome = client.update().resource(pat).withId(patientId)
+						.withAdditionalHeader(headerName, "retry; max-retries=10")
+						.execute();
+					ourLog.trace("updated patient: {}", outcome.getResponseStatusCode());
+					return outcome.getResponseStatusCode();
 				}
 			};
 			callables.add(callable);
