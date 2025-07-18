@@ -87,6 +87,11 @@ hapi:
       caregaps:
         reporter: "default"
         section_author: "default"
+      terminologyServerClientSettings:
+        maxRetryCount: 3
+        retryIntervalMillis: 1000
+        timeoutSeconds: 30
+        socketTimeout: 60
       cql:
         use_embedded_libraries: true
         compiler:
