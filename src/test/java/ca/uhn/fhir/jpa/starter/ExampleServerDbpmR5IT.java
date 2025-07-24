@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 		"hapi.fhir.partitioning.database_partition_mode_enabled=true",
 		"hapi.fhir.partitioning.patient_id_partitioning_mode=true"
 	})
-public class ExampleServerDbpmR5IT {
+class ExampleServerDbpmR5IT {
 
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu2IT.class);
 	private IGenericClient ourClient;

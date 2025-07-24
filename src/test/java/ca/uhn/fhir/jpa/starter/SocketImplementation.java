@@ -43,7 +43,7 @@ public class SocketImplementation {
 
 	/**
 	 * This method is executed when the client is connecting to the server.
-	 * In this case, we are sending a message to create the subscription dynamiclly
+	 * In this case, we are sending a message to create the subscription dynamically
 	 *
 	 * @param session
 	 */
@@ -58,7 +58,6 @@ public class SocketImplementation {
 
 			ourLog.info("Connection: DONE");
 		} catch (Throwable t) {
-			t.printStackTrace();
 			ourLog.error("Failure", t);
 		}
 	}
@@ -70,7 +69,7 @@ public class SocketImplementation {
 	 */
 	@OnMessage
 	public void onMessage(String theMsg) {
-		ourLog.info("Got msg: " + theMsg);
+		ourLog.info("Got msg: {}", theMsg);
 		myMessages.add(theMsg);
 
 		if (theMsg.startsWith("bound ")) {
@@ -78,7 +77,7 @@ public class SocketImplementation {
 			mySubsId = (theMsg.substring("bound ".length()));
 		} else if (myGotBound && theMsg.startsWith("add " + mySubsId + "\n")) {
 			String text = theMsg.substring(("add " + mySubsId + "\n").length());
-			ourLog.info("text: " + text);
+			ourLog.info("text: {}", text);
 		} else if (theMsg.startsWith("ping ")) {
 			myPingCount++;
 		} else {

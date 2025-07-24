@@ -47,7 +47,7 @@
                         <p>
                             This UI can be customized!
                             You might want to put rules on who can use this server here, or
-                            notices about privacy, or whatever else you want..
+                            notices about privacy, or whatever else you want.
                         </p>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
 <script>
     // Function to check if a file exists using AJAX
     function fileExists(filePath, callback) {
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4) {
                 callback(xhr.status === 200);
@@ -77,7 +77,7 @@
     fileExists("content/custom/about.html", function(exists) {
         if (exists) {
             loadFile("content/custom/about.html", function(content) {
-                var replacementContainer = document.getElementById("replacementAbout");
+                let replacementContainer = document.getElementById("replacementAbout");
                 replacementContainer.innerHTML = content;
             });
         }
@@ -85,7 +85,7 @@
 
     // Function to load file content using AJAX
     function loadFile(filePath, callback) {
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 callback(xhr.responseText);
