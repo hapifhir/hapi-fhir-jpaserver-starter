@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
@@ -53,6 +54,8 @@ import org.hl7.fhir.r5.context.ContextUtilities;
 import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Element;
 import org.hl7.fhir.r5.elementmodel.JsonParser;
+import org.hl7.fhir.r5.extensions.ExtensionDefinitions;
+import org.hl7.fhir.r5.extensions.ExtensionUtilities;
 import org.hl7.fhir.r5.formats.IParser.OutputStyle;
 import org.hl7.fhir.r5.model.Base;
 import org.hl7.fhir.r5.model.CanonicalResource;
@@ -66,8 +69,7 @@ import org.hl7.fhir.r5.model.UsageContext;
 import org.hl7.fhir.r5.model.ValueSet;
 import org.hl7.fhir.r5.model.Enumerations.PublicationStatus;
 import org.hl7.fhir.r5.model.OperationOutcome.OperationOutcomeIssueComponent;
-import org.hl7.fhir.r5.terminologies.ValueSetUtilities;
-import org.hl7.fhir.r5.utils.ToolingExtensions;
+import org.hl7.fhir.r5.terminologies.ImplicitValueSets;
 import org.hl7.fhir.r5.utils.UserDataNames;
 import org.hl7.fhir.r5.utils.XVerExtensionManager;
 import org.hl7.fhir.r5.utils.XVerExtensionManager.XVerExtensionStatus;
@@ -91,6 +93,14 @@ import org.hl7.fhir.validation.instance.utils.IndexedElement;
 import org.hl7.fhir.validation.instance.utils.NodeStack;
 
 public class BaseValidator implements IValidationContextResourceLoader, IMessagingServices {
+
+  /**
+   * This regex tests FHIR search parameters. It expects the formats:
+   * [paramName]=[paramValue]
+   * [paramName]=[paramValue]&[paramName]=[paramValue]
+   * etc..
+   */
+  private static final Pattern SEARCH_URL_PARAMS = Pattern.compile("[_a-zA-Z][_a-zA-Z0-9.:-]*=[^=&]*(&([_a-zA-Z][_a-zA-Z0-9.:]*=[^=&]*))*");
 
   public static class BooleanHolder {
     private boolean value = true;
@@ -695,11 +705,11 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
     IssueType code = IssueType.fromCode(issue.getCode().toCode());
     IssueSeverity severity = IssueSeverity.fromCode(issue.getSeverity().toCode());
     ValidationMessage validationMessage = new ValidationMessage(Source.TerminologyEngine, code, line, col, path, issue.getDetails().getText(), severity).setTxLink(txLink);
-    if (issue.getExtensionString(ToolingExtensions.EXT_ISSUE_SERVER) != null) {
-      validationMessage.setServer(issue.getExtensionString(ToolingExtensions.EXT_ISSUE_SERVER).replace("local.fhir.org", "tx-dev.fhir.org"));
+    if (issue.getExtensionString(ExtensionDefinitions.EXT_ISSUE_SERVER) != null) {
+      validationMessage.setServer(issue.getExtensionString(ExtensionDefinitions.EXT_ISSUE_SERVER).replace("local.fhir.org", "tx-dev.fhir.org"));
     }
-    if (issue.getExtensionString(ToolingExtensions.EXT_ISSUE_MSG_ID) != null) {
-      validationMessage.setMessageId(issue.getExtensionString(ToolingExtensions.EXT_ISSUE_MSG_ID));
+    if (issue.getExtensionString(ExtensionDefinitions.EXT_ISSUE_MSG_ID) != null) {
+      validationMessage.setMessageId(issue.getExtensionString(ExtensionDefinitions.EXT_ISSUE_MSG_ID));
     }
     return validationMessage;
   }
@@ -968,7 +978,7 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
           }
         }
         if (fr == null) {
-          fr = ValueSetUtilities.generateImplicitValueSet(reference);
+          fr = new ImplicitValueSets(context.getExpansionParameters()).generateImplicitValueSet(reference);
         } 
        
         timeTracker.tx(t, "vs "+uri);
@@ -1302,7 +1312,7 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
   }
 
   protected IndexedElement getFromBundle(Element bundle, String ref, String fullUrl, List<ValidationMessage> errors, String path, String type, boolean isTransaction, BooleanHolder bh) {
-    String targetUrl = null;
+    String targetUrl;
     String version = "";
     String resourceType = null;
     if (ref.startsWith("http:") || ref.startsWith("urn:") || Utilities.isAbsoluteUrl(ref)) {
@@ -1319,9 +1329,9 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
       rule(errors, NO_RULE_DATE, IssueType.REQUIRED, -1, -1, path, Utilities.existsInList(type, "batch-response", "transaction-response") || path.startsWith("Bundle.signature"), I18nConstants.BUNDLE_BUNDLE_FULLURL_MISSING);
       return null;
 
-    } else if (ref.split("/").length != 2 && ref.split("/").length != 4) {
+    } else if (StringUtils.countMatches(ref, '/') != 1 && StringUtils.countMatches(ref, '/') != 3) {
       if (isTransaction) {
-        rule(errors, NO_RULE_DATE, IssueType.INVALID, -1, -1, path, isSearchUrl(ref), I18nConstants.REFERENCE_REF_FORMAT1, ref);
+        rule(errors, NO_RULE_DATE, IssueType.INVALID, -1, -1, path, isSearchUrl(context, ref), I18nConstants.REFERENCE_REF_FORMAT1, ref);
       } else {
         rule(errors, NO_RULE_DATE, IssueType.INVALID, -1, -1, path, false, I18nConstants.REFERENCE_REF_FORMAT2, ref);
       }
@@ -1419,16 +1429,29 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
     return match == null ? null : new IndexedElement(matchIndex, match, entries.get(matchIndex));
   }
 
-  private boolean isSearchUrl(String ref) {
-    if (Utilities.noString(ref) || !ref.contains("?")) {
+  /**
+   * Determines whether a string is a valid search URL. A valid search URL takes
+   * the forms:
+   * [resourceType]?[paramName]=[paramValue]
+   * [resourceType]?[paramName]=[paramValue]&[paramName]=[paramValue]
+   * [resourceType]?[paramName]=[paramValue]&[paramName]=[paramValue]&....
+   */
+  public static boolean isSearchUrl(IWorkerContext context, String ref) {
+    if (Utilities.noString(ref)) {
       return false;
     }
-    String tn = ref.substring(0, ref.indexOf("?"));
-    String q = ref.substring(ref.indexOf("?") + 1);
-    if (!context.getResourceNames().contains(tn)) {
+
+    int questionMarkIndex = ref.indexOf("?");
+    if (questionMarkIndex == -1) {
+      return false;
+    }
+
+    String resourceType = ref.substring(0, questionMarkIndex);
+    String query = ref.substring(questionMarkIndex + 1);
+    if (!context.getResourceNamesAsSet().contains(resourceType)) {
       return false;
     } else {
-      return q.matches("([_a-zA-Z][_a-zA-Z0-9]*=[^=&]*)(&([_a-zA-Z][_a-zA-Z0-9]*=[^=&]*))*");
+      return SEARCH_URL_PARAMS.matcher(query).matches();
     }
   }
 
@@ -1595,12 +1618,12 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
     boolean ok = true;
     String vurl = ex.getVersionedUrl();
 
-    StandardsStatus standardsStatus = ToolingExtensions.getStandardsStatus(ex);
+    StandardsStatus standardsStatus = ExtensionUtilities.getStandardsStatus(ex);
     
     if (standardsStatus == StandardsStatus.DEPRECATED) {
       if (!statusWarnings.contains(vurl+":DEPRECATED")) {
-        Extension ext = ex.getExtensionByUrl(ToolingExtensions.EXT_STANDARDS_STATUS);
-        ext = ext == null || !ext.hasValue() ? null : ext.getValue().getExtensionByUrl(ToolingExtensions.EXT_STANDARDS_STATUS_REASON);
+        Extension ext = ex.getExtensionByUrl(ExtensionDefinitions.EXT_STANDARDS_STATUS);
+        ext = ext == null || !ext.hasValue() ? null : ext.getValue().getExtensionByUrl(ExtensionDefinitions.EXT_STANDARDS_STATUS_REASON);
         String note = ext == null || !ext.hasValue() ? null : MarkDownProcessor.markdownToPlainText(ext.getValue().primitiveValue());
 
         statusWarnings.add(vurl+":DEPRECATED");

@@ -24,7 +24,7 @@ import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.fhirpath.ExpressionNode.CollectionStatus;
 import org.hl7.fhir.r5.fhirpath.FHIRPathEngine;
-import org.hl7.fhir.r5.fhirpath.FHIRPathEngine.IEvaluationContext.FunctionDefinition;
+import org.hl7.fhir.r5.fhirpath.FHIRPathFunctionDefinition;
 import org.hl7.fhir.r5.fhirpath.FHIRPathUtilityClasses.FunctionDetails;
 import org.hl7.fhir.r5.fhirpath.TypeDetails;
 import org.hl7.fhir.r5.formats.IParser.OutputStyle;
@@ -122,7 +122,7 @@ public class TestDataFactory {
     }
   }
     
-  public static class CellLookupFunction extends FunctionDefinition {
+  public static class CellLookupFunction extends FHIRPathFunctionDefinition {
 
     @Override
     public String name() {
@@ -154,7 +154,7 @@ public class TestDataFactory {
     }
   }
 
-  public static class TableLookupFunction extends FunctionDefinition {
+  public static class TableLookupFunction extends FHIRPathFunctionDefinition {
 
     @Override
     public String name() {

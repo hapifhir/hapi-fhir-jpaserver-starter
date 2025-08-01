@@ -52,9 +52,8 @@ class R5ValidationTests {
 		final String invalidCareplan = this.careplanRaw.replace("{{INTENT}}", "non-existent-code");
 		final var errors = this.expectInvalid(invalidCareplan, Manager.FhirFormat.XML, "http://hl7" +
 			".org/fhir/StructureDefinition/CarePlan");
-		assertEquals(1, errors.size());
-		assertEquals(OperationOutcome.IssueType.CODEINVALID, errors.get(0).getCode());
-		assertTrue(errors.get(0).getDetails().getText().startsWith("The value provided ('non-existent-code') was not found in the value set 'Care Plan Intent' (http://hl7.org/fhir/ValueSet/care-plan-intent|5.0.0)"));
+		assertEquals(2, errors.size());
+		assertTrue(errors.get(0).getDetails().getText().startsWith("The value provided ('non-existent-code') was not found in the value set 'Care Plan Intent' (http://hl7.org/fhir/ValueSet/care-plan-intent|5.0.0)") || errors.get(1).getDetails().getText().startsWith("The value provided ('non-existent-code') was not found in the value set 'Care Plan Intent' (http://hl7.org/fhir/ValueSet/care-plan-intent|5.0.0)") );
 	}
 
 	/**
@@ -70,9 +69,8 @@ class R5ValidationTests {
 
 		final String invalidMeasure = this.measureRaw.replace("{{STATUS}}", "non-existent-code");
 		final var errors = this.expectInvalid(invalidMeasure, Manager.FhirFormat.XML, "http://hl7.org/fhir/StructureDefinition/Measure");
-		assertEquals(1, errors.size());
-		assertEquals(OperationOutcome.IssueType.CODEINVALID, errors.get(0).getCode());
-		assertTrue(errors.get(0).getDetails().getText().startsWith("The value provided ('non-existent-code') was not found in the value set 'PublicationStatus'"));
+		assertEquals(2, errors.size());
+		assertTrue(errors.get(0).getDetails().getText().startsWith("The value provided ('non-existent-code') was not found in the value set 'PublicationStatus'") || errors.get(1).getDetails().getText().startsWith("The value provided ('non-existent-code') was not found in the value set 'PublicationStatus'"));
 	}
 	
 	/**

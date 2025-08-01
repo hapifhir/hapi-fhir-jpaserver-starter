@@ -57,6 +57,8 @@ import org.hl7.fhir.r5.conformance.profile.ProfileUtilities;
 import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Element.SpecialElement;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
+import org.hl7.fhir.r5.extensions.ExtensionDefinitions;
+import org.hl7.fhir.r5.extensions.ExtensionUtilities;
 import org.hl7.fhir.r5.formats.FormatUtilities;
 import org.hl7.fhir.r5.formats.IParser.OutputStyle;
 import org.hl7.fhir.r5.model.Constants;
@@ -65,7 +67,6 @@ import org.hl7.fhir.r5.model.ElementDefinition;
 import org.hl7.fhir.r5.model.ElementDefinition.PropertyRepresentation;
 import org.hl7.fhir.r5.model.Enumeration;
 import org.hl7.fhir.r5.model.StructureDefinition;
-import org.hl7.fhir.r5.utils.ToolingExtensions;
 import org.hl7.fhir.r5.utils.UserDataNames;
 import org.hl7.fhir.r5.utils.formats.XmlLocationAnnotator;
 import org.hl7.fhir.r5.utils.formats.XmlLocationData;
@@ -407,8 +408,8 @@ public class XmlParser extends ParserBase {
 						av = av.trim();
 					}
 
-          if (ToolingExtensions.hasExtension(property.getDefinition(), ToolingExtensions.EXT_DATE_FORMAT))
-            av = convertForDateFormatFromExternal(ToolingExtensions.readStringExtension(property.getDefinition(), ToolingExtensions.EXT_DATE_FORMAT), av);          
+          if (ExtensionUtilities.hasExtension(property.getDefinition(), ExtensionDefinitions.EXT_DATE_FORMAT))
+            av = convertForDateFormatFromExternal(ExtensionUtilities.readStringExtension(property.getDefinition(), ExtensionDefinitions.EXT_DATE_FORMAT), av);          
           if (property.getName().equals("value") && element.isPrimitive())
             element.setValue(av);
           else {
@@ -486,8 +487,8 @@ public class XmlParser extends ParserBase {
               if (property.getDefinition().hasRepresentation(PropertyRepresentation.TYPEATTR)) {
                 String xsiType = ((org.w3c.dom.Element) child).getAttributeNS(FormatUtilities.NS_XSI, "type");
                 if (Utilities.noString(xsiType)) {
-                  if (ToolingExtensions.hasExtension(property.getDefinition(), "http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype")) {
-                    xsiType = ToolingExtensions.readStringExtension(property.getDefinition(), "http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype");
+                  if (ExtensionUtilities.hasExtension(property.getDefinition(), "http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype")) {
+                    xsiType = ExtensionUtilities.readStringExtension(property.getDefinition(), "http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype");
                     n.setType(xsiType);
                   } else {
                     logError(errors, ValidationMessage.NO_RULE_DATE, line(child, false), col(child, false), path, IssueType.STRUCTURE, context.formatMessage(I18nConstants.NO_TYPE_FOUND_ON_, child.getLocalName()), IssueSeverity.ERROR);
@@ -574,7 +575,7 @@ public class XmlParser extends ParserBase {
 
   private Property getChoiceGroupProp(List<Property> properties) {
     for (Property p : properties) {
-      if (p.getDefinition().hasExtension(ToolingExtensions.EXT_ID_CHOICE_GROUP)) {
+      if (p.getDefinition().hasExtension(ExtensionDefinitions.EXT_ID_CHOICE_GROUP)) {
         return p;
       }
     }
@@ -877,6 +878,7 @@ public class XmlParser extends ParserBase {
           if (isCdaText(element.getProperty())) {
             new CDANarrativeFormat().convert(xml, element.getXhtml());
           } else {
+            //matchbox patch
             if (element.getXhtml() != null) {
                String xhtml = new XhtmlComposer(XhtmlComposer.XML, false).setCanonical(xml.isCanonical()).compose(element.getXhtml());            
                xml.escapedText(xhtml);
@@ -949,15 +951,15 @@ public class XmlParser extends ParserBase {
             }
             if (linkResolver != null)
               xml.link(linkResolver.resolveType(child.getType()));
-            if (ToolingExtensions.hasExtension(child.getProperty().getDefinition(), ToolingExtensions.EXT_DATE_FORMAT))
-              av = convertForDateFormatToExternal(ToolingExtensions.readStringExtension(child.getProperty().getDefinition(), ToolingExtensions.EXT_DATE_FORMAT), av);
+            if (ExtensionUtilities.hasExtension(child.getProperty().getDefinition(), ExtensionDefinitions.EXT_DATE_FORMAT))
+              av = convertForDateFormatToExternal(ExtensionUtilities.readStringExtension(child.getProperty().getDefinition(), ExtensionDefinitions.EXT_DATE_FORMAT), av);
           // MATCHBOX PATCH: adjusting it for pharm
 					xml.attribute(child.getProperty().getXmlName(), av);
           }
         }
       }
       }
-      if (!element.getProperty().getDefinition().hasExtension(ToolingExtensions.EXT_ID_CHOICE_GROUP)) {
+      if (!element.getProperty().getDefinition().hasExtension(ExtensionDefinitions.EXT_ID_CHOICE_GROUP)) {
         if (linkResolver != null)
           xml.link(linkResolver.resolveProperty(element.getProperty()));
         if (!xml.namespaceDefined(element.getProperty().getXmlNamespace())) {
@@ -997,7 +999,7 @@ public class XmlParser extends ParserBase {
           }
         }
       }
-      if (!element.getProperty().getDefinition().hasExtension(ToolingExtensions.EXT_ID_CHOICE_GROUP)) {
+      if (!element.getProperty().getDefinition().hasExtension(ExtensionDefinitions.EXT_ID_CHOICE_GROUP)) {
         if (!root && element.getSpecial() != null)
           xml.exit(element.getProperty().getXmlNamespace(),element.getType());
         if (Utilities.isAbsoluteUrl(elementName)) {

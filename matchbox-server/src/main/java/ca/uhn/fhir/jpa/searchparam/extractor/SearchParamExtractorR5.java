@@ -26,22 +26,21 @@ import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import ca.uhn.fhir.sl.cache.Cache;
 import ca.uhn.fhir.sl.cache.CacheFactory;
 import ca.uhn.fhir.util.BundleUtil;
-import com.google.common.annotations.VisibleForTesting;
 import jakarta.annotation.PostConstruct;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.exceptions.PathEngineException;
 import org.hl7.fhir.instance.model.api.IBase;
-import org.hl7.fhir.r4.context.IWorkerContext;
-import org.hl7.fhir.r4.fhirpath.ExpressionNode;
-import org.hl7.fhir.r4.fhirpath.FHIRPathEngine;
-import org.hl7.fhir.r4.fhirpath.FHIRPathUtilityClasses.FunctionDetails;
-import org.hl7.fhir.r4.fhirpath.TypeDetails;
-import org.hl7.fhir.r4.hapi.ctx.HapiWorkerContext;
-import org.hl7.fhir.r4.model.Base;
-import org.hl7.fhir.r4.model.IdType;
-import org.hl7.fhir.r4.model.Resource;
-import org.hl7.fhir.r4.model.ResourceType;
-import org.hl7.fhir.r4.model.ValueSet;
+import org.hl7.fhir.r5.context.IWorkerContext;
+import org.hl7.fhir.r5.fhirpath.ExpressionNode;
+import org.hl7.fhir.r5.fhirpath.FHIRPathEngine;
+import org.hl7.fhir.r5.fhirpath.FHIRPathUtilityClasses.FunctionDetails;
+import org.hl7.fhir.r5.fhirpath.TypeDetails;
+import org.hl7.fhir.r5.hapi.ctx.HapiWorkerContext;
+import org.hl7.fhir.r5.model.Base;
+import org.hl7.fhir.r5.model.IdType;
+import org.hl7.fhir.r5.model.Resource;
+import org.hl7.fhir.r5.model.ResourceType;
+import org.hl7.fhir.r5.model.ValueSet;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -54,21 +53,19 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 /*
  * MATCHBOX FIX: backported from upstream to fix bean construction
  */
-public class SearchParamExtractorR4 extends BaseSearchParamExtractor implements ISearchParamExtractor {
+public class SearchParamExtractorR5 extends BaseSearchParamExtractor implements ISearchParamExtractor {
 
-	private Cache<String, ExpressionNode> myParsedFhirPathCache;
 	private FHIRPathEngine myFhirPathEngine;
+	private Cache<String, ExpressionNode> myParsedFhirPathCache;
 
-	/**
-	 * Constructor
-	 */
-	public SearchParamExtractorR4() {
+	public SearchParamExtractorR5() {
 		super();
 	}
 
-	// This constructor is used by tests
-	@VisibleForTesting
-	public SearchParamExtractorR4(
+	/**
+	 * Constructor for unit tests
+	 */
+	public SearchParamExtractorR5(
 			StorageSettings theStorageSettings,
 			PartitionSettings thePartitionSettings,
 			FhirContext theCtx,
@@ -76,15 +73,6 @@ public class SearchParamExtractorR4 extends BaseSearchParamExtractor implements 
 		super(theStorageSettings, thePartitionSettings, theCtx, theSearchParamRegistry);
 		initFhirPath();
 		start();
-	}
-
-	@Override
-	public IValueExtractor getPathValueExtractor(IBase theResource, String theSinglePath) {
-		return () -> {
-			ExpressionNode parsed = myParsedFhirPathCache.get(theSinglePath, path -> myFhirPathEngine.parse(path));
-			return myFhirPathEngine.evaluate(
-					theResource, (Base) theResource, (Base) theResource, (Base) theResource, parsed);
-		};
 	}
 
 	@Override
@@ -99,9 +87,16 @@ public class SearchParamExtractorR4 extends BaseSearchParamExtractor implements 
 	public void initFhirPath() {
 		IWorkerContext worker = new HapiWorkerContext(getContext(), getContext().getValidationSupport());
 		myFhirPathEngine = new FHIRPathEngine(worker);
-//		myFhirPathEngine.setHostServices(new SearchParamExtractorR4HostServices());
 
 		myParsedFhirPathCache = CacheFactory.build(TimeUnit.MINUTES.toMillis(10));
 	}
 
+	@Override
+	public IValueExtractor getPathValueExtractor(IBase theResource, String theSinglePath) {
+		return () -> {
+			ExpressionNode parsed = myParsedFhirPathCache.get(theSinglePath, path -> myFhirPathEngine.parse(path));
+			return myFhirPathEngine.evaluate(
+					theResource, (Base) theResource, (Base) theResource, (Base) theResource, parsed);
+		};
+	}
 }

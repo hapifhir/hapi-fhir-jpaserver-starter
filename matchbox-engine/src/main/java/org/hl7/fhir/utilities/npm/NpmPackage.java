@@ -432,7 +432,7 @@ public class NpmPackage {
    */
   public static NpmPackage empty(PackageGenerator thePackageGenerator) {
     NpmPackage retVal = new NpmPackage();
-    retVal.npm = thePackageGenerator.getRootJsonObject();
+    retVal.npm = PackageHacker.fixPackageOnLoad(thePackageGenerator.getRootJsonObject());
     return retVal;
   }
 
@@ -452,7 +452,7 @@ public class NpmPackage {
   }
 
   public void loadFiles(String path, File source, String... exemptions) throws IOException {
-    this.npm = JsonParser.parseObject(FileUtilities.fileToString(Utilities.path(path, "package", "package.json")));
+    this.npm = PackageHacker.fixPackageOnLoad(JsonParser.parseObject(FileUtilities.fileToString(Utilities.path(path, "package", "package.json"))));
     this.path = path;
 
     File dir = ManagedFileAccess.file(path);
@@ -530,7 +530,7 @@ public class NpmPackage {
     if (!res.folders.get("package").hasFile("package.json") && defType != null) {
       FileUtilities.stringToFile("{ \"type\" : \""+defType.getCode()+"\"}", Utilities.path(res.folders.get("package").folder.getAbsolutePath(), "package.json"));
     }
-    res.npm = JsonParser.parseObject(new String(res.folders.get("package").fetchFile("package.json")));
+    res.npm = PackageHacker.fixPackageOnLoad(JsonParser.parseObject(new String(res.folders.get("package").fetchFile("package.json"))));
     return res;
   }
 
@@ -657,7 +657,7 @@ public class NpmPackage {
     byte[] packageJsonBytes = packageFolder.fetchFile("package.json");
     Validate.notNull(packageJsonBytes, "package/package.json not found in NPM file");
     try {
-      npm = JsonParser.parseObject(packageJsonBytes);
+      npm = PackageHacker.fixPackageOnLoad(JsonParser.parseObject(packageJsonBytes));
     } catch (Exception e) {
       throw new IOException("Error parsing "+(desc == null ? "" : desc+"#")+"package/package.json: "+e.getMessage(), e);
     }
@@ -770,7 +770,7 @@ public class NpmPackage {
     }
     zip.close();         
     try {
-      res.npm = JsonParser.parseObject(res.folders.get("package").fetchFile("package.json"));
+      res.npm = PackageHacker.fixPackageOnLoad(JsonParser.parseObject(res.folders.get("package").fetchFile("package.json")));
     } catch (Exception e) {
       throw new IOException("Error parsing "+(desc == null ? "" : desc+"#")+"package/package.json: "+e.getMessage(), e);
     }
@@ -1038,7 +1038,7 @@ public class NpmPackage {
    * @param npm
    */
   public void setNpm(JsonObject npm) {
-    this.npm = npm;
+    this.npm = PackageHacker.fixPackageOnLoad(npm);
   }
 
   /**
@@ -1437,7 +1437,7 @@ public class NpmPackage {
     folder.types.get(type).add(name);
     if ("package".equals(folderName) && "package.json".equals(name)) {
       try {
-        npm = JsonParser.parseObject(cnt);
+        npm = PackageHacker.fixPackageOnLoad(JsonParser.parseObject(cnt));
       } catch (IOException e) {
       }
     }

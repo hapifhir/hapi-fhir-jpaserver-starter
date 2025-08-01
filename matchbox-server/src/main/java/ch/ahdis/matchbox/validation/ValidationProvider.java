@@ -48,13 +48,13 @@ import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r5.model.CodeableConcept;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
+import org.hl7.fhir.r5.extensions.ExtensionDefinitions;
 import org.hl7.fhir.r5.model.Duration;
 import org.hl7.fhir.r5.model.OperationOutcome;
 import org.hl7.fhir.r5.model.StringType;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.hl7.fhir.r5.model.UriType;
 import org.hl7.fhir.r5.utils.OperationOutcomeUtilities;
-import org.hl7.fhir.r5.utils.ToolingExtensions;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -385,7 +385,7 @@ public class ValidationProvider {
 		issue.setSeverity(OperationOutcome.IssueSeverity.ERROR);
 		issue.setCode(OperationOutcome.IssueType.EXCEPTION);
 		issue.setDiagnostics(message);
-		issue.addExtension().setUrl(ToolingExtensions.EXT_ISSUE_SOURCE).setValue(new StringType("ValidationProvider"));
+		issue.addExtension().setUrl(ExtensionDefinitions.EXT_ISSUE_SOURCE).setValue(new StringType("ValidationProvider"));
 		return VersionConvertorFactory_40_50.convertResource(oo);
 	}
 

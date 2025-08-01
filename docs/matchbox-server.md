@@ -26,12 +26,15 @@ They can be set in the Spring configuration (e.g. `application.properties`/`appl
 | `matchbox.fhir.context.llm.apiKey`       |          | Your API key for the desired LLM provider.                                                          |
 | `spring.ai.mcp.server.enabled`       |          | Whether matchbox should be provided as MCP-Server or not.                                                          |
 
+In addition for validation the different [java validator parameters](https://confluence.hl7.org/spaces/FHIR/pages/35718580/Using+the+FHIR+Validator) can also be configured for default values: e.g: matchbox.fhir.context.displayIssuesAreWarnings is set default to true, but you can overwrite that by providing another value. To see the current supported list of parameters, you can check the OperationDefinition of $validate on matchbox [test instance](https://test.ahdis.ch/matchboxv3/fhir/OperationDefinition/-s-validate).
+
 See an example of configuration, to show the expected format:
 
 ```yaml
 matchbox:
   fhir:
     context:
+      displayIssuesAreWarnings: false
       igsPreloaded: ch.fhir.ig.ch-elm#1.4.0
       suppressWarnInfo:
         hl7.fhir.r4.core#4.0.1:

@@ -84,7 +84,7 @@ public class Params {
   public static final String LOG = "-log";
   public static final String LANGUAGE = "-language";
   public static final String IMPLEMENTATION_GUIDE = "-ig";
-  public static final String DEFINITION = "defn";
+  public static final String DEFINITION = "-defn";
   public static final String MAP = "-map";
   public static final String X = "-x";
   public static final String CONVERT = "-convert";
@@ -94,6 +94,7 @@ public class Params {
   public static final String AI_TESTS = "-aiTests";
   public static final String HELP = "help";
   public static final String COMPARE = "-compare";
+  public static final String SERVER = "-server";
   public static final String SPREADSHEET = "-spreadsheet";
   public static final String DESTINATION = "-dest";
   public static final String LEFT = "-left";
@@ -142,9 +143,9 @@ public class Params {
   public static final String EXTERNALS = "-externals";
   public static final String MODE = "-mode";
   private static final String FHIR_SETTINGS_PARAM = "-fhir-settings";
-  private static final String WATCH_MODE_PARAM = "-watch-mode";
-  private static final String WATCH_SCAN_DELAY = "-watch-scan-delay";
-  private static final String WATCH_SETTLE_TIME = "-watch-settle-time";
+  public static final String WATCH_MODE_PARAM = "-watch-mode";
+  public static final String WATCH_SCAN_DELAY = "-watch-scan-delay";
+  public static final String WATCH_SETTLE_TIME = "-watch-settle-time";
   public static final String NO_HTTP_ACCESS = "-no-http-access";
   public static final String AUTH_NONCONFORMANT_SERVERS = "-authorise-non-conformant-tx-servers";
   public static final String R5_REF_POLICY = "r5-bundle-relative-reference-policy";
@@ -610,6 +611,8 @@ public class Params {
         i++;
       } else if (args[i].equals(CONVERT)) {
         validationContext.setMode(EngineMode.CONVERT);
+      } else if (args[i].equals(SERVER)) {
+        i++;
       } else if (args[i].equals(FHIRPATH)) {
         validationContext.setMode(EngineMode.FHIRPATH);
         if (validationContext.getFhirpath() == null)

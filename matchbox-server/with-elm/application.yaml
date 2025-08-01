@@ -21,7 +21,7 @@ hapi:
       ch_elm:
         name: ch.fhir.ig.ch-elm
         version: 1.10.0
-        url: https://build.fhir.org/ig/ahdis/ch-elm/branches/oe_1_10/package.tgz
+        url: https://fhir.ch/ig/ch-elm/package.tgz
     staticLocation: file:/apps/
 matchbox:
   fhir:

@@ -41,9 +41,12 @@ public class FmlParser extends ParserBase {
 
   private FHIRPathEngine fpe;
 
-  public FmlParser(IWorkerContext context) {
+  public FmlParser(IWorkerContext context, FHIRPathEngine fpe) {
     super(context);
-    fpe = new FHIRPathEngine(context);
+    this.fpe = fpe;
+    if (this.fpe == null) {
+      this.fpe = new FHIRPathEngine(context);
+    }
   }
 
   @Override

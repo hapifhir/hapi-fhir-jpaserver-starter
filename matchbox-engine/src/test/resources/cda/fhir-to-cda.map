@@ -72,8 +72,8 @@ group DateTS(source src : date, target tgt : TS) extends InstantTS <<types>> {
 }
 
 group IdentifierII(source src : Identifier, target tgt : II)  {
-    src.value as value where src.system.empty() and src.value.startsWith('urn:uuid:') -> tgt.root = (value.substring(9).upper()) "idAsUuid";
-    src.value as value where src.system = 'urn:ietf:rfc:3986' -> tgt.root = (value.substring(9).upper()) "idAsUuid";
+    src.value as value where src.system.empty() and src.value.startsWith('urn:uuid:') -> tgt.root = (%value.substring(9).upper()) "idAsUuid";
+    src.value as value where src.system = 'urn:ietf:rfc:3986' -> tgt.root = (%value.substring(9).upper()) "idAsUuid";
     src.value as value where src.system.startsWith('urn:oid:') then {
       src.system as system -> tgt.root = (system.substring(8)), tgt.extension = value "oidident"; 
     } "system";

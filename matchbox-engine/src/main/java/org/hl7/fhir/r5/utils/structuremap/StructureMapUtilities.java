@@ -45,6 +45,8 @@ import org.hl7.fhir.r5.elementmodel.Element;
 import org.hl7.fhir.r5.elementmodel.FmlParser;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.elementmodel.Property;
+import org.hl7.fhir.r5.extensions.ExtensionDefinitions;
+import org.hl7.fhir.r5.extensions.ExtensionUtilities;
 import org.hl7.fhir.r5.elementmodel.ParserBase.ValidationPolicy;
 import org.hl7.fhir.r5.fhirpath.ExpressionNode;
 import org.hl7.fhir.r5.fhirpath.FHIRLexer;
@@ -73,7 +75,6 @@ import org.hl7.fhir.r5.model.ValueSet.ValueSetExpansionContainsComponent;
 import org.hl7.fhir.r5.renderers.TerminologyRenderer;
 import org.hl7.fhir.r5.terminologies.expansion.ValueSetExpansionOutcome;
 import org.hl7.fhir.r5.terminologies.utilities.ValidationResult;
-import org.hl7.fhir.r5.utils.ToolingExtensions;
 import org.hl7.fhir.r5.utils.UserDataNames;
 import org.hl7.fhir.utilities.CommaSeparatedStringBuilder;
 import org.hl7.fhir.utilities.FhirPublication;
@@ -646,7 +647,7 @@ public class StructureMapUtilities {
       log("FHIR version needs to be 5.0.0");
       return null;
     }
-    FmlParser fp = new FmlParser(context);
+    FmlParser fp = new FmlParser(context, fpe);
     fp.setupValidation(ValidationPolicy.EVERYTHING);     
     List<ValidationMessage> errors = new ArrayList<ValidationMessage>();
     Element res = fp.parse(errors, Utilities.stripBOM(text));
@@ -2133,8 +2134,8 @@ public class StructureMapUtilities {
     String id = getLogicalMappingId(sd);
     if (id == null)
       return null;
-    String prefix = ToolingExtensions.readStringExtension(sd, ToolingExtensions.EXT_MAPPING_PREFIX);
-    String suffix = ToolingExtensions.readStringExtension(sd, ToolingExtensions.EXT_MAPPING_SUFFIX);
+    String prefix = ExtensionUtilities.readStringExtension(sd, ExtensionDefinitions.EXT_MAPPING_PREFIX);
+    String suffix = ExtensionUtilities.readStringExtension(sd, ExtensionDefinitions.EXT_MAPPING_SUFFIX);
     if (prefix == null || suffix == null)
       return null;
     // we build this by text. Any element that has a mapping, we put it's mappings inside it....
