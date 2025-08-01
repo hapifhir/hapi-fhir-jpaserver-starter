@@ -34,7 +34,9 @@ public class CrProperties {
 		this.cql = cql;
 	}
 
-	public TerminologyServerClientSettings getTerminologyServerClientSettings() { return terminologyServerClientSettings; }
+	public TerminologyServerClientSettings getTerminologyServerClientSettings() {
+		return terminologyServerClientSettings;
+	}
 
 	public void setTerminologyServerClientSettings(TerminologyServerClientSettings terminologyServerClientSettings) {
 		this.terminologyServerClientSettings = terminologyServerClientSettings;
