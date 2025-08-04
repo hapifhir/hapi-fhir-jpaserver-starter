@@ -15,7 +15,7 @@ public class UpdatedCdsCrService extends CdsCrService {
 	private final IAdapterFactory adapterFactory;
 
 	public UpdatedCdsCrService(RequestDetails theRequestDetails, IRepository theRepository) {
-		super(theRequestDetails, theRepository);
+		super(theRequestDetails, (org.opencds.cqf.fhir.api.Repository) theRepository, null);
 		adapterFactory = IAdapterFactory.forFhirContext(theRepository.fhirContext());
 	}
 
