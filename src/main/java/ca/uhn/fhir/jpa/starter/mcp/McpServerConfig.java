@@ -42,7 +42,7 @@ public class McpServerConfig implements WebMvcConfigurer {
     public McpSyncServer syncServer(McpSyncServer mcpSyncServer, SyncToolSpecGenerator syncToolSpecGenerator) {
 
 
-        syncToolSpecGenerator.getSyncTools().stream().forEach(toolSpec -> mcpSyncServer.addTool(toolSpec));
+        syncToolSpecGenerator.getSyncTools().stream().forEach(mcpSyncServer::addTool);
         return mcpSyncServer;
     }
 
