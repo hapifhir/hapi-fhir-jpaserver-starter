@@ -5,17 +5,23 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.spec.McpSchema;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+@Component
 public class CallToolResultFactory {
 
-	public static McpSchema.CallToolResult success(
+	@Autowired
+	private FhirContext fhirContext;
+
+	public McpSchema.CallToolResult success(
 			String resourceType, Interaction interaction, Object response, int status) {
 		Map<String, Object> payload = Map.of(
 				"resourceType", resourceType,
 				"interaction", interaction,
-				"response", FhirContext.forR4().newJsonParser().encodeResourceToString((IBaseResource) response),
+				"response", fhirContext.newJsonParser().encodeResourceToString((IBaseResource) response),
 				"status", status);
 
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -31,7 +37,7 @@ public class CallToolResultFactory {
 				.build();
 	}
 
-	public static McpSchema.CallToolResult failure(String message) {
+	public McpSchema.CallToolResult failure(String message) {
 		return McpSchema.CallToolResult.builder()
 				.isError(true)
 				.addTextContent(message)
