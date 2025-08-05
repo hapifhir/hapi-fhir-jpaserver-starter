@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class CallToolResultFactory {
 
-	public static McpSchema.CallToolResult success(String resourceType, String interaction, Object response, int status) {
+	public static McpSchema.CallToolResult success(String resourceType, Interaction interaction, Object response, int status) {
 		Map<String, Object> payload = Map.of(
 			"resourceType", resourceType,
 			"interaction", interaction,

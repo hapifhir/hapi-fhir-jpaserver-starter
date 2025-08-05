@@ -1,6 +1,8 @@
 package ca.uhn.fhir.jpa.starter.mcp;
 
 import ca.uhn.fhir.context.FhirContext;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -8,18 +10,31 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+
+
 public class RequestBuilder {
 
 	private final FhirContext fhirContext;
 	private final String resourceType;
 	private final Interaction interaction;
 	private final Map<String, Object> config;
+	private final ObjectMapper mapper = new ObjectMapper();
+	private final String headers;
+	private String resource;
 
-	public RequestBuilder(FhirContext fhirContext, String resourceType, Interaction interaction, Map<String, Object> config) {
-		this.fhirContext = fhirContext;
-		this.resourceType = resourceType;
+	public RequestBuilder(FhirContext fhirContext, Map<String, Object> contextMap, Interaction interaction) {
+		this.config = contextMap;
+		this.resourceType = contextMap.get("resourceType") instanceof String rt ? rt : null;
+		this.headers = contextMap.get("headers") instanceof String h ? h : null;
+		this.resource = null;
+		try {
+			resource = mapper.writeValueAsString(contextMap.get("resource"));
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 		this.interaction = interaction;
-		this.config = config;
+		this.fhirContext = fhirContext;
+
 	}
 
 	public MockHttpServletRequest buildRequest() {
@@ -73,10 +88,6 @@ public class RequestBuilder {
 	private void applyResourceBody(MockHttpServletRequest req, String key) {
 		Object resourceObj = config.get(key);
 		String json = new Gson().toJson(resourceObj, Map.class);
-        /*if (!(resourceObj instanceof IBaseResource)) {
-            throw new IllegalArgumentException("Missing or invalid '" + key + "' for " + interaction.getName());
-        }
-        String serialized = fhirContext.newJsonParser().encodeResourceToString((IBaseResource) resourceObj);*/
 		req.setContent(json.getBytes(StandardCharsets.UTF_8));
 	}
 

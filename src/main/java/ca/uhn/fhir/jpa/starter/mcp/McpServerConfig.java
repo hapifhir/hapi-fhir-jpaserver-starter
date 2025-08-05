@@ -1,26 +1,15 @@
 package ca.uhn.fhir.jpa.starter.mcp;
 
-import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.server.MCPBridge;
 import ca.uhn.fhir.rest.server.RestfulServer;
-import ca.uhn.fhir.rest.server.SyncToolSpecGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.modelcontextprotocol.server.McpServer;
-import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServer;
-import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.server.transport.HttpServletSseServerTransportProvider;
-import io.modelcontextprotocol.spec.McpSchema;
-import io.modelcontextprotocol.spec.McpServerTransportProvider;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
-
-import java.util.Optional;
 
 
 //https://mcp-cn.ssshooter.com/sdk/java/mcp-server#sse-servlet
@@ -33,18 +22,17 @@ import java.util.Optional;
 @EnableWebMvc
 public class McpServerConfig implements WebMvcConfigurer {
 
-    @Bean
-    public SyncToolSpecGenerator syncToolSpecGenerator(RestfulServer restfulServer, FhirContext fhirContext, Optional<IncrementalSyncStrategy> incrementalSyncStrategy) {
-        return new SyncToolSpecGenerator(restfulServer, fhirContext, incrementalSyncStrategy);
-    }
+	@Bean
+	public MCPBridge mcpBridge(RestfulServer restfulServer) {
+		return new MCPBridge(restfulServer);
+	}
 
-    @Bean
-    public McpSyncServer syncServer(McpSyncServer mcpSyncServer, SyncToolSpecGenerator syncToolSpecGenerator) {
+	@Bean
+	public McpSyncServer syncServer(McpSyncServer mcpSyncServer, MCPBridge mcpBridge) {
 
-
-        syncToolSpecGenerator.getSyncTools().stream().forEach(mcpSyncServer::addTool);
-        return mcpSyncServer;
-    }
+		mcpBridge.generateTools().stream().forEach(mcpSyncServer::addTool);
+		return mcpSyncServer;
+	}
 
     /*@Bean
 	@Primary

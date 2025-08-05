@@ -1,5 +1,7 @@
 package ca.uhn.fhir.jpa.starter.mcp;
 
+import ca.uhn.fhir.rest.api.RequestTypeEnum;
+
 public enum Interaction {
 	SEARCH("search"),
 	READ("read"),
@@ -16,6 +18,16 @@ public enum Interaction {
 
 	public String getName() {
 		return name;
+	}
+
+	public RequestTypeEnum asRequestType() {
+		return switch (this) {
+			case SEARCH, READ -> RequestTypeEnum.GET;
+			case CREATE -> RequestTypeEnum.POST;
+			case UPDATE -> RequestTypeEnum.PUT;
+			case DELETE -> RequestTypeEnum.DELETE;
+			case PATCH -> RequestTypeEnum.PATCH;
+		};
 	}
 
 	public static Interaction fromString(String s) {
