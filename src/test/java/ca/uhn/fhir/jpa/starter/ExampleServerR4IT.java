@@ -1,6 +1,8 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.jpa.config.HibernatePropertiesProvider;
+import ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect;
 import ca.uhn.fhir.jpa.searchparam.config.NicknameServiceConfig;
 import ca.uhn.fhir.jpa.starter.cr.CrProperties;
 import ca.uhn.fhir.model.primitive.IdDt;
@@ -79,6 +81,9 @@ class ExampleServerR4IT implements IServerSupport {
 
 	@Autowired
 	private CrProperties crProperties;
+
+	@Autowired
+	private HibernatePropertiesProvider myHibernatePropertiesProvider;
 
 	@LocalServerPort
 	private int port;
@@ -365,6 +370,11 @@ class ExampleServerR4IT implements IServerSupport {
 		assertEquals("Myocardial infarction", ((StringType) remoteResult.getParameterValue("display")).getValue());
 
 		Parameters localResult = ourClient.operation().onType(CodeSystem.class).named("$validate-code").withParameter(Parameters.class, "url", new UrlType(testCodeSystem)).andParameter("coding", new Coding(testCodeSystem, "yes", null)).execute();
+	}
+
+	@Test
+	public void testHibernatePropertiesProvider_GetDialect() {
+		assertEquals(HapiFhirH2Dialect.class, myHibernatePropertiesProvider.getDialect().getClass());
 	}
 
 	@BeforeEach
