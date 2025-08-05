@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class TransformTest {
 	private static final String TARGET_SERVER = "http://localhost:8086/matchboxv3";
-	private static final FhirContext FHIR_CONTEXT = FhirVersionEnum.R4.newContextCached();
+	private static final FhirContext FHIR_CONTEXT = FhirContext.R4.newContextCached();
 
 	private final ValidationClient validationClient = new ValidationClient(FHIR_CONTEXT, TARGET_SERVER + "/fhir");
 	private final HttpClient httpClient = HttpClient.newHttpClient();

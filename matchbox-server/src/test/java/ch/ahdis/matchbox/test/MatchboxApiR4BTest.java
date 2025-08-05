@@ -59,8 +59,8 @@ public class MatchboxApiR4BTest {
 
 	private String targetServer = "http://localhost:8083/matchboxv3/fhir";
 
-	private final FhirContext context = FhirVersionEnum.R4B.newContext();
-
+	private final FhirContext context = FhirContext.R4B.newContextCached();
+	
 	@BeforeAll
 	void waitUntilStartup() throws Exception {
 		Thread.sleep(10000); // give the server some time to start up

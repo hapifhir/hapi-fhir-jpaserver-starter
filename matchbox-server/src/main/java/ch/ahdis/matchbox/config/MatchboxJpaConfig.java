@@ -392,16 +392,6 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	}
 
 	@Bean
-	public CachingValidationSupport validationSupportChain(@Qualifier(JpaConfig.JPA_VALIDATION_SUPPORT_CHAIN) IValidationSupport theJpaValidationSupportChain) {
-		// Short timeout for code translation because TermConceptMappingSvcImpl has its own caching
-		CachingValidationSupport.CacheTimeouts cacheTimeouts =
-			CachingValidationSupport.CacheTimeouts.defaultValues().setTranslateCodeMillis(1000);
-
-		return new CachingValidationSupport(
-			theJpaValidationSupportChain, cacheTimeouts, false);
-	}
-
-	@Bean
 	public IJobPartitionProvider jobPartitionProvider(
 			FhirContext theFhirContext,
 			IRequestPartitionHelperSvc theRequestPartitionHelperSvc,

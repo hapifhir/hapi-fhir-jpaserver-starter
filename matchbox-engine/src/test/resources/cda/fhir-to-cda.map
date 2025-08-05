@@ -27,6 +27,13 @@ group BundleToClinicalDocument(source bundle : Bundle, target recordTarget : Rec
   };
 }
 
+group SectionCdaSection(source section, target cdasection) {
+  section.title as title ->  cdasection.title as cdatitle,  cdatitle.xmlText = title;
+  section.text as text then {
+    text.div as div -> cdasection.text = div;
+  };
+}
+
 group CompositionClinicalDocument(source bundle : Bundle, source composition : Composition, target recordTarget : RecordTarget, target author : Author, target cda : ClinicalDocument) {
   composition.title as title -> cda.title as t then {
     title -> t.xmlText = title "titleInner";
@@ -42,6 +49,11 @@ group CompositionClinicalDocument(source bundle : Bundle, source composition : C
     } "uuid";
     entry.resource as patient where ('Patient' + '/' + $this.id) in %composition.subject.reference then PatientRecordTarget(patient, bundle, recordTarget) "patient";
   } "patient";
+
+  composition.section as section -> cda.component as component then {
+    section -> component.contextConductionInd = true "contextConductionInd";
+    section ->  component.structuredBody as structuredBody,  structuredBody.component as component,  component.section as cdasection then SectionCdaSection(section, cdasection) "cdasection";
+  };
 }
 
 group PatientRecordTarget(source src : Patient, source bundle : Bundle, target tgt : RecordTarget) {
@@ -75,7 +87,7 @@ group IdentifierII(source src : Identifier, target tgt : II)  {
     src.value as value where src.system.empty() and src.value.startsWith('urn:uuid:') -> tgt.root = (%value.substring(9).upper()) "idAsUuid";
     src.value as value where src.system = 'urn:ietf:rfc:3986' -> tgt.root = (%value.substring(9).upper()) "idAsUuid";
     src.value as value where src.system.startsWith('urn:oid:') then {
-      src.system as system -> tgt.root = (system.substring(8)), tgt.extension = value "oidident"; 
+      src.system as system -> tgt.root = (%system.substring(8)), tgt.extension = value "oidident"; 
     } "system";
 }
   

@@ -55,7 +55,7 @@ public class MatchboxApiR5onR4Test {
 
   private String targetServer = "http://localhost:8085/matchboxv3/fhir";
 
-  private final FhirContext context = FhirVersionEnum.R4.newContext();
+  private final FhirContext context = FhirContext.R4.newContext();
 
   @BeforeAll
   void waitUntilStartup() throws Exception {

@@ -28,8 +28,4 @@ public class EngineLoggingService implements ILoggingService {
     }
   }
 
-  @Override
-  public boolean isDebugLogging() {
-    return debug;
-  }
 }

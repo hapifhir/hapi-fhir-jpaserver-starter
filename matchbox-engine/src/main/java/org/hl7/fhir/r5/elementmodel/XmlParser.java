@@ -872,19 +872,23 @@ public class XmlParser extends ParserBase {
       }
     } else if (element.isPrimitive() || (element.hasType() && isPrimitive(element.getType()))) {
       if (element.getType().equals("xhtml")) {
+        if (element.getXhtml()==null) {
+          XhtmlParser xhtml = new XhtmlParser();
+          element.setXhtml(xhtml.setXmlMode(true).parse(element.getValue(), null).getDocumentElement());
+        } 
         if (isElideElements() && element.isElided() && xml.canElide())
           xml.elide();
         else {
+          
           if (isCdaText(element.getProperty())) {
-            new CDANarrativeFormat().convert(xml, element.getXhtml());
+          	// matchbox patch
+          	new CDANarrativeFormat().convert(xml, element.getXhtml());
           } else {
             //matchbox patch
             if (element.getXhtml() != null) {
                String xhtml = new XhtmlComposer(XhtmlComposer.XML, false).setCanonical(xml.isCanonical()).compose(element.getXhtml());            
                xml.escapedText(xhtml);
-            } else {
-               xml.escapedText(element.getValue());
-            }
+            } 
             if (!markedXhtml) {
               xml.anchor("end-xhtml");
               markedXhtml = true;
