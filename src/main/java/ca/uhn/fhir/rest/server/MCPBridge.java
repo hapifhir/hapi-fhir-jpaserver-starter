@@ -2,9 +2,9 @@ package ca.uhn.fhir.rest.server;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.starter.mcp.CallToolResultFactory;
-import ca.uhn.fhir.jpa.starter.mcp.ToolFactory;
 import ca.uhn.fhir.jpa.starter.mcp.Interaction;
 import ca.uhn.fhir.jpa.starter.mcp.RequestBuilder;
+import ca.uhn.fhir.jpa.starter.mcp.ToolFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.server.McpServerFeatures;
@@ -34,15 +34,30 @@ public class MCPBridge {
 
 		try {
 			return List.of(
-				new McpServerFeatures.SyncToolSpecification(ToolFactory.createFhirResource(), (exchange, contextMap) -> getToolResult(contextMap, Interaction.CREATE)),
-				new McpServerFeatures.SyncToolSpecification(ToolFactory.readFhirResource(), (exchange, contextMap) -> getToolResult(contextMap, Interaction.READ)),
-				new McpServerFeatures.SyncToolSpecification(ToolFactory.updateFhirResource(), (exchange, contextMap) -> getToolResult(contextMap, Interaction.UPDATE)),
-				new McpServerFeatures.SyncToolSpecification(ToolFactory.deleteFhirResource(), (exchange, contextMap) -> getToolResult(contextMap, Interaction.DELETE)),
-				new McpServerFeatures.SyncToolSpecification(ToolFactory.conditionalPatchFhirResource(), (exchange, contextMap) -> getToolResult(contextMap, Interaction.PATCH)),
-				new McpServerFeatures.SyncToolSpecification(ToolFactory.searchFhirResources(), (exchange, contextMap) -> getToolResult(contextMap, Interaction.SEARCH)),
-				new McpServerFeatures.SyncToolSpecification(ToolFactory.conditionalUpdateFhirResource(), (exchange, contextMap) -> getToolResult(contextMap, Interaction.UPDATE)),
-				new McpServerFeatures.SyncToolSpecification(ToolFactory.patchFhirResource(), (exchange, contextMap) -> getToolResult(contextMap, Interaction.PATCH))
-			);
+					new McpServerFeatures.SyncToolSpecification(
+							ToolFactory.createFhirResource(),
+							(exchange, contextMap) -> getToolResult(contextMap, Interaction.CREATE)),
+					new McpServerFeatures.SyncToolSpecification(
+							ToolFactory.readFhirResource(),
+							(exchange, contextMap) -> getToolResult(contextMap, Interaction.READ)),
+					new McpServerFeatures.SyncToolSpecification(
+							ToolFactory.updateFhirResource(),
+							(exchange, contextMap) -> getToolResult(contextMap, Interaction.UPDATE)),
+					new McpServerFeatures.SyncToolSpecification(
+							ToolFactory.deleteFhirResource(),
+							(exchange, contextMap) -> getToolResult(contextMap, Interaction.DELETE)),
+					new McpServerFeatures.SyncToolSpecification(
+							ToolFactory.conditionalPatchFhirResource(),
+							(exchange, contextMap) -> getToolResult(contextMap, Interaction.PATCH)),
+					new McpServerFeatures.SyncToolSpecification(
+							ToolFactory.searchFhirResources(),
+							(exchange, contextMap) -> getToolResult(contextMap, Interaction.SEARCH)),
+					new McpServerFeatures.SyncToolSpecification(
+							ToolFactory.conditionalUpdateFhirResource(),
+							(exchange, contextMap) -> getToolResult(contextMap, Interaction.UPDATE)),
+					new McpServerFeatures.SyncToolSpecification(
+							ToolFactory.patchFhirResource(),
+							(exchange, contextMap) -> getToolResult(contextMap, Interaction.PATCH)));
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
@@ -59,18 +74,25 @@ public class MCPBridge {
 
 			if (status >= 200 && status < 300) {
 				if (body.isBlank()) {
-					return McpSchema.CallToolResult.builder().isError(true).addTextContent("Empty successful response for " + interaction).build();
+					return McpSchema.CallToolResult.builder()
+							.isError(true)
+							.addTextContent("Empty successful response for " + interaction)
+							.build();
 				}
 				IBaseResource parsed = fhirContext.newJsonParser().parseResource(body);
 
-				return CallToolResultFactory.success(contextMap.get("resourceType").toString(), interaction, parsed, status);
+				return CallToolResultFactory.success(
+						contextMap.get("resourceType").toString(), interaction, parsed, status);
 			} else {
 				return CallToolResultFactory.failure(String.format("FHIR server error %d: %s", status, body));
 			}
 		} catch (IOException e) {
 			return CallToolResultFactory.failure("Dispatch error: " + e.getMessage());
 		} catch (Exception e) {
-			return McpSchema.CallToolResult.builder().isError(true).addTextContent("Unexpected error: " + e.getMessage()).build();
+			return McpSchema.CallToolResult.builder()
+					.isError(true)
+					.addTextContent("Unexpected error: " + e.getMessage())
+					.build();
 		}
 	}
 }

@@ -29,11 +29,4 @@ public enum Interaction {
 			case PATCH -> RequestTypeEnum.PATCH;
 		};
 	}
-
-	public static Interaction fromString(String s) {
-		for (Interaction i : values()) {
-			if (i.name.equalsIgnoreCase(s)) return i;
-		}
-		throw new IllegalArgumentException("Unknown interaction: " + s);
-	}
 }

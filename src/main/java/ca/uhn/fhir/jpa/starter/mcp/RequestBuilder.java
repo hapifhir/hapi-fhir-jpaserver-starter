@@ -10,8 +10,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-
-
 public class RequestBuilder {
 
 	private final FhirContext fhirContext;
@@ -34,7 +32,6 @@ public class RequestBuilder {
 		}
 		this.interaction = interaction;
 		this.fhirContext = fhirContext;
-
 	}
 
 	public MockHttpServletRequest buildRequest() {

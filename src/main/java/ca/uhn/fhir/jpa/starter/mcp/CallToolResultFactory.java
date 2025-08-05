@@ -10,13 +10,13 @@ import java.util.Map;
 
 public class CallToolResultFactory {
 
-	public static McpSchema.CallToolResult success(String resourceType, Interaction interaction, Object response, int status) {
+	public static McpSchema.CallToolResult success(
+			String resourceType, Interaction interaction, Object response, int status) {
 		Map<String, Object> payload = Map.of(
-			"resourceType", resourceType,
-			"interaction", interaction,
-			"response", FhirContext.forR4().newJsonParser().encodeResourceToString((IBaseResource) response),
-			"status", status
-		);
+				"resourceType", resourceType,
+				"interaction", interaction,
+				"response", FhirContext.forR4().newJsonParser().encodeResourceToString((IBaseResource) response),
+				"status", status);
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		String jacksonData = "";
@@ -26,10 +26,15 @@ public class CallToolResultFactory {
 			throw new RuntimeException(e);
 		}
 
-		return McpSchema.CallToolResult.builder().addContent(new McpSchema.TextContent(jacksonData)).build();
+		return McpSchema.CallToolResult.builder()
+				.addContent(new McpSchema.TextContent(jacksonData))
+				.build();
 	}
 
 	public static McpSchema.CallToolResult failure(String message) {
-		return McpSchema.CallToolResult.builder().isError(true).addTextContent(message).build();
+		return McpSchema.CallToolResult.builder()
+				.isError(true)
+				.addTextContent(message)
+				.build();
 	}
 }

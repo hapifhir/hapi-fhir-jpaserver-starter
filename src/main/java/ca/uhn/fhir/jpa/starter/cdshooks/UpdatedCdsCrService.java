@@ -24,8 +24,8 @@ public class UpdatedCdsCrService extends CdsCrService {
 		var parameters = adapterFactory.createParameters(super.encodeParams(theJson));
 		if (parameters.hasParameter(APPLY_PARAMETER_DATA)) {
 			parameters.addParameter(
-				"useServerData",
-				booleanTypeForVersion(parameters.fhirContext().getVersion().getVersion(), false));
+					"useServerData",
+					booleanTypeForVersion(parameters.fhirContext().getVersion().getVersion(), false));
 		}
 		return (IBaseParameters) parameters.get();
 	}
