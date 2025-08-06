@@ -59,7 +59,7 @@ public class MatchboxApiR4BTest {
 
 	private String targetServer = "http://localhost:8083/matchboxv3/fhir";
 
-	private final FhirContext context = FhirContext.R4B.newContextCached();
+	private final FhirContext context = FhirContext.forR4BCached();
 	
 	@BeforeAll
 	void waitUntilStartup() throws Exception {

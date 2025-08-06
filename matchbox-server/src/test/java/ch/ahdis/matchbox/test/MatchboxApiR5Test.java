@@ -63,7 +63,7 @@ public class MatchboxApiR5Test {
 
 	private String targetServer = "http://localhost:8082/matchboxv3/fhir";
 
-	private final FhirContext context = FhirContext.R5.newContext();
+	private final FhirContext context = FhirContext.forR5Cached();
 
 	@BeforeAll
 	void waitUntilStartup() throws Exception {

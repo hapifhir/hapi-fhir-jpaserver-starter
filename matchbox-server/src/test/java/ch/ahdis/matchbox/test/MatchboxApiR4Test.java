@@ -46,7 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 class MatchboxApiR4Test {
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MatchboxApiR4Test.class);
 	private static final String TARGET_SERVER = "http://localhost:8081/matchboxv3";
-	private static final FhirContext FHIR_CONTEXT = FhirContext.R4.newContextCached();
+	private static final FhirContext FHIR_CONTEXT = FhirContext.forR4Cached();
 
 	private final ValidationClient validationClient = new ValidationClient(FHIR_CONTEXT, TARGET_SERVER + "/fhir");
 	private final HttpClient httpClient = HttpClient.newHttpClient();
