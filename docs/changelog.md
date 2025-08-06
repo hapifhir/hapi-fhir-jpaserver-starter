@@ -1,4 +1,4 @@
-2025/07/01 Release 4.0.10
+2025/08/xx Release 4.0.10
 - update org.hl7.fhir.core 6.6.0 [#415](https://github.com/ahdis/matchbox/issues/415)
 - document validation parameters [#407](https://github.com/ahdis/matchbox/issues/407)
 
