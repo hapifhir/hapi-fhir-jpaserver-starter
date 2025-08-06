@@ -6,7 +6,6 @@ import ca.uhn.fhir.jpa.starter.mcp.Interaction;
 import ca.uhn.fhir.jpa.starter.mcp.RequestBuilder;
 import ca.uhn.fhir.jpa.starter.mcp.ToolFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.spec.McpSchema;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -23,11 +22,12 @@ public class MCPBridge {
 
 	private final RestfulServer restfulServer;
 	private final FhirContext fhirContext;
-	private final ObjectMapper mapper = new ObjectMapper();
+	private final CallToolResultFactory callToolResultFactory;
 
-	public MCPBridge(RestfulServer restfulServer) {
+	public MCPBridge(RestfulServer restfulServer, CallToolResultFactory callToolResultFactory) {
 		this.restfulServer = restfulServer;
 		this.fhirContext = restfulServer.getFhirContext();
+		this.callToolResultFactory = callToolResultFactory;
 	}
 
 	public List<McpServerFeatures.SyncToolSpecification> generateTools() {
@@ -84,13 +84,13 @@ public class MCPBridge {
 				}
 				IBaseResource parsed = fhirContext.newJsonParser().parseResource(body);
 
-				return CallToolResultFactory.success(
+				return callToolResultFactory.success(
 						contextMap.get("resourceType").toString(), interaction, parsed, status);
 			} else {
-				return CallToolResultFactory.failure(String.format("FHIR server error %d: %s", status, body));
+				return callToolResultFactory.failure(String.format("FHIR server error %d: %s", status, body));
 			}
 		} catch (IOException e) {
-			return CallToolResultFactory.failure("Dispatch error: " + e.getMessage());
+			return callToolResultFactory.failure("Dispatch error: " + e.getMessage());
 		} catch (Exception e) {
 			return McpSchema.CallToolResult.builder()
 					.isError(true)

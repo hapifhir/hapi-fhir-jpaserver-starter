@@ -22,8 +22,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class McpServerConfig implements WebMvcConfigurer {
 
 	@Bean
-	public MCPBridge mcpBridge(RestfulServer restfulServer) {
-		return new MCPBridge(restfulServer);
+	public MCPBridge mcpBridge(RestfulServer restfulServer, CallToolResultFactory callToolResultFactory) {
+		return new MCPBridge(restfulServer, callToolResultFactory);
 	}
 
 	@Bean
