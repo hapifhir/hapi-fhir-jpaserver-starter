@@ -57,7 +57,10 @@ public class MCPBridge {
 							(exchange, contextMap) -> getToolResult(contextMap, Interaction.UPDATE)),
 					new McpServerFeatures.SyncToolSpecification(
 							ToolFactory.patchFhirResource(),
-							(exchange, contextMap) -> getToolResult(contextMap, Interaction.PATCH)));
+							(exchange, contextMap) -> getToolResult(contextMap, Interaction.PATCH)),
+					new McpServerFeatures.SyncToolSpecification(
+							ToolFactory.createFhirTransaction(),
+							(exchange, contextMap) -> getToolResult(contextMap, Interaction.TRANSACTION)));
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}

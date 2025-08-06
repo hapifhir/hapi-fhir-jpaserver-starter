@@ -181,6 +181,24 @@ public class ToolFactory {
 		}
 		""";
 
+	private static final String CREATE_FHIR_TRANSACTION_SCHEMA =
+			"""
+	{
+	"type": "object",
+	"properties": {
+		"resourceType": {
+		"type": "string",
+		"description": "A Bundle resource type with type 'transaction' containing multiple FHIR resources"
+		},
+		"resource": {
+		"type": "object",
+		"description": "A FHIR Bundle Resource content in JSON format"
+		}
+	},
+	"required": ["resourceType", "resource"]
+	}
+	""";
+
 	public static Tool readFhirResource() throws JsonProcessingException {
 		return new Tool(
 				"read-fhir-resource",
@@ -235,6 +253,13 @@ public class ToolFactory {
 				"search-fhir-resources",
 				"Search an existing FHIR resources",
 				mapper.readValue(SEARCH_FHIR_RESOURCES_SCHEMA, McpSchema.JsonSchema.class));
+	}
+
+	public static Tool createFhirTransaction() throws JsonProcessingException {
+		return new Tool(
+				"create-fhir-transaction",
+				"Create a FHIR transaction",
+				mapper.readValue(CREATE_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class));
 	}
 
 	public static final ObjectMapper mapper = new ObjectMapper()

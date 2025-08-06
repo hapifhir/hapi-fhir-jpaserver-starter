@@ -22,7 +22,10 @@ public class RequestBuilder {
 
 	public RequestBuilder(FhirContext fhirContext, Map<String, Object> contextMap, Interaction interaction) {
 		this.config = contextMap;
-		this.resourceType = contextMap.get("resourceType") instanceof String rt ? rt : null;
+		if (interaction == Interaction.TRANSACTION) this.resourceType = "";
+		else if (contextMap.get("resourceType") instanceof String rt && !rt.isBlank()) this.resourceType = rt;
+		else throw new IllegalArgumentException("Missing or invalid 'resourceType' in contextMap");
+		// this.resourceType = contextMap.get("resourceType") instanceof String rt ? rt : null;
 		this.headers = contextMap.get("headers") instanceof String h ? h : null;
 		this.resource = null;
 		try {
@@ -52,7 +55,7 @@ public class RequestBuilder {
 				String id = requireString("id");
 				req = new MockHttpServletRequest(method, basePath + "/" + id);
 			}
-			case CREATE -> {
+			case CREATE, TRANSACTION -> {
 				method = "POST";
 				req = new MockHttpServletRequest(method, basePath);
 				applyResourceBody(req, "resource");
