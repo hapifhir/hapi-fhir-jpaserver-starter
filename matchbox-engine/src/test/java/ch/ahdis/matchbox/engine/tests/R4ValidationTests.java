@@ -84,10 +84,10 @@ class R4ValidationTests {
 	 *
 	 */
 	@Test
-	void testIngoreErrors() throws Exception {
+	void testIgnoreErrors() throws Exception {
 		final var errors = this.expectInvalid(this.relatedPerson, Manager.FhirFormat.JSON, "http://hl7.org/fhir/StructureDefinition/RelatedPerson");
 		assertEquals(1, errors.size());
- 		assertTrue(errors.get(0).getDetails().getText().startsWith("The extension http://hl7.org/fhir/StructureDefinition/patient-citizenship is not allowed to be used at this point (allowed = e:Patient; this element is [RelatedPerson])"));
+		assertTrue(errors.get(0).getDetails().getText().startsWith("The extension http://hl7.org/fhir/StructureDefinition/patient-citizenship is not allowed to be used at this point (this element is [RelatedPerson]; allowed for this version = e:Patient)"));
 		engine.addSuppressedError("Extension_EXTP_Context_Wrong", "RelatedPerson");
  		expectValid(this.relatedPerson, Manager.FhirFormat.JSON, "http://hl7.org/fhir/StructureDefinition/RelatedPerson");
 	}

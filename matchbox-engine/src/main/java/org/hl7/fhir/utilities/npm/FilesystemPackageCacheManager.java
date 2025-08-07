@@ -383,14 +383,14 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
     return fetchTheOldWay(id, version);
   }
 
-  public String getLatestVersion(String id) throws IOException {
+  public String getLatestVersion(String id, boolean milestonesOnly) throws IOException {
     id = stripAlias(id);
     for (PackageServer nextPackageServer : getPackageServers()) {
       // special case:
       if (!(Utilities.existsInList(id, CommonPackages.ID_PUBPACK, "hl7.terminology.r5") && PackageServer.SECONDARY_SERVER.equals(nextPackageServer.getUrl()))) {
         PackageClient pc = new PackageClient(nextPackageServer);
         try {
-          return pc.getLatestVersion(id);
+          return pc.getLatestVersion(id, milestonesOnly);
         } catch (IOException e) {
           ourLog.info("Failed to determine latest version of package {} from server: {}", id, nextPackageServer.toString());
         }
@@ -724,7 +724,7 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
 
     if (version == null) {
       try {
-        version = getLatestVersion(id);
+        version = getLatestVersion(id, false);
       } catch (Exception e) {
         version = null;
       }

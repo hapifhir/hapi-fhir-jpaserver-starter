@@ -67,6 +67,7 @@ import org.hl7.fhir.r5.model.ElementDefinition;
 import org.hl7.fhir.r5.model.ElementDefinition.PropertyRepresentation;
 import org.hl7.fhir.r5.model.Enumeration;
 import org.hl7.fhir.r5.model.StructureDefinition;
+
 import org.hl7.fhir.r5.utils.UserDataNames;
 import org.hl7.fhir.r5.utils.formats.XmlLocationAnnotator;
 import org.hl7.fhir.r5.utils.formats.XmlLocationData;
@@ -818,7 +819,8 @@ public class XmlParser extends ParserBase {
     }
     markedXhtml = false;
     xml.start();
-    xml.setDefaultNamespace(e.getProperty().getXmlNamespace());    
+    xml.setDefaultNamespace(e.getProperty().getXmlNamespace());
+
     if (Utilities.isAbsoluteUrl(e.getType())) {
       xml.namespace(urlRoot(e.getType()), "et");
     }
@@ -850,8 +852,9 @@ public class XmlParser extends ParserBase {
       if (isElideElements() && element.isElided() && xml.canElide())
         xml.elide();
       else {
-        if (linkResolver != null)
+        if (linkResolver != null) {
           xml.link(linkResolver.resolveProperty(element.getProperty()));
+        }
         xml.enter(element.getProperty().getXmlNamespace(),elementName);
         if (linkResolver != null && element.getProperty().isReference()) {
           String ref = linkResolver.resolveReference(getReferenceForElement(element));
@@ -860,6 +863,9 @@ public class XmlParser extends ParserBase {
           }
         }
         xml.text(element.getValue());
+        if (linkResolver != null) {
+          xml.link(linkResolver.resolveProperty(element.getProperty()));
+        }
         xml.exit(element.getProperty().getXmlNamespace(),elementName);
       }
     } else if (!element.hasChildren() && !element.hasValue() && !element.hasXhtml()) {
@@ -872,23 +878,19 @@ public class XmlParser extends ParserBase {
       }
     } else if (element.isPrimitive() || (element.hasType() && isPrimitive(element.getType()))) {
       if (element.getType().equals("xhtml")) {
-        if (element.getXhtml()==null) {
+        // matchbox patch https://github.com/ahdis/matchbox/issues/417
+        if ((element.getXhtml()==null)  && (element.getValue() != null)) {
           XhtmlParser xhtml = new XhtmlParser();
           element.setXhtml(xhtml.setXmlMode(true).parse(element.getValue(), null).getDocumentElement());
         } 
         if (isElideElements() && element.isElided() && xml.canElide())
           xml.elide();
         else {
-          
           if (isCdaText(element.getProperty())) {
-          	// matchbox patch
-          	new CDANarrativeFormat().convert(xml, element.getXhtml());
+            new CDANarrativeFormat().convert(xml, element.getXhtml());
           } else {
-            //matchbox patch
-            if (element.getXhtml() != null) {
-               String xhtml = new XhtmlComposer(XhtmlComposer.XML, false).setCanonical(xml.isCanonical()).compose(element.getXhtml());            
-               xml.escapedText(xhtml);
-            } 
+            String xhtml = new XhtmlComposer(XhtmlComposer.XML, false).setCanonical(xml.isCanonical()).compose(element.getXhtml());
+            xml.escapedText(xhtml);
             if (!markedXhtml) {
               xml.anchor("end-xhtml");
               markedXhtml = true;
@@ -913,8 +915,9 @@ public class XmlParser extends ParserBase {
               xml.link(linkResolver.resolveType(element.getType()));
             xml.attribute("value", element.getValue());
           }
-          if (linkResolver != null)
+          if (linkResolver != null) {
             xml.link(linkResolver.resolveProperty(element.getProperty()));
+          }
           if (element.hasChildren()) {
             xml.enter(element.getProperty().getXmlNamespace(), elementName);
             if (linkResolver != null && element.getProperty().isReference()) {
@@ -925,6 +928,9 @@ public class XmlParser extends ParserBase {
             }
             for (Element child : element.getChildren())
               composeElement(xml, child, child.getName(), false);
+            if (linkResolver != null) {
+              xml.link(linkResolver.resolveProperty(element.getProperty()));
+            }
             xml.exit(element.getProperty().getXmlNamespace(),elementName);
           } else
             xml.element(elementName);
@@ -1004,8 +1010,14 @@ public class XmlParser extends ParserBase {
         }
       }
       if (!element.getProperty().getDefinition().hasExtension(ExtensionDefinitions.EXT_ID_CHOICE_GROUP)) {
-        if (!root && element.getSpecial() != null)
-          xml.exit(element.getProperty().getXmlNamespace(),element.getType());
+
+        if (linkResolver != null) {
+          xml.link(linkResolver.resolveProperty(element.getProperty()));
+        }
+        if (!root && element.getSpecial() != null) {
+          xml.exit(element.getProperty().getXmlNamespace(), element.getType());
+        }
+
         if (Utilities.isAbsoluteUrl(elementName)) {
           xml.exit(urlRoot(elementName), urlTail(elementName));
         } else {
