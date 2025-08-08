@@ -13,9 +13,9 @@ helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 
 ## Requirements
 
-| Repository | Name | Version |
-|------------|------|---------|
-| oci://registry-1.docker.io/bitnamicharts | common | 2.31.3 |
+| Repository                               | Name       | Version |
+|------------------------------------------|------------|---------|
+| oci://registry-1.docker.io/bitnamicharts | common     | 2.31.3  |
 | oci://registry-1.docker.io/bitnamicharts | postgresql | 16.7.11 |
 
 ## Values
@@ -98,7 +98,7 @@ INFO[2021-11-20T12:38:04Z] Found Chart directories [charts/hapi-fhir-jpaserver]
 INFO[2021-11-20T12:38:04Z] Generating README Documentation for chart /usr/src/app/charts/hapi-fhir-jpaserver
 ```
 
-## Enable Distributed Tracing based on the OpenTelemtry Java Agent
+## Enable Distributed Tracing based on the OpenTelemetry Java Agent
 
 The container image includes the [OpenTelemetry Java agent JAR](https://github.com/open-telemetry/opentelemetry-java-instrumentation)
 which can be used to enable distributed tracing. It can be configured entirely using environment variables,

@@ -39,7 +39,7 @@ class ExampleServerR4BIT {
 	@Order(0)
 	void testCreateAndRead() {
 		String methodName = "testCreateAndRead";
-		ourLog.info("Entering " + methodName + "()...");
+		ourLog.info("Entering {}()...", methodName);
 
 		Patient pt = new Patient();
 		pt.setActive(true);
@@ -56,51 +56,52 @@ class ExampleServerR4BIT {
 
 	@Test
 	void testBatchPutWithIdenticalTags() {
-		String batchPuts = "{\n" +
-			"\t\"resourceType\": \"Bundle\",\n" +
-			"\t\"id\": \"patients\",\n" +
-			"\t\"type\": \"batch\",\n" +
-			"\t\"entry\": [\n" +
-			"\t\t{\n" +
-			"\t\t\t\"request\": {\n" +
-			"\t\t\t\t\"method\": \"PUT\",\n" +
-			"\t\t\t\t\"url\": \"Patient/pat-1\"\n" +
-			"\t\t\t},\n" +
-			"\t\t\t\"resource\": {\n" +
-			"\t\t\t\t\"resourceType\": \"Patient\",\n" +
-			"\t\t\t\t\"id\": \"pat-1\",\n" +
-			"\t\t\t\t\"meta\": {\n" +
-			"\t\t\t\t\t\"tag\": [\n" +
-			"\t\t\t\t\t\t{\n" +
-			"\t\t\t\t\t\t\t\"system\": \"http://mysystem.org\",\n" +
-			"\t\t\t\t\t\t\t\"code\": \"value2\"\n" +
-			"\t\t\t\t\t\t}\n" +
-			"\t\t\t\t\t]\n" +
-			"\t\t\t\t}\n" +
-			"\t\t\t},\n" +
-			"\t\t\t\"fullUrl\": \"/Patient/pat-1\"\n" +
-			"\t\t},\n" +
-			"\t\t{\n" +
-			"\t\t\t\"request\": {\n" +
-			"\t\t\t\t\"method\": \"PUT\",\n" +
-			"\t\t\t\t\"url\": \"Patient/pat-2\"\n" +
-			"\t\t\t},\n" +
-			"\t\t\t\"resource\": {\n" +
-			"\t\t\t\t\"resourceType\": \"Patient\",\n" +
-			"\t\t\t\t\"id\": \"pat-2\",\n" +
-			"\t\t\t\t\"meta\": {\n" +
-			"\t\t\t\t\t\"tag\": [\n" +
-			"\t\t\t\t\t\t{\n" +
-			"\t\t\t\t\t\t\t\"system\": \"http://mysystem.org\",\n" +
-			"\t\t\t\t\t\t\t\"code\": \"value2\"\n" +
-			"\t\t\t\t\t\t}\n" +
-			"\t\t\t\t\t]\n" +
-			"\t\t\t\t}\n" +
-			"\t\t\t},\n" +
-			"\t\t\t\"fullUrl\": \"/Patient/pat-2\"\n" +
-			"\t\t}\n" +
-			"\t]\n" +
-			"}";
+		String batchPuts = """
+			{
+			\t"resourceType": "Bundle",
+			\t"id": "patients",
+			\t"type": "batch",
+			\t"entry": [
+			\t\t{
+			\t\t\t"request": {
+			\t\t\t\t"method": "PUT",
+			\t\t\t\t"url": "Patient/pat-1"
+			\t\t\t},
+			\t\t\t"resource": {
+			\t\t\t\t"resourceType": "Patient",
+			\t\t\t\t"id": "pat-1",
+			\t\t\t\t"meta": {
+			\t\t\t\t\t"tag": [
+			\t\t\t\t\t\t{
+			\t\t\t\t\t\t\t"system": "http://mysystem.org",
+			\t\t\t\t\t\t\t"code": "value2"
+			\t\t\t\t\t\t}
+			\t\t\t\t\t]
+			\t\t\t\t}
+			\t\t\t},
+			\t\t\t"fullUrl": "/Patient/pat-1"
+			\t\t},
+			\t\t{
+			\t\t\t"request": {
+			\t\t\t\t"method": "PUT",
+			\t\t\t\t"url": "Patient/pat-2"
+			\t\t\t},
+			\t\t\t"resource": {
+			\t\t\t\t"resourceType": "Patient",
+			\t\t\t\t"id": "pat-2",
+			\t\t\t\t"meta": {
+			\t\t\t\t\t"tag": [
+			\t\t\t\t\t\t{
+			\t\t\t\t\t\t\t"system": "http://mysystem.org",
+			\t\t\t\t\t\t\t"code": "value2"
+			\t\t\t\t\t\t}
+			\t\t\t\t\t]
+			\t\t\t\t}
+			\t\t\t},
+			\t\t\t"fullUrl": "/Patient/pat-2"
+			\t\t}
+			\t]
+			}""";
 		Bundle bundle = FhirContext.forR4B().newJsonParser().parseResource(Bundle.class, batchPuts);
 		ourClient.transaction().withBundle(bundle).execute();
 	}
