@@ -1,0 +1,18 @@
+{
+    "hook": "patient-view",
+    "hookInstance": "8d5a3a2e-6d8b-4f7c-bb2d-2f1b8cf1d7a1",
+    "context": {
+        "userId": "Practitioner/123",
+        "patientId": "123",
+        "encounterId": "456"
+    },
+    "prefetch": {
+        "item1": {
+            "resourceType": "Patient",
+            "gender": "male",
+            "birthDate": "1989-10-23",
+            "id": "123",
+            "active": true
+        }
+    }
+}

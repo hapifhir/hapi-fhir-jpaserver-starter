@@ -3,6 +3,7 @@ package ca.uhn.fhir.jpa.starter.mcp;
 import ca.uhn.fhir.rest.api.RequestTypeEnum;
 
 public enum Interaction {
+	CALL_CDS_HOOK("call-cds-hook"),
 	SEARCH("search"),
 	READ("read"),
 	CREATE("create"),
@@ -28,6 +29,7 @@ public enum Interaction {
 			case UPDATE -> RequestTypeEnum.PUT;
 			case DELETE -> RequestTypeEnum.DELETE;
 			case PATCH -> RequestTypeEnum.PATCH;
+			case CALL_CDS_HOOK -> RequestTypeEnum.POST;
 		};
 	}
 }
