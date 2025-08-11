@@ -199,6 +199,55 @@ public class ToolFactory {
 	}
 	""";
 
+	// TODO Add a tool for the CDS Hooks discovery endpoint
+	// Alternatively, should each service be a separate tool?
+
+	// TODO Add other fields from https://cds-hooks.hl7.org/STU2/#http-request-1
+	// TODO Context here is for the patient-view hook, https://cds-hooks.hl7.org/hooks/STU1/patient-view.html#context
+	private static final String CALL_CDS_HOOK_SCHEMA_2_0_1 =
+			"""
+		{
+		"type": "object",
+		"properties": {
+			"service": {
+				"type": "string",
+				"description": "The CDS Service to call."
+			},
+			"hook": {
+				"type": "string",
+				"description": "The hook that triggered this CDS Service call."
+			},
+			"hookInstance": {
+				"type": "string",
+				"description": "A universally unique identifier (UUID) for this particular hook call."
+			},
+			"hookContext": {
+				"type": "object",
+				"description": "Hook-specific contextual data that the CDS service will need.",
+				"properties": {
+					"userId": {
+						"type": "string",
+						"description": "The id of the current user. Must be in the format [ResourceType]/[id]."
+					},
+					"patientId": {
+						"type": "string",
+						"description": "The FHIR Patient.id of the current patient in context"
+					},
+					"encounterId": {
+						"type": "string",
+						"description": "The FHIR Encounter.id of the current encounter in context."
+					}
+				}
+			},
+			"prefetch": {
+				"type": "object",
+				"description": "Additional data to prefetch for the CDS service call."
+			}
+		},
+		"required": ["service", "hook", "hookInstance", "context"]
+		}
+		""";
+
 	public static Tool readFhirResource() throws JsonProcessingException {
 		return new Tool(
 				"read-fhir-resource",
@@ -260,6 +309,13 @@ public class ToolFactory {
 				"create-fhir-transaction",
 				"Create a FHIR transaction",
 				mapper.readValue(CREATE_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class));
+	}
+
+	public static Tool callCdsHook() throws JsonProcessingException {
+		return new Tool(
+				"call-cds-hook",
+				"Call a CDS Hook",
+				mapper.readValue(CALL_CDS_HOOK_SCHEMA_2_0_1, McpSchema.JsonSchema.class));
 	}
 
 	public static final ObjectMapper mapper = new ObjectMapper()
