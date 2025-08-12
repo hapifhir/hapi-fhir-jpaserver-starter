@@ -357,7 +357,9 @@ public class FilesystemPackageCacheManager extends BasePackageCacheManager imple
       String packageName = id + "#" + version;
       switch (packageName) {
         case MatchboxEngine.PACKAGE_R4_TERMINOLOGY:
+        case MatchboxEngine.PACKAGE_R4_TERMINOLOGY65:
         case MatchboxEngine.PACKAGE_R5_TERMINOLOGY:
+        case MatchboxEngine.PACKAGE_R5_TERMINOLOGY65:
         case MatchboxEngine.PACKAGE_R4_UV_EXTENSIONS:
         case MatchboxEngine.PACKAGE_R5_UV_EXTENSIONS:
           ourLog.info("loading from classpath "+id);

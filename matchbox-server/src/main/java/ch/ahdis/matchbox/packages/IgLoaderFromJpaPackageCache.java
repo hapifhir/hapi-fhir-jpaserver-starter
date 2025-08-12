@@ -178,6 +178,11 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 			case R4, R4B -> {
 				if (src.startsWith("hl7.terminology#6.5.0")) {
 					log.info("Requesting to load '{}', loading '{}' instead'", src, PACKAGE_R4_TERMINOLOGY);
+					loadIg(igs, binaries, PACKAGE_R4_TERMINOLOGY65, recursive);
+					return;
+				}
+				if (src.startsWith("hl7.terminology#6.3.0")) {
+					log.info("Requesting to load '{}', loading '{}' instead'", src, PACKAGE_R4_TERMINOLOGY);
 					loadIg(igs, binaries, PACKAGE_R4_TERMINOLOGY, recursive);
 					return;
 				}
@@ -189,6 +194,11 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 			}
 			case R5 -> {
 				if (src.startsWith("hl7.terminology#6.5.0")) {
+					log.info("Requesting to load '{}', loading from classpath '{}' instead'", src, PACKAGE_R5_TERMINOLOGY);
+					loadIg(igs, binaries, PACKAGE_R5_TERMINOLOGY65, recursive);
+					return;
+				}
+				if (src.startsWith("hl7.terminology#6.3.0")) {
 					log.info("Requesting to load '{}', loading from classpath '{}' instead'", src, PACKAGE_R5_TERMINOLOGY);
 					loadIg(igs, binaries, PACKAGE_R5_TERMINOLOGY, recursive);
 					return;
