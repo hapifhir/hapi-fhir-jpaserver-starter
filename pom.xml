@@ -9,7 +9,7 @@
 
     <groupId>health.matchbox</groupId>
     <artifactId>matchbox</artifactId>
-    <version>4.0.10</version>
+    <version>4.0.11</version>
     <packaging>pom</packaging>
     <name>matchbox</name>
     <description>An open-source implementation to support testing and implementation of FHIR based solutions and map or
@@ -51,12 +51,14 @@
         <commons_compress_version>1.27.1</commons_compress_version>
         <commons_dbcp2_version>2.12.0</commons_dbcp2_version>
         <commons_io_version>2.17.0</commons_io_version>
+        <commons_lang3_version>3.18.0</commons_lang3_version>
         <junit_version>5.13.1</junit_version>
         <logback_version>1.5.16</logback_version>
         <jackson_version>2.17.1</jackson_version>
         <okhttp_version>4.12.0</okhttp_version>
         <log4j_to_slf4j_version>2.19.0</log4j_to_slf4j_version>
-        <spring_version>6.1.15</spring_version>
+        <spring_version>6.1.21</spring_version>
+        <spring_context_version>6.1.20</spring_context_version>
         <spring_boot_version>3.3.11</spring_boot_version>
         <testcontainers_version>1.21.1</testcontainers_version>
         <ucum_version>1.0.10</ucum_version>
@@ -66,6 +68,7 @@
         <awaitility_version>4.2.0</awaitility_version>
         <xmlunit_version>2.10.0</xmlunit_version>
         <beanutils_version>1.11.0</beanutils_version>
+
 
 
         <org_commonmark_version>0.21.0</org_commonmark_version>
@@ -97,7 +100,7 @@
 
         <excludePackageNames>org.hl7.*:ca.uhn.*</excludePackageNames>
 
-        <apache_poi_version>5.2.1</apache_poi_version>
+        <apache_poi_version>5.4.0</apache_poi_version>
 
     </properties>
 
@@ -174,6 +177,17 @@
                 <version>${org_commonmark_version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons_lang3_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring_context_version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>ca.uhn.hapi.fhir</groupId>
                 <artifactId>org.hl7.fhir.validation</artifactId>
                 <version>${fhir.core.version}</version>
@@ -216,6 +230,18 @@
             </dependency>
             <dependency>
                 <groupId>ca.uhn.hapi.fhir</groupId>
+                <artifactId>hapi-fhir-server</artifactId>
+                <version>${hapi.fhir.version}</version>
+                <exclusions>
+                    <!-- CVE-2025-7962" "org.eclipse.angus:smtp" -->
+                    <exclusion>
+                        <groupId>org.simplejavamail</groupId>
+                        <artifactId>core-module</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>ca.uhn.hapi.fhir</groupId>
                 <artifactId>hapi-fhir-jpaserver-base</artifactId>
                 <version>${hapi.fhir.version}</version>
                 <exclusions>
@@ -235,6 +261,10 @@
                     <exclusion>
                         <groupId>commons-logging</groupId>
                         <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>commons-lang3</artifactId>
                     </exclusion>
                     <exclusion>
                         <groupId>com.zaxxer</groupId>

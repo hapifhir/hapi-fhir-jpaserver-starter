@@ -5,7 +5,7 @@
     <parent>
         <artifactId>matchbox</artifactId>
         <groupId>health.matchbox</groupId>
-        <version>4.0.10</version>
+        <version>4.0.11</version>
     </parent>
 
     <artifactId>matchbox-server</artifactId>
@@ -27,6 +27,12 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+
         <!-- This dependency includes the core HAPI-FHIR classes -->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
@@ -72,6 +78,12 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-jpaserver-mdm</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- This dependency includes the JPA CQL Server -->
         <!-- This dependency includes the OpenAPI Server -->
@@ -158,6 +170,11 @@
             <groupId>org.awaitility</groupId>
             <artifactId>awaitility</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
         </dependency>
 
         <dependency>
