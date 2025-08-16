@@ -22,8 +22,8 @@ import com.google.gson.JsonSyntaxException;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.spec.McpSchema;
 
-import org.apache.jena.base.Sys;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.stereotype.Component;
-import org.w3._1999.xhtml.I;
 
 import java.io.IOException;
 import java.util.List;
@@ -101,84 +100,8 @@ public class MCPBridge {
 
 	private McpSchema.CallToolResult getToolResult(Map<String, Object> contextMap, Interaction interaction) {
 
-		if (interaction == Interaction.CALL_CDS_HOOK) {
-
-			// Print the keys of contextMap
-			for (String key : contextMap.keySet()) {
-				System.out.println("Context map key: " + key);
-			}
-
-			// TODO Build up CDS Hooks request JSON from contextMap
-			CdsHooksRequest request = new CdsHooksRequest();
-			request.setHook(contextMap.get("hook").toString());
-			request.setHookInstance(contextMap.get("hookInstance").toString());
-
-			// Context
-			CdsServiceRequestContextJson context = new CdsServiceRequestContextJson();
-			Map<String, String> hookContext = (Map<String, String>) contextMap.get("hookContext");
-			if (hookContext.containsKey("userId")) {
-				context.put("userId", hookContext.get("userId").toString());
-			}
-			if (hookContext.containsKey("patientId")) {
-				context.put("patientId", hookContext.get("patientId").toString());
-			}
-			if (hookContext.containsKey("encounterId")) {
-				context.put("encounterId", hookContext.get("encounterId").toString());
-			}
-			request.setContext(context);
-
-			// Prefetch
-			if (contextMap.containsKey("prefetch")) {
-				Object prefetch = contextMap.get("prefetch");
-				Map<String, Object> prefetchMap = (Map<String, Object>) prefetch;
-				for (Map.Entry<String, Object> entry : prefetchMap.entrySet()) {
-					String key = entry.getKey();
-					Object value = entry.getValue();
-
-					// Object is a String -> Object map
-					// Use a standard JSON library to convert it
-					String json = new Gson().toJson(value);
-					System.out.println("Prefetch data for " + key + ": " + value);
-					System.out.println("FHIR JSON: " + json);
-					IBaseResource resource = fhirContext.newJsonParser().parseResource(json);
-					request.addPrefetch(key, resource);
-				}
-			}
-
-			try {
-				String requestString = objectMapper.writeValueAsString(request);
-				System.out.println("CDS Hooks request JSON: " + requestString);
-			} catch (JsonProcessingException e) {
-				e.printStackTrace();
-			}
-			String service = contextMap.get("service").toString();
-			CdsServiceResponseJson serviceResponseJson = cdsServiceRegistry.callService(service, request);
-
-			// Copy from CdsHooksServlet, including the comment below
-			// Using GSON pretty print format as Jackson's is ugly
-			String jsonResponse = "";
-			try {
-				jsonResponse = new GsonBuilder()
-						.disableHtmlEscaping()
-						.setPrettyPrinting()
-						.create()
-						.toJson(JsonParser.parseString(objectMapper.writeValueAsString(serviceResponseJson)));
-			} catch (JsonSyntaxException e) {
-				// TODO Return MCP Error
-				jsonResponse = "{\"error\": \"" + e.getMessage() + "\"}";
-				logger.error(e.getMessage(), e);
-				e.printStackTrace();
-			} catch (JsonProcessingException e) {
-				// TODO Return MCP Error
-				jsonResponse = "{\"error\": \"" + e.getMessage() + "\"}";
-				logger.error(e.getMessage(), e);
-				e.printStackTrace();
-			}
-
-			return McpSchema.CallToolResult.builder()
-				.addContent(new McpSchema.TextContent(jsonResponse))
-				.build();
-		}
+		if (interaction == Interaction.CALL_CDS_HOOK)
+			return invokeCDS(contextMap);
 
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		MockHttpServletRequest request = new RequestBuilder(fhirContext, contextMap, interaction).buildRequest();
@@ -212,5 +135,85 @@ public class MCPBridge {
 					.addTextContent("Unexpected error: " + e.getMessage())
 					.build();
 		}
+	}
+
+	private McpSchema.CallToolResult invokeCDS(Map<String, Object> contextMap) {
+		CdsHooksRequest cdsInvocation = constructCdsHooksRequest(contextMap);
+		CdsServiceResponseJson serviceResponseJson = cdsServiceRegistry.callService(contextMap.get("service").toString(), cdsInvocation);
+		String jsonResponse = constructMCPResponse(serviceResponseJson);
+
+		return McpSchema.CallToolResult.builder()
+			.addContent(new McpSchema.TextContent(jsonResponse))
+			.build();
+	}
+
+	private String constructMCPResponse(CdsServiceResponseJson serviceResponseJson) {
+		// Copy from CdsHooksServlet, including the comment below
+		// Using GSON pretty print format as Jackson's is ugly
+		try {
+			return new GsonBuilder()
+					.disableHtmlEscaping()
+					.setPrettyPrinting()
+					.create()
+					.toJson(JsonParser.parseString(objectMapper.writeValueAsString(serviceResponseJson)));
+		} catch (JsonSyntaxException | JsonProcessingException e) {
+			// TODO Return MCP Error
+			logger.error(e.getMessage(), e);
+			e.printStackTrace();
+			return "{\"error\": \"" + e.getMessage() + "\"}";
+		}
+	}
+
+	private @NotNull CdsHooksRequest constructCdsHooksRequest(Map<String, Object> contextMap) {
+		// Print the keys of contextMap
+		for (String key : contextMap.keySet()) {
+			System.out.println("Context map key: " + key);
+		}
+
+		// TODO Build up CDS Hooks request JSON from contextMap
+		CdsHooksRequest request = new CdsHooksRequest();
+		request.setHook(contextMap.get("hook").toString());
+		request.setHookInstance(contextMap.get("hookInstance").toString());
+
+		// Context
+		CdsServiceRequestContextJson context = new CdsServiceRequestContextJson();
+		Map<String, String> hookContext = (Map<String, String>) contextMap.get("hookContext");
+		if (hookContext.containsKey("userId")) {
+			context.put("userId", hookContext.get("userId").toString());
+		}
+		if (hookContext.containsKey("patientId")) {
+			context.put("patientId", hookContext.get("patientId").toString());
+		}
+		if (hookContext.containsKey("encounterId")) {
+			context.put("encounterId", hookContext.get("encounterId").toString());
+		}
+		request.setContext(context);
+
+		// Prefetch
+		if (contextMap.containsKey("prefetch")) {
+			Object prefetch = contextMap.get("prefetch");
+			Map<String, Object> prefetchMap = (Map<String, Object>) prefetch;
+			for (Map.Entry<String, Object> entry : prefetchMap.entrySet()) {
+				String key = entry.getKey();
+				Object value = entry.getValue();
+
+				// Object is a String -> Object map
+				// Use a standard JSON library to convert it
+				String json = new Gson().toJson(value);
+				System.out.println("Prefetch data for " + key + ": " + value);
+				System.out.println("FHIR JSON: " + json);
+				IBaseResource resource = fhirContext.newJsonParser().parseResource(json);
+				request.addPrefetch(key, resource);
+			}
+		}
+
+		try {
+			String requestString = objectMapper.writeValueAsString(request);
+			System.out.println("CDS Hooks request JSON: " + requestString);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
+		return request;
 	}
 }

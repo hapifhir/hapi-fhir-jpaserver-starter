@@ -308,7 +308,7 @@ public class ToolFactory {
 		return new Tool(
 				"create-fhir-transaction",
 				"Create a FHIR transaction",
-				mapper.readValue(CREATE_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class));
+				mapper.readValue(CREATE_FHIR_TRANSACTION_SCHEMA, McpSchema.JsonSchema.class));
 	}
 
 	public static Tool callCdsHook() throws JsonProcessingException {

@@ -25,11 +25,10 @@ public enum Interaction {
 	public RequestTypeEnum asRequestType() {
 		return switch (this) {
 			case SEARCH, READ -> RequestTypeEnum.GET;
-			case CREATE, TRANSACTION -> RequestTypeEnum.POST;
+			case CREATE, TRANSACTION, CALL_CDS_HOOK -> RequestTypeEnum.POST;
 			case UPDATE -> RequestTypeEnum.PUT;
 			case DELETE -> RequestTypeEnum.DELETE;
 			case PATCH -> RequestTypeEnum.PATCH;
-			case CALL_CDS_HOOK -> RequestTypeEnum.POST;
 		};
 	}
 }

@@ -5,10 +5,10 @@ import ca.uhn.fhir.rest.server.RestfulServer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.server.McpSyncServer;
 import io.modelcontextprotocol.server.transport.HttpServletSseServerTransportProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 // https://mcp-cn.ssshooter.com/sdk/java/mcp-server#sse-servlet
@@ -18,7 +18,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 // https://github.com/spring-projects/spring-ai-examples/blob/main/model-context-protocol/sampling/mcp-weather-webmvc-server/src/main/java/org/springframework/ai/mcp/sample/server/WeatherService.java
 
 @Configuration
-@EnableWebMvc
+@ConditionalOnProperty(
+	prefix = "spring.ai.mcp.server",
+	name = {"enabled"},
+	havingValue = "true"
+)
 public class McpServerConfig implements WebMvcConfigurer {
 
 	@Bean
@@ -40,8 +44,6 @@ public class McpServerConfig implements WebMvcConfigurer {
 
 	@Bean
 	public ServletRegistrationBean customServletBean(HttpServletSseServerTransportProvider transportProvider) {
-		var servetRegistrationBean = new ServletRegistrationBean<>(transportProvider, "/mcp/message", "/sse");
-		return servetRegistrationBean;
-		// return new ServletRegistrationBean(transportProvider);
+		return new ServletRegistrationBean<>(transportProvider, "/mcp/message", "/sse");
 	}
 }

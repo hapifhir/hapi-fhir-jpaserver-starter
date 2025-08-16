@@ -25,7 +25,7 @@ public class CallToolResultFactory {
 				"status", status);
 
 		ObjectMapper objectMapper = new ObjectMapper();
-		String jacksonData = "";
+		String jacksonData;
 		try {
 			jacksonData = objectMapper.writeValueAsString(payload);
 		} catch (JsonProcessingException e) {

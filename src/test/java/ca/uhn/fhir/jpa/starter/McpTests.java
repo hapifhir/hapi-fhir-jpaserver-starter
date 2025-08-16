@@ -24,7 +24,7 @@ public class McpTests {
 			return null;
 		};
 
-		HttpClientSseClientTransport transport = HttpClientSseClientTransport.builder("http://localhost:8080/sse").build();
+		HttpClientSseClientTransport transport = HttpClientSseClientTransport.builder("http://localhost:8080/mcp").build();
 		// Create a sync client with custom configuration
 		McpSchema.Role response = null;
 		McpSyncClient client = McpClient.sync(transport).requestTimeout(Duration.ofSeconds(10)).capabilities(McpSchema.ClientCapabilities.builder().roots(true)      // Enable roots capability
@@ -40,8 +40,9 @@ public class McpTests {
 // List available tools
 		McpSchema.ListToolsResult tools = client.listTools();
 
+		tools.tools().stream().forEach(System.out::println);
 // Call a tool
-		McpSchema.CallToolResult result = client.callTool(new McpSchema.CallToolRequest("calculator", Map.of("operation", "add", "a", 2, "b", 3)));
+		McpSchema.CallToolResult result = client.callTool(new McpSchema.CallToolRequest("read-fhir-resource", Map.of("operation", "add", "a", 2, "b", 3)));
 
 // List and read resources
 		McpSchema.ListResourcesResult resources = client.listResources();

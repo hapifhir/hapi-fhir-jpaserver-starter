@@ -1,8 +1,6 @@
 package ca.uhn.fhir.jpa.starter.mcp;
 
 import ca.uhn.fhir.context.FhirContext;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -16,23 +14,19 @@ public class RequestBuilder {
 	private final String resourceType;
 	private final Interaction interaction;
 	private final Map<String, Object> config;
-	private final ObjectMapper mapper = new ObjectMapper();
-	private final String headers;
-	private String resource;
-
+	/**
+	 * Constructs a RequestBuilder for a specific FHIR interaction.
+	 *
+	 * @param fhirContext the FHIR context
+	 * @param contextMap  a map containing configuration parameters, including 'resourceType'
+	 * @param interaction the type of interaction (e.g., SEARCH, READ, CREATE, etc.)
+	 */
 	public RequestBuilder(FhirContext fhirContext, Map<String, Object> contextMap, Interaction interaction) {
 		this.config = contextMap;
 		if (interaction == Interaction.TRANSACTION) this.resourceType = "";
 		else if (contextMap.get("resourceType") instanceof String rt && !rt.isBlank()) this.resourceType = rt;
 		else throw new IllegalArgumentException("Missing or invalid 'resourceType' in contextMap");
-		// this.resourceType = contextMap.get("resourceType") instanceof String rt ? rt : null;
-		this.headers = contextMap.get("headers") instanceof String h ? h : null;
-		this.resource = null;
-		try {
-			resource = mapper.writeValueAsString(contextMap.get("resource"));
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
-		}
+
 		this.interaction = interaction;
 		this.fhirContext = fhirContext;
 	}
@@ -52,28 +46,28 @@ public class RequestBuilder {
 			}
 			case READ -> {
 				method = "GET";
-				String id = requireString("id");
+				String id = requireString();
 				req = new MockHttpServletRequest(method, basePath + "/" + id);
 			}
 			case CREATE, TRANSACTION -> {
 				method = "POST";
 				req = new MockHttpServletRequest(method, basePath);
-				applyResourceBody(req, "resource");
+				applyResourceBody(req);
 			}
 			case UPDATE -> {
 				method = "PUT";
-				String id = requireString("id");
+				String id = requireString();
 				req = new MockHttpServletRequest(method, basePath + "/" + id);
-				applyResourceBody(req, "resource");
+				applyResourceBody(req);
 			}
 			case DELETE -> {
 				method = "DELETE";
-				String id = requireString("id");
+				String id = requireString();
 				req = new MockHttpServletRequest(method, basePath + "/" + id);
 			}
 			case PATCH -> {
 				method = "PATCH";
-				String id = requireString("id");
+				String id = requireString();
 				req = new MockHttpServletRequest(method, basePath + "/" + id);
 				applyPatchBody(req);
 			}
@@ -85,8 +79,8 @@ public class RequestBuilder {
 		return req;
 	}
 
-	private void applyResourceBody(MockHttpServletRequest req, String key) {
-		Object resourceObj = config.get(key);
+	private void applyResourceBody(MockHttpServletRequest req) {
+		Object resourceObj = config.get("resource");
 		String json = new Gson().toJson(resourceObj, Map.class);
 		req.setContent(json.getBytes(StandardCharsets.UTF_8));
 	}
@@ -107,11 +101,11 @@ public class RequestBuilder {
 		req.setContent(content.getBytes(StandardCharsets.UTF_8));
 	}
 
-	private String requireString(String key) {
-		Object val = config.get(key);
+	private String requireString() {
+		Object val = config.get("id");
 		if (!(val instanceof String s) || s.isBlank()) {
-			throw new IllegalArgumentException("Missing or invalid '" + key + "'");
+			throw new IllegalArgumentException("Missing or invalid '" + "id" + "'");
 		}
-		return (String) val;
+		return s;
 	}
 }
