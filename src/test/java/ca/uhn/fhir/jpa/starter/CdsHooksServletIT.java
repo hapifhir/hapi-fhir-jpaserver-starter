@@ -80,10 +80,10 @@ class CdsHooksServletIT implements IServerSupport {
 		ourCdsBase = "http://localhost:" + port + "/cds-services";
 
 		var cdsServicesJson = myCdsServiceRegistry.getCdsServicesJson();
-		if (cdsServicesJson != null && cdsServicesJson.getServices() != null && !cdsServicesJson.getServices().isEmpty()) {
+		if (cdsServicesJson != null && cdsServicesJson.getServices() != null) {
 			var services = cdsServicesJson.getServices();
-			for (var service : services) {
-				myCdsServiceRegistry.unregisterService(service.getId(), "CR");
+			for (int i = 0; i < services.size(); i++) {
+				myCdsServiceRegistry.unregisterService(services.get(i).getId(), "CR");
 			}
 		}
 	}
