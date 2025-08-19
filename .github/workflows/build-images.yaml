@@ -12,7 +12,8 @@ on:
       - "charts/**"
 env:
   IMAGES: docker.io/hapiproject/hapi
-  PLATFORMS: linux/amd64,linux/arm64/v8
+  PLATFORMS: linux/amd64,linux/arm64
+  GHA_CACHE_SCOPE: hapi-fhir-jpaserver-starter
 
 jobs:
   build:
@@ -51,34 +52,28 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Cache Docker layers
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-
       - name: Build and push default (distroless) image
         id: docker_build
         uses: docker/build-push-action@v5
         with:
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          context: .
+          target: default
+          platforms: ${{ env.PLATFORMS }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
-          platforms: ${{ env.PLATFORMS }}
-          target: default
+          cache-from: type=gha,scope=${{ env.GHA_CACHE_SCOPE }}
+          cache-to: type=gha,mode=max,scope=${{ env.GHA_CACHE_SCOPE }}
 
       - name: Build and push tomcat image
         id: docker_build_tomcat
         uses: docker/build-push-action@v5
         with:
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          context: .
+          target: tomcat
+          platforms: ${{ env.PLATFORMS }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.docker_tomcat_meta.outputs.tags }}
           labels: ${{ steps.docker_tomcat_meta.outputs.labels }}
-          platforms: ${{ env.PLATFORMS }}
-          target: tomcat
+          cache-from: type=gha,scope=${{ env.GHA_CACHE_SCOPE }}
+          cache-to: type=gha,mode=max,scope=${{ env.GHA_CACHE_SCOPE }}
