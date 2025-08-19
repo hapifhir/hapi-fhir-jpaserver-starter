@@ -6,6 +6,40 @@ entries:
         # When using the list of objects option the valid supported kinds are
         # added, changed, deprecated, removed, fixed, and security.
         - kind: changed
+          description: "fixed typo in README.md"
+      artifacthub.io/containsSecurityUpdates: "false"
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/operator: "false"
+      artifacthub.io/prerelease: "false"
+      artifacthub.io/recommendations: |
+        - url: https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack
+        - url: https://artifacthub.io/packages/helm/bitnami/postgresql
+    apiVersion: v2
+    appVersion: 8.2.0
+    created: "2025-08-19T18:00:50.674295265Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 16.7.11
+    - name: common
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 2.31.3
+    description: A Helm chart for deploying the HAPI FHIR JPA server starter on Kubernetes.
+    digest: 13d220ae0adbf39a2553c8949cddf64bd1c3103b80cecfa76b79e55eae1a34f4
+    home: https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    name: hapi-fhir-jpaserver
+    sources:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    type: application
+    urls:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.20.1/hapi-fhir-jpaserver-0.20.1.tgz
+    version: 0.20.1
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
+        - kind: changed
           description: "updated postgresql sub-chart to 16.7.11"
         - kind: changed
           description: "updated common sub-chart to 2.31.3"
@@ -623,4 +657,4 @@ entries:
     urls:
     - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.6.0/hapi-fhir-jpaserver-0.6.0.tgz
     version: 0.6.0
-generated: "2025-06-26T13:46:30.480927765Z"
+generated: "2025-08-19T18:00:50.674425759Z"
