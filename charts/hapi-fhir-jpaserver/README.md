@@ -13,9 +13,9 @@ helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 
 ## Requirements
 
-| Repository                               | Name       | Version |
-|------------------------------------------|------------|---------|
-| oci://registry-1.docker.io/bitnamicharts | common     | 2.31.3  |
+| Repository | Name | Version |
+|------------|------|---------|
+| oci://registry-1.docker.io/bitnamicharts | common | 2.31.3 |
 | oci://registry-1.docker.io/bitnamicharts | postgresql | 16.7.11 |
 
 ## Values
