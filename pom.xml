@@ -384,7 +384,15 @@
             <artifactId>spring-ai-mcp</artifactId>
             <version>1.0.1</version>
         </dependency>
-        
+        <!--
+        This will be included as well as using Spring Automatic Configuration
+        once spring-ai and io.modelcontextprotocol.sdk are on par
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-mcp-server</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        -->
         <dependency>
             <groupId>io.modelcontextprotocol.sdk</groupId>
             <artifactId>mcp</artifactId>
