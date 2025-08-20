@@ -37,6 +37,7 @@ management:
         enabled: true
 spring:
   ai:
+    # Run e.g. `npx @modelcontextprotocol/inspector` and connect to http://localhost:8080/mcp/message using Streamable HTTP
     mcp:
       server:
         name: FHIR MCP Server

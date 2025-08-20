@@ -3,13 +3,14 @@ package ca.uhn.fhir.jpa.starter.mcp;
 import ca.uhn.fhir.rest.server.MCPBridge;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.modelcontextprotocol.server.McpServer;
 import io.modelcontextprotocol.server.McpSyncServer;
-import io.modelcontextprotocol.server.transport.HttpServletSseServerTransportProvider;
+import io.modelcontextprotocol.server.transport.HttpServletStreamableServerTransportProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.context.annotation.Primary;
 
 // https://mcp-cn.ssshooter.com/sdk/java/mcp-server#sse-servlet
 // https://www.baeldung.com/spring-ai-model-context-protocol-mcp
@@ -19,11 +20,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @ConditionalOnProperty(
-	prefix = "spring.ai.mcp.server",
-	name = {"enabled"},
-	havingValue = "true"
-)
-public class McpServerConfig implements WebMvcConfigurer {
+		prefix = "spring.ai.mcp.server",
+		name = {"enabled"},
+		havingValue = "true")
+public class McpServerConfig {
 
 	@Bean
 	public MCPBridge mcpBridge(RestfulServer restfulServer, CallToolResultFactory callToolResultFactory) {
@@ -31,19 +31,25 @@ public class McpServerConfig implements WebMvcConfigurer {
 	}
 
 	@Bean
-	public McpSyncServer syncServer(McpSyncServer mcpSyncServer, MCPBridge mcpBridge) {
-
-		mcpBridge.generateTools().stream().forEach(mcpSyncServer::addTool);
-		return mcpSyncServer;
+	public McpSyncServer syncServer(
+			MCPBridge mcpBridge, HttpServletStreamableServerTransportProvider transportProvider) {
+		return McpServer.sync(transportProvider)
+				.tools(mcpBridge.generateTools())
+				.build();
 	}
 
 	@Bean
-	public HttpServletSseServerTransportProvider servletSseServerTransportProvider() {
-		return new HttpServletSseServerTransportProvider(new ObjectMapper(), "/mcp/message");
+	public HttpServletStreamableServerTransportProvider servletSseServerTransportProvider() {
+		return HttpServletStreamableServerTransportProvider.builder()
+				.disallowDelete(false)
+				.mcpEndpoint("/mcp/message")
+				.objectMapper(new ObjectMapper())
+				.contextExtractor((serverRequest, context) -> context)
+				.build();
 	}
 
 	@Bean
-	public ServletRegistrationBean customServletBean(HttpServletSseServerTransportProvider transportProvider) {
+	public ServletRegistrationBean customServletBean(HttpServletStreamableServerTransportProvider transportProvider) {
 		return new ServletRegistrationBean<>(transportProvider, "/mcp/message", "/sse");
 	}
 }

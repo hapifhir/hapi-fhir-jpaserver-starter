@@ -1,7 +1,5 @@
 package ca.uhn.fhir.rest.server;
 
-import static org.opencds.cqf.fhir.cr.hapi.config.test.TestCdsHooksConfig.CDS_HOOKS_OBJECT_MAPPER_FACTORY;
-
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.starter.cdshooks.CdsHooksRequest;
 import ca.uhn.fhir.jpa.starter.mcp.CallToolResultFactory;
@@ -11,17 +9,14 @@ import ca.uhn.fhir.jpa.starter.mcp.ToolFactory;
 import ca.uhn.fhir.rest.api.server.cdshooks.CdsServiceRequestContextJson;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsServiceRegistry;
 import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServiceResponseJson;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.spec.McpSchema;
-
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -35,6 +30,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import static org.opencds.cqf.fhir.cr.hapi.config.test.TestCdsHooksConfig.CDS_HOOKS_OBJECT_MAPPER_FACTORY;
 
 @Component
 public class MCPBridge {
@@ -100,8 +97,7 @@ public class MCPBridge {
 
 	private McpSchema.CallToolResult getToolResult(Map<String, Object> contextMap, Interaction interaction) {
 
-		if (interaction == Interaction.CALL_CDS_HOOK)
-			return invokeCDS(contextMap);
+		if (interaction == Interaction.CALL_CDS_HOOK) return invokeCDS(contextMap);
 
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		MockHttpServletRequest request = new RequestBuilder(fhirContext, contextMap, interaction).buildRequest();
@@ -139,12 +135,13 @@ public class MCPBridge {
 
 	private McpSchema.CallToolResult invokeCDS(Map<String, Object> contextMap) {
 		CdsHooksRequest cdsInvocation = constructCdsHooksRequest(contextMap);
-		CdsServiceResponseJson serviceResponseJson = cdsServiceRegistry.callService(contextMap.get("service").toString(), cdsInvocation);
+		CdsServiceResponseJson serviceResponseJson =
+				cdsServiceRegistry.callService(contextMap.get("service").toString(), cdsInvocation);
 		String jsonResponse = constructMCPResponse(serviceResponseJson);
 
 		return McpSchema.CallToolResult.builder()
-			.addContent(new McpSchema.TextContent(jsonResponse))
-			.build();
+				.addContent(new McpSchema.TextContent(jsonResponse))
+				.build();
 	}
 
 	private String constructMCPResponse(CdsServiceResponseJson serviceResponseJson) {

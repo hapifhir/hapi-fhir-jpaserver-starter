@@ -16,8 +16,7 @@ public class CallToolResultFactory {
 	@Autowired
 	private FhirContext fhirContext;
 
-	public McpSchema.CallToolResult success(
-			String resourceType, Interaction interaction, Object response, int status) {
+	public McpSchema.CallToolResult success(String resourceType, Interaction interaction, Object response, int status) {
 		Map<String, Object> payload = Map.of(
 				"resourceType", resourceType,
 				"interaction", interaction,

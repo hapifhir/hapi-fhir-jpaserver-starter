@@ -183,21 +183,21 @@ public class ToolFactory {
 
 	private static final String CREATE_FHIR_TRANSACTION_SCHEMA =
 			"""
-	{
-	"type": "object",
-	"properties": {
-		"resourceType": {
-		"type": "string",
-		"description": "A Bundle resource type with type 'transaction' containing multiple FHIR resources"
-		},
-		"resource": {
+		{
 		"type": "object",
-		"description": "A FHIR Bundle Resource content in JSON format"
+		"properties": {
+			"resourceType": {
+			"type": "string",
+			"description": "A Bundle resource type with type 'transaction' containing multiple FHIR resources"
+			},
+			"resource": {
+			"type": "object",
+			"description": "A FHIR Bundle Resource content in JSON format"
+			}
+		},
+		"required": ["resourceType", "resource"]
 		}
-	},
-	"required": ["resourceType", "resource"]
-	}
-	""";
+		""";
 
 	// TODO Add a tool for the CDS Hooks discovery endpoint
 	// Alternatively, should each service be a separate tool?
@@ -249,73 +249,83 @@ public class ToolFactory {
 		""";
 
 	public static Tool readFhirResource() throws JsonProcessingException {
-		return new Tool(
-				"read-fhir-resource",
-				"Read an individual FHIR resource",
-				mapper.readValue(READ_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class));
+		return new Tool.Builder()
+				.name("read-fhir-resource")
+				.description("Read an individual FHIR resource")
+				.inputSchema(mapper.readValue(READ_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class))
+				.build();
 	}
 
 	public static Tool createFhirResource() throws JsonProcessingException {
-		return new Tool(
-				"create-fhir-resource",
-				"Create a new FHIR resource",
-				mapper.readValue(CREATE_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class));
+		return new Tool.Builder()
+				.name("create-fhir-resource")
+				.description("Create a new FHIR resource")
+				.inputSchema(mapper.readValue(CREATE_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class))
+				.build();
 	}
 
 	public static Tool updateFhirResource() throws JsonProcessingException {
-		return new Tool(
-				"update-fhir-resource",
-				"Update an existing FHIR resource",
-				mapper.readValue(UPDATE_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class));
+		return new Tool.Builder()
+				.name("update-fhir-resource")
+				.description("Update an existing FHIR resource")
+				.inputSchema(mapper.readValue(UPDATE_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class))
+				.build();
 	}
 
 	public static Tool conditionalUpdateFhirResource() throws JsonProcessingException {
-		return new Tool(
-				"conditional-update-fhir-resource",
-				"Conditional update an existing FHIR resource",
-				mapper.readValue(CONDITIONAL_UPDATE_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class));
+		return new Tool.Builder()
+				.name("conditional-update-fhir-resource")
+				.description("Conditional update an existing FHIR resource")
+				.inputSchema(mapper.readValue(CONDITIONAL_UPDATE_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class))
+				.build();
 	}
 
 	public static Tool conditionalPatchFhirResource() throws JsonProcessingException {
-		return new Tool(
-				"conditional-patch-fhir-resource",
-				"Conditional patch an existing FHIR resource",
-				mapper.readValue(CONDITIONAL_PATCH_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class));
+		return new Tool.Builder()
+				.name("conditional-patch-fhir-resource")
+				.description("Conditional patch an existing FHIR resource")
+				.inputSchema(mapper.readValue(CONDITIONAL_PATCH_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class))
+				.build();
 	}
 
 	public static Tool patchFhirResource() throws JsonProcessingException {
-		return new Tool(
-				"patch-fhir-resource",
-				"Patch an existing FHIR resource",
-				mapper.readValue(PATCH_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class));
+		return new Tool.Builder()
+				.name("patch-fhir-resource")
+				.description("Patch an existing FHIR resource")
+				.inputSchema(mapper.readValue(PATCH_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class))
+				.build();
 	}
 
 	public static Tool deleteFhirResource() throws JsonProcessingException {
-		return new Tool(
-				"delete-fhir-resource",
-				"Delete an existing FHIR resource",
-				mapper.readValue(DELETE_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class));
+		return new Tool.Builder()
+				.name("delete-fhir-resource")
+				.description("Delete an existing FHIR resource")
+				.inputSchema(mapper.readValue(DELETE_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class))
+				.build();
 	}
 
 	public static Tool searchFhirResources() throws JsonProcessingException {
-		return new Tool(
-				"search-fhir-resources",
-				"Search an existing FHIR resources",
-				mapper.readValue(SEARCH_FHIR_RESOURCES_SCHEMA, McpSchema.JsonSchema.class));
+		return new Tool.Builder()
+				.name("search-fhir-resources")
+				.description("Search an existing FHIR resources")
+				.inputSchema(mapper.readValue(SEARCH_FHIR_RESOURCES_SCHEMA, McpSchema.JsonSchema.class))
+				.build();
 	}
 
 	public static Tool createFhirTransaction() throws JsonProcessingException {
-		return new Tool(
-				"create-fhir-transaction",
-				"Create a FHIR transaction",
-				mapper.readValue(CREATE_FHIR_TRANSACTION_SCHEMA, McpSchema.JsonSchema.class));
+		return new Tool.Builder()
+				.name("create-fhir-transaction")
+				.description("Create a FHIR transaction")
+				.inputSchema(mapper.readValue(CREATE_FHIR_TRANSACTION_SCHEMA, McpSchema.JsonSchema.class))
+				.build();
 	}
 
 	public static Tool callCdsHook() throws JsonProcessingException {
-		return new Tool(
-				"call-cds-hook",
-				"Call a CDS Hook",
-				mapper.readValue(CALL_CDS_HOOK_SCHEMA_2_0_1, McpSchema.JsonSchema.class));
+		return new Tool.Builder()
+				.name("call-cds-hook")
+				.description("Call a CDS Hook")
+				.inputSchema(mapper.readValue(CALL_CDS_HOOK_SCHEMA_2_0_1, McpSchema.JsonSchema.class))
+				.build();
 	}
 
 	public static final ObjectMapper mapper = new ObjectMapper()
