@@ -14,7 +14,7 @@ dependencies:
     repository: oci://registry-1.docker.io/bitnamicharts
     version: 2.31.3
 appVersion: 8.2.0
-version: 0.20.0
+version: 0.20.1
 annotations:
   artifacthub.io/license: Apache-2.0
   artifacthub.io/containsSecurityUpdates: "false"
@@ -27,14 +27,4 @@ annotations:
     # When using the list of objects option the valid supported kinds are
     # added, changed, deprecated, removed, fixed, and security.
     - kind: changed
-      description: "updated postgresql sub-chart to 16.7.11"
-    - kind: changed
-      description: "updated common sub-chart to 2.31.3"
-    - kind: changed
-      description: "updated curlimages/curl to 8.14.1"
-    - kind: changed
-      description: "updated hapiproject/hapi to v8.2.0-1"
-    - kind: changed
-      description: "use ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect dialect"
-    - kind: changed
-      description: "made the init container waiting for the database to be ready configurable"
+      description: "fixed typo in README.md"

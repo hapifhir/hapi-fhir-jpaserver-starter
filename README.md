@@ -51,7 +51,7 @@ HAPI looks in the environment variables for properties in the [application.yaml]
 
 ### Configuration via overridden application.yaml file and using Docker
 
-You can customize HAPI by telling HAPI to look for the configuration file in a different location, eg.:
+You can customize HAPI by telling HAPI to look for the configuration file in a different location, e.g.:
 
 ```
 docker run -p 8090:8080 -v $(pwd)/yourLocalFolder:/configs -e "--spring.config.location=file:///configs/another.application.yaml" hapiproject/hapi:latest
@@ -237,7 +237,7 @@ The Server will then be accessible at http://localhost:8888/fhir and the Capabil
 ```bash
 mvn clean spring-boot:run -Pboot
 ```
-Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to the following:
+Server will then be accessible at http://localhost:8080/ and e.g. http://localhost:8080/fhir/metadata. Remember to adjust you overlay configuration in the application.yaml to the following:
 
 ```yaml
     tester:
@@ -253,7 +253,7 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
 ```bash
 mvn clean package spring-boot:repackage -DskipTests=true -Pboot && java -jar target/ROOT.war
 ```
-Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust your overlay configuration in the application.yaml to the following:
+Server will then be accessible at http://localhost:8080/ and e.g. http://localhost:8080/fhir/metadata. Remember to adjust your overlay configuration in the application.yaml to the following:
 
 ```yaml
     tester:
@@ -268,7 +268,7 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
 ```bash
 mvn clean package com.google.cloud.tools:jib-maven-plugin:dockerBuild -Dimage=distroless-hapi && docker run -p 8080:8080 distroless-hapi
 ```
-Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust your overlay configuration in the application.yaml to the following:
+Server will then be accessible at http://localhost:8080/ and e.g. http://localhost:8080/fhir/metadata. Remember to adjust your overlay configuration in the application.yaml to the following:
 
 ```yaml
     tester:
@@ -284,7 +284,7 @@ Server will then be accessible at http://localhost:8080/ and eg. http://localhos
 ```bash
 ./build-docker-image.sh && docker run -p 8080:8080 hapi-fhir/hapi-fhir-jpaserver-starter:latest
 ```
-Server will then be accessible at http://localhost:8080/ and eg. http://localhost:8080/fhir/metadata. Remember to adjust your overlay configuration in the application.yaml to the following:
+Server will then be accessible at http://localhost:8080/ and e.g. http://localhost:8080/fhir/metadata. Remember to adjust your overlay configuration in the application.yaml to the following:
 
 ```yaml
     tester:
@@ -384,7 +384,7 @@ Several template files that can be customized are found in the following directo
 
 Using the Maven-Embedded Jetty method above is convenient, but it is not a good solution if you want to leave the server running in the background.
 
-Most people who are using HAPI FHIR JPA as a server that is accessible to other people (whether internally on your network or publically hosted) will do so using an Application Server, such as [Apache Tomcat](http://tomcat.apache.org/) or [Jetty](https://www.eclipse.org/jetty/). Note that any Servlet 3.0+ compatible Web Container will work (e.g Wildfly, Websphere, etc.).
+Most people who are using HAPI FHIR JPA as a server that is accessible to other people (whether internally on your network or publicly hosted) will do so using an Application Server, such as [Apache Tomcat](http://tomcat.apache.org/) or [Jetty](https://www.eclipse.org/jetty/). Note that any Servlet 3.0+ compatible Web Container will work (e.g. Wildfly, Websphere, etc.).
 
 Tomcat is very popular, so it is a good choice simply because you will be able to find many tutorials online. Jetty is a great alternative due to its fast startup time and good overall performance.
 
@@ -402,7 +402,7 @@ Again, browse to the following link to use the server (note that the port 8080 m
 
 You will then be able to access the JPA server e.g. using http://localhost:8080/fhir/metadata.
 
-If you would like it to be hosted at eg. hapi-fhir-jpaserver, eg. http://localhost:8080/hapi-fhir-jpaserver/ or http://localhost:8080/hapi-fhir-jpaserver/fhir/metadata - then rename the WAR file to ```hapi-fhir-jpaserver.war``` and adjust the overlay configuration accordingly e.g.
+If you would like it to be hosted at e.g. hapi-fhir-jpaserver, e.g. http://localhost:8080/hapi-fhir-jpaserver/ or http://localhost:8080/hapi-fhir-jpaserver/fhir/metadata - then rename the WAR file to ```hapi-fhir-jpaserver.war``` and adjust the overlay configuration accordingly e.g.
 
 ```yaml
     tester:
@@ -525,7 +525,7 @@ Set `hapi.fhir.store_resource_in_lucene_index_enabled` in the [application.yaml]
 
 ## Changing cached search results time
 
-It is possible to change the cached search results time. The option `reuse_cached_search_results_millis` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) is 6000 miliseconds by default.
+It is possible to change the cached search results time. The option `reuse_cached_search_results_millis` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) is 6000 milliseconds by default.
 Set `reuse_cached_search_results_millis: -1` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to ignore the cache time every search.
 
 ## Build the distroless variant of the image (for lower footprint and improved security)

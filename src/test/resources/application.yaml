@@ -4,7 +4,7 @@ management:
     enabled-by-default: false
     web:
       exposure:
-        include: 'info,health,prometheus,metrics' # or '*' for all'
+        include: 'info,health,prometheus,metrics' # or '*' for all
   endpoint:
     info:
       enabled: true
@@ -31,7 +31,7 @@ spring:
     allow-bean-definition-overriding: true
   flyway:
     enabled: false
-    check-location: false
+    fail-on-missing-locations: false
     baselineOnMigrate: true
   datasource:
     url: jdbc:h2:mem:test_mem
@@ -126,7 +126,7 @@ hapi:
     #    enable_index_missing_fields: false
     #    enable_index_of_type: true
     #    enable_index_contained_resource: false
-    ###  !!Extended Lucene/Elasticsearch Indexing is still a experimental feature, expect some features (e.g. _total=accurate) to not work as expected!!
+    ###  !!Extended Lucene/Elasticsearch Indexing is still an experimental feature, expect some features (e.g. _total=accurate) to not work as expected!!
     ###  more information here: https://hapifhir.io/hapi-fhir/docs/server_jpa/elastic.html
     advanced_lucene_indexing: false
     search_index_full_text_enabled: false
