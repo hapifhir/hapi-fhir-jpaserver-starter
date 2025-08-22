@@ -1,6 +1,7 @@
 package ch.ahdis.matchbox.terminology;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.ResourceParam;
 import ca.uhn.fhir.rest.server.IResourceProvider;
@@ -12,13 +13,13 @@ import org.hl7.fhir.instance.model.api.IBaseParameters;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r5.model.Coding;
 import org.hl7.fhir.r5.model.Parameters;
+import org.hl7.fhir.r5.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.servlet.http.HttpServletResponse;
 
 import static ch.ahdis.matchbox.terminology.TerminologyUtils.mapErrorToOperationOutcome;
-import static java.util.Objects.requireNonNull;
 
 /**
  * The HAPI FHIR provider for the CodeSystem/$validate-code operation.
@@ -28,10 +29,10 @@ import static java.util.Objects.requireNonNull;
 public class CodeSystemCodeValidationProvider implements IResourceProvider {
 	private static final Logger log = LoggerFactory.getLogger(CodeSystemCodeValidationProvider.class);
 
-	private final FhirContext fhirContext;
+	private final FhirVersionEnum fhirVersion;
 
 	public CodeSystemCodeValidationProvider(final FhirContext fhirContext) {
-		this.fhirContext = requireNonNull(fhirContext);
+		this.fhirVersion = fhirContext.getVersion().getVersion();
 	}
 
 	/**
@@ -49,35 +50,41 @@ public class CodeSystemCodeValidationProvider implements IResourceProvider {
 			request = (Parameters) VersionConvertorFactory_43_50.convertResource(parametersR4B);
 		} else {
 			throw new MatchboxUnsupportedFhirVersionException("CodeSystemCodeValidationProvider",
-																			  this.fhirContext.getVersion().getVersion());
+																			  this.fhirVersion);
 		}
 
+		final var response = this.doValidateR5Code(request, servletResponse);
+
+		return switch (this.fhirVersion) {
+			case R4 -> VersionConvertorFactory_40_50.convertResource(response);
+			case R4B -> VersionConvertorFactory_43_50.convertResource(response);
+			case R5 -> response;
+			default -> throw new MatchboxUnsupportedFhirVersionException("CodeSystemCodeValidationProvider",
+																							 this.fhirVersion);
+		};
+	}
+
+	private Resource doValidateR5Code(final Parameters request,
+											  final HttpServletResponse servletResponse) {
 		if (request.hasParameter("coding") && request.getParameterValue("coding") instanceof final Coding coding) {
 			log.debug("Validating code in CS: {}|{}", coding.getCode(), coding.getSystem());
-			final var outputParams = TerminologyUtils.createSuccessfulResponseParameters(coding);
-			return switch (this.fhirContext.getVersion().getVersion()) {
-				case R4 -> VersionConvertorFactory_40_50.convertResource(outputParams);
-				case R4B -> VersionConvertorFactory_43_50.convertResource(outputParams);
-				case R5 -> outputParams;
-				default -> throw new MatchboxUnsupportedFhirVersionException("CodeSystemCodeValidationProvider",
-																								 this.fhirContext.getVersion().getVersion());
-			};
+			return TerminologyUtils.createSuccessfulResponseParameters(coding);
 		}
 
 		servletResponse.setStatus(422);
-		// Original error message is:
+		// The original error message is:
 		// Unable to find code to validate (looked for coding | codeableConcept | code)
 		return mapErrorToOperationOutcome("Unable to find code to validate (looked for coding)");
 	}
 
 	@Override
 	public Class<? extends IBaseResource> getResourceType() {
-		return switch (this.fhirContext.getVersion().getVersion()) {
+		return switch (this.fhirVersion) {
 			case R4 -> org.hl7.fhir.r4.model.CodeSystem.class;
 			case R4B -> org.hl7.fhir.r4b.model.CodeSystem.class;
 			case R5 -> org.hl7.fhir.r5.model.CodeSystem.class;
 			default -> throw new MatchboxUnsupportedFhirVersionException("CodeSystemCodeValidationProvider",
-																							 this.fhirContext.getVersion().getVersion());
+																							 this.fhirVersion);
 		};
 	}
 }

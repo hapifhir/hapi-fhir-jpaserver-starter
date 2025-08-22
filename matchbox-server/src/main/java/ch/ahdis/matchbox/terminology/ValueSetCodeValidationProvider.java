@@ -1,6 +1,7 @@
 package ch.ahdis.matchbox.terminology;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.context.support.ValidationSupportContext;
 import ca.uhn.fhir.context.support.ValueSetExpansionOptions;
@@ -16,10 +17,7 @@ import org.hl7.fhir.instance.model.api.IAnyResource;
 import org.hl7.fhir.instance.model.api.IBaseParameters;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IDomainResource;
-import org.hl7.fhir.r5.model.CodeableConcept;
-import org.hl7.fhir.r5.model.Coding;
-import org.hl7.fhir.r5.model.Parameters;
-import org.hl7.fhir.r5.model.ValueSet;
+import org.hl7.fhir.r5.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +41,7 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 	private static final Logger log = LoggerFactory.getLogger(ValueSetCodeValidationProvider.class);
 
 	private final FhirContext fhirContext;
+	private final FhirVersionEnum fhirVersion;
 
 	private final InMemoryTerminologyServerValidationSupport inMemoryTerminologySupport;
 
@@ -63,6 +62,7 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 			new InMemoryTerminologyServerValidationSupport(fhirContext);
 		this.validationSupportContext =
 			new ValidationSupportContext(new DummyValidationSupport(fhirContext));
+		this.fhirVersion = fhirContext.getVersion().getVersion();
 	}
 
 	/**
@@ -79,10 +79,22 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 				(Parameters) VersionConvertorFactory_40_50.convertResource(parametersR4);
 			case final org.hl7.fhir.r4b.model.Parameters parametersR4B ->
 				(Parameters) VersionConvertorFactory_43_50.convertResource(parametersR4B);
-			default -> throw new MatchboxUnsupportedFhirVersionException("CodeSystemCodeValidationProvider",
+			default -> throw new MatchboxUnsupportedFhirVersionException("ValueSetCodeValidationProvider",
 																							 baseParameters.getStructureFhirVersionEnum());
 		};
 
+		final var response = doValidateR5Code(request, servletResponse);
+		return switch (this.fhirVersion) {
+			case R4 -> VersionConvertorFactory_40_50.convertResource(response);
+			case R4B -> VersionConvertorFactory_43_50.convertResource(response);
+			case R5 -> response;
+			default -> throw new MatchboxUnsupportedFhirVersionException("ValueSetCodeValidationProvider",
+																							 this.fhirVersion);
+		};
+	}
+
+	private Resource doValidateR5Code(final Parameters request,
+												 final HttpServletResponse servletResponse) {
 		final String valueSetMode = request.hasParameter("valueSetMode")
 			? request.getParameterValue("valueSetMode").toString()
 			: "DEFAULT";
@@ -311,7 +323,7 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 												  final String valueSetUrl,
 												  final ValueSet valueSet) {
 		this.valueSetCache
-			.computeIfAbsent(cacheId, k -> new HashMap<>(20))
+			.computeIfAbsent(cacheId, k -> HashMap.newHashMap(20))
 			.put(valueSetUrl, valueSet);
 	}
 
