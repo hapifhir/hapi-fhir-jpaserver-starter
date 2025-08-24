@@ -177,10 +177,6 @@ public class MCPBridge {
 	}
 
 	private @NotNull CdsHooksRequest constructCdsHooksRequest(Map<String, Object> contextMap) {
-		// Print the keys of contextMap
-		for (String key : contextMap.keySet()) {
-			System.out.println("Context map key: " + key);
-		}
 
 		// TODO Build up CDS Hooks request JSON from contextMap
 		CdsHooksRequest request = new CdsHooksRequest();
