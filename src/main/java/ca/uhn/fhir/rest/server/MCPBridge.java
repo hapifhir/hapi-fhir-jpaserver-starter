@@ -21,7 +21,6 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -38,21 +37,24 @@ public class MCPBridge {
 
 	private static final Logger logger = LoggerFactory.getLogger(MCPBridge.class);
 
-	@Autowired
-	ICdsServiceRegistry cdsServiceRegistry;
+	private final ICdsServiceRegistry cdsServiceRegistry;
 
-	@Autowired
-	@Qualifier(CDS_HOOKS_OBJECT_MAPPER_FACTORY)
-	ObjectMapper objectMapper;
+	private final ObjectMapper objectMapper;
 
 	private final RestfulServer restfulServer;
 	private final FhirContext fhirContext;
 	private final CallToolResultFactory callToolResultFactory;
 
-	public MCPBridge(RestfulServer restfulServer, CallToolResultFactory callToolResultFactory) {
+	public MCPBridge(
+			RestfulServer restfulServer,
+			CallToolResultFactory callToolResultFactory,
+			ICdsServiceRegistry cdsServiceRegistry,
+			@Qualifier(CDS_HOOKS_OBJECT_MAPPER_FACTORY) ObjectMapper objectMapper) {
 		this.restfulServer = restfulServer;
 		this.fhirContext = restfulServer.getFhirContext();
 		this.callToolResultFactory = callToolResultFactory;
+		this.cdsServiceRegistry = cdsServiceRegistry;
+		this.objectMapper = objectMapper;
 	}
 
 	public List<McpServerFeatures.SyncToolSpecification> generateTools() {
@@ -98,7 +100,10 @@ public class MCPBridge {
 	private McpSchema.CallToolResult getToolResult(Map<String, Object> contextMap, Interaction interaction) {
 
 		if (interaction == Interaction.CALL_CDS_HOOK) return invokeCDS(contextMap);
+		else return invokeFhirService(contextMap, interaction);
+	}
 
+	private McpSchema.CallToolResult invokeFhirService(Map<String, Object> contextMap, Interaction interaction) {
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		MockHttpServletRequest request = new RequestBuilder(fhirContext, contextMap, interaction).buildRequest();
 
@@ -196,19 +201,9 @@ public class MCPBridge {
 
 				// Object is a String -> Object map
 				// Use a standard JSON library to convert it
-				String json = new Gson().toJson(value);
-				System.out.println("Prefetch data for " + key + ": " + value);
-				System.out.println("FHIR JSON: " + json);
-				IBaseResource resource = fhirContext.newJsonParser().parseResource(json);
+				IBaseResource resource = fhirContext.newJsonParser().parseResource(new Gson().toJson(value));
 				request.addPrefetch(key, resource);
 			}
-		}
-
-		try {
-			String requestString = objectMapper.writeValueAsString(request);
-			System.out.println("CDS Hooks request JSON: " + requestString);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
 		}
 
 		return request;
