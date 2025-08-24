@@ -15,7 +15,7 @@ on the jetbrains website, in addition to the [API reference][Link-HTTP-Client-Re
 
 ### Formatting
 Each test file corresponds to a given section within the hapifhir documentation as close as possible. For 
-example, there is a `plain_server.rest` file, which attemps to smoke test all basic functionality outlined in the section
+example, there is a `plain_server.rest` file, which attempts to smoke test all basic functionality outlined in the section
 [within the docs][Link-HAPI-FHIR-docs-plain-server].
 
 Individual tests are formatted as follows:
@@ -38,7 +38,7 @@ To run these tests against a specific server, configure the server details withi
 ```
 
 ### Running the Tests
-Within IntelliJ, right click the file you wish to run tests in and select the `Run All` option from the menu.
+Within IntelliJ, right-click the file you wish to run tests in and select the `Run All` option from the menu.
 
 **Important:** Tests may not work individually when run. Often times, tests need to be run sequentially, as they depend
 on resources/references from previous tests to complete. _(An example of this would be adding a Patient, saving the id, 

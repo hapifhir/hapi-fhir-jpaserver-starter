@@ -11,7 +11,7 @@ public class PostInitProviderRegisterer {
 		resourceProviderFactory.attach(new Observer(restfulServer));
 	}
 
-	private class Observer implements IResourceProviderFactoryObserver {
+	private static class Observer implements IResourceProviderFactoryObserver {
 		private RestfulServer restfulServer;
 
 		public Observer(RestfulServer restfulServer) {
