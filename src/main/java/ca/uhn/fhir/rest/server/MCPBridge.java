@@ -62,45 +62,55 @@ public class MCPBridge {
 		try {
 			return List.of(
 					// TODO Add CDS Hooks tool only if CR & CDS Hooks are enabled (CDS Hooks depends on CR)
-					new McpServerFeatures.SyncToolSpecification(
-							ToolFactory.callCdsHook(),
-							(exchange, contextMap) -> getToolResult(contextMap, Interaction.CALL_CDS_HOOK)),
-					new McpServerFeatures.SyncToolSpecification(
-							ToolFactory.createFhirResource(),
-							(exchange, contextMap) -> getToolResult(contextMap, Interaction.CREATE)),
-					new McpServerFeatures.SyncToolSpecification(
-							ToolFactory.readFhirResource(),
-							(exchange, contextMap) -> getToolResult(contextMap, Interaction.READ)),
-					new McpServerFeatures.SyncToolSpecification(
-							ToolFactory.updateFhirResource(),
-							(exchange, contextMap) -> getToolResult(contextMap, Interaction.UPDATE)),
-					new McpServerFeatures.SyncToolSpecification(
-							ToolFactory.deleteFhirResource(),
-							(exchange, contextMap) -> getToolResult(contextMap, Interaction.DELETE)),
-					new McpServerFeatures.SyncToolSpecification(
-							ToolFactory.conditionalPatchFhirResource(),
-							(exchange, contextMap) -> getToolResult(contextMap, Interaction.PATCH)),
-					new McpServerFeatures.SyncToolSpecification(
-							ToolFactory.searchFhirResources(),
-							(exchange, contextMap) -> getToolResult(contextMap, Interaction.SEARCH)),
-					new McpServerFeatures.SyncToolSpecification(
-							ToolFactory.conditionalUpdateFhirResource(),
-							(exchange, contextMap) -> getToolResult(contextMap, Interaction.UPDATE)),
-					new McpServerFeatures.SyncToolSpecification(
-							ToolFactory.patchFhirResource(),
-							(exchange, contextMap) -> getToolResult(contextMap, Interaction.PATCH)),
-					new McpServerFeatures.SyncToolSpecification(
-							ToolFactory.createFhirTransaction(),
-							(exchange, contextMap) -> getToolResult(contextMap, Interaction.TRANSACTION)));
+					new McpServerFeatures.SyncToolSpecification.Builder()
+							.tool(ToolFactory.callCdsHook())
+							.callHandler((exchange, request) -> getToolResult(request, Interaction.CALL_CDS_HOOK))
+							.build(),
+					new McpServerFeatures.SyncToolSpecification.Builder()
+							.tool(ToolFactory.createFhirResource())
+							.callHandler((exchange, request) -> getToolResult(request, Interaction.CREATE))
+							.build(),
+					new McpServerFeatures.SyncToolSpecification.Builder()
+							.tool(ToolFactory.readFhirResource())
+							.callHandler((exchange, request) -> getToolResult(request, Interaction.READ))
+							.build(),
+					new McpServerFeatures.SyncToolSpecification.Builder()
+							.tool(ToolFactory.updateFhirResource())
+							.callHandler((exchange, request) -> getToolResult(request, Interaction.UPDATE))
+							.build(),
+					new McpServerFeatures.SyncToolSpecification.Builder()
+							.tool(ToolFactory.deleteFhirResource())
+							.callHandler((exchange, request) -> getToolResult(request, Interaction.DELETE))
+							.build(),
+					new McpServerFeatures.SyncToolSpecification.Builder()
+							.tool(ToolFactory.conditionalPatchFhirResource())
+							.callHandler((exchange, request) -> getToolResult(request, Interaction.PATCH))
+							.build(),
+					new McpServerFeatures.SyncToolSpecification.Builder()
+							.tool(ToolFactory.searchFhirResources())
+							.callHandler((exchange, request) -> getToolResult(request, Interaction.SEARCH))
+							.build(),
+					new McpServerFeatures.SyncToolSpecification.Builder()
+							.tool(ToolFactory.conditionalUpdateFhirResource())
+							.callHandler((exchange, request) -> getToolResult(request, Interaction.UPDATE))
+							.build(),
+					new McpServerFeatures.SyncToolSpecification.Builder()
+							.tool(ToolFactory.patchFhirResource())
+							.callHandler((exchange, request) -> getToolResult(request, Interaction.PATCH))
+							.build(),
+					new McpServerFeatures.SyncToolSpecification.Builder()
+							.tool(ToolFactory.createFhirTransaction())
+							.callHandler((exchange, request) -> getToolResult(request, Interaction.TRANSACTION))
+							.build());
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private McpSchema.CallToolResult getToolResult(Map<String, Object> contextMap, Interaction interaction) {
+	private McpSchema.CallToolResult getToolResult(McpSchema.CallToolRequest contextMap, Interaction interaction) {
 
-		if (interaction == Interaction.CALL_CDS_HOOK) return invokeCDS(contextMap);
-		else return invokeFhirService(contextMap, interaction);
+		if (interaction == Interaction.CALL_CDS_HOOK) return invokeCDS(contextMap.arguments());
+		else return invokeFhirService(contextMap.arguments(), interaction);
 	}
 
 	private McpSchema.CallToolResult invokeFhirService(Map<String, Object> contextMap, Interaction interaction) {
@@ -179,7 +189,7 @@ public class MCPBridge {
 
 		// Context
 		CdsServiceRequestContextJson context = new CdsServiceRequestContextJson();
-		Map<String, String> hookContext = (Map<String, String>) contextMap.get("hookContext");
+		var hookContext = (Map<String, String>) contextMap.get("hookContext");
 		if (hookContext.containsKey("userId")) {
 			context.put("userId", hookContext.get("userId").toString());
 		}

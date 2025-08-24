@@ -38,6 +38,16 @@ management:
 spring:
   ai:
     # Run e.g. `npx @modelcontextprotocol/inspector` and connect to http://localhost:8080/mcp/message using Streamable HTTP
+
+# Add the following to the MCP server settings file in e.g. cursor or claude (Desktop applications) for local debugging:
+#    {
+#      "mcpServers": {
+#        "hapi": {
+#          "url": "http://localhost:8080/mcp/message"
+#        }
+#      }
+#    }
+
     mcp:
       server:
         name: FHIR MCP Server
