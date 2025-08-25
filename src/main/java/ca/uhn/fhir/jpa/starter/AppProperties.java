@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
+
 @ConfigurationProperties(prefix = "hapi.fhir")
 @Configuration
 @EnableConfigurationProperties
