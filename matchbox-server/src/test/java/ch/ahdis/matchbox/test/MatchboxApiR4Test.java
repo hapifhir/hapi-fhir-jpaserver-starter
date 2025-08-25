@@ -101,7 +101,7 @@ class MatchboxApiR4Test {
 		String sessionIdCore = getSessionId(operationOutcome);
 		assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
 		assertEquals("hl7.fhir.r4.core#4.0.1", getIg(operationOutcome));
-		assertEquals("http://localhost:8081/matchboxv3/fhir", getTxServer(operationOutcome));
+		assertEquals("http://localhost:8081/matchboxv3/tx", getTxServer(operationOutcome));
 
 		// tests against matchbox r4 test ig
 		String profileMatchbox = "http://matchbox.health/ig/test/r4/StructureDefinition/practitioner-identifier-required";
