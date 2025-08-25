@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.ClientIdStrategyEnum;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.IdStrategyEnum;
 import ca.uhn.fhir.jpa.model.entity.NormalizedQuantitySearchLevel;
@@ -18,6 +19,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 @ConfigurationProperties(prefix = "hapi.fhir")
 @Configuration
 @EnableConfigurationProperties
@@ -34,6 +36,7 @@ public class AppProperties {
 	private Boolean mdm_enabled = false;
 	private String mdm_rules_json_location = "mdm-rules.json";
 	private boolean advanced_lucene_indexing = false;
+	private boolean search_index_full_text_enabled = false;
 	private boolean enable_index_of_type = false;
 	private Boolean allow_cascading_deletes = false;
 	private Boolean allow_contains_searches = true;
@@ -44,6 +47,7 @@ public class AppProperties {
 	private Boolean mass_ingestion_mode_enabled = false;
 	private Boolean language_search_parameter_enabled = false;
 	private Boolean dao_scheduling_enabled = true;
+	private Boolean delete_enabled = true;
 	private Boolean delete_expunge_enabled = false;
 	private Boolean enable_index_missing_fields = false;
 	private Boolean enable_index_contained_resource = false;
@@ -107,8 +111,12 @@ public class AppProperties {
 	private Integer pre_expand_value_sets_default_count = 1000;
 	private Integer pre_expand_value_sets_max_count = 1000;
 	private Integer maximum_expansion_size = 1000;
+	private JpaStorageSettings.StoreMetaSourceInformationEnum store_meta_source_information =
+			JpaStorageSettings.StoreMetaSourceInformationEnum.NONE;
 
 	private Map<String, RemoteSystem> remote_terminology_service = null;
+	private Boolean match_url_cache_enabled = false;
+	private Boolean index_storage_optimized = false;
 
 	public List<String> getCustomInterceptorClasses() {
 		return custom_interceptor_classes;
@@ -286,6 +294,14 @@ public class AppProperties {
 		advanced_lucene_indexing = theAdvanced_lucene_indexing;
 	}
 
+	public boolean getSearch_index_full_text_enabled() {
+		return this.search_index_full_text_enabled;
+	}
+
+	public void setSearch_index_full_text_enabled(boolean theSearch_index_full_text_enabled) {
+		search_index_full_text_enabled = theSearch_index_full_text_enabled;
+	}
+
 	public Boolean getAllow_cascading_deletes() {
 		return allow_cascading_deletes;
 	}
@@ -364,6 +380,14 @@ public class AppProperties {
 
 	public Boolean getDelete_expunge_enabled() {
 		return delete_expunge_enabled;
+	}
+
+	public boolean getDelete_enabled() {
+		return defaultIfNull(delete_enabled, true);
+	}
+
+	public void setDelete_enabled(boolean theDelete_enabled) {
+		delete_enabled = theDelete_enabled;
 	}
 
 	public void setDelete_expunge_enabled(Boolean delete_expunge_enabled) {
@@ -742,6 +766,31 @@ public class AppProperties {
 
 	public void setRemote_terminology_service(Map<String, RemoteSystem> remote_terminology_service) {
 		this.remote_terminology_service = remote_terminology_service;
+	}
+
+	public boolean getMatch_url_cache_enabled() {
+		return defaultIfNull(match_url_cache_enabled, false);
+	}
+
+	public void setMatch_url_cache_enabled(boolean theMatchUrlCacheEnabled) {
+		match_url_cache_enabled = theMatchUrlCacheEnabled;
+	}
+
+	public boolean getIndex_storage_optimized() {
+		return defaultIfNull(index_storage_optimized, false);
+	}
+
+	public void setIndex_storage_optimized(boolean theIndex_storage_optimized) {
+		index_storage_optimized = theIndex_storage_optimized;
+	}
+
+	public JpaStorageSettings.StoreMetaSourceInformationEnum getStore_meta_source_information() {
+		return store_meta_source_information;
+	}
+
+	public void setStore_meta_source_information(
+			JpaStorageSettings.StoreMetaSourceInformationEnum store_meta_source_information) {
+		this.store_meta_source_information = store_meta_source_information;
 	}
 
 	public static class Cors {

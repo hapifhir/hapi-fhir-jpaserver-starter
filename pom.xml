@@ -5,8 +5,8 @@
 
     <properties>
         <java.version>17</java.version>
-        <hapi.fhir.jpa.server.starter.revision>1</hapi.fhir.jpa.server.starter.revision>
-        <clinical-reasoning.version>3.21.0</clinical-reasoning.version>
+        <hapi.fhir.jpa.server.starter.revision>2</hapi.fhir.jpa.server.starter.revision>
+        <clinical-reasoning.version>3.24.0</clinical-reasoning.version>
     </properties>
 
     <!-- one-liner to take you to the cloud with settings form the application.yaml file: -->
@@ -191,7 +191,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- If you are using HAPI narrative generation, you will need to include Thymeleaf as well. Otherwise the following can be omitted. -->
+        <!-- If you are using HAPI narrative generation, you will need to include Thymeleaf as well. Otherwise, the following can be omitted. -->
         <dependency>
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf</artifactId>

@@ -1,6 +1,6 @@
 # HAPI FHIR JPA Server Starter Helm Chart
 
-![Version: 0.19.0](https://img.shields.io/badge/Version-0.19.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.0.0](https://img.shields.io/badge/AppVersion-8.0.0-informational?style=flat-square)
+![Version: 0.20.1](https://img.shields.io/badge/Version-0.20.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.2.0](https://img.shields.io/badge/AppVersion-8.2.0-informational?style=flat-square)
 
 This helm chart will help you install the HAPI FHIR JPA Server in a Kubernetes environment.
 
@@ -15,8 +15,8 @@ helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://registry-1.docker.io/bitnamicharts | common | 2.30.0 |
-| oci://registry-1.docker.io/bitnamicharts | postgresql | 16.5.5 |
+| oci://registry-1.docker.io/bitnamicharts | common | 2.31.3 |
+| oci://registry-1.docker.io/bitnamicharts | postgresql | 16.7.11 |
 
 ## Values
 
@@ -39,7 +39,7 @@ helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 | image.pullPolicy | string | `"IfNotPresent"` | image pullPolicy to use |
 | image.registry | string | `"docker.io"` | registry where the HAPI FHIR server image is hosted |
 | image.repository | string | `"hapiproject/hapi"` | the path inside the repository |
-| image.tag | string | `"v8.0.0-1@sha256:9fbac7b012b4be91ba481e7008f1353ede4598bc99a36f3902b8abf873e70ed8"` | the image tag. As of v5.7.0, this is the `distroless` flavor by default, add `-tomcat` to use the Tomcat-based image. |
+| image.tag | string | `"v8.2.0-1@sha256:e85ded02f60e25a66e6d9423ea71f3ebc9494e3a69bdd7d7dbfa31b8aa5b2fe9"` | the image tag. As of v5.7.0, this is the `distroless` flavor by default, add `-tomcat` to use the Tomcat-based image. |
 | imagePullSecrets | list | `[]` | image pull secrets to use when pulling the image |
 | ingress.annotations | object | `{}` | provide any additional annotations which may be required. Evaluated as a template. |
 | ingress.enabled | bool | `false` | whether to create an Ingress to expose the FHIR server HTTP endpoint |
@@ -84,6 +84,7 @@ helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 | tests.resourcesPreset | string | `"nano"` | set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if `resources` is set (`resources` is recommended for production). More information: <https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15> |
 | tolerations | list | `[]` | pod tolerations |
 | topologySpreadConstraints | list | `[]` | pod topology spread configuration see: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#api |
+| waitForDatabaseInitContainer.image | object | `{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"bitnami/postgresql","tag":"17.5.0-debian-12-r11@sha256:ac8dd0d6512c4c5fb146c16b1c5f05862bd5f600d73348506ab4252587e7fcc6"}` | image to use for the init container which waits until the database is ready to accept connections |
 
 ## Development
 
@@ -97,7 +98,7 @@ INFO[2021-11-20T12:38:04Z] Found Chart directories [charts/hapi-fhir-jpaserver]
 INFO[2021-11-20T12:38:04Z] Generating README Documentation for chart /usr/src/app/charts/hapi-fhir-jpaserver
 ```
 
-## Enable Distributed Tracing based on the OpenTelemtry Java Agent
+## Enable Distributed Tracing based on the OpenTelemetry Java Agent
 
 The container image includes the [OpenTelemetry Java agent JAR](https://github.com/open-telemetry/opentelemetry-java-instrumentation)
 which can be used to enable distributed tracing. It can be configured entirely using environment variables,

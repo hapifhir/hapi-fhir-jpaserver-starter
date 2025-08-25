@@ -22,6 +22,7 @@ import org.opencds.cqf.fhir.cr.hapi.common.ElmCacheResourceChangeListener;
 import org.opencds.cqf.fhir.cr.measure.CareGapsProperties;
 import org.opencds.cqf.fhir.cr.measure.MeasureEvaluationOptions;
 import org.opencds.cqf.fhir.utility.ValidationProfile;
+import org.opencds.cqf.fhir.utility.client.TerminologyServerClientSettings;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -55,6 +56,11 @@ public class CrCommonConfig {
 	@Bean
 	TerminologySettings terminologySettings(CrProperties theCrProperties) {
 		return theCrProperties.getCql().getTerminology();
+	}
+
+	@Bean
+	TerminologyServerClientSettings terminologyServerClientSettings(CrProperties theCrProperties) {
+		return theCrProperties.getTerminologyServerClientSettings();
 	}
 
 	@Bean

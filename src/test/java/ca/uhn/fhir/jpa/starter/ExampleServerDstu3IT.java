@@ -51,8 +51,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
      "hapi.fhir.allow_placeholder_references=true",
 	  "spring.main.allow-bean-definition-overriding=true"
   })
-
-
 class ExampleServerDstu3IT implements IServerSupport {
 
   private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerDstu3IT.class);

@@ -3,7 +3,7 @@ server:
 #  servlet:
 #    context-path: /example/path
   port: 8080
-#Adds the option to go to eg. http://localhost:8080/actuator/health for seeing the running configuration
+#Adds the option to go to e.g. http://localhost:8080/actuator/health for seeing the running configuration
 #see https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
 management:
   #The following configuration will enable the actuator endpoints at /actuator/health, /actuator/info, /actuator/prometheus, /actuator/metrics. For security purposes, only /actuator/health is enabled by default.
@@ -11,7 +11,7 @@ management:
     enabled-by-default: false
     web:
       exposure:
-        include: 'health' # or e.g. 'info,health,prometheus,metrics' or '*' for all'
+        include: 'health' # or e.g. 'info,health,prometheus,metrics' or '*' for all
   endpoint:
     info:
       enabled: true
@@ -87,6 +87,11 @@ hapi:
       caregaps:
         reporter: "default"
         section_author: "default"
+      terminologyServerClientSettings:
+        maxRetryCount: 3
+        retryIntervalMillis: 1000
+        timeoutSeconds: 30
+        socketTimeout: 60
       cql:
         use_embedded_libraries: true
         compiler:
@@ -144,7 +149,7 @@ hapi:
     ### forces the use of the https:// protocol for the returned server address.
     ### alternatively, it may be set using the X-Forwarded-Proto header.
     #   use_apache_address_strategy_https: false
-    ### enables the server to overwrite defaults on HTML, css, etc. under the url pattern of eg. /content/custom **
+    ### enables the server to overwrite defaults on HTML, css, etc. under the url pattern of e.g. /content/custom **
     ### Folder with custom content MUST be named custom. If omitted then default content applies
     #custom_content_path: ./custom
     ### enables the server host custom content. If e.g. the value ./configs/app is supplied then the content
@@ -193,9 +198,10 @@ hapi:
     #    enable_index_of_type: true
     #    enable_index_contained_resource: false
     #    resource_dbhistory_enabled: false
-    ###  !!Extended Lucene/Elasticsearch Indexing is still a experimental feature, expect some features (e.g. _total=accurate) to not work as expected!!
+    ###  !!Extended Lucene/Elasticsearch Indexing is still an experimental feature, expect some features (e.g. _total=accurate) to not work as expected!!
     ###  more information here: https://hapifhir.io/hapi-fhir/docs/server_jpa/elastic.html
     advanced_lucene_indexing: false
+    search_index_full_text_enabled: false
     bulk_export_enabled: false
     bulk_import_enabled: false
     #    language_search_parameter_enabled: true
@@ -251,12 +257,12 @@ hapi:
     
     # comma-separated list of fully qualified interceptor classes. 
     # classes listed here will be fetched from the Spring context when combined with 'custom-bean-packages', 
-    # or will be instantiated via reflection using an no-arg contructor; then registered with the server  
+    # or will be instantiated via reflection using a no-arg constructor; then registered with the server
     #custom-interceptor-classes:  
 
     # comma-separated list of fully qualified provider classes. 
     # classes listed here will be fetched from the Spring context when combined with 'custom-bean-packages', 
-    # or will be instantiated via reflection using an no-arg contructor; then registered with the server  
+    # or will be instantiated via reflection using a no-arg constructor; then registered with the server
     #custom-provider-classes:  
     
     # Threadpool size for BATCH'ed GETs in a bundle.

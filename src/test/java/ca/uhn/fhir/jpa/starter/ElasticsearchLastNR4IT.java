@@ -13,13 +13,10 @@ import java.io.IOException;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.indices.IndexSettings;
-import co.elastic.clients.json.JsonData;
 import jakarta.annotation.PreDestroy;
-import org.elasticsearch.client.RequestOptions;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.DateTimeType;
@@ -52,6 +49,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
     "hapi.fhir.lastn_enabled=true",
 	 "hapi.fhir.store_resource_in_lucene_index_enabled=true",
 	 "hapi.fhir.advanced_lucene_indexing=true",
+	 "hapi.fhir.search_index_full_text_enabled=true",
 
     "elasticsearch.enabled=true",
 	  "hapi.fhir.cr_enabled=false",
@@ -67,13 +65,12 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 	  "spring.jpa.properties.hibernate.search.backend.analysis.configurer=ca.uhn.fhir.jpa.search.elastic.HapiElasticsearchAnalysisConfigurer"
   })
 @ContextConfiguration(initializers = ElasticsearchLastNR4IT.Initializer.class)
-public class ElasticsearchLastNR4IT {
-
-	private IGenericClient ourClient;
+class ElasticsearchLastNR4IT {
+  private IGenericClient ourClient;
   private FhirContext ourCtx;
 
-	@Container
-	public static ElasticsearchContainer embeddedElastic = TestElasticsearchContainerHelper.getEmbeddedElasticSearch();
+  @Container
+  public static ElasticsearchContainer embeddedElastic = TestElasticsearchContainerHelper.getEmbeddedElasticSearch();
 
   @Autowired
   private ElasticsearchSvcImpl myElasticsearchSvc;
@@ -108,7 +105,7 @@ public class ElasticsearchLastNR4IT {
 
   //@Test
   void testLastN() throws IOException, InterruptedException {
-	  Thread.sleep(2000);
+	 Thread.sleep(2000);
 
     Patient pt = new Patient();
     pt.addName().setFamily("Lastn").addGiven("Arthur");

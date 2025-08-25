@@ -6,7 +6,7 @@ server:
   tomcat:
     # allow | as a separator in the URL
     relaxed-query-chars: "|"
-#Adds the option to go to eg. http://localhost:8080/actuator/health for seeing the running configuration
+#Adds the option to go to e.g. http://localhost:8080/actuator/health for seeing the running configuration
 #see https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
 management:
   #The following configuration will enable the actuator endpoints at /actuator/health, /actuator/info, /actuator/prometheus, /actuator/metrics. For security purposes, only /actuator/health is enabled by default.
@@ -14,7 +14,7 @@ management:
     enabled-by-default: false
     web:
       exposure:
-        include: 'health' # or e.g. 'info,health,prometheus,metrics' or '*' for all'
+        include: 'health' # or e.g. 'info,health,prometheus,metrics' or '*' for all
   endpoint:
     info:
       enabled: true
@@ -89,6 +89,11 @@ hapi:
       caregaps:
         reporter: "default"
         section_author: "default"
+      terminologyServerClientSettings:
+        maxRetryCount: 3
+        retryIntervalMillis: 1000
+        timeoutSeconds: 30
+        socketTimeout: 60
       cql:
         use_embedded_libraries: true
         compiler:
@@ -194,8 +199,12 @@ hapi:
     #    default_encoding: JSON
     #    default_pretty_print: true
     #    default_page_size: 20
+    #    delete_enabled: true
     #    delete_expunge_enabled: true
+    #    match_url_cache_enabled: false
     #    enable_repository_validating_interceptor: true
+    ### Reduce the size used by search indexes by not tagging every row with the resource type and parameter name (this setting makes manual inspection of the database more difficult, but does not impact HAPI FHIR functionality in any way)
+    #    index_storage_optimized: false
     #    enable_index_missing_fields: false
     #    enable_index_of_type: true
     #    enable_index_contained_resource: false
@@ -204,6 +213,7 @@ hapi:
     ###  !!Extended Lucene/Elasticsearch Indexing is still a experimental feature, expect some features (e.g. _total=accurate) to not work as expected!!
     ###  more information here: https://hapifhir.io/hapi-fhir/docs/server_jpa/elastic.html
     advanced_lucene_indexing: false
+    search_index_full_text_enabled: false
     bulk_export_enabled: false
     bulk_import_enabled: false
     #    language_search_parameter_enabled: true
@@ -240,14 +250,26 @@ hapi:
       - https://unitsofmeasure.org/*
       - http://loinc.org/*
       - https://loinc.org/*
+
+    ### Uncomment the following section, and any sub-properties you need in order to enable
+    ### partitioning support on this server.
     #partitioning:
-    #  allow_references_across_partitions: true
-    #  partitioning_include_in_search_hashes: true
-    #  conditional_create_duplicate_identifiers_enabled: true
-    #  patient-id-partitioning-mode: true
-    #  request-tenant-partitioning-mode: true
-    #  database-partition-mode-enabled: true
-    #  default-partition-id: 0
+    #  allow_references_across_partitions: false
+    #  partitioning_include_in_search_hashes: false
+    #  default_partition_id: 0
+      ### Enable the following setting to enable Database Partitioning Mode
+      ###    See: https://hapifhir.io/hapi-fhir/docs/server_jpa_partitioning/db_partition_mode.html
+    #  database_partition_mode_enabled: true
+      ### Partition Style: Partitioning requires a partition interceptor which helps the server
+      ###    select which partition(s) should be accessed for a given request. You can supply your
+      ###    own interceptor (see https://hapifhir.io/hapi-fhir/docs/server_jpa_partitioning/partitioning.html#partition-interceptors )
+      ###    but the following setting can also be used to use a built-in form.
+      ### Patient ID Partitioning Mode uses the patient/subject ID to determine the partition
+    #  patient_id_partitioning_mode: true
+      ### Request tenant mode can be used for a multi-tenancy setup where the request path is
+      ###    expected to have an additional path element, e.g. GET http://example.com/fhir/TENANT-ID/Patient/A
+    #  request_tenant_partitioning_mode: false
+
     cors:
       allow_Credentials: true
       # These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-
@@ -275,14 +297,15 @@ hapi:
     
     # comma-separated list of fully qualified interceptor classes. 
     # classes listed here will be fetched from the Spring context when combined with 'custom-bean-packages', 
-    # or will be instantiated via reflection using an no-arg contructor; then registered with the server  
+    # or will be instantiated via reflection using a no-arg constructor; then registered with the server
     #custom-interceptor-classes:  
 
     # comma-separated list of fully qualified provider classes. 
     # classes listed here will be fetched from the Spring context when combined with 'custom-bean-packages', 
-    # or will be instantiated via reflection using an no-arg contructor; then registered with the server  
+    # or will be instantiated via reflection using a no-arg constructor; then registered with the server
     #custom-provider-classes:  
-    
+    # specify what should be stored in meta.source based on StoreMetaSourceInformationEnum defaults to NONE
+    # store_meta_source_information: NONE
     # Threadpool size for BATCH'ed GETs in a bundle.
     #    bundle_batch_pool_size: 10
     #    bundle_batch_pool_max_size: 50

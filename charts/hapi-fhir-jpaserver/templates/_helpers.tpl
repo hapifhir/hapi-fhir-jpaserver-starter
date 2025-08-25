@@ -150,3 +150,13 @@ Create the JDBC URL from the host, port and database name.
 {{- $appName := .Release.Name -}}
 {{ printf "jdbc:postgresql://%s:%d/%s?ApplicationName=%s" $host (int $port) $name $appName }}
 {{- end -}}
+
+{{/*
+Get the container image for the wait-for-db init container t
+*/}}
+{{- define "hapi-fhir-jpaserver.waitForDatabaseInitContainerImage" -}}
+{{- $registry := .Values.waitForDatabaseInitContainer.image.registry -}}
+{{- $repository := .Values.waitForDatabaseInitContainer.image.repository -}}
+{{- $tag := .Values.waitForDatabaseInitContainer.image.tag -}}
+{{ printf "%s/%s:%s" $registry $repository $tag}}
+{{- end -}}
