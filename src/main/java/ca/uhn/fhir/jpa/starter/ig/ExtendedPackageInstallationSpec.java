@@ -16,7 +16,8 @@ public class ExtendedPackageInstallationSpec extends PackageInstallationSpec {
 		this.additionalResourceFolders = additionalResourceFolders;
 	}
 
-	@Schema(description =
+	@Schema(
+			description =
 					"Specifies folder names containing additional resources to load. These folders will be scanned for resources to include during installation.")
 	@JsonProperty("additionalResourceFolders")
 	private Set<String> additionalResourceFolders;
