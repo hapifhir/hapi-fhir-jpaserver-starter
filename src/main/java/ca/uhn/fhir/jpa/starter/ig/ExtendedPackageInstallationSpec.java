@@ -17,8 +17,7 @@ public class ExtendedPackageInstallationSpec extends PackageInstallationSpec {
 	}
 
 	@Schema(
-			description =
-					"If resources are being installed individually, this is list provides the resource types to install. By default, all conformance resources will be installed.")
+					"Specifies folder names containing additional resources to load. These folders will be scanned for resources to include during installation.")
 	@JsonProperty("additionalResourceFolders")
 	private Set<String> additionalResourceFolders;
 }
