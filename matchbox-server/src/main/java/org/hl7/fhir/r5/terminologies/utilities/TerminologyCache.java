@@ -1,10 +1,5 @@
 package org.hl7.fhir.r5.terminologies.utilities;
 
-/*
-  This class is copied from HAPI to integrate log statements for debugging.
-  No other modifications are done, so the class can be deleted at any time without any change in Matchbox.
- */
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -400,7 +395,9 @@ public class TerminologyCache {
 			nameCacheToken(vs, ct);
 			JsonParser json = new JsonParser();
 			json.setOutputStyle(OutputStyle.PRETTY);
-			String expJS = expParameters == null ? "" : json.composeString(expParameters);
+			// PATCH MATCHBOX: need to copy expParameters to avoid multithreading issues
+			String expJS = expParameters == null ? "" : json.composeString(expParameters.copy());
+			// END PATCH MATCHBOX
 
 			if (vs != null && vs.hasUrl() && vs.hasVersion()) {
 				ct.request = "{\"code\" : "+json.composeString(code, "codeableConcept")+", \"url\": \""+Utilities.escapeJson(vs.getUrl())
