@@ -1,12 +1,9 @@
 package ca.uhn.fhir.jpa.starter.common;
 
-import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
 import ch.ahdis.matchbox.mappinglanguage.StructureMapListProvider;
 import ch.ahdis.matchbox.providers.CodeSystemResourceProvider;
 import ch.ahdis.matchbox.providers.ConceptMapResourceProvider;
 import ch.ahdis.matchbox.packages.ImplementationGuideProviderR4B;
-import ch.ahdis.matchbox.terminology.CodeSystemCodeValidationProvider;
-import ch.ahdis.matchbox.terminology.ValueSetCodeValidationProvider;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +29,6 @@ import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR4B;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR4B;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
-import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @Conditional(OnR4BCondition.class)
@@ -71,7 +67,7 @@ public class FhirServerConfigR4B {
   public IFhirResourceDao<org.hl7.fhir.r4b.model.ImplementationGuide> daoImplementationGuideR4B() {
 
     ca.uhn.fhir.jpa.dao.BaseHapiFhirResourceDao<org.hl7.fhir.r4b.model.ImplementationGuide> retVal;
-    retVal = new ca.uhn.fhir.jpa.dao.JpaResourceDao<org.hl7.fhir.r4b.model.ImplementationGuide>();
+    retVal = new ca.uhn.fhir.jpa.dao.JpaResourceDao<>();
     retVal.setResourceType(org.hl7.fhir.r4b.model.ImplementationGuide.class);
     retVal.setContext(fhirContext);
     return retVal;
@@ -171,15 +167,4 @@ public class FhirServerConfigR4B {
   public MatchboxPackageInstallerImpl packageInstaller() {
     return new MatchboxPackageInstallerImpl();
   }
-  
-	@Bean
-	public CodeSystemCodeValidationProvider codeSystemCodeValidationProvider(final FhirContext fhirContext) {
-		return new CodeSystemCodeValidationProvider(fhirContext);
-	}
-
-	@Bean
-	public ValueSetCodeValidationProvider valueSetCodeValidationProvider(final FhirContext fhirContext) {
-		return new ValueSetCodeValidationProvider(fhirContext);
-	}
-
 }

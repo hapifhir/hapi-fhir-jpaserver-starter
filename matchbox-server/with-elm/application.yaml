@@ -27,7 +27,7 @@ matchbox:
   fhir:
     context:
 #      txServer: http://tx.fhir.org
-      txServer: http://localhost:${server.port}/matchboxv3/fhir
+      txServer: http://localhost:${server.port}/matchboxv3/tx
       txUseEcosystem: false
       txLog: test.html
       txServerCache: false

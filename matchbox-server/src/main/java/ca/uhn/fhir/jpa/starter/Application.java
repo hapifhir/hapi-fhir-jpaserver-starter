@@ -1,8 +1,11 @@
 package ca.uhn.fhir.jpa.starter;
 
+import ch.ahdis.matchbox.MatchboxRestfulServer;
 import ch.ahdis.matchbox.config.MatchboxStaticResourceConfig;
 import ch.ahdis.matchbox.config.MatchboxMcpConfig;
+import ch.ahdis.matchbox.config.MatchboxTxConfig;
 import ch.ahdis.matchbox.spring.MatchboxEventListener;
+import ch.ahdis.matchbox.terminology.MatchboxTxServer;
 import ch.ahdis.matchbox.terminology.RegistryWs;
 import ch.ahdis.matchbox.validation.gazelle.GazelleValidationWs;
 
@@ -35,7 +38,9 @@ import ch.ahdis.matchbox.config.MatchboxJpaConfig;
 	GazelleValidationWs.class,
   RegistryWs.class,
   MatchboxStaticResourceConfig.class,
-  MatchboxMcpConfig.class})
+  MatchboxMcpConfig.class,
+  MatchboxTxConfig.class
+})
 public class Application extends SpringBootServletInitializer {
 
   public static void main(String[] args) {
@@ -57,12 +62,23 @@ public class Application extends SpringBootServletInitializer {
 
   @Bean(name = "hapiServletRegistration")
   @Conditional(OnEitherVersion.class)
-  public ServletRegistrationBean<RestfulServer> hapiServletRegistration(final RestfulServer restfulServer) {
+  public ServletRegistrationBean<RestfulServer> hapiServletRegistration(final MatchboxRestfulServer restfulServer) {
     ServletRegistrationBean<RestfulServer> servletRegistrationBean = new ServletRegistrationBean<>();
     beanFactory.autowireBean(restfulServer);
     servletRegistrationBean.setServlet(restfulServer);
     servletRegistrationBean.addUrlMappings("/fhir/*");
     servletRegistrationBean.setLoadOnStartup(1);
+
+    return servletRegistrationBean;
+  }
+  
+  @Bean(name = "terminologyServletRegistration")
+  public ServletRegistrationBean<RestfulServer> terminologyServletRegistration(final MatchboxTxServer matchboxTxServer) {
+    ServletRegistrationBean<RestfulServer> servletRegistrationBean = new ServletRegistrationBean<>();
+    beanFactory.autowireBean(matchboxTxServer);
+    servletRegistrationBean.setServlet(matchboxTxServer);
+    servletRegistrationBean.addUrlMappings("/tx/*");
+    servletRegistrationBean.setLoadOnStartup(2);
 
     return servletRegistrationBean;
   }

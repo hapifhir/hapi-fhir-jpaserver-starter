@@ -1,15 +1,11 @@
 package ca.uhn.fhir.jpa.starter.common;
 
-import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
 import ch.ahdis.matchbox.mappinglanguage.StructureMapListProvider;
 import ch.ahdis.matchbox.providers.ValueSetResourceProvider;
 import ch.ahdis.matchbox.providers.ConceptMapResourceProvider;
 import ch.ahdis.matchbox.packages.ImplementationGuideProviderR4;
-import ch.ahdis.matchbox.terminology.CodeSystemCodeValidationProvider;
-import ch.ahdis.matchbox.terminology.ValueSetCodeValidationProvider;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +29,6 @@ import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR4;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR4;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
-import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @Conditional(OnR4Condition.class)
@@ -182,15 +177,4 @@ public class FhirServerConfigR4 {
   public MatchboxPackageInstallerImpl packageInstaller() {
     return new MatchboxPackageInstallerImpl();
   }
-  
-	@Bean
-	public CodeSystemCodeValidationProvider codeSystemCodeValidationProvider(final FhirContext fhirContext) {
-		return new CodeSystemCodeValidationProvider(fhirContext);
-	}
-
-	@Bean
-	public ValueSetCodeValidationProvider valueSetCodeValidationProvider(final FhirContext fhirContext) {
-		return new ValueSetCodeValidationProvider(fhirContext);
-	}
-
 }

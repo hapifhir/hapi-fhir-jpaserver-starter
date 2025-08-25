@@ -1,4 +1,4 @@
-package ch.ahdis.matchbox.interceptors;
+package ch.ahdis.matchbox.terminology.interceptors;
 
 import ca.uhn.fhir.interceptor.api.Hook;
 import ca.uhn.fhir.interceptor.api.Interceptor;
@@ -65,6 +65,9 @@ public class TerminologyCapabilitiesInterceptor {
 		for (final var codeSystem : this.getCodeSystems()) {
 			tc.getCodeSystem().add(new TerminologyCapabilities.TerminologyCapabilitiesCodeSystemComponent().setUri(codeSystem));
 		}
+		for (final var expansionParam : this.getExpansionParameters()) {
+			tc.getExpansion().addParameter(new TerminologyCapabilities.TerminologyCapabilitiesExpansionParameterComponent().setName(expansionParam));
+		}
 
 		return tc;
 	}
@@ -78,5 +81,14 @@ public class TerminologyCapabilitiesInterceptor {
 							"http://unstats.un.org/unsd/methods/m49/m49.htm", "http://varnomen.hgvs.org",
 							"https://www.usps.com/", "urn:ietf:rfc:3986", "urn:iso:std:iso:3166",
 							"urn:iso:std:iso:4217", "urn:oid:1.2.36.1.2001.1005.17");
+	}
+
+	private List<String> getExpansionParameters() {
+		return List.of(
+			"cache-id", "tx-resource", "_incomplete", "abstract", "activeOnly", "check-system-version", "count",
+			"default-to-latest-version", "displayLanguage", "excludeNested", "excludeNotForUI", "excludePostCoordinated",
+			"force-system-version", "inactive", "includeAlternateCodes", "includeDefinition", "includeDesignations",
+			"incomplete-ok", "limitedExpansion", "mode", "no-cache", "offset", "profile", "property", "system-version",
+			"valueSetMode");
 	}
 }

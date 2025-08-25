@@ -25,7 +25,7 @@ public class Candidate {
     @JsonProperty("open")
     private Boolean open;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new LinkedHashMap<>();
 
     /**
      * No args constructor for use in serialization

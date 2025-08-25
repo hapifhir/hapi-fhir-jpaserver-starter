@@ -6,9 +6,8 @@ import javax.annotation.Nullable;
 
 import ca.uhn.fhir.batch2.model.*;
 import ca.uhn.fhir.context.FhirVersionEnum;
-import ca.uhn.fhir.context.support.IValidationSupport;
-import ca.uhn.fhir.jpa.config.JpaConfig;
 import ch.ahdis.matchbox.CliContext;
+import ch.ahdis.matchbox.MatchboxRestfulServer;
 import ch.ahdis.matchbox.interceptors.*;
 import ch.ahdis.matchbox.mappinglanguage.StructureMapListProvider;
 import ch.ahdis.matchbox.packages.*;
@@ -20,11 +19,8 @@ import jakarta.persistence.EntityManager;
 
 import ca.uhn.fhir.jpa.dao.tx.IHapiTransactionService;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
-import ch.ahdis.matchbox.terminology.CodeSystemCodeValidationProvider;
-import ch.ahdis.matchbox.terminology.ValueSetCodeValidationProvider;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -69,7 +65,6 @@ import ca.uhn.fhir.jpa.searchparam.MatchUrlService;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.common.StarterJpaConfig;
 import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
-import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
@@ -82,8 +77,6 @@ import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
 import org.springframework.data.domain.Page;
 
 import ca.uhn.fhir.jpa.bulk.export.model.ExportPIDIteratorParameters;
-
-import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
 
 @Configuration
 @Import(ThreadPoolFactoryConfig.class)
@@ -161,28 +154,30 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	@Autowired(required = false)
 	private ImplementationGuideProviderR5 implementationGuideResourceProviderR5;
 
-	@Autowired(required = false)
-	private CodeSystemCodeValidationProvider codeSystemCodeValidationProvider;
-
-	@Autowired(required = false)
-	private ValueSetCodeValidationProvider valueSetCodeValidationProvider;
-
 	// removed GraphQlProvider
 	// removed IVAldiationSupport
 	
 	@Bean
-	public RestfulServer restfulServer(IFhirSystemDao<?, ?> fhirSystemDao, AppProperties appProperties,
-			DaoRegistry daoRegistry, Optional<MdmProviderLoader> mdmProviderProvider, IJpaSystemProvider jpaSystemProvider,
-			ResourceProviderFactory resourceProviderFactory, JpaStorageSettings daoConfig, ISearchParamRegistry searchParamRegistry,
-			DatabaseBackedPagingProvider databaseBackedPagingProvider,
-			LoggingInterceptor loggingInterceptor, 
-			Optional<CorsInterceptor> corsInterceptor, IInterceptorBroadcaster interceptorBroadcaster,
-			Optional<BinaryAccessProvider> binaryAccessProvider, BinaryStorageInterceptor binaryStorageInterceptor,
-			PartitionManagementProvider partitionManagementProvider,
-			IPackageInstallerSvc packageInstallerSvc, ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc,
-												  final InstallNpmPackageProvider installNpmPackageOperationProvider) {
+	public MatchboxRestfulServer restfulServer(IFhirSystemDao<?, ?> fhirSystemDao,
+															 AppProperties appProperties,
+															 DaoRegistry daoRegistry,
+															 Optional<MdmProviderLoader> mdmProviderProvider,
+															 IJpaSystemProvider jpaSystemProvider,
+															 ResourceProviderFactory resourceProviderFactory,
+															 JpaStorageSettings daoConfig,
+															 ISearchParamRegistry searchParamRegistry,
+															 DatabaseBackedPagingProvider databaseBackedPagingProvider,
+															 LoggingInterceptor loggingInterceptor,
+															 Optional<CorsInterceptor> corsInterceptor,
+															 IInterceptorBroadcaster interceptorBroadcaster,
+															 Optional<BinaryAccessProvider> binaryAccessProvider,
+															 BinaryStorageInterceptor binaryStorageInterceptor,
+															 PartitionManagementProvider partitionManagementProvider,
+															 IPackageInstallerSvc packageInstallerSvc,
+															 ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc,
+															 final InstallNpmPackageProvider installNpmPackageOperationProvider) {
 
-		RestfulServer fhirServer = super.restfulServer(fhirSystemDao, appProperties, daoRegistry, mdmProviderProvider,
+		final var fhirServer = super.restfulServer(fhirSystemDao, appProperties, daoRegistry, mdmProviderProvider,
 				jpaSystemProvider, resourceProviderFactory, daoConfig, searchParamRegistry,
 				databaseBackedPagingProvider, loggingInterceptor, null, null,
 				corsInterceptor, interceptorBroadcaster, binaryAccessProvider, binaryStorageInterceptor, null,
@@ -196,8 +191,6 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 		fhirServer.registerInterceptor(new ImplementationGuidePackageInterceptor(myPackageCacheManager, myFhirContext));
 		fhirServer.registerInterceptor(new MatchboxValidationInterceptor(this.myFhirContext));
 
-		fhirServer.registerInterceptor(new TerminologyCapabilitiesInterceptor());
-
 		Arrays.stream(new Object[] {
 			this.validationProvider,
 			this.questionnaireProvider,
@@ -205,8 +198,6 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 			this.codeSystemProvider,
 			this.valueSetProvider,
 			this.structureDefinitionProvider,
-			this.codeSystemCodeValidationProvider,
-			this.valueSetCodeValidationProvider,
 			this.structureMapTransformProvider,
 			this.structureMapListProvider
 		})

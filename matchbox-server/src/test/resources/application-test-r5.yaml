@@ -14,7 +14,7 @@ matchbox:
   fhir:
     context:
       httpReadOnly: true
-      txServer: http://localhost:${server.port}/matchboxv3/fhir
+      txServer: http://localhost:${server.port}/matchboxv3/tx
       suppressWarnInfo:
         hl7.fhir.r45.core#5.0.0:
           - "Constraint failed: dom-6:"

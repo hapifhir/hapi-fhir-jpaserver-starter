@@ -1,4 +1,4 @@
-package ch.ahdis.matchbox.terminology;
+package ch.ahdis.matchbox.terminology.providers;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
@@ -8,70 +8,60 @@ import ca.uhn.fhir.context.support.ValueSetExpansionOptions;
 import ca.uhn.fhir.rest.annotation.*;
 import ca.uhn.fhir.rest.server.IResourceProvider;
 import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
-import org.apache.commons.collections4.map.PassiveExpiringMap;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import ch.ahdis.matchbox.terminology.validation.DummyValidationSupport;
+import ch.ahdis.matchbox.terminology.validation.TxValidationCache;
+import jakarta.servlet.http.HttpServletResponse;
 import org.hl7.fhir.common.hapi.validation.support.InMemoryTerminologyServerValidationSupport;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
-import org.hl7.fhir.instance.model.api.IAnyResource;
-import org.hl7.fhir.instance.model.api.IBaseParameters;
-import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.instance.model.api.IDomainResource;
-import org.hl7.fhir.r5.model.*;
+import org.hl7.fhir.instance.model.api.*;
+import org.hl7.fhir.r4.model.ValueSet;
+import org.hl7.fhir.r5.model.CodeableConcept;
+import org.hl7.fhir.r5.model.Coding;
+import org.hl7.fhir.r5.model.Parameters;
+import org.hl7.fhir.r5.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.servlet.http.HttpServletResponse;
-
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import static ch.ahdis.matchbox.terminology.TerminologyUtils.*;
+import static ch.ahdis.matchbox.terminology.TerminologyUtils.createErrorResponseParameters;
+import static ch.ahdis.matchbox.terminology.TerminologyUtils.createSuccessfulResponseParameters;
 import static java.util.Objects.requireNonNull;
 
-/**
- * The HAPI FHIR provider for the ValueSet/$validate-code operation.
- * <p>
- * It currently only supports FHIR R4 value sets.
- *
- * @author Quentin Ligier
- **/
-public class ValueSetCodeValidationProvider implements IResourceProvider {
-	private static final Logger log = LoggerFactory.getLogger(ValueSetCodeValidationProvider.class);
+public class ValueSetProvider implements IResourceProvider {
+	private static final Logger log = LoggerFactory.getLogger(ValueSetProvider.class);
 
-	private final FhirContext fhirContext;
 	private final FhirVersionEnum fhirVersion;
-
 	private final InMemoryTerminologyServerValidationSupport inMemoryTerminologySupport;
-
-	/**
-	 * A cache that stores a mapping from value set URLs to expanded value sets, per cache ID.
-	 */
-	private final Map<String, Map<String, ValueSet>> valueSetCache =
-		new PassiveExpiringMap<>(5, TimeUnit.MINUTES);
-
 	private final ValueSetExpansionOptions expansionOptions = new ValueSetExpansionOptions();
-
 	private final ValidationSupportContext validationSupportContext;
+	private final TxValidationCache txValidationCache;
 
-	public ValueSetCodeValidationProvider(final FhirContext fhirContext) {
-		this.fhirContext = requireNonNull(fhirContext);
+	public ValueSetProvider(final FhirContext fhirContext,
+									final TxValidationCache txValidationCache) {
 		this.expansionOptions.setFailOnMissingCodeSystem(false);
 		this.inMemoryTerminologySupport =
 			new InMemoryTerminologyServerValidationSupport(fhirContext);
 		this.validationSupportContext =
 			new ValidationSupportContext(new DummyValidationSupport(fhirContext));
 		this.fhirVersion = fhirContext.getVersion().getVersion();
+		this.txValidationCache = txValidationCache;
 	}
 
 	/**
 	 *
 	 */
-	@Operation(name = "$validate-code", idempotent = true)
+	@Operation(
+		name = "$validate-code",
+		canonicalUrl = "http://hl7.org/fhir/OperationDefinition/ValueSet-validate-code",
+		idempotent = true
+	)
 	public IAnyResource validateCode(@ResourceParam final IBaseParameters baseParameters,
 												final HttpServletResponse servletResponse) {
-		Objects.requireNonNull(baseParameters, "baseParameters is null in ValueSetCodeValidationProvider.validateCode");
+		Objects.requireNonNull(baseParameters, "baseParameters is null in validateCode");
 		// Convert the incoming parameters to R5, to handle a single FHIR version in the method
 		final Parameters request = switch (baseParameters) {
 			case final Parameters parametersR5 -> parametersR5;
@@ -91,6 +81,27 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 			default -> throw new MatchboxUnsupportedFhirVersionException("ValueSetCodeValidationProvider",
 																							 this.fhirVersion);
 		};
+	}
+
+	@Operation(
+		name = "$expand",
+		canonicalUrl = "http://hl7.org/fhir/OperationDefinition/ValueSet-expand",
+		idempotent = true
+	)
+	public IAnyResource expandValueSet(@ResourceParam final IBaseParameters baseParameters,
+												  final HttpServletResponse servletResponse) {
+		return null;
+	}
+
+	@Read
+	public IAnyResource readValueSet(@IdParam final IIdType id,
+												final HttpServletResponse servletResponse) {
+		return null;
+	}
+
+	@Search
+	public List<ValueSet> searchValueSets() {
+		return Collections.emptyList();
 	}
 
 	private Resource doValidateR5Code(final Parameters request,
@@ -159,14 +170,14 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 		}
 
 		String url = null;
-		ValueSet valueSet = null;
+		org.hl7.fhir.r5.model.ValueSet valueSet = null;
 		boolean cachedValueSet = false;
 		if (request.hasParameter("url")) {
 			url = request.getParameterValue("url").toString();
-			valueSet = this.getExpandedValueSet(cacheId, url);
+			valueSet = this.txValidationCache.getValueSet(cacheId, url);
 			cachedValueSet = true;
 		} else if (request.hasParameter("valueSet")) {
-			valueSet = (ValueSet) request.getParameter("valueSet").getResource();
+			valueSet = (org.hl7.fhir.r5.model.ValueSet) request.getParameter("valueSet").getResource();
 			url = valueSet.getUrl();
 		}
 
@@ -216,12 +227,12 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 
 			// Value set is expanded, convert it to R5 for internal use
 			final var baseValueSet = (IDomainResource) result.getValueSet();
-			if (baseValueSet instanceof final ValueSet valueSetR5) {
+			if (baseValueSet instanceof final org.hl7.fhir.r5.model.ValueSet valueSetR5) {
 				valueSet = valueSetR5;
 			} else if (baseValueSet instanceof final org.hl7.fhir.r4.model.ValueSet valueSetR4) {
-				valueSet = (ValueSet) VersionConvertorFactory_40_50.convertResource(valueSetR4);
+				valueSet = (org.hl7.fhir.r5.model.ValueSet) VersionConvertorFactory_40_50.convertResource(valueSetR4);
 			} else if (baseValueSet instanceof final org.hl7.fhir.r4b.model.ValueSet valueSetR4B) {
-				valueSet = (ValueSet) VersionConvertorFactory_43_50.convertResource(valueSetR4B);
+				valueSet = (org.hl7.fhir.r5.model.ValueSet) VersionConvertorFactory_43_50.convertResource(valueSetR4B);
 			} else {
 				throw new MatchboxUnsupportedFhirVersionException("ValueSetCodeValidationProvider",
 																				  baseValueSet.getStructureFhirVersionEnum());
@@ -234,7 +245,7 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 			}
 
 			if (cacheId != null) {
-				this.cacheExpandedValueSet(cacheId, url, valueSet);
+				this.txValidationCache.cacheValueSet(cacheId, url, valueSet);
 			}
 		}
 
@@ -257,8 +268,8 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 	 * Try to infer from an expanded value set if a coding is included or excluded.
 	 */
 	private boolean evaluateCodingInExpandedValueSet(final Coding coding,
-												                final ValueSet valueSet,
-												                final boolean inferSystem) {
+																	 final org.hl7.fhir.r5.model.ValueSet valueSet,
+																	 final boolean inferSystem) {
 		if (inferSystem && !coding.hasSystem()) {
 			// Infer the coding system as the first included system in the composition
 			coding.setSystem(valueSet.getCompose().getIncludeFirstRep().getSystem());
@@ -279,7 +290,7 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 	 * excluded.
 	 */
 	private CodeMembership evaluateCodeInComposition(final Coding coding,
-																	 final ValueSet.ValueSetComposeComponent compose) {
+																											  final org.hl7.fhir.r5.model.ValueSet.ValueSetComposeComponent compose) {
 		int mayBeIncludedByInclude = 0;
 		for (final var include : compose.getInclude()) {
 			if (include.hasSystem() && !include.getSystem().equals(coding.getSystem())) {
@@ -312,23 +323,8 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 		return CodeMembership.EXCLUDED;
 	}
 
-	private @Nullable ValueSet getExpandedValueSet(final String cacheId,
-																  final String valueSetUrl) {
-		return Optional.ofNullable(this.valueSetCache.get(cacheId))
-			.map(m -> m.get(valueSetUrl))
-			.orElse(null);
-	}
-
-	private void cacheExpandedValueSet(final String cacheId,
-												  final String valueSetUrl,
-												  final ValueSet valueSet) {
-		this.valueSetCache
-			.computeIfAbsent(cacheId, k -> HashMap.newHashMap(20))
-			.put(valueSetUrl, valueSet);
-	}
-
 	private boolean validateCodeInExpandedValueSet(final Coding coding,
-																  final ValueSet valueSet) {
+																  final org.hl7.fhir.r5.model.ValueSet valueSet) {
 		for (final var item : valueSet.getExpansion().getContains()) {
 			if (item.getSystem().equals(coding.getSystem()) && item.getCode().equals(coding.getCode())) {
 				return true;
@@ -337,29 +333,14 @@ public class ValueSetCodeValidationProvider implements IResourceProvider {
 		return false;
 	}
 
+	/**
+	 * Returns the type of resource returned by this provider
+	 *
+	 * @return Returns the type of resource returned by this provider
+	 */
 	@Override
 	public Class<? extends IBaseResource> getResourceType() {
-		return switch (this.fhirContext.getVersion().getVersion()) {
-			case R4 -> org.hl7.fhir.r4.model.ValueSet.class;
-			case R4B -> org.hl7.fhir.r4b.model.ValueSet.class;
-			case R5 -> org.hl7.fhir.r5.model.ValueSet.class;
-			default -> throw new MatchboxUnsupportedFhirVersionException("ValueSetCodeValidationProvider",
-																							 this.fhirContext.getVersion().getVersion());
-		};
-	}
-
-	public static class DummyValidationSupport implements IValidationSupport {
-
-		private final FhirContext context;
-
-		DummyValidationSupport(final FhirContext context) {
-			this.context = context;
-		}
-
-		@Override
-		public FhirContext getFhirContext() {
-			return context;
-		}
+		return ValueSet.class;
 	}
 
 	enum CodeMembership {
