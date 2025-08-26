@@ -7,7 +7,6 @@ import ca.uhn.fhir.jpa.starter.mcp.ToolFactory;
 import ca.uhn.fhir.rest.api.server.cdshooks.CdsServiceRequestContextJson;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsServiceRegistry;
 import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServiceResponseJson;
-import ca.uhn.hapi.fhir.cdshooks.module.CdsHooksObjectMapperFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -16,7 +15,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.spec.McpSchema;
-import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +32,10 @@ public class McpCdsBridge implements McpBridge {
 	private final ObjectMapper objectMapper;
 	private final FhirContext fhirContext;
 
-	public McpCdsBridge(FhirContext fhirContext, ICdsServiceRegistry cdsServiceRegistry) {
+	public McpCdsBridge(FhirContext fhirContext, ICdsServiceRegistry cdsServiceRegistry, ObjectMapper objectMapper) {
 		this.fhirContext = fhirContext;
 		this.cdsServiceRegistry = cdsServiceRegistry;
-		this.objectMapper = new CdsHooksObjectMapperFactory(fhirContext).newMapper();
+		this.objectMapper = objectMapper;
 	}
 
 	public List<McpServerFeatures.SyncToolSpecification> generateTools() {
@@ -54,18 +52,21 @@ public class McpCdsBridge implements McpBridge {
 
 	private McpSchema.CallToolResult getToolResult(McpSchema.CallToolRequest contextMap, Interaction interaction) {
 
-		if (interaction == Interaction.CALL_CDS_HOOK) return invokeCDS(contextMap.arguments());
-		throw new UnsupportedOperationException("Unsupported interaction: " + interaction);
-	}
+		if (interaction != Interaction.CALL_CDS_HOOK)
+			throw new UnsupportedOperationException("Unsupported interaction: " + interaction);
 
-	private McpSchema.CallToolResult invokeCDS(Map<String, Object> contextMap) {
-		CdsHooksRequest cdsInvocation = constructCdsHooksRequest(contextMap);
-		CdsServiceResponseJson serviceResponseJson =
-				cdsServiceRegistry.callService(contextMap.get("service").toString(), cdsInvocation);
-		String jsonResponse = constructMCPResponse(serviceResponseJson);
+		var cdsInvocation = constructCdsHooksRequest(contextMap);
+		var serviceResponseJson = cdsServiceRegistry.callService(
+				contextMap.arguments().get("service").toString(), cdsInvocation);
 
+		final String content;
+		try {
+			content = objectMapper.writeValueAsString(serviceResponseJson);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 		return McpSchema.CallToolResult.builder()
-				.addContent(new McpSchema.TextContent(jsonResponse))
+				.addContent(new McpSchema.TextContent(content))
 				.build();
 	}
 
@@ -86,15 +87,16 @@ public class McpCdsBridge implements McpBridge {
 		}
 	}
 
-	private @NotNull CdsHooksRequest constructCdsHooksRequest(Map<String, Object> contextMap) {
+	private @NotNull CdsHooksRequest constructCdsHooksRequest(McpSchema.CallToolRequest callToolRequest) {
 
 		// TODO Build up CDS Hooks request JSON from contextMap
-		CdsHooksRequest request = new CdsHooksRequest();
+		var contextMap = callToolRequest.arguments();
+		var request = new CdsHooksRequest();
 		request.setHook(contextMap.get("hook").toString());
 		request.setHookInstance(contextMap.get("hookInstance").toString());
 
 		// Context
-		CdsServiceRequestContextJson context = new CdsServiceRequestContextJson();
+		var context = new CdsServiceRequestContextJson();
 		var hookContext = (Map<String, String>) contextMap.get("hookContext");
 		if (hookContext.containsKey("userId")) {
 			context.put("userId", hookContext.get("userId").toString());
@@ -109,15 +111,15 @@ public class McpCdsBridge implements McpBridge {
 
 		// Prefetch
 		if (contextMap.containsKey("prefetch")) {
-			Object prefetch = contextMap.get("prefetch");
-			Map<String, Object> prefetchMap = (Map<String, Object>) prefetch;
+			var prefetch = contextMap.get("prefetch");
+			var prefetchMap = (Map<String, Object>) prefetch;
 			for (Map.Entry<String, Object> entry : prefetchMap.entrySet()) {
-				String key = entry.getKey();
-				Object value = entry.getValue();
+				var key = entry.getKey();
+				var value = entry.getValue();
 
 				// Object is a String -> Object map
 				// Use a standard JSON library to convert it
-				IBaseResource resource = fhirContext.newJsonParser().parseResource(new Gson().toJson(value));
+				var resource = fhirContext.newJsonParser().parseResource(new Gson().toJson(value));
 				request.addPrefetch(key, resource);
 			}
 		}

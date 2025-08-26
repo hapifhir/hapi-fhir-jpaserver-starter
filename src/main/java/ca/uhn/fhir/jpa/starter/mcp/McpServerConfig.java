@@ -6,6 +6,7 @@ import ca.uhn.fhir.rest.server.McpCdsBridge;
 import ca.uhn.fhir.rest.server.McpFhirBridge;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsServiceRegistry;
+import ca.uhn.hapi.fhir.cdshooks.module.CdsHooksObjectMapperFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.server.McpServer;
 import io.modelcontextprotocol.server.McpSyncServer;
@@ -51,7 +52,9 @@ public class McpServerConfig {
 			name = {"enabled"},
 			havingValue = "true")
 	public McpCdsBridge mcpCdsBridge(FhirContext fhirContext, ICdsServiceRegistry cdsServiceRegistry) {
-		return new McpCdsBridge(fhirContext, cdsServiceRegistry);
+
+		return new McpCdsBridge(
+				fhirContext, cdsServiceRegistry, new CdsHooksObjectMapperFactory(fhirContext).newMapper());
 	}
 
 	@Bean

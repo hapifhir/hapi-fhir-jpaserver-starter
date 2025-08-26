@@ -8,16 +8,12 @@ import ca.uhn.fhir.jpa.starter.mcp.ToolFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.spec.McpSchema;
-import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class McpFhirBridge implements McpBridge {
@@ -26,12 +22,10 @@ public class McpFhirBridge implements McpBridge {
 
 	private final RestfulServer restfulServer;
 	private final FhirContext fhirContext;
-	private final CallToolResultFactory callToolResultFactory;
 
 	public McpFhirBridge(RestfulServer restfulServer) {
 		this.restfulServer = restfulServer;
 		this.fhirContext = restfulServer.getFhirContext();
-		this.callToolResultFactory = new CallToolResultFactory(fhirContext);
 	}
 
 	public List<McpServerFeatures.SyncToolSpecification> generateTools() {
@@ -81,41 +75,27 @@ public class McpFhirBridge implements McpBridge {
 
 	private McpSchema.CallToolResult getToolResult(McpSchema.CallToolRequest contextMap, Interaction interaction) {
 
-		return invokeFhirService(contextMap.arguments(), interaction);
-	}
-
-	private McpSchema.CallToolResult invokeFhirService(Map<String, Object> contextMap, Interaction interaction) {
-		MockHttpServletResponse response = new MockHttpServletResponse();
-		MockHttpServletRequest request = new RequestBuilder(fhirContext, contextMap, interaction).buildRequest();
+		var response = new MockHttpServletResponse();
+		var request = new RequestBuilder(fhirContext, contextMap.arguments(), interaction).buildRequest();
 
 		try {
 			restfulServer.handleRequest(interaction.asRequestType(), request, response);
-			int status = response.getStatus();
-			String body = response.getContentAsString();
+			var status = response.getStatus();
+			var body = response.getContentAsString();
 
 			if (status >= 200 && status < 300) {
 				if (body.isBlank()) {
-					return McpSchema.CallToolResult.builder()
-							.isError(true)
-							.addTextContent("Empty successful response for " + interaction)
-							.build();
+					return CallToolResultFactory.failure("Empty successful response for " + interaction);
 				}
-				IBaseResource parsed = fhirContext.newJsonParser().parseResource(body);
 
-				return callToolResultFactory.success(
-						contextMap.get("resourceType").toString(), interaction, parsed, status);
+				return CallToolResultFactory.success(
+						contextMap.arguments().get("resourceType").toString(), interaction, body, status);
 			} else {
-				return callToolResultFactory.failure(String.format("FHIR server error %d: %s", status, body));
+				return CallToolResultFactory.failure(String.format("FHIR server error %d: %s", status, body));
 			}
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-			return callToolResultFactory.failure("Dispatch error: " + e.getMessage());
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			return McpSchema.CallToolResult.builder()
-					.isError(true)
-					.addTextContent("Unexpected error: " + e.getMessage())
-					.build();
+			return CallToolResultFactory.failure("Unexpected error: " + e.getMessage());
 		}
 	}
 }
