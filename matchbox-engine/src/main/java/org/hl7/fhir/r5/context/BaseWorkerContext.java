@@ -3793,35 +3793,41 @@ public abstract class BaseWorkerContext extends I18nBase implements IWorkerConte
   }
   
   public void setLocale(Locale locale) {
-	    // matchbox patch  https://github.com/ahdis/matchbox/issues/425 
-	    if (this.locale == null) {
-	    	this.locale = locale;
-	    	super.setLocale(locale);
-	    } else {
-	      if (!this.locale.equals(locale)) {
-		    	this.locale = locale;
-		      super.setLocale(locale);
-		      log.info("changing locale to" + locale.toLanguageTag());
-	      }
-	    }
-	    if (locale != null) {
+    // matchbox patch https://github.com/ahdis/matchbox/issues/425
+    if (this.locale == null) {
+      this.locale = locale;
+      super.setLocale(locale);
+    } else {
+      if (!this.locale.equals(locale)) {
+        this.locale = locale;
+        super.setLocale(locale);
+        if (locale != null) {
+          log.info("changing locale to" + locale.toLanguageTag());
+        } else {
+          log.info("resetting locale");
+        }
+      }
+    }
+    if (locale != null) {
       String lt = locale.toLanguageTag();
       if ("und".equals(lt)) {
-        throw new FHIRException("The locale "+locale.toString()+" is not valid");
+        throw new FHIRException("The locale " + locale.toString() + " is not valid");
       }
       if (expParameters != null) {
         for (ParametersParameterComponent p : expParameters.getParameter()) {
-          // matchbox patch  https://github.com/ahdis/matchbox/issues/425 change from displayLanguage to defaultDisplayLanguage
+          // matchbox patch https://github.com/ahdis/matchbox/issues/425 change from
+          // displayLanguage to defaultDisplayLanguage
           if ("defaultDisplayLanguage".equals(p.getName())) {
             if (p.hasUserData(UserDataNames.auto_added_parameter)) {
-              if (p.getValueCodeType() != null && !p.getValueCodeType().getCode().equals(lt) ) {
-                log.error("should this acutally happenen that the defaultDisplayLanguage is overerwritten from " +p.getValueCodeType().getCode()+ " to " + lt );
+              if (p.getValueCodeType() != null && !p.getValueCodeType().getCode().equals(lt)) {
+                log.error("should this acutally happenen that the defaultDisplayLanguage is overerwritten from "
+                    + p.getValueCodeType().getCode() + " to " + lt);
                 p.setValue(new CodeType(lt));
-               }
+              }
               return;
             } else {
               // user supplied, we leave it alone
-              return ;
+              return;
             }
           }
         }
