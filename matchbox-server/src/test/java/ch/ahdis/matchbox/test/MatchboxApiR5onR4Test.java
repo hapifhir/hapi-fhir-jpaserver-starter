@@ -2,7 +2,6 @@ package ch.ahdis.matchbox.test;
 
 import ca.uhn.fhir.context.BaseRuntimeChildDefinition;
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.RuntimeResourceDefinition;
 import ca.uhn.fhir.jpa.starter.Application;
 
@@ -164,7 +163,7 @@ public class MatchboxApiR5onR4Test {
     String sessionIdCore = getSessionId(this.context, operationOutcome);
     assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
     assertEquals("hl7.fhir.r5.core#5.0.0", getIg(this.context, operationOutcome));
-    assertEquals("http://localhost:8085/matchboxv3/tx", this.getTxServer(this.context, operationOutcome));
+    assertEquals(this.targetServer.replace("/fhir", "/tx"), this.getTxServer(this.context, operationOutcome));
 
     // check that the cached validation engine of core gets used
     operationOutcome = validationClient.validate(resource, profileCore);
