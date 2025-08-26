@@ -21,7 +21,7 @@ public class MatchboxTxConfig {
 		final var server = new MatchboxTxServer(fhirContext);
 
 		server.setServerAddressStrategy(new IncomingRequestAddressStrategy());
-		server.setServerConformanceProvider(new CapabilityStatementProvider(server));
+		server.setServerConformanceProvider(new CapabilityStatementProvider(server, fhirContext));
 		server.setDefaultPrettyPrint(true);
 
 		server.registerInterceptor(new ResponseHighlighterInterceptor());

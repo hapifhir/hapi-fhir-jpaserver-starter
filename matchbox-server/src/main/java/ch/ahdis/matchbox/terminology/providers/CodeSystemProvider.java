@@ -105,6 +105,12 @@ public class CodeSystemProvider implements IResourceProvider {
 	 */
 	@Override
 	public Class<? extends IBaseResource> getResourceType() {
-		return CodeSystem.class;
+		return switch (this.fhirVersion) {
+			case R4 -> org.hl7.fhir.r4.model.CodeSystem.class;
+			case R4B -> org.hl7.fhir.r4b.model.CodeSystem.class;
+			case R5 -> org.hl7.fhir.r5.model.CodeSystem.class;
+			default -> throw new MatchboxUnsupportedFhirVersionException("CodeSystemProvider",
+																							 this.fhirVersion);
+		};
 	}
 }

@@ -340,7 +340,13 @@ public class ValueSetProvider implements IResourceProvider {
 	 */
 	@Override
 	public Class<? extends IBaseResource> getResourceType() {
-		return ValueSet.class;
+		return switch (this.fhirVersion) {
+			case R4 -> org.hl7.fhir.r4.model.ValueSet.class;
+			case R4B -> org.hl7.fhir.r4b.model.ValueSet.class;
+			case R5 -> org.hl7.fhir.r5.model.ValueSet.class;
+			default -> throw new MatchboxUnsupportedFhirVersionException("ValueSetProvider",
+																							 this.fhirVersion);
+		};
 	}
 
 	enum CodeMembership {
