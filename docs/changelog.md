@@ -1,3 +1,6 @@
+2025/08/xx Release 4.0.12
+- update org.hl7.fhir.core 6.6.5 [#425](https://github.com/ahdis/matchbox/issues/425)
+
 2025/08/12 Release 4.0.11
 - update for scanned vulnerabilities
 
@@ -9,7 +12,7 @@
 
 2025/07/01 Release 4.0.9
 - unable to resolve resource with reference [#409](https://github.com/ahdis/matchbox/issues/409)
-- disableDefautlResource Fetcher provokes an error [#408](https://github.com/ahdis/matchbox/issues/408)
+- disableDefaultResource Fetcher provokes an error [#408](https://github.com/ahdis/matchbox/issues/408)
 - update org.hl7.fhir.core 6.5.27 [#411](https://github.com/ahdis/matchbox/issues/411)
 
 2025/06/22 Release 4.0.8

@@ -85,28 +85,12 @@ import org.hl7.fhir.r5.fhirpath.FHIRPathUtilityClasses.FunctionDetails;
 import org.hl7.fhir.r5.fhirpath.FHIRPathUtilityClasses.TypedElementDefinition;
 import org.hl7.fhir.r5.fhirpath.TypeDetails;
 import org.hl7.fhir.r5.formats.FormatUtilities;
-import org.hl7.fhir.r5.model.Address;
-import org.hl7.fhir.r5.model.Attachment;
-import org.hl7.fhir.r5.model.Base;
+import org.hl7.fhir.r5.model.*;
 import org.hl7.fhir.r5.model.Base.ProfileSource;
 import org.hl7.fhir.r5.model.Base.ValidationInfo;
 import org.hl7.fhir.r5.model.Base.ValidationMode;
 import org.hl7.fhir.r5.model.Base.ValidationReason;
-import org.hl7.fhir.r5.model.BooleanType;
-import org.hl7.fhir.r5.model.CanonicalResource;
-import org.hl7.fhir.r5.model.CanonicalType;
-import org.hl7.fhir.r5.model.CodeSystem;
 import org.hl7.fhir.r5.model.CodeSystem.ConceptDefinitionComponent;
-import org.hl7.fhir.r5.model.CodeType;
-import org.hl7.fhir.r5.model.CodeableConcept;
-import org.hl7.fhir.r5.model.Coding;
-import org.hl7.fhir.r5.model.Constants;
-import org.hl7.fhir.r5.model.ContactPoint;
-import org.hl7.fhir.r5.model.DataType;
-import org.hl7.fhir.r5.model.DateTimeType;
-import org.hl7.fhir.r5.model.DateType;
-import org.hl7.fhir.r5.model.DecimalType;
-import org.hl7.fhir.r5.model.ElementDefinition;
 import org.hl7.fhir.r5.model.ElementDefinition.AdditionalBindingPurposeVS;
 import org.hl7.fhir.r5.model.ElementDefinition.AggregationMode;
 import org.hl7.fhir.r5.model.ElementDefinition.ConstraintSeverity;
@@ -122,38 +106,14 @@ import org.hl7.fhir.r5.model.ElementDefinition.TypeRefComponent;
 import org.hl7.fhir.r5.model.Enumeration;
 import org.hl7.fhir.r5.model.Enumerations.BindingStrength;
 import org.hl7.fhir.r5.model.Enumerations.CodeSystemContentMode;
-import org.hl7.fhir.r5.model.Extension;
-import org.hl7.fhir.r5.model.HumanName;
-import org.hl7.fhir.r5.model.Identifier;
-import org.hl7.fhir.r5.model.ImplementationGuide;
 import org.hl7.fhir.r5.model.ImplementationGuide.ImplementationGuideGlobalComponent;
-import org.hl7.fhir.r5.model.InstantType;
-import org.hl7.fhir.r5.model.IntegerType;
 import org.hl7.fhir.r5.model.OperationOutcome.OperationOutcomeIssueComponent;
-import org.hl7.fhir.r5.model.Period;
-import org.hl7.fhir.r5.model.PrimitiveType;
-import org.hl7.fhir.r5.model.Property;
-import org.hl7.fhir.r5.model.Quantity;
-import org.hl7.fhir.r5.model.Range;
-import org.hl7.fhir.r5.model.Ratio;
-import org.hl7.fhir.r5.model.Reference;
-import org.hl7.fhir.r5.model.Resource;
-import org.hl7.fhir.r5.model.SampledData;
-import org.hl7.fhir.r5.model.SearchParameter;
-import org.hl7.fhir.r5.model.StringType;
-import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.model.StructureDefinition.ExtensionContextType;
 import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionContextComponent;
 import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionKind;
 import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionMappingComponent;
 import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionSnapshotComponent;
 import org.hl7.fhir.r5.model.StructureDefinition.TypeDerivationRule;
-import org.hl7.fhir.r5.model.TimeType;
-import org.hl7.fhir.r5.model.Timing;
-import org.hl7.fhir.r5.model.UriType;
-import org.hl7.fhir.r5.model.UrlType;
-import org.hl7.fhir.r5.model.UsageContext;
-import org.hl7.fhir.r5.model.ValueSet;
 import org.hl7.fhir.r5.model.ValueSet.ValueSetExpansionContainsComponent;
 import org.hl7.fhir.r5.terminologies.utilities.TerminologyServiceErrorClass;
 import org.hl7.fhir.r5.terminologies.utilities.ValidationResult;
@@ -185,6 +145,7 @@ import org.hl7.fhir.utilities.VersionUtilities.VersionURLInfo;
 import org.hl7.fhir.utilities.fhirpath.FHIRPathConstantEvaluationMode;
 import org.hl7.fhir.utilities.filesystem.ManagedFileAccess;
 import org.hl7.fhir.utilities.http.HTTPResultException;
+import org.hl7.fhir.utilities.http.ManagedWebAccess;
 import org.hl7.fhir.utilities.i18n.I18nConstants;
 import org.hl7.fhir.utilities.json.model.JsonObject;
 import org.hl7.fhir.utilities.validation.IDigitalSignatureServices;
@@ -245,21 +206,17 @@ import org.w3c.dom.Document;
  *
  * @author Grahame Grieve
  */
-/*
- * todo:
- * check urn's don't start oid: or uuid:
- * check MetadataResource.url is absolute
- */
 @Slf4j
 public class InstanceValidator extends BaseValidator implements IResourceValidator {
-  
+
+  private Map<Element, Map<String, List<String>>> xhtmlElementMap = new HashMap<>();
+
   public enum MatchetypeStatus {
     Disallowed, Allowed, Required
   }
 
   public enum BindingContext {
     BASE, MAXVS, ADDITIONAL
-
   }
 
   private static final String EXECUTED_CONSTRAINT_LIST = "validator.executed.invariant.list";
@@ -638,7 +595,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     if (theContext.getVersion().startsWith("3.0") || theContext.getVersion().startsWith("1.0"))
       fpe.setLegacyMode(true);
     settings.setSource(Source.InstanceValidator);
-    fpe.setDoNotEnforceAsSingletonRule(!VersionUtilities.isR5VerOrLater(theContext.getVersion()));
+    fpe.setDoNotEnforceAsSingletonRule(!VersionUtilities.isR5Plus(theContext.getVersion()));
     fpe.setAllowDoubleQuotes(allowDoubleQuotesInFHIRPath);
     codingObserver = new CodingsObserver(theContext, settings, xverManager, session);
     oids = new OIDUtilities();
@@ -2858,7 +2815,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     if ("http://hl7.org/fhir/StructureDefinition/structuredefinition-normative-version".equals(extUrl)) {
       list.get(0).setExpression("Element"); // well, it can't be used anywhere but the list of places it can be used is quite long
     }
-    if (!VersionUtilities.isThisOrLater("4.6", context.getVersion())) {
+    if (!VersionUtilities.isThisOrLater("4.6", context.getVersion(), VersionUtilities.VersionPrecision.MINOR)) {
       if (Utilities.existsInList(extUrl, "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation", "http://hl7.org/fhir/StructureDefinition/capabilitystatement-prohibited")) {
         list.get(0).setExpression("Element"); // well, they can't be used anywhere but the list of places they can be used is quite long        
       }
@@ -3256,7 +3213,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       if (type.equals("dateTime")) {
         boolean dok = ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path,
             e.primitiveValue()
-            .matches("([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\.[0-9]+)?(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?)?)?)?"), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_DATETIME_VALID, "'"+e.primitiveValue()+"' doesn't meet format requirements for dateTime") && ok;
+            .matches("([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\.[0-9]+)?(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?)?)?)?"), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_DATETIME_VALID, e.primitiveValue()) && ok;
         if (isCoreDefinition(profile) || (context.hasExtension(ExtensionDefinitions.EXT_DATE_RULES) && ExtensionUtilities.readStringExtension(context, ExtensionDefinitions.EXT_DATE_RULES).contains("tz-for-time"))) {
           dok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, !hasTime(e.primitiveValue()) || hasTimeZone(e.primitiveValue()), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_DATETIME_TZ) && dok;
         }
@@ -3286,7 +3243,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         }
       }
       if (type.equals("date")) {
-        boolean dok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, e.primitiveValue().matches("([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1]))?)?"), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_DATE_VALID, "'"+e.primitiveValue()+"' doesn't meet format requirements for date");
+        boolean dok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, e.primitiveValue().matches("([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1]))?)?"), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_DATE_VALID, e.primitiveValue());
         dok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, !context.hasMaxLength() || context.getMaxLength() == 0 || e.primitiveValue().length() <= context.getMaxLength(), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_PRIMITIVE_LENGTH, context.getMaxLength()) && dok;
         if (dok) {
           try {
@@ -3310,7 +3267,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
             ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_BASE64_VALID, value) && ok;
           } else {
             boolean wsok = !Base64Util.base64HasWhitespace(encoded);
-            if (VersionUtilities.isR5VerOrLater(this.context.getVersion())) {
+            if (VersionUtilities.isR5Plus(this.context.getVersion())) {
               ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, wsok, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_BASE64_NO_WS_ERROR) && ok;            
             } else {
               warning(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, wsok, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_BASE64_NO_WS_WARNING);            
@@ -3384,7 +3341,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       }
       if (type.equals("instant")) {
         boolean dok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path,
-            e.primitiveValue().matches("-?[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\.[0-9]+)?(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))"), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_DATETIME_REGEX, "'"+e.primitiveValue()+"' doesn't meet format requirements for instant)");
+            e.primitiveValue().matches("-?[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\.[0-9]+)?(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))"), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_DATETIME_REGEX,  e.primitiveValue());
         if (dok) {
           try {
             InstantType dt = new InstantType(e.primitiveValue());
@@ -3630,6 +3587,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       } else {
         if (type.equals("canonical")) {
           ReferenceValidationPolicy rp = policyAdvisor.policyForReference(this, valContext, path, url, refType);
+          url = checkManifest(url);
           if (rp == ReferenceValidationPolicy.CHECK_EXISTS_AND_TYPE || rp == ReferenceValidationPolicy.CHECK_TYPE_IF_EXISTS || rp == ReferenceValidationPolicy.CHECK_VALID) {
             try {
               Resource r = null;
@@ -3668,6 +3626,23 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       }
     }
     return ok;
+  }
+
+  private String checkManifest(String url) {
+    if (url.contains("|")) {
+      return url;
+    }
+    if (context.getExpansionParameters() != null) {
+      for (Parameters.ParametersParameterComponent p : context.getExpansionParameters().getParameter()) {
+        if (Utilities.existsInList(p.getName(), "system-version", "default-valueset-version", "default-canonical-version")) {
+          String v = p.getValue().primitiveValue();
+          if (!Utilities.noString(v) && v.startsWith(url)) {
+            return v;
+          }
+        }
+      }
+    }
+    return url;
   }
 
   private boolean isExtensionThatMatters(Element element) {
@@ -3944,7 +3919,18 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       refs.add(path+"/id");
     }
     if (element.getXhtml() != null) {
-      count = count + countTargetMatches(element.getXhtml(), fragment, path, refs);
+      Map<String, List<String>> map = xhtmlElementMap.get(element);
+      if (map == null) {
+        map = buildXhtmlIdMap(element.getXhtml());
+        xhtmlElementMap.put(element, map);
+      }
+      List<String> xrefs = map.get(fragment);
+      if (xrefs != null) {
+        count = count + xrefs.size();
+        for (String x : xrefs) {
+          refs.add(path+x);
+        }
+      }
     }
     if (element.hasChildren()) {
       for (Element child : element.getChildren()) {
@@ -3963,28 +3949,65 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     return count;
   }
 
-  private int countTargetMatches(XhtmlNode node, String fragment, String path, List<String> refs) {
-    int count = 0;
-    if (fragment.equals(node.getAttribute("id"))) {
-      count++;
-      refs.add(path+"/@id");
-    }
-    if ("a".equals(node.getName()) && fragment.equals(node.getAttribute("name"))) {
-      count++;
-      refs.add(path+"/@name");
-    }
-    if (node.hasChildren()) {
-      for (int i = 0; i < node.getChildNodes().size(); i++) {
-        XhtmlNode child = node.getChildNodes().get(i);
-        String cn = child.getPathName();
-        int total = node.countByPathName(child);
-        int index = node.indexByPathName(child);
-        count = count + countTargetMatches(child, fragment, path+"/"+cn+(total > 1 ? "["+index+"]" : ""), refs);
-      }
-    }
-    return count;
+  private Map<String, List<String>> buildXhtmlIdMap(XhtmlNode xhtml) {
+    Map<String, List<String>> res = new HashMap<>();
+    addXhtmlToIdMap(res, "/", xhtml);
+    return res;
   }
 
+  private void addXhtmlToIdMap(Map<String, List<String>> map, String path, XhtmlNode x) {
+    if (x.getNodeType() == NodeType.Element) {
+      String id = x.getAttribute("id");
+      if (id != null) {
+        addToMapList(map, path, id, "@id");
+      }
+      if ("a".equals(x.getName()) && x.getAttribute("name") != null) {
+        addToMapList(map, path, x.getAttribute("name"), "@name");
+      }
+
+      if (x.hasChildren()) {
+        for (int i = 0; i < x.getChildNodes().size(); i++) {
+          XhtmlNode child = x.getChildNodes().get(i);
+          String cn = child.getPathName();
+          int total = x.countByPathName(child);
+          int index = x.indexByPathName(child);
+          addXhtmlToIdMap(map, path + cn + (total > 1 ? "[" + index + "]" : "") + "/", child);
+        }
+      }
+    }
+  }
+
+  private void addToMapList(Map<String, List<String>> map, String path, String id, String name) {
+    List<String> list = map.get(id);
+    if (list == null) {
+      list = new ArrayList<>();
+      map.put(id, list);
+    }
+    list.add(path + name);
+  }
+
+//  private int countTargetMatches(XhtmlNode node, String fragment, String path, List<String> refs) {
+//    int count = 0;
+//    if (fragment.equals(node.getAttribute("id"))) {
+//      count++;
+//      refs.add(path+"/@id");
+//    }
+//    if ("a".equals(node.getName()) && fragment.equals(node.getAttribute("name"))) {
+//      count++;
+//      refs.add(path+"/@name");
+//    }
+//    if (node.hasChildren()) {
+//      for (int i = 0; i < node.getChildNodes().size(); i++) {
+//        XhtmlNode child = node.getChildNodes().get(i);
+//        String cn = child.getPathName();
+//        int total = node.countByPathName(child);
+//        int index = node.indexByPathName(child);
+//        count = count + countTargetMatches(child, fragment, path+"/"+cn+(total > 1 ? "["+index+"]" : ""), refs);
+//      }
+//    }
+//    return count;
+//  }
+//
 
   private boolean checkImageSources(ValidationContext valContext, List<ValidationMessage> errors, Element e, String path, String xpath, XhtmlNode node, Element resource) {
     boolean ok = true;
@@ -4935,7 +4958,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
   private boolean checkSampledData(List<ValidationMessage> errors, String path, Element focus, SampledData fixed, String fixedSource, boolean pattern, String context) {
     boolean ok = true;
     ok = checkFixedValue(errors, path + ".origin", focus.getNamedChild("origin", false), fixed.getOrigin(), fixedSource, "origin", focus, pattern, context) && ok;
-    if (VersionUtilities.isR5VerOrLater(this.context.getVersion())) {
+    if (VersionUtilities.isR5Plus(this.context.getVersion())) {
       ok = checkFixedValue(errors, path + ".interval", focus.getNamedChild("period", false), fixed.getIntervalElement(), fixedSource, "interval", focus, pattern, context) && ok;
       ok = checkFixedValue(errors, path + ".intervalUnit", focus.getNamedChild("period", false), fixed.getIntervalUnitElement(), fixedSource, "intervalUnit", focus, pattern, context) && ok;
     } else {
@@ -6201,7 +6224,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
           // is this a version specific reference? 
           VersionURLInfo vu = VersionUtilities.parseVersionUrl(profile.primitiveValue());
           if (vu != null) {
-            if (!VersionUtilities.versionsCompatible(vu.getVersion(),  context.getVersion())) {
+            if (!VersionUtilities.versionMatches(vu.getVersion()+".*", context.getVersion())) {
               hint(errors, NO_RULE_DATE, IssueType.STRUCTURE, element.line(), element.col(), stack.getLiteralPath() + ".meta.profile[" + i + "]", false, I18nConstants.VALIDATION_VAL_PROFILE_OTHER_VERSION, vu.getVersion());
             } else if (vu.getUrl().equals(defn.getUrl())) {
               hint(errors, NO_RULE_DATE, IssueType.STRUCTURE, element.line(), element.col(), stack.getLiteralPath() + ".meta.profile[" + i + "]", false, I18nConstants.VALIDATION_VAL_PROFILE_THIS_VERSION_OK);              
@@ -8365,9 +8388,16 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     return (timeTracker.getOverall() - timeTracker.getTxTime()) / 1000000;
   }
   public String reportTimes() {
-    String s = String.format("Times (ms): overall = %d:4, tx = %d, sd = %d, load = %d, fpe = %d, spec = %d, ai = %d",
-        timeTracker.getOverall() / 1000000, timeTracker.getTxTime() / 1000000, timeTracker.getSdTime() / 1000000, 
-        timeTracker.getLoadTime() / 1000000, timeTracker.getFpeTime() / 1000000, timeTracker.getSpecTime() / 1000000, timeTracker.getAiTime() / 1000000);
+    String s = String.format("Times (ms): overall = %d, tx = %d, sd = %d, load = %d, fpe = %d, spec = %d, ai = %d",
+      timeTracker.getOverall() / 1000000, timeTracker.getTxTime() / 1000000, timeTracker.getSdTime() / 1000000,
+      timeTracker.getLoadTime() / 1000000, timeTracker.getFpeTime() / 1000000, timeTracker.getSpecTime() / 1000000, timeTracker.getAiTime() / 1000000);
+    timeTracker.reset();
+    return s;
+  }
+  public String reportTimesShort() {
+    String s = String.format("%d:%d:%d",
+      timeTracker.getOverall() / 1000000, timeTracker.getTxTime() / 1000000,
+      (timeTracker.getOverall() - timeTracker.getTxTime()) / 1000000);
     timeTracker.reset();
     return s;
   }

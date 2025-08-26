@@ -20,17 +20,19 @@ hapi:
         url: classpath:/hl7.terminology.r4#6.3.0.tgz
       ch_elm:
         name: ch.fhir.ig.ch-elm
-        version: 1.10.0
-        url: https://fhir.ch/ig/ch-elm/package.tgz
+        version: 1.11.0
+#        url: https://fhir.ch/ig/ch-elm/package.tgz
     staticLocation: file:/apps/
 matchbox:
   fhir:
     context:
 #      txServer: http://tx.fhir.org
       txServer: http://localhost:${server.port}/matchboxv3/tx
+#      txServer: n/a
+      igsPreloaded: ch.fhir.ig.ch-elm#1.11.0
       txUseEcosystem: false
-      txLog: test.html
-      txServerCache: false
+#      txLog: test.html
+#      txServerCache: false
       httpReadOnly: true
       suppressWarnInfo:
         hl7.fhir.r4.core#4.0.1:
@@ -44,7 +46,8 @@ matchbox:
           - "regex:Does not match slice '(.+)' (.+)"
           - "regex:(.+)Unable to find a match for profile(.+)"
           - "regex:(.+): Specified profile type was '(.+)' in profile '(.+)', but found type '(.+)"
-spring:
-  datasource:
-    url: "jdbc:h2:mem:test"
 
+# logging:
+#  config: classpath:logback.xml # This is needed, otherwise Logback will load logback-test.xml in priority
+#  level:
+#    ch.ahdis.matchbox: DEBUG

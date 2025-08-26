@@ -1,10 +1,38 @@
 ###
-GET http://localhost:8100/matchboxv3/actuator/metrics/jvm.memory.used  HTTP/1.1
+GET http://localhost:8080/matchboxv3/actuator/metrics/jvm.memory.used  HTTP/1.1
 Accept: application/json
 
 
 ###
-POST http://localhost:8100/matchboxv3/fhir/$validate?profile=http://fhir.ch/ig/ch-elm/StructureDefinition/PublishDocumentReferenceStrict  HTTP/1.1
+POST http://localhost:8080/matchboxv3/fhir/$validate?profile=http://fhir.ch/ig/ch-elm/StructureDefinition/PublishDocumentReferenceStrict  HTTP/1.1
+Accept: application/json
+Content-Type: application/fhir+json
+
+{
+  "resourceType" : "DocumentReference",
+  "id" : "1-DocumentReferenceStrict",
+  "identifier" : [
+    {
+      "system" : "urn:ietf:rfc:3986",
+      "value" : "urn:uuid:1901332d-6012-443f-9690-9291adb2e19d"
+    }
+  ],
+  "status" : "current",
+  "content" : [
+    {
+      "attachment" : {
+        "language" : "de-CH"
+^      }
+    }
+  ]
+}
+
+
+
+
+
+###
+POST http://localhost:8080/matchboxv3/fhir/$validate?profile=http://fhir.ch/ig/ch-elm/StructureDefinition/PublishDocumentReferenceStrict  HTTP/1.1
 Accept: application/json
 Content-Type: application/fhir+json
 
@@ -49,12 +77,12 @@ Content-Type: application/fhir+json
               ]
             },
             "subject" : {
-              🔗 "reference" : "Patient/Pat-001"
+               "reference" : "Patient/Pat-001"
             },
             "date" : "2023-07-14T16:00:00+02:00",
             "author" : [
               {
-                🔗 "reference" : "Organization/1Org-Labor"
+                 "reference" : "Organization/1Org-Labor"
               }
             ],
             "title" : "Laborbericht vom 14.07.2023",
@@ -72,7 +100,110 @@ Content-Type: application/fhir+json
                 },
                 "entry" : [
                   {
-                    🔗 "reference" : "Observation/1Obs-NeisseriaGonorrhoeae"
+                     "reference" : "Observation/1Obs-NeisseriaGonorrhoeae"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "identifier" : [
+    {
+      "system" : "urn:ietf:rfc:3986",
+      "value" : "urn:uuid:1901332d-6012-443f-9690-9291adb2e19d"
+    }
+  ],
+  "status" : "current",
+  "content" : [
+    {
+      "attachment" : {
+        "language" : "de-CH",
+        "url" : "#1Doc-NeisseriaGonorrhoeae"
+      }
+    }
+  ]
+}
+
+
+
+
+
+
+
+
+###
+POST http://localhost:8080/matchboxv3/fhir/$validate?profile=http://fhir.ch/ig/ch-elm/StructureDefinition/PublishDocumentReferenceStrict  HTTP/1.1
+Accept: application/json
+Content-Type: application/fhir+json
+
+{
+  "resourceType" : "DocumentReference",
+  "id" : "1-DocumentReferenceStrict",
+  "contained" : [
+    {
+      "resourceType" : "Bundle",
+      "id" : "1Doc-NeisseriaGonorrhoeae",
+      "identifier" : {
+        "system" : "urn:ietf:rfc:3986",
+        "value" : "urn:uuid:1901332d-6012-443f-9690-9291adb2e19d"
+      },
+      "type" : "document",
+      "timestamp" : "2023-07-14T16:00:00+02:00",
+      "entry" : [
+        {
+          "fullUrl" : "http://test.fhir.ch/r4/Composition/1Comp-NeisseriaGonorrhoeae",
+          "resource" : {
+            "resourceType" : "Composition",
+            "id" : "1Comp-NeisseriaGonorrhoeae",
+            "language" : "de-CH",
+            "identifier" : {
+              "system" : "urn:ietf:rfc:3986",
+              "value" : "urn:uuid:1901332d-6012-443f-9690-9291adb2e19d"
+            },
+            "status" : "final",
+            "type" : {
+              "coding" : [
+                {
+                  "system" : "http://snomed.info/sct",
+                  "version" : "http://snomed.info/sct/2011000195101",
+                  "code" : "4241000179101",
+                  "display" : "Laborbericht"
+                },
+                {
+                  "system" : "http://loinc.org",
+                  "code" : "11502-2",
+                  "display" : "Laboratory report"
+                }
+              ]
+            },
+            "subject" : {
+               "reference" : "Patient/Pat-001"
+            },
+            "date" : "2023-07-14T16:00:00+02:00",
+            "author" : [
+              {
+                 "reference" : "Organization/1Org-Labor"
+              }
+            ],
+            "title" : "Laborbericht vom 14.07.2023",
+            "section" : [
+              {
+                "title" : "Analyseergebnisse der mikrobiologischen Untersuchung",
+                "code" : {
+                  "coding" : [
+                    {
+                      "system" : "http://loinc.org",
+                      "code" : "18725-2",
+                      "display" : "Microbiology studies (set)"
+                    }
+                  ]
+                },
+                "entry" : [
+                  {
+                     "reference" : "Observation/1Obs-NeisseriaGonorrhoeae"
                   }
                 ]
               }
@@ -88,7 +219,7 @@ Content-Type: application/fhir+json
               {
                 "url" : "http://hl7.org/fhir/5.0/StructureDefinition/extension-DiagnosticReport.composition",
                 "valueReference" : {
-                  🔗 "reference" : "Composition/1Comp-NeisseriaGonorrhoeae"
+                   "reference" : "Composition/1Comp-NeisseriaGonorrhoeae"
                 }
               }
             ],
@@ -100,7 +231,7 @@ Content-Type: application/fhir+json
             ],
             "basedOn" : [
               {
-                🔗 "reference" : "ServiceRequest/1SR-Order"
+                 "reference" : "ServiceRequest/1SR-Order"
               }
             ],
             "status" : "final",
@@ -114,21 +245,21 @@ Content-Type: application/fhir+json
               ]
             },
             "subject" : {
-              🔗 "reference" : "Patient/Pat-001"
+               "reference" : "Patient/Pat-001"
             },
             "performer" : [
               {
-                🔗 "reference" : "Organization/1Org-Labor"
+                 "reference" : "Organization/1Org-Labor"
               }
             ],
             "specimen" : [
               {
-                🔗 "reference" : "Specimen/1Spec-Specimen"
+                 "reference" : "Specimen/1Spec-Specimen"
               }
             ],
             "result" : [
               {
-                🔗 "reference" : "Observation/1Obs-NeisseriaGonorrhoeae"
+                 "reference" : "Observation/1Obs-NeisseriaGonorrhoeae"
               }
             ]
           }
@@ -203,12 +334,12 @@ Content-Type: application/fhir+json
               ]
             },
             "subject" : {
-              🔗 "reference" : "Patient/Pat-001"
+               "reference" : "Patient/Pat-001"
             },
             "effectiveDateTime" : "2023-07-14T11:10:00+02:00",
             "performer" : [
               {
-                🔗 "reference" : "Organization/1Org-Labor"
+                 "reference" : "Organization/1Org-Labor"
               }
             ],
             "valueCodeableConcept" : {
@@ -232,7 +363,7 @@ Content-Type: application/fhir+json
               }
             ],
             "specimen" : {
-              🔗 "reference" : "Specimen/1Spec-Specimen"
+               "reference" : "Specimen/1Spec-Specimen"
             }
           }
         },
@@ -245,7 +376,7 @@ Content-Type: application/fhir+json
               "text" : "Material declared by Observation.code or non-mandatory"
             },
             "subject" : {
-              🔗 "reference" : "Patient/Pat-001"
+               "reference" : "Patient/Pat-001"
             },
             "collection" : {
               "collectedDateTime" : "2023-07-01"
@@ -274,14 +405,14 @@ Content-Type: application/fhir+json
               ]
             },
             "subject" : {
-              🔗 "reference" : "Patient/Pat-001"
+               "reference" : "Patient/Pat-001"
             },
             "requester" : {
-              🔗 "reference" : "PractitionerRole/1PR-KsAbc"
+               "reference" : "PractitionerRole/1PR-KsAbc"
             },
             "specimen" : [
               {
-                🔗 "reference" : "Specimen/1Spec-Specimen"
+                 "reference" : "Specimen/1Spec-Specimen"
               }
             ]
           }
@@ -292,10 +423,424 @@ Content-Type: application/fhir+json
             "resourceType" : "PractitionerRole",
             "id" : "1PR-KsAbc",
             "practitioner" : {
-              🔗 "reference" : "Practitioner/1Pract-KsAbc"
+               "reference" : "Practitioner/1Pract-KsAbc"
             },
             "organization" : {
-              🔗 "reference" : "Organization/1Org-KsAbc"
+               "reference" : "Organization/1Org-KsAbc"
+            }
+          }
+        },
+        {
+          "fullUrl" : "http://test.fhir.ch/r4/Practitioner/1Pract-KsAbc",
+          "resource" : {
+            "resourceType" : "Practitioner",
+            "id" : "1Pract-KsAbc",
+            "identifier" : [
+              {
+                "system" : "urn:oid:2.51.1.3",
+                "value" : "7601000234438"
+              },
+              {
+                "system" : "urn:oid:2.16.756.5.30.1.123.100.2.1.1",
+                "value" : "A123262"
+              }
+            ],
+            "name" : [
+              {
+                "family" : "Giacometti",
+                "given" : [
+                  "Monika"
+                ]
+              }
+            ],
+            "telecom" : [
+              {
+                "system" : "email",
+                "value" : "m.giacometti@ks-abc.ch"
+              },
+              {
+                "system" : "phone",
+                "value" : "+41 79 111 44 55"
+              }
+            ]
+          }
+        },
+        {
+          "fullUrl" : "http://test.fhir.ch/r4/Organization/1Org-Labor",
+          "resource" : {
+            "resourceType" : "Organization",
+            "id" : "1Org-Labor",
+            "identifier" : [
+              {
+                "system" : "urn:oid:2.51.1.3",
+                "value" : "7601002331470"
+              }
+            ],
+            "name" : "SanLab"
+          }
+        },
+        {
+          "fullUrl" : "http://test.fhir.ch/r4/Organization/1Org-KsAbc",
+          "resource" : {
+            "resourceType" : "Organization",
+            "id" : "1Org-KsAbc",
+            "extension" : [
+              {
+                "url" : "http://fhir.ch/ig/ch-elm/StructureDefinition/ch-elm-ext-department",
+                "valueString" : "Abteilung 2"
+              }
+            ],
+            "identifier" : [
+              {
+                "system" : "urn:oid:2.16.756.5.45",
+                "value" : "A99684215"
+              }
+            ],
+            "name" : "Kantonsspital ABC",
+            "address" : [
+              {
+                "line" : [
+                  "Aortastrasse 22"
+                ],
+                "_line" : [
+                  {
+                    "extension" : [
+                      {
+                        "url" : "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetName",
+                        "valueString" : "Aortastrasse"
+                      },
+                      {
+                        "url" : "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-houseNumber",
+                        "valueString" : "22"
+                      },
+                      {
+                        "url" : "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-postBox",
+                        "valueString" : "18"
+                      }
+                    ]
+                  }
+                ],
+                "city" : "Bern",
+                "postalCode" : "3000"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "identifier" : [
+    {
+      "system" : "urn:ietf:rfc:3986",
+      "value" : "urn:uuid:1901332d-6012-443f-9690-9291adb2e19d"
+    }
+  ],
+  "status" : "current",
+  "content" : [
+    {
+      "attachment" : {
+        "language" : "de-CH",
+        "url" : "#1Doc-NeisseriaGonorrhoeae"
+      }
+    }
+  ]
+}
+
+
+
+###
+POST http://localhost:8080/matchboxv3/fhir/$validate?profile=http://fhir.ch/ig/ch-elm/StructureDefinition/PublishDocumentReferenceStrict  HTTP/1.1
+Accept: application/json
+Content-Type: application/fhir+json
+
+{
+  "resourceType" : "DocumentReference",
+  "id" : "1-DocumentReferenceStrict",
+  "contained" : [
+    {
+      "resourceType" : "Bundle",
+      "id" : "1Doc-NeisseriaGonorrhoeae",
+      "identifier" : {
+        "system" : "urn:ietf:rfc:3986",
+        "value" : "urn:uuid:1901332d-6012-443f-9690-9291adb2e19d"
+      },
+      "type" : "document",
+      "timestamp" : "2023-07-14T16:00:00+02:00",
+      "entry" : [
+        {
+          "fullUrl" : "http://test.fhir.ch/r4/Composition/1Comp-NeisseriaGonorrhoeae",
+          "resource" : {
+            "resourceType" : "Composition",
+            "id" : "1Comp-NeisseriaGonorrhoeae",
+            "language" : "de-CH",
+            "identifier" : {
+              "system" : "urn:ietf:rfc:3986",
+              "value" : "urn:uuid:1901332d-6012-443f-9690-9291adb2e19d"
+            },
+            "status" : "final",
+            "type" : {
+              "coding" : [
+                {
+                  "system" : "http://snomed.info/sct",
+                  "version" : "http://snomed.info/sct/2011000195101",
+                  "code" : "4241000179101",
+                  "display" : "Laborbericht"
+                },
+                {
+                  "system" : "http://loinc.org",
+                  "code" : "11502-2",
+                  "display" : "Laboratory report"
+                }
+              ]
+            },
+            "subject" : {
+               "reference" : "Patient/Pat-001"
+            },
+            "date" : "2023-07-14T16:00:00+02:00",
+            "author" : [
+              {
+                 "reference" : "Organization/1Org-Labor"
+              }
+            ],
+            "title" : "Laborbericht vom 14.07.2023",
+            "section" : [
+              {
+                "title" : "Analyseergebnisse der mikrobiologischen Untersuchung",
+                "code" : {
+                  "coding" : [
+                    {
+                      "system" : "http://loinc.org",
+                      "code" : "18725-2",
+                      "display" : "Microbiology studies (set)"
+                    }
+                  ]
+                },
+                "entry" : [
+                  {
+                     "reference" : "Observation/1Obs-NeisseriaGonorrhoeae"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "fullUrl" : "http://test.fhir.ch/r4/DiagnosticReport/1DR-NeisseriaGonorrhoeae",
+          "resource" : {
+            "resourceType" : "DiagnosticReport",
+            "id" : "1DR-NeisseriaGonorrhoeae",
+            "extension" : [
+              {
+                "url" : "http://hl7.org/fhir/5.0/StructureDefinition/extension-DiagnosticReport.composition",
+                "valueReference" : {
+                   "reference" : "Composition/1Comp-NeisseriaGonorrhoeae"
+                }
+              }
+            ],
+            "identifier" : [
+              {
+                "system" : "urn:ietf:rfc:3986",
+                "value" : "urn:uuid:1901332d-6012-443f-9690-9291adb2e19d"
+              }
+            ],
+            "basedOn" : [
+              {
+                 "reference" : "ServiceRequest/1SR-Order"
+              }
+            ],
+            "status" : "final",
+            "code" : {
+              "coding" : [
+                {
+                  "system" : "http://loinc.org",
+                  "code" : "11502-2",
+                  "display" : "Laboratory report"
+                }
+              ]
+            },
+            "subject" : {
+               "reference" : "Patient/Pat-001"
+            },
+            "performer" : [
+              {
+                 "reference" : "Organization/1Org-Labor"
+              }
+            ],
+            "specimen" : [
+              {
+                 "reference" : "Specimen/1Spec-Specimen"
+              }
+            ],
+            "result" : [
+              {
+                 "reference" : "Observation/1Obs-NeisseriaGonorrhoeae"
+              }
+            ]
+          }
+        },
+        {
+          "fullUrl" : "http://test.fhir.ch/r4/Patient/Pat-001",
+          "resource" : {
+            "resourceType" : "Patient",
+            "id" : "Pat-001",
+            "identifier" : [
+              {
+                "system" : "urn:oid:2.16.756.5.32",
+                "value" : "7562295883070"
+              }
+            ],
+            "name" : [
+              {
+                "family" : "M",
+                "given" : [
+                  "D"
+                ]
+              }
+            ],
+            "gender" : "male",
+            "birthDate" : "1960-08-22",
+            "address" : [
+              {
+                "use" : "home",
+                "city" : "Bern",
+                "state" : "BE",
+                "postalCode" : "3000",
+                "country" : "CH",
+                "_country" : {
+                  "extension" : [
+                    {
+                      "url" : "http://hl7.org/fhir/StructureDefinition/iso21090-SC-coding",
+                      "valueCoding" : {
+                        "system" : "urn:iso:std:iso:3166",
+                        "code" : "CH"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "fullUrl" : "http://test.fhir.ch/r4/Observation/1Obs-NeisseriaGonorrhoeae",
+          "resource" : {
+            "resourceType" : "Observation",
+            "id" : "1Obs-NeisseriaGonorrhoeae",
+            "status" : "final",
+            "category" : [
+              {
+                "coding" : [
+                  {
+                    "system" : "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code" : "laboratory",
+                    "display" : "Laboratory"
+                  }
+                ]
+              }
+            ],
+            "code" : {
+              "coding" : [
+                {
+                  "system" : "http://loinc.org",
+                  "code" : "697-3",
+                  "display" : "Neisseria gonorrhoeae [Presence] in Urethra by Organism specific culture"
+                }
+              ]
+            },
+            "subject" : {
+               "reference" : "Patient/Pat-001"
+            },
+            "effectiveDateTime" : "2023-07-14T11:10:00+02:00",
+            "performer" : [
+              {
+                 "reference" : "Organization/1Org-Labor"
+              }
+            ],
+            "valueCodeableConcept" : {
+              "coding" : [
+                {
+                  "system" : "http://snomed.info/sct",
+                  "code" : "10828004",
+                  "display" : "Positive"
+                }
+              ]
+            },
+            "interpretation" : [
+              {
+                "coding" : [
+                  {
+                    "system" : "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                    "code" : "POS",
+                    "display" : "Positive"
+                  }
+                ]
+              }
+            ],
+            "specimen" : {
+               "reference" : "Specimen/1Spec-Specimen"
+            }
+          }
+        },
+        {
+          "fullUrl" : "http://test.fhir.ch/r4/Specimen/1Spec-Specimen",
+          "resource" : {
+            "resourceType" : "Specimen",
+            "id" : "1Spec-Specimen",
+            "type" : {
+              "text" : "Material declared by Observation.code or non-mandatory"
+            },
+            "subject" : {
+               "reference" : "Patient/Pat-001"
+            },
+            "collection" : {
+              "collectedDateTime" : "2023-07-01"
+            }
+          }
+        },
+        {
+          "fullUrl" : "http://test.fhir.ch/r4/ServiceRequest/1SR-Order",
+          "resource" : {
+            "resourceType" : "ServiceRequest",
+            "id" : "1SR-Order",
+            "identifier" : [
+              {
+                "value" : "22000938108"
+              }
+            ],
+            "status" : "completed",
+            "intent" : "order",
+            "code" : {
+              "coding" : [
+                {
+                  "system" : "http://loinc.org",
+                  "code" : "697-3",
+                  "display" : "Neisseria gonorrhoeae [Presence] in Urethra by Organism specific culture"
+                }
+              ]
+            },
+            "subject" : {
+               "reference" : "Patient/Pat-001"
+            },
+            "requester" : {
+               "reference" : "PractitionerRole/1PR-KsAbc"
+            },
+            "specimen" : [
+              {
+                 "reference" : "Specimen/1Spec-Specimen"
+              }
+            ]
+          }
+        },
+        {
+          "fullUrl" : "http://test.fhir.ch/r4/PractitionerRole/1PR-KsAbc",
+          "resource" : {
+            "resourceType" : "PractitionerRole",
+            "id" : "1PR-KsAbc",
+            "practitioner" : {
+               "reference" : "Practitioner/1Pract-KsAbc"
+            },
+            "organization" : {
+               "reference" : "Organization/1Org-KsAbc"
             }
           }
         },

@@ -47,7 +47,7 @@ jobs:
       - name: Run the tests
         timeout-minutes: 90 # We need a long timeout here
         env:
-          MAVEN_OPTS: -Xmx12g
+          MAVEN_OPTS: -Xmx12g -Xms4g -XX:MaxMetaspaceSize=1g
         run: mvn --batch-mode --no-transfer-progress --update-snapshots -Dmatchbox.version="${{ env.MATCHBOX_VERSION }}" verify site
         working-directory: matchbox-int-tests
           

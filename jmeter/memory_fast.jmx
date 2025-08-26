@@ -125,7 +125,7 @@
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="validate ch-elm" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">stopthread</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
-          <stringProp name="LoopController.loops">500</stringProp>
+          <stringProp name="LoopController.loops">2000</stringProp>
           <boolProp name="LoopController.continue_forever">false</boolProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
@@ -713,8 +713,8 @@
           </ResultCollector>
           <hashTree/>
         </hashTree>
-        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Pause 30 second" enabled="true">
-          <stringProp name="ConstantTimer.delay">1000</stringProp>
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Pause 1 second" enabled="true">
+          <stringProp name="ConstantTimer.delay">1</stringProp>
         </ConstantTimer>
         <hashTree/>
       </hashTree>

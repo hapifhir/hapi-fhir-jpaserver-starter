@@ -101,6 +101,7 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
    * etc..
    */
   private static final Pattern SEARCH_URL_PARAMS = Pattern.compile("[_a-zA-Z][_a-zA-Z0-9.:-]*=[^=&]*(&([_a-zA-Z][_a-zA-Z0-9.:]*=[^=&]*))*");
+  public static final boolean ALLOW_TRANSIENT_BASE_REFERENCES = false;
 
   public static class BooleanHolder {
     private boolean value = true;
@@ -1172,11 +1173,22 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
                   return el.get(0);
                 } else if (stack != null && !session.getSessionId().equals(source.getUserString(UserDataNames.validation_bundle_error))) {
                   source.setUserData(UserDataNames.validation_bundle_error, session.getSessionId());
-                  rulePlural(errors, "2023-11-15", IssueType.INVALID, stack, false, el.size(), I18nConstants.BUNDLE_BUNDLE_ENTRY_NOTFOUND_APPARENT, ref, name, CommaSeparatedStringBuilder.join(",", Utilities.sorted(tl)));
+                  if (u == null) {
+                    rulePlural(errors, "2023-11-15", IssueType.INVALID, stack, false, el.size(), I18nConstants.BUNDLE_BUNDLE_ENTRY_NOTFOUND_CANNOT, ref, name, CommaSeparatedStringBuilder.join(",", Utilities.sorted(tl)), fullUrl);
+                  } else {
+                    rulePlural(errors, "2023-11-15", IssueType.INVALID, stack, false, el.size(), I18nConstants.BUNDLE_BUNDLE_ENTRY_NOTFOUND_APPARENT, ref, name, u, CommaSeparatedStringBuilder.join(",", Utilities.sorted(tl)));
+                  }
                 }
               } else if (stack != null && !session.getSessionId().equals(source.getUserString(UserDataNames.validation_bundle_error))) {
+                if (ALLOW_TRANSIENT_BASE_REFERENCES && isTransientUrl(fullUrl) && el.size() == 1 && isTransientUrl(el.get(0).getNamedChildValue(FULL_URL, false))) {
+                  return el.get(0);
+                }
                 source.setUserData(UserDataNames.validation_bundle_error, session.getSessionId());
-                rulePlural(errors, "2023-11-15", IssueType.INVALID, stack, false, el.size(), I18nConstants.BUNDLE_BUNDLE_ENTRY_NOTFOUND_APPARENT, ref, name, CommaSeparatedStringBuilder.join(",", Utilities.sorted(tl)));
+                if (u == null) {
+                  rulePlural(errors, "2023-11-15", IssueType.INVALID, stack, false, el.size(), I18nConstants.BUNDLE_BUNDLE_ENTRY_NOTFOUND_CANNOT, ref, name, CommaSeparatedStringBuilder.join(",", Utilities.sorted(tl)), fullUrl);
+                } else {
+                  rulePlural(errors, "2023-11-15", IssueType.INVALID, stack, false, el.size(), I18nConstants.BUNDLE_BUNDLE_ENTRY_NOTFOUND_APPARENT, ref, name, u, CommaSeparatedStringBuilder.join(",", Utilities.sorted(tl)));
+                }
               }
             } else {
               if (stack != null && !session.getSessionId().equals(source.getUserString(UserDataNames.validation_bundle_error))) {
@@ -1189,6 +1201,10 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
         return null;    
       }
     }
+  }
+
+  private boolean isTransientUrl(String fullUrl) {
+    return Utilities.startsWithInList(fullUrl, "urn:", "cid:");
   }
 
   protected List<Element> getUrlMatches(Element element, String url, NodeStack stack) {
