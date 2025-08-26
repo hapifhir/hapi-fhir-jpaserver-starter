@@ -1,5 +1,7 @@
-2025/08/xx Release 4.0.12
+2025/08/26 Release 4.0.12
 - update org.hl7.fhir.core 6.6.5 [#425](https://github.com/ahdis/matchbox/issues/425)
+- fix for multithreading issue and increasing terminology logs [#425](https://github.com/ahdis/matchbox/issues/425)
+- separating internal terminology server to /tx endpoint
 
 2025/08/12 Release 4.0.11
 - update for scanned vulnerabilities

@@ -395,7 +395,7 @@ public class TerminologyCache {
 			nameCacheToken(vs, ct);
 			JsonParser json = new JsonParser();
 			json.setOutputStyle(OutputStyle.PRETTY);
-			// PATCH MATCHBOX: need to copy expParameters to avoid multithreading issues
+			// PATCH MATCHBOX: need to copy expParameters to avoid multithreading issues, see https://github.com/ahdis/matchbox/issues/425
 			String expJS = expParameters == null ? "" : json.composeString(expParameters.copy());
 			// END PATCH MATCHBOX
 

@@ -4,6 +4,7 @@ cp ../org.hl7.fhir.core/org.hl7.fhir.r5/src/main/java/org/hl7/fhir/r5/elementmod
 cp ../org.hl7.fhir.core/org.hl7.fhir.r5/src/main/java/org/hl7/fhir/r5/utils/structuremap/FHIRPathHostServices.java matchbox-engine/src/main/java/org/hl7/fhir/r5/utils/structuremap/
 cp ../org.hl7.fhir.core/org.hl7.fhir.r5/src/main/java/org/hl7/fhir/r5/utils/structuremap/StructureMapUtilities.java matchbox-engine/src/main/java/org/hl7/fhir/r5/utils/structuremap/
 cp ../org.hl7.fhir.core/org.hl7.fhir.r5/src/main/java/org/hl7/fhir/r5/context/BaseWorkerContext.java matchbox-engine/src/main/java/org/hl7/fhir/r5/context/
+cp ../org.hl7.fhir.core/org.hl7.fhir.r5/src/main/java/org/hl7/fhir/r5/terminologies/utilities/TerminologyCache.java matchbox-engine/src/main/java/org/hl7/fhir/r5/terminologies/utilities/
 cp ../org.hl7.fhir.core/org.hl7.fhir.utilities/src/main/java/org/hl7/fhir/utilities/npm/FilesystemPackageCacheManager.java matchbox-engine/src/main/java/org/hl7/fhir/utilities/npm/
 cp ../org.hl7.fhir.core/org.hl7.fhir.validation/src/main/java/org/hl7/fhir/validation/instance/InstanceValidator.java matchbox-engine/src/main/java/org/hl7/fhir/validation/instance/
 cp ../org.hl7.fhir.core/org.hl7.fhir.validation/src/main/java/org/hl7/fhir/validation/instance/type/BundleValidator.java matchbox-engine/src/main/java/org/hl7/fhir/validation/instance/type
