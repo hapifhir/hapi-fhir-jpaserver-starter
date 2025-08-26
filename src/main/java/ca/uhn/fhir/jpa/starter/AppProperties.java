@@ -21,8 +21,8 @@ import java.util.Set;
 
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
-@ConfigurationProperties(prefix = "hapi.fhir")
 @EnableConfigurationProperties
+@ConfigurationProperties(prefix = "hapi.fhir")
 @Configuration
 public class AppProperties {
 

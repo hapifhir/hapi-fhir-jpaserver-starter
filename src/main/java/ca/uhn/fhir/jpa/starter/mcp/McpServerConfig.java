@@ -1,19 +1,21 @@
 package ca.uhn.fhir.jpa.starter.mcp;
 
-import ca.uhn.fhir.rest.server.MCPBridge;
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.server.McpBridge;
+import ca.uhn.fhir.rest.server.McpCdsBridge;
+import ca.uhn.fhir.rest.server.McpFhirBridge;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsServiceRegistry;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.server.McpServer;
 import io.modelcontextprotocol.server.McpSyncServer;
 import io.modelcontextprotocol.server.transport.HttpServletStreamableServerTransportProvider;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static org.opencds.cqf.fhir.cr.hapi.config.test.TestCdsHooksConfig.CDS_HOOKS_OBJECT_MAPPER_FACTORY;
+import java.util.List;
 
 // https://mcp-cn.ssshooter.com/sdk/java/mcp-server#sse-servlet
 // https://www.baeldung.com/spring-ai-model-context-protocol-mcp
@@ -30,15 +32,26 @@ public class McpServerConfig {
 
 	@Bean
 	public McpSyncServer syncServer(
-			RestfulServer restfulServer,
-			CallToolResultFactory callToolResultFactory,
-			HttpServletStreamableServerTransportProvider transportProvider,
-			ICdsServiceRegistry cdsServiceRegistry,
-			@Qualifier(CDS_HOOKS_OBJECT_MAPPER_FACTORY) ObjectMapper objectMapper) {
+			List<McpBridge> mcpBridges, HttpServletStreamableServerTransportProvider transportProvider) {
 		return McpServer.sync(transportProvider)
-				.tools(new MCPBridge(restfulServer, callToolResultFactory, cdsServiceRegistry, objectMapper)
-						.generateTools())
+				.tools(mcpBridges.stream()
+						.flatMap(bridge -> bridge.generateTools().stream())
+						.toList())
 				.build();
+	}
+
+	@Bean
+	public McpFhirBridge mcpFhirBridge(RestfulServer restfulServer) {
+		return new McpFhirBridge(restfulServer);
+	}
+
+	@Bean
+	@ConditionalOnProperty(
+			prefix = "hapi.fhir.cr",
+			name = {"enabled"},
+			havingValue = "true")
+	public McpCdsBridge mcpCdsBridge(FhirContext fhirContext, ICdsServiceRegistry cdsServiceRegistry) {
+		return new McpCdsBridge(fhirContext, cdsServiceRegistry);
 	}
 
 	@Bean
