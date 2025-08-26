@@ -261,7 +261,7 @@ public class TerminologyCache {
 
 	protected TerminologyCache(Object lock, String folder, Long capabilityCacheExpirationMilliseconds) throws FileNotFoundException, IOException, FHIRException {
 		super();
-		log.info("QLDBG <init> folder = {}", folder);
+		log.trace("QLDBG <init> folder = {}", folder);
 		this.lock = lock;
 		this.capabilityCacheExpirationMilliseconds = capabilityCacheExpirationMilliseconds;
 		capabilityStatementCache = new CommonsTerminologyCapabilitiesCache<>(capabilityCacheExpirationMilliseconds, TimeUnit.MILLISECONDS);
@@ -345,7 +345,7 @@ public class TerminologyCache {
 	}
 
 	public boolean hasCapabilityStatement(String address) {
-		log.info("QLDBG hasCapabilityStatement "+address+" : "+capabilityStatementCache.containsKey(address));
+		log.trace("QLDBG hasCapabilityStatement "+address+" : "+capabilityStatementCache.containsKey(address));
 		return capabilityStatementCache.containsKey(address);
 	}
 
@@ -354,7 +354,7 @@ public class TerminologyCache {
 	}
 
 	public void cacheCapabilityStatement(String address, CapabilityStatement capabilityStatement) throws IOException {
-		log.info("QLDBG cacheCapabilityStatement "+address);
+		log.trace("QLDBG cacheCapabilityStatement "+address);
 		if (noCaching) {
 			return;
 		}
@@ -364,7 +364,7 @@ public class TerminologyCache {
 
 
 	public boolean hasTerminologyCapabilities(String address) {
-		log.info("QLDBG hasTerminologyCapabilities "+address+" : "+terminologyCapabilitiesCache.containsKey(address));
+		log.trace("QLDBG hasTerminologyCapabilities "+address+" : "+terminologyCapabilitiesCache.containsKey(address));
 		return terminologyCapabilitiesCache.containsKey(address);
 	}
 
@@ -373,7 +373,7 @@ public class TerminologyCache {
 	}
 
 	public void cacheTerminologyCapabilities(String address, TerminologyCapabilities terminologyCapabilities) throws IOException {
-		log.info("QLDBG cacheTerminologyCapabilities "+address);
+		log.trace("QLDBG cacheTerminologyCapabilities "+address);
 		if (noCaching) {
 			return;
 		}
@@ -383,7 +383,7 @@ public class TerminologyCache {
 
 
 	public CacheToken generateValidationToken(ValidationOptions options, Coding code, ValueSet vs, Parameters expParameters) {
-		log.info("QLDBG generateValidationToken code {} in vs {}", code.getCode(), vs == null ? "null" : vs.getUrl());
+		log.trace("QLDBG generateValidationToken code {} in vs {}", code.getCode(), vs == null ? "null" : vs.getUrl());
 		try {
 			CacheToken ct = new CacheToken();
 			if (code.hasSystem()) {
@@ -416,7 +416,7 @@ public class TerminologyCache {
 	}
 
 	public CacheToken generateValidationToken(ValidationOptions options, Coding code, String vsUrl, Parameters expParameters) {
-		log.info("QLDBG generateValidationToken code {} in vs {}", code.getCode(), vsUrl == null ? "null" : vsUrl);
+		log.trace("QLDBG generateValidationToken code {} in vs {}", code.getCode(), vsUrl == null ? "null" : vsUrl);
 		try {
 			CacheToken ct = new CacheToken();
 			if (code.hasSystem()) {
@@ -428,7 +428,9 @@ public class TerminologyCache {
 			ct.setName(vsUrl);
 			JsonParser json = new JsonParser();
 			json.setOutputStyle(OutputStyle.PRETTY);
-			String expJS = json.composeString(expParameters);
+			// PATCH MATCHBOX: need to copy expParameters to avoid multithreading issues, see https://github.com/ahdis/matchbox/issues/425
+			String expJS = expParameters == null ? "" : json.composeString(expParameters.copy());
+			// END PATCH MATCHBOX
 
 			ct.request = "{\"code\" : "+json.composeString(code, "code")+", \"valueSet\" :"+(vsUrl == null ? "null" : vsUrl)+(options == null ? "" : ", "+options.toJson())+", \"profile\": "+expJS+"}";
 			ct.key = String.valueOf(hashJson(ct.request));
@@ -449,7 +451,7 @@ public class TerminologyCache {
 	}
 
 	public CacheToken generateValidationToken(ValidationOptions options, CodeableConcept code, ValueSet vs, Parameters expParameters) {
-		log.info("QLDBG generateValidationToken code {} in vs {}", code.hasText() ? code.getText() : "(no text)", vs == null ? "null" : vs.getUrl());
+		log.trace("QLDBG generateValidationToken code {} in vs {}", code.hasText() ? code.getText() : "(no text)", vs == null ? "null" : vs.getUrl());
 		try {
 			CacheToken ct = new CacheToken();
 			for (Coding c : code.getCoding()) {
@@ -461,7 +463,9 @@ public class TerminologyCache {
 			nameCacheToken(vs, ct);
 			JsonParser json = new JsonParser();
 			json.setOutputStyle(OutputStyle.PRETTY);
-			String expJS = json.composeString(expParameters);
+			// PATCH MATCHBOX: need to copy expParameters to avoid multithreading issues, see https://github.com/ahdis/matchbox/issues/425
+			String expJS = expParameters == null ? "" : json.composeString(expParameters.copy());
+			// END PATCH MATCHBOX
 			if (vs != null && vs.hasUrl() && vs.hasVersion()) {
 				ct.request = "{\"code\" : "+json.composeString(code, "codeableConcept")+", \"url\": \""+Utilities.escapeJson(vs.getUrl())+
 					"\", \"version\": \""+Utilities.escapeJson(vs.getVersion())+"\""+(options == null ? "" : ", "+options.toJson())+", \"profile\": "+expJS+"}\r\n";
@@ -491,7 +495,7 @@ public class TerminologyCache {
 	}
 
 	public CacheToken generateExpandToken(ValueSet vs, boolean hierarchical) {
-		log.info("QLDBG generateExpandToken vs {}", vs == null ? "null" : vs.getUrl());
+		log.trace("QLDBG generateExpandToken vs {}", vs == null ? "null" : vs.getUrl());
 		CacheToken ct = new CacheToken();
 		nameCacheToken(vs, ct);
 		if (vs.hasUrl() && vs.hasVersion()) {
@@ -511,7 +515,7 @@ public class TerminologyCache {
 	}
 
 	public CacheToken generateExpandToken(String url, boolean hierarchical) {
-		log.info("QLDBG generateExpandToken url {}", url == null ? "null" : url);
+		log.trace("QLDBG generateExpandToken url {}", url == null ? "null" : url);
 		CacheToken ct = new CacheToken();
 		ct.request = "{\"hierarchical\" : "+(hierarchical ? "true" : "false")+", \"url\": \""+Utilities.escapeJson(url)+"\"}\r\n";
 		ct.key = String.valueOf(hashJson(ct.request));
@@ -519,7 +523,7 @@ public class TerminologyCache {
 	}
 
 	public void nameCacheToken(ValueSet vs, CacheToken ct) {
-		log.info("QLDBG nameCacheToken vs {}", vs == null ? "null" : vs.getUrl());
+		log.trace("QLDBG nameCacheToken vs {}", vs == null ? "null" : vs.getUrl());
 		if (vs != null) {
 			for (ConceptSetComponent inc : vs.getCompose().getInclude()) {
 				if (inc.hasSystem()) {
@@ -585,7 +589,7 @@ public class TerminologyCache {
 	}
 
 	public void store(CacheToken cacheToken, boolean persistent, NamedCache nc, CacheEntry e) {
-		log.info("QLDBG store NamedCache.name={}, CacheToken.name={}, CacheToken.key={}", nc.name, cacheToken.name, cacheToken.key);
+		log.trace("QLDBG store NamedCache.name={}, CacheToken.name={}, CacheToken.key={}", nc.name, cacheToken.name, cacheToken.key);
 		if (noCaching) {
 			return;
 		}
@@ -613,7 +617,7 @@ public class TerminologyCache {
 	}
 
 	public ValidationResult getValidation(CacheToken cacheToken) {
-		log.info("QLDBG getValidation CacheToken.name={}, CacheToken.key={}", cacheToken.name, cacheToken.key);
+		log.trace("QLDBG getValidation CacheToken.name={}, CacheToken.key={}", cacheToken.name, cacheToken.key);
 		if (cacheToken.key == null) {
 			return null;
 		}
@@ -632,7 +636,7 @@ public class TerminologyCache {
 	}
 
 	public void cacheValidation(CacheToken cacheToken, ValidationResult res, boolean persistent) {
-		log.info("QLDBG cacheValidation CacheToken.name={}, CacheToken.key={}", cacheToken.name, cacheToken.key);
+		log.trace("QLDBG cacheValidation CacheToken.name={}, CacheToken.key={}", cacheToken.name, cacheToken.key);
 		if (cacheToken.key != null) {
 			synchronized (lock) {
 				NamedCache nc = getNamedCache(cacheToken);
@@ -670,7 +674,7 @@ public class TerminologyCache {
 	}
 
 	private void save(NamedCache nc) {
-		log.info("QLDBG cacheValidation NamedCache.name={}", nc.name);
+		log.trace("QLDBG cacheValidation NamedCache.name={}", nc.name);
 		if (folder == null)
 			return;
 
@@ -768,7 +772,7 @@ public class TerminologyCache {
 	}
 
 	private boolean isCapabilityCache(String fn) {
-		log.info("QLDBG isCapabilityCache {}", fn);
+		log.trace("QLDBG isCapabilityCache {}", fn);
 		if (fn == null) {
 			return false;
 		}
@@ -776,7 +780,7 @@ public class TerminologyCache {
 	}
 
 	private void loadCapabilityCache(String fn) throws IOException {
-		log.info("QLDBG loadCapabilityCache {}", fn);
+		log.trace("QLDBG loadCapabilityCache {}", fn);
 		if (TerminologyCapabilitiesCache.cacheFileHasExpired(Utilities.path(folder, fn), capabilityCacheExpirationMilliseconds)) {
 			return;
 		}
@@ -861,7 +865,7 @@ public class TerminologyCache {
 	}
 
 	private void loadNamedCache(String fn) throws IOException {
-		log.info("QLDBG loadNamedCache {}", fn);
+		log.trace("QLDBG loadNamedCache {}", fn);
 		int c = 0;
 		try {
 			String src = FileUtilities.fileToString(Utilities.path(folder, fn));
@@ -1062,7 +1066,7 @@ public class TerminologyCache {
 	}
 
 	public SourcedValueSet getValueSet(String canonical) {
-		log.info("QLDBG getValueSet {}", canonical);
+		log.trace("QLDBG getValueSet {}", canonical);
 		SourcedValueSetEntry sp = vsCache.get(canonical);
 		if (sp == null || folder == null) {
 			return null;
@@ -1076,7 +1080,7 @@ public class TerminologyCache {
 	}
 
 	public SourcedCodeSystem getCodeSystem(String canonical) {
-		log.info("QLDBG getCodeSystem {}", canonical);
+		log.trace("QLDBG getCodeSystem {}", canonical);
 		SourcedCodeSystemEntry sp = csCache.get(canonical);
 		if (sp == null || folder == null) {
 			return null;
@@ -1090,7 +1094,7 @@ public class TerminologyCache {
 	}
 
 	public void cacheValueSet(String canonical, SourcedValueSet svs) {
-		log.info("QLDBG cacheValueSet {}", canonical);
+		log.trace("QLDBG cacheValueSet {}", canonical);
 		if (canonical == null) {
 			return;
 		}
@@ -1128,7 +1132,7 @@ public class TerminologyCache {
 	}
 
 	public void cacheCodeSystem(String canonical, SourcedCodeSystem scs) {
-		log.info("QLDBG cacheCodeSystem {}", canonical);
+		log.trace("QLDBG cacheCodeSystem {}", canonical);
 		if (canonical == null) {
 			return;
 		}
@@ -1177,7 +1181,9 @@ public class TerminologyCache {
 			ct.hasVersion = parent.hasVersion() || child.hasVersion();
 			JsonParser json = new JsonParser();
 			json.setOutputStyle(OutputStyle.PRETTY);
-			String expJS = json.composeString(expParameters);
+			// PATCH MATCHBOX: need to copy expParameters to avoid multithreading issues, see https://github.com/ahdis/matchbox/issues/425
+			String expJS = expParameters == null ? "" : json.composeString(expParameters.copy());
+			// END PATCH MATCHBOX
 			ct.request = "{\"op\": \"subsumes\", \"parent\" : "+json.composeString(parent, "code")+", \"child\" :"+json.composeString(child, "code")+(options == null ? "" : ", "+options.toJson())+", \"profile\": "+expJS+"}";
 			ct.key = String.valueOf(hashJson(ct.request));
 			return ct;

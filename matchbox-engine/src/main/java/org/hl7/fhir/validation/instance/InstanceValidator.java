@@ -222,7 +222,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
   private static final String EXECUTED_CONSTRAINT_LIST = "validator.executed.invariant.list";
   private static final String EXECUTION_ID = "validator.execution.id";
   private static final String HTML_FRAGMENT_REGEX = "[a-zA-Z]\\w*(((\\s+)(\\S)*)*)";
-  private static final boolean STACK_TRACE = false;
+  private static final boolean STACK_TRACE = true;
   private static final boolean DEBUG_ELEMENT = false;
   private static final boolean SAVE_INTERMEDIARIES = false; // set this to true to get the intermediary formats while we are waiting for a UI around this z(SHC/SHL)
   
@@ -5810,6 +5810,17 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     ValidationContext shc = valContext.forSlicing();
     boolean pass = evaluateSlicingExpression(shc, element, path, profile, n);
     if (!pass) {
+    	String msg = null;
+    	for(int i=0; msg!= null && i<10; ++i) {
+    		try {
+    			msg = context.formatMessage(I18nConstants.DOES_NOT_MATCH_SLICE_, ed.getSliceName(), n.toString().substring(8).trim());
+    		} catch(NullPointerException e) {
+    			try {
+						Thread.sleep(500);
+					} catch (InterruptedException e1) {
+					}
+    		}
+    	}
       slicingHint(sliceInfo, NO_RULE_DATE, IssueType.STRUCTURE, element.line(), element.col(), path, false, isProfile(slicer), (context.formatMessage(I18nConstants.DOES_NOT_MATCH_SLICE_, ed.getSliceName(), n.toString().substring(8).trim())), "discriminator = " + Utilities.escapeXml(n.toString()), null);
       for (String url : shc.getSliceRecords().keySet()) {
         StructureDefinition sdt = context.fetchResource(StructureDefinition.class, url);
@@ -7891,6 +7902,17 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
             ei.setAdditionalSlice(true);
           }
         } catch (FHIRException e) {
+    	    log.error("FHIRException caught!", e);
+    	    log.error("Current thread: " + Thread.currentThread().getName());
+  		    log.error("Active threads:");
+  		    
+  		    // Print all active threads
+  		    Thread.getAllStackTraces().forEach((thread, stackTrace) -> {
+  		    	log.error("Thread: " + thread.getName() + " (State: " + thread.getState() + ")");
+  		        for (StackTraceElement element : stackTrace) {
+  		        	log.error("  at " + element);
+  		        }
+  		    });
           rule(errors, NO_RULE_DATE, IssueType.PROCESSING, ei.line(), ei.col(), ei.getPath(), false,  I18nConstants.SLICING_CANNOT_BE_EVALUATED, e.getMessage());
           bh.fail();
           unsupportedSlicing = true;
