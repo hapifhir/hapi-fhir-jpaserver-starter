@@ -6,13 +6,9 @@ import ca.uhn.fhir.jpa.starter.mcp.Interaction;
 import ca.uhn.fhir.jpa.starter.mcp.ToolFactory;
 import ca.uhn.fhir.rest.api.server.cdshooks.CdsServiceRequestContextJson;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsServiceRegistry;
-import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServiceResponseJson;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.spec.McpSchema;
 import org.jetbrains.annotations.NotNull;
@@ -68,23 +64,6 @@ public class McpCdsBridge implements McpBridge {
 		return McpSchema.CallToolResult.builder()
 				.addContent(new McpSchema.TextContent(content))
 				.build();
-	}
-
-	private String constructMCPResponse(CdsServiceResponseJson serviceResponseJson) {
-		// Copy from CdsHooksServlet, including the comment below
-		// Using GSON pretty print format as Jackson's is ugly
-		try {
-			return new GsonBuilder()
-					.disableHtmlEscaping()
-					.setPrettyPrinting()
-					.create()
-					.toJson(JsonParser.parseString(objectMapper.writeValueAsString(serviceResponseJson)));
-		} catch (JsonSyntaxException | JsonProcessingException e) {
-			// TODO Return MCP Error
-			logger.error(e.getMessage(), e);
-			e.printStackTrace();
-			return "{\"error\": \"" + e.getMessage() + "\"}";
-		}
 	}
 
 	private @NotNull CdsHooksRequest constructCdsHooksRequest(McpSchema.CallToolRequest callToolRequest) {
