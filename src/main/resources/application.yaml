@@ -40,10 +40,23 @@ spring:
     # Run e.g. `npx @modelcontextprotocol/inspector` and connect to http://localhost:8080/mcp/message using Streamable HTTP
 
 # Add the following to the MCP server settings file in e.g. cursor or claude (Desktop applications) for local debugging:
+#    cursor:
 #    {
 #      "mcpServers": {
 #        "hapi": {
 #          "url": "http://localhost:8080/mcp/message"
+#        }
+#      }
+#    }
+#    or claude:
+#    {
+#      "mcpServers": {
+#        "hapi": {
+#          "command": "npx",
+#          "args": [
+#            "mcp-remote@latest",
+#            "http://localhost:8080/mcp/message"
+#          ]
 #        }
 #      }
 #    }
