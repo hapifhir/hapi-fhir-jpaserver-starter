@@ -21,9 +21,9 @@ jobs:
           java-version: "21"
           distribution: "adopt"
           cache: maven
-          server-id: ossrh
-          server-username: OSSRH_USERNAME
-          server-password: OSSRH_PASSWORD
+          server-id: central
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_CENTRAL_TOKEN
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
@@ -33,8 +33,8 @@ jobs:
       - name: Publish to Apache Maven Central
         run: mvn deploy -P release --file pom.xml --projects :matchbox,:matchbox-engine -DskipTests
         env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          MAVEN_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.NEXUS_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 # The requirements are described in https://central.sonatype.org/publish/requirements/
 # The secrets are managed in https://github.com/ahdis/matchbox/settings/secrets/actions

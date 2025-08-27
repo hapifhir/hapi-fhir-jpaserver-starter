@@ -96,7 +96,7 @@
         <plugin_maven_source_version>3.3.1</plugin_maven_source_version>
         <plugin_maven_javadoc_version>3.11.2</plugin_maven_javadoc_version>
         <plugin_maven_gpg_version>3.2.7</plugin_maven_gpg_version>
-        <plugin_nexus_staging_version>1.7.0</plugin_nexus_staging_version>
+        <plugin_sonatype_central_publishing>0.8.0</plugin_sonatype_central_publishing>
 
         <excludePackageNames>org.hl7.*:ca.uhn.*</excludePackageNames>
 
@@ -654,13 +654,12 @@
 
             <!-- Release plugins -->
             <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
                 <extensions>true</extensions>
                 <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    <publishingServerId>central</publishingServerId>
+                    <autoPublish>true</autoPublish>
                 </configuration>
             </plugin>
         </plugins>
@@ -737,8 +736,8 @@
                 </plugin>
                 <plugin>
                     <groupId>org.sonatype.plugins</groupId>
-                    <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>${plugin_nexus_staging_version}</version>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>${plugin_sonatype_central_publishing}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
