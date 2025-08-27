@@ -214,10 +214,14 @@ hapi:
     #    reloadExisting: false
     #    installMode: STORE_AND_INSTALL
     #      example not from registry
-    #      ips_1_0_0:
-    #        packageUrl: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
-    #        name: hl7.fhir.uv.ips
-    #        version: 1.0.0
+    #  ips_1_0_0:
+    #    packageUrl: https://costateixeira.github.io/smart-ips-pilgrimage-fulltest/package.tgz
+    #    name: smart.who.int.ips-pilgrimage-test
+    #    version: 0.1.0
+    #    installMode: STORE_AND_INSTALL
+    #    additionalResourceFolders:
+    #      - example
+        #  - example2
     #    supported_resource_types:
     #      - Patient
     #      - Observation
