@@ -93,15 +93,20 @@ public class McpCdsBridge implements McpBridge {
 		// Prefetch
 		if (contextMap.containsKey("prefetch")) {
 			var prefetch = contextMap.get("prefetch");
-			var prefetchMap = (Map<String, Object>) prefetch;
-			for (Map.Entry<String, Object> entry : prefetchMap.entrySet()) {
-				var key = entry.getKey();
-				var value = entry.getValue();
+			if (prefetch instanceof Map) {
+				@SuppressWarnings("unchecked")
+				var prefetchMap = (Map<String, Object>) prefetch;
+				for (Map.Entry<String, Object> entry : prefetchMap.entrySet()) {
+					var key = entry.getKey();
+					var value = entry.getValue();
 
-				// Object is a String -> Object map
-				// Use a standard JSON library to convert it
-				var resource = fhirContext.newJsonParser().parseResource(new Gson().toJson(value));
-				request.addPrefetch(key, resource);
+					// Object is a String -> Object map
+					// Use a standard JSON library to convert it
+					var resource = fhirContext.newJsonParser().parseResource(new Gson().toJson(value));
+					request.addPrefetch(key, resource);
+				}
+			} else {
+				logger.warn("Prefetch object is not a Map: {}", prefetch == null ? "null" : prefetch.getClass().getName());
 			}
 		}
 
