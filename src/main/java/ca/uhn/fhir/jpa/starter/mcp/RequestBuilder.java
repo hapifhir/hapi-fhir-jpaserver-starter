@@ -40,7 +40,13 @@ public class RequestBuilder {
 			case SEARCH -> {
 				method = "GET";
 				req = new MockHttpServletRequest(method, basePath);
-				if (config.get("searchParams") instanceof Map<?, ?> sp) {
+				Map<?, ?> sp = null;
+				if (config.get("query") instanceof Map<?, ?> q) {
+					sp = q;
+				} else if (config.get("searchParams") instanceof Map<?, ?> s) {
+					sp = s;
+				}
+				if (sp != null) {
 					sp.forEach((k, v) -> req.addParameter(k.toString(), v.toString()));
 				}
 			}
