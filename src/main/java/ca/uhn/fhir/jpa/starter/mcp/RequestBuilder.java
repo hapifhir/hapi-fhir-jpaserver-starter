@@ -81,7 +81,13 @@ public class RequestBuilder {
 
 	private void applyResourceBody(MockHttpServletRequest req) {
 		Object resourceObj = config.get("resource");
-		String json = new Gson().toJson(resourceObj, Map.class);
+		String json;
+		if(resourceObj instanceof Map<?,?>)
+			json = new Gson().toJson(resourceObj, Map.class);
+		else if (resourceObj instanceof String)
+			json = resourceObj.toString();
+		else
+			throw new IllegalArgumentException("Unsupported resource body type: " + resourceObj.getClass());
 		req.setContent(json.getBytes(StandardCharsets.UTF_8));
 	}
 
