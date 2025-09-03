@@ -95,9 +95,9 @@ public class RequestBuilder {
 	}
 
 	private void applyPatchBody(MockHttpServletRequest req) {
-		Object patchBody = config.get("patch");
+		Object patchBody = config.get("resource");
 		if (patchBody == null) {
-			throw new IllegalArgumentException("Missing 'patch' for patch interaction");
+			throw new IllegalArgumentException("Missing 'resource' for patch interaction");
 		}
 		String content;
 		if (patchBody instanceof String s) {
