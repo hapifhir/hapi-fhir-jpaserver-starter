@@ -76,15 +76,17 @@ public class McpCdsBridge implements McpBridge {
 
 		// Context
 		var context = new CdsServiceRequestContextJson();
-		var hookContext = (Map<String, String>) contextMap.get("hookContext");
-		if (hookContext.containsKey("userId")) {
-			context.put("userId", hookContext.get("userId").toString());
-		}
-		if (hookContext.containsKey("patientId")) {
-			context.put("patientId", hookContext.get("patientId").toString());
-		}
-		if (hookContext.containsKey("encounterId")) {
-			context.put("encounterId", hookContext.get("encounterId").toString());
+		Object hookContextObj = contextMap.get("hookContext");
+		if (hookContextObj instanceof Map<?, ?> hookContext) {
+			if (hookContext.containsKey("userId")) {
+				context.put("userId", String.valueOf(hookContext.get("userId")));
+			}
+			if (hookContext.containsKey("patientId")) {
+				context.put("patientId", String.valueOf(hookContext.get("patientId")));
+			}
+			if (hookContext.containsKey("encounterId")) {
+				context.put("encounterId", String.valueOf(hookContext.get("encounterId")));
+			}
 		}
 		request.setContext(context);
 
