@@ -106,7 +106,9 @@ public class McpCdsBridge implements McpBridge {
 					request.addPrefetch(key, resource);
 				}
 			} else {
-				logger.warn("Prefetch object is not a Map: {}", prefetch == null ? "null" : prefetch.getClass().getName());
+				logger.warn(
+						"Prefetch object is not a Map: {}",
+						prefetch == null ? "null" : prefetch.getClass().getName());
 			}
 		}
 
