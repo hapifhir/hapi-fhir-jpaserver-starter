@@ -244,7 +244,7 @@ public class ToolFactory {
 				"description": "Additional data to prefetch for the CDS service call."
 			}
 		},
-		"required": ["service", "hook", "hookInstance", "context"]
+		"required": ["service", "hook", "hookInstance", "hookContext"]
 		}
 		""";
 
