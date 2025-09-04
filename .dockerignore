@@ -5,7 +5,6 @@ target/maven-*
 target/ROOT
 target/test-classes/
 target/war
-target/duplicate-finder-result.xml
 target/jacoco.exec
 target/*.original
 .idea

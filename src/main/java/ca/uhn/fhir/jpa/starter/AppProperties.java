@@ -21,9 +21,9 @@ import java.util.Set;
 
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
+@EnableConfigurationProperties
 @ConfigurationProperties(prefix = "hapi.fhir")
 @Configuration
-@EnableConfigurationProperties
 public class AppProperties {
 
 	private final Set<String> auto_version_reference_at_paths = new HashSet<>();
