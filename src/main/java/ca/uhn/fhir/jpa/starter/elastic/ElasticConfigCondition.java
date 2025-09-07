@@ -1,4 +1,3 @@
 package ca.uhn.fhir.jpa.starter.elastic;
 
-public class ElasticConfigCondition {
-}
+public class ElasticConfigCondition {}

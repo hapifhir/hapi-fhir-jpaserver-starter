@@ -10,12 +10,5 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Conditional(OnR4Condition.class)
-@Import({
-	JpaR4Config.class,
-	StarterJpaConfig.class,
-	StarterCrR4Config.class,
-
-	StarterIpsConfig.class
-})
-public class FhirServerConfigR4 {
-}
+@Import({JpaR4Config.class, StarterJpaConfig.class, StarterCrR4Config.class, StarterIpsConfig.class})
+public class FhirServerConfigR4 {}

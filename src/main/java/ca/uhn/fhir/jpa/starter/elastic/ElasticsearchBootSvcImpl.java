@@ -17,7 +17,6 @@ import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.elasticsearch.indices.ExistsRequest;
 import com.google.common.annotations.VisibleForTesting;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Service;
 
@@ -54,8 +53,7 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 
 	private final FhirContext myContext;
 
-	public ElasticsearchBootSvcImpl(
-		ElasticsearchClient client, FhirContext fhirContext) {
+	public ElasticsearchBootSvcImpl(ElasticsearchClient client, FhirContext fhirContext) {
 
 		myContext = fhirContext;
 		myRestHighLevelClient = client;
@@ -70,7 +68,7 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 
 	private String getIndexSchema(String theSchemaFileName) throws IOException {
 		InputStreamReader input =
-			new InputStreamReader(ElasticsearchSvcImpl.class.getResourceAsStream(theSchemaFileName));
+				new InputStreamReader(ElasticsearchSvcImpl.class.getResourceAsStream(theSchemaFileName));
 		BufferedReader reader = new BufferedReader(input);
 		StringBuilder sb = new StringBuilder();
 		String str;
@@ -103,9 +101,9 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 
 	private boolean createIndex(String theIndexName, String theMapping) throws IOException {
 		return myRestHighLevelClient
-			.indices()
-			.create(cir -> cir.index(theIndexName).withJson(new StringReader(theMapping)))
-			.acknowledged();
+				.indices()
+				.create(cir -> cir.index(theIndexName).withJson(new StringReader(theMapping)))
+				.acknowledged();
 	}
 
 	private boolean indexExists(String theIndexName) throws IOException {
@@ -123,39 +121,39 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 		SearchRequest searchRequest = buildObservationResourceSearchRequest(thePids);
 		try {
 			SearchResponse<ObservationJson> observationDocumentResponse =
-				myRestHighLevelClient.search(searchRequest, ObservationJson.class);
+					myRestHighLevelClient.search(searchRequest, ObservationJson.class);
 			List<Hit<ObservationJson>> observationDocumentHits =
-				observationDocumentResponse.hits().hits();
+					observationDocumentResponse.hits().hits();
 			IParser parser = TolerantJsonParser.createWithLenientErrorHandling(myContext, null);
 			Class<? extends IBaseResource> resourceType =
-				myContext.getResourceDefinition(OBSERVATION_RESOURCE_NAME).getImplementingClass();
+					myContext.getResourceDefinition(OBSERVATION_RESOURCE_NAME).getImplementingClass();
 			/**
 			 * @see ca.uhn.fhir.jpa.dao.BaseHapiFhirDao#toResource(Class, IBaseResourceEntity, Collection, boolean) for
 			 * details about parsing raw json to BaseResource
 			 */
 			return observationDocumentHits.stream()
-				.map(Hit::source)
-				.map(observationJson -> parser.parseResource(resourceType, observationJson.getResource()))
-				.collect(Collectors.toList());
+					.map(Hit::source)
+					.map(observationJson -> parser.parseResource(resourceType, observationJson.getResource()))
+					.collect(Collectors.toList());
 		} catch (IOException theE) {
 			throw new InvalidRequestException(
-				Msg.code(2003) + "Unable to execute observation document query for provided IDs " + thePids, theE);
+					Msg.code(2003) + "Unable to execute observation document query for provided IDs " + thePids, theE);
 		}
 	}
 
 	private SearchRequest buildObservationResourceSearchRequest(Collection<? extends IResourcePersistentId> thePids) {
 		List<FieldValue> values = thePids.stream()
-			.map(Object::toString)
-			.map(v -> FieldValue.of(v))
-			.collect(Collectors.toList());
+				.map(Object::toString)
+				.map(v -> FieldValue.of(v))
+				.collect(Collectors.toList());
 
 		return SearchRequest.of(sr -> sr.index(OBSERVATION_INDEX)
-			.query(qb -> qb.bool(bb -> bb.must(bbm -> {
-				bbm.terms(terms ->
-					terms.field(OBSERVATION_IDENTIFIER_FIELD_NAME).terms(termsb -> termsb.value(values)));
-				return bbm;
-			})))
-			.size(thePids.size()));
+				.query(qb -> qb.bool(bb -> bb.must(bbm -> {
+					bbm.terms(terms ->
+							terms.field(OBSERVATION_IDENTIFIER_FIELD_NAME).terms(termsb -> termsb.value(values)));
+					return bbm;
+				})))
+				.size(thePids.size()));
 	}
 
 	@VisibleForTesting
