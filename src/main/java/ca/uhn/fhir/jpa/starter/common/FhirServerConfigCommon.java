@@ -19,10 +19,7 @@ import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.env.YamlPropertySourceLoader;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.*;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -36,6 +33,7 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
  */
 @Configuration
 @EnableTransactionManagement
+@Import(ElasticsearchBootSvcImpl.class)
 public class FhirServerConfigCommon {
 
 	private static final Logger ourLog = LoggerFactory.getLogger(FhirServerConfigCommon.class);

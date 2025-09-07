@@ -9,5 +9,5 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Conditional(OnR4BCondition.class)
-@Import({JpaR4BConfig.class, SubscriptionTopicConfig.class, StarterJpaConfig.class, ElasticsearchConfig.class})
+@Import({JpaR4BConfig.class, SubscriptionTopicConfig.class, StarterJpaConfig.class})
 public class FhirServerConfigR4B {}

@@ -14,7 +14,8 @@ import org.springframework.context.annotation.Import;
 	JpaR4Config.class,
 	StarterJpaConfig.class,
 	StarterCrR4Config.class,
-	ElasticsearchConfig.class,
+
 	StarterIpsConfig.class
 })
-public class FhirServerConfigR4 {}
+public class FhirServerConfigR4 {
+}

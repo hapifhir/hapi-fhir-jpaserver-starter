@@ -26,8 +26,9 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
 
 @ServletComponentScan(basePackageClasses = {RestfulServer.class})
-@SpringBootApplication(exclude = {ElasticsearchRestClientAutoConfiguration.class, ThymeleafAutoConfiguration.class})
+@SpringBootApplication(exclude = {ThymeleafAutoConfiguration.class})
 @Import({
+	ElasticsearchRestClientAutoConfiguration.class,
 	StarterCrR4Config.class,
 	StarterCrDstu3Config.class,
 	StarterCdsHooksConfig.class,

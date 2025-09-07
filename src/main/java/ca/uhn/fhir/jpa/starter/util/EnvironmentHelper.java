@@ -140,7 +140,7 @@ public class EnvironmentHelper {
 	}
 
 	public static String getElasticsearchServerUrl(ConfigurableEnvironment environment) {
-		return environment.getProperty("elasticsearch.rest_url", String.class);
+		return environment.getProperty("spring.elasticsearch.uris", String.class);
 	}
 
 	public static String getElasticsearchServerProtocol(ConfigurableEnvironment environment) {
@@ -148,16 +148,16 @@ public class EnvironmentHelper {
 	}
 
 	public static String getElasticsearchServerUsername(ConfigurableEnvironment environment) {
-		return environment.getProperty("elasticsearch.username");
+		return environment.getProperty("spring.elasticsearch.username");
 	}
 
 	public static String getElasticsearchServerPassword(ConfigurableEnvironment environment) {
-		return environment.getProperty("elasticsearch.password");
+		return environment.getProperty("spring.elasticsearch.password");
 	}
 
 	public static Boolean isElasticsearchEnabled(ConfigurableEnvironment environment) {
-		if (environment.getProperty("elasticsearch.enabled", Boolean.class) != null) {
-			return environment.getProperty("elasticsearch.enabled", Boolean.class);
+		if (environment.getProperty("spring.elasticsearch.enabled", Boolean.class) != null) {
+			return environment.getProperty("spring.elasticsearch.enabled", Boolean.class);
 		} else {
 			return false;
 		}
