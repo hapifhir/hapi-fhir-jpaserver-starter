@@ -125,7 +125,7 @@ class ElasticsearchLastNR4IT {
 
     myElasticsearchSvc.refreshIndex(ElasticsearchSvcImpl.OBSERVATION_INDEX);
 	  Thread.sleep(2000);
-	  
+
     Parameters output = ourClient.operation().onType(Observation.class).named("lastn")
       .withParameter(Parameters.class, "max", new IntegerType(1))
       .andParameter("subject", new StringType("Patient/" + id.getIdPart()))

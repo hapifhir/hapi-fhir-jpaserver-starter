@@ -70,6 +70,7 @@ import static org.opencds.cqf.fhir.utility.r4.Parameters.stringPart;
 	// beans are ambiguous as they are constructed multiple places. This is evident
 	// when running in a spring boot environment
 	"spring.main.allow-bean-definition-overriding=true",
+	"management.health.elasticsearch.enabled=false",
 	"hapi.fhir.remote_terminology_service.snomed.system=http://snomed.info/sct",
 	"hapi.fhir.remote_terminology_service.snomed.url=https://tx.fhir.org/r4"
 })
