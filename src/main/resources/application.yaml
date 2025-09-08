@@ -17,7 +17,8 @@ management:
     enabled-by-default: false
     web:
       exposure:
-        include: 'health' # or e.g. 'info,health,prometheus,metrics' or '*' for all
+        # expose only health (default) — change to [health,info,prometheus,metrics] if you want them reachable
+        include: health
   endpoint:
     info:
       enabled: true
@@ -43,23 +44,22 @@ spring:
     allow-circular-references: true
   flyway:
     enabled: false
-    baselineOnMigrate: true
+    baseline-on-migrate: true
     fail-on-missing-locations: false
   datasource:
     #url: 'jdbc:h2:file:./target/database/h2'
     url: jdbc:h2:mem:test_mem
     username: sa
     password: null
-    driverClassName: org.h2.Driver
-    max-active: 15
+    driver-class-name: org.h2.Driver
 
     # database connection pool size
     hikari:
       maximum-pool-size: 10
-  elasticsearch:
-    uris: http://localhost:9200
-    username: elastic
-    password: changeme
+#  elasticsearch:
+#    uris: http://localhost:9200
+#    username: elastic
+#    password: changeme
   jpa:
     properties:
         hibernate:
@@ -67,24 +67,23 @@ spring:
             auto: update
           jdbc:
             batch_size: 20
-            cache:
-              use_query_cache: false
-              use_second_level_cache: false
-              use_structured_entries: false
-              use_minimal_puts: false
+          cache:
+            use_query_cache: false
+            use_second_level_cache: false
+            use_structured_entries: false
+            use_minimal_puts: false
           format_sql: false
-          show_sql: false.
+          show_sql: false
           #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
           #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
           #dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
           dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
           search:
-            schema_management_strategy: create
-            enabled: true
+            schema_management:
+              strategy: create
             ### lucene parameters
             backend:
               type: lucene
-              version: lucene_current
               directory:
                 type: local-filesystem
                 root: target/lucenefiles
