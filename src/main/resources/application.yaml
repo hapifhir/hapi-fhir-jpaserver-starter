@@ -39,66 +39,6 @@ management:
       export:
         enabled: true
 spring:
-#  elasticsearch:
-#    enabled: false
-#    uris: http://localhost:9200
-#    username: elastic
-#    password: changeme
-  ai:
-    # Run e.g. `npx @modelcontextprotocol/inspector` and connect to http://localhost:8080/mcp/message using Streamable HTTP
-
-    # Add the following to the MCP server settings file in e.g. cursor or claude (Desktop applications) for local debugging:
-    #    cursor:
-    #    {
-    #      "mcpServers": {
-    #        "hapi": {
-    #          "url": "http://localhost:8080/mcp/message"
-    #        }
-    #      }
-    #    }
-    #    or claude:
-    #    {
-    #      "mcpServers": {
-    #        "hapi": {
-    #          "command": "npx",
-    #          "args": [
-    #            "mcp-remote@latest",
-    #            "http://localhost:8080/mcp/message"
-    #          ]
-    #        }
-    #      }
-    #    }
-
-    mcp:
-      server:
-        name: FHIR MCP Server
-        version: 1.0.0
-        type: SYNC
-        instructions: "This server provides access to a FHIR RESTful API. You can use it to query FHIR resources, perform operations, and retrieve data in a structured format."
-        sse-message-endpoint: /mcp/messages
-        capabilities:
-          tool: true
-          resource: true
-          prompt: true
-          completion: true
-        stdio: false
-        enabled: true
-        #endpoint: /mcp
-
-        #schema:
-        #  fhir-enabled: true
-        #  fhir:
-        #    base-url: http://localhost:8080/fhir
-
-        #query:
-        #  prompt:
-        #    template: |
-        #      You are a FHIR assistant. Translate the following question into a valid FHIR RESTful API query:
-        #      "{{query}}"
-        #      Use the provided FHIR schema:
-        #      {{schema}}
-        #base-url: /api/v1
-
   main:
     allow-circular-references: true
   flyway:
@@ -116,34 +56,53 @@ spring:
     # database connection pool size
     hikari:
       maximum-pool-size: 10
+  elasticsearch:
+    uris: http://localhost:9200
+    username: elastic
+    password: changeme
   jpa:
     properties:
-      hibernate.format_sql: false
-      hibernate.show_sql: false
+        hibernate:
+          hbm2ddl:
+            auto: update
+          jdbc:
+            batch_size: 20
+            cache:
+              use_query_cache: false
+              use_second_level_cache: false
+              use_structured_entries: false
+              use_minimal_puts: false
+          format_sql: false
+          show_sql: false.
+          #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+          #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
+          #dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
+          dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+          search:
+            schema_management_strategy: create
+            enabled: true
+            ### lucene parameters
+            backend:
+              type: lucene
+              version: lucene_current
+              directory:
+                type: local-filesystem
+                root: target/lucenefiles
+              analysis:
+                configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
 
-      #Hibernate dialect is automatically detected except Postgres and H2.
-      #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
-      #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
-      #      hibernate.hbm2ddl.auto: update
-      #      hibernate.jdbc.batch_size: 20
-      #      hibernate.cache.use_query_cache: false
-      #      hibernate.cache.use_second_level_cache: false
-      #      hibernate.cache.use_structured_entries: false
-      #      hibernate.cache.use_minimal_puts: false
+            ### elastic parameters ===> see also elasticsearch section below <===
+#            backend:
+#              type: elasticsearch
+#              discovery: true
+#              analysis:
+#                configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticAnalysisConfigurer
+#              hosts: localhost:9200
+#              protocol: http
+#              username: elastic
+#              password: changeme
+#              refresh_after_write: true
 
-      ###    These settings will enable fulltext search with lucene or elastic
-      hibernate.search.enabled: true
-  ### lucene parameters
-  #      hibernate.search.backend.type: lucene
-  #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
-  #      hibernate.search.backend.directory.type: local-filesystem
-  #      hibernate.search.backend.directory.root: target/lucenefiles
-  #      hibernate.search.backend.lucene_version: lucene_current
-  ### elastic parameters ===> see also elasticsearch section below <===
-#      hibernate.search.backend.type: elasticsearch
-#      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticAnalysisConfigurer
-      hibernate.search.backend.discovery: false
 hapi:
   fhir:
     ### This flag when enabled to true, will avail evaluate measure operations from CR Module.

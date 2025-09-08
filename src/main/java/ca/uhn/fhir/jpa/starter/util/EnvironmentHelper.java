@@ -108,26 +108,27 @@ public class EnvironmentHelper {
 					.get(BackendSettings.backendKey(BackendSettings.TYPE))
 					.equals(ElasticsearchBackendSettings.TYPE_NAME)) {
 				ElasticsearchHibernatePropertiesBuilder builder = new ElasticsearchHibernatePropertiesBuilder();
-				IndexStatus requiredIndexStatus =
-						environment.getProperty("elasticsearch.required_index_status", IndexStatus.class);
+				IndexStatus requiredIndexStatus = environment.getProperty(
+						"spring.jpa.properties.default.elasticsearch.required_index_status", IndexStatus.class);
 				builder.setRequiredIndexStatus(requireNonNullElse(requiredIndexStatus, IndexStatus.YELLOW));
-				builder.setHosts(getElasticsearchServerUrl(environment));
+				builder.setHosts(getElasticsearchServerHosts(environment));
+				builder.setProtocol(getElasticsearchServerProtocol(environment));
 				builder.setUsername(getElasticsearchServerUsername(environment));
 				builder.setPassword(getElasticsearchServerPassword(environment));
-				builder.setProtocol(getElasticsearchServerProtocol(environment));
 				SchemaManagementStrategyName indexSchemaManagementStrategy = environment.getProperty(
-						"elasticsearch.schema_management_strategy", SchemaManagementStrategyName.class);
+						"spring.elasticsearch.schema_management_strategy", SchemaManagementStrategyName.class);
 				builder.setIndexSchemaManagementStrategy(
 						requireNonNullElse(indexSchemaManagementStrategy, SchemaManagementStrategyName.CREATE));
-				Boolean refreshAfterWrite =
-						environment.getProperty("elasticsearch.debug.refresh_after_write", Boolean.class);
+				Boolean refreshAfterWrite = environment.getProperty(
+						"spring.jpa.properties.hibernate.search.backend.refresh_after_write", Boolean.class);
 				if (refreshAfterWrite == null || !refreshAfterWrite) {
 					builder.setDebugIndexSyncStrategy(AutomaticIndexingSynchronizationStrategyNames.ASYNC);
 				} else {
 					builder.setDebugIndexSyncStrategy(AutomaticIndexingSynchronizationStrategyNames.READ_SYNC);
 				}
 				builder.setDebugPrettyPrintJsonLog(requireNonNullElse(
-						environment.getProperty("elasticsearch.debug.pretty_print_json_log", Boolean.class), false));
+						environment.getProperty("spring.elasticsearch.debug.pretty_print_json_log", Boolean.class),
+						false));
 				builder.apply(properties);
 
 			} else {
@@ -139,28 +140,27 @@ public class EnvironmentHelper {
 		return properties;
 	}
 
-	public static String getElasticsearchServerUrl(ConfigurableEnvironment environment) {
-		return environment.getProperty("spring.elasticsearch.uris", String.class);
+	private static String getElasticsearchServerPassword(ConfigurableEnvironment environment) {
+		return environment.getProperty("spring.jpa.properties.hibernate.search.backend.password");
 	}
 
-	public static String getElasticsearchServerProtocol(ConfigurableEnvironment environment) {
-		return environment.getProperty("elasticsearch.protocol", String.class, "http");
+	private static String getElasticsearchServerUsername(ConfigurableEnvironment environment) {
+		return environment.getProperty("spring.jpa.properties.hibernate.search.backend.username");
 	}
 
-	public static String getElasticsearchServerUsername(ConfigurableEnvironment environment) {
-		return environment.getProperty("spring.elasticsearch.username");
+	private static String getElasticsearchServerHosts(ConfigurableEnvironment environment) {
+		return environment.getProperty("spring.jpa.properties.hibernate.search.backend.hosts");
 	}
 
-	public static String getElasticsearchServerPassword(ConfigurableEnvironment environment) {
-		return environment.getProperty("spring.elasticsearch.password");
+	private static String getElasticsearchServerProtocol(ConfigurableEnvironment environment) {
+		return environment.getProperty("spring.jpa.properties.hibernate.search.backend.protocol");
 	}
 
 	public static Boolean isElasticsearchEnabled(ConfigurableEnvironment environment) {
-		if (environment.getProperty("spring.elasticsearch.enabled", Boolean.class) != null) {
-			return environment.getProperty("spring.elasticsearch.enabled", Boolean.class);
-		} else {
-			return false;
-		}
+		return environment.getProperty("spring.jpa.properties.hibernate.search.backend.type") != null
+				&& environment
+						.getProperty("spring.jpa.properties.hibernate.search.backend.type")
+						.equals("elasticsearch");
 	}
 
 	public static Map<String, Object> getPropertiesStartingWith(ConfigurableEnvironment aEnv, String aKeyPrefix) {

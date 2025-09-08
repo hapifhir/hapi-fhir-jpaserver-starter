@@ -49,18 +49,18 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 	 "hapi.fhir.store_resource_in_lucene_index_enabled=true",
 	 "hapi.fhir.advanced_lucene_indexing=true",
 	 "hapi.fhir.search_index_full_text_enabled=true",
-
-    "spring.elasticsearch.enabled=true",
 	  "hapi.fhir.cr_enabled=false",
     // Because the port is set randomly, we will set the rest_url using the Initializer.
     // "elasticsearch.rest_url='http://localhost:9200'",
-    "spring.elasticsearch.username=elastic",
-    "spring.elasticsearch.password=changeme",
-    "spring.elasticsearch.debug.refresh_after_write=true",
-	 "spring.elasticsearch.protocol=http",
+
+	  "spring.elasticsearch.uris=http://localhost:9200",
+     "spring.elasticsearch.username=elastic",
+     "spring.elasticsearch.password=changeme",
 	  "spring.main.allow-bean-definition-overriding=true",
 	  "spring.jpa.properties.hibernate.search.enabled=true",
 	  "spring.jpa.properties.hibernate.search.backend.type=elasticsearch",
+	  "spring.jpa.properties.hibernate.search.backend.hosts=localhost:9200",
+	  "spring.jpa.properties.hibernate.search.backend.protocol=http",
 	  "spring.jpa.properties.hibernate.search.backend.analysis.configurer=ca.uhn.fhir.jpa.search.elastic.HapiElasticsearchAnalysisConfigurer"
   })
 @ContextConfiguration(initializers = ElasticsearchLastNR4IT.Initializer.class)
@@ -156,6 +156,8 @@ class ElasticsearchLastNR4IT {
       // Since the port is dynamically generated, replace the URL with one that has the correct port
       TestPropertyValues.of("spring.elasticsearch.uris=" + embeddedElastic.getHost() +":" + embeddedElastic.getMappedPort(9200))
         .applyTo(configurableApplicationContext.getEnvironment());
+		 TestPropertyValues.of("spring.jpa.properties.hibernate.search.backend.hosts=" + embeddedElastic.getHost() +":" + embeddedElastic.getMappedPort(9200))
+			 .applyTo(configurableApplicationContext.getEnvironment());
     }
 
   }
