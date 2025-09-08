@@ -13,7 +13,6 @@ public class ElasticConfigCondition implements Condition {
 		ElasticsearchProperties config = Binder.get(theConditionContext.getEnvironment())
 				.bind("spring.elasticsearch", ElasticsearchProperties.class)
 				.orElse(null);
-		if (config == null) return false;
-		else return true;
+		return config != null;
 	}
 }
