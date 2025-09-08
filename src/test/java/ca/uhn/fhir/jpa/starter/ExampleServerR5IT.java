@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class}, properties =
   {
      "spring.datasource.url=jdbc:h2:mem:dbr5",
+	  "spring.jpa.properties.hibernate.search.backend.directory.type=local-heap",
      "hapi.fhir.fhir_version=r5",
 	  "hapi.fhir.cr_enabled=false",
 	  "hapi.fhir.subscription.websocket_enabled=true",

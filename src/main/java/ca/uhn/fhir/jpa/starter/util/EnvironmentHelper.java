@@ -1,22 +1,7 @@
 package ca.uhn.fhir.jpa.starter.util;
 
-import ca.uhn.fhir.jpa.config.HapiFhirLocalContainerEntityManagerFactoryBean;
-import ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers;
-import ca.uhn.fhir.jpa.search.elastic.ElasticsearchHibernatePropertiesBuilder;
-import org.apache.lucene.util.Version;
-import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
-import org.hibernate.cfg.AvailableSettings;
-import org.hibernate.search.backend.elasticsearch.cfg.ElasticsearchBackendSettings;
-import org.hibernate.search.backend.elasticsearch.index.IndexStatus;
-import org.hibernate.search.backend.lucene.cfg.LuceneBackendSettings;
-import org.hibernate.search.backend.lucene.cfg.LuceneIndexSettings;
-import org.hibernate.search.backend.lucene.lowlevel.directory.impl.LocalFileSystemDirectoryProvider;
-import org.hibernate.search.engine.cfg.BackendSettings;
-import org.hibernate.search.mapper.orm.automaticindexing.session.AutomaticIndexingSynchronizationStrategyNames;
-import org.hibernate.search.mapper.orm.cfg.HibernateOrmMapperSettings;
-import org.hibernate.search.mapper.orm.schema.management.SchemaManagementStrategyName;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy;
+import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.env.CompositePropertySource;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
@@ -25,142 +10,11 @@ import org.springframework.core.env.PropertySource;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
-
-import static java.util.Objects.requireNonNullElse;
 
 public class EnvironmentHelper {
 
-	public static Properties getHibernateProperties(
-			ConfigurableEnvironment environment, ConfigurableListableBeanFactory myConfigurableListableBeanFactory) {
-		Properties properties = new Properties();
-		Map<String, Object> jpaProps = getPropertiesStartingWith(environment, "spring.jpa.properties");
-		for (Map.Entry<String, Object> entry : jpaProps.entrySet()) {
-			String strippedKey = entry.getKey().replace("spring.jpa.properties.", "");
-			properties.put(strippedKey, entry.getValue().toString());
-		}
-
-		// also check for JPA properties set as environment variables, this is slightly hacky and doesn't cover all
-		// the naming conventions Springboot allows
-		// but there doesn't seem to be a better/deterministic way to get these properties when they are set as ENV
-		// variables and this at least provides
-		// a way to set them (in a docker container, for instance)
-		Map<String, Object> jpaPropsEnv = getPropertiesStartingWith(environment, "SPRING_JPA_PROPERTIES");
-		for (Map.Entry<String, Object> entry : jpaPropsEnv.entrySet()) {
-			String strippedKey = entry.getKey().replace("SPRING_JPA_PROPERTIES_", "");
-			strippedKey = strippedKey.replaceAll("_", ".");
-			strippedKey = strippedKey.toLowerCase();
-			properties.put(strippedKey, entry.getValue().toString());
-		}
-
-		// Spring Boot Autoconfiguration defaults
-		properties.putIfAbsent(AvailableSettings.SCANNER, "org.hibernate.boot.archive.scan.internal.DisabledScanner");
-		properties.putIfAbsent(
-				AvailableSettings.IMPLICIT_NAMING_STRATEGY, SpringImplicitNamingStrategy.class.getName());
-		properties.putIfAbsent(
-				AvailableSettings.PHYSICAL_NAMING_STRATEGY, CamelCaseToUnderscoresNamingStrategy.class.getName());
-		// TODO The bean factory should be added as parameter but that requires that it can be injected from the
-		// entityManagerFactory bean from xBaseConfig
-		// properties.putIfAbsent(AvailableSettings.BEAN_CONTAINER, new SpringBeanContainer(beanFactory));
-
-		// hapi-fhir-jpaserver-base "sensible defaults"
-		Map<String, Object> hapiJpaPropertyMap = new HapiFhirLocalContainerEntityManagerFactoryBean(
-						myConfigurableListableBeanFactory)
-				.getJpaPropertyMap();
-		hapiJpaPropertyMap.forEach(properties::putIfAbsent);
-
-		// hapi-fhir-jpaserver-starter defaults
-		properties.putIfAbsent(AvailableSettings.FORMAT_SQL, false);
-		properties.putIfAbsent(AvailableSettings.SHOW_SQL, false);
-		properties.putIfAbsent(AvailableSettings.HBM2DDL_AUTO, "update");
-		properties.putIfAbsent(AvailableSettings.STATEMENT_BATCH_SIZE, 20);
-		properties.putIfAbsent(AvailableSettings.USE_QUERY_CACHE, false);
-		properties.putIfAbsent(AvailableSettings.USE_SECOND_LEVEL_CACHE, false);
-		properties.putIfAbsent(AvailableSettings.USE_STRUCTURED_CACHE, false);
-		properties.putIfAbsent(AvailableSettings.USE_MINIMAL_PUTS, false);
-
-		// Hibernate Search defaults
-		properties.putIfAbsent(HibernateOrmMapperSettings.ENABLED, false);
-		if (Boolean.parseBoolean(String.valueOf(properties.get(HibernateOrmMapperSettings.ENABLED)))) {
-			if (isElasticsearchEnabled(environment)) {
-				properties.putIfAbsent(
-						BackendSettings.backendKey(BackendSettings.TYPE), ElasticsearchBackendSettings.TYPE_NAME);
-			} else {
-				properties.putIfAbsent(
-						BackendSettings.backendKey(BackendSettings.TYPE), LuceneBackendSettings.TYPE_NAME);
-			}
-
-			if (properties
-					.get(BackendSettings.backendKey(BackendSettings.TYPE))
-					.equals(LuceneBackendSettings.TYPE_NAME)) {
-				properties.putIfAbsent(
-						BackendSettings.backendKey(LuceneIndexSettings.DIRECTORY_TYPE),
-						LocalFileSystemDirectoryProvider.NAME);
-				properties.putIfAbsent(
-						BackendSettings.backendKey(LuceneIndexSettings.DIRECTORY_ROOT), "target/lucenefiles");
-				properties.putIfAbsent(
-						BackendSettings.backendKey(LuceneBackendSettings.ANALYSIS_CONFIGURER),
-						HapiHSearchAnalysisConfigurers.HapiLuceneAnalysisConfigurer.class.getName());
-				properties.putIfAbsent(
-						BackendSettings.backendKey(LuceneBackendSettings.LUCENE_VERSION), Version.LATEST);
-
-			} else if (properties
-					.get(BackendSettings.backendKey(BackendSettings.TYPE))
-					.equals(ElasticsearchBackendSettings.TYPE_NAME)) {
-				ElasticsearchHibernatePropertiesBuilder builder = new ElasticsearchHibernatePropertiesBuilder();
-				IndexStatus requiredIndexStatus = environment.getProperty(
-						"spring.jpa.properties.default.elasticsearch.required_index_status", IndexStatus.class);
-				builder.setRequiredIndexStatus(requireNonNullElse(requiredIndexStatus, IndexStatus.YELLOW));
-				builder.setHosts(getElasticsearchServerHosts(environment));
-				builder.setProtocol(getElasticsearchServerProtocol(environment));
-				builder.setUsername(getElasticsearchServerUsername(environment));
-				builder.setPassword(getElasticsearchServerPassword(environment));
-				SchemaManagementStrategyName indexSchemaManagementStrategy = environment.getProperty(
-						"spring.elasticsearch.schema_management_strategy", SchemaManagementStrategyName.class);
-				builder.setIndexSchemaManagementStrategy(
-						requireNonNullElse(indexSchemaManagementStrategy, SchemaManagementStrategyName.CREATE));
-				Boolean refreshAfterWrite = environment.getProperty(
-						"spring.jpa.properties.hibernate.search.backend.refresh_after_write", Boolean.class);
-				if (refreshAfterWrite == null || !refreshAfterWrite) {
-					builder.setDebugIndexSyncStrategy(AutomaticIndexingSynchronizationStrategyNames.ASYNC);
-				} else {
-					builder.setDebugIndexSyncStrategy(AutomaticIndexingSynchronizationStrategyNames.READ_SYNC);
-				}
-				builder.setDebugPrettyPrintJsonLog(requireNonNullElse(
-						environment.getProperty("spring.elasticsearch.debug.pretty_print_json_log", Boolean.class),
-						false));
-				builder.apply(properties);
-
-			} else {
-				throw new UnsupportedOperationException("Unsupported Hibernate Search backend: "
-						+ properties.get(BackendSettings.backendKey(BackendSettings.TYPE)));
-			}
-		}
-
-		return properties;
-	}
-
-	private static String getElasticsearchServerPassword(ConfigurableEnvironment environment) {
-		return environment.getProperty("spring.jpa.properties.hibernate.search.backend.password");
-	}
-
-	private static String getElasticsearchServerUsername(ConfigurableEnvironment environment) {
-		return environment.getProperty("spring.jpa.properties.hibernate.search.backend.username");
-	}
-
-	private static String getElasticsearchServerHosts(ConfigurableEnvironment environment) {
-		return environment.getProperty("spring.jpa.properties.hibernate.search.backend.hosts");
-	}
-
-	private static String getElasticsearchServerProtocol(ConfigurableEnvironment environment) {
-		return environment.getProperty("spring.jpa.properties.hibernate.search.backend.protocol");
-	}
-
-	public static Boolean isElasticsearchEnabled(ConfigurableEnvironment environment) {
-		return environment.getProperty("spring.jpa.properties.hibernate.search.backend.type") != null
-				&& environment
-						.getProperty("spring.jpa.properties.hibernate.search.backend.type")
-						.equals("elasticsearch");
+	public static <T> T getConfiguration(ConditionContext context, String path, Class<T> clazz) {
+		return Binder.get(context.getEnvironment()).bind(path, clazz).orElse(null);
 	}
 
 	public static Map<String, Object> getPropertiesStartingWith(ConfigurableEnvironment aEnv, String aKeyPrefix) {

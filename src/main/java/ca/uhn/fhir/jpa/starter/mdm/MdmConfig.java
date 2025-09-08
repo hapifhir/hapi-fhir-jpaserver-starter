@@ -9,8 +9,8 @@ import ca.uhn.fhir.mdm.rules.config.MdmRuleValidator;
 import ca.uhn.fhir.mdm.rules.config.MdmSettings;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 @Configuration
-@Conditional(MdmConfigCondition.class)
+@ConditionalOnProperty(prefix = "hapi.fhir", name = "mdm_enabled")
 @Import({MdmConsumerConfig.class, MdmSubmitterConfig.class, NicknameServiceConfig.class})
 public class MdmConfig {
 

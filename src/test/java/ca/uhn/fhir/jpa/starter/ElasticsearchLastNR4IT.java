@@ -61,7 +61,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 	  "spring.jpa.properties.hibernate.search.backend.type=elasticsearch",
 	  "spring.jpa.properties.hibernate.search.backend.hosts=localhost:9200",
 	  "spring.jpa.properties.hibernate.search.backend.protocol=http",
-	  "spring.jpa.properties.hibernate.search.backend.analysis.configurer=ca.uhn.fhir.jpa.search.elastic.HapiElasticsearchAnalysisConfigurer"
+	  "spring.jpa.properties.hibernate.search.backend.analysis.configurer=ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticsearchAnalysisConfigurer"
   })
 @ContextConfiguration(initializers = ElasticsearchLastNR4IT.Initializer.class)
 class ElasticsearchLastNR4IT {

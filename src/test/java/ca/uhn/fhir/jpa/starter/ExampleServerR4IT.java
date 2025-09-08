@@ -71,6 +71,8 @@ import static org.opencds.cqf.fhir.utility.r4.Parameters.stringPart;
 	// when running in a spring boot environment
 	"spring.main.allow-bean-definition-overriding=true",
 	"management.health.elasticsearch.enabled=false",
+	"spring.jpa.properties.hibernate.search.backend.directory.type=local-heap",
+	"management.endpoints.web.exposure.include=*",
 	"hapi.fhir.remote_terminology_service.snomed.system=http://snomed.info/sct",
 	"hapi.fhir.remote_terminology_service.snomed.url=https://tx.fhir.org/r4"
 })

@@ -63,6 +63,8 @@ spring:
   jpa:
     properties:
         hibernate:
+
+
           hbm2ddl:
             auto: update
           jdbc:
@@ -79,6 +81,7 @@ spring:
           #dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
           dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
           search:
+            enabled: true
             schema_management:
               strategy: create
             ### lucene parameters
