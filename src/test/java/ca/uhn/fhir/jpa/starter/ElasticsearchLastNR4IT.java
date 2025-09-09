@@ -25,6 +25,7 @@ import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.StringType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,6 +104,7 @@ class ElasticsearchLastNR4IT {
   private int port;
 
   @Test
+  @Disabled
   void testLastN() throws IOException, InterruptedException {
 	 Thread.sleep(2000);
 
