@@ -42,6 +42,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @ExtendWith(SpringExtension.class)
 @Testcontainers
+@Disabled
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class}, properties =
   {
     "spring.datasource.url=jdbc:h2:mem:dbr4",
@@ -104,7 +105,6 @@ class ElasticsearchLastNR4IT {
   private int port;
 
   @Test
-  @Disabled
   void testLastN() throws IOException, InterruptedException {
 	 Thread.sleep(2000);
 
