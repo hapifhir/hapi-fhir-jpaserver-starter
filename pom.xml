@@ -5,8 +5,8 @@
 
     <properties>
         <java.version>17</java.version>
-        <hapi.fhir.jpa.server.starter.revision>3</hapi.fhir.jpa.server.starter.revision>
-        <clinical-reasoning.version>3.26.0</clinical-reasoning.version>
+        <hapi.fhir.jpa.server.starter.revision>2</hapi.fhir.jpa.server.starter.revision>
+        <clinical-reasoning.version>3.27.0-SNAPSHOT</clinical-reasoning.version>
     </properties>
 
     <!-- one-liner to take you to the cloud with settings form the application.yaml file: -->
