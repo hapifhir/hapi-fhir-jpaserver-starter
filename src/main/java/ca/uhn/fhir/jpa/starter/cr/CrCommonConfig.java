@@ -58,7 +58,8 @@ public class CrCommonConfig {
 
 	@Bean
 	public EvaluationSettings evaluationSettings(
-			CrProperties theCrProperties,
+			CqlRuntimeProperties cqlRuntimeProperties,
+			CqlCompilerProperties cqlCompilerProperties,
 			RetrieveSettings theRetrieveSettings,
 			TerminologySettings theTerminologySettings,
 			Map<VersionedIdentifier, CompiledLibrary> theGlobalLibraryCache,
@@ -69,7 +70,7 @@ public class CrCommonConfig {
 
 		var cqlEngineOptions = cqlOptions.getCqlEngineOptions();
 		Set<CqlEngine.Options> options = EnumSet.noneOf(CqlEngine.Options.class);
-		var cqlRuntimeProperties = theCrProperties.getCql().getRuntime();
+
 		if (cqlRuntimeProperties.isEnableExpressionCaching()) {
 			options.add(CqlEngine.Options.EnableExpressionCaching);
 		}
@@ -83,8 +84,6 @@ public class CrCommonConfig {
 		cqlOptions.setCqlEngineOptions(cqlEngineOptions);
 
 		var cqlCompilerOptions = new CqlCompilerOptions();
-
-		var cqlCompilerProperties = theCrProperties.getCql().getCompiler();
 
 		if (cqlCompilerProperties.isEnableDateRangeOptimization()) {
 			cqlCompilerOptions.setOptions(CqlCompilerOptions.Options.EnableDateRangeOptimization);

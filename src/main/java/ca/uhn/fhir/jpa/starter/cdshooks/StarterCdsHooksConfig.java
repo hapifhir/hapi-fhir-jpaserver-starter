@@ -1,8 +1,6 @@
 package ca.uhn.fhir.jpa.starter.cdshooks;
 
-import ca.uhn.fhir.jpa.starter.cr.CrCommonConfig;
-import ca.uhn.fhir.jpa.starter.cr.CrConfigCondition;
-import ca.uhn.fhir.jpa.starter.cr.CrProperties;
+import ca.uhn.fhir.jpa.starter.cr.*;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsHooksDaoAuthorizationSvc;
 import ca.uhn.hapi.fhir.cdshooks.config.CdsHooksConfig;
 import ca.uhn.hapi.fhir.cdshooks.svc.CdsHooksContextBooter;
@@ -41,8 +39,9 @@ public class StarterCdsHooksConfig {
 	}
 
 	@Bean
-	public ProviderConfiguration providerConfiguration(CdsHooksProperties cdsProperties, CrProperties crProperties) {
-		return new ProviderConfiguration(cdsProperties, crProperties);
+	public ProviderConfiguration providerConfiguration(
+			CdsHooksProperties cdsProperties, CqlProperties cqlProperties, CqlRuntimeProperties cqlRuntimeProperties) {
+		return new ProviderConfiguration(cdsProperties, cqlRuntimeProperties);
 	}
 
 	@Bean

@@ -11,7 +11,7 @@ public class CrProperties {
 
 	private CareGapsProperties careGaps;
 	private CqlProperties cql;
-	private TerminologyServerClientSettings terminologyServerClientSettings;
+	private TerminologyServerClientSettings terminologyServerClientSettings = new TerminologyServerClientSettings();
 
 	public Boolean getEnabled() {
 		return enabled;
