@@ -63,18 +63,20 @@ spring:
 
     mcp:
       server:
-        name: FHIR MCP Server
-        version: 1.0.0
-        type: SYNC
-        instructions: "This server provides access to a FHIR RESTful API. You can use it to query FHIR resources, perform operations, and retrieve data in a structured format."
-        sse-message-endpoint: /mcp/messages
-        capabilities:
-          tool: true
-          resource: true
-          prompt: true
-          completion: true
-        stdio: false
+        # Will be enabled once spring-ai-starter-mcp-server is added as dependency
+#        name: FHIR MCP Server
+#        version: 1.0.0
+#        type: SYNC
+#        instructions: "This server provides access to a FHIR RESTful API. You can use it to query FHIR resources, perform operations, and retrieve data in a structured format."
+#        sse-message-endpoint: /mcp/message
+#        capabilities:
+#          tool: true
+#          resource: true
+#          prompt: true
+#          completion: true
+#        stdio: false
         enabled: true
+
         #endpoint: /mcp
 
         #schema:

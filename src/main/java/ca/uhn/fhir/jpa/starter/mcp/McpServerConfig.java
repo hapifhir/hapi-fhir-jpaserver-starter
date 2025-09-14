@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.server.McpServer;
 import io.modelcontextprotocol.server.McpSyncServer;
 import io.modelcontextprotocol.server.transport.HttpServletStreamableServerTransportProvider;
+import io.modelcontextprotocol.spec.McpStreamableServerTransportProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -31,9 +32,12 @@ import java.util.List;
 		havingValue = "true")
 public class McpServerConfig {
 
+	private static final String SSE_ENDPOINT = "/sse";
+	private static final String SSE_MESSAGE_ENDPOINT = "/mcp/message";
+
 	@Bean
 	public McpSyncServer syncServer(
-			List<McpBridge> mcpBridges, HttpServletStreamableServerTransportProvider transportProvider) {
+			List<McpBridge> mcpBridges, McpStreamableServerTransportProvider transportProvider) {
 		return McpServer.sync(transportProvider)
 				.tools(mcpBridges.stream()
 						.flatMap(bridge -> bridge.generateTools().stream())
@@ -58,17 +62,20 @@ public class McpServerConfig {
 	}
 
 	@Bean
-	public HttpServletStreamableServerTransportProvider servletSseServerTransportProvider() {
+	public HttpServletStreamableServerTransportProvider servletSseServerTransportProvider(
+			/*McpServerProperties properties*/ ) {
+
 		return HttpServletStreamableServerTransportProvider.builder()
 				.disallowDelete(false)
-				.mcpEndpoint("/mcp/message")
+				.mcpEndpoint(SSE_MESSAGE_ENDPOINT)
 				.objectMapper(new ObjectMapper())
-				.contextExtractor((serverRequest, context) -> context)
+				// .contextExtractor((serverRequest, context) -> context)
 				.build();
 	}
 
 	@Bean
-	public ServletRegistrationBean customServletBean(HttpServletStreamableServerTransportProvider transportProvider) {
-		return new ServletRegistrationBean<>(transportProvider, "/mcp/message", "/sse");
+	public ServletRegistrationBean customServletBean(
+			HttpServletStreamableServerTransportProvider transportProvider /*, McpServerProperties properties*/) {
+		return new ServletRegistrationBean<>(transportProvider, SSE_MESSAGE_ENDPOINT, SSE_ENDPOINT);
 	}
 }
