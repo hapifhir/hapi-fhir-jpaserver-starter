@@ -23,8 +23,6 @@ jobs:
          if: always()
          with:
            proxy-url: https://slack-bots.azure.smilecdr.com/robogary/github
-           message-success: |
-             Formatting check succeeded!
            message-failure: |
              **This Pull Request has failed the formatting check**
              
