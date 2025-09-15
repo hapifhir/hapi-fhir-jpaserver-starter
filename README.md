@@ -120,9 +120,9 @@ docker-compose exec -T matchbox-test-db pg_restore -c -U matchbox -d matchbox < 
 ### making container available
 
 ```
-docker tag matchbox eu.gcr.io/fhir-ch/matchbox:v313
+docker tag matchbox eu.gcr.io/fhir-ch/matchbox:4.0.12
 
-docker push eu.gcr.io/fhir-ch/matchbox:v313
+docker push eu.gcr.io/fhir-ch/matchbox:v4.0.12
 ```
 
 ### publish docs
