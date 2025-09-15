@@ -19,7 +19,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.opencds.cqf.fhir.cr.hapi.config.CrCdsHooksConfig;
 import org.opencds.cqf.fhir.cr.hapi.config.RepositoryConfig;
@@ -157,7 +156,6 @@ class CdsHooksServletIT implements IServerSupport {
 		}
 	}
 
-	@Disabled
 	@Test
 	void testRec10() throws IOException {
 		loadBundle("r4/opioidcds-10-order-sign-bundle.json", ourCtx, ourClient);
