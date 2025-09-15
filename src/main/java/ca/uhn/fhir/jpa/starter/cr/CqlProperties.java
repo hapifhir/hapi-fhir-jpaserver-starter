@@ -2,18 +2,14 @@ package ca.uhn.fhir.jpa.starter.cr;
 
 import org.opencds.cqf.fhir.cql.engine.retrieve.RetrieveSettings;
 import org.opencds.cqf.fhir.cql.engine.terminology.TerminologySettings;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
-@ConfigurationProperties(prefix = "hapi.fhir.cr.cql")
 public class CqlProperties {
 
 	private Boolean use_embedded_libraries = true;
-	private CqlCompilerProperties compiler;
-	private CqlRuntimeProperties runtime;
-	private TerminologySettings terminology;
-	private CqlData data;
+	private CqlCompilerProperties compiler = new CqlCompilerProperties();
+	private CqlRuntimeProperties runtime = new CqlRuntimeProperties();
+	private TerminologySettings terminology = new TerminologySettings();
+	private RetrieveSettings data = new RetrieveSettings();
 
 	public Boolean getUse_embedded_libraries() {
 		return use_embedded_libraries;
@@ -47,15 +43,11 @@ public class CqlProperties {
 		this.terminology = terminology;
 	}
 
-	public CqlData getData() {
+	public RetrieveSettings getData() {
 		return data;
 	}
 
-	public void setData(CqlData data) {
+	public void setData(RetrieveSettings data) {
 		this.data = data;
-	}
-
-	public RetrieveSettings getRetrieveSettings() {
-		return data.getRetrieveSettings();
 	}
 }

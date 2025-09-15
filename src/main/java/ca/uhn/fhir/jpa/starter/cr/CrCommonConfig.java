@@ -23,6 +23,7 @@ import org.opencds.cqf.fhir.cr.measure.CareGapsProperties;
 import org.opencds.cqf.fhir.cr.measure.MeasureEvaluationOptions;
 import org.opencds.cqf.fhir.utility.ValidationProfile;
 import org.opencds.cqf.fhir.utility.client.TerminologyServerClientSettings;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -42,13 +43,19 @@ import java.util.concurrent.Executors;
 public class CrCommonConfig {
 
 	@Bean
-	RetrieveSettings retrieveSettings(CqlData cqlData) {
-		return cqlData.getRetrieveSettings();
+	@ConfigurationProperties(prefix = "hapi.fhir.cr")
+	CrProperties crProperties() {
+		return new CrProperties();
 	}
 
 	@Bean
-	TerminologySettings terminologySettings(CqlTerminologyProperties theCqlTerminologyProperties) {
-		return theCqlTerminologyProperties.getTerminologySettings();
+	RetrieveSettings retrieveSettings(CrProperties theCrProperties) {
+		return theCrProperties.getCql().getData();
+	}
+
+	@Bean
+	TerminologySettings terminologySettings(CrProperties theCrProperties) {
+		return theCrProperties.getCql().getTerminology();
 	}
 
 	@Bean
@@ -152,8 +159,8 @@ public class CrCommonConfig {
 		return executor;
 	}
 
-	@Bean(name = "measure.CareGapsProperties")
-	org.opencds.cqf.fhir.cr.measure.CareGapsProperties careGapsProperties(CrProperties theCrProperties) {
+	@Bean
+	CareGapsProperties careGapsProperties(CrProperties theCrProperties) {
 		var careGapsProperties = new CareGapsProperties();
 		// This check for the resource type really should be happening down in CR where the setting is actually used but
 		// that will have to wait for a future CR release
