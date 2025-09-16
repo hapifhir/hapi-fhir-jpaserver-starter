@@ -3,7 +3,11 @@ package ca.uhn.fhir.jpa.starter.cr;
 import org.cqframework.cql.cql2elm.CqlCompilerException;
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.LibraryBuilder;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
+@ConfigurationProperties(prefix = "hapi.fhir.cr.cql.compiler")
 public class CqlCompilerProperties {
 	private Boolean validate_units = true;
 	private Boolean verify_only = false;

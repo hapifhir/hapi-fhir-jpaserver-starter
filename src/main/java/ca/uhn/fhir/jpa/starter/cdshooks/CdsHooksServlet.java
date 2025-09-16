@@ -2,7 +2,6 @@ package ca.uhn.fhir.jpa.starter.cdshooks;
 
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.rest.api.server.cdshooks.CdsServiceRequestJson;
-import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsServiceRegistry;
 import ca.uhn.hapi.fhir.cdshooks.api.json.CdsServiceResponseJson;
@@ -42,9 +41,6 @@ public class CdsHooksServlet extends HttpServlet {
 
 	@Autowired
 	ICdsServiceRegistry cdsServiceRegistry;
-
-	@Autowired
-	RestfulServer restfulServer;
 
 	@Autowired
 	@Qualifier(CDS_HOOKS_OBJECT_MAPPER_FACTORY)
