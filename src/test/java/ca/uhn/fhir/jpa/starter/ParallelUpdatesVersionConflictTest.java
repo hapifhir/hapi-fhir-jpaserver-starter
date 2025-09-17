@@ -30,7 +30,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class}, properties = {
 	"spring.datasource.url=jdbc:h2:mem:dbr4",
 	"hapi.fhir.fhir_version=r4",
-	"hapi.fhir.userRequestRetryVersionConflictsInterceptorEnabled=true"
+	"hapi.fhir.userRequestRetryVersionConflictsInterceptorEnabled=true",
+	"spring.jpa.properties.hibernate.search.backend.directory.type=local-heap"
 })
 
 /**

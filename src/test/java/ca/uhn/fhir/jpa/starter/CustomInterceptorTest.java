@@ -14,14 +14,14 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class}, properties = {
-		"hapi.fhir.custom-bean-packages=some.custom.pkg1",
-		"hapi.fhir.custom-interceptor-classes=some.custom.pkg1.CustomInterceptorBean,some.custom.pkg1.CustomInterceptorPojo",
-		"spring.datasource.url=jdbc:h2:mem:dbr4",
-		"hapi.fhir.cr_enabled=false",
-		// "hapi.fhir.enable_repository_validating_interceptor=true",
-		"hapi.fhir.fhir_version=r4"
+	"hapi.fhir.custom-bean-packages=some.custom.pkg1",
+	"spring.jpa.properties.hibernate.search.backend.directory.type=local-heap",
+	"hapi.fhir.custom-interceptor-classes=some.custom.pkg1.CustomInterceptorBean,some.custom.pkg1.CustomInterceptorPojo",
+	"spring.datasource.url=jdbc:h2:mem:dbr4",
+	"hapi.fhir.cr_enabled=false",
+	// "hapi.fhir.enable_repository_validating_interceptor=true",
+	"hapi.fhir.fhir_version=r4"
 })
-
 class CustomInterceptorTest {
 
 	@LocalServerPort

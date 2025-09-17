@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
      "hapi.fhir.fhir_version=dstu2",
      "spring.datasource.url=jdbc:h2:mem:dbr2",
 	  "hapi.fhir.cr_enabled=false",
+	  "spring.jpa.properties.hibernate.search.backend.directory.type=local-heap"
   })
 class ExampleServerDstu2IT {
 

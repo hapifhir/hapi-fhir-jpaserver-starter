@@ -17,16 +17,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
 	classes = {Application.class},
 	properties = {
-	"spring.datasource.url=jdbc:h2:mem:dbr4b",
-	"hapi.fhir.enable_repository_validating_interceptor=true",
-	"hapi.fhir.fhir_version=r4b",
-	"hapi.fhir.subscription.websocket_enabled=false",
-	"hapi.fhir.mdm_enabled=false",
-	"hapi.fhir.cr_enabled=false",
-	// Override is currently required when using MDM as the construction of the MDM
-	// beans are ambiguous as they are constructed multiple places. This is evident
-	// when running in a spring boot environment
-	"spring.main.allow-bean-definition-overriding=true"})
+		"spring.datasource.url=jdbc:h2:mem:dbr4b",
+		"hapi.fhir.enable_repository_validating_interceptor=true",
+		"spring.jpa.properties.hibernate.search.backend.directory.type=local-heap",
+		"hapi.fhir.fhir_version=r4b",
+		"hapi.fhir.subscription.websocket_enabled=false",
+		"hapi.fhir.mdm_enabled=false",
+		"hapi.fhir.cr_enabled=false",
+		// Override is currently required when using MDM as the construction of the MDM
+		// beans are ambiguous as they are constructed multiple places. This is evident
+		// when running in a spring boot environment
+		"spring.main.allow-bean-definition-overriding=true"})
 class ExampleServerR4BIT {
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(ExampleServerR4BIT.class);
 	private IGenericClient ourClient;
@@ -105,7 +106,6 @@ class ExampleServerR4BIT {
 		Bundle bundle = FhirContext.forR4B().newJsonParser().parseResource(Bundle.class, batchPuts);
 		ourClient.transaction().withBundle(bundle).execute();
 	}
-
 
 
 	@BeforeEach
