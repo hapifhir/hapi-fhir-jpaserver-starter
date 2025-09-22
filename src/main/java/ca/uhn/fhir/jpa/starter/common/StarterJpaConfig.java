@@ -80,6 +80,7 @@ import com.google.common.base.Strings;
 import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
 import org.hibernate.cfg.AvailableSettings;
+import org.hibernate.search.mapper.orm.cfg.HibernateOrmMapperSettings;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -179,6 +180,9 @@ public class StarterJpaConfig {
 		theJpaProperties.getProperties().putIfAbsent(AvailableSettings.USE_SECOND_LEVEL_CACHE, "false");
 		theJpaProperties.getProperties().putIfAbsent(AvailableSettings.USE_STRUCTURED_CACHE, "false");
 		theJpaProperties.getProperties().putIfAbsent(AvailableSettings.USE_MINIMAL_PUTS, "false");
+
+		// Hibernate Search defaults
+		theJpaProperties.getProperties().putIfAbsent(HibernateOrmMapperSettings.ENABLED, "false");
 
 		entityManagerFactoryBean.setPersistenceUnitName("HAPI_PU");
 		entityManagerFactoryBean.setJpaPropertyMap(theJpaProperties.getProperties());
