@@ -52,7 +52,6 @@ import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
 import ca.uhn.fhir.jpa.starter.ig.ExtendedPackageInstallationSpec;
 import ca.uhn.fhir.jpa.starter.ig.IImplementationGuideOperationProvider;
-import ca.uhn.fhir.jpa.starter.util.EnvironmentHelper;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceCountCache;
 import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
@@ -79,13 +78,17 @@ import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
 import jakarta.persistence.EntityManagerFactory;
+import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
+import org.hibernate.cfg.AvailableSettings;
+import org.hibernate.search.mapper.orm.cfg.HibernateOrmMapperSettings;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
+import org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -93,13 +96,11 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.web.cors.CorsConfiguration;
 
-import java.io.IOException;
 import java.util.*;
 import javax.sql.DataSource;
 
@@ -122,9 +123,6 @@ public class StarterJpaConfig {
 	public IStaleSearchDeletingSvc staleSearchDeletingSvc() {
 		return new StaleSearchDeletingSvcImpl();
 	}
-
-	@Autowired
-	private ConfigurableEnvironment configurableEnvironment;
 
 	/**
 	 * Customize the default/max page sizes for search results. You can set these however
@@ -151,22 +149,46 @@ public class StarterJpaConfig {
 	@Primary
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+			JpaProperties theJpaProperties,
 			DataSource myDataSource,
 			ConfigurableListableBeanFactory myConfigurableListableBeanFactory,
 			FhirContext theFhirContext,
 			JpaStorageSettings theStorageSettings) {
-		LocalContainerEntityManagerFactoryBean retVal = HapiEntityManagerFactoryUtil.newEntityManagerFactory(
-				myConfigurableListableBeanFactory, theFhirContext, theStorageSettings);
-		retVal.setPersistenceUnitName("HAPI_PU");
+		LocalContainerEntityManagerFactoryBean entityManagerFactoryBean =
+				HapiEntityManagerFactoryUtil.newEntityManagerFactory(
+						myConfigurableListableBeanFactory, theFhirContext, theStorageSettings);
 
-		try {
-			retVal.setDataSource(myDataSource);
-		} catch (Exception e) {
-			throw new ConfigurationException("Could not set the data source due to a configuration issue", e);
-		}
-		retVal.setJpaProperties(
-				EnvironmentHelper.getHibernateProperties(configurableEnvironment, myConfigurableListableBeanFactory));
-		return retVal;
+		// Spring Boot Autoconfiguration defaults
+		theJpaProperties
+				.getProperties()
+				.putIfAbsent(AvailableSettings.SCANNER, "org.hibernate.boot.archive.scan.internal.DisabledScanner");
+		theJpaProperties
+				.getProperties()
+				.putIfAbsent(AvailableSettings.IMPLICIT_NAMING_STRATEGY, SpringImplicitNamingStrategy.class.getName());
+		theJpaProperties
+				.getProperties()
+				.putIfAbsent(
+						AvailableSettings.PHYSICAL_NAMING_STRATEGY,
+						CamelCaseToUnderscoresNamingStrategy.class.getName());
+
+		// Hibernate Search defaults
+		theJpaProperties.getProperties().putIfAbsent(AvailableSettings.FORMAT_SQL, "false");
+		theJpaProperties.getProperties().putIfAbsent(AvailableSettings.SHOW_SQL, "false");
+		theJpaProperties.getProperties().putIfAbsent(AvailableSettings.HBM2DDL_AUTO, "update");
+		theJpaProperties.getProperties().putIfAbsent(AvailableSettings.STATEMENT_BATCH_SIZE, "20");
+		theJpaProperties.getProperties().putIfAbsent(AvailableSettings.USE_QUERY_CACHE, "false");
+		theJpaProperties.getProperties().putIfAbsent(AvailableSettings.USE_SECOND_LEVEL_CACHE, "false");
+		theJpaProperties.getProperties().putIfAbsent(AvailableSettings.USE_STRUCTURED_CACHE, "false");
+		theJpaProperties.getProperties().putIfAbsent(AvailableSettings.USE_MINIMAL_PUTS, "false");
+
+		// Hibernate Search defaults
+		theJpaProperties.getProperties().putIfAbsent(HibernateOrmMapperSettings.ENABLED, "false");
+
+		entityManagerFactoryBean.setPersistenceUnitName("HAPI_PU");
+		entityManagerFactoryBean.setJpaPropertyMap(theJpaProperties.getProperties());
+		entityManagerFactoryBean.setDataSource(myDataSource);
+
+		return entityManagerFactoryBean;
 	}
 
 	@Bean
@@ -213,8 +235,7 @@ public class StarterJpaConfig {
 			Batch2JobRegisterer batch2JobRegisterer,
 			FhirContext fhirContext,
 			TransactionProcessor transactionProcessor,
-			IHapiPackageCacheManager iHapiPackageCacheManager)
-			throws IOException {
+			IHapiPackageCacheManager iHapiPackageCacheManager) {
 
 		batch2JobRegisterer.start();
 

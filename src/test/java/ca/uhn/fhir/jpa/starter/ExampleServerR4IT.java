@@ -54,6 +54,7 @@ import static org.opencds.cqf.fhir.utility.r4.Parameters.stringPart;
 		RepositoryConfig.class
 	}, properties = {
 	"spring.datasource.url=jdbc:h2:mem:dbr4",
+	"spring.ai.mcp.server.enabled=false",
 	"hapi.fhir.enable_repository_validating_interceptor=true",
 	"hapi.fhir.fhir_version=r4",
 	"hapi.fhir.subscription.websocket_enabled=true",
@@ -70,6 +71,9 @@ import static org.opencds.cqf.fhir.utility.r4.Parameters.stringPart;
 	// beans are ambiguous as they are constructed multiple places. This is evident
 	// when running in a spring boot environment
 	"spring.main.allow-bean-definition-overriding=true",
+	"management.health.elasticsearch.enabled=false",
+	"spring.jpa.properties.hibernate.search.backend.directory.type=local-heap",
+	"management.endpoints.web.exposure.include=*",
 	"hapi.fhir.remote_terminology_service.snomed.system=http://snomed.info/sct",
 	"hapi.fhir.remote_terminology_service.snomed.url=https://tx.fhir.org/r4"
 })

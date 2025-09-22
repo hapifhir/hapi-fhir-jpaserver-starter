@@ -8,14 +8,14 @@ import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsServiceRegistry;
 import ca.uhn.hapi.fhir.cdshooks.module.CdsHooksObjectMapperFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.modelcontextprotocol.server.McpServer;
-import io.modelcontextprotocol.server.McpSyncServer;
+import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.transport.HttpServletStreamableServerTransportProvider;
-import io.modelcontextprotocol.spec.McpStreamableServerTransportProvider;
+import org.springframework.ai.mcp.server.common.autoconfigure.properties.McpServerStreamableHttpProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 import java.util.List;
 
@@ -30,19 +30,17 @@ import java.util.List;
 		prefix = "spring.ai.mcp.server",
 		name = {"enabled"},
 		havingValue = "true")
+@Import(McpServerStreamableHttpProperties.class)
 public class McpServerConfig {
 
 	private static final String SSE_ENDPOINT = "/sse";
 	private static final String SSE_MESSAGE_ENDPOINT = "/mcp/message";
 
 	@Bean
-	public McpSyncServer syncServer(
-			List<McpBridge> mcpBridges, McpStreamableServerTransportProvider transportProvider) {
-		return McpServer.sync(transportProvider)
-				.tools(mcpBridges.stream()
-						.flatMap(bridge -> bridge.generateTools().stream())
-						.toList())
-				.build();
+	public List<McpServerFeatures.SyncToolSpecification> syncServer(List<McpBridge> mcpBridges) {
+		return mcpBridges.stream()
+				.flatMap(bridge -> bridge.generateTools().stream())
+				.toList();
 	}
 
 	@Bean
@@ -63,11 +61,11 @@ public class McpServerConfig {
 
 	@Bean
 	public HttpServletStreamableServerTransportProvider servletSseServerTransportProvider(
-			/*McpServerProperties properties*/ ) {
+			McpServerStreamableHttpProperties properties) {
 
 		return HttpServletStreamableServerTransportProvider.builder()
 				.disallowDelete(false)
-				.mcpEndpoint(SSE_MESSAGE_ENDPOINT)
+				.mcpEndpoint(properties.getMcpEndpoint())
 				.objectMapper(new ObjectMapper())
 				// .contextExtractor((serverRequest, context) -> context)
 				.build();
@@ -75,7 +73,8 @@ public class McpServerConfig {
 
 	@Bean
 	public ServletRegistrationBean customServletBean(
-			HttpServletStreamableServerTransportProvider transportProvider /*, McpServerProperties properties*/) {
-		return new ServletRegistrationBean<>(transportProvider, SSE_MESSAGE_ENDPOINT, SSE_ENDPOINT);
+			HttpServletStreamableServerTransportProvider transportProvider,
+			McpServerStreamableHttpProperties properties) {
+		return new ServletRegistrationBean<>(transportProvider, properties.getMcpEndpoint(), SSE_ENDPOINT);
 	}
 }
