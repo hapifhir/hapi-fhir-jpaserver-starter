@@ -47,6 +47,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 	}, properties = {
 	"spring.profiles.include=storageSettingsTest",
 	"spring.datasource.url=jdbc:h2:mem:dbr4",
+	"spring.jpa.properties.hibernate.search.backend.directory.type=local-heap",
 	"hapi.fhir.enable_repository_validating_interceptor=true",
 	"hapi.fhir.fhir_version=r4",
 	"hapi.fhir.cr.enabled=true",

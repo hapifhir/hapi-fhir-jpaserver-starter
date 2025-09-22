@@ -9,6 +9,7 @@ import ca.uhn.fhir.jpa.model.config.PartitionSettings.CrossPartitionReferenceMod
 import ca.uhn.fhir.jpa.model.config.SubscriptionSettings;
 import ca.uhn.fhir.jpa.model.entity.StorageSettings;
 import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.jpa.starter.elastic.ElasticsearchBootSvcImpl;
 import ca.uhn.fhir.jpa.starter.util.JpaHibernatePropertiesProvider;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.EmailSenderImpl;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.IEmailSender;
@@ -19,10 +20,7 @@ import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.env.YamlPropertySourceLoader;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.*;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -36,6 +34,7 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
  */
 @Configuration
 @EnableTransactionManagement
+@Import(ElasticsearchBootSvcImpl.class)
 public class FhirServerConfigCommon {
 
 	private static final Logger ourLog = LoggerFactory.getLogger(FhirServerConfigCommon.class);
@@ -274,7 +273,15 @@ public class FhirServerConfigCommon {
 		ourLog.debug("Server configured to Store Meta Source: {}", appProperties.getStore_meta_source_information());
 		jpaStorageSettings.setStoreMetaSourceInformation(appProperties.getStore_meta_source_information());
 
-		storageSettings(appProperties, jpaStorageSettings);
+		jpaStorageSettings.setAllowContainsSearches(appProperties.getAllow_contains_searches());
+		jpaStorageSettings.setAllowExternalReferences(appProperties.getAllow_external_references());
+		jpaStorageSettings.setDefaultSearchParamsCanBeOverridden(
+				appProperties.getAllow_override_default_search_params());
+
+		jpaStorageSettings.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
+
+		jpaStorageSettings.setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
+		jpaStorageSettings.setIndexIdentifierOfType(appProperties.getEnable_index_of_type());
 		return jpaStorageSettings;
 	}
 
@@ -330,19 +337,6 @@ public class FhirServerConfigCommon {
 	public HibernatePropertiesProvider jpaStarterDialectProvider(
 			LocalContainerEntityManagerFactoryBean myEntityManagerFactory) {
 		return new JpaHibernatePropertiesProvider(myEntityManagerFactory);
-	}
-
-	protected StorageSettings storageSettings(AppProperties appProperties, JpaStorageSettings jpaStorageSettings) {
-		jpaStorageSettings.setAllowContainsSearches(appProperties.getAllow_contains_searches());
-		jpaStorageSettings.setAllowExternalReferences(appProperties.getAllow_external_references());
-		jpaStorageSettings.setDefaultSearchParamsCanBeOverridden(
-				appProperties.getAllow_override_default_search_params());
-
-		jpaStorageSettings.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
-
-		jpaStorageSettings.setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
-		jpaStorageSettings.setIndexIdentifierOfType(appProperties.getEnable_index_of_type());
-		return jpaStorageSettings;
 	}
 
 	@Lazy

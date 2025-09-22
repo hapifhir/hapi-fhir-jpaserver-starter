@@ -33,7 +33,7 @@ public class McpTests {
 
 		var fhirContext = FhirContext.forR4();
 
-		var transport = HttpClientStreamableHttpTransport.builder("http://localhost:" + port).endpoint("/mcp/message").build();
+		var transport = HttpClientStreamableHttpTransport.builder("http://localhost:" + port).endpoint("/mcp/messages").build();
 		var client = McpClient.sync(transport).requestTimeout(Duration.ofSeconds(10)).capabilities(McpSchema.ClientCapabilities.builder().roots(true)      // Enable roots capability
 			.sampling().build()).build();
 		var initializationResult = client.initialize();

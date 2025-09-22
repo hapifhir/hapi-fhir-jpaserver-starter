@@ -3,8 +3,8 @@ package ca.uhn.fhir.jpa.starter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.jpa.search.lastn.ElasticsearchRestClientFactory;
 import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
+import ca.uhn.fhir.jpa.starter.elastic.ElasticsearchBootSvcImpl;
 import ca.uhn.fhir.jpa.test.config.TestElasticsearchContainerHelper;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
-import co.elastic.clients.elasticsearch.indices.IndexSettings;
 import jakarta.annotation.PreDestroy;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Bundle;
@@ -27,6 +25,8 @@ import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.StringType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -42,6 +42,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @ExtendWith(SpringExtension.class)
 @Testcontainers
+@Disabled
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class}, properties =
   {
     "spring.datasource.url=jdbc:h2:mem:dbr4",
@@ -50,19 +51,19 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 	 "hapi.fhir.store_resource_in_lucene_index_enabled=true",
 	 "hapi.fhir.advanced_lucene_indexing=true",
 	 "hapi.fhir.search_index_full_text_enabled=true",
-
-    "elasticsearch.enabled=true",
 	  "hapi.fhir.cr_enabled=false",
     // Because the port is set randomly, we will set the rest_url using the Initializer.
     // "elasticsearch.rest_url='http://localhost:9200'",
-    "elasticsearch.username=SomeUsername",
-    "elasticsearch.password=SomePassword",
-    "elasticsearch.debug.refresh_after_write=true",
-	 "elasticsearch.protocol=http",
+
+	  "spring.elasticsearch.uris=http://localhost:9200",
+     "spring.elasticsearch.username=elastic",
+     "spring.elasticsearch.password=changeme",
 	  "spring.main.allow-bean-definition-overriding=true",
 	  "spring.jpa.properties.hibernate.search.enabled=true",
 	  "spring.jpa.properties.hibernate.search.backend.type=elasticsearch",
-	  "spring.jpa.properties.hibernate.search.backend.analysis.configurer=ca.uhn.fhir.jpa.search.elastic.HapiElasticsearchAnalysisConfigurer"
+	  "spring.jpa.properties.hibernate.search.backend.hosts=localhost:9200",
+	  "spring.jpa.properties.hibernate.search.backend.protocol=http",
+	  "spring.jpa.properties.hibernate.search.backend.analysis.configurer=ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticsearchAnalysisConfigurer"
   })
 @ContextConfiguration(initializers = ElasticsearchLastNR4IT.Initializer.class)
 class ElasticsearchLastNR4IT {
@@ -73,26 +74,26 @@ class ElasticsearchLastNR4IT {
   public static ElasticsearchContainer embeddedElastic = TestElasticsearchContainerHelper.getEmbeddedElasticSearch();
 
   @Autowired
-  private ElasticsearchSvcImpl myElasticsearchSvc;
+  private ElasticsearchBootSvcImpl myElasticsearchSvc;
 
   @BeforeAll
   public static void beforeClass() throws IOException {
 	  //Given
-	  ElasticsearchClient elasticsearchHighLevelRestClient = ElasticsearchRestClientFactory.createElasticsearchHighLevelRestClient(
-		  "http", embeddedElastic.getHost() + ":" + embeddedElastic.getMappedPort(9200), "", "");
+	 // ElasticsearchClient elasticsearchHighLevelRestClient = ElasticsearchRestClientFactory.createElasticsearchHighLevelRestClient(
+//		  "http", embeddedElastic.getHost() + ":" + embeddedElastic.getMappedPort(9200), "", "");
 
 	  /* As of 2023-08-10, HAPI FHIR sets SubscriptionConstants.MAX_SUBSCRIPTION_RESULTS to 50000
 	  		which is in excess of elastic's default max_result_window. If MAX_SUBSCRIPTION_RESULTS is changed
 	  		to a value <= 10000, the following will no longer be necessary. - dotasek
 	  */
 
-	  elasticsearchHighLevelRestClient.indices().putTemplate(t->{
+	/*  elasticsearchHighLevelRestClient.indices().putTemplate(t->{
 		  t.name("hapi_fhir_template");
 		  t.indexPatterns("*");
 		  t.settings(new IndexSettings.Builder().maxResultWindow(50000).build());
 		  return t;
 	  });
-
+*/
   }
 
   @PreDestroy
@@ -103,7 +104,7 @@ class ElasticsearchLastNR4IT {
   @LocalServerPort
   private int port;
 
-  //@Test
+  @Test
   void testLastN() throws IOException, InterruptedException {
 	 Thread.sleep(2000);
 
@@ -125,6 +126,7 @@ class ElasticsearchLastNR4IT {
     IIdType obsId = ourClient.create().resource(obs).execute().getId().toUnqualifiedVersionless();
 
     myElasticsearchSvc.refreshIndex(ElasticsearchSvcImpl.OBSERVATION_INDEX);
+	  Thread.sleep(2000);
 
     Parameters output = ourClient.operation().onType(Observation.class).named("lastn")
       .withParameter(Parameters.class, "max", new IntegerType(1))
@@ -154,8 +156,10 @@ class ElasticsearchLastNR4IT {
     public void initialize(
       ConfigurableApplicationContext configurableApplicationContext) {
       // Since the port is dynamically generated, replace the URL with one that has the correct port
-      TestPropertyValues.of("elasticsearch.rest_url=" + embeddedElastic.getHost() +":" + embeddedElastic.getMappedPort(9200))
+      TestPropertyValues.of("spring.elasticsearch.uris=" + embeddedElastic.getHost() +":" + embeddedElastic.getMappedPort(9200))
         .applyTo(configurableApplicationContext.getEnvironment());
+		 TestPropertyValues.of("spring.jpa.properties.hibernate.search.backend.hosts=" + embeddedElastic.getHost() +":" + embeddedElastic.getMappedPort(9200))
+			 .applyTo(configurableApplicationContext.getEnvironment());
     }
 
   }

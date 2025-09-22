@@ -114,11 +114,19 @@ topologySpreadConstraints:
   #       app.kubernetes.io/instance: hapi-fhir-jpaserver
   #       app.kubernetes.io/name: hapi-fhir-jpaserver
 
+# @ignored
+# used by the bitnami sub-chart. Allowing it allows for overrding the image repository.
+global:
+  security:
+    allowInsecureImages: true
+
 postgresql:
   # -- enable an included PostgreSQL DB.
   # see <https://github.com/bitnami/charts/tree/master/bitnami/postgresql> for details
   # if set to `false`, the values under `externalDatabase` are used
   enabled: true
+  image:
+    repository: bitnamilegacy/postgresql
   auth:
     # -- name for a custom database to create
     database: "fhir"
@@ -306,6 +314,6 @@ waitForDatabaseInitContainer:
   # is ready to accept connections
   image:
     registry: docker.io
-    repository: bitnami/postgresql
-    tag: 17.5.0-debian-12-r11@sha256:ac8dd0d6512c4c5fb146c16b1c5f05862bd5f600d73348506ab4252587e7fcc6
+    repository: bitnamilegacy/postgresql
+    tag: 17.6.0-debian-12-r4@sha256:926356130b77d5742d8ce605b258d35db9b62f2f8fd1601f9dbaef0c8a710a8d
     pullPolicy: IfNotPresent
