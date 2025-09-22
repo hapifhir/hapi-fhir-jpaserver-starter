@@ -109,12 +109,15 @@ spring:
         dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
 
         # --- Optional Hibernate DDL & tuning (commented out from source) ---
-        # hbm2ddl.auto: update
-        # jdbc.batch_size: 20
-        # cache.use_query_cache: false
-        # cache.use_second_level_cache: false
-        # cache.use_structured_entries: false
-        # cache.use_minimal_puts: false
+        hbm2ddl:
+          auto: update
+        jdbc:
+          batch_size: 20
+        cache:
+          use_query_cache: false
+          use_second_level_cache: false
+          use_structured_entries: false
+          use_minimal_puts: false
 
         # --- Hibernate Search (Lucene/Elasticsearch) ---
         search:
@@ -331,15 +334,26 @@ hapi:
     search-coord-core-pool-size: 20
     search-coord-max-pool-size: 100
     search-coord-queue-capacity: 200
+    # Search Prefetch Thresholds.
+    # This setting sets the number of search results to prefetch. For example, if this list
+    # is set to [100, 1000, -1] then the server will initially load 100 results and not
+    # attempt to load more. If the user requests subsequent page(s) of results and goes
+    # past 100 results, the system will load the next 900 (up to the following threshold of 1000).
+    # The system will progressively work through these thresholds.
+    # A threshold of -1 means to load all results. Note that if the final threshold is a
+    # number other than -1, the system will never prefetch more than the given number.
     # CSV list; -1 as final value means "all"
     search_prefetch_thresholds: 13,503,2003,-1
 
     # -------------------------------------------------------------------------------
     # M. Extensibility (custom beans / interceptors / providers)
     # -------------------------------------------------------------------------------
-    # custom-bean-packages:
+    # comma-separated package names, will be @ComponentScan'ed by Spring to allow for creating custom Spring beans
+
+    # custom-provider-classes:
     # custom-interceptor-classes:
     # custom-provider-classes:
+    
     # store_meta_source_information: NONE
     # bundle_batch_pool_size: 10
     # bundle_batch_pool_max_size: 50
