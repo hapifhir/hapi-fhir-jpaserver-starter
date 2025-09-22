@@ -78,6 +78,8 @@ import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
 import jakarta.persistence.EntityManagerFactory;
+import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
+import org.hibernate.cfg.AvailableSettings;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,6 +87,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
+import org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -153,6 +156,29 @@ public class StarterJpaConfig {
 		LocalContainerEntityManagerFactoryBean entityManagerFactoryBean =
 				HapiEntityManagerFactoryUtil.newEntityManagerFactory(
 						myConfigurableListableBeanFactory, theFhirContext, theStorageSettings);
+
+		// Spring Boot Autoconfiguration defaults
+		theJpaProperties
+				.getProperties()
+				.putIfAbsent(AvailableSettings.SCANNER, "org.hibernate.boot.archive.scan.internal.DisabledScanner");
+		theJpaProperties
+				.getProperties()
+				.putIfAbsent(AvailableSettings.IMPLICIT_NAMING_STRATEGY, SpringImplicitNamingStrategy.class.getName());
+		theJpaProperties
+				.getProperties()
+				.putIfAbsent(
+						AvailableSettings.PHYSICAL_NAMING_STRATEGY,
+						CamelCaseToUnderscoresNamingStrategy.class.getName());
+
+		// Hibernate Search defaults
+		theJpaProperties.getProperties().putIfAbsent(AvailableSettings.FORMAT_SQL, "false");
+		theJpaProperties.getProperties().putIfAbsent(AvailableSettings.SHOW_SQL, "false");
+		theJpaProperties.getProperties().putIfAbsent(AvailableSettings.HBM2DDL_AUTO, "update");
+		theJpaProperties.getProperties().putIfAbsent(AvailableSettings.STATEMENT_BATCH_SIZE, "20");
+		theJpaProperties.getProperties().putIfAbsent(AvailableSettings.USE_QUERY_CACHE, "false");
+		theJpaProperties.getProperties().putIfAbsent(AvailableSettings.USE_SECOND_LEVEL_CACHE, "false");
+		theJpaProperties.getProperties().putIfAbsent(AvailableSettings.USE_STRUCTURED_CACHE, "false");
+		theJpaProperties.getProperties().putIfAbsent(AvailableSettings.USE_MINIMAL_PUTS, "false");
 
 		entityManagerFactoryBean.setPersistenceUnitName("HAPI_PU");
 		entityManagerFactoryBean.setJpaPropertyMap(theJpaProperties.getProperties());

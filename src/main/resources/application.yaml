@@ -40,6 +40,9 @@ management:
       export:
         enabled: true
 spring:
+  autoconfigure:
+    # This exclude is only needed for setups not using Elasticsearch where the elasticsearch sniff is not needed.
+    exclude: org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration
   main:
     allow-circular-references: true
   flyway:
@@ -56,44 +59,42 @@ spring:
     # database connection pool size
     hikari:
       maximum-pool-size: 10
-#  elasticsearch:
-#    uris: http://localhost:9200
-#    username: elastic
-#    password: changeme
+  #  elasticsearch:
+  #    uris: http://localhost:9200
+  #    username: elastic
+  #    password: changeme
   jpa:
     properties:
-        hibernate:
+      hibernate:
+        hbm2ddl:
+          auto: update
+        jdbc:
+          batch_size: 20
+        cache:
+          use_query_cache: false
+          use_second_level_cache: false
+          use_structured_entries: false
+          use_minimal_puts: false
+        format_sql: false
+        show_sql: false
+        #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+        #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
+        #dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
+        dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+        search:
+          enabled: true
+          schema_management:
+            strategy: create
+          ### lucene parameters
+          backend:
+            type: lucene
+            directory:
+              type: local-filesystem
+              root: target/lucenefiles
+            analysis:
+              configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
 
-
-          hbm2ddl:
-            auto: update
-          jdbc:
-            batch_size: 20
-          cache:
-            use_query_cache: false
-            use_second_level_cache: false
-            use_structured_entries: false
-            use_minimal_puts: false
-          format_sql: false
-          show_sql: false
-          #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
-          #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
-          #dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
-          dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
-          search:
-            enabled: true
-            schema_management:
-              strategy: create
-            ### lucene parameters
-            backend:
-              type: lucene
-              directory:
-                type: local-filesystem
-                root: target/lucenefiles
-              analysis:
-                configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
-
-            ### elastic parameters ===> see also elasticsearch section below <===
+          ### elastic parameters ===> see also elasticsearch section below <===
 #            backend:
 #              type: elasticsearch
 #              discovery: true
@@ -200,8 +201,8 @@ hapi:
       #    packageUrl: https://costateixeira.github.io/smart-ips-pilgrimage-fulltest/package.tgz
       #    name: smart.who.int.ips-pilgrimage-test
       #    version: 0.1.0
-      #    installMode: STORE_AND_INSTALL
-      #    additionalResourceFolders:
+    #    installMode: STORE_AND_INSTALL
+    #    additionalResourceFolders:
     #      - example
     #  - example2
     #    supported_resource_types:

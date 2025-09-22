@@ -273,7 +273,15 @@ public class FhirServerConfigCommon {
 		ourLog.debug("Server configured to Store Meta Source: {}", appProperties.getStore_meta_source_information());
 		jpaStorageSettings.setStoreMetaSourceInformation(appProperties.getStore_meta_source_information());
 
-		storageSettings(appProperties, jpaStorageSettings);
+		jpaStorageSettings.setAllowContainsSearches(appProperties.getAllow_contains_searches());
+		jpaStorageSettings.setAllowExternalReferences(appProperties.getAllow_external_references());
+		jpaStorageSettings.setDefaultSearchParamsCanBeOverridden(
+				appProperties.getAllow_override_default_search_params());
+
+		jpaStorageSettings.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
+
+		jpaStorageSettings.setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
+		jpaStorageSettings.setIndexIdentifierOfType(appProperties.getEnable_index_of_type());
 		return jpaStorageSettings;
 	}
 
@@ -329,19 +337,6 @@ public class FhirServerConfigCommon {
 	public HibernatePropertiesProvider jpaStarterDialectProvider(
 			LocalContainerEntityManagerFactoryBean myEntityManagerFactory) {
 		return new JpaHibernatePropertiesProvider(myEntityManagerFactory);
-	}
-
-	protected StorageSettings storageSettings(AppProperties appProperties, JpaStorageSettings jpaStorageSettings) {
-		jpaStorageSettings.setAllowContainsSearches(appProperties.getAllow_contains_searches());
-		jpaStorageSettings.setAllowExternalReferences(appProperties.getAllow_external_references());
-		jpaStorageSettings.setDefaultSearchParamsCanBeOverridden(
-				appProperties.getAllow_override_default_search_params());
-
-		jpaStorageSettings.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
-
-		jpaStorageSettings.setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
-		jpaStorageSettings.setIndexIdentifierOfType(appProperties.getEnable_index_of_type());
-		return jpaStorageSettings;
 	}
 
 	@Lazy
