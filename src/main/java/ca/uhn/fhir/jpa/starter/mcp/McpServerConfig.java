@@ -8,12 +8,8 @@ import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsServiceRegistry;
 import ca.uhn.hapi.fhir.cdshooks.module.CdsHooksObjectMapperFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.modelcontextprotocol.server.McpServer;
 import io.modelcontextprotocol.server.McpServerFeatures;
-import io.modelcontextprotocol.server.McpSyncServer;
 import io.modelcontextprotocol.server.transport.HttpServletStreamableServerTransportProvider;
-import io.modelcontextprotocol.spec.McpStreamableServerTransportProvider;
-import org.springframework.ai.mcp.server.common.autoconfigure.properties.McpServerProperties;
 import org.springframework.ai.mcp.server.common.autoconfigure.properties.McpServerStreamableHttpProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -31,9 +27,9 @@ import java.util.List;
 // https://docs.spring.io/spring-ai/reference/api/mcp/mcp-server-boot-starter-docs.html
 @Configuration
 @ConditionalOnProperty(
-	prefix = "spring.ai.mcp.server",
-	name = {"enabled"},
-	havingValue = "true")
+		prefix = "spring.ai.mcp.server",
+		name = {"enabled"},
+		havingValue = "true")
 @Import(McpServerStreamableHttpProperties.class)
 public class McpServerConfig {
 
@@ -41,12 +37,10 @@ public class McpServerConfig {
 	private static final String SSE_MESSAGE_ENDPOINT = "/mcp/message";
 
 	@Bean
-	public List<McpServerFeatures.SyncToolSpecification> syncServer(
-		List<McpBridge> mcpBridges) {
+	public List<McpServerFeatures.SyncToolSpecification> syncServer(List<McpBridge> mcpBridges) {
 		return mcpBridges.stream()
-			.flatMap(bridge -> bridge.generateTools().stream())
-			.toList();
-
+				.flatMap(bridge -> bridge.generateTools().stream())
+				.toList();
 	}
 
 	@Bean
@@ -56,30 +50,31 @@ public class McpServerConfig {
 
 	@Bean
 	@ConditionalOnProperty(
-		prefix = "hapi.fhir.cr",
-		name = {"enabled"},
-		havingValue = "true")
+			prefix = "hapi.fhir.cr",
+			name = {"enabled"},
+			havingValue = "true")
 	public McpCdsBridge mcpCdsBridge(FhirContext fhirContext, ICdsServiceRegistry cdsServiceRegistry) {
 
 		return new McpCdsBridge(
-			fhirContext, cdsServiceRegistry, new CdsHooksObjectMapperFactory(fhirContext).newMapper());
+				fhirContext, cdsServiceRegistry, new CdsHooksObjectMapperFactory(fhirContext).newMapper());
 	}
 
 	@Bean
 	public HttpServletStreamableServerTransportProvider servletSseServerTransportProvider(
-		McpServerStreamableHttpProperties properties) {
+			McpServerStreamableHttpProperties properties) {
 
 		return HttpServletStreamableServerTransportProvider.builder()
-			.disallowDelete(false)
-			.mcpEndpoint(properties.getMcpEndpoint())
-			.objectMapper(new ObjectMapper())
-			// .contextExtractor((serverRequest, context) -> context)
-			.build();
+				.disallowDelete(false)
+				.mcpEndpoint(properties.getMcpEndpoint())
+				.objectMapper(new ObjectMapper())
+				// .contextExtractor((serverRequest, context) -> context)
+				.build();
 	}
 
 	@Bean
 	public ServletRegistrationBean customServletBean(
-		HttpServletStreamableServerTransportProvider transportProvider , McpServerStreamableHttpProperties properties) {
+			HttpServletStreamableServerTransportProvider transportProvider,
+			McpServerStreamableHttpProperties properties) {
 		return new ServletRegistrationBean<>(transportProvider, properties.getMcpEndpoint(), SSE_ENDPOINT);
 	}
 }
