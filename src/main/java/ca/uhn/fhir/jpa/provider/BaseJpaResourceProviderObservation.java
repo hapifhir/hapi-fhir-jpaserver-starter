@@ -38,6 +38,7 @@ import org.hl7.fhir.instance.model.api.IPrimitiveType;
 import java.util.List;
 import java.util.Map;
 
+// Can be removed when https://github.com/hapifhir/hapi-fhir/issues/7255 is resolved
 public abstract class BaseJpaResourceProviderObservation<T extends IBaseResource> extends BaseJpaResourceProvider<T> {
 
 	/**
