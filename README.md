@@ -65,6 +65,12 @@ docker run -p 8090:8080 -e "--spring.config.location=classpath:/another.applicat
 ```
 Here, the configuration file (*another.application.yaml*) is part of the compiled set of resources.
 
+### One-liner for quickly getting an Implementation Guide installed into HAPI
+
+```
+docker run -p 8080:8080 -e "hapi.fhir.implementationguides.someIg.name=com.org.something" -e "hapi.fhir.implementationguides.someIg.version=1.2.3" -e "hapi.fhir.implementationguides.someIg.packageUrl=https://build.fhir.org/ig/yourOrg/yourIg/package.tgz" -e "hapi.fhir.implementationguides.someIg.installMode=STORE_AND_INSTALL" hapiproject/hapi:latest
+```
+
 ### Example using ``docker-compose.yml`` for docker-compose
 
 ```yaml
