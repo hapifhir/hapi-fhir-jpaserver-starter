@@ -8,7 +8,8 @@ public class CrProperties {
 	private CareGapsProperties careGaps = new CareGapsProperties();
 	private CqlProperties cql = new CqlProperties();
 
-	private TerminologyServerClientSettings terminologyServerClientSettings = new TerminologyServerClientSettings();
+	private TerminologyServerClientSettings terminologyServerClientSettings =
+			TerminologyServerClientSettings.getDefault();
 
 	public Boolean getEnabled() {
 		return enabled;
