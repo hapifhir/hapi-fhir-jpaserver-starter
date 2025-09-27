@@ -6,7 +6,19 @@ server:
   tomcat:
     # allow | as a separator in the URL
     relaxed-query-chars: "|"
-#Adds the option to go to e.g. http://localhost:8080/actuator/health for seeing the running configuration
+otel:
+  service:
+    name: hapi-fhir-jpaserver
+  exporter:
+    otlp:
+      endpoint: http://localhost:4318/v1/traces
+  instrumentation:
+    spring-web:
+      enabled: true
+    jdbc:
+      enabled: true
+    jpa:
+      enabled: true#Adds the option to go to e.g. http://localhost:8080/actuator/health for seeing the running configuration
 #see https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
 management:
   #The following configuration will enable the actuator endpoints at /actuator/health, /actuator/info, /actuator/prometheus, /actuator/metrics. For security purposes, only /actuator/health is enabled by default.
@@ -376,7 +388,22 @@ hapi:
     #        UA[${requestHeader.user-agent}] Params[${requestParameters}]
     #        ResponseEncoding[${responseEncodingNoDefault}]
     #      log_exceptions: true
-    #      name: fhirtest.access
+    logger:
+      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
+      format: >-
+        Path[${servletPath}] Source[${requestHeader.x-forwarded-for}]
+        Operation[${operationType} ${operationName} ${idOrResourceName}]
+        UA[${requestHeader.user-agent}] Params[${requestParameters}]
+        ResponseEncoding[${responseEncodingNoDefault}]
+      log_exceptions: true
+      name: fhirtest.access
+    management:
+      tracing:
+        sampling:
+          probability: 1.0
+      otlp:
+        tracing:
+          endpoint: http://localhost:4318/v1/traces
     #    max_binary_size: 104857600
     #    max_page_size: 200
     #    retain_cached_searches_mins: 60
