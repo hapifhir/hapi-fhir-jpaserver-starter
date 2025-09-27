@@ -1,25 +1,51 @@
-version: "3"
+version: '3.8'
 services:
-  hapi-fhir-jpaserver-start:
-    build: .
-    container_name: hapi-fhir-jpaserver-start
-    restart: on-failure
-    environment:
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://hapi-fhir-postgres:5432/hapi"
-      SPRING_DATASOURCE_USERNAME: "admin"
-      SPRING_DATASOURCE_PASSWORD: "admin"
-      SPRING_DATASOURCE_DRIVERCLASSNAME: "org.postgresql.Driver"
+  hapi-fhir-jpaserver:
+    image: "hapiproject/hapi:latest"
+    container_name: hapi-fhir-jpaserver
     ports:
       - "8080:8080"
-  hapi-fhir-postgres:
-    image: postgres:15-alpine
-    container_name: hapi-fhir-postgres
+    configs:
+      - source: hapi
+        target: /app/config/application.yaml
+    depends_on:
+      - db
+    environment:
+      SPRING_CONFIG_LOCATION: 'file:///app/config/application.yaml'
+    networks:
+      - hapi-fhir
+
+  db:
+    image: postgres:15
     restart: always
     environment:
-      POSTGRES_DB: "hapi"
-      POSTGRES_USER: "admin"
-      POSTGRES_PASSWORD: "admin"
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: hapi
     volumes:
       - hapi-fhir-postgres:/var/lib/postgresql/data
+    networks:
+      - hapi-fhir
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - "16686:16686"    # Jaeger UI
+      - "14250:14250"    # gRPC  
+      - "4317:4317"      # OTLP gRPC
+      - "4318:4318"      # OTLP HTTP
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    networks:
+      - hapi-fhir
+
 volumes:
   hapi-fhir-postgres:
+
+configs:
+  hapi:
+    file: ./src/main/resources/application.yaml
+
+networks:
+  hapi-fhir:
