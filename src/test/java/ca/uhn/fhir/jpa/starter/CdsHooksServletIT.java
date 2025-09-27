@@ -19,6 +19,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.opencds.cqf.fhir.cr.hapi.config.CrCdsHooksConfig;
 import org.opencds.cqf.fhir.cr.hapi.config.RepositoryConfig;
@@ -35,25 +36,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-	classes = {
-		Application.class,
-		NicknameServiceConfig.class,
-		RepositoryConfig.class,
-		TestCdsHooksConfig.class,
-		CrCdsHooksConfig.class,
-		StarterCdsHooksConfig.class
-	}, properties = {
-	"spring.profiles.include=storageSettingsTest",
-	"spring.datasource.url=jdbc:h2:mem:dbr4",
-	"spring.jpa.properties.hibernate.search.backend.directory.type=local-heap",
-	"hapi.fhir.enable_repository_validating_interceptor=true",
-	"hapi.fhir.fhir_version=r4",
-	"hapi.fhir.cr.enabled=true",
-	"hapi.fhir.cr.caregaps.section_author=Organization/alphora-author",
-	"hapi.fhir.cr.caregaps.reporter=Organization/alphora",
-	"hapi.fhir.cdshooks.enabled=true",
-	"spring.main.allow-bean-definition-overriding=true"})
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, NicknameServiceConfig.class, RepositoryConfig.class, TestCdsHooksConfig.class, CrCdsHooksConfig.class, StarterCdsHooksConfig.class},
+	properties = {
+		"spring.profiles.include=storageSettingsTest",
+		"spring.datasource.url=jdbc:h2:mem:dbr4",
+		"spring.jpa.properties.hibernate.search.backend.directory.type=local-heap",
+		"hapi.fhir.enable_repository_validating_interceptor=true",
+		"hapi.fhir.fhir_version=r4",
+		"hapi.fhir.cr.enabled=true",
+		"hapi.fhir.cr.caregaps.section_author=Organization/alphora-author",
+		"hapi.fhir.cr.caregaps.reporter=Organization/alphora",
+		"hapi.fhir.cdshooks.enabled=true",
+		"spring.main.allow-bean-definition-overriding=true",
+		"server.max-http-request-header-size=16KB"})
 class CdsHooksServletIT implements IServerSupport {
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(CdsHooksServletIT.class);
 	private final FhirContext ourCtx = FhirContext.forR4Cached();
@@ -156,83 +151,87 @@ class CdsHooksServletIT implements IServerSupport {
 			fail(ioe.getMessage());
 		}
 	}
-
+	
 	@Test
 	void testRec10() throws IOException {
 		loadBundle("r4/opioidcds-10-order-sign-bundle.json", ourCtx, ourClient);
 		await().atMost(20000, TimeUnit.MILLISECONDS).until(this::hasCdsServices);
 		var fhirServer = "  \"fhirServer\": " + "\"" + ourServerBase + "\"" + ",\n";
-		var cdsRequest = "{\n" +
-			"  \"hookInstance\": \"055b009c-4a7d-4db4-a35e-0e5198918ed1\",\n" +
-			"  \"hook\": \"order-sign\",\n" +
-			fhirServer +
-			"  \"context\": {\n" +
-			"    \"patientId\": \"example-rec-10-order-sign-illicit-POS-Cocaine-drugs\",\n" +
-			"    \"userId\": \"COREPRACTITIONER1\",\n" +
-			"    \"draftOrders\": {\n" +
-			"      \"resourceType\": \"Bundle\",\n" +
-			"      \"entry\": [\n" +
-			"        {\n" +
-			"          \"resource\": {\n" +
-			"            \"resourceType\": \"MedicationRequest\",\n" +
-			"            \"id\": \"request-123\",\n" +
-			"            \"status\": \"draft\",\n" +
-			"            \"subject\": {\n" +
-			"              \"reference\": \"Patient/example-rec-10-order-sign-illicit-POS-Cocaine-drugs\"\n" +
-			"            },\n" +
-			"            \"authoredOn\": \"2024-03-27\",\n" +
-			"            \"dosageInstruction\": [\n" +
-			"              {\n" +
-			"                \"timing\": {\n" +
-			"                  \"repeat\": {\n" +
-			"                    \"frequency\": 1,\n" +
-			"                    \"period\": 1,\n" +
-			"                    \"periodUnit\": \"d\"\n" +
-			"                  }\n" +
-			"                },\n" +
-			"                \"doseAndRate\": [\n" +
-			"                  {\n" +
-			"                    \"doseQuantity\": {\n" +
-			"                      \"value\": 1,\n" +
-			"                      \"system\": \"http://unitsofmeasure.org\",\n" +
-			"                      \"code\": \"{pill}\"\n" +
-			"                    }\n" +
-			"                  }\n" +
-			"                ]\n" +
-			"              }\n" +
-			"            ],\n" +
-			"            \"dispenseRequest\": {\n" +
-			"              \"expectedSupplyDuration\": {\n" +
-			"                \"value\": 90,\n" +
-			"                \"unit\": \"days\",\n" +
-			"                \"system\": \"http://unitsofmeasure.org\",\n" +
-			"                \"code\": \"d\"\n" +
-			"              }\n" +
-			"            },\n" +
-			"            \"intent\": \"order\",\n" +
-			"            \"category\": {\n" +
-			"              \"coding\": [\n" +
-			"                {\n" +
-			"                  \"system\": \"http://terminology.hl7.org/CodeSystem/medicationrequest-category\",\n" +
-			"                  \"code\": \"community\"\n" +
-			"                }\n" +
-			"              ]\n" +
-			"            },\n" +
-			"            \"medicationCodeableConcept\": {\n" +
-			"              \"coding\": [\n" +
-			"                {\n" +
-			"                  \"system\": \"http://www.nlm.nih.gov/research/umls/rxnorm\",\n" +
-			"                  \"code\": \"1049502\",\n" +
-			"                  \"display\": \"12 HR oxycodone hydrochloride 10 MG Extended Release Oral Tablet\"\n" +
-			"                }\n" +
-			"              ]\n" +
-			"            }\n" +
-			"          }\n" +
-			"        }\n" +
-			"      ]\n" +
-			"    }\n" +
-			"  }\n" +
-			"}";
+		var cdsRequest = """
+			{
+			  "hookInstance": "055b009c-4a7d-4db4-a35e-0e5198918ed1",
+			  "hook": "order-sign",
+			""" + fhirServer + """
+			  "context": {
+				  "patientId": "example-rec-10-order-sign-illicit-POS-Cocaine-drugs",
+				  "userId": "COREPRACTITIONER1",
+				  "draftOrders": {
+					 "resourceType": "Bundle",
+					 "entry": [
+						{
+						  "resource": {
+							 "resourceType": "MedicationRequest",
+							 "id": "request-123",
+							 "status": "draft",
+							 "subject": {
+								"reference": "Patient/example-rec-10-order-sign-illicit-POS-Cocaine-drugs"
+							 },
+							 "authoredOn": "2024-03-27",
+							 "dosageInstruction": [
+								{
+								  "timing": {
+									 "repeat": {
+										"frequency": 1,
+										"period": 1,
+										"periodUnit": "d"
+									 }
+								  },
+								  "doseAndRate": [
+									 {
+										"doseQuantity": {
+										  "value": 1,
+										  "system": "http://unitsofmeasure.org",
+										  "code": "{pill}"
+										}
+									 }
+								  ]
+								}
+							 ],
+							 "dispenseRequest": {
+								"expectedSupplyDuration": {
+								  "value": 90,
+								  "unit": "days",
+								  "system": "http://unitsofmeasure.org",
+								  "code": "d"
+								}
+							 },
+							 "intent": "order",
+							 "category": [
+								{
+								  "coding": [
+									 {
+										"system": "http://terminology.hl7.org/CodeSystem/medicationrequest-category",
+										"code": "community"
+									 }
+								  ]
+								}
+							 ],
+							 "medicationCodeableConcept": {
+								"coding": [
+								  {
+									 "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+									 "code": "1049502",
+									 "display": "12 HR oxycodone hydrochloride 10 MG Extended Release Oral Tablet"
+								  }
+								]
+							 }
+						  }
+						}
+					 ]
+				  }
+				}
+			 }
+			""";
 		try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
 			HttpPost request = new HttpPost(ourCdsBase + "/opioidcds-10-order-sign");
 			request.setEntity(new StringEntity(cdsRequest));
@@ -245,7 +244,7 @@ class CdsHooksServletIT implements IServerSupport {
 			assertNotNull(response);
 			JsonArray cards = response.getAsJsonArray("cards");
 			assertEquals(0, cards.size());
-//			assertEquals("\"Hello World!\"", cards.get(0).getAsJsonObject().get("summary").toString());
+			//assertEquals("\"Hello World!\"", cards.get(0).getAsJsonObject().get("summary").toString());
 		} catch (IOException ioe) {
 			fail(ioe.getMessage());
 		}
