@@ -9,16 +9,24 @@ server:
 otel:
   service:
     name: hapi-fhir-jpaserver
+    version: "1.0.0"
   exporter:
     otlp:
-      endpoint: http://localhost:4318/v1/traces
+      traces:
+        endpoint: http://localhost:4318/v1/traces
+    metrics:
+      enabled: false
+    logs:
+      enabled: false
   instrumentation:
     spring-web:
       enabled: true
     jdbc:
       enabled: true
     jpa:
-      enabled: true#Adds the option to go to e.g. http://localhost:8080/actuator/health for seeing the running configuration
+      enabled: true
+
+#Adds the option to go to e.g. http://localhost:8080/actuator/health for seeing the running configuration
 #see https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
 management:
   #The following configuration will enable the actuator endpoints at /actuator/health, /actuator/info, /actuator/prometheus, /actuator/metrics. For security purposes, only /actuator/health is enabled by default.
@@ -26,7 +34,7 @@ management:
     enabled-by-default: false
     web:
       exposure:
-        include: 'health' # or e.g. 'info,health,prometheus,metrics' or '*' for all
+        include: 'health,info,metrics,prometheus' # 添加更多端點用於調試
   endpoint:
     info:
       enabled: true
@@ -47,6 +55,9 @@ management:
     metrics:
       export:
         enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
 spring:
   ai:
     # Run e.g. `npx @modelcontextprotocol/inspector` and connect to http://localhost:8080/mcp/message using Streamable HTTP
@@ -113,12 +124,19 @@ spring:
     baselineOnMigrate: true
     fail-on-missing-locations: false
   datasource:
-    #url: 'jdbc:h2:file:./target/database/h2'
-    url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driverClassName: org.h2.Driver
+    # PostgreSQL configuration
+    url: jdbc:postgresql://localhost:5432/hapi
+    username: admin
+    password: admin
+    driverClassName: org.postgresql.Driver
     max-active: 15
+    
+    # H2 configuration (commented out - uncomment to use H2)
+    #url: jdbc:h2:mem:test_mem
+    #username: sa
+    #password: null
+    #driverClassName: org.h2.Driver
+    #max-active: 15
 
     # database connection pool size
     hikari:
@@ -131,7 +149,7 @@ spring:
       #Hibernate dialect is automatically detected except Postgres and H2.
       #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
       #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
   #      hibernate.hbm2ddl.auto: update
   #      hibernate.jdbc.batch_size: 20
   #      hibernate.cache.use_query_cache: false
