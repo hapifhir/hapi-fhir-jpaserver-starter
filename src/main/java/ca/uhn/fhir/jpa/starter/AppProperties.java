@@ -61,7 +61,15 @@ public class AppProperties {
 	private Boolean filter_search_enabled = true;
 	private Boolean graphql_enabled = false;
 	private Boolean binary_storage_enabled = false;
-	private Integer inline_resource_storage_below_size = 0;
+
+	public enum BinaryStorageMode {
+		DATABASE,
+		FILESYSTEM
+	}
+
+	private BinaryStorageMode binary_storage_mode = BinaryStorageMode.DATABASE;
+	private String binary_storage_filesystem_base_directory;
+	private Integer inline_resource_storage_below_size;
 	private Boolean bulk_export_enabled = false;
 	private Boolean bulk_import_enabled = false;
 	private Boolean default_pretty_print = true;
@@ -481,6 +489,22 @@ public class AppProperties {
 
 	public void setBinary_storage_enabled(Boolean binary_storage_enabled) {
 		this.binary_storage_enabled = binary_storage_enabled;
+	}
+
+	public BinaryStorageMode getBinary_storage_mode() {
+		return binary_storage_mode;
+	}
+
+	public void setBinary_storage_mode(BinaryStorageMode binary_storage_mode) {
+		this.binary_storage_mode = binary_storage_mode;
+	}
+
+	public String getBinary_storage_filesystem_base_directory() {
+		return binary_storage_filesystem_base_directory;
+	}
+
+	public void setBinary_storage_filesystem_base_directory(String binary_storage_filesystem_base_directory) {
+		this.binary_storage_filesystem_base_directory = binary_storage_filesystem_base_directory;
 	}
 
 	public Integer getInline_resource_storage_below_size() {

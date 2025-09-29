@@ -49,6 +49,21 @@ docker run -p 8080:8080 -e hapi.fhir.default_encoding=xml hapiproject/hapi:lates
 
 HAPI looks in the environment variables for properties in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file for defaults.
 
+### Binary storage configuration
+
+To stream large `Binary` payloads to disk instead of the database, configure the starter with filesystem storage properties:
+
+```
+hapi:
+  fhir:
+    binary_storage_enabled: true
+    binary_storage_mode: FILESYSTEM
+    binary_storage_filesystem_base_directory: /binstore
+    # inline_resource_storage_below_size: 131072   # optional override
+```
+
+When `binary_storage_mode` is set to `FILESYSTEM` and `inline_resource_storage_below_size` is omitted, the starter automatically applies a 102400 byte (100 KB) inline threshold so smaller payloads remain in the database. Ensure the directory you point to is writable by the process (for Docker builds, mount it into the container with appropriate permissions).
+
 ### Configuration via overridden application.yaml file and using Docker
 
 You can customize HAPI by telling HAPI to look for the configuration file in a different location, e.g.:

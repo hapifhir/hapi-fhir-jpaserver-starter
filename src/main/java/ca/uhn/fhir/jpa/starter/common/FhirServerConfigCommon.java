@@ -3,6 +3,7 @@ package ca.uhn.fhir.jpa.starter.common;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.binstore.DatabaseBinaryContentStorageSvcImpl;
+import ca.uhn.fhir.jpa.binstore.FilesystemBinaryStorageSvcImpl;
 import ca.uhn.fhir.jpa.config.HibernatePropertiesProvider;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings.CrossPartitionReferenceMode;
@@ -23,6 +24,7 @@ import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.context.annotation.*;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.util.Assert;
 
 import java.util.HashSet;
 import java.util.stream.Collectors;
@@ -38,6 +40,7 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 public class FhirServerConfigCommon {
 
 	private static final Logger ourLog = LoggerFactory.getLogger(FhirServerConfigCommon.class);
+	private static final int DEFAULT_FILESYSTEM_INLINE_THRESHOLD = 102_400;
 
 	public FhirServerConfigCommon(AppProperties appProperties) {
 		ourLog.info(
@@ -222,8 +225,13 @@ public class FhirServerConfigCommon {
 			jpaStorageSettings.setLastNEnabled(true);
 		}
 
-		if (appProperties.getInline_resource_storage_below_size() != 0) {
-			jpaStorageSettings.setInlineResourceTextBelowSize(appProperties.getInline_resource_storage_below_size());
+		Integer inlineResourceThreshold = appProperties.getInline_resource_storage_below_size();
+		if (inlineResourceThreshold == null
+				&& appProperties.getBinary_storage_mode() == AppProperties.BinaryStorageMode.FILESYSTEM) {
+			inlineResourceThreshold = resolveFilesystemMinimumBinarySize(appProperties);
+		}
+		if (inlineResourceThreshold != null && inlineResourceThreshold != 0) {
+			jpaStorageSettings.setInlineResourceTextBelowSize(inlineResourceThreshold);
 		}
 
 		jpaStorageSettings.setStoreResourceInHSearchIndex(appProperties.getStore_resource_in_lucene_index_enabled());
@@ -342,13 +350,37 @@ public class FhirServerConfigCommon {
 	@Lazy
 	@Bean
 	public IBinaryStorageSvc binaryStorageSvc(AppProperties appProperties) {
-		DatabaseBinaryContentStorageSvcImpl binaryStorageSvc = new DatabaseBinaryContentStorageSvcImpl();
+		IBinaryStorageSvc binaryStorageSvc;
 
-		if (appProperties.getMax_binary_size() != null) {
-			binaryStorageSvc.setMaximumBinarySize(appProperties.getMax_binary_size());
+		if (appProperties.getBinary_storage_mode() == AppProperties.BinaryStorageMode.FILESYSTEM) {
+			String baseDirectory = appProperties.getBinary_storage_filesystem_base_directory();
+			Assert.hasText(
+					baseDirectory,
+					"binary_storage_filesystem_base_directory must be provided when binary_storage_mode=FILESYSTEM");
+
+			FilesystemBinaryStorageSvcImpl filesystemSvc = new FilesystemBinaryStorageSvcImpl(baseDirectory);
+			int minimumBinarySize = resolveFilesystemMinimumBinarySize(appProperties);
+			filesystemSvc.setMinimumBinarySize(minimumBinarySize);
+
+			if (appProperties.getMax_binary_size() != null) {
+				filesystemSvc.setMaximumBinarySize(appProperties.getMax_binary_size().longValue());
+			}
+
+			binaryStorageSvc = filesystemSvc;
+		} else {
+			DatabaseBinaryContentStorageSvcImpl databaseSvc = new DatabaseBinaryContentStorageSvcImpl();
+			if (appProperties.getMax_binary_size() != null) {
+				databaseSvc.setMaximumBinarySize(appProperties.getMax_binary_size());
+			}
+			binaryStorageSvc = databaseSvc;
 		}
 
 		return binaryStorageSvc;
+	}
+
+	private int resolveFilesystemMinimumBinarySize(AppProperties appProperties) {
+		Integer inlineThreshold = appProperties.getInline_resource_storage_below_size();
+		return inlineThreshold == null ? DEFAULT_FILESYSTEM_INLINE_THRESHOLD : inlineThreshold;
 	}
 
 	@Bean
