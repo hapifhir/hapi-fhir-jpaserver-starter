@@ -1,5 +1,10 @@
 package ca.uhn.fhir.jpa.starter.cr;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ConfigurationProperties(prefix = "hapi.fhir.cr.cql.runtime")
 public class CqlRuntimeProperties {
 
 	private Boolean debug_logging_enabled = false;

@@ -1,5 +1,10 @@
 package ca.uhn.fhir.jpa.starter.cr;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ConfigurationProperties(prefix = "hapi.fhir.cr.caregaps")
 public class CareGapsProperties {
 	private String reporter = "default";
 	private String section_author = "default";
