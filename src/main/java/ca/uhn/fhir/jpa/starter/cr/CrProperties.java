@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
 public class CrProperties {
 	private Boolean enabled;
 
-	private CareGapsProperties careGaps;
-	private CqlProperties cql;
+	private CareGapsProperties careGaps = new CareGapsProperties();
+	private CqlProperties cql = new CqlProperties();
 	private TerminologyServerClientSettings terminologyServerClientSettings = new TerminologyServerClientSettings();
 
 	public Boolean getEnabled() {

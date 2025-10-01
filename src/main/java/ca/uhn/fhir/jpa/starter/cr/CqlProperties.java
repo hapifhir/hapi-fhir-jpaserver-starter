@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Configuration;
 public class CqlProperties {
 
 	private Boolean use_embedded_libraries = true;
-	private CqlCompilerProperties compiler;
-	private CqlRuntimeProperties runtime;
-	private TerminologySettings terminology;
-	private CqlData data;
+	private CqlCompilerProperties compiler = new CqlCompilerProperties();
+	private CqlRuntimeProperties runtime = new CqlRuntimeProperties();
+	private TerminologySettings terminology = new TerminologySettings();
+	private CqlData data = new CqlData();
 
 	public Boolean getUse_embedded_libraries() {
 		return use_embedded_libraries;

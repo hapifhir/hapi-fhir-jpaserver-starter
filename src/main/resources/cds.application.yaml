@@ -1,7 +1,7 @@
 #Uncomment the "servlet" and "context-path" lines below to make the fhir endpoint available at /example/path/fhir instead of the default value of /fhir
 server:
-#  servlet:
-#    context-path: /example/path
+  #  servlet:
+  #    context-path: /example/path
   port: 8080
 #Adds the option to go to e.g. http://localhost:8080/actuator/health for seeing the running configuration
 #see https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.endpoints
@@ -53,28 +53,31 @@ spring:
       maximum-pool-size: 10
   jpa:
     properties:
-      hibernate.format_sql: false
-      hibernate.show_sql: false
+      hibernate:
+        format_sql: false
+        show_sql: false
 
       #Hibernate dialect is automatically detected except Postgres and H2.
       #If using H2, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
       #If using postgres, then supply the value of ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
-  #      hibernate.hbm2ddl.auto: update
-  #      hibernate.jdbc.batch_size: 20
-  #      hibernate.cache.use_query_cache: false
-  #      hibernate.cache.use_second_level_cache: false
-  #      hibernate.cache.use_structured_entries: false
-  #      hibernate.cache.use_minimal_puts: false
+        dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+      #      hibernate.hbm2ddl.auto: update
+      #      hibernate.jdbc.batch_size: 20
+      #      hibernate.cache.use_query_cache: false
+      #      hibernate.cache.use_second_level_cache: false
+      #      hibernate.cache.use_structured_entries: false
+      #      hibernate.cache.use_minimal_puts: false
 
-  ###    These settings will enable fulltext search with lucene or elastic
-      hibernate.search.enabled: true
+      ###    These settings will enable fulltext search with lucene or elastic
+
+        search:
+          enabled: true
   ### lucene parameters
-#      hibernate.search.backend.type: lucene
-#      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
-#      hibernate.search.backend.directory.type: local-filesystem
-#      hibernate.search.backend.directory.root: target/lucenefiles
-#      hibernate.search.backend.lucene_version: lucene_current
+  #      hibernate.search.backend.type: lucene
+  #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
+  #      hibernate.search.backend.directory.type: local-filesystem
+  #      hibernate.search.backend.directory.root: target/lucenefiles
+  #      hibernate.search.backend.lucene_version: lucene_current
   ### elastic parameters ===> see also elasticsearch section below <===
 #      hibernate.search.backend.type: elasticsearch
 #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticAnalysisConfigurer
