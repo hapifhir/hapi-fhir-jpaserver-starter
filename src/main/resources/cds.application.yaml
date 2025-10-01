@@ -81,6 +81,10 @@ spring:
   ### elastic parameters ===> see also elasticsearch section below <===
 #      hibernate.search.backend.type: elasticsearch
 #      hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticAnalysisConfigurer
+  autoconfigure:
+    # This exclude is only needed for setups not using Elasticsearch where the elasticsearch sniff is not needed.
+    exclude: org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration
+
 hapi:
   fhir:
     ### This flag when enabled to true, will avail evaluate measure operations from CR Module.

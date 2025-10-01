@@ -75,13 +75,16 @@ spring:
           mcp-endpoint: /mcp/messages
 
 
-
   # -------------------------------------------------------------------------------
   # B. Core Spring
   # -------------------------------------------------------------------------------
   main:
     allow-bean-definition-overriding: false
     allow-circular-references: true
+
+  autoconfigure:
+    # This exclude is only needed for setups not using Elasticsearch where the elasticsearch sniff is not needed.
+    exclude: org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration
 
   flyway:
     enabled: false
