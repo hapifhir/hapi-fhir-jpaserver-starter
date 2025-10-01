@@ -225,11 +225,7 @@ public class FhirServerConfigCommon {
 			jpaStorageSettings.setLastNEnabled(true);
 		}
 
-		Integer inlineResourceThreshold = appProperties.getInline_resource_storage_below_size();
-		if (inlineResourceThreshold == null
-				&& appProperties.getBinary_storage_mode() == AppProperties.BinaryStorageMode.FILESYSTEM) {
-			inlineResourceThreshold = resolveFilesystemMinimumBinarySize(appProperties);
-		}
+		Integer inlineResourceThreshold = resolveInlineResourceThreshold(appProperties);
 		if (inlineResourceThreshold != null && inlineResourceThreshold != 0) {
 			jpaStorageSettings.setInlineResourceTextBelowSize(inlineResourceThreshold);
 		}
@@ -352,6 +348,9 @@ public class FhirServerConfigCommon {
 	public IBinaryStorageSvc binaryStorageSvc(AppProperties appProperties) {
 		IBinaryStorageSvc binaryStorageSvc;
 
+		Integer maxBinarySize = appProperties.getMax_binary_size();
+		Integer inlineResourceThreshold = resolveInlineResourceThreshold(appProperties);
+
 		if (appProperties.getBinary_storage_mode() == AppProperties.BinaryStorageMode.FILESYSTEM) {
 			String baseDirectory = appProperties.getBinary_storage_filesystem_base_directory();
 			Assert.hasText(
@@ -359,18 +358,19 @@ public class FhirServerConfigCommon {
 					"binary_storage_filesystem_base_directory must be provided when binary_storage_mode=FILESYSTEM");
 
 			FilesystemBinaryStorageSvcImpl filesystemSvc = new FilesystemBinaryStorageSvcImpl(baseDirectory);
-			int minimumBinarySize = resolveFilesystemMinimumBinarySize(appProperties);
+			int minimumBinarySize =
+					inlineResourceThreshold == null ? DEFAULT_FILESYSTEM_INLINE_THRESHOLD : inlineResourceThreshold;
 			filesystemSvc.setMinimumBinarySize(minimumBinarySize);
 
-			if (appProperties.getMax_binary_size() != null) {
-				filesystemSvc.setMaximumBinarySize(appProperties.getMax_binary_size().longValue());
+			if (maxBinarySize != null) {
+				filesystemSvc.setMaximumBinarySize(maxBinarySize.longValue());
 			}
 
 			binaryStorageSvc = filesystemSvc;
 		} else {
 			DatabaseBinaryContentStorageSvcImpl databaseSvc = new DatabaseBinaryContentStorageSvcImpl();
-			if (appProperties.getMax_binary_size() != null) {
-				databaseSvc.setMaximumBinarySize(appProperties.getMax_binary_size());
+			if (maxBinarySize != null) {
+				databaseSvc.setMaximumBinarySize(maxBinarySize.longValue());
 			}
 			binaryStorageSvc = databaseSvc;
 		}
@@ -378,9 +378,13 @@ public class FhirServerConfigCommon {
 		return binaryStorageSvc;
 	}
 
-	private int resolveFilesystemMinimumBinarySize(AppProperties appProperties) {
-		Integer inlineThreshold = appProperties.getInline_resource_storage_below_size();
-		return inlineThreshold == null ? DEFAULT_FILESYSTEM_INLINE_THRESHOLD : inlineThreshold;
+	private Integer resolveInlineResourceThreshold(AppProperties appProperties) {
+		Integer inlineResourceThreshold = appProperties.getInline_resource_storage_below_size();
+		if (inlineResourceThreshold == null
+				&& appProperties.getBinary_storage_mode() == AppProperties.BinaryStorageMode.FILESYSTEM) {
+			return DEFAULT_FILESYSTEM_INLINE_THRESHOLD;
+		}
+		return inlineResourceThreshold;
 	}
 
 	@Bean
