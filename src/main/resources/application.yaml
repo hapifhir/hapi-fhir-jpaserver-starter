@@ -187,7 +187,7 @@ hapi:
     # C. Clinical Reasoning / CQL / Care Gaps / CDS Hooks
     # -------------------------------------------------------------------------------
     cr:
-      enabled: false                            # expose $evaluate-measure endpoints
+      enabled: false                            # exposes Clinical Reasoning operation endpoints
       caregaps:
         reporter: "default"
         section_author: "default"
