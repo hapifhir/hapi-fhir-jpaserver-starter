@@ -51,7 +51,7 @@ public class McpServerConfig {
 
 	@Bean
 	@ConditionalOnProperty(
-			prefix = "hapi.fhir.cr",
+			prefix = "hapi.fhir.cdshooks",
 			name = {"enabled"},
 			havingValue = "true")
 	public McpCdsBridge mcpCdsBridge(FhirContext fhirContext, ICdsServiceRegistry cdsServiceRegistry) {
