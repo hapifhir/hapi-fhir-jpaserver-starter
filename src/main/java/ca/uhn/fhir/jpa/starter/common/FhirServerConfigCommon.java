@@ -20,6 +20,7 @@ import com.google.common.base.Strings;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.context.annotation.*;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -344,38 +345,49 @@ public class FhirServerConfigCommon {
 	}
 
 	@Lazy
+	@Primary
 	@Bean
-	public IBinaryStorageSvc binaryStorageSvc(AppProperties appProperties) {
-		IBinaryStorageSvc binaryStorageSvc;
+	public IBinaryStorageSvc binaryStorageSvc(
+			AppProperties appProperties,
+			ObjectProvider<DatabaseBinaryContentStorageSvcImpl> databaseBinaryStorageSvcProvider,
+			ObjectProvider<FilesystemBinaryStorageSvcImpl> filesystemBinaryStorageSvcProvider) {
+		if (appProperties.getBinary_storage_mode() == AppProperties.BinaryStorageMode.FILESYSTEM) {
+			return filesystemBinaryStorageSvcProvider.getObject();
+		}
+		return databaseBinaryStorageSvcProvider.getObject();
+	}
+
+	@Lazy
+	@Bean
+	public FilesystemBinaryStorageSvcImpl filesystemBinaryStorageSvc(AppProperties appProperties) {
+		String baseDirectory = appProperties.getBinary_storage_filesystem_base_directory();
+		Assert.hasText(
+				baseDirectory,
+				"binary_storage_filesystem_base_directory must be provided when binary_storage_mode=FILESYSTEM");
+
+		FilesystemBinaryStorageSvcImpl filesystemSvc = new FilesystemBinaryStorageSvcImpl(baseDirectory);
+		Integer inlineResourceThreshold = resolveInlineResourceThreshold(appProperties);
+		int minimumBinarySize =
+				inlineResourceThreshold == null ? DEFAULT_FILESYSTEM_INLINE_THRESHOLD : inlineResourceThreshold;
+		filesystemSvc.setMinimumBinarySize(minimumBinarySize);
 
 		Integer maxBinarySize = appProperties.getMax_binary_size();
-		Integer inlineResourceThreshold = resolveInlineResourceThreshold(appProperties);
-
-		if (appProperties.getBinary_storage_mode() == AppProperties.BinaryStorageMode.FILESYSTEM) {
-			String baseDirectory = appProperties.getBinary_storage_filesystem_base_directory();
-			Assert.hasText(
-					baseDirectory,
-					"binary_storage_filesystem_base_directory must be provided when binary_storage_mode=FILESYSTEM");
-
-			FilesystemBinaryStorageSvcImpl filesystemSvc = new FilesystemBinaryStorageSvcImpl(baseDirectory);
-			int minimumBinarySize =
-					inlineResourceThreshold == null ? DEFAULT_FILESYSTEM_INLINE_THRESHOLD : inlineResourceThreshold;
-			filesystemSvc.setMinimumBinarySize(minimumBinarySize);
-
-			if (maxBinarySize != null) {
-				filesystemSvc.setMaximumBinarySize(maxBinarySize.longValue());
-			}
-
-			binaryStorageSvc = filesystemSvc;
-		} else {
-			DatabaseBinaryContentStorageSvcImpl databaseSvc = new DatabaseBinaryContentStorageSvcImpl();
-			if (maxBinarySize != null) {
-				databaseSvc.setMaximumBinarySize(maxBinarySize.longValue());
-			}
-			binaryStorageSvc = databaseSvc;
+		if (maxBinarySize != null) {
+			filesystemSvc.setMaximumBinarySize(maxBinarySize.longValue());
 		}
 
-		return binaryStorageSvc;
+		return filesystemSvc;
+	}
+
+	@Lazy
+	@Bean
+	public DatabaseBinaryContentStorageSvcImpl databaseBinaryStorageSvc(AppProperties appProperties) {
+		DatabaseBinaryContentStorageSvcImpl databaseSvc = new DatabaseBinaryContentStorageSvcImpl();
+		Integer maxBinarySize = appProperties.getMax_binary_size();
+		if (maxBinarySize != null) {
+			databaseSvc.setMaximumBinarySize(maxBinarySize.longValue());
+		}
+		return databaseSvc;
 	}
 
 	private Integer resolveInlineResourceThreshold(AppProperties appProperties) {
