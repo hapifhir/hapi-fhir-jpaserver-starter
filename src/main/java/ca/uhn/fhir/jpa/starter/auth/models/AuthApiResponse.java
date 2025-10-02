@@ -5,6 +5,8 @@ public class AuthApiResponse {
 	private String message;
 	private VerifyTokenResponse data;
 
+	public AuthApiResponse() {}
+
 	public AuthApiResponse(Boolean success, String message, VerifyTokenResponse data) {
 		this.success = success;
 		this.message = message;
@@ -38,6 +40,8 @@ public class AuthApiResponse {
 
 	public static class VerifyTokenResponse {
 		private String username;
+
+		public VerifyTokenResponse() {}
 
 		public VerifyTokenResponse(String username) {
 			this.username = username;
