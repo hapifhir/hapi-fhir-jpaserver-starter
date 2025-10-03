@@ -81,7 +81,11 @@ public class MatchboxJpaPackageCache {
 			title = SD_LOGICAL_TITLE_PREFIX + title;
 		} else if ("Extension".equals(type)) {
 			title = SD_EXTENSION_TITLE_PREFIX + title;
-		}
+		} else if ("resource".equals(kind)) {
+			if (!title.startsWith(type)) {
+				title = type + " " + title;
+			}
+		} 
 
 		// Change the filename for the StructureDefinition title
 		npmPackageVersionResourceEntity.setFilename(title);

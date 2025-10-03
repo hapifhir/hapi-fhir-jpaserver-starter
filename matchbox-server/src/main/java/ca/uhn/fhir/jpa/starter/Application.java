@@ -2,7 +2,6 @@ package ca.uhn.fhir.jpa.starter;
 
 import ch.ahdis.matchbox.MatchboxRestfulServer;
 import ch.ahdis.matchbox.config.MatchboxStaticResourceConfig;
-import ch.ahdis.matchbox.config.MatchboxMcpConfig;
 import ch.ahdis.matchbox.config.MatchboxTxConfig;
 import ch.ahdis.matchbox.spring.MatchboxEventListener;
 import ch.ahdis.matchbox.terminology.MatchboxTxServer;
@@ -24,6 +23,7 @@ import org.springframework.context.annotation.Import;
 
 import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
 import ca.uhn.fhir.jpa.starter.common.FhirServerConfigR4;
+import ca.uhn.fhir.jpa.starter.mcp.McpServerConfig;
 import ca.uhn.fhir.jpa.starter.mdm.MdmConfig;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ch.ahdis.matchbox.config.MatchboxJpaConfig;
@@ -38,7 +38,7 @@ import ch.ahdis.matchbox.config.MatchboxJpaConfig;
 	GazelleValidationWs.class,
   RegistryWs.class,
   MatchboxStaticResourceConfig.class,
-  MatchboxMcpConfig.class,
+  McpServerConfig.class,
   MatchboxTxConfig.class
 })
 public class Application extends SpringBootServletInitializer {
