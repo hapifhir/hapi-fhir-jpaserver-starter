@@ -1,7 +1,6 @@
 package ca.uhn.fhir.jpa.starter.common;
 
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
-import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.binstore.DatabaseBinaryContentStorageSvcImpl;
 import ca.uhn.fhir.jpa.binstore.FilesystemBinaryStorageSvcImpl;
 import ca.uhn.fhir.jpa.config.HibernatePropertiesProvider;
@@ -20,7 +19,7 @@ import com.google.common.base.Strings;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.context.annotation.*;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -344,21 +343,8 @@ public class FhirServerConfigCommon {
 		return new JpaHibernatePropertiesProvider(myEntityManagerFactory);
 	}
 
-	@Lazy
-	@Primary
 	@Bean
-	public IBinaryStorageSvc binaryStorageSvc(
-			AppProperties appProperties,
-			ObjectProvider<DatabaseBinaryContentStorageSvcImpl> databaseBinaryStorageSvcProvider,
-			ObjectProvider<FilesystemBinaryStorageSvcImpl> filesystemBinaryStorageSvcProvider) {
-		if (appProperties.getBinary_storage_mode() == AppProperties.BinaryStorageMode.FILESYSTEM) {
-			return filesystemBinaryStorageSvcProvider.getObject();
-		}
-		return databaseBinaryStorageSvcProvider.getObject();
-	}
-
-	@Lazy
-	@Bean
+	@ConditionalOnProperty(prefix = "hapi.fhir", name = "binary_storage_mode", havingValue = "FILESYSTEM")
 	public FilesystemBinaryStorageSvcImpl filesystemBinaryStorageSvc(AppProperties appProperties) {
 		String baseDirectory = appProperties.getBinary_storage_filesystem_base_directory();
 		Assert.hasText(
@@ -379,8 +365,12 @@ public class FhirServerConfigCommon {
 		return filesystemSvc;
 	}
 
-	@Lazy
 	@Bean
+	@ConditionalOnProperty(
+			prefix = "hapi.fhir",
+			name = "binary_storage_mode",
+			havingValue = "DATABASE",
+			matchIfMissing = true)
 	public DatabaseBinaryContentStorageSvcImpl databaseBinaryStorageSvc(AppProperties appProperties) {
 		DatabaseBinaryContentStorageSvcImpl databaseSvc = new DatabaseBinaryContentStorageSvcImpl();
 		Integer maxBinarySize = appProperties.getMax_binary_size();

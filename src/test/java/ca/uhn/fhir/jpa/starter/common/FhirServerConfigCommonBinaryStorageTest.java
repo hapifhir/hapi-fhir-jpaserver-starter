@@ -2,14 +2,13 @@ package ca.uhn.fhir.jpa.starter.common;
 
 import ca.uhn.fhir.jpa.binstore.DatabaseBinaryContentStorageSvcImpl;
 import ca.uhn.fhir.jpa.binstore.FilesystemBinaryStorageSvcImpl;
+import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.springframework.beans.factory.ObjectProvider;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -27,7 +26,7 @@ class FhirServerConfigCommonBinaryStorageTest {
 	void defaultsToDatabaseImplementation() {
 		AppProperties props = new AppProperties();
 
-		Object svc = binaryStorageSvc(props);
+		IBinaryStorageSvc svc = binaryStorageSvc(props);
 
 		assertThat(svc).isInstanceOf(DatabaseBinaryContentStorageSvcImpl.class);
 	}
@@ -83,39 +82,15 @@ class FhirServerConfigCommonBinaryStorageTest {
 				.hasMessageContaining("binary_storage_filesystem_base_directory");
 	}
 
-	private Object binaryStorageSvc(AppProperties props) {
+	private IBinaryStorageSvc binaryStorageSvc(AppProperties props) {
 		FhirServerConfigCommon config = newConfig();
-		return config.binaryStorageSvc(
-				props,
-				provider(() -> config.databaseBinaryStorageSvc(props)),
-				provider(() -> config.filesystemBinaryStorageSvc(props)));
+		if (props.getBinary_storage_mode() == AppProperties.BinaryStorageMode.FILESYSTEM) {
+			return config.filesystemBinaryStorageSvc(props);
+		}
+		return config.databaseBinaryStorageSvc(props);
 	}
 
 	private FilesystemBinaryStorageSvcImpl filesystemBinaryStorageSvc(AppProperties props) {
 		return (FilesystemBinaryStorageSvcImpl) binaryStorageSvc(props);
-	}
-
-	private static <T> ObjectProvider<T> provider(Supplier<T> supplier) {
-		return new ObjectProvider<>() {
-			@Override
-			public T getObject(Object... args) {
-				return supplier.get();
-			}
-
-			@Override
-			public T getObject() {
-				return supplier.get();
-			}
-
-			@Override
-			public T getIfAvailable() {
-				return supplier.get();
-			}
-
-			@Override
-			public T getIfUnique() {
-				return supplier.get();
-			}
-		};
 	}
 }
