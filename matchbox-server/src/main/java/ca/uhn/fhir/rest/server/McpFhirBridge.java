@@ -26,9 +26,9 @@ public class McpFhirBridge implements McpBridge {
 	private final RestfulServer restfulServer;
 	private final CliContext cliContext;
 
-	public McpFhirBridge(RestfulServer restfulServer, CliContext cliClontext) {
+	public McpFhirBridge(RestfulServer restfulServer, CliContext cliContext) {
 		this.restfulServer = restfulServer;
-		this.cliContext = cliClontext; 
+		this.cliContext = cliContext; 
 	}
 
 	public List<McpServerFeatures.SyncToolSpecification> generateTools() {
