@@ -13,18 +13,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout matchbox
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: matchbox
 
       - name: Checkout integration tests
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: matchbox-int-tests
           repository: ahdis/matchbox-int-tests
 
       - name: Setup Java 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         # https://github.com/actions/setup-java#usage
         with:
           java-version: 21

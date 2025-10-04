@@ -13,10 +13,10 @@ jobs:
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Java 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with: # running setup-java again overwrites the settings.xml
           java-version: "21"
           distribution: "adopt"

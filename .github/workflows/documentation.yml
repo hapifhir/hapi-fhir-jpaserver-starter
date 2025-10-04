@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout master
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Python 3
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.x'
           cache: 'pip'
@@ -28,7 +28,7 @@ jobs:
         # https://www.mkdocs.org/user-guide/deploying-your-docs/#github-pages
 
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         # https://github.com/actions/setup-java#usage
         with:
           java-version: 21

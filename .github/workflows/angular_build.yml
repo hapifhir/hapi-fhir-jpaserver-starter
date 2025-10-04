@@ -20,10 +20,10 @@ jobs:
         working-directory: ./matchbox-frontend
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           # https://github.com/actions/setup-node
           node-version: 20
@@ -39,7 +39,7 @@ jobs:
 
       - name: Commit
         if: success()
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v6.0.1
         with:
           commit_message: "server: rebuild the Angular GUI resources"
           file_pattern: "matchbox-server/src/main/resources/static"

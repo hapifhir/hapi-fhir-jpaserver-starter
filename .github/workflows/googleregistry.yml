@@ -25,10 +25,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Build Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: 21
           distribution: adopt
@@ -37,15 +37,20 @@ jobs:
       - run: mvn --batch-mode --update-snapshots package -DskipTests -P release
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@master
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@master
+        uses: docker/setup-buildx-action@v3
+        with:
+          version: latest
+          platforms: linux/amd64,linux/arm64
 
       # Configure Workload Identity Federation and generate an access token.
       - id: "auth"
         name: "Authenticate to Google Cloud"
-        uses: google-github-actions/auth@v2
+        uses: google-github-actions/auth@v3
         with:
           token_format: "access_token"
           workload_identity_provider: "projects/1022310475153/locations/global/workloadIdentityPools/github-wif-pool/providers/oidc-github-provider"
@@ -69,7 +74,7 @@ jobs:
             matchbox-server
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.33.1
         with:
           image-ref: '${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.ref_name }}'
           format: 'sarif'
@@ -79,7 +84,7 @@ jobs:
           output: 'trivy-results.sarif'
 
       - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@main
+        uses: github/codeql-action/upload-sarif@3
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
