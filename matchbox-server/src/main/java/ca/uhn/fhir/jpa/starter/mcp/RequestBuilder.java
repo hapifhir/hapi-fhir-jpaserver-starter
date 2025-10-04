@@ -114,7 +114,7 @@ public class RequestBuilder {
 				if (profile != null && !profile.isBlank()) {
 					req.addParameter("profile", profile);
 				}
-				req.addHeader("Content-Type", "Content-Type: text/plain; charset=UTF-8");
+				req.addHeader("Content-Type", "text/plain; charset=UTF-8");
 			}
 			default -> throw new IllegalArgumentException("Unsupported interaction: " + interaction);
 		}
