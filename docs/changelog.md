@@ -1,33 +1,46 @@
+2025/10/04 Release 4.0.13
+
+- MCP Server integration [#398](https://github.com/ahdis/matchbox/issues/398)
+
+
 2025/08/26 Release 4.0.12
+
 - update org.hl7.fhir.core 6.6.5 [#425](https://github.com/ahdis/matchbox/issues/425)
 - fix for multithreading issue and increasing terminology logs [#425](https://github.com/ahdis/matchbox/issues/425)
 - separating internal terminology server to /tx endpoint
 
 2025/08/12 Release 4.0.11
+
 - update for scanned vulnerabilities
 
 2025/08/07 Release 4.0.10
+
 - update org.hl7.fhir.core 6.6.3 [#415](https://github.com/ahdis/matchbox/issues/415)
 - document validation parameters [#407](https://github.com/ahdis/matchbox/issues/407)
 - CDANarrative serialization issue [#417](https://github.com/ahdis/matchbox/issues/417)
 - add HL7 Terminology (THO) 6.5.0
 
 2025/07/01 Release 4.0.9
+
 - unable to resolve resource with reference [#409](https://github.com/ahdis/matchbox/issues/409)
 - disableDefaultResource Fetcher provokes an error [#408](https://github.com/ahdis/matchbox/issues/408)
 - update org.hl7.fhir.core 6.5.27 [#411](https://github.com/ahdis/matchbox/issues/411)
 
 2025/06/22 Release 4.0.8
+
 - suppressErrors not taken into account on gazelle interface [#405](https://github.com/ahdis/matchbox/issues/405)
 
 2025/06/18 Release 4.0.7
+
 - fix security issues
 
 2025/06/15 Release 4.0.6
+
 - fix capability statement for production mode [#399](https://github.com/ahdis/matchbox/issues/399)
 - allow llm api key to be set over gui [#392](https://github.com/ahdis/matchbox/issues/392)
 
 2025/06/13 Release 4.0.5
+
 - Add MCP Server integration [#398](https://github.com/ahdis/matchbox/issues/398)
 - suppress error messages for known issues [#395](https://github.com/ahdis/matchbox/issues/395)
 - unknown extensions should not raise an error for validation (IPS) [#394](https://github.com/ahdis/matchbox/issues/394)

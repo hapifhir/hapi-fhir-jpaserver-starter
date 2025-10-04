@@ -1,4 +1,4 @@
-@host = http://localhost:8080/matchboxv3
+@host = http://localhost:8090/matchbox
 ### @host = https://test.ahdis.ch/matchbox
 ### @host = https://test.ahdis.ch/matchboxv3
 

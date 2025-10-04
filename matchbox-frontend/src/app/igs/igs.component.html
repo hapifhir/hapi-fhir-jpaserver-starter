@@ -10,7 +10,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr (click)="selectRow(ig)" *ngFor="let ig of igs">
+    <tr  (click)="selectRow(ig)"  [ngStyle]="isCurrent(ig) ? {'background-color': 'lightyellow'} : {}"    *ngFor="let ig of igs">
       <td>{{ ig.packageId }}</td>
       <td class="secondary">{{ ig.version }}</td>
       <td class="secondary">{{ ig.title }}</td>

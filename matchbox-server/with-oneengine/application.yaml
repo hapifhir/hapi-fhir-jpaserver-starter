@@ -1,7 +1,7 @@
 server:
-  port: 8090
+  port: 8080
   servlet:
-    context-path: /matchbox
+    context-path: /matchboxv3
 spring:
   datasource:
     url: "jdbc:h2:mem:validate-r4"
@@ -17,7 +17,7 @@ spring:
         enabled: true
 hapi:
   fhir:
-    server_address: http://localhost:${server.port}/matchbox/fhir
+    server_address: http://localhost:${server.port}/matchboxv3/fhir
     implementationguides:
       fhir_r4_core:
         name: hl7.fhir.r4.core

@@ -69,6 +69,13 @@ export class IgsComponent {
     );
   }
 
+  isCurrent(ig: fhir.r4.ImplementationGuide): boolean {
+    let result  = this.fhirPathService.evaluateToString(
+       ig,
+       "meta.tag.where(system='http://matchbox.health/fhir/CodeSystem/tag').code");
+    return result === "current";
+  }
+
   selectRow(ig: fhir.r4.ImplementationGuide) {
     this.selection = ig;
     this.addPackageId.setValue(this.selection.packageId);

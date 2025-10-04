@@ -38,7 +38,7 @@ public class McpMatchboxBridge implements McpBridge {
 			return List.of(
 					new McpServerFeatures.SyncToolSpecification.Builder()
 							.tool(ToolFactory.validateFhirResource())
-							.callHandler((exchange, request) -> getToolResult(request, Interaction.VALIDATE))
+							.callHandler((exchange, request) -> getValidationResult(request, Interaction.VALIDATE))
 					 		.build(),
 					new McpServerFeatures.SyncToolSpecification.Builder()
 							.tool(ToolFactory.listFhirImplementationGuides())
@@ -56,6 +56,8 @@ public class McpMatchboxBridge implements McpBridge {
 
 	private McpSchema.CallToolResult getFhirProfilesToValidateFor(McpSchema.CallToolRequest contextMap, Interaction interaction) {
 		var response = new MockHttpServletResponse();
+		final String resourceType = (String) contextMap.arguments().get("resourceType");
+		// we need to overwrite it for calling the read interaction
 		contextMap.arguments().put("resourceType", "OperationDefinition");
 		contextMap.arguments().put("id", "-s-validate");
 		final String ig = (String) contextMap.arguments().get("ig");
@@ -77,7 +79,8 @@ public class McpMatchboxBridge implements McpBridge {
 					.map(p -> p.getTargetProfile())
 					.flatMap(List::stream)
 					.filter(targetProfile -> targetProfile.hasExtension("ig-current") && targetProfile.getExtensionByUrl("ig-current").getValueBooleanType().booleanValue())
-					.filter(targetProfile -> ig==null || ig.isEmpty() || (targetProfile.hasExtension("ig") && targetProfile.getExtensionByUrl("ig").getValueStringType().asStringValue().equals(ig)))
+					.filter(targetProfile -> ig==null || ig.isEmpty() || (targetProfile.hasExtension("ig-id") && targetProfile.getExtensionByUrl("ig-id").getValueStringType().asStringValue().equals(ig)))
+					.filter(targetProfile -> resourceType==null || resourceType.isEmpty() || (targetProfile.hasExtension("sd-title") && targetProfile.getExtensionByUrl("sd-title").getValueStringType().asStringValue().startsWith(resourceType)))
 					.map( targetProfile -> {
 						var map = new HashMap<String, String>();
 						map.put("title", targetProfile.getExtensionByUrl("sd-title").getValueStringType().asStringValue());
@@ -130,10 +133,15 @@ public class McpMatchboxBridge implements McpBridge {
 		}
 	}	
 
-	private McpSchema.CallToolResult getToolResult(McpSchema.CallToolRequest contextMap, Interaction interaction) {
+	private McpSchema.CallToolResult getValidationResult(McpSchema.CallToolRequest contextMap, Interaction interaction) {
 
 		var response = new MockHttpServletResponse();
 		var request = new RequestBuilder(restfulServer, contextMap.arguments(), interaction).buildRequest();
+
+		Map<String, Object> map = new java.util.HashMap<>();
+		// we do not want to use AI for validation, this can do mcp client itself
+		map.put("analyzeOutcomeWithAI", "false");
+		contextMap.arguments().put("query", map);
 
 		try {
 			restfulServer.handleRequest(interaction.asRequestType(), request, response);

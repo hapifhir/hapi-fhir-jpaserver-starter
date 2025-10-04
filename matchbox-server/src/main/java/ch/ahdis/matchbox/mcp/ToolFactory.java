@@ -48,9 +48,13 @@ public class ToolFactory {
 			"ig": {
 				"type": "string",
 				"description": "package id to list profiles for, if not provided all profiles for the latest ig versions are listed"
+			},
+			"resourceType": {
+				"type": "string",
+				"description": "FHIR resource type list profiles for, if not provided all profiles for all resources and logical models are listed"
 			}
 		}
-		}
+	}
 		""";
 
 	private static final String LIST_FHIR_IGS_OUTPUT_SCHEMA =
@@ -96,7 +100,7 @@ public class ToolFactory {
 	public static Tool validateFhirResource() throws JsonProcessingException {
 		return new Tool.Builder()
 				.name("validate-fhir-resource")
-				.description("Validate a FHIR resource or logical model against a profile")
+				.description("Validate a FHIR resource or logical model against a profile and return a FHIR OperationOutcome indicating the result of the validation")
 				.inputSchema(mapper.readValue(VALIDATE_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class))
 				.build();
 	}
