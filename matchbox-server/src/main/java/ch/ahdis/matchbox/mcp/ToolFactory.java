@@ -16,7 +16,7 @@ public class ToolFactory {
 		"properties": {
 			"resource": {
 			"type": "string",
-			"description": "The FHIR resource or logical model to validate in XML oder JSON format"
+			"description": "The FHIR resource or logical model to validate in XML or JSON format"
 			},
 			"profile": {
 			"type": "string",
