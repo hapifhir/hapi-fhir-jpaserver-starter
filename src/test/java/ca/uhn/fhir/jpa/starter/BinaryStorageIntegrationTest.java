@@ -1,28 +1,35 @@
 package ca.uhn.fhir.jpa.starter;
 
-import ca.uhn.fhir.jpa.binary.api.IBinaryStorageSvc;
-import ca.uhn.fhir.jpa.binary.api.StoredDetails;
-import ca.uhn.fhir.jpa.binstore.DatabaseBinaryContentStorageSvcImpl;
+import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.binstore.FilesystemBinaryStorageSvcImpl;
 import ca.uhn.fhir.jpa.dao.data.IBinaryStorageEntityDao;
 import ca.uhn.fhir.jpa.model.entity.BinaryStorageEntity;
-import ca.uhn.fhir.rest.api.server.SystemRequestDetails;
-import org.hl7.fhir.r4.model.IdType;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
+import org.hl7.fhir.instance.model.api.IIdType;
+import org.hl7.fhir.r4.model.Patient;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,19 +52,48 @@ abstract class BaseBinaryStorageIntegrationTest {
 	protected static final String COMMON_BEAN_OVERRIDE_ALLOWED = "spring.main.allow-bean-definition-overriding=true";
 	protected static final String COMMON_CIRCULAR_REFERENCES = "spring.main.allow-circular-references=true";
 	protected static final String COMMON_MCP_DISABLED = "spring.ai.mcp.server.enabled=false";
+	protected static final String CONTENT_TYPE = "application/octet-stream";
 
-	protected StoredDetails storeBinary(
-			IBinaryStorageSvc binaryStorageSvc, IdType resourceId, int size, String contentType) throws IOException {
-		byte[] payload = randomBytes(size);
-		SystemRequestDetails requestDetails = new SystemRequestDetails();
-		StoredDetails stored;
-		try (ByteArrayInputStream input = new ByteArrayInputStream(payload)) {
-			stored =
-					binaryStorageSvc.storeBinaryContent(resourceId, null, contentType, input, requestDetails);
+	@LocalServerPort
+	protected int port;
+
+	protected FhirContext fhirContext;
+	protected IGenericClient client;
+	private final List<IIdType> resourcesToDelete = new ArrayList<>();
+
+	@BeforeEach
+	void setUpClient() {
+		fhirContext = FhirContext.forR4();
+		fhirContext.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
+		fhirContext.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
+		String serverBase = "http://localhost:" + port + "/fhir/";
+		client = fhirContext.newRestfulGenericClient(serverBase);
+		resourcesToDelete.clear();
+	}
+
+	@AfterEach
+	void deleteCreatedResources() {
+		for (IIdType id : resourcesToDelete) {
+			try {
+				client.delete().resourceById(id).execute();
+			} catch (Exception ignored) {
+				// Ignore cleanup failures to keep tests resilient
+			}
 		}
-		assertThat(binaryStorageSvc.fetchBinaryContent(resourceId, stored.getBinaryContentId()))
-				.containsExactly(payload);
-		return stored;
+	}
+
+	protected IIdType createPatientWithPhoto(String label, byte[] payload) {
+		Patient patient = new Patient();
+		patient.addIdentifier().setSystem("urn:binary-storage-test").setValue(label);
+		patient.addName().setFamily(label);
+		patient.addPhoto().setContentType(CONTENT_TYPE).setData(payload);
+		IIdType id = client.create().resource(patient).execute().getId().toUnqualifiedVersionless();
+		resourcesToDelete.add(id);
+		return id;
+	}
+
+	protected String uniqueLabel(String prefix) {
+		return prefix + "-" + UUID.randomUUID();
 	}
 
 	protected byte[] randomBytes(int size) {
@@ -74,13 +110,9 @@ abstract class BaseBinaryStorageIntegrationTest {
 		assertThat(regularFileCount(baseDir)).isGreaterThan(minimumFileCount);
 	}
 
-	private long regularFileCount(Path baseDir) throws IOException {
-		if (Files.notExists(baseDir)) {
-			return 0;
-		}
-		try (Stream<Path> files = Files.walk(baseDir)) {
-			return files.filter(Files::isRegularFile).count();
-		}
+	protected Path ensureDirectory(Path directory) throws IOException {
+		Files.createDirectories(directory);
+		return directory;
 	}
 
 	protected void deleteDirectoryContents(Path baseDir) throws IOException {
@@ -97,6 +129,15 @@ abstract class BaseBinaryStorageIntegrationTest {
 							throw new UncheckedIOException(e);
 						}
 					});
+		}
+	}
+
+	private long regularFileCount(Path baseDir) throws IOException {
+		if (Files.notExists(baseDir)) {
+			return 0;
+		}
+		try (Stream<Path> files = Files.walk(baseDir)) {
+			return files.filter(Files::isRegularFile).count();
 		}
 	}
 }
@@ -121,13 +162,11 @@ abstract class BaseBinaryStorageIntegrationTest {
 		BaseBinaryStorageIntegrationTest.COMMON_BEAN_OVERRIDE_ALLOWED,
 		BaseBinaryStorageIntegrationTest.COMMON_CIRCULAR_REFERENCES,
 		BaseBinaryStorageIntegrationTest.COMMON_MCP_DISABLED,
+		"hapi.fhir.binary_storage_enabled=true",
 		"hapi.fhir.binary_storage_mode=DATABASE"
 	}
 )
 class BinaryStorageDatabaseModeIT extends BaseBinaryStorageIntegrationTest {
-
-	@Autowired
-	private IBinaryStorageSvc binaryStorageSvc;
 
 	@Autowired
 	private IBinaryStorageEntityDao binaryStorageEntityDao;
@@ -135,28 +174,41 @@ class BinaryStorageDatabaseModeIT extends BaseBinaryStorageIntegrationTest {
 	@Autowired
 	private PlatformTransactionManager transactionManager;
 
-	@Test
-	void databaseModeStoresBinaryContentInDatabase() throws IOException {
-		assertThat(binaryStorageSvc).isInstanceOf(DatabaseBinaryContentStorageSvcImpl.class);
+	private TransactionTemplate transactionTemplate;
 
-		storeAndAssertDatabasePersistence(new IdType("Binary/database-small"), 24);
-		storeAndAssertDatabasePersistence(new IdType("Binary/database-large"), 150_000);
+	@BeforeEach
+	void initTemplate() {
+		transactionTemplate = new TransactionTemplate(transactionManager);
 	}
 
-	private void storeAndAssertDatabasePersistence(IdType resourceId, int size) throws IOException {
-		StoredDetails stored = storeBinary(binaryStorageSvc, resourceId, size, "application/octet-stream");
+	@Test
+	void largeAttachmentStoredInDatabase() {
+		Set<String> beforeIds = captureContentIds();
 
-		TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
-		BinaryStorageEntity entity =
-				transactionTemplate.execute(status ->
-						binaryStorageEntityDao
-								.findByIdAndResourceId(stored.getBinaryContentId(), resourceId.toUnqualifiedVersionless().getValue())
-								.orElseThrow());
+		createPatientWithPhoto(uniqueLabel("database"), randomBytes(150_000));
+
+		Set<String> afterIds = captureContentIds();
+		afterIds.removeAll(beforeIds);
+		assertThat(afterIds).hasSize(1);
+
+		String binaryId = afterIds.iterator().next();
+		BinaryStorageEntity entity = transactionTemplate.execute(status ->
+			binaryStorageEntityDao.findById(binaryId).orElseThrow());
 
 		assertThat(entity.hasStorageContent()).isTrue();
-		assertThat(entity.getStorageContentBin()).hasSize(size);
+		assertThat(entity.getStorageContentBin()).hasSize(150_000);
 
-		binaryStorageSvc.expungeBinaryContent(resourceId, stored.getBinaryContentId());
+		transactionTemplate.execute(status -> {
+			binaryStorageEntityDao.deleteById(binaryId);
+			return null;
+		});
+	}
+
+	private Set<String> captureContentIds() {
+		return transactionTemplate.execute(status ->
+			binaryStorageEntityDao.findAll().stream()
+					.map(BinaryStorageEntity::getContentId)
+					.collect(Collectors.toCollection(LinkedHashSet::new)));
 	}
 }
 
@@ -180,42 +232,38 @@ class BinaryStorageDatabaseModeIT extends BaseBinaryStorageIntegrationTest {
 		BaseBinaryStorageIntegrationTest.COMMON_BEAN_OVERRIDE_ALLOWED,
 		BaseBinaryStorageIntegrationTest.COMMON_CIRCULAR_REFERENCES,
 		BaseBinaryStorageIntegrationTest.COMMON_MCP_DISABLED,
+		"hapi.fhir.binary_storage_enabled=true",
 		"hapi.fhir.binary_storage_mode=FILESYSTEM",
-		"hapi.fhir.binary_storage_filesystem_base_directory=" + BinaryStorageFilesystemDefaultIT.BASE_DIRECTORY
+		"hapi.fhir.binary_storage_filesystem_base_directory=target/test-binary-storage/filesystem-default"
 	}
 )
 class BinaryStorageFilesystemDefaultIT extends BaseBinaryStorageIntegrationTest {
-	static final String BASE_DIRECTORY = "target/test-binary-storage/filesystem-default";
+	static final Path BASE_DIRECTORY = Paths.get("target/test-binary-storage/filesystem-default").toAbsolutePath();
 
 	@Autowired
 	private FilesystemBinaryStorageSvcImpl filesystemBinaryStorageSvc;
 
-	@AfterEach
-	void cleanUp() throws IOException {
-		deleteDirectoryContents(baseDir());
+	@BeforeEach
+	void prepareDirectory() throws IOException {
+		ensureDirectory(BASE_DIRECTORY);
+		deleteDirectoryContents(BASE_DIRECTORY);
 	}
 
 	@Test
-	void filesystemModeUsesDefaultThresholdForLargePayloads() throws Exception {
+	void filesystemModeUsesDefaultThreshold() throws IOException {
 		assertThat(filesystemBinaryStorageSvc.getMinimumBinarySize()).isEqualTo(102_400);
+		assertRegularFileCount(BASE_DIRECTORY, 0);
 
-		IdType resourceId = new IdType("Binary/filesystem-default");
-		String contentType = "application/octet-stream";
+		createPatientWithPhoto(uniqueLabel("fs-default-inline"), randomBytes(50_000));
+		assertRegularFileCount(BASE_DIRECTORY, 0);
 
-		assertThat(filesystemBinaryStorageSvc.shouldStoreBinaryContent(50_000, resourceId, contentType)).isFalse();
-		assertRegularFileCount(baseDir(), 0);
-
-		StoredDetails largeStored = storeBinary(filesystemBinaryStorageSvc, resourceId, 150_000, contentType);
-
-		assertRegularFileCountGreaterThan(baseDir(), 0);
-
-		filesystemBinaryStorageSvc.expungeBinaryContent(resourceId, largeStored.getBinaryContentId());
+		createPatientWithPhoto(uniqueLabel("fs-default-offload"), randomBytes(150_000));
+		assertRegularFileCountGreaterThan(BASE_DIRECTORY, 0);
 	}
 
-	private Path baseDir() throws IOException {
-		Path baseDir = Paths.get(BASE_DIRECTORY).toAbsolutePath();
-		Files.createDirectories(baseDir);
-		return baseDir;
+	@AfterEach
+	void cleanUpDirectory() throws IOException {
+		deleteDirectoryContents(BASE_DIRECTORY);
 	}
 }
 
@@ -239,42 +287,38 @@ class BinaryStorageFilesystemDefaultIT extends BaseBinaryStorageIntegrationTest 
 		BaseBinaryStorageIntegrationTest.COMMON_BEAN_OVERRIDE_ALLOWED,
 		BaseBinaryStorageIntegrationTest.COMMON_CIRCULAR_REFERENCES,
 		BaseBinaryStorageIntegrationTest.COMMON_MCP_DISABLED,
+		"hapi.fhir.binary_storage_enabled=true",
 		"hapi.fhir.binary_storage_mode=FILESYSTEM",
-		"hapi.fhir.binary_storage_filesystem_base_directory=" + BinaryStorageFilesystemCustomThresholdIT.BASE_DIRECTORY,
+		"hapi.fhir.binary_storage_filesystem_base_directory=target/test-binary-storage/filesystem-custom",
 		"hapi.fhir.inline_resource_storage_below_size=32768"
 	}
 )
 class BinaryStorageFilesystemCustomThresholdIT extends BaseBinaryStorageIntegrationTest {
-	static final String BASE_DIRECTORY = "target/test-binary-storage/filesystem-custom";
+	static final Path BASE_DIRECTORY = Paths.get("target/test-binary-storage/filesystem-custom").toAbsolutePath();
 
 	@Autowired
 	private FilesystemBinaryStorageSvcImpl filesystemBinaryStorageSvc;
 
-	@AfterEach
-	void cleanUp() throws IOException {
-		deleteDirectoryContents(baseDir());
+	@BeforeEach
+	void prepareDirectory() throws IOException {
+		ensureDirectory(BASE_DIRECTORY);
+		deleteDirectoryContents(BASE_DIRECTORY);
 	}
 
 	@Test
-	void filesystemModeHonoursCustomThreshold() throws Exception {
+	void filesystemModeHonoursCustomThreshold() throws IOException {
 		assertThat(filesystemBinaryStorageSvc.getMinimumBinarySize()).isEqualTo(32_768);
+		assertRegularFileCount(BASE_DIRECTORY, 0);
 
-		IdType resourceId = new IdType("Binary/filesystem-custom");
-		String contentType = "application/octet-stream";
+		createPatientWithPhoto(uniqueLabel("fs-custom-inline"), randomBytes(30_000));
+		assertRegularFileCount(BASE_DIRECTORY, 0);
 
-		assertThat(filesystemBinaryStorageSvc.shouldStoreBinaryContent(30_000, resourceId, contentType)).isFalse();
-		assertRegularFileCount(baseDir(), 0);
-
-		StoredDetails stored = storeBinary(filesystemBinaryStorageSvc, resourceId, 40_000, contentType);
-
-		assertRegularFileCountGreaterThan(baseDir(), 0);
-
-		filesystemBinaryStorageSvc.expungeBinaryContent(resourceId, stored.getBinaryContentId());
+		createPatientWithPhoto(uniqueLabel("fs-custom-offload"), randomBytes(40_000));
+		assertRegularFileCountGreaterThan(BASE_DIRECTORY, 0);
 	}
 
-	private Path baseDir() throws IOException {
-		Path baseDir = Paths.get(BASE_DIRECTORY).toAbsolutePath();
-		Files.createDirectories(baseDir);
-		return baseDir;
+	@AfterEach
+	void cleanUpDirectory() throws IOException {
+		deleteDirectoryContents(BASE_DIRECTORY);
 	}
 }
