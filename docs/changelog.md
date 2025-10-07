@@ -216,7 +216,7 @@
 2024/06/24 Release 3.8.6
 
 - fhirpath date add/minus with variables in fml (#243)
-- update to published CDA FHIR logical model with matcbhox patches 2.0.0-sd (#241)
+- update to published CDA FHIR logical model with matchbox patches 2.0.0-sd (#241)
 - update frontend for high security vulnerabilities (#246)
 - CH:IPS validation problem (#248)
 - improved the validation GUI (#242), upgraded to angular@18
