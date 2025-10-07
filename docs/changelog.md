@@ -1,12 +1,12 @@
 2025/10/04 Release 4.0.13
 
-- MCP Server integration [#398](https://github.com/ahdis/matchbox/issues/398)
+- MCP Server integration (#398)
 
 
 2025/08/26 Release 4.0.12
 
-- update org.hl7.fhir.core 6.6.5 [#425](https://github.com/ahdis/matchbox/issues/425)
-- fix for multithreading issue and increasing terminology logs [#425](https://github.com/ahdis/matchbox/issues/425)
+- update org.hl7.fhir.core 6.6.5 (#425)
+- fix for multithreading issue and increasing terminology logs (#425)
 - separating internal terminology server to /tx endpoint
 
 2025/08/12 Release 4.0.11
@@ -15,20 +15,20 @@
 
 2025/08/07 Release 4.0.10
 
-- update org.hl7.fhir.core 6.6.3 [#415](https://github.com/ahdis/matchbox/issues/415)
-- document validation parameters [#407](https://github.com/ahdis/matchbox/issues/407)
-- CDANarrative serialization issue [#417](https://github.com/ahdis/matchbox/issues/417)
+- update org.hl7.fhir.core 6.6.3 (#415)
+- document validation parameters (#407)
+- CDANarrative serialization issue (#417)
 - add HL7 Terminology (THO) 6.5.0
 
 2025/07/01 Release 4.0.9
 
-- unable to resolve resource with reference [#409](https://github.com/ahdis/matchbox/issues/409)
-- disableDefaultResource Fetcher provokes an error [#408](https://github.com/ahdis/matchbox/issues/408)
-- update org.hl7.fhir.core 6.5.27 [#411](https://github.com/ahdis/matchbox/issues/411)
+- unable to resolve resource with reference (#409)
+- disableDefaultResource Fetcher provokes an error (#408)
+- update org.hl7.fhir.core 6.5.27 (#411)
 
 2025/06/22 Release 4.0.8
 
-- suppressErrors not taken into account on gazelle interface [#405](https://github.com/ahdis/matchbox/issues/405)
+- suppressErrors not taken into account on gazelle interface (#405)
 
 2025/06/18 Release 4.0.7
 
@@ -36,108 +36,108 @@
 
 2025/06/15 Release 4.0.6
 
-- fix capability statement for production mode [#399](https://github.com/ahdis/matchbox/issues/399)
-- allow llm api key to be set over gui [#392](https://github.com/ahdis/matchbox/issues/392)
+- fix capability statement for production mode (#399)
+- allow llm api key to be set over gui (#392)
 
 2025/06/13 Release 4.0.5
 
-- Add MCP Server integration [#398](https://github.com/ahdis/matchbox/issues/398)
-- suppress error messages for known issues [#395](https://github.com/ahdis/matchbox/issues/395)
-- unknown extensions should not raise an error for validation (IPS) [#394](https://github.com/ahdis/matchbox/issues/394)
+- Add MCP Server integration (#398)
+- suppress error messages for known issues (#395)
+- unknown extensions should not raise an error for validation (IPS) (#394)
 - Update org.hl7.fhir.core to 6.5.25
-- SuppressError does not catch constraints [#401](https://github.com/ahdis/matchbox/issues/401)
+- SuppressError does not catch constraints (#401)
 
 2025/05/13 Release 4.0.4
 
-- integrate with https://fhirpath-lab.com/FhirPath [#390](https://github.com/ahdis/matchbox/issues/390) thx to @brianpos
-- Validation Error: http://hl7.org/fhir/StructureDefinition/annotationType [#389](https://github.com/ahdis/matchbox/issues/389)
-- hl7.terminology 6.3.0 replace for hl7.terminology 6.2.0 [#384](https://github.com/ahdis/matchbox/issues/384)
+- integrate with https://fhirpath-lab.com/FhirPath (#390) thx to @brianpos
+- Validation Error: http://hl7.org/fhir/StructureDefinition/annotationType (#389)
+- hl7.terminology 6.3.0 replace for hl7.terminology 6.2.0 (#384)
 
 2025/05/09 Release 4.0.3
 
-- matchbox validation: fix ai analysis of xml resources [#378](https://github.com/ahdis/matchbox/issues/378)
-- Fix error thrown when opening a validation link in the GUI [#379](https://github.com/ahdis/matchbox/issues/379)
-- Remove `matchbox.fhir.context.fhirVersion`, use `hapi.fhir.fhir_version` instead [#382](https://github.com/ahdis/matchbox/issues/382)
-- API: Matchbox is more respectful of the 'Accept' header (format and FHIR version) [#382](https://github.com/ahdis/matchbox/issues/382)
-- Validation GUI: allow locking the profile selection [#385](https://github.com/ahdis/matchbox/issues/385)
+- matchbox validation: fix ai analysis of xml resources (#378)
+- Fix error thrown when opening a validation link in the GUI (#379)
+- Remove `matchbox.fhir.context.fhirVersion`, use `hapi.fhir.fhir_version` instead (#382)
+- API: Matchbox is more respectful of the 'Accept' header (format and FHIR version) (#382)
+- Validation GUI: allow locking the profile selection (#385)
 - Update org.hl7.fhir.core to 6.5.21
 
 2025/05/01 Release 4.0.2
 
-- matchbox validation: html tags in result [#371](https://github.com/ahdis/matchbox/issues/371)
-- matchbox validation: make showMessagesFromReferences default to true [#370](https://github.com/ahdis/matchbox/issues/370)
-- matchbox validation: fix exception during ai validation [#375](https://github.com/ahdis/matchbox/issues/375)
+- matchbox validation: html tags in result (#371)
+- matchbox validation: make showMessagesFromReferences default to true (#370)
+- matchbox validation: fix exception during ai validation (#375)
 - Update org.hl7.fhir.core to 6.5.20
 
 2025/04/15 Release 4.0.1
 
-- Fix handling of UTF-8 content in the validator GUI [#363](https://github.com/ahdis/matchbox/issues/363)
+- Fix handling of UTF-8 content in the validator GUI (#363)
 - Update org.hl7.fhir.core to 6.5.18
 - Incorporate PR for lookup with liquid templates https://github.com/hapifhir/org.hl7.fhir.core/issues/1942
-- Add AI Analyze feature to validator [#350](https://github.com/ahdis/matchbox/issues/350)
+- Add AI Analyze feature to validator (#350)
 - FML: support resolve() for source thx to @mrunibe 
-- FML: lexer errors swallowed [#367](https://github.com/ahdis/matchbox/issues/367) thx to @mrunibe
+- FML: lexer errors swallowed (#367) thx to @mrunibe
 
 2025/03/19 Release 4.0.0
 
 - Upgrade to HAPI 8.0.0 and FHIR Core 6.5.15, plus various other dependency upgrades
-- Hide primitive/complex datatypes and logical models in the validators [#352](https://github.com/ahdis/matchbox/issues/352)
-- Fix handling of the hl7.fhir.uv.extensions packages [#343](https://github.com/ahdis/matchbox/issues/343)
+- Hide primitive/complex datatypes and logical models in the validators (#352)
+- Fix handling of the hl7.fhir.uv.extensions packages (#343)
 
 2025/03/05 Release 3.9.13
 
-- No more GUI version mismatch [#346](https://github.com/ahdis/matchbox/issues/346)
-- Support for bundle option to validate directly a resource within the bundle [#348](https://github.com/ahdis/matchbox/issues/348)
-- Automatically validate composition within bundle if profile can be deduced [#348](https://github.com/ahdis/matchbox/issues/348)
+- No more GUI version mismatch (#346)
+- Support for bundle option to validate directly a resource within the bundle (#348)
+- Automatically validate composition within bundle if profile can be deduced (#348)
 - Update org.hl7.fhir.core to 6.5.9
 
 2025/02/05 Release 3.9.12
 
 - Update org.hl7.fhir.core to 6.5.7 
-- Update hl7.terminology.r4 to 6.2.0 (note you need to update your application.yaml) [#339](https://github.com/ahdis/matchbox/issues/339)
-- Validation GUI: handle non-200 responses that contain an OperationOutcome [#326](https://github.com/ahdis/matchbox/issues/326)
-- Set the right PostgreSQL dialect in Hibernate configuration [#321](https://github.com/ahdis/matchbox/issues/321)
-- Customize the NpmPackageVersionResourceEntities before saving them for the first time [#341](https://github.com/ahdis/matchbox/issues/341)
-- Optimize `NpmPackageIndexBuilder.seeFile` for memory consumption [#342](https://github.com/ahdis/matchbox/issues/342)
-- Matchbox too strict in document validation [#345](https://github.com/ahdis/matchbox/issues/345)
-- Duplicate ID for contained resource in IG Publisher 1.8.10 / core 6.5.7 [#344](https://github.com/ahdis/matchbox/issues/344)
+- Update hl7.terminology.r4 to 6.2.0 (note you need to update your application.yaml) (#339)
+- Validation GUI: handle non-200 responses that contain an OperationOutcome (#326)
+- Set the right PostgreSQL dialect in Hibernate configuration (#321)
+- Customize the NpmPackageVersionResourceEntities before saving them for the first time (#341)
+- Optimize `NpmPackageIndexBuilder.seeFile` for memory consumption (#342)
+- Matchbox too strict in document validation (#345)
+- Duplicate ID for contained resource in IG Publisher 1.8.10 / core 6.5.7 (#344)
 
 2025/01/24 Release 3.9.11
 
-- remove introduced FML limitation to R5 [#329](https://github.com/ahdis/matchbox/issues/329), [#331](https://github.com/ahdis/matchbox/issues/331) thanks @mrunibe for PR's !
+- remove introduced FML limitation to R5 (#329), (#331) thanks @mrunibe for PR's !
 - load testing example for matchbox with jmeter
-- memory leaks with precached implementation guides [#336](https://github.com/ahdis/matchbox/issues/336)
-- Update org.hl7.fhir.core to 6.5.5, additional validation parameters -check-references -resolution-context and -disableDefaultResourceFetcher [#334](https://github.com/ahdis/matchbox/issues/334) and [#337](https://github.com/ahdis/matchbox/issues/337)
+- memory leaks with precached implementation guides (#336)
+- Update org.hl7.fhir.core to 6.5.5, additional validation parameters -check-references -resolution-context and -disableDefaultResourceFetcher (#334) and (#337)
 
 2025/01/13 Release 3.9.10
 
-- Performance improvement fml parsing [#323](https://github.com/ahdis/matchbox/issues/323)
+- Performance improvement fml parsing (#323)
 - Update org.hl7.fhir.core to 6.5.4 and hapi-fhir to 7.6.1 
 - Update integration tests with correct url
-- make autoinstall new ig [#325](https://github.com/ahdis/matchbox/issues/325)
-- support for terminology servers which require authentication [#327](https://github.com/ahdis/matchbox/issues/327), thanks @echiu-infoway for support!
+- make autoinstall new ig (#325)
+- support for terminology servers which require authentication (#327), thanks @echiu-infoway for support!
 
 2024/12/09 Release 3.9.9
 
 - Upgrade org.hl7.fhir.core to 6.4.4 and hapi-fhir to 7.6.0
-- Remove the `devMode` configuration parameter, it is now enabled when `httpReadOnly` is not [#315](https://github.com/ahdis/matchbox/issues/315)
-- Remove the `autoInstallMissingIgs` configuration parameter, it is now enabled when `httpReadOnly` is not [#315](https://github.com/ahdis/matchbox/issues/315)
-- Improve the Matchbox server documentation [#315](https://github.com/ahdis/matchbox/issues/315)
-- Respect the 'onlyOneEngine' mode in MappingLanguageInterceptor [#316](https://github.com/ahdis/matchbox/issues/316)
-- Use the proper encoding when returning a transformed resource [#318](https://github.com/ahdis/matchbox/issues/318)
+- Remove the `devMode` configuration parameter, it is now enabled when `httpReadOnly` is not (#315)
+- Remove the `autoInstallMissingIgs` configuration parameter, it is now enabled when `httpReadOnly` is not (#315)
+- Improve the Matchbox server documentation (#315)
+- Respect the 'onlyOneEngine' mode in MappingLanguageInterceptor (#316)
+- Use the proper encoding when returning a transformed resource (#318)
 
 2024/11/25 Release 3.9.8
 
-- Allow providing map and models in the StructureMap $transform operation [#305](https://github.com/ahdis/matchbox/issues/305)
+- Allow providing map and models in the StructureMap $transform operation (#305)
 - Introduce parameter 'autoInstallMissingIgs' to automatically install IGs from the public registry
-  [#306](https://github.com/ahdis/matchbox/issues/306)
+  (#306)
 - Introduce the configuration parameter 'devMode' to enable the development environment; it allows installing an 
   ImplementationGuide by posting its NPM package to the operation _$install-npm-package_
-  [#306](https://github.com/ahdis/matchbox/issues/306)
+  (#306)
 - Add filtering to the list of StructureMaps in the GUI
 - Move from the hash-based Angular routing to the path-based routing
 - Upgrade hapifhir org.hl7.fhir.core to 6.4.2
-- Upgrade hl7.terminology to 6.1.0 [#313](https://github.com/ahdis/matchbox/issues/313)
+- Upgrade hl7.terminology to 6.1.0 (#313)
 
 2024/11/13 Release 3.9.7
 
@@ -145,52 +145,52 @@
 
 2024/10/24 Release 3.9.6
 
-- Remove lucene dependencies [#301](https://github.com/ahdis/matchbox/issues/301)
+- Remove lucene dependencies (#301)
 
 2024/10/24 Release 3.9.5
 
-- Updated dependencies [#301](https://github.com/ahdis/matchbox/issues/301)
+- Updated dependencies (#301)
 
 2024/10/17 Release 3.9.4
 
 - Validation: Tutorial for validating FHIR resources with [matchbox](https://ahdis.github.io/matchbox/validation-tutorial/)
-- Validation: add button to copy a direct link to the validation [#296](https://github.com/ahdis/matchbox/issues/296)
-- Validation: support additional validation parameters [#299](https://github.com/ahdis/matchbox/issues/299)
-- Validation: Allow validating a resource through the GUI with URL search parameters [#288](https://github.com/ahdis/matchbox/issues/288)
-- Validation: Terminology: support CodeableConcept in ValueSet/$validate operation [#291](https://github.com/ahdis/matchbox/issues/291)
-- FML: Use FMLParser in StructureMapUtilities and support for identity transform [#289](https://github.com/ahdis/matchbox/issues/289)
+- Validation: add button to copy a direct link to the validation (#296)
+- Validation: support additional validation parameters (#299)
+- Validation: Allow validating a resource through the GUI with URL search parameters (#288)
+- Validation: Terminology: support CodeableConcept in ValueSet/$validate operation (#291)
+- FML: Use FMLParser in StructureMapUtilities and support for identity transform (#289)
 - FML: FML transform performance tuning #264 (via @mrunibe)
 - Gazelle reports: add test to ensure https://gazelle.ihe.net/jira/browse/EHS-831 is fixed
 - Upgrade hapifhir org.hl7.fhir.core to 6.3.32
 
 2024/10/07 Release 3.9.3
 
-- Gazelle reports: add an information message if there are no other messages [#274](https://github.com/ahdis/matchbox/issues/274)
-- Additional tx Parameters txLog and txUseEcosystem [#281](https://github.com/ahdis/matchbox/issues/281)
-- FML: updates to work with fhir-mapping-tutorial [#283](https://github.com/ahdis/matchbox/issues/283)
-- Container: Create config directory already in base image [#284](https://github.com/ahdis/matchbox/issues/284)
+- Gazelle reports: add an information message if there are no other messages (#274)
+- Additional tx Parameters txLog and txUseEcosystem (#281)
+- FML: updates to work with fhir-mapping-tutorial (#283)
+- Container: Create config directory already in base image (#284)
 
 2024/09/16 Release 3.9.2
 
-- Fix security issues [#279](https://github.com/ahdis/matchbox/issues/279)
-- where clause on alias [#278](https://github.com/ahdis/matchbox/issues/278)
+- Fix security issues (#279)
+- where clause on alias (#278)
 
 2024/09/16 Release 3.9.1
 
-- Make CORS configurable, default not activated make cors configurable (now activated) [#271](https://github.com/ahdis/matchbox/issues/271)
-- server API FML transforms between different FHIR versions (R4, R4B, R5) [#265](https://github.com/ahdis/matchbox/issues/265), set flag xVersion
-- show a notification on errors in the validation GUI [#272](https://github.com/ahdis/matchbox/issues/272)
-- ignore info/warnings also in slicing info [#273](https://github.com/ahdis/matchbox/issues/273)
-- Gazelle validation reports with no issues should pass [#274](https://github.com/ahdis/matchbox/issues/274)
+- Make CORS configurable, default not activated make cors configurable (now activated) (#271)
+- server API FML transforms between different FHIR versions (R4, R4B, R5) (#265), set flag xVersion
+- show a notification on errors in the validation GUI (#272)
+- ignore info/warnings also in slicing info (#273)
+- Gazelle validation reports with no issues should pass (#274)
 - update frontend dependencies
-- provide version-less Gazelle profiles for current packages [#276](https://github.com/ahdis/matchbox/issues/276)
+- provide version-less Gazelle profiles for current packages (#276)
 
 2024/09/10 Release 3.9.0
 
-- initial support for FML transforms between different FHIR versions (R4, R4B, R5) [#265](https://github.com/ahdis/matchbox/issues/265), set flag xVersion
-- support for FHIR R4B in engine and server [#65](https://github.com/ahdis/matchbox/issues/65)
-- upgrade to hapi-fhir 7.4.0 and org.hl7.fhir.core 6.3.24 [#267](https://github.com/ahdis/matchbox/issues/267)
-- Ignore info/warnings also in slicing info [#269](https://github.com/ahdis/matchbox/issues/269)
+- initial support for FML transforms between different FHIR versions (R4, R4B, R5) (#265), set flag xVersion
+- support for FHIR R4B in engine and server (#65)
+- upgrade to hapi-fhir 7.4.0 and org.hl7.fhir.core 6.3.24 (#267)
+- Ignore info/warnings also in slicing info (#269)
 
 2024/08/13 Release 3.8.10
 
@@ -199,70 +199,70 @@
 
 2024/07/10 Release 3.8.9
 
-- add support for dateTime [#243](https://github.com/ahdis/matchbox/issues/243)
-- fix code editor high-jacking of the search keyboard shortcut (CTRL + f) [#260](https://github.com/ahdis/matchbox/issues/260)
+- add support for dateTime (#243)
+- fix code editor high-jacking of the search keyboard shortcut (CTRL + f) (#260)
 - upgrade Tomcat to fix [CVE-2024-34750](https://github.com/ahdis/matchbox/security/dependabot/115)
 
 2024/06/25 Release 3.8.8
 
-- validation for 3 letter country codes [#259](https://github.com/ahdis/matchbox/issues/259)
+- validation for 3 letter country codes (#259)
 - making caching of txServer configurable
-- add support for dateTime [#243](https://github.com/ahdis/matchbox/issues/243)
+- add support for dateTime (#243)
 
 2024/06/24 Release 3.8.7
 
-- docker image for v3.8.6 not starting up [#258](https://github.com/ahdis/matchbox/issues/258)
+- docker image for v3.8.6 not starting up (#258)
 
 2024/06/24 Release 3.8.6
 
-- fhirpath date add/minus with variables in fml [#243](https://github.com/ahdis/matchbox/issues/243)
-- update to published CDA FHIR logical model with matcbhox patches 2.0.0-sd [#241](https://github.com/ahdis/matchbox/issues/241)
-- update frontend for high security vulnerabilities [#246](https://github.com/ahdis/matchbox/issues/246)
-- CH:IPS validation problem [#248](https://github.com/ahdis/matchbox/issues/248)
-- improved the validation GUI [#242](https://github.com/ahdis/matchbox/issues/242), upgraded to angular@18
-- update to hl7.fhir.core 6.3.11 [#254](https://github.com/ahdis/matchbox/issues/254)
-- fixed validation problems [#250](https://github.com/ahdis/matchbox/issues/250),[#251](https://github.com/ahdis/matchbox/issues/251),[#252](https://github.com/ahdis/matchbox/issues/252)
-- enable Terminology Caching [#257](https://github.com/ahdis/matchbox/issues/257)
+- fhirpath date add/minus with variables in fml (#243)
+- update to published CDA FHIR logical model with matcbhox patches 2.0.0-sd (#241)
+- update frontend for high security vulnerabilities (#246)
+- CH:IPS validation problem (#248)
+- improved the validation GUI (#242), upgraded to angular@18
+- update to hl7.fhir.core 6.3.11 (#254)
+- fixed validation problems (#250),(#251),(#252)
+- enable Terminology Caching (#257)
 
 2024/06/14 Release 3.8.5
 
-- Exception when using internal terminology server [#236](https://github.com/ahdis/matchbox/issues/236)
-- Extension profiles are not shown for validation anymore [#237](https://github.com/ahdis/matchbox/issues/237)
-- Ignore suppressWarnInfo Version independent [#239](https://github.com/ahdis/matchbox/issues/239)
+- Exception when using internal terminology server (#236)
+- Extension profiles are not shown for validation anymore (#237)
+- Ignore suppressWarnInfo Version independent (#239)
 
 2024/05/27 Release 3.8.4
 
-- R5 validation problem from EVS Client [#234](https://github.com/ahdis/matchbox/issues/234)
-- IPS validation with unknown extensions should not give an error [#233](https://github.com/ahdis/matchbox/issues/233) 
-- Only download NPM package from localhost or ci-build if already installed in container [#232](https://github.com/ahdis/matchbox/issues/232)
+- R5 validation problem from EVS Client (#234)
+- IPS validation with unknown extensions should not give an error (#233) 
+- Only download NPM package from localhost or ci-build if already installed in container (#232)
 
 2024/04/29 Release 3.8.3
 
-- profile validation with different ig version issues, GUI & EVS Client [#225](https://github.com/ahdis/matchbox/issues/225)
+- profile validation with different ig version issues, GUI & EVS Client (#225)
 - improved the profile selection in the validation GUI
-- FML: Side effect exception when updating a StructureMap [#227](https://github.com/ahdis/matchbox/issues/227)
+- FML: Side effect exception when updating a StructureMap (#227)
 
 2024/04/22 Release 3.8.2
 
 - Improvements in the Gazelle validation API
 - Upgrade to Spring 6.1.6 to fix [CVE-2024-22262](https://github.com/ahdis/matchbox/security/code-scanning/59)
 - Fix [CVE-2023-4043](https://nvd.nist.gov/vuln/detail/CVE-2023-4043)
-- Upgrade to HAPI FHIR 7.0.2 and org.hl7.fhir.core 6.3.5 [#222](https://github.com/ahdis/matchbox/issues/222)
+- Upgrade to HAPI FHIR 7.0.2 and org.hl7.fhir.core 6.3.5 (#222)
 
 2024/04/09 Release 3.8.1
 
-- update to latest cda logical model 2.0.0-sd-snapshot1 (CDA Serialization issue) [#196](https://github.com/ahdis/matchbox/issues/196)
-- adapt the simple terminology server to the new API [#217](https://github.com/ahdis/matchbox/issues/217)
-- loading of ig's in dev mode into engine [#219](https://github.com/ahdis/matchbox/issues/219)
+- update to latest cda logical model 2.0.0-sd-snapshot1 (CDA Serialization issue) (#196)
+- adapt the simple terminology server to the new API (#217)
+- loading of ig's in dev mode into engine (#219)
 - upgrade to JDK 21 (LTS)
-- Path traversal in webpack-dev-middleware [#221](https://github.com/ahdis/matchbox/issues/221)
+- Path traversal in webpack-dev-middleware (#221)
 
 2024/03/19 Release 3.8.0
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.8.0`
-- update to fhir.core.version 6.3.2 [#210](https://github.com/ahdis/matchbox/issues/210)
-- support for target CDA observation.value as xsi:type CS [#205](https://github.com/ahdis/matchbox/issues/205)
-- update to latest cda logical model 2.0.0-sd-snapshot1 (Note: breaking changes for existing CDA to FHIR maps, see details in issue) [#196](https://github.com/ahdis/matchbox/issues/196)
+- update to fhir.core.version 6.3.2 (#210)
+- support for target CDA observation.value as xsi:type CS (#205)
+- update to latest cda logical model 2.0.0-sd-snapshot1 (Note: breaking changes for existing CDA to FHIR maps, see details in issue) (#196)
 - Update to Spring 6.1.5 to fix [CVE-2024-22259](https://github.com/ahdis/matchbox/security/dependabot/105)
 - Update to Tomcat 10.1.19 to fix [CVE-2024-24549](https://github.com/ahdis/matchbox/security/dependabot/104)
 - Update frontend dependencies
@@ -271,29 +271,29 @@
 2024/03/07 Release 3.7.0
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.7.0`
-- Implemented the new Gazelle validation API [#141](https://github.com/ahdis/matchbox/issues/141)
-- Fixed some validation GUI issues [#207](https://github.com/ahdis/matchbox/issues/207)
-- Renamed the keyword "current" to "last" for Implementation Guide versions [#206](https://github.com/ahdis/matchbox/issues/206)
-- Added support for R5 [#55](https://github.com/ahdis/matchbox/issues/55)
+- Implemented the new Gazelle validation API (#141)
+- Fixed some validation GUI issues (#207)
+- Renamed the keyword "current" to "last" for Implementation Guide versions (#206)
+- Added support for R5 (#55)
 - Fixed an XXE vulnerability in the XmlParser [#45](https://github.com/ahdis/matchbox/security/code-scanning/45)
 - Upgraded to HAPI FHIR 7.0.1
 
 2024/02/28 Release 3.6.1
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.6.1`
-- Fixed support for the date format `YYYYMMDDHHMMSS.UUUU[+|-ZZzz]` [#202](https://github.com/ahdis/matchbox/issues/202)
+- Fixed support for the date format `YYYYMMDDHHMMSS.UUUU[+|-ZZzz]` (#202)
 
 2024/02/27 Release 3.6.0
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.6.0`
-- Upgraded to HAPI FHIR 7.0.0 and org.hl7.fhir.core 6.1.2.2 [#191](https://github.com/ahdis/matchbox/issues/191)
-- Added matchbox validation API tests [#193](https://github.com/ahdis/matchbox/issues/193)
+- Upgraded to HAPI FHIR 7.0.0 and org.hl7.fhir.core 6.1.2.2 (#191)
+- Added matchbox validation API tests (#193)
 
 2024/01/31 Release 3.5.4
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.5.4`
-- The application now stops if it fails to load an IG, instead of continuing running without an engine [#171](https://github.com/ahdis/matchbox/issues/171)
-- GUI: improved the validation interface [#177](https://github.com/ahdis/matchbox/issues/177)
+- The application now stops if it fails to load an IG, instead of continuing running without an engine (#171)
+- GUI: improved the validation interface (#177)
 - Dependency upgrade to fix various security issues (see https://github.com/ahdis/matchbox/security/dependabot and 
   https://github.com/ahdis/matchbox/security/code-scanning)
 - Added security scanners for the Java code, Java dependencies and Docker image
@@ -301,22 +301,22 @@
 2024/01/05 Release 3.5.3
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.5.3`
-- Updated `hl7.terminology` from 5.3.0 to 5.4.0 [#174](https://github.com/ahdis/matchbox/issues/174)
-- Prevented initializing a matchbox engine in `only_load_packages` mode [#172](https://github.com/ahdis/matchbox/issues/172)
-- Fixed the issue count in validation results [#173](https://github.com/ahdis/matchbox/issues/173)
+- Updated `hl7.terminology` from 5.3.0 to 5.4.0 (#174)
+- Prevented initializing a matchbox engine in `only_load_packages` mode (#172)
+- Fixed the issue count in validation results (#173)
 - Improved the validation interface
 - GUI: updated to Angular 17
 
 2023/12/27 Release 3.5.2
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.5.2`
-- IG ballot versions are not considered "current" if the same version, non-balloted is also loaded [#168](https://github.com/ahdis/matchbox/issues/168)
-- Removed wrong warning about R5 specials not being loaded [#167](https://github.com/ahdis/matchbox/issues/167)
-- Fixed loading of hl7.terminology [#166](https://github.com/ahdis/matchbox/issues/166)
-- Added onlyOneEngine and httpReadOnly flags to the validation OperationOutcome [#164](https://github.com/ahdis/matchbox/issues/164)
-- Implemented feature to suppress warning/information-level issues from validation result [#163](https://github.com/ahdis/matchbox/issues/163)
-- Fixed configuration of the terminology server when onlyOneEngine mode is used [#160](https://github.com/ahdis/matchbox/issues/160)
-- Improved common error messages about engine malfunctions [#159](https://github.com/ahdis/matchbox/issues/159)
+- IG ballot versions are not considered "current" if the same version, non-balloted is also loaded (#168)
+- Removed wrong warning about R5 specials not being loaded (#167)
+- Fixed loading of hl7.terminology (#166)
+- Added onlyOneEngine and httpReadOnly flags to the validation OperationOutcome (#164)
+- Implemented feature to suppress warning/information-level issues from validation result (#163)
+- Fixed configuration of the terminology server when onlyOneEngine mode is used (#160)
+- Improved common error messages about engine malfunctions (#159)
 - Improved waiting loop for the validation engine initialization (you should not get the "engine not ready" error 
   message anymore)
 - Reworked exception handling and logging in the validation engine
@@ -331,43 +331,43 @@
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.5.0`
 - Upgraded to HAPI FHIR 6.10.0 and Core 6.1.16
-- Implemented an HTTP read-only mode [#158](https://github.com/ahdis/matchbox/issues/158)
-- Implemented a simple terminology server for offline validation [#152](https://github.com/ahdis/matchbox/issues/152)
+- Implemented an HTTP read-only mode (#158)
+- Implemented a simple terminology server for offline validation (#152)
 - Upgraded logback to fix CVE-2023-6378
 - Fixed a bug in package loading on Windows filesystem
 
 2023/10/05 Release 3.4.5
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.4.5`
-- CDA Logical Model update for xsi-type ST [#145](https://github.com/ahdis/matchbox/issues/145)
+- CDA Logical Model update for xsi-type ST (#145)
 
 2023/10/03 Release 3.4.4
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.4.4`
-- CDA Logical Model update for xsi-type ST [#145](https://github.com/ahdis/matchbox/issues/145)
-- update hl7.terminology package from 5.1.0 to 5.3.0 [#146](https://github.com/ahdis/matchbox/issues/146)
-- Validation: Upload of new IG over API does not configure it for validation [#144](https://github.com/ahdis/matchbox/issues/144)
+- CDA Logical Model update for xsi-type ST (#145)
+- update hl7.terminology package from 5.1.0 to 5.3.0 (#146)
+- Validation: Upload of new IG over API does not configure it for validation (#144)
 
 2023/09/20 Release 3.4.3
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.4.3`
-- FML: Contained ConceptMap in StructureMap does not work for transformation [#137](https://github.com/ahdis/matchbox/issues/137)
-- FML: POST / PUT for StructureMap should return HTTP error code 404 instead of 200 in deployment mode [#133](https://github.com/ahdis/matchbox/issues/133)
-- FHIR Validation problem with not support R5 extensions [#135](https://github.com/ahdis/matchbox/issues/135)
-- FHIR Validation Errors for display values should only be warnings [#132](https://github.com/ahdis/matchbox/issues/132)
-- GET all and query for url is not working in development mode [#129](https://github.com/ahdis/matchbox/issues/129)
-- matchbox app assumed matchboxv3 as the app location [#128](https://github.com/ahdis/matchbox/issues/128)
-- FHIR R4 validation error with cross version Extension for R5 [#138](https://github.com/ahdis/matchbox/issues/138)
+- FML: Contained ConceptMap in StructureMap does not work for transformation (#137)
+- FML: POST / PUT for StructureMap should return HTTP error code 404 instead of 200 in deployment mode (#133)
+- FHIR Validation problem with not support R5 extensions (#135)
+- FHIR Validation Errors for display values should only be warnings (#132)
+- GET all and query for url is not working in development mode (#129)
+- matchbox app assumed matchboxv3 as the app location (#128)
+- FHIR R4 validation error with cross version Extension for R5 (#138)
 
 2023/09/05 Release 3.4.2
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.4.2`
-- Query all conformance resources by type [#129](https://github.com/ahdis/matchbox/issues/129)
+- Query all conformance resources by type (#129)
 
 2023/09/04 Release 3.4.1
 
 - `docker pull europe-west6-docker.pkg.dev/ahdis-ch/ahdis/matchbox:v3.4.1`
-- development mode to create conformance resources [#125](https://github.com/ahdis/matchbox/issues/125)
+- development mode to create conformance resources (#125)
 - matchbox version in capability statement [matchbox#126](https://github.com/ahdis/matchbox/issues/126)
 
 2023/08/30 Release 3.4.0
@@ -426,22 +426,22 @@
 2023/03/06 Release 3.2.0
 
 - updated CDA core logical model 2.0 and added tests
-- docker multiarchitecture support and ci-build setup [#76](https://github.com/ahdis/matchbox/issues/76)
-- proxy support for downloading packages, thanks @ValentinLorand for your [PR](https://github.com/ahdis/matchbox/pull/74), [#76](https://github.com/ahdis/matchbox/issues/76)
-- matchbox-server: disable caching for specific engines / implementation guides [#77](https://github.com/ahdis/matchbox/issues/77)
-- update to core 5.6.100 and hapi-fhir 5.4.1 for r4 and r5 maps support [#81](https://github.com/ahdis/matchbox/issues/81)
+- docker multiarchitecture support and ci-build setup (#76)
+- proxy support for downloading packages, thanks @ValentinLorand for your [PR](https://github.com/ahdis/matchbox/pull/74), (#76)
+- matchbox-server: disable caching for specific engines / implementation guides (#77)
+- update to core 5.6.100 and hapi-fhir 5.4.1 for r4 and r5 maps support (#81)
 
 2023/02/01 Release 3.1.0
 
-- Reenable FHIR Mapping Language tutorial, xml and json issues with matchbox [#51](https://github.com/ahdis/matchbox/issues/51)
-- Enable create and update on conformance resources [#70](https://github.com/ahdis/matchbox/issues/70), valid for 60 minutes (not persisting)
-- GUI: more intuitive order for validation [#69](https://github.com/ahdis/matchbox/issues/69)
-- GUI: paged ig's page does not work [#67](https://github.com/ahdis/matchbox/issues/67)
+- Reenable FHIR Mapping Language tutorial, xml and json issues with matchbox (#51)
+- Enable create and update on conformance resources (#70), valid for 60 minutes (not persisting)
+- GUI: more intuitive order for validation (#69)
+- GUI: paged ig's page does not work (#67)
 - Update to https://github.com/hapifhir/org.hl7.fhir.core/releases/tag/5.6.92 and hapi-fhir 6.2.5
-- validation difference to HL7 FHIR validator [#71](https://github.com/ahdis/matchbox/issues/71): only selected ig (and dependencies) for selected canonical will be used for validation if configured on matchbox (including no dynamic loading of packages depending on meta.profile)
-- spurios validation erros with package validation [#72](https://github.com/ahdis/matchbox/issues/72)
-- Fixed package configuration, not loading additional ig / conformance resources [#71](https://github.com/ahdis/matchbox/issues/71)
-- loading IG from package by filepath does not work [#26](https://github.com/ahdis/matchbox/issues/26)
+- validation difference to HL7 FHIR validator (#71): only selected ig (and dependencies) for selected canonical will be used for validation if configured on matchbox (including no dynamic loading of packages depending on meta.profile)
+- spurios validation erros with package validation (#72)
+- Fixed package configuration, not loading additional ig / conformance resources (#71)
+- loading IG from package by filepath does not work (#26)
 - base release with no ig's configured: docker pull eu.gcr.io/fhir-ch/matchbox:v313
 
 2023/01/16 Release 3.0.0
@@ -450,44 +450,44 @@
 - Extracting matchbox-engine out of matchbox for validation and transformation with standalone validation engine
 - CDA transformation: Updating to latest [CDA Core 2.0 logical model](cda-logical-model/index.html) with lab/pharm additions, [package](https://github.com/ahdis/cda-core-2.0/releases/download/v0.0.4-dev/cda-core-2.0.2.1.0-cibuild.tgz)
 - matchbox-server for validation and transformation but not storage of FHIR resources
-- cda to fhir: decimal in cda allows spaces [#62](https://github.com/ahdis/matchbox/issues/62)
-- Mapping of xmlText fails [#61](https://github.com/ahdis/matchbox/issues/61)
+- cda to fhir: decimal in cda allows spaces (#62)
+- Mapping of xmlText fails (#61)
 - removing questionnaire viewer and mobile access gateway gui
 
 2022/09/11 Release 2.4.0
 
 - hapi-fhir 6.2.0 and org.hl7.fhir.core 5.6.43
 - update mobile access
-- ihe.iti.pmir#1.5.0 cannot be uploaded to matchbox [#59](https://github.com/ahdis/matchbox/issues/59): removed Subscription from resources to import
-- show all cda2fhir and fhir2cda maps [#58](https://github.com/ahdis/matchbox/issues/58)
+- ihe.iti.pmir#1.5.0 cannot be uploaded to matchbox (#59): removed Subscription from resources to import
+- show all cda2fhir and fhir2cda maps (#58)
 - hapi.fhir.version: 6.2.0-PRE5-SNAPSHOT and fhir.core.version 5.6.65
 
 2022/07/11 Release 2.3.0
 
-- favicon fixed [#53](https://github.com/ahdis/matchbox/issues/53)
-- add possiblity to add a static file location [#57](https://github.com/ahdis/matchbox/issues/57)
+- favicon fixed (#53)
+- add possiblity to add a static file location (#57)
 
 2022/06/08 Release 2.2.0
 
-- FHIR Mapping Language tutorial, xml and json issues [#51](https://github.com/ahdis/matchbox/issues/51)
+- FHIR Mapping Language tutorial, xml and json issues (#51)
 - base release with no ig's configured: docker pull eu.gcr.io/fhir-ch/matchbox:v220
 
 2022/05/25 Release 2.1.0
 
 - hapi-fhir 6.0.0 and org.hl7.fhir.core 5.6.43
-- Validation: CapabilityStatement caching fixed [#43](https://github.com/ahdis/matchbox/issues/43)
-- prototype [SDC $assembly operation](http://hl7.org/fhir/uv/sdc/OperationDefinition-Questionnaire-assemble.html) [#46](https://github.com/ahdis/matchbox/issues/46)
-- Enable SDC extraction with unknown ValueSets [#48](https://github.com/ahdis/matchbox/issues/48)
-- Patch for FHIR Mapping Language: funcMemberOf/resolveValueSet: Not Implemented Yet [#49](https://github.com/ahdis/matchbox/issues/49)
-- validation without terminology server and with hl7.terminology [#50](https://github.com/ahdis/matchbox/issues/50)
+- Validation: CapabilityStatement caching fixed (#43)
+- prototype [SDC $assembly operation](http://hl7.org/fhir/uv/sdc/OperationDefinition-Questionnaire-assemble.html) (#46)
+- Enable SDC extraction with unknown ValueSets (#48)
+- Patch for FHIR Mapping Language: funcMemberOf/resolveValueSet: Not Implemented Yet (#49)
+- validation without terminology server and with hl7.terminology (#50)
 - base release with no ig's configured: docker pull eu.gcr.io/fhir-ch/matchbox:v210
 
 2022/04/28 Release 2.0.0
 
-- version of ig, validator and matchbox should be provided in the validation report [#40](https://github.com/ahdis/matchbox/issues/40)
+- version of ig, validator and matchbox should be provided in the validation report (#40)
 - hapi-fhir 6.0.0-PRE10-SNAPSHOT and org.hl7.fhir.core 5.6.43
-- allow xml in gui for validation [#38](https://github.com/ahdis/matchbox/issues/38)
-- mobile access gateway gui: prefix DocumentEntry.identifier with urn:uuid in GUI [#41](https://github.com/ahdis/matchbox/issues/41)
+- allow xml in gui for validation (#38)
+- mobile access gateway gui: prefix DocumentEntry.identifier with urn:uuid in GUI (#41)
 - base release with no ig's configured: docker pull eu.gcr.io/fhir-ch/matchbox:v200
 
 2022/03/21 Release 1.9.1
@@ -512,25 +512,25 @@
 
 2022/02/08 Release 1.8.0
 
-- Integrate webapp running on matchbox port and root itself [#35](https://github.com/ahdis/matchbox/issues/35)
+- Integrate webapp running on matchbox port and root itself (#35)
 - NPM can be downloaded with Accept:application/gzip on Implementation Guide Resource
 
 2022/01/13 Release 1.7.1
 
-- JSON POST Requests have a size limit (filler issue) [#33](https://github.com/ahdis/matchbox/issues/33)
-- FHIRPathEnginge construction is expensive [#31](https://github.com/ahdis/matchbox/issues/31)
-- SNOMED CT Code validation problem for Quantity in Medication.amount [#30](https://github.com/ahdis/matchbox/issues/30)
-- Validation: Uploaded StructureDefinitions via NPM are not available in same session for $validate [#29](https://github.com/ahdis/matchbox/issues/29)
-- StructureMap transformation: Bundle request element not correctly ordered [#27](https://github.com/ahdis/matchbox/issues/27)
-- Error on release V1.6.0 [#24](https://github.com/ahdis/matchbox/issues/24), thanks [@delcroip](https://github.com/delcroip)
+- JSON POST Requests have a size limit (filler issue) (#33)
+- FHIRPathEnginge construction is expensive (#31)
+- SNOMED CT Code validation problem for Quantity in Medication.amount (#30)
+- Validation: Uploaded StructureDefinitions via NPM are not available in same session for $validate (#29)
+- StructureMap transformation: Bundle request element not correctly ordered (#27)
+- Error on release V1.6.0 (#24), thanks [@delcroip](https://github.com/delcroip)
 - Integrated [PR](https://github.com/ahdis/matchbox/pull/25) and [PR](https://github.com/ahdis/matchbox/pull/32) for translate in Structure Map, thanks [@aralych](https://github.com/ralych)
 - base release with no ig's configured: docker pull eu.gcr.io/fhir-ch/matchbox:v171
 
 2022/01/04 Release 1.6.0
 
-- extend FHIR API based on Implementation Guide NPM packages [#23](https://github.com/ahdis/matchbox/issues/23)
-- add spring actuator for health checks [#22](https://github.com/ahdis/matchbox/issues/22)
-- disable special questionnaire validation [#21](https://github.com/ahdis/matchbox/issues/21)
+- extend FHIR API based on Implementation Guide NPM packages (#23)
+- add spring actuator for health checks (#22)
+- disable special questionnaire validation (#21)
 - base release with no ig's configured: docker pull eu.gcr.io/fhir-ch/matchbox:v160
 
 2021/12/17 Release 1.5.0
