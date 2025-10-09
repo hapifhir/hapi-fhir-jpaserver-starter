@@ -792,7 +792,8 @@ public class AppProperties {
 
 	public void setMark_resources_for_reindexing_upon_search_parameter_change(
 			Boolean mark_resources_for_reindexing_upon_search_parameter_change) {
-		this.mark_resources_for_reindexing_upon_search_parameter_change = mark_resources_for_reindexing_upon_search_parameter_change;
+		this.mark_resources_for_reindexing_upon_search_parameter_change =
+				mark_resources_for_reindexing_upon_search_parameter_change;
 	}
 
 	public JpaStorageSettings.StoreMetaSourceInformationEnum getStore_meta_source_information() {
