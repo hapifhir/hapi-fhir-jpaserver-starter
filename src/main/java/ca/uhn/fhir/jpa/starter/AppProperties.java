@@ -118,6 +118,7 @@ public class AppProperties {
 	private Map<String, RemoteSystem> remote_terminology_service = null;
 	private Boolean match_url_cache_enabled = false;
 	private Boolean index_storage_optimized = false;
+	private Boolean mark_resources_for_reindexing_upon_search_parameter_change = true;
 
 	public List<String> getCustomInterceptorClasses() {
 		return custom_interceptor_classes;
@@ -783,6 +784,15 @@ public class AppProperties {
 
 	public void setIndex_storage_optimized(boolean theIndex_storage_optimized) {
 		index_storage_optimized = theIndex_storage_optimized;
+	}
+
+	public Boolean getMark_resources_for_reindexing_upon_search_parameter_change() {
+		return mark_resources_for_reindexing_upon_search_parameter_change;
+	}
+
+	public void setMark_resources_for_reindexing_upon_search_parameter_change(
+			Boolean mark_resources_for_reindexing_upon_search_parameter_change) {
+		this.mark_resources_for_reindexing_upon_search_parameter_change = mark_resources_for_reindexing_upon_search_parameter_change;
 	}
 
 	public JpaStorageSettings.StoreMetaSourceInformationEnum getStore_meta_source_information() {
