@@ -7,16 +7,18 @@ import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import org.hl7.fhir.r4.model.Base64BinaryType;
 import org.hl7.fhir.r4.model.Parameters;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-@Conditional({OnR4Condition.class, IgConfigCondition.class})
+@Conditional({OnR4Condition.class})
+@ConditionalOnProperty(name = "hapi.fhir.ig_runtime_upload_enabled", havingValue = "true")
 @Service
 public class ImplementationGuideR4OperationProvider implements IImplementationGuideOperationProvider {
 
-	IPackageInstallerSvc packageInstallerSvc;
+	final IPackageInstallerSvc packageInstallerSvc;
 
 	public ImplementationGuideR4OperationProvider(IPackageInstallerSvc packageInstallerSvc) {
 		this.packageInstallerSvc = packageInstallerSvc;

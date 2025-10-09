@@ -1,0 +1,9 @@
+{
+    "item1": {
+        "resourceType": "Patient",
+        "gender": "male",
+        "birthDate": "1989-10-23",
+        "id": "123",
+        "active": true
+    }
+}
