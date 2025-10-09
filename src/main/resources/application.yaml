@@ -386,6 +386,14 @@ hapi:
     # max_page_size: 200
     # retain_cached_searches_mins: 60
     # reuse_cached_search_results_millis: 60000
+    #   validation:
+    #     requests_enabled: true
+    #     responses_enabled: true
+    #   binary_storage_enabled: true
+    #   binary_storage_mode: FILESYSTEM
+    #   binary_storage_filesystem_base_directory: /binstore
+    # When binary_storage_mode is FILESYSTEM and this value is not set,
+    # the starter defaults to 102400 bytes so smaller binaries stay inline.
     inline_resource_storage_below_size: 4000
 
     # -------------------------------------------------------------------------------
