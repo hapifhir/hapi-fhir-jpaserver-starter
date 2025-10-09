@@ -118,6 +118,8 @@ public class AppProperties {
 	private Map<String, RemoteSystem> remote_terminology_service = null;
 	private Boolean match_url_cache_enabled = false;
 	private Boolean index_storage_optimized = false;
+	private Integer reindex_thread_count = null;
+	private Integer expunge_thread_count = null;
 
 	public List<String> getCustomInterceptorClasses() {
 		return custom_interceptor_classes;
@@ -783,6 +785,24 @@ public class AppProperties {
 
 	public void setIndex_storage_optimized(boolean theIndex_storage_optimized) {
 		index_storage_optimized = theIndex_storage_optimized;
+	}
+
+
+
+	public Integer getReindex_thread_count() {
+		return reindex_thread_count;
+	}
+
+	public void setReindex_thread_count(Integer reindex_thread_count) {
+		this.reindex_thread_count = reindex_thread_count;
+	}
+
+	public Integer getExpunge_thread_count() {
+		return expunge_thread_count;
+	}
+
+	public void setExpunge_thread_count(Integer expunge_thread_count) {
+		this.expunge_thread_count = expunge_thread_count;
 	}
 
 	public JpaStorageSettings.StoreMetaSourceInformationEnum getStore_meta_source_information() {
