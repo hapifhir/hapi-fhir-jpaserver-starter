@@ -787,8 +787,6 @@ public class AppProperties {
 		index_storage_optimized = theIndex_storage_optimized;
 	}
 
-
-
 	public Integer getReindex_thread_count() {
 		return reindex_thread_count;
 	}

@@ -286,11 +286,15 @@ public class FhirServerConfigCommon {
 		// Configure thread counts for reindex and expunge operations
 		if (appProperties.getReindex_thread_count() != null) {
 			jpaStorageSettings.setReindexThreadCount(appProperties.getReindex_thread_count());
-			ourLog.info("Server configured to use {} threads for reindex operations", appProperties.getReindex_thread_count());
+			ourLog.info(
+					"Server configured to use {} threads for reindex operations",
+					appProperties.getReindex_thread_count());
 		}
 		if (appProperties.getExpunge_thread_count() != null) {
 			jpaStorageSettings.setExpungeThreadCount(appProperties.getExpunge_thread_count());
-			ourLog.info("Server configured to use {} threads for expunge operations", appProperties.getExpunge_thread_count());
+			ourLog.info(
+					"Server configured to use {} threads for expunge operations",
+					appProperties.getExpunge_thread_count());
 		}
 
 		return jpaStorageSettings;
