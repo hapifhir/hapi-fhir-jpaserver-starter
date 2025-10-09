@@ -279,6 +279,11 @@ hapi:
     # filter_search_enabled: true
     # graphql_enabled: true
 
+    # Thread pool configuration for maintenance operations
+    # Defaults to Runtime.getRuntime().availableProcessors() if not specified
+    # reindex_thread_count: 4        # Number of threads to use for reindex operations
+    # expunge_thread_count: 4        # Number of threads to use for expunge operations
+
     # -------------------------------------------------------------------------------
     # G. Narrative & Validation
     # -------------------------------------------------------------------------------
