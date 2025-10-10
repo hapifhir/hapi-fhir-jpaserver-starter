@@ -94,7 +94,7 @@ spring:
     # This exclude is only needed for setups not using Elasticsearch where the elasticsearch sniff is not needed.
     exclude: org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration
   main:
-    allow-bean-definition-overriding: false
+    allow-bean-definition-overriding: true
     allow-circular-references: true
   flyway:
     enabled: false
@@ -162,7 +162,7 @@ hapi:
     ### This flag when enabled to true, will avail evaluate measure operations from CR Module.
     ### Flag is false by default, can be passed as command line argument to override.
     cr:
-      enabled: false
+      enabled: true
       caregaps:
         reporter: "default"
         section_author: "default"
@@ -211,7 +211,7 @@ hapi:
           profile_mode: DECLARED # ENFORCED, DECLARED, OPTIONAL, TRUST, OFF
 
     cdshooks:
-      enabled: false
+      enabled: true
       clientIdHeaderName: client_id
 
     ### This enables the swagger-ui at /fhir/swagger-ui/index.html as well as the /fhir/api-docs (see https://hapifhir.io/hapi-fhir/docs/server_plain/openapi.html)
@@ -240,7 +240,17 @@ hapi:
       ### Flag is true by default. This flag filters resources during package installation, allowing only those resources with a valid status (e.g. active) to be installed.
       #    validate_resource_status_for_package_upload: false
       #    install_transitive_ig_dependencies: true
-      #implementationguides:
+    implementationguides:
+      uscore_6:
+        name: hl7.fhir.us.core
+        version: 6.1.0
+        installMode: STORE_AND_INSTALL
+        #        fetchDependencies: true
+      r4_core:
+        name: hl7.fhir.r4.core
+        version: 4.0.1
+        installMode: STORE_AND_INSTALL
+        installResourceTypes: ["StructureDefinition", "ValueSet", "CodeSystem"]
       ###    example from registry (packages.fhir.org)
       #  swiss:
       #    name: swiss.mednet.fhir
@@ -297,10 +307,10 @@ hapi:
     #    enforce_referential_integrity_on_delete: false
     # This is an experimental feature, and does not fully support _total and other FHIR features.
     #    enforce_referential_integrity_on_delete: false
-    #    enforce_referential_integrity_on_write: false
+    enforce_referential_integrity_on_write: false
     #    etag_support_enabled: true
     #    expunge_enabled: true
-    #    client_id_strategy: ALPHANUMERIC
+    client_id_strategy: ANY
     #    server_id_strategy: SEQUENTIAL_NUMERIC
     #    fhirpath_interceptor_enabled: false
     #    filter_search_enabled: true
