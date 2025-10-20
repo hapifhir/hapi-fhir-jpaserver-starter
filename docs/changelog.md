@@ -1,3 +1,7 @@
+2025/10/21 Release 4.0.14
+
+- Further MCP Server integration [#398](https://github.com/ahdis/matchbox/issues/398)
+
 2025/10/04 Release 4.0.13
 
 - MCP Server integration (#398)

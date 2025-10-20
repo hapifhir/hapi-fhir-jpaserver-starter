@@ -21,6 +21,10 @@ public class ToolFactory {
 			"profile": {
 			"type": "string",
 			"description": "The FHIR profile to validate against"
+			},
+			"validationparams": {
+			"type": "string",
+			"description": "Additional validation parameters separated by \\",\\". For example: \\"txServer=http://tx.fhir.org,txUseEcosystem=false\\"."
 			}
 		},
 		"required": ["resource", "profile"]
@@ -35,8 +39,8 @@ public class ToolFactory {
 			"includeVersions": {
 				"type": "boolean",
 				"description": "include older versions of the installed FHIR Implementation Guides, defaults to false"
+				}
 			}
-		}
 		}
 		""";
 
@@ -55,6 +59,15 @@ public class ToolFactory {
 			}
 		}
 	}
+		""";
+
+	private static final String LIST_VALIDATIONPARAMETERS_SCHEMA =
+		"""
+		{
+		"type": "object",
+		"properties": {
+			}
+		}
 		""";
 
 	private static final String LIST_FHIR_IGS_OUTPUT_SCHEMA =
@@ -122,6 +135,16 @@ public class ToolFactory {
 //				.outputSchema(LIST_FHIR_IGS_OUTPUT_SCHEMA)
 				.build();
 	}
+
+	public static Tool listValidationParameters() throws JsonProcessingException {
+		return new Tool.Builder()
+				.name("list-validation-parameters")
+				.description("List additional available parameters for validation")
+				.inputSchema(mapper.readValue(LIST_VALIDATIONPARAMETERS_SCHEMA, McpSchema.JsonSchema.class))
+//				.outputSchema(LIST_FHIR_IGS_OUTPUT_SCHEMA)
+				.build();
+	}
+
 
 	public static final ObjectMapper mapper = new ObjectMapper()
 			.enable(JsonParser.Feature.ALLOW_COMMENTS)

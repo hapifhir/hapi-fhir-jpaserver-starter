@@ -18,6 +18,7 @@ nav:
   - docker.md
   - cda.md
   - 'Tutorial: validation': validation-tutorial.md
+  - 'Tutorial: validation with ai': validation-with-ai-tutorial.md
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true

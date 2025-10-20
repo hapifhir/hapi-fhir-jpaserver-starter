@@ -114,6 +114,15 @@ public class RequestBuilder {
 				if (profile != null && !profile.isBlank()) {
 					req.addParameter("profile", profile);
 				}
+				Map<?, ?> sp = null;
+				if (config.get("query") instanceof Map<?, ?> q) {
+					sp = q;
+				} else if (config.get("searchParams") instanceof Map<?, ?> s) {
+					sp = s;
+				}
+				if (sp != null) {
+					sp.forEach((k, v) -> req.addParameter(k.toString(), v.toString()));
+				}
 				req.addHeader("Content-Type", "text/plain; charset=UTF-8");
 			}
 			default -> throw new IllegalArgumentException("Unsupported interaction: " + interaction);

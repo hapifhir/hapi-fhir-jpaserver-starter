@@ -2,7 +2,8 @@ package ca.uhn.fhir.rest.server;
 
 import ca.uhn.fhir.context.FhirContext;
 import ch.ahdis.matchbox.mcp.ToolFactory;
-import ca.uhn.fhir.jpa.starter.AppProperties;
+import ch.ahdis.matchbox.util.CrossVersionResourceUtils;
+import ch.ahdis.matchbox.util.http.MatchboxFhirFormat;
 import ca.uhn.fhir.jpa.starter.mcp.CallToolResultFactory;
 import ca.uhn.fhir.jpa.starter.mcp.Interaction;
 import ca.uhn.fhir.jpa.starter.mcp.RequestBuilder;
@@ -11,12 +12,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.spec.McpSchema;
 
+import org.hl7.fhir.r5.model.OperationDefinition.OperationDefinitionParameterComponent;
+import org.hl7.fhir.r5.model.Resource;
+import org.hl7.fhir.r5.model.Enumerations.OperationParameterUse;
 import org.hl7.fhir.r5.model.OperationDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.stereotype.Component;
 
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +51,10 @@ public class McpMatchboxBridge implements McpBridge {
 					new McpServerFeatures.SyncToolSpecification.Builder()
 							.tool(ToolFactory.listFhirProfilesToValidateFor())
 							.callHandler((exchange, request) -> getFhirProfilesToValidateFor(request, Interaction.READ))
+					 		.build(),
+					new McpServerFeatures.SyncToolSpecification.Builder()
+							.tool(ToolFactory.listValidationParameters())
+							.callHandler((exchange, request) -> getExtraValidationParameters(request, Interaction.READ))
 					 		.build()
 							);
 		} catch (JsonProcessingException e) {
@@ -97,6 +106,52 @@ public class McpMatchboxBridge implements McpBridge {
 		}
 	}
 
+	private McpSchema.CallToolResult getExtraValidationParameters(McpSchema.CallToolRequest contextMap, Interaction interaction) {
+		var response = new MockHttpServletResponse();
+		contextMap.arguments().put("resourceType", "OperationDefinition");
+		contextMap.arguments().put("id", "-s-validate");
+		var request = new RequestBuilder(restfulServer, contextMap.arguments(), interaction).buildRequest();
+		try {
+			restfulServer.handleRequest(interaction.asRequestType(), request, response);
+			var status = response.getStatus();
+			var body = response.getContentAsString();
+
+			if (status >= 200 && status < 300) {
+				if (body.isBlank()) {
+					return CallToolResultFactory.failure("Empty successful response for " + interaction);
+				}
+
+				FhirContext fhirR5Context = FhirContext.forR5Cached();
+				OperationDefinition operationDefinition = fhirR5Context.newJsonParser().parseResource(OperationDefinition.class, body);
+				List<OperationDefinitionParameterComponent> parameters = operationDefinition.getParameter().stream()
+					.filter(p -> OperationParameterUse.IN.equals(p.getUse()))
+					.filter(p -> !"resource".equals(p.getName()))
+					.filter(p -> !"profile".equals(p.getName()))
+					.map(p -> {
+						p.setUse(null);
+						return p;
+					}).toList();
+				
+				
+				StringWriter result = new StringWriter();
+				result.append("[ ");
+				for (int i = 0; i < parameters.size(); i++) {
+					CrossVersionResourceUtils.serializeR5(parameters.get(i), MatchboxFhirFormat.JSON, result);
+					result.append(",");
+				}
+				result.append("]");
+
+				String json = result.toString();
+		        return CallToolResultFactory.successFhirBody(json);
+			} else {
+				return CallToolResultFactory.failure(String.format("FHIR server error %d: %s", status, body));
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return CallToolResultFactory.failure("Unexpected error: " + e.getMessage());
+		}
+	}
+
 	private McpSchema.CallToolResult getFhirImplementationGuides(McpSchema.CallToolRequest contextMap, Interaction interaction) {
 		var response = new MockHttpServletResponse();
 		contextMap.arguments().put("resourceType", "ImplementationGuide");
@@ -135,12 +190,25 @@ public class McpMatchboxBridge implements McpBridge {
 	private McpSchema.CallToolResult getValidationResult(McpSchema.CallToolRequest contextMap, Interaction interaction) {
 
 		var response = new MockHttpServletResponse();
-		var request = new RequestBuilder(restfulServer, contextMap.arguments(), interaction).buildRequest();
+		if (contextMap.arguments().containsKey("validationparams")) {
+			Map<String, Object> map = new java.util.HashMap<>();
+			String validationParams = (String) contextMap.arguments().get("validationparams");
+			// Parse the validationParams string into a Map
+			String[] params = validationParams.split(",");
+			for (String param : params) {
+				String[] keyValue = param.split("=");
+				if (keyValue.length == 2) {
+					map.put(keyValue[0].trim(), keyValue[1].trim());
+				}
+			}
+			contextMap.arguments().put("query", map);
+		} else {
+			Map<String, Object> map = new java.util.HashMap<>();
+			map.put("analyzeOutcomeWithAI", "false");
+			contextMap.arguments().put("query", map);
+		}
 
-		Map<String, Object> map = new java.util.HashMap<>();
-		// we do not want to use AI for validation, this can do mcp client itself
-		map.put("analyzeOutcomeWithAI", "false");
-		contextMap.arguments().put("query", map);
+		var request = new RequestBuilder(restfulServer, contextMap.arguments(), interaction).buildRequest();
 
 		try {
 			restfulServer.handleRequest(interaction.asRequestType(), request, response);

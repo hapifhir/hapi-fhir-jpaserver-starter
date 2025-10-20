@@ -8,6 +8,7 @@ import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
 import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r5.model.Resource;
+import org.hl7.fhir.instance.model.api.IBase;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -65,6 +66,14 @@ public class CrossVersionResourceUtils {
 		final var parser = getHapiParser(format, FhirVersionEnum.R5);
 		parser.setPrettyPrint(true);
 		parser.encodeResourceToWriter(resource, writer);
+	}
+
+	public static void serializeR5(final IBase theElement,
+											 final MatchboxFhirFormat format,
+											 final Writer writer) throws IOException {
+		final var parser = getHapiParser(format, FhirVersionEnum.R5);
+		parser.setPrettyPrint(true);
+		writer.append(parser.encodeToString(theElement));
 	}
 
 	public static org.hl7.fhir.r4.model.Resource convertResource(final org.hl7.fhir.r4b.model.Resource resource) {

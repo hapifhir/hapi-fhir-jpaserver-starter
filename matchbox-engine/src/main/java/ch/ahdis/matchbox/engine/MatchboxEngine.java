@@ -889,6 +889,8 @@ public class MatchboxEngine extends ValidationEngine {
 		final List<ValidationMessage> messages = new ArrayList<>();
 		final InstanceValidator validator = getValidator(format);
 		validator.validate(null, messages, stream, format, (sd != null) ? new ArrayList<>(List.of(sd)) :  new ArrayList<>());
+			log.info("finished validation " + sd.getUrl() + "|" + sd.getVersion() + " "
+						+ (sd.getDateElement() != null ? "(" + sd.getDateElement().asStringValue() + ")" : ""));
 		return this.filterValidationMessages(messages);
 	}
 

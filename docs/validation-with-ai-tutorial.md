@@ -87,7 +87,7 @@ spring:
         enabled: true
 ```
 
-The MCP-Server can be reached at the endpoint `http://<<your-url>>/matchbox/mcp/sse`
+The MCP-Server can be reached at the endpoint `http://<<your-url>>/matchbox(v3)/mcp/message`
 
 ### Setting up matchbox for Claude Desktop
 
@@ -97,6 +97,20 @@ For Free users connecting to remote servers is currently not officially supporte
 
 Example Claude Desktop:
 ![Claude Desktop MCP example](assets/claude_desktop_mcp_example.png)
+
+```json
+  {
+      "mcpServers": {
+        "matchbox": {
+          "command": "npx",
+          "args": [
+            "mcp-remote@latest",
+            "http://localhost:8080/matchboxv3/mcp/message"
+          ]
+        }
+      }
+    }
+```
 
 ### Setting up matchbox for VS Code GitHub Copilot
 
@@ -112,7 +126,7 @@ Add matchbox as MCP-Server as such:
     "mcp": {
         "servers": {
             "matchbox": {
-                "url": "http://<<your-url>>/matchbox/mcp/sse"
+                "url": "http://<<your-url>>/matchboxv3/mcp/message"
             }
         }
     },
