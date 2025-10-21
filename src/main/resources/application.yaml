@@ -159,6 +159,8 @@ spring:
 
 hapi:
   fhir:
+    pre_expand_value_sets: false
+    enable_task_pre_expand_value_sets: false
     ### This flag when enabled to true, will avail evaluate measure operations from CR Module.
     ### Flag is false by default, can be passed as command line argument to override.
     cr:
@@ -241,16 +243,43 @@ hapi:
       #    validate_resource_status_for_package_upload: false
       #    install_transitive_ig_dependencies: true
     implementationguides:
-      uscore_6:
+      us_core_6_1_0:
         name: hl7.fhir.us.core
         version: 6.1.0
         installMode: STORE_AND_INSTALL
+        installResourceTypes: ["StructureDefinition", "ValueSet", "CodeSystem", "CapabilityStatement", "OperationDefinition", "SearchParameter"]
         #        fetchDependencies: true
+
       r4_core:
         name: hl7.fhir.r4.core
         version: 4.0.1
         installMode: STORE_AND_INSTALL
-        installResourceTypes: ["StructureDefinition", "ValueSet", "CodeSystem"]
+        installResourceTypes: ["StructureDefinition", "ValueSet", "CodeSystem", "CapabilityStatement", "OperationDefinition", "SearchParameter"]
+
+      hl7_terminology_r4:
+        name: hl7.terminology.r4
+        version: 5.0.0
+        installMode: STORE_AND_INSTALL
+        installResourceTypes: ["StructureDefinition", "ValueSet", "CodeSystem", "CapabilityStatement", "OperationDefinition", "SearchParameter"]
+
+      fhir_extensions_r4:
+        name: hl7.fhir.uv.extensions.r4
+        version: 1.0.0
+        installMode: STORE_AND_INSTALL
+        installResourceTypes: ["StructureDefinition", "ValueSet", "CodeSystem", "CapabilityStatement", "OperationDefinition", "SearchParameter"]
+
+      cdc_phinvads:
+        name: us.cdc.phinvads
+        version: 0.12.0
+        installMode: STORE_AND_INSTALL
+        installResourceTypes: ["StructureDefinition", "ValueSet", "CodeSystem", "CapabilityStatement", "OperationDefinition", "SearchParameter"]
+
+#      nlm_vsac:
+#        name: us.nlm.vsac
+#        version: 0.11.0
+#        installMode: STORE_AND_INSTALL
+#        installResourceTypes: ["StructureDefinition", "ValueSet", "CodeSystem", "CapabilityStatement", "OperationDefinition", "SearchParameter"]
+
       ###    example from registry (packages.fhir.org)
       #  swiss:
       #    name: swiss.mednet.fhir
