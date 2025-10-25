@@ -1,10 +1,14 @@
 package ca.uhn.fhir.jpa.starter.mcp;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.support.IValidationSupport;
+import ca.uhn.fhir.rest.api.IResourceSupportedSvc;
 import ca.uhn.fhir.rest.server.McpBridge;
 import ca.uhn.fhir.rest.server.McpCdsBridge;
 import ca.uhn.fhir.rest.server.McpFhirBridge;
+import ca.uhn.fhir.rest.server.McpMetadataBridge;
 import ca.uhn.fhir.rest.server.RestfulServer;
+import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsServiceRegistry;
 import ca.uhn.hapi.fhir.cdshooks.module.CdsHooksObjectMapperFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,6 +51,15 @@ public class McpServerConfig {
 	@Bean
 	public McpFhirBridge mcpFhirBridge(RestfulServer restfulServer) {
 		return new McpFhirBridge(restfulServer);
+	}
+
+	@Bean
+	public McpMetadataBridge mcpMetadataBridge(
+			RestfulServer restfulServer,
+			IValidationSupport validationSupport,
+			IResourceSupportedSvc resourceSupportedSvc,
+			ISearchParamRegistry searchParamRegistry) {
+		return new McpMetadataBridge(restfulServer, validationSupport, resourceSupportedSvc, searchParamRegistry);
 	}
 
 	@Bean

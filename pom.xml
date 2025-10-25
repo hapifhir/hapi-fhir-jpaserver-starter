@@ -391,14 +391,14 @@
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-mcp</artifactId>
-            <version>1.1.0-M2</version>
+            <version>1.1.0-M3</version>
         </dependency>
 
         <!--implementation("org.springframework.ai:spring-ai-starter-mcp-server-webmvc:1.1.0-M1")-->
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-starter-mcp-server</artifactId>
-            <version>1.1.0-M2</version>
+            <version>1.1.0-M3</version>
         </dependency>
 
         <dependency>
