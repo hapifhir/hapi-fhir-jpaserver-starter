@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.spec.McpSchema;
 import io.modelcontextprotocol.spec.McpSchema.Tool;
 
-
 public class ToolFactory {
 
 	public static final ObjectMapper mapper = new ObjectMapper()
@@ -232,7 +231,8 @@ public class ToolFactory {
 		},
 		"required": ["store"]
 		}
-		""".formatted(STORE_NAME_PROPERTY);
+		"""
+					.formatted(STORE_NAME_PROPERTY);
 
 	private static final String GET_DATA_TYPE_LIST_SCHEMA =
 			"""
@@ -243,7 +243,8 @@ public class ToolFactory {
 		},
 		"required": ["store"]
 		}
-		""".formatted(STORE_NAME_PROPERTY);
+		"""
+					.formatted(STORE_NAME_PROPERTY);
 
 	private static final String GET_SEARCH_PARAMETERS_SCHEMA =
 			"""
@@ -255,7 +256,8 @@ public class ToolFactory {
 		},
 		"required": ["store", "resourceType"]
 		}
-		""".formatted(STORE_NAME_PROPERTY, RESOURCE_NAME_PROPERTY);
+		"""
+					.formatted(STORE_NAME_PROPERTY, RESOURCE_NAME_PROPERTY);
 
 	private static final String GET_RESOURCE_DEFINITION_SCHEMA =
 			"""
@@ -266,7 +268,8 @@ public class ToolFactory {
 		},
 		"required": ["resourceType"]
 		}
-		""".formatted(RESOURCE_NAME_PROPERTY);
+		"""
+					.formatted(RESOURCE_NAME_PROPERTY);
 
 	private static final String GET_DATA_TYPE_DEFINITION_SCHEMA =
 			"""
@@ -310,24 +313,24 @@ public class ToolFactory {
 		},
 		"required": ["store", "resourceType", "searchString"]
 		}
-		""".formatted(STORE_NAME_PROPERTY, RESOURCE_NAME_PROPERTY);
+		"""
+					.formatted(STORE_NAME_PROPERTY, RESOURCE_NAME_PROPERTY);
 
-private static final McpSchema.JsonSchema EMPTY_OBJECT_SCHEMA = createEmptyObjectSchema();
+	private static final McpSchema.JsonSchema EMPTY_OBJECT_SCHEMA = createEmptyObjectSchema();
 
-private static McpSchema.JsonSchema createEmptyObjectSchema() {
-	try {
-		return mapper.readValue(
-				"""
+	private static McpSchema.JsonSchema createEmptyObjectSchema() {
+		try {
+			return mapper.readValue(
+					"""
 				{
 				"type": "object",
 				"properties": {}
 				}
-				""",
-				McpSchema.JsonSchema.class);
-	} catch (JsonProcessingException e) {
-		throw new IllegalStateException("Unable to construct empty object schema", e);
+				""", McpSchema.JsonSchema.class);
+		} catch (JsonProcessingException e) {
+			throw new IllegalStateException("Unable to construct empty object schema", e);
+		}
 	}
-}
 
 	// TODO Add a tool for the CDS Hooks discovery endpoint
 	// Alternatively, should each service be a separate tool?
@@ -461,7 +464,8 @@ private static McpSchema.JsonSchema createEmptyObjectSchema() {
 	public static Tool getStoreList() {
 		return new Tool.Builder()
 				.name("get-store-list")
-				.description("Gets the list of FHIR stores, the base URL of the FHIR store, and their FHIR Versions that are configured on this server.")
+				.description(
+						"Gets the list of FHIR stores, the base URL of the FHIR store, and their FHIR Versions that are configured on this server.")
 				.inputSchema(EMPTY_OBJECT_SCHEMA)
 				.build();
 	}

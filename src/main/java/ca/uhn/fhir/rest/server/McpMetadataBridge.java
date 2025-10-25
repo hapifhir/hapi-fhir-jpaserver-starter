@@ -44,24 +44,24 @@ public class McpMetadataBridge implements McpBridge {
 	private static final Logger ourLog = LoggerFactory.getLogger(McpMetadataBridge.class);
 	private static final String DEFAULT_STORE_NAME = "default";
 	private static final Set<String> GENERAL_SEARCH_PARAMS = Set.of(
-		"_id",
-		"_lastUpdated",
-		"_profile",
-		"_security",
-		"_tag",
-		"_text",
-		"_content",
-		"_list",
-		"_has",
-		"_include",
-		"_revinclude",
-		"_count",
-		"_sort",
-		"_summary",
-		"_elements",
-		"_since",
-		"_type",
-		"_total");
+			"_id",
+			"_lastUpdated",
+			"_profile",
+			"_security",
+			"_tag",
+			"_text",
+			"_content",
+			"_list",
+			"_has",
+			"_include",
+			"_revinclude",
+			"_count",
+			"_sort",
+			"_summary",
+			"_elements",
+			"_since",
+			"_type",
+			"_total");
 
 	private final RestfulServer myRestfulServer;
 	private final FhirContext myFhirContext;
@@ -71,10 +71,10 @@ public class McpMetadataBridge implements McpBridge {
 	private final ISearchParamRegistry mySearchParamRegistry;
 
 	public McpMetadataBridge(
-		RestfulServer restfulServer,
-		ca.uhn.fhir.context.support.IValidationSupport validationSupport,
-		IResourceSupportedSvc resourceSupportedSvc,
-		ISearchParamRegistry searchParamRegistry) {
+			RestfulServer restfulServer,
+			ca.uhn.fhir.context.support.IValidationSupport validationSupport,
+			IResourceSupportedSvc resourceSupportedSvc,
+			ISearchParamRegistry searchParamRegistry) {
 		myRestfulServer = restfulServer;
 		myFhirContext = restfulServer.getFhirContext();
 		myTerser = myFhirContext.newTerser();
@@ -87,46 +87,42 @@ public class McpMetadataBridge implements McpBridge {
 	public List<McpServerFeatures.SyncToolSpecification> generateTools() {
 		try {
 			return List.of(
-				buildSpecification(ToolFactory.getStoreList(), this::handleGetStoreList),
-				buildSpecification(ToolFactory.getResourceList(), this::handleGetResourceList),
-				buildSpecification(ToolFactory.getResourceDefinition(), this::handleGetResourceDefinition),
-				buildSpecification(ToolFactory.getDataTypeList(), this::handleGetDataTypeList),
-				buildSpecification(ToolFactory.getDataTypeDefinition(), this::handleGetDataTypeDefinition),
-				buildSpecification(ToolFactory.getSearchTypeList(), this::handleGetSearchTypeList),
-				buildSpecification(ToolFactory.getSearchTypeDefinition(), this::handleGetSearchTypeDefinition),
-				buildSpecification(ToolFactory.getSearchParameters(), this::handleGetSearchParameters),
-				buildSpecification(ToolFactory.validateTypeSearch(), this::handleValidateTypeSearch));
+					buildSpecification(ToolFactory.getStoreList(), this::handleGetStoreList),
+					buildSpecification(ToolFactory.getResourceList(), this::handleGetResourceList),
+					buildSpecification(ToolFactory.getResourceDefinition(), this::handleGetResourceDefinition),
+					buildSpecification(ToolFactory.getDataTypeList(), this::handleGetDataTypeList),
+					buildSpecification(ToolFactory.getDataTypeDefinition(), this::handleGetDataTypeDefinition),
+					buildSpecification(ToolFactory.getSearchTypeList(), this::handleGetSearchTypeList),
+					buildSpecification(ToolFactory.getSearchTypeDefinition(), this::handleGetSearchTypeDefinition),
+					buildSpecification(ToolFactory.getSearchParameters(), this::handleGetSearchParameters),
+					buildSpecification(ToolFactory.validateTypeSearch(), this::handleValidateTypeSearch));
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	private McpServerFeatures.SyncToolSpecification buildSpecification(
-		io.modelcontextprotocol.spec.McpSchema.Tool tool,
-		Function<McpSchema.CallToolRequest, McpSchema.CallToolResult> handler) {
+			io.modelcontextprotocol.spec.McpSchema.Tool tool,
+			Function<McpSchema.CallToolRequest, McpSchema.CallToolResult> handler) {
 		return new McpServerFeatures.SyncToolSpecification.Builder()
-			.tool(tool)
-			.callHandler((exchange, request) -> handler.apply(request))
-			.build();
+				.tool(tool)
+				.callHandler((exchange, request) -> handler.apply(request))
+				.build();
 	}
 
 	private McpSchema.CallToolResult handleGetStoreList(McpSchema.CallToolRequest request) {
 		var version = myFhirContext.getVersion().getVersion().getFhirVersionString();
 		var baseUrl = determineServerBaseUrl();
-		var message = String.format(
-			Locale.ROOT,
-			"%s: URL is %s, FHIR version is %s",
-			DEFAULT_STORE_NAME,
-			baseUrl,
-			version);
+		var message =
+				String.format(Locale.ROOT, "%s: URL is %s, FHIR version is %s", DEFAULT_STORE_NAME, baseUrl, version);
 		return toTextResult(List.of(message));
 	}
 
 	private McpSchema.CallToolResult handleGetResourceList(McpSchema.CallToolRequest request) {
 
 		Set<String> resources = myFhirContext.getResourceTypes().stream()
-			.filter(myResourceSupportedSvc::isSupported)
-			.collect(Collectors.toCollection(TreeSet::new));
+				.filter(myResourceSupportedSvc::isSupported)
+				.collect(Collectors.toCollection(TreeSet::new));
 		if (resources.isEmpty()) {
 			return toErrorResult("No resource providers are registered on this server.");
 		}
@@ -139,25 +135,27 @@ public class McpMetadataBridge implements McpBridge {
 			return toErrorResult("Resource name is missing or not provided and is required.");
 		}
 		if (!myResourceSupportedSvc.isSupported(resourceName)) {
-			return toErrorResult("The provided resource name did not resolve into a supported resource on this server.");
+			return toErrorResult(
+					"The provided resource name did not resolve into a supported resource on this server.");
 		}
 
 		Optional<String> definition = describeStructure(resourceName, Set.of("resource"));
 		return definition
-			.map(desc -> toTextResult(List.of(desc)))
-			.orElseGet(() -> toErrorResult("Unable to locate a StructureDefinition for resource " + resourceName + "."));
+				.map(desc -> toTextResult(List.of(desc)))
+				.orElseGet(() ->
+						toErrorResult("Unable to locate a StructureDefinition for resource " + resourceName + "."));
 	}
 
 	private McpSchema.CallToolResult handleGetDataTypeList(McpSchema.CallToolRequest request) {
 		Set<String> dataTypes = myFhirContext.getElementDefinitions().stream()
-			.filter(def -> {
-				BaseRuntimeElementDefinition.ChildTypeEnum childType = def.getChildType();
-				return childType == BaseRuntimeElementDefinition.ChildTypeEnum.COMPOSITE_DATATYPE
-					|| childType == BaseRuntimeElementDefinition.ChildTypeEnum.PRIMITIVE_DATATYPE;
-			})
-			.map(BaseRuntimeElementDefinition::getName)
-			.filter(name -> !myFhirContext.getResourceTypes().contains(name))
-			.collect(Collectors.toCollection(TreeSet::new));
+				.filter(def -> {
+					BaseRuntimeElementDefinition.ChildTypeEnum childType = def.getChildType();
+					return childType == BaseRuntimeElementDefinition.ChildTypeEnum.COMPOSITE_DATATYPE
+							|| childType == BaseRuntimeElementDefinition.ChildTypeEnum.PRIMITIVE_DATATYPE;
+				})
+				.map(BaseRuntimeElementDefinition::getName)
+				.filter(name -> !myFhirContext.getResourceTypes().contains(name))
+				.collect(Collectors.toCollection(TreeSet::new));
 		if (dataTypes.isEmpty()) {
 			return toErrorResult("No FHIR data types were discovered for the current server version.");
 		}
@@ -171,8 +169,8 @@ public class McpMetadataBridge implements McpBridge {
 		}
 		Optional<String> definition = describeStructure(datatypeName, Set.of("complex-type", "primitive-type"));
 		return definition
-			.map(desc -> toTextResult(List.of(desc)))
-			.orElseGet(() -> toErrorResult("The provided data type name did not resolve on this server."));
+				.map(desc -> toTextResult(List.of(desc)))
+				.orElseGet(() -> toErrorResult("The provided data type name did not resolve on this server."));
 	}
 
 	private McpSchema.CallToolResult handleGetSearchTypeList(McpSchema.CallToolRequest request) {
@@ -185,8 +183,8 @@ public class McpMetadataBridge implements McpBridge {
 			return toErrorResult("Search type is missing or not provided and is required.");
 		}
 		return SearchTypeDescriptions.describe(searchType)
-			.map(desc -> toTextResult(List.of(desc)))
-			.orElseGet(() -> toErrorResult("The provided search type did not resolve on this server."));
+				.map(desc -> toTextResult(List.of(desc)))
+				.orElseGet(() -> toErrorResult("The provided search type did not resolve on this server."));
 	}
 
 	private McpSchema.CallToolResult handleGetSearchParameters(McpSchema.CallToolRequest request) {
@@ -195,7 +193,8 @@ public class McpMetadataBridge implements McpBridge {
 			return toErrorResult("Resource name is missing or not provided and is required.");
 		}
 		if (!myResourceSupportedSvc.isSupported(resourceName)) {
-			return toErrorResult("The provided resource name did not resolve into a supported resource on this server.");
+			return toErrorResult(
+					"The provided resource name did not resolve into a supported resource on this server.");
 		}
 
 		List<String> searchParameters = collectSearchParameterDescriptions(resourceName);
@@ -262,7 +261,8 @@ public class McpMetadataBridge implements McpBridge {
 
 			String detail;
 			if (searchParam != null) {
-				detail = "Recognized search parameter of type " + searchParam.getParamType().getCode();
+				detail = "Recognized search parameter of type "
+						+ searchParam.getParamType().getCode();
 			} else if (isGeneral) {
 				detail = "Recognized server-wide parameter.";
 			} else {
@@ -271,27 +271,22 @@ public class McpMetadataBridge implements McpBridge {
 
 			String combinedValues = String.join(",", values);
 			detailMessages.add(String.format(
-				Locale.ROOT,
-				"'%s=%s': %s%s",
-				rawName,
-				combinedValues,
-				isValid ? "Valid" : "Invalid",
-				" - " + detail));
+					Locale.ROOT,
+					"'%s=%s': %s%s",
+					rawName,
+					combinedValues,
+					isValid ? "Valid" : "Invalid",
+					" - " + detail));
 		}
 
 		int total = detailMessages.size();
 		String overall;
 		boolean isError = invalidCount > 0;
 		if (invalidCount == 0) {
-			overall = String.format(
-				Locale.ROOT, "All %d search parameters are valid for %s.", total, resourceName);
+			overall = String.format(Locale.ROOT, "All %d search parameters are valid for %s.", total, resourceName);
 		} else {
 			overall = String.format(
-				Locale.ROOT,
-				"%d of %d search parameters are invalid for %s.",
-				invalidCount,
-				total,
-				resourceName);
+					Locale.ROOT, "%d of %d search parameters are invalid for %s.", invalidCount, total, resourceName);
 		}
 
 		List<String> responses = new ArrayList<>();
@@ -304,12 +299,12 @@ public class McpMetadataBridge implements McpBridge {
 		List<String> results = new ArrayList<>();
 
 		ResourceSearchParams registryParams = mySearchParamRegistry.getRuntimeSearchParams(
-			resourceName, ISearchParamRegistry.SearchParamLookupContextEnum.SEARCH);
+				resourceName, ISearchParamRegistry.SearchParamLookupContextEnum.SEARCH);
 		if (registryParams != null && registryParams.size() > 0) {
 			results = registryParams.values().stream()
-				.sorted(Comparator.comparing(RuntimeSearchParam::getName, String.CASE_INSENSITIVE_ORDER))
-				.map(this::formatRuntimeSearchParam)
-				.collect(Collectors.toCollection(ArrayList::new));
+					.sorted(Comparator.comparing(RuntimeSearchParam::getName, String.CASE_INSENSITIVE_ORDER))
+					.map(this::formatRuntimeSearchParam)
+					.collect(Collectors.toCollection(ArrayList::new));
 		}
 
 		if (!results.isEmpty()) {
@@ -321,17 +316,17 @@ public class McpMetadataBridge implements McpBridge {
 			for (IBaseResource searchParameter : searchParameters) {
 				List<?> bases = myTerser.getValues(searchParameter, "base");
 				boolean matches = bases.stream()
-					.filter(IPrimitiveType.class::isInstance)
-					.map(IPrimitiveType.class::cast)
-					.map(IPrimitiveType::getValueAsString)
-					.anyMatch(resourceName::equalsIgnoreCase);
+						.filter(IPrimitiveType.class::isInstance)
+						.map(IPrimitiveType.class::cast)
+						.map(IPrimitiveType::getValueAsString)
+						.anyMatch(resourceName::equalsIgnoreCase);
 				if (!matches) {
 					continue;
 				}
 				String code = defaultString(myTerser.getSinglePrimitiveValueOrNull(searchParameter, "code"), "Unnamed");
 				String type = defaultString(myTerser.getSinglePrimitiveValueOrNull(searchParameter, "type"), "unknown");
-				String description = defaultString(
-					myTerser.getSinglePrimitiveValueOrNull(searchParameter, "description"), "");
+				String description =
+						defaultString(myTerser.getSinglePrimitiveValueOrNull(searchParameter, "description"), "");
 				results.add(String.format(Locale.ROOT, "%s (%s): %s", code, type, description));
 			}
 		}
@@ -342,20 +337,16 @@ public class McpMetadataBridge implements McpBridge {
 
 		RuntimeResourceDefinition resourceDefinition = myFhirContext.getResourceDefinition(resourceName);
 		return resourceDefinition.getSearchParams().stream()
-			.sorted((left, right) -> left.getName().compareToIgnoreCase(right.getName()))
-			.map(this::formatRuntimeSearchParam)
-			.collect(Collectors.toList());
+				.sorted((left, right) -> left.getName().compareToIgnoreCase(right.getName()))
+				.map(this::formatRuntimeSearchParam)
+				.collect(Collectors.toList());
 	}
 
 	private String formatRuntimeSearchParam(RuntimeSearchParam param) {
 		String name = param.getName();
 		String description = StringUtils.defaultString(param.getDescription(), "");
 		return String.format(
-			Locale.ROOT,
-			"%s (%s): %s",
-			name,
-			param.getParamType().getCode(),
-			description);
+				Locale.ROOT, "%s (%s): %s", name, param.getParamType().getCode(), description);
 	}
 
 	private Optional<String> describeStructure(String typeName, Set<String> expectedKinds) {
@@ -423,8 +414,8 @@ public class McpMetadataBridge implements McpBridge {
 		request.setServerName("localhost");
 		request.setServerPort(8080);
 		request.setContextPath(Optional.ofNullable(myRestfulServer.getServletContext())
-			.map(ctx -> StringUtils.defaultString(ctx.getContextPath(), ""))
-			.orElse(""));
+				.map(ctx -> StringUtils.defaultString(ctx.getContextPath(), ""))
+				.orElse(""));
 		return request;
 	}
 
@@ -443,9 +434,9 @@ public class McpMetadataBridge implements McpBridge {
 
 	private static McpSchema.CallToolResult toErrorResult(String message) {
 		return McpSchema.CallToolResult.builder()
-			.isError(true)
-			.addTextContent(message)
-			.build();
+				.isError(true)
+				.addTextContent(message)
+				.build();
 	}
 
 	private String getStringArgument(McpSchema.CallToolRequest request, String name) {
