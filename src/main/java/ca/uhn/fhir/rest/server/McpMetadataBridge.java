@@ -216,9 +216,13 @@ public class McpMetadataBridge implements McpBridge {
 			return toErrorResult("Search string is missing or not provided and is required.");
 		}
 
-		var activeSearchParams = mySearchParamRegistry.getActiveSearchParams(resourceName, ISearchParamRegistry.SearchParamLookupContextEnum.ALL);
-
-		Map<String, RuntimeSearchParam> activeParams = activeSearchParams.getSearchParamNames().stream().collect(Collectors.toMap(Function.identity(), activeSearchParams::get));
+		ResourceSearchParams activeSearchParams = mySearchParamRegistry.getRuntimeSearchParams(
+				resourceName, ISearchParamRegistry.SearchParamLookupContextEnum.SEARCH);
+		if (activeSearchParams == null || activeSearchParams.size() == 0) {
+			return toErrorResult("No search parameters were found for resource " + resourceName + ".");
+		}
+		Map<String, RuntimeSearchParam> activeParams = activeSearchParams.getSearchParamNames().stream()
+				.collect(Collectors.toMap(Function.identity(), activeSearchParams::get));
 
 		Map<String, String[]> rawParams;
 		try {

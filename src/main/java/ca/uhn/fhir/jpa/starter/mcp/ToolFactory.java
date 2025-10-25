@@ -460,7 +460,7 @@ private static McpSchema.JsonSchema createEmptyObjectSchema() {
 
 	public static Tool getStoreList() {
 		return new Tool.Builder()
-				.name("getStoreList")
+				.name("get-store-list")
 				.description("Gets the list of FHIR stores, the base URL of the FHIR store, and their FHIR Versions that are configured on this server.")
 				.inputSchema(EMPTY_OBJECT_SCHEMA)
 				.build();
@@ -468,7 +468,7 @@ private static McpSchema.JsonSchema createEmptyObjectSchema() {
 
 	public static Tool getResourceList() throws JsonProcessingException {
 		return new Tool.Builder()
-				.name("getResourceList")
+				.name("get-resource-list")
 				.description("Gets the list of FHIR resources supported by the specified resource store.")
 				.inputSchema(mapper.readValue(GET_RESOURCE_LIST_SCHEMA, McpSchema.JsonSchema.class))
 				.build();
@@ -476,7 +476,7 @@ private static McpSchema.JsonSchema createEmptyObjectSchema() {
 
 	public static Tool getResourceDefinition() throws JsonProcessingException {
 		return new Tool.Builder()
-				.name("getResourceDefinition")
+				.name("get-resource-definition")
 				.description("Gets the definition of a FHIR resource.")
 				.inputSchema(mapper.readValue(GET_RESOURCE_DEFINITION_SCHEMA, McpSchema.JsonSchema.class))
 				.build();
@@ -484,7 +484,7 @@ private static McpSchema.JsonSchema createEmptyObjectSchema() {
 
 	public static Tool getDataTypeList() throws JsonProcessingException {
 		return new Tool.Builder()
-				.name("getDataTypeList")
+				.name("get-data-type-list")
 				.description("Gets the list of FHIR data types known in the specified resource store.")
 				.inputSchema(mapper.readValue(GET_DATA_TYPE_LIST_SCHEMA, McpSchema.JsonSchema.class))
 				.build();
@@ -492,7 +492,7 @@ private static McpSchema.JsonSchema createEmptyObjectSchema() {
 
 	public static Tool getDataTypeDefinition() throws JsonProcessingException {
 		return new Tool.Builder()
-				.name("getDataTypeDefinition")
+				.name("get-data-type-definition")
 				.description("Gets the definition of a FHIR data type.")
 				.inputSchema(mapper.readValue(GET_DATA_TYPE_DEFINITION_SCHEMA, McpSchema.JsonSchema.class))
 				.build();
@@ -500,7 +500,7 @@ private static McpSchema.JsonSchema createEmptyObjectSchema() {
 
 	public static Tool getSearchTypeList() {
 		return new Tool.Builder()
-				.name("getSearchTypeList")
+				.name("get-search-type-list")
 				.description("Gets the list of FHIR search types (not FHIR Data Types).")
 				.inputSchema(EMPTY_OBJECT_SCHEMA)
 				.build();
@@ -508,23 +508,23 @@ private static McpSchema.JsonSchema createEmptyObjectSchema() {
 
 	public static Tool getSearchTypeDefinition() throws JsonProcessingException {
 		return new Tool.Builder()
-				.name("getSearchTypeDefinition")
+				.name("get-search-type-definition")
 				.description("Gets the definition of a FHIR search type.")
 				.inputSchema(mapper.readValue(GET_SEARCH_TYPE_DEFINITION_SCHEMA, McpSchema.JsonSchema.class))
 				.build();
 	}
 
 	public static Tool getSearchParameters() throws JsonProcessingException {
-	return new Tool.Builder()
-			.name("getSearchParameters")
-			.description("Get the FHIR Search Parameters for a resource in a specified store.")
-			.inputSchema(mapper.readValue(GET_SEARCH_PARAMETERS_SCHEMA, McpSchema.JsonSchema.class))
-			.build();
-}
+		return new Tool.Builder()
+				.name("get-search-parameters")
+				.description("Get the FHIR Search Parameters for a resource in a specified store.")
+				.inputSchema(mapper.readValue(GET_SEARCH_PARAMETERS_SCHEMA, McpSchema.JsonSchema.class))
+				.build();
+	}
 
 	public static Tool validateTypeSearch() throws JsonProcessingException {
 		return new Tool.Builder()
-				.name("validateTypeSearch")
+				.name("validate-type-search")
 				.description("Validate a FHIR search request against a resource type in the store.")
 				.inputSchema(mapper.readValue(VALIDATE_TYPE_SEARCH_SCHEMA, McpSchema.JsonSchema.class))
 				.build();
