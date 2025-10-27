@@ -170,6 +170,11 @@ hapi:
         version: 2.0.0
         installMode: STORE_AND_INSTALL
         installResourceTypes: [ "CodeSystem", "ValueSet", "ConceptMap", "ActivityDefinition", "PlanDefinition", "Library", "Measure", "StructureDefinition" ]
+      uscql:
+        name: hl7.fhir.us.cql
+        version: 1.0.0
+        installMode: STORE_AND_INSTALL
+        installResourceTypes: [ "CodeSystem", "ValueSet", "ConceptMap", "ActivityDefinition", "PlanDefinition", "Library", "Measure", "StructureDefinition" ]
     #   swiss:
     #     name: swiss.mednet.fhir
     #     version: 0.8.0
