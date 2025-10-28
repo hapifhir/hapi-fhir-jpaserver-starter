@@ -103,6 +103,7 @@ $RECYCLE.BIN/
 .idea/*.iml
 .idea/modules
 .idea/sonarlint
+.idea/copilot.data.*.xml
 *.iml
 *.ipr
 
