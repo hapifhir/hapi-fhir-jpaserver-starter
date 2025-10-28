@@ -1,3 +1,7 @@
+Release 4.0.15
+
+- Upgrade Tomcat to fix [CVE-2025-55752](https://github.com/advisories/GHSA-wmwf-9ccg-fff5)
+
 2025/10/21 Release 4.0.14
 
 - Further MCP Server integration [#398](https://github.com/ahdis/matchbox/issues/398)

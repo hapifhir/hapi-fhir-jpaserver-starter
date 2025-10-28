@@ -80,7 +80,7 @@
 
         <!-- Other dependencies we need -->
         <lombok_version>1.18.36</lombok_version>
-        <tomcat_embed_version>10.1.44</tomcat_embed_version>
+        <tomcat_embed_version>10.1.48</tomcat_embed_version>
         <postgresql_version>42.7.7</postgresql_version>
         <h2_version>2.3.232</h2_version>
         <jakarta_servlet_version>6.1.0</jakarta_servlet_version>
