@@ -89,6 +89,9 @@ class CdaToFhirTransformTests {
 				sm = getEngine().parseMap(getFileAsStringFromResources("cda-it-observation.map"));
 				assertTrue(sm != null);
 				engine.addCanonicalResource(sm);
+				sm = getEngine().parseMap(getFileAsStringFromResources("cda-it-observation-st-r2b.map"));
+				assertTrue(sm != null);
+				engine.addCanonicalResource(sm);
 				sm = getEngine().parseMap(getFileAsStringFromResources("cda-it-observation-condition.map"));
 				assertTrue(sm != null);
 				engine.addCanonicalResource(sm);
@@ -205,6 +208,21 @@ class CdaToFhirTransformTests {
 		Observation obs = (Observation) resource;
 
 		assertEquals("Nessun Trauma riscontrato", obs.getValueStringType().getValue());
+
+		assertNotNull(resource);
+	}
+
+	@Test
+	void TestObservationStR2b() throws FHIRException, IOException {
+		InputStream in = getResourceAsStream("cda-it-observation-st-r2b.xml");
+
+		String cdaObservation = IOUtils.toString(in, StandardCharsets.UTF_8);
+		Resource resource = getEngine().transformToFhir(cdaObservation,
+				false,
+				"http://salute.gov.it/ig/cda-fhir-maps/StructureMap/TestObservationStR2b");
+		Observation obs = (Observation) resource;
+
+		assertEquals("prova", obs.getValueStringType().getValue());
 
 		assertNotNull(resource);
 	}
