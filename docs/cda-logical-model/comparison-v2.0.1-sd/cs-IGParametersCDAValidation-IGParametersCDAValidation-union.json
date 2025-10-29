@@ -1,0 +1,19 @@
+{
+  "resourceType" : "CodeSystem",
+  "id" : "0e56ebbd-666c-461b-9bdc-13902900384b-5",
+  "url" : "http://hl7.org/fhir/comparison/CodeSystem/0e56ebbd-666c-461b-9bdc-13902900384b-5",
+  "name" : "UnionIGParametersCDAValidationAndIGParametersCDAValidation",
+  "title" : "Union of IG Parameters CDA Validation And IG Parameters CDA Validation",
+  "status" : "draft",
+  "date" : "2025-10-29T22:16:24+01:00",
+  "concept" : [{
+    "code" : "parent-template-id",
+    "display" : "Parent TemplateId",
+    "definition" : "TemplateId from which all templates in this IG descend. A schematron warning will detect any teplateIds starting with this value that are not defined in the IG."
+  },
+  {
+    "code" : "value-set-limit",
+    "display" : "ValueSet Limit",
+    "definition" : "Maximum number of values to include in value set lookups."
+  }]
+}

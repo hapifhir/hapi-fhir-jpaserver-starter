@@ -2,11 +2,19 @@
   "codeSystems" : [
     {
       "url" : "http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "BinaryDataEncoding",
       "title" : "Binary Data Encoding Code System",
       "description" : "Identifies the representation of binary data in a text field"
+    },
+    {
+      "url" : "http://hl7.org/cda/stds/core/CodeSystem/IGParametersCDAValidation",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
+      "status" : "draft",
+      "name" : "IGParametersCDAValidation",
+      "title" : "IG Parameters CDA Validation",
+      "description" : "Code system for CDA validation parameters in the IG."
     }
   ]
 }

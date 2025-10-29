@@ -1,0 +1,9 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "0e56ebbd-666c-461b-9bdc-13902900384b-54",
+  "url" : "http://hl7.org/fhir/comparison/ValueSet/0e56ebbd-666c-461b-9bdc-13902900384b-54",
+  "name" : "IntersectionBinaryDataEncodingAndBinaryDataEncoding",
+  "title" : "Intersection of CDABinaryDataEncoding And CDABinaryDataEncoding",
+  "status" : "draft",
+  "date" : "2025-10-29T22:16:25+01:00"
+}

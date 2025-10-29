@@ -1,0 +1,174 @@
+# Subject (CDA Class) - Clinical Document Architecture v2.0.1-sd-202510-matchbox-patch
+
+* [**Table of Contents**](toc.md)
+* [**Artifacts Summary**](artifacts.md)
+* **Subject (CDA Class)**
+
+## Logical Model: Subject (CDA Class) 
+
+| | |
+| :--- | :--- |
+| *Official URL*:http://hl7.org/cda/stds/core/StructureDefinition/Subject | *Version*:2.0.1-sd-202510-matchbox-patch |
+| Active as of 2025-10-29 | *Computable Name*:Subject |
+
+ 
+The subject participant represents the primary target of the entries recorded in the document. Most of the time the subject is the same as the recordTarget, but need not be, for instance when the subject is a fetus observed in an obstetrical ultrasound. 
+The subject participant can be ascribed to a CDA section or a CDA entry. It propagates to nested components, unless overridden. The subject of a document is presumed to be the patient. 
+
+**Usages:**
+
+* Use this Logical Model: [Act (CDA Class)](StructureDefinition-Act.md), [Encounter (CDA Class)](StructureDefinition-Encounter.md), [Observation (CDA Class)](StructureDefinition-Observation.md), [ObservationMedia (CDA Class)](StructureDefinition-ObservationMedia.md)...Show 6 more,[Organizer (CDA Class)](StructureDefinition-Organizer.md),[Procedure (CDA Class)](StructureDefinition-Procedure.md),[RegionOfInterest (CDA Class)](StructureDefinition-RegionOfInterest.md),[Section (CDA Class)](StructureDefinition-Section.md),[SubstanceAdministration (CDA Class)](StructureDefinition-SubstanceAdministration.md)and[Supply (CDA Class)](StructureDefinition-Supply.md)
+
+You can also check for [usages in the FHIR IG Statistics](https://packages2.fhir.org/xig/hl7.cda.uv.core|current/StructureDefinition/Subject)
+
+### Formal Views of Template Content
+
+ [Description of Template, Differentials, Snapshots and how the different presentations work](http://hl7.org/fhir/R5/profiling.html#presentation). 
+
+ 
+
+Other representations of profile: [CSV](StructureDefinition-Subject.csv), [Excel](StructureDefinition-Subject.xlsx) 
+
+
+
+## Resource Content
+
+```json
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "Subject",
+  "extension" : [
+    {
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+      "_valueBoolean" : {
+        "extension" : [
+          {
+            "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+            "valueCode" : "not-applicable"
+          }
+        ]
+      }
+    },
+    {
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+      "valueUri" : "urn:hl7-org:v3"
+    },
+    {
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-name",
+      "valueString" : "subject"
+    },
+    {
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-container",
+      "valueUri" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
+    },
+    {
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/type-profile-style",
+      "valueCode" : "cda"
+    }
+  ],
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/Subject",
+  "version" : "2.0.1-sd-202510-matchbox-patch",
+  "name" : "Subject",
+  "title" : "Subject (CDA Class)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2025-10-29T22:15:57+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [
+    {
+      "name" : "HL7 International - Structured Documents",
+      "telecom" : [
+        {
+          "system" : "url",
+          "value" : "http://www.hl7.org/Special/committees/structure"
+        },
+        {
+          "system" : "email",
+          "value" : "structdog@lists.HL7.org"
+        }
+      ]
+    }
+  ],
+  "description" : "The subject participant represents the primary target of the entries recorded in the document. Most of the time the subject is the same as the recordTarget, but need not be, for instance when the subject is a fetus observed in an obstetrical ultrasound.\n\nThe subject participant can be ascribed to a CDA section or a CDA entry. It propagates to nested components, unless overridden. The subject of a document is presumed to be the patient.",
+  "fhirVersion" : "5.0.0",
+  "mapping" : [
+    {
+      "identity" : "rim",
+      "uri" : "http://hl7.org/v3",
+      "name" : "RIM Mapping"
+    }
+  ],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/Subject",
+  "baseDefinition" : "http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot",
+  "derivation" : "specialization",
+  "differential" : {
+    "element" : [
+      {
+        "id" : "Subject.typeCode",
+        "path" : "Subject.typeCode",
+        "representation" : ["xmlAttr"],
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "code",
+            "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+          }
+        ],
+        "fixedCode" : "SBJ",
+        "binding" : {
+          "strength" : "required",
+          "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ParticipationTargetSubject"
+        }
+      },
+      {
+        "id" : "Subject.contextControlCode",
+        "path" : "Subject.contextControlCode",
+        "representation" : ["xmlAttr"],
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "code",
+            "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+          }
+        ],
+        "fixedCode" : "OP",
+        "binding" : {
+          "strength" : "required",
+          "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAContextControl"
+        }
+      },
+      {
+        "id" : "Subject.awarenessCode",
+        "path" : "Subject.awarenessCode",
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
+          }
+        ],
+        "binding" : {
+          "strength" : "example",
+          "valueSet" : "http://terminology.hl7.org/ValueSet/v3-TargetAwareness"
+        }
+      },
+      {
+        "id" : "Subject.relatedSubject",
+        "path" : "Subject.relatedSubject",
+        "min" : 1,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "http://hl7.org/cda/stds/core/StructureDefinition/RelatedSubject"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+```

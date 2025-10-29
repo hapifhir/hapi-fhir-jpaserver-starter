@@ -33,7 +33,6 @@ uses "http://hl7.org/cda/stds/core/StructureDefinition/CE" alias CE as source
 uses "http://hl7.org/cda/stds/core/StructureDefinition/CD" alias CD as source
 uses "http://hl7.org/fhir/StructureDefinition/CodeableConcept" alias CodeableConcept as target
 uses "http://hl7.org/cda/stds/core/StructureDefinition/ST" alias ST as source
-uses "http://hl7.org/cda/stds/core/StructureDefinition/ST.r2b" alias ST_r2b as source
 uses "http://hl7.org/fhir/StructureDefinition/string" alias string as target
 uses "http://hl7.org/cda/stds/core/StructureDefinition/EN" alias EN as source
 uses "http://hl7.org/cda/stds/core/StructureDefinition/PN" alias PN as source
@@ -119,10 +118,6 @@ group IVLTSDateTime(source src : IVL_TS, target tgt : dateTime) extends Any <<ty
 
 group STstring(source src : ST, target tgt : string) extends Any <<types>> {
   src as v -> tgt.value = cast(v, 'string') "value";
-}
-
-group ST_r2bstring(source src : ST_r2b, target tgt : string) extends Any <<types>> {
-  src.value as v -> tgt.value = cast(v, 'string') "value";
 }
 
 group EDstring(source src : ED, target tgt : string) extends STstring <<types>> {

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <id value="uuid"/>
+  <language value="en"/>
+  <text>
+    <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml">
+      <p>Primitive type 'uuid'</p>
+    </div>
+  </text>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+    <valueUri value="urn:hl7-org:v3"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-container">
+    <valueUri value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics">
+    <valueCode value="can-bind"/>
+  </extension>
+  <url value="http://hl7.org/cda/stds/core/StructureDefinition/uuid"/>
+  <version value="2.0.0-sd-202510-matchbox-patch"/>
+  <name value="uuid"/>
+  <title value="uuid: DCE Universal Unique Identifier"/>
+  <status value="active"/>
+  <experimental value="false"/>
+  <date value="2025-10-28T21:58:07+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <name value="HL7 International - Structured Documents"/>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+    <telecom>
+      <system value="email"/>
+      <value value="structdog@lists.HL7.org"/>
+    </telecom>
+  </contact>
+  <description value="A globally unique string representing a DCE Universal Unique Identifier (UUID) in the common UUID format that consists of 5 hyphen-separated groups of hexadecimal digits having 8, 4, 4, 4, and 12 places respectively.&#xA;&#xA;***NOTE:*** The output of UUID related programs and functions may use all sorts of forms, upper case, lower case, and with or without the hyphens that group the digits. This variate output must be postprocessed to conform to the HL7 specification, i.e., the hyphens must be inserted for the 8-4-4-4-12 grouping and all hexadecimal digits must be converted to upper case."/>
+  <fhirVersion value="5.0.0"/>
+  <kind value="primitive-type"/>
+  <abstract value="false"/>
+  <type value="string"/>
+  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/string"/>
+  <derivation value="constraint"/>
+  <snapshot>
+    <extension url="http://hl7.org/fhir/tools/StructureDefinition/snapshot-base-version">
+      <valueString value="5.0.0"/>
+    </extension>
+    <element id="string">
+      <path value="string"/>
+      <short value="Primitive Type string"/>
+      <definition value="A sequence of Unicode characters"/>
+      <comment value="Note that FHIR strings SHALL NOT exceed 1,048,576 (1024*1024) characters in size"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="string"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+      <constraint>
+        <key value="uuid-pattern"/>
+        <severity value="error"/>
+        <human value="Must contain 5 hyphen-separated groups of hexadecimal digits having 8, 4, 4, 4, and 12 places respectively."/>
+        <expression value="matches('^[0-9A-Za-z]{8}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{12}$')"/>
+      </constraint>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+    </element>
+    <element id="string.id">
+      <path value="string.id"/>
+      <representation value="xmlAttr"/>
+      <short value="xml:id (or equivalent in JSON)"/>
+      <definition value="unique id for the element within a resource (for internal references)"/>
+      <min value="0"/>
+      <max value="0"/>
+      <base>
+        <path value="Element.id"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type">
+          <valueUrl value="string"/>
+        </extension>
+        <code value="http://hl7.org/fhirpath/System.String"/>
+      </type>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+    </element>
+    <element id="string.extension">
+      <path value="string.extension"/>
+      <short value="Extension"/>
+      <definition value="An Extension"/>
+      <min value="0"/>
+      <max value="0"/>
+      <base>
+        <path value="Element.extension"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="Extension"/>
+      </type>
+      <constraint>
+        <key value="ele-1"/>
+        <severity value="error"/>
+        <human value="All FHIR elements must have a @value or children"/>
+        <expression value="hasValue() or (children().count() &gt; id.count())"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Element"/>
+      </constraint>
+      <constraint>
+        <key value="ext-1"/>
+        <severity value="error"/>
+        <human value="Must have either extensions or value[x], not both"/>
+        <expression value="extension.exists() != value.exists()"/>
+        <source value="http://hl7.org/fhir/StructureDefinition/Extension"/>
+      </constraint>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+    </element>
+    <element id="string.value">
+      <path value="string.value"/>
+      <representation value="xmlAttr"/>
+      <short value="Primitive value for string"/>
+      <definition value="The actual value"/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="string.value"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-fhir-type">
+          <valueUrl value="string"/>
+        </extension>
+        <extension url="http://hl7.org/fhir/StructureDefinition/regex">
+          <valueString value="^[\s\S]+$"/>
+        </extension>
+        <code value="http://hl7.org/fhirpath/System.String"/>
+      </type>
+      <maxLength value="1048576"/>
+      <isModifier value="false"/>
+      <isSummary value="false"/>
+    </element>
+  </snapshot>
+  <differential>
+    <element id="string">
+      <path value="string"/>
+      <constraint>
+        <key value="uuid-pattern"/>
+        <severity value="error"/>
+        <human value="Must contain 5 hyphen-separated groups of hexadecimal digits having 8, 4, 4, 4, and 12 places respectively."/>
+        <expression value="matches('^[0-9A-Za-z]{8}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{12}$')"/>
+      </constraint>
+    </element>
+    <element id="string.id">
+      <path value="string.id"/>
+      <max value="0"/>
+    </element>
+    <element id="string.extension">
+      <path value="string.extension"/>
+      <max value="0"/>
+    </element>
+  </differential>
+</StructureDefinition>

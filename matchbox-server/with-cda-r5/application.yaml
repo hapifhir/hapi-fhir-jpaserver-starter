@@ -19,8 +19,8 @@ hapi:
         url: classpath:/hl7.terminology.r5#6.3.0.tgz
       cda:
         name: hl7.cda.uv.core
-        version: 2.0.0-sd-202406-matchbox-patch
-        url: classpath:/hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch.tgz
+        version: 2.0.1-sd-202510-matchbox-patch
+        url: classpath:/hl7.cda.uv.core#2.0.1-sd-202510-matchbox-patch.tgz
     staticLocation: file:/apps/
     fhir_version: R5
 matchbox:

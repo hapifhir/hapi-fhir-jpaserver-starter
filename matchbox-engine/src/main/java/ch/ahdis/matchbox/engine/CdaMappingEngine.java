@@ -80,7 +80,7 @@ public class CdaMappingEngine extends MatchboxEngine {
 			CdaMappingEngine engine = new CdaMappingEngine(this.getEngineR5());
 			// if the version would have been set before (constructor) the package is loaded
 			// from the package cache, we don't want this
-			engine.loadPackage(getClass().getResourceAsStream("/hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch.tgz"));
+			engine.loadPackage(getClass().getResourceAsStream("/hl7.cda.uv.core#2.0.1-sd-202510-matchbox-patch.tgz"));
 			engine.getContext().setCanRunWithoutTerminology(true);
 			engine.getContext().setNoTerminologyServer(true);
 			engine.getContext().setPackageTracker(engine);
@@ -102,7 +102,7 @@ public class CdaMappingEngine extends MatchboxEngine {
       CdaMappingEngine engine = new CdaMappingEngine(this.getEngineR4());
       // if the version would have been set before (constructor) the package is loaded
       // from the package cache, we don't want this
-      engine.loadPackage(getClass().getResourceAsStream("/hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch.tgz"));
+      engine.loadPackage(getClass().getResourceAsStream("/hl7.cda.uv.core#2.0.1-sd-202510-matchbox-patch.tgz"));
       engine.getContext().setCanRunWithoutTerminology(true);
       engine.getContext().setNoTerminologyServer(true);
       engine.getContext().setPackageTracker(engine);

@@ -1,0 +1,349 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "SC",
+  "language" : "en",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A ST that optionally may have a code attached. The text must always be present if a code is present. The code is often a local code.</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics",
+    "valueCode" : "can-bind"
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/elementdefinition-binding-style",
+    "valueCode" : "CDA"
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-container",
+    "valueUri" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
+  }],
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/SC",
+  "version" : "2.0.0-sd-202510-matchbox-patch",
+  "name" : "SC",
+  "title" : "SC: CharacterStringWithCode (V3 Data Type)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2025-10-28T21:58:07+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "name" : "HL7 International - Structured Documents",
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    },
+    {
+      "system" : "email",
+      "value" : "structdog@lists.HL7.org"
+    }]
+  }],
+  "description" : "A character string that optionally may have a code attached. The text must always be present if a code is present. The code is often a local code.",
+  "fhirVersion" : "5.0.0",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/SC",
+  "baseDefinition" : "http://hl7.org/cda/stds/core/StructureDefinition/ST",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "extension" : [{
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/snapshot-base-version",
+      "valueString" : "2.0.0-sd-202510-matchbox-patch"
+    }],
+    "element" : [{
+      "id" : "SC",
+      "path" : "SC",
+      "short" : "Base for all types and resources",
+      "definition" : "An ST that optionally may have a code attached. The text must always be present if a code is present. The code is often a local code.",
+      "min" : 1,
+      "max" : "*",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "constraint" : [{
+        "key" : "text-null",
+        "severity" : "error",
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
+      }],
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "SC.nullFlavor",
+      "path" : "SC.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ANY.nullFlavor",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
+      }
+    },
+    {
+      "id" : "SC.representation",
+      "path" : "SC.representation",
+      "representation" : ["xmlAttr"],
+      "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ST.representation",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "fixedCode" : "TXT"
+    },
+    {
+      "id" : "SC.mediaType",
+      "path" : "SC.mediaType",
+      "representation" : ["xmlAttr"],
+      "label" : "Media Type",
+      "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ST.mediaType",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "fixedCode" : "text/plain"
+    },
+    {
+      "id" : "SC.language",
+      "path" : "SC.language",
+      "representation" : ["xmlAttr"],
+      "label" : "Language",
+      "definition" : "For character based information the language property specifies the human language of the text.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ST.language",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }]
+    },
+    {
+      "id" : "SC.xmlText",
+      "path" : "SC.xmlText",
+      "representation" : ["xmlText"],
+      "short" : "Allows for mixed text content",
+      "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ST.xmlText",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+      }]
+    },
+    {
+      "id" : "SC.code",
+      "path" : "SC.code",
+      "representation" : ["xmlAttr"],
+      "label" : "Code",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SC.code",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }]
+    },
+    {
+      "id" : "SC.codeSystem",
+      "path" : "SC.codeSystem",
+      "representation" : ["xmlAttr"],
+      "label" : "Code System",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SC.codeSystem",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/oid",
+        "http://hl7.org/cda/stds/core/StructureDefinition/uuid",
+        "http://hl7.org/cda/stds/core/StructureDefinition/ruid"]
+      }]
+    },
+    {
+      "id" : "SC.codeSystemName",
+      "path" : "SC.codeSystemName",
+      "representation" : ["xmlAttr"],
+      "label" : "Code System Name",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SC.codeSystemName",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+      }]
+    },
+    {
+      "id" : "SC.codeSystemVersion",
+      "path" : "SC.codeSystemVersion",
+      "representation" : ["xmlAttr"],
+      "label" : "Code System Version",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SC.codeSystemVersion",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+      }]
+    },
+    {
+      "id" : "SC.displayName",
+      "path" : "SC.displayName",
+      "representation" : ["xmlAttr"],
+      "label" : "Display Name",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "SC.displayName",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+      }]
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "SC",
+      "path" : "SC",
+      "definition" : "An ST that optionally may have a code attached. The text must always be present if a code is present. The code is often a local code.",
+      "min" : 1,
+      "max" : "*"
+    },
+    {
+      "id" : "SC.code",
+      "path" : "SC.code",
+      "representation" : ["xmlAttr"],
+      "label" : "Code",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }]
+    },
+    {
+      "id" : "SC.codeSystem",
+      "path" : "SC.codeSystem",
+      "representation" : ["xmlAttr"],
+      "label" : "Code System",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/oid",
+        "http://hl7.org/cda/stds/core/StructureDefinition/uuid",
+        "http://hl7.org/cda/stds/core/StructureDefinition/ruid"]
+      }]
+    },
+    {
+      "id" : "SC.codeSystemName",
+      "path" : "SC.codeSystemName",
+      "representation" : ["xmlAttr"],
+      "label" : "Code System Name",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+      }]
+    },
+    {
+      "id" : "SC.codeSystemVersion",
+      "path" : "SC.codeSystemVersion",
+      "representation" : ["xmlAttr"],
+      "label" : "Code System Version",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+      }]
+    },
+    {
+      "id" : "SC.displayName",
+      "path" : "SC.displayName",
+      "representation" : ["xmlAttr"],
+      "label" : "Display Name",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+      }]
+    }]
+  }
+}

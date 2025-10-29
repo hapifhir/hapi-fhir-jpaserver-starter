@@ -1,0 +1,67 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "0e56ebbd-666c-461b-9bdc-13902900384b-98",
+  "url" : "http://hl7.org/fhir/comparison/ValueSet/0e56ebbd-666c-461b-9bdc-13902900384b-98",
+  "name" : "UnionCDAObservationInterpretationAndCDAObservationInterpretation",
+  "title" : "Union of CDAObservationInterpretation And CDAObservationInterpretation",
+  "status" : "draft",
+  "date" : "2025-10-29T22:16:25+01:00",
+  "compose" : {
+    "include" : [{
+      "concept" : [{
+        "code" : "B"
+      },
+      {
+        "code" : "D"
+      },
+      {
+        "code" : "U"
+      },
+      {
+        "code" : "W"
+      },
+      {
+        "code" : "<"
+      },
+      {
+        "code" : ">"
+      },
+      {
+        "code" : "A"
+      },
+      {
+        "code" : "AA"
+      },
+      {
+        "code" : "HH"
+      },
+      {
+        "code" : "LL"
+      },
+      {
+        "code" : "H"
+      },
+      {
+        "code" : "L"
+      },
+      {
+        "code" : "N"
+      },
+      {
+        "code" : "I"
+      },
+      {
+        "code" : "MS"
+      },
+      {
+        "code" : "R"
+      },
+      {
+        "code" : "S"
+      },
+      {
+        "code" : "VS"
+      }]
+    }]
+  }
+}

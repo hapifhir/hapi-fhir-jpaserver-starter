@@ -87,7 +87,7 @@
         <jaxb_api_version>2.3.1</jaxb_api_version>
         <snakeyaml_version>2.4</snakeyaml_version>
 
-        <plugin_maven_compiler_version>3.14.0</plugin_maven_compiler_version>
+        <plugin_maven_compiler_version>3.14.1</plugin_maven_compiler_version>
         <plugin_maven_resources_version>3.3.1</plugin_maven_resources_version>
         <plugin_maven_failsafe_version>3.5.2</plugin_maven_failsafe_version>
         <plugin_duplicate_finder_version>2.0.1</plugin_duplicate_finder_version>

@@ -2,7 +2,7 @@
   "codeSystems" : [
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/BinaryDataEncoding",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "BinaryDataEncoding",
       "title" : "CDABinaryDataEncoding",
@@ -11,7 +11,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAActClass",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDAActClass",
       "title" : "CDAActClass",
@@ -20,7 +20,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAActClassObservation",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDAActClassObservation",
       "title" : "CDAActClassObservation",
@@ -29,7 +29,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAActMood",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDAActMood",
       "title" : "CDAActMood",
@@ -38,7 +38,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAActMoodIntent",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDAActMoodIntent",
       "title" : "CDAActMoodIntent",
@@ -47,7 +47,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAActRelationshipType",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDAActRelationshipType",
       "title" : "CDAActRelationshipType",
@@ -58,7 +58,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAActSubstanceAdministrationCode",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDAActSubstanceAdministrationCode",
       "title" : "CDAActSubstanceAdministrationCode",
@@ -67,7 +67,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDACompressionAlgorithm",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDACompressionAlgorithm",
       "title" : "CDACompressionAlgorithm",
@@ -78,7 +78,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAContextControl",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDAContextControl",
       "title" : "CDAContextControl",
@@ -87,7 +87,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityCode",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDAEntityCode",
       "title" : "CDAEntityCode",
@@ -99,7 +99,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityNamePartQualifier",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDAEntityNamePartQualifier",
       "title" : "CDAEntityNamePartQualifier",
@@ -110,7 +110,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityNameUse",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDAEntityNameUse",
       "title" : "CDAEntityNameUse",
@@ -119,7 +119,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAInformationRecipientRole",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDAInformationRecipientRole",
       "title" : "CDAInformationRecipientRole",
@@ -128,7 +128,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAMaterialEntityClassType",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDAMaterialEntityClassType",
       "title" : "CDAMaterialEntityClassType",
@@ -140,7 +140,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDANullFlavor",
       "title" : "CDANullFlavor",
@@ -149,7 +149,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAObservationInterpretation",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDAObservationInterpretation",
       "title" : "CDAObservationInterpretation",
@@ -160,7 +160,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAParticipationType",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDAParticipationType",
       "title" : "CDAParticipationType",
@@ -169,7 +169,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDAPostalAddressUse",
       "title" : "CDAPostalAddressUse",
@@ -181,7 +181,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDARoleClass",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDARoleClass",
       "title" : "CDARoleClass",
@@ -190,7 +190,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDARoleClassAssociative",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDARoleClassAssociative",
       "title" : "CDARoleClassAssociative",
@@ -199,7 +199,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDARoleClassMutualRelationship",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDARoleClassMutualRelationship",
       "title" : "CDARoleClassMutualRelationship",
@@ -208,7 +208,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDARoleClassRoot",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDARoleClassRoot",
       "title" : "CDARoleClassRoot",
@@ -217,7 +217,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDARoleCode",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDARoleCode",
       "title" : "CDARoleCode",
@@ -226,7 +226,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDASetOperator",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDASetOperator",
       "title" : "CDASetOperator",
@@ -235,7 +235,7 @@
     },
     {
       "url" : "http://hl7.org/cda/stds/core/ValueSet/CDASignatureCode",
-      "version" : "2.0.0-sd-202406-matchbox-patch",
+      "version" : "2.0.1-sd-202510-matchbox-patch",
       "status" : "draft",
       "name" : "CDASignatureCode",
       "title" : "CDASignatureCode",

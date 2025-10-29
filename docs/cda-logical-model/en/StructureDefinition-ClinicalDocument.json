@@ -1,0 +1,1122 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "ClinicalDocument",
+  "language" : "en",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>The ClinicalDocument class is the entry point into the CDA R-MIM, and corresponds to the &lt;ClinicalDocument&gt; XML element that is the root element of a CDA document.</p>\n      <p>A CDA document is logically broken up into a CDA Header and a CDA Body. The CDA Header is comprised of ClinicalDocument attributes, participants, and act relationships. The CDA Body is the target of the ClinicalDocument component act relationship.</p>\n      <p>The ClinicalDocument class inherits various attributes from the InfrastructureRoot class of the RIM, including ClinicalDocument.templateId and ClinicalDocument.typeId. When ClinicalDocument.templateId is valued in an instance, it signals the imposition of a set of template-defined constraints. In addition, the templateId attribute is available in all other CDA classes, thus enabling the imposition of a set of template-defined constraints at any level of granularity. The value of this attribute provides a unique identifier for the template(s) in question.</p>\n      <p>ClinicalDocument.typeId is a technology-neutral explicit reference to this CDA, Release Two specification, and must be valued as follows: ClinicalDocument.typeId.root = &quot;2.16.840.1.113883.1.3&quot; (which is the OID for HL7 Registered models); ClinicalDocument.typeId.extension = &quot;POCD_HD000040&quot; (which is the unique identifier for the CDA, Release Two Hierarchical Description).</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-name",
+    "valueString" : "ClinicalDocument"
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/type-profile-style",
+    "valueUri" : "cda"
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-container",
+    "valueUri" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
+  }],
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument",
+  "version" : "2.0.0-sd-202510-matchbox-patch",
+  "name" : "ClinicalDocument",
+  "title" : "ClinicalDocument (CDA Class)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2025-10-28T21:58:07+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "name" : "HL7 International - Structured Documents",
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    },
+    {
+      "system" : "email",
+      "value" : "structdog@lists.HL7.org"
+    }]
+  }],
+  "description" : "This is a generated StructureDefinition that describes CDA - that is, CDA as it actually is for R2. The intent of this StructureDefinition is to enable CDA to be a FHIR resource. That enables the FHIR infrastructure - API, conformance, query - to be used directly against CDA",
+  "fhirVersion" : "5.0.0",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument",
+  "baseDefinition" : "http://hl7.org/cda/stds/core/StructureDefinition/ANY",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "extension" : [{
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/snapshot-base-version",
+      "valueString" : "2.0.0-sd-202510-matchbox-patch"
+    }],
+    "element" : [{
+      "id" : "ClinicalDocument",
+      "path" : "ClinicalDocument",
+      "short" : "Base for all types and resources",
+      "definition" : "Defines the basic properties of every data value. This is an abstract type, meaning that no value can be just a data value without belonging to any concrete type. Every concrete type is a specialization of this general abstract DataValue type.",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.nullFlavor",
+      "path" : "ClinicalDocument.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ANY.nullFlavor",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
+      }
+    },
+    {
+      "id" : "ClinicalDocument.classCode",
+      "path" : "ClinicalDocument.classCode",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.classCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "fixedCode" : "DOCCLIN",
+      "binding" : {
+        "strength" : "example",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAActClass"
+      }
+    },
+    {
+      "id" : "ClinicalDocument.moodCode",
+      "path" : "ClinicalDocument.moodCode",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.moodCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "fixedCode" : "EVN",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAActMood"
+      }
+    },
+    {
+      "id" : "ClinicalDocument.realmCode",
+      "path" : "ClinicalDocument.realmCode",
+      "definition" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "ClinicalDocument.realmCode",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.typeId",
+      "path" : "ClinicalDocument.typeId",
+      "definition" : "ClinicalDocument.typeId is a technology-neutral explicit reference to this CDA, Release Two specification, and must be valued as follows: ClinicalDocument.typeId.root = \"2.16.840.1.113883.1.3\" (which is the OID for HL7 Registered models); ClinicalDocument.typeId.extension = \"POCD_HD000040\" (which is the unique identifier for the CDA, Release Two Hierarchical Description).",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.typeId",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.typeId.nullFlavor",
+      "path" : "ClinicalDocument.typeId.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ANY.nullFlavor",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
+      }
+    },
+    {
+      "id" : "ClinicalDocument.typeId.assigningAuthorityName",
+      "path" : "ClinicalDocument.typeId.assigningAuthorityName",
+      "representation" : ["xmlAttr"],
+      "label" : "Assigning Authority Name",
+      "definition" : "A human readable name or mnemonic for the assigning authority. The Assigning Authority Name has no computational value. The purpose of a Assigning Authority Name is to assist an unaided human interpreter of an II value to interpret the authority. Note: no automated processing must depend on the assigning authority name to be present in any form.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "II.assigningAuthorityName",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.typeId.displayable",
+      "path" : "ClinicalDocument.typeId.displayable",
+      "representation" : ["xmlAttr"],
+      "label" : "Displayable",
+      "definition" : "Specifies if the identifier is intended for human display and data entry (displayable = true) as opposed to pure machine interoperation (displayable = false).",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "II.displayable",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "boolean",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"]
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.typeId.root",
+      "path" : "ClinicalDocument.typeId.root",
+      "representation" : ["xmlAttr"],
+      "label" : "Root",
+      "definition" : "Identifies the type as an HL7 Registered model",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "II.root",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/oid",
+        "http://hl7.org/cda/stds/core/StructureDefinition/uuid",
+        "http://hl7.org/cda/stds/core/StructureDefinition/ruid"]
+      }],
+      "fixedString" : "2.16.840.1.113883.1.3"
+    },
+    {
+      "id" : "ClinicalDocument.typeId.extension",
+      "path" : "ClinicalDocument.typeId.extension",
+      "representation" : ["xmlAttr"],
+      "label" : "Extension",
+      "definition" : "A character string as a unique identifier within the scope of the identifier root.",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "II.extension",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+      }],
+      "fixedString" : "POCD_HD000040"
+    },
+    {
+      "id" : "ClinicalDocument.templateId",
+      "path" : "ClinicalDocument.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "ClinicalDocument.templateId",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.id",
+      "path" : "ClinicalDocument.id",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.id",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.code",
+      "path" : "ClinicalDocument.code",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.code",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "example",
+        "valueSet" : "http://hl7.org/fhir/ValueSet/doc-typecodes"
+      }
+    },
+    {
+      "id" : "ClinicalDocument.title",
+      "path" : "ClinicalDocument.title",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.title",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.sdtcStatusCode",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      },
+      {
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-name",
+        "valueString" : "statusCode"
+      }],
+      "path" : "ClinicalDocument.sdtcStatusCode",
+      "definition" : "The statusCode extension attribute allows the implementer to identify a ClinicalDocument that is in other than the completed state. It was created to support the Structured Form Definition IG to identify that the document itself is an unfinished product currently being completed for a patient.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.sdtcStatusCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActStatus"
+      }
+    },
+    {
+      "id" : "ClinicalDocument.terminologyDate",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-at:v3"
+      },
+      {
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-name",
+        "valueString" : "terminologyDate"
+      }],
+      "path" : "ClinicalDocument.terminologyDate",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.terminologyDate",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/TS"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.formatCode",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-at:v3"
+      },
+      {
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-name",
+        "valueString" : "formatCode"
+      }],
+      "path" : "ClinicalDocument.formatCode",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.formatCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CD"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.practiceSettingCode",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-at:v3"
+      },
+      {
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-name",
+        "valueString" : "practiceSettingCode"
+      }],
+      "path" : "ClinicalDocument.practiceSettingCode",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.practiceSettingCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CD"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.effectiveTime",
+      "path" : "ClinicalDocument.effectiveTime",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.effectiveTime",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/TS"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.confidentialityCode",
+      "path" : "ClinicalDocument.confidentialityCode",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.confidentialityCode",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.languageCode",
+      "path" : "ClinicalDocument.languageCode",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.languageCode",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/fhir/ValueSet/all-languages"
+      }
+    },
+    {
+      "id" : "ClinicalDocument.setId",
+      "path" : "ClinicalDocument.setId",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.setId",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.versionNumber",
+      "path" : "ClinicalDocument.versionNumber",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.versionNumber",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/INT"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.copyTime",
+      "path" : "ClinicalDocument.copyTime",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.copyTime",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/TS"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.recordTarget",
+      "path" : "ClinicalDocument.recordTarget",
+      "min" : 1,
+      "max" : "*",
+      "base" : {
+        "path" : "ClinicalDocument.recordTarget",
+        "min" : 1,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/RecordTarget"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.author",
+      "path" : "ClinicalDocument.author",
+      "min" : 1,
+      "max" : "*",
+      "base" : {
+        "path" : "ClinicalDocument.author",
+        "min" : 1,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Author"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.dataEnterer",
+      "path" : "ClinicalDocument.dataEnterer",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.dataEnterer",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/DataEnterer"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.informant",
+      "path" : "ClinicalDocument.informant",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "ClinicalDocument.informant",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Informant"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.custodian",
+      "path" : "ClinicalDocument.custodian",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.custodian",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Custodian"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.informationRecipient",
+      "path" : "ClinicalDocument.informationRecipient",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "ClinicalDocument.informationRecipient",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/InformationRecipient"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.legalAuthenticator",
+      "path" : "ClinicalDocument.legalAuthenticator",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "ClinicalDocument.legalAuthenticator",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/LegalAuthenticator"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.authenticator",
+      "path" : "ClinicalDocument.authenticator",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "ClinicalDocument.authenticator",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Authenticator"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.participant",
+      "path" : "ClinicalDocument.participant",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "ClinicalDocument.participant",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Participant1"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.inFulfillmentOf",
+      "path" : "ClinicalDocument.inFulfillmentOf",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "ClinicalDocument.inFulfillmentOf",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/InFulfillmentOf"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.documentationOf",
+      "path" : "ClinicalDocument.documentationOf",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "ClinicalDocument.documentationOf",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/DocumentationOf"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.relatedDocument",
+      "path" : "ClinicalDocument.relatedDocument",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "ClinicalDocument.relatedDocument",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/RelatedDocument"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.authorization",
+      "path" : "ClinicalDocument.authorization",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "ClinicalDocument.authorization",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Authorization"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.componentOf",
+      "path" : "ClinicalDocument.componentOf",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.componentOf",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ComponentOf"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.component",
+      "path" : "ClinicalDocument.component",
+      "min" : 1,
+      "max" : "1",
+      "base" : {
+        "path" : "ClinicalDocument.component",
+        "min" : 1,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Component"
+      }]
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "ClinicalDocument",
+      "path" : "ClinicalDocument",
+      "min" : 1,
+      "max" : "1"
+    },
+    {
+      "id" : "ClinicalDocument.classCode",
+      "path" : "ClinicalDocument.classCode",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "fixedCode" : "DOCCLIN",
+      "binding" : {
+        "strength" : "example",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAActClass"
+      }
+    },
+    {
+      "id" : "ClinicalDocument.moodCode",
+      "path" : "ClinicalDocument.moodCode",
+      "representation" : ["xmlAttr"],
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "fixedCode" : "EVN",
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAActMood"
+      }
+    },
+    {
+      "id" : "ClinicalDocument.realmCode",
+      "path" : "ClinicalDocument.realmCode",
+      "definition" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.typeId",
+      "path" : "ClinicalDocument.typeId",
+      "definition" : "ClinicalDocument.typeId is a technology-neutral explicit reference to this CDA, Release Two specification, and must be valued as follows: ClinicalDocument.typeId.root = \"2.16.840.1.113883.1.3\" (which is the OID for HL7 Registered models); ClinicalDocument.typeId.extension = \"POCD_HD000040\" (which is the unique identifier for the CDA, Release Two Hierarchical Description).",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.typeId.root",
+      "path" : "ClinicalDocument.typeId.root",
+      "representation" : ["xmlAttr"],
+      "definition" : "Identifies the type as an HL7 Registered model",
+      "min" : 1,
+      "max" : "1",
+      "fixedString" : "2.16.840.1.113883.1.3"
+    },
+    {
+      "id" : "ClinicalDocument.typeId.extension",
+      "path" : "ClinicalDocument.typeId.extension",
+      "representation" : ["xmlAttr"],
+      "definition" : "A character string as a unique identifier within the scope of the identifier root.",
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+      }],
+      "fixedString" : "POCD_HD000040"
+    },
+    {
+      "id" : "ClinicalDocument.templateId",
+      "path" : "ClinicalDocument.templateId",
+      "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.id",
+      "path" : "ClinicalDocument.id",
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.code",
+      "path" : "ClinicalDocument.code",
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
+      }],
+      "binding" : {
+        "strength" : "example",
+        "valueSet" : "http://hl7.org/fhir/ValueSet/doc-typecodes"
+      }
+    },
+    {
+      "id" : "ClinicalDocument.title",
+      "path" : "ClinicalDocument.title",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.sdtcStatusCode",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-org:sdtc"
+      },
+      {
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-name",
+        "valueString" : "statusCode"
+      }],
+      "path" : "ClinicalDocument.sdtcStatusCode",
+      "definition" : "The statusCode extension attribute allows the implementer to identify a ClinicalDocument that is in other than the completed state. It was created to support the Structured Form Definition IG to identify that the document itself is an unfinished product currently being completed for a patient.",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActStatus"
+      }
+    },
+    {
+      "id" : "ClinicalDocument.terminologyDate",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-at:v3"
+      },
+      {
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-name",
+        "valueString" : "terminologyDate"
+      }],
+      "path" : "ClinicalDocument.terminologyDate",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/TS"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.formatCode",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-at:v3"
+      },
+      {
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-name",
+        "valueString" : "formatCode"
+      }],
+      "path" : "ClinicalDocument.formatCode",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CD"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.practiceSettingCode",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+        "valueUri" : "urn:hl7-at:v3"
+      },
+      {
+        "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-name",
+        "valueString" : "practiceSettingCode"
+      }],
+      "path" : "ClinicalDocument.practiceSettingCode",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CD"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.effectiveTime",
+      "path" : "ClinicalDocument.effectiveTime",
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/TS"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.confidentialityCode",
+      "path" : "ClinicalDocument.confidentialityCode",
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CE"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.languageCode",
+      "path" : "ClinicalDocument.languageCode",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/fhir/ValueSet/all-languages"
+      }
+    },
+    {
+      "id" : "ClinicalDocument.setId",
+      "path" : "ClinicalDocument.setId",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.versionNumber",
+      "path" : "ClinicalDocument.versionNumber",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/INT"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.copyTime",
+      "path" : "ClinicalDocument.copyTime",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/TS"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.recordTarget",
+      "path" : "ClinicalDocument.recordTarget",
+      "min" : 1,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/RecordTarget"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.author",
+      "path" : "ClinicalDocument.author",
+      "min" : 1,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Author"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.dataEnterer",
+      "path" : "ClinicalDocument.dataEnterer",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/DataEnterer"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.informant",
+      "path" : "ClinicalDocument.informant",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Informant"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.custodian",
+      "path" : "ClinicalDocument.custodian",
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Custodian"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.informationRecipient",
+      "path" : "ClinicalDocument.informationRecipient",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/InformationRecipient"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.legalAuthenticator",
+      "path" : "ClinicalDocument.legalAuthenticator",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/LegalAuthenticator"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.authenticator",
+      "path" : "ClinicalDocument.authenticator",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Authenticator"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.participant",
+      "path" : "ClinicalDocument.participant",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Participant1"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.inFulfillmentOf",
+      "path" : "ClinicalDocument.inFulfillmentOf",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/InFulfillmentOf"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.documentationOf",
+      "path" : "ClinicalDocument.documentationOf",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/DocumentationOf"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.relatedDocument",
+      "path" : "ClinicalDocument.relatedDocument",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/RelatedDocument"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.authorization",
+      "path" : "ClinicalDocument.authorization",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Authorization"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.componentOf",
+      "path" : "ClinicalDocument.componentOf",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ComponentOf"
+      }]
+    },
+    {
+      "id" : "ClinicalDocument.component",
+      "path" : "ClinicalDocument.component",
+      "min" : 1,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/Component"
+      }]
+    }]
+  }
+}

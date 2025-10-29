@@ -1,0 +1,28 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "0e56ebbd-666c-461b-9bdc-13902900384b-72",
+  "url" : "http://hl7.org/fhir/comparison/ValueSet/0e56ebbd-666c-461b-9bdc-13902900384b-72",
+  "name" : "IntersectionCDAActSubstanceAdministrationCodeAndCDAActSubstanceAdministrationCode",
+  "title" : "Intersection of CDAActSubstanceAdministrationCode And CDAActSubstanceAdministrationCode",
+  "status" : "draft",
+  "date" : "2025-10-29T22:16:25+01:00",
+  "compose" : {
+    "include" : [{
+      "concept" : [{
+        "code" : "DRUG"
+      },
+      {
+        "code" : "FD"
+      },
+      {
+        "code" : "IMMUNIZ"
+      },
+      {
+        "code" : "BOOSTER"
+      },
+      {
+        "code" : "INITIMMUNIZ"
+      }]
+    }]
+  }
+}

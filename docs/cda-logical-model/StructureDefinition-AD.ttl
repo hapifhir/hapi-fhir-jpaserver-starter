@@ -1,5 +1,6 @@
 @prefix fhir: <http://hl7.org/fhir/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -10,31 +11,57 @@
   fhir:id [ fhir:v "AD"] ; # 
   fhir:text [
      fhir:status [ fhir:v "generated" ] ;
-     fhir:div "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Mailing and home or office addresses. A sequence of address parts, such as street or post office Box, city, postal code, country, etc.</p>\n    </div>"
+     fhir:div [ fhir:v "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Mailing and home or office addresses. A sequence of address parts, such as street or post office Box, city, postal code, country, etc.</p>\n    </div>"^^rdf:XMLLiteral ]
   ] ; # 
   fhir:extension ( [
-     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/logical-target"^^xsd:anyURI ] ;
+     fhir:url [
+       fhir:v "http://hl7.org/fhir/tools/StructureDefinition/logical-target"^^xsd:anyURI ;
+       fhir:l <http://hl7.org/fhir/tools/StructureDefinition/logical-target>
+     ] ;
      fhir:value [
-       a fhir:boolean ;
+       a fhir:Boolean ;
        fhir:extension ( [
-         fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/data-absent-reason"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "not-applicable" ]
+         fhir:url [
+           fhir:v "http://hl7.org/fhir/StructureDefinition/data-absent-reason"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/fhir/StructureDefinition/data-absent-reason>
+         ] ;
+         fhir:value [
+           a fhir:Code ;
+           fhir:v "not-applicable"
+         ]
        ] )
      ]
   ] [
-     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ] ;
-     fhir:value [ fhir:v "urn:hl7-org:v3"^^xsd:anyURI ]
+     fhir:url [
+       fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ;
+       fhir:l <http://hl7.org/fhir/tools/StructureDefinition/xml-namespace>
+     ] ;
+     fhir:value [
+       a fhir:Uri ;
+       fhir:v "urn:hl7-org:v3"^^xsd:anyURI ;
+       fhir:l <urn:hl7-org:v3>
+     ]
   ] [
-     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/logical-container"^^xsd:anyURI ] ;
-     fhir:value [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"^^xsd:anyURI ]
+     fhir:url [
+       fhir:v "http://hl7.org/fhir/tools/StructureDefinition/logical-container"^^xsd:anyURI ;
+       fhir:l <http://hl7.org/fhir/tools/StructureDefinition/logical-container>
+     ] ;
+     fhir:value [
+       a fhir:Uri ;
+       fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"^^xsd:anyURI ;
+       fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument>
+     ]
   ] ) ; # 
-  fhir:url [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/AD"^^xsd:anyURI] ; # 
-  fhir:version [ fhir:v "2.0.0-sd-202406-matchbox-patch"] ; # 
+  fhir:url [
+     fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/AD"^^xsd:anyURI ;
+     fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/AD>
+  ] ; # 
+  fhir:version [ fhir:v "2.0.1-sd-202510-matchbox-patch"] ; # 
   fhir:name [ fhir:v "AD"] ; # 
   fhir:title [ fhir:v "AD: PostalAddress (V3 Data Type)"] ; # 
   fhir:status [ fhir:v "active"] ; # 
-  fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
-  fhir:date [ fhir:v "2024-06-19T17:47:42+02:00"^^xsd:dateTime] ; # 
+  fhir:experimental [ fhir:v false] ; # 
+  fhir:date [ fhir:v "2025-10-29T22:15:57+01:00"^^xsd:dateTime] ; # 
   fhir:publisher [ fhir:v "Health Level 7"] ; # 
   fhir:contact ( [
      fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
@@ -50,18 +77,34 @@
   fhir:fhirVersion [ fhir:v "5.0.0"] ; # 
   fhir:mapping ( [
      fhir:identity [ fhir:v "rim" ] ;
-     fhir:uri [ fhir:v "http://hl7.org/v3"^^xsd:anyURI ] ;
+     fhir:uri [
+       fhir:v "http://hl7.org/v3"^^xsd:anyURI ;
+       fhir:l <http://hl7.org/v3>
+     ] ;
      fhir:name [ fhir:v "RIM Mapping" ]
   ] ) ; # 
   fhir:kind [ fhir:v "logical"] ; # 
-  fhir:abstract [ fhir:v "false"^^xsd:boolean] ; # 
-  fhir:type [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/AD"^^xsd:anyURI] ; # 
+  fhir:abstract [ fhir:v false] ; # 
+  fhir:type [
+     fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/AD"^^xsd:anyURI ;
+     fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/AD>
+  ] ; # 
   fhir:baseDefinition [
      fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ANY"^^xsd:anyURI ;
-     fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ANY>
+     fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ANY>
   ] ; # 
   fhir:derivation [ fhir:v "specialization"] ; # 
   fhir:snapshot [
+     fhir:extension ( [
+       fhir:url [
+         fhir:v "http://hl7.org/fhir/tools/StructureDefinition/snapshot-base-version"^^xsd:anyURI ;
+         fhir:l <http://hl7.org/fhir/tools/StructureDefinition/snapshot-base-version>
+       ] ;
+       fhir:value [
+         a fhir:String ;
+         fhir:v "2.0.1-sd-202510-matchbox-patch"
+       ]
+     ] ) ;
      fhir:element ( [
        fhir:id [ fhir:v "AD" ] ;
        fhir:path [ fhir:v "AD" ] ;
@@ -74,7 +117,7 @@
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
          fhir:max [ fhir:v "*" ]
        ] ;
-       fhir:isModifier [ fhir:v "false"^^xsd:boolean ] ;
+       fhir:isModifier [ fhir:v false ] ;
        fhir:mapping ( [
          fhir:identity [ fhir:v "rim" ] ;
          fhir:map [ fhir:v "n/a" ]
@@ -93,17 +136,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -120,10 +166,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "boolean"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "boolean"^^xsd:anyURI ;
+           fhir:l fhir:boolean
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/bl-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/bl-simple>
          ] )
        ] )
      ] [
@@ -140,24 +189,33 @@
          fhir:max [ fhir:v "*" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse>
          ]
        ]
      ] [
        fhir:id [ fhir:v "AD.item" ] ;
        fhir:extension ( [
-         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-choice-group"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "true"^^xsd:boolean ]
+         fhir:url [
+           fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-choice-group"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/fhir/tools/StructureDefinition/xml-choice-group>
+         ] ;
+         fhir:value [
+           a fhir:Boolean ;
+           fhir:v true
+         ]
        ] ) ;
        fhir:path [ fhir:v "AD.item" ] ;
        fhir:definition [ fhir:v "A series of items that constitute the address." ] ;
@@ -169,7 +227,10 @@
          fhir:max [ fhir:v "*" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/fhir/StructureDefinition/Base"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/fhir/StructureDefinition/Base"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/fhir/StructureDefinition/Base>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "AD-1" ] ;
@@ -189,7 +250,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -198,7 +262,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -215,17 +279,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -241,13 +308,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.delimiter.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.delimiter.mediaType" ] ;
@@ -262,13 +335,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.delimiter.language" ] ;
        fhir:path [ fhir:v "AD.item.delimiter.language" ] ;
@@ -283,10 +362,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -303,10 +385,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -322,13 +407,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "DEL" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "DEL"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.country" ] ;
        fhir:path [ fhir:v "AD.item.country" ] ;
@@ -341,7 +432,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -350,7 +444,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -367,17 +461,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -393,13 +490,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.country.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.country.mediaType" ] ;
@@ -414,13 +517,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.country.language" ] ;
        fhir:path [ fhir:v "AD.item.country.language" ] ;
@@ -435,10 +544,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -455,10 +567,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -474,13 +589,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "CNT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "CNT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.state" ] ;
        fhir:path [ fhir:v "AD.item.state" ] ;
@@ -493,7 +614,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -502,7 +626,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -519,17 +643,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -545,13 +672,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.state.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.state.mediaType" ] ;
@@ -566,13 +699,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.state.language" ] ;
        fhir:path [ fhir:v "AD.item.state.language" ] ;
@@ -587,10 +726,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -607,10 +749,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -626,13 +771,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "STA" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "STA"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.county" ] ;
        fhir:path [ fhir:v "AD.item.county" ] ;
@@ -645,7 +796,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -654,7 +808,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -671,17 +825,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -697,13 +854,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.county.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.county.mediaType" ] ;
@@ -718,13 +881,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.county.language" ] ;
        fhir:path [ fhir:v "AD.item.county.language" ] ;
@@ -739,10 +908,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -759,10 +931,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -778,13 +953,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "CPA" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "CPA"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.city" ] ;
        fhir:path [ fhir:v "AD.item.city" ] ;
@@ -797,7 +978,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -806,7 +990,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -823,17 +1007,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -849,13 +1036,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.city.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.city.mediaType" ] ;
@@ -870,13 +1063,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.city.language" ] ;
        fhir:path [ fhir:v "AD.item.city.language" ] ;
@@ -891,10 +1090,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -911,10 +1113,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -930,13 +1135,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "CTY" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "CTY"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.postalCode" ] ;
        fhir:path [ fhir:v "AD.item.postalCode" ] ;
@@ -949,7 +1160,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -958,7 +1172,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -975,17 +1189,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -1001,13 +1218,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.postalCode.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.postalCode.mediaType" ] ;
@@ -1022,13 +1245,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.postalCode.language" ] ;
        fhir:path [ fhir:v "AD.item.postalCode.language" ] ;
@@ -1043,10 +1272,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -1063,10 +1295,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -1082,13 +1317,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "ZIP" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "ZIP"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.streetAddressLine" ] ;
        fhir:path [ fhir:v "AD.item.streetAddressLine" ] ;
@@ -1101,7 +1342,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -1110,7 +1354,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -1127,17 +1371,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -1153,13 +1400,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.streetAddressLine.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.streetAddressLine.mediaType" ] ;
@@ -1174,13 +1427,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.streetAddressLine.language" ] ;
        fhir:path [ fhir:v "AD.item.streetAddressLine.language" ] ;
@@ -1195,10 +1454,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -1215,10 +1477,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -1234,13 +1499,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "SAL" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "SAL"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.houseNumber" ] ;
        fhir:path [ fhir:v "AD.item.houseNumber" ] ;
@@ -1253,7 +1524,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -1262,7 +1536,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -1279,17 +1553,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -1305,13 +1582,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.houseNumber.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.houseNumber.mediaType" ] ;
@@ -1326,13 +1609,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.houseNumber.language" ] ;
        fhir:path [ fhir:v "AD.item.houseNumber.language" ] ;
@@ -1347,10 +1636,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -1367,10 +1659,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -1386,13 +1681,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "BNR" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "BNR"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.houseNumberNumeric" ] ;
        fhir:path [ fhir:v "AD.item.houseNumberNumeric" ] ;
@@ -1405,7 +1706,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -1414,7 +1718,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -1431,17 +1735,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -1457,13 +1764,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.houseNumberNumeric.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.houseNumberNumeric.mediaType" ] ;
@@ -1478,13 +1791,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.houseNumberNumeric.language" ] ;
        fhir:path [ fhir:v "AD.item.houseNumberNumeric.language" ] ;
@@ -1499,10 +1818,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -1519,10 +1841,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -1538,13 +1863,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "BNN" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "BNN"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.direction" ] ;
        fhir:path [ fhir:v "AD.item.direction" ] ;
@@ -1557,7 +1888,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -1566,7 +1900,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -1583,17 +1917,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -1609,13 +1946,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.direction.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.direction.mediaType" ] ;
@@ -1630,13 +1973,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.direction.language" ] ;
        fhir:path [ fhir:v "AD.item.direction.language" ] ;
@@ -1651,10 +2000,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -1671,10 +2023,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -1690,13 +2045,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "DIR" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "DIR"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.streetName" ] ;
        fhir:path [ fhir:v "AD.item.streetName" ] ;
@@ -1709,7 +2070,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -1718,7 +2082,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -1735,17 +2099,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -1761,13 +2128,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.streetName.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.streetName.mediaType" ] ;
@@ -1782,13 +2155,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.streetName.language" ] ;
        fhir:path [ fhir:v "AD.item.streetName.language" ] ;
@@ -1803,10 +2182,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -1823,10 +2205,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -1842,13 +2227,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "STR" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "STR"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.streetNameBase" ] ;
        fhir:path [ fhir:v "AD.item.streetNameBase" ] ;
@@ -1861,7 +2252,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -1870,7 +2264,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -1887,17 +2281,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -1913,13 +2310,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.streetNameBase.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.streetNameBase.mediaType" ] ;
@@ -1934,13 +2337,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.streetNameBase.language" ] ;
        fhir:path [ fhir:v "AD.item.streetNameBase.language" ] ;
@@ -1955,10 +2364,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -1975,10 +2387,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -1994,13 +2409,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "STB" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "STB"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.streetNameType" ] ;
        fhir:path [ fhir:v "AD.item.streetNameType" ] ;
@@ -2013,7 +2434,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -2022,7 +2446,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -2039,17 +2463,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -2065,13 +2492,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.streetNameType.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.streetNameType.mediaType" ] ;
@@ -2086,13 +2519,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.streetNameType.language" ] ;
        fhir:path [ fhir:v "AD.item.streetNameType.language" ] ;
@@ -2107,10 +2546,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -2127,10 +2569,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -2146,13 +2591,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "STTYP" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "STTYP"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.additionalLocator" ] ;
        fhir:path [ fhir:v "AD.item.additionalLocator" ] ;
@@ -2165,7 +2616,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -2174,7 +2628,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -2191,17 +2645,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -2217,13 +2674,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.additionalLocator.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.additionalLocator.mediaType" ] ;
@@ -2238,13 +2701,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.additionalLocator.language" ] ;
        fhir:path [ fhir:v "AD.item.additionalLocator.language" ] ;
@@ -2259,10 +2728,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -2279,10 +2751,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -2298,13 +2773,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "ADL" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "ADL"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.unitID" ] ;
        fhir:path [ fhir:v "AD.item.unitID" ] ;
@@ -2317,7 +2798,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -2326,7 +2810,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -2343,17 +2827,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -2369,13 +2856,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.unitID.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.unitID.mediaType" ] ;
@@ -2390,13 +2883,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.unitID.language" ] ;
        fhir:path [ fhir:v "AD.item.unitID.language" ] ;
@@ -2411,10 +2910,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -2431,10 +2933,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -2450,13 +2955,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "UNID" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "UNID"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.unitType" ] ;
        fhir:path [ fhir:v "AD.item.unitType" ] ;
@@ -2469,7 +2980,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -2478,7 +2992,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -2495,17 +3009,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -2521,13 +3038,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.unitType.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.unitType.mediaType" ] ;
@@ -2542,13 +3065,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.unitType.language" ] ;
        fhir:path [ fhir:v "AD.item.unitType.language" ] ;
@@ -2563,10 +3092,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -2583,10 +3115,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -2602,13 +3137,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "UNIT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "UNIT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.careOf" ] ;
        fhir:path [ fhir:v "AD.item.careOf" ] ;
@@ -2621,7 +3162,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -2630,7 +3174,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -2647,17 +3191,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -2673,13 +3220,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.careOf.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.careOf.mediaType" ] ;
@@ -2694,13 +3247,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.careOf.language" ] ;
        fhir:path [ fhir:v "AD.item.careOf.language" ] ;
@@ -2715,10 +3274,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -2735,10 +3297,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -2754,13 +3319,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "CAR" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "CAR"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.censusTract" ] ;
        fhir:path [ fhir:v "AD.item.censusTract" ] ;
@@ -2773,7 +3344,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -2782,7 +3356,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -2799,17 +3373,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -2825,13 +3402,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.censusTract.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.censusTract.mediaType" ] ;
@@ -2846,13 +3429,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.censusTract.language" ] ;
        fhir:path [ fhir:v "AD.item.censusTract.language" ] ;
@@ -2867,10 +3456,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -2887,10 +3479,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -2906,13 +3501,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "CEN" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "CEN"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryAddressLine" ] ;
        fhir:path [ fhir:v "AD.item.deliveryAddressLine" ] ;
@@ -2925,7 +3526,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -2934,7 +3538,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -2951,17 +3555,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -2977,13 +3584,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryAddressLine.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.deliveryAddressLine.mediaType" ] ;
@@ -2998,13 +3611,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryAddressLine.language" ] ;
        fhir:path [ fhir:v "AD.item.deliveryAddressLine.language" ] ;
@@ -3019,10 +3638,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -3039,10 +3661,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -3058,13 +3683,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "DAL" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "DAL"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryInstallationType" ] ;
        fhir:path [ fhir:v "AD.item.deliveryInstallationType" ] ;
@@ -3077,7 +3708,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -3086,7 +3720,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -3103,17 +3737,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -3129,13 +3766,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryInstallationType.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.deliveryInstallationType.mediaType" ] ;
@@ -3150,13 +3793,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryInstallationType.language" ] ;
        fhir:path [ fhir:v "AD.item.deliveryInstallationType.language" ] ;
@@ -3171,10 +3820,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -3191,10 +3843,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -3210,13 +3865,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "DINST" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "DINST"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryInstallationArea" ] ;
        fhir:path [ fhir:v "AD.item.deliveryInstallationArea" ] ;
@@ -3229,7 +3890,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -3238,7 +3902,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -3255,17 +3919,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -3281,13 +3948,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryInstallationArea.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.deliveryInstallationArea.mediaType" ] ;
@@ -3302,13 +3975,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryInstallationArea.language" ] ;
        fhir:path [ fhir:v "AD.item.deliveryInstallationArea.language" ] ;
@@ -3323,10 +4002,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -3343,10 +4025,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -3362,13 +4047,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "DINSTA" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "DINSTA"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryInstallationQualifier" ] ;
        fhir:path [ fhir:v "AD.item.deliveryInstallationQualifier" ] ;
@@ -3381,7 +4072,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -3390,7 +4084,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -3407,17 +4101,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -3433,13 +4130,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryInstallationQualifier.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.deliveryInstallationQualifier.mediaType" ] ;
@@ -3454,13 +4157,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryInstallationQualifier.language" ] ;
        fhir:path [ fhir:v "AD.item.deliveryInstallationQualifier.language" ] ;
@@ -3475,10 +4184,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -3495,10 +4207,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -3514,13 +4229,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "DINSTQ" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "DINSTQ"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryMode" ] ;
        fhir:path [ fhir:v "AD.item.deliveryMode" ] ;
@@ -3533,7 +4254,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -3542,7 +4266,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -3559,17 +4283,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -3585,13 +4312,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryMode.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.deliveryMode.mediaType" ] ;
@@ -3606,13 +4339,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryMode.language" ] ;
        fhir:path [ fhir:v "AD.item.deliveryMode.language" ] ;
@@ -3627,10 +4366,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -3647,10 +4389,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -3666,13 +4411,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "DMOD" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "DMOD"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryModeIdentifier" ] ;
        fhir:path [ fhir:v "AD.item.deliveryModeIdentifier" ] ;
@@ -3685,7 +4436,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -3694,7 +4448,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -3711,17 +4465,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -3737,13 +4494,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryModeIdentifier.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.deliveryModeIdentifier.mediaType" ] ;
@@ -3758,13 +4521,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryModeIdentifier.language" ] ;
        fhir:path [ fhir:v "AD.item.deliveryModeIdentifier.language" ] ;
@@ -3779,10 +4548,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -3799,10 +4571,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -3818,13 +4593,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "DMODID" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "DMODID"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.buildingNumberSuffix" ] ;
        fhir:path [ fhir:v "AD.item.buildingNumberSuffix" ] ;
@@ -3837,7 +4618,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -3846,7 +4630,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -3863,17 +4647,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -3889,13 +4676,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.buildingNumberSuffix.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.buildingNumberSuffix.mediaType" ] ;
@@ -3910,13 +4703,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.buildingNumberSuffix.language" ] ;
        fhir:path [ fhir:v "AD.item.buildingNumberSuffix.language" ] ;
@@ -3931,10 +4730,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -3951,10 +4753,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -3970,13 +4775,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "BNS" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "BNS"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.postBox" ] ;
        fhir:path [ fhir:v "AD.item.postBox" ] ;
@@ -3989,7 +4800,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -3998,7 +4812,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -4015,17 +4829,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -4041,13 +4858,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.postBox.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.postBox.mediaType" ] ;
@@ -4062,13 +4885,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.postBox.language" ] ;
        fhir:path [ fhir:v "AD.item.postBox.language" ] ;
@@ -4083,10 +4912,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -4103,10 +4935,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -4122,13 +4957,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "POB" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "POB"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.precinct" ] ;
        fhir:path [ fhir:v "AD.item.precinct" ] ;
@@ -4141,7 +4982,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "text-null" ] ;
@@ -4150,7 +4994,7 @@
          fhir:expression [ fhir:v "(xmlText | nullFlavor).count() = 1" ] ;
          fhir:source [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
          ]
        ] )
      ] [
@@ -4167,17 +5011,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -4193,13 +5040,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "TXT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "TXT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.precinct.mediaType" ] ;
        fhir:path [ fhir:v "AD.item.precinct.mediaType" ] ;
@@ -4214,13 +5067,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "text/plain" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "text/plain"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.precinct.language" ] ;
        fhir:path [ fhir:v "AD.item.precinct.language" ] ;
@@ -4235,10 +5094,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] )
      ] [
@@ -4255,10 +5117,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -4274,13 +5139,19 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "PRE" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "PRE"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.xmlText" ] ;
        fhir:path [ fhir:v "AD.item.xmlText" ] ;
@@ -4295,19 +5166,26 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
        fhir:id [ fhir:v "AD.useablePeriod" ] ;
        fhir:extension ( [
-         fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype"^^xsd:anyURI ] ;
+         fhir:url [
+           fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype>
+         ] ;
          fhir:value [
+           a fhir:Canonical ;
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS>
          ]
        ] ) ;
        fhir:path [ fhir:v "AD.useablePeriod" ] ;
@@ -4322,13 +5200,25 @@
          fhir:max [ fhir:v "*" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS>
+         ]
        ] [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/EIVL-TS"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/EIVL-TS"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/EIVL-TS>
+         ]
        ] [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/PIVL-TS"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/PIVL-TS"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/PIVL-TS>
+         ]
        ] [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS>
+         ]
        ] )
      ] )
   ] ; # 
@@ -4353,10 +5243,13 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "boolean"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "boolean"^^xsd:anyURI ;
+           fhir:l fhir:boolean
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/bl-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/bl-simple>
          ] )
        ] )
      ] [
@@ -4368,31 +5261,43 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "*" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDAPostalAddressUse>
          ]
        ]
      ] [
        fhir:id [ fhir:v "AD.item" ] ;
        fhir:extension ( [
-         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-choice-group"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "true"^^xsd:boolean ]
+         fhir:url [
+           fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-choice-group"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/fhir/tools/StructureDefinition/xml-choice-group>
+         ] ;
+         fhir:value [
+           a fhir:Boolean ;
+           fhir:v true
+         ]
        ] ) ;
        fhir:path [ fhir:v "AD.item" ] ;
        fhir:definition [ fhir:v "A series of items that constitute the address." ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "*" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/fhir/StructureDefinition/Base"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/fhir/StructureDefinition/Base"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/fhir/StructureDefinition/Base>
+         ]
        ] ) ;
        fhir:constraint ( [
          fhir:key [ fhir:v "AD-1" ] ;
@@ -4407,7 +5312,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.delimiter.partType" ] ;
@@ -4416,13 +5324,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "DEL" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "DEL"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.country" ] ;
        fhir:path [ fhir:v "AD.item.country" ] ;
@@ -4430,7 +5344,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.country.partType" ] ;
@@ -4439,13 +5356,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "CNT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "CNT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.state" ] ;
        fhir:path [ fhir:v "AD.item.state" ] ;
@@ -4453,7 +5376,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.state.partType" ] ;
@@ -4462,13 +5388,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "STA" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "STA"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.county" ] ;
        fhir:path [ fhir:v "AD.item.county" ] ;
@@ -4476,7 +5408,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.county.partType" ] ;
@@ -4485,13 +5420,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "CPA" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "CPA"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.city" ] ;
        fhir:path [ fhir:v "AD.item.city" ] ;
@@ -4499,7 +5440,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.city.partType" ] ;
@@ -4508,13 +5452,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "CTY" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "CTY"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.postalCode" ] ;
        fhir:path [ fhir:v "AD.item.postalCode" ] ;
@@ -4522,7 +5472,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.postalCode.partType" ] ;
@@ -4531,13 +5484,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "ZIP" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "ZIP"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.streetAddressLine" ] ;
        fhir:path [ fhir:v "AD.item.streetAddressLine" ] ;
@@ -4545,7 +5504,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.streetAddressLine.partType" ] ;
@@ -4554,13 +5516,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "SAL" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "SAL"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.houseNumber" ] ;
        fhir:path [ fhir:v "AD.item.houseNumber" ] ;
@@ -4568,7 +5536,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.houseNumber.partType" ] ;
@@ -4577,13 +5548,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "BNR" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "BNR"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.houseNumberNumeric" ] ;
        fhir:path [ fhir:v "AD.item.houseNumberNumeric" ] ;
@@ -4591,7 +5568,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.houseNumberNumeric.partType" ] ;
@@ -4600,13 +5580,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "BNN" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "BNN"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.direction" ] ;
        fhir:path [ fhir:v "AD.item.direction" ] ;
@@ -4614,7 +5600,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.direction.partType" ] ;
@@ -4623,13 +5612,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "DIR" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "DIR"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.streetName" ] ;
        fhir:path [ fhir:v "AD.item.streetName" ] ;
@@ -4637,7 +5632,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.streetName.partType" ] ;
@@ -4646,13 +5644,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "STR" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "STR"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.streetNameBase" ] ;
        fhir:path [ fhir:v "AD.item.streetNameBase" ] ;
@@ -4660,7 +5664,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.streetNameBase.partType" ] ;
@@ -4669,13 +5676,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "STB" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "STB"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.streetNameType" ] ;
        fhir:path [ fhir:v "AD.item.streetNameType" ] ;
@@ -4683,7 +5696,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.streetNameType.partType" ] ;
@@ -4692,13 +5708,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "STTYP" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "STTYP"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.additionalLocator" ] ;
        fhir:path [ fhir:v "AD.item.additionalLocator" ] ;
@@ -4706,7 +5728,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.additionalLocator.partType" ] ;
@@ -4715,13 +5740,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "ADL" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "ADL"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.unitID" ] ;
        fhir:path [ fhir:v "AD.item.unitID" ] ;
@@ -4729,7 +5760,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.unitID.partType" ] ;
@@ -4738,13 +5772,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "UNID" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "UNID"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.unitType" ] ;
        fhir:path [ fhir:v "AD.item.unitType" ] ;
@@ -4752,7 +5792,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.unitType.partType" ] ;
@@ -4761,13 +5804,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "UNIT" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "UNIT"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.careOf" ] ;
        fhir:path [ fhir:v "AD.item.careOf" ] ;
@@ -4775,7 +5824,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.careOf.partType" ] ;
@@ -4784,13 +5836,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "CAR" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "CAR"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.censusTract" ] ;
        fhir:path [ fhir:v "AD.item.censusTract" ] ;
@@ -4798,7 +5856,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.censusTract.partType" ] ;
@@ -4807,13 +5868,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "CEN" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "CEN"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryAddressLine" ] ;
        fhir:path [ fhir:v "AD.item.deliveryAddressLine" ] ;
@@ -4821,7 +5888,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.deliveryAddressLine.partType" ] ;
@@ -4830,13 +5900,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "DAL" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "DAL"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryInstallationType" ] ;
        fhir:path [ fhir:v "AD.item.deliveryInstallationType" ] ;
@@ -4844,7 +5920,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.deliveryInstallationType.partType" ] ;
@@ -4853,13 +5932,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "DINST" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "DINST"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryInstallationArea" ] ;
        fhir:path [ fhir:v "AD.item.deliveryInstallationArea" ] ;
@@ -4867,7 +5952,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.deliveryInstallationArea.partType" ] ;
@@ -4876,13 +5964,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "DINSTA" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "DINSTA"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryInstallationQualifier" ] ;
        fhir:path [ fhir:v "AD.item.deliveryInstallationQualifier" ] ;
@@ -4890,7 +5984,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.deliveryInstallationQualifier.partType" ] ;
@@ -4899,13 +5996,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "DINSTQ" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "DINSTQ"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryMode" ] ;
        fhir:path [ fhir:v "AD.item.deliveryMode" ] ;
@@ -4913,7 +6016,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.deliveryMode.partType" ] ;
@@ -4922,13 +6028,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "DMOD" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "DMOD"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.deliveryModeIdentifier" ] ;
        fhir:path [ fhir:v "AD.item.deliveryModeIdentifier" ] ;
@@ -4936,7 +6048,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.deliveryModeIdentifier.partType" ] ;
@@ -4945,13 +6060,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "DMODID" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "DMODID"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.buildingNumberSuffix" ] ;
        fhir:path [ fhir:v "AD.item.buildingNumberSuffix" ] ;
@@ -4959,7 +6080,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.buildingNumberSuffix.partType" ] ;
@@ -4968,13 +6092,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "BNS" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "BNS"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.postBox" ] ;
        fhir:path [ fhir:v "AD.item.postBox" ] ;
@@ -4982,7 +6112,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.postBox.partType" ] ;
@@ -4991,13 +6124,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "POB" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "POB"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.precinct" ] ;
        fhir:path [ fhir:v "AD.item.precinct" ] ;
@@ -5005,7 +6144,10 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ADXP"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ADXP>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "AD.item.precinct.partType" ] ;
@@ -5014,13 +6156,19 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "PRE" ]
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "PRE"
+       ]
      ] [
        fhir:id [ fhir:v "AD.item.xmlText" ] ;
        fhir:path [ fhir:v "AD.item.xmlText" ] ;
@@ -5030,19 +6178,26 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
        fhir:id [ fhir:v "AD.useablePeriod" ] ;
        fhir:extension ( [
-         fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype"^^xsd:anyURI ] ;
+         fhir:url [
+           fhir:v "http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/fhir/StructureDefinition/elementdefinition-defaulttype>
+         ] ;
          fhir:value [
+           a fhir:Canonical ;
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS>
          ]
        ] ) ;
        fhir:path [ fhir:v "AD.useablePeriod" ] ;
@@ -5052,13 +6207,25 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "*" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS>
+         ]
        ] [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/EIVL-TS"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/EIVL-TS"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/EIVL-TS>
+         ]
        ] [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/PIVL-TS"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/PIVL-TS"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/PIVL-TS>
+         ]
        ] [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/SXPR-TS>
+         ]
        ] )
      ] )
   ] . # 

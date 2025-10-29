@@ -6,7 +6,7 @@
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "PN.use","PN.use","","","Use Code",0,*,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","A set of codes advising a system or user which name in a set of like names to select for a given purpose. A name without specific use code might be a default name useful for any purpose, but a name with a specific use code would be preferred for that respective purpose","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDAEntityNameUse","",,,,"EN.use",0,*,"",""
-"PN.item","PN.item","","","",1,*,"","","","http://hl7.org/fhir/StructureDefinition/Base {[]} {[]}
+"PN.item","PN.item","","","",0,*,"","","","http://hl7.org/fhir/StructureDefinition/Base {[]} {[]}
 ","","A series of items that constitute the name.","","","","","","","","","",,,,,"",,,,"EN.item",0,*,"","EN-1:Can only have only one of the possible item elements in each choice {(delimiter | family | given | prefix | suffix | xmlText).count() = 1}
 "
 "PN.item.delimiter","PN.item.delimiter","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ENXP {[]} {[]}

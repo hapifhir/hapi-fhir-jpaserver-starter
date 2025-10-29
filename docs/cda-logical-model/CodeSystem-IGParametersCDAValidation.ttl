@@ -1,0 +1,52 @@
+@prefix fhir: <http://hl7.org/fhir/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# - resource -------------------------------------------------------------------
+
+<http://hl7.org/cda/stds/core/CodeSystem/IGParametersCDAValidation> a fhir:CodeSystem ;
+  fhir:nodeRole fhir:treeRoot ;
+  fhir:id [ fhir:v "IGParametersCDAValidation"] ; # 
+  fhir:text [
+     fhir:status [ fhir:v "generated" ] ;
+     fhir:div [ fhir:v "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p class=\"res-header-id\"><b>Generated Narrative: CodeSystem IGParametersCDAValidation</b></p><a name=\"IGParametersCDAValidation\"> </a><a name=\"hcIGParametersCDAValidation\"> </a><p>This case-sensitive code system <code>http://hl7.org/cda/stds/core/CodeSystem/IGParametersCDAValidation</code> defines the following codes:</p><table class=\"codes\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td style=\"white-space:nowrap\">parent-template-id<a name=\"IGParametersCDAValidation-parent-template-id\"> </a></td><td>Parent TemplateId</td><td>TemplateId from which all templates in this IG descend. A schematron warning will detect any teplateIds starting with this value that are not defined in the IG.</td></tr><tr><td style=\"white-space:nowrap\">value-set-limit<a name=\"IGParametersCDAValidation-value-set-limit\"> </a></td><td>ValueSet Limit</td><td>Maximum number of values to include in value set lookups.</td></tr></table></div>"^^rdf:XMLLiteral ]
+  ] ; # 
+  fhir:url [
+     fhir:v "http://hl7.org/cda/stds/core/CodeSystem/IGParametersCDAValidation"^^xsd:anyURI ;
+     fhir:l <http://hl7.org/cda/stds/core/CodeSystem/IGParametersCDAValidation>
+  ] ; # 
+  fhir:version [ fhir:v "2.0.1-sd-202510-matchbox-patch"] ; # 
+  fhir:name [ fhir:v "IGParametersCDAValidation"] ; # 
+  fhir:title [ fhir:v "IG Parameters CDA Validation"] ; # 
+  fhir:status [ fhir:v "draft"] ; # 
+  fhir:experimental [ fhir:v false] ; # 
+  fhir:date [ fhir:v "2025-10-29T22:15:57+01:00"^^xsd:dateTime] ; # 
+  fhir:publisher [ fhir:v "Health Level 7"] ; # 
+  fhir:contact ( [
+     fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
+     fhir:telecom ( [
+       fhir:system [ fhir:v "url" ] ;
+       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structure" ]
+     ] [
+       fhir:system [ fhir:v "email" ] ;
+       fhir:value [ fhir:v "structdog@lists.HL7.org" ]
+     ] )
+  ] ) ; # 
+  fhir:description [ fhir:v "Code system for CDA validation parameters in the IG."] ; # 
+  fhir:caseSensitive [ fhir:v true] ; # 
+  fhir:content [ fhir:v "complete"] ; # 
+  fhir:count [ fhir:v "2"^^xsd:nonNegativeInteger] ; # 
+  fhir:concept ( [
+     fhir:code [ fhir:v "parent-template-id" ] ;
+     fhir:display [ fhir:v "Parent TemplateId" ] ;
+     fhir:definition [ fhir:v "TemplateId from which all templates in this IG descend. A schematron warning will detect any teplateIds starting with this value that are not defined in the IG." ]
+  ] [
+     fhir:code [ fhir:v "value-set-limit" ] ;
+     fhir:display [ fhir:v "ValueSet Limit" ] ;
+     fhir:definition [ fhir:v "Maximum number of values to include in value set lookups." ]
+  ] ) . # 
+
+# -------------------------------------------------------------------------------------
+

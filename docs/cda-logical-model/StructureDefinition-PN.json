@@ -27,12 +27,12 @@
     "valueUri" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
   }],
   "url" : "http://hl7.org/cda/stds/core/StructureDefinition/PN",
-  "version" : "2.0.0-sd-202406-matchbox-patch",
+  "version" : "2.0.1-sd-202510-matchbox-patch",
   "name" : "PN",
   "title" : "PN: PersonName (V3 Data Type)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2024-06-19T17:47:42+02:00",
+  "date" : "2025-10-29T22:15:57+01:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
@@ -58,6 +58,10 @@
   "baseDefinition" : "http://hl7.org/cda/stds/core/StructureDefinition/EN",
   "derivation" : "specialization",
   "snapshot" : {
+    "extension" : [{
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/snapshot-base-version",
+      "valueString" : "2.0.1-sd-202510-matchbox-patch"
+    }],
     "element" : [{
       "id" : "PN",
       "path" : "PN",
@@ -134,7 +138,7 @@
       }],
       "path" : "PN.item",
       "definition" : "A series of items that constitute the name.",
-      "min" : 1,
+      "min" : 0,
       "max" : "*",
       "base" : {
         "path" : "EN.item",
@@ -272,7 +276,7 @@
     {
       "id" : "PN.item",
       "path" : "PN.item",
-      "min" : 1,
+      "min" : 0,
       "max" : "*"
     }]
   }

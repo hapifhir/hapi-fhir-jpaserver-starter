@@ -21,12 +21,12 @@
     <valueUri value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/TN"/>
-  <version value="2.0.0-sd-202406-matchbox-patch"/>
+  <version value="2.0.1-sd-202510-matchbox-patch"/>
   <name value="TN"/>
   <title value="TN: TrivialName (V3 Data Type)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2024-06-19T17:47:42+02:00"/>
+  <date value="2025-10-29T22:15:57+01:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
@@ -48,12 +48,15 @@
   </mapping>
   <kind value="logical"/>
   <abstract value="false"/>
-  <type value="http://hl7.org/cda/stds/core/StructureDefinition/EN"/>
+  <type value="http://hl7.org/cda/stds/core/StructureDefinition/TN"/>
   <baseDefinition value="http://hl7.org/cda/stds/core/StructureDefinition/EN"/>
-  <derivation value="constraint"/>
+  <derivation value="specialization"/>
   <snapshot>
-    <element id="EN">
-      <path value="EN"/>
+    <extension url="http://hl7.org/fhir/tools/StructureDefinition/snapshot-base-version">
+      <valueString value="2.0.1-sd-202510-matchbox-patch"/>
+    </extension>
+    <element id="TN">
+      <path value="TN"/>
       <short value="Base for all types and resources"/>
       <definition value="A restriction of entity name that is effectively a simple string used for a simple name for things and places."/>
       <min value="1"/>
@@ -69,8 +72,8 @@
         <map value="n/a"/>
       </mapping>
     </element>
-    <element id="EN.nullFlavor">
-      <path value="EN.nullFlavor"/>
+    <element id="TN.nullFlavor">
+      <path value="TN.nullFlavor"/>
       <representation value="xmlAttr"/>
       <label value="Exceptional Value Detail"/>
       <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
@@ -90,8 +93,8 @@
         <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"/>
       </binding>
     </element>
-    <element id="EN.use">
-      <path value="EN.use"/>
+    <element id="TN.use">
+      <path value="TN.use"/>
       <representation value="xmlAttr"/>
       <label value="Use Code"/>
       <definition value="A set of codes advising a system or user which name in a set of like names to select for a given purpose. A name without specific use code might be a default name useful for any purpose, but a name with a specific use code would be preferred for that respective purpose"/>
@@ -111,11 +114,11 @@
         <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAEntityNameUse"/>
       </binding>
     </element>
-    <element id="EN.item">
+    <element id="TN.item">
       <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-choice-group">
         <valueBoolean value="true"/>
       </extension>
-      <path value="EN.item"/>
+      <path value="TN.item"/>
       <definition value="A series of items that constitute the name."/>
       <min value="0"/>
       <max value="*"/>
@@ -135,8 +138,8 @@
         <source value="http://hl7.org/cda/stds/core/StructureDefinition/EN"/>
       </constraint>
     </element>
-    <element id="EN.item.delimiter">
-      <path value="EN.item.delimiter"/>
+    <element id="TN.item.delimiter">
+      <path value="TN.item.delimiter"/>
       <min value="0"/>
       <max value="0"/>
       <base>
@@ -148,8 +151,8 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
       </type>
     </element>
-    <element id="EN.item.family">
-      <path value="EN.item.family"/>
+    <element id="TN.item.family">
+      <path value="TN.item.family"/>
       <min value="0"/>
       <max value="0"/>
       <base>
@@ -161,8 +164,8 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
       </type>
     </element>
-    <element id="EN.item.given">
-      <path value="EN.item.given"/>
+    <element id="TN.item.given">
+      <path value="TN.item.given"/>
       <min value="0"/>
       <max value="0"/>
       <base>
@@ -174,8 +177,8 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
       </type>
     </element>
-    <element id="EN.item.prefix">
-      <path value="EN.item.prefix"/>
+    <element id="TN.item.prefix">
+      <path value="TN.item.prefix"/>
       <min value="0"/>
       <max value="0"/>
       <base>
@@ -187,8 +190,8 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
       </type>
     </element>
-    <element id="EN.item.suffix">
-      <path value="EN.item.suffix"/>
+    <element id="TN.item.suffix">
+      <path value="TN.item.suffix"/>
       <min value="0"/>
       <max value="0"/>
       <base>
@@ -200,8 +203,8 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
       </type>
     </element>
-    <element id="EN.item.xmlText">
-      <path value="EN.item.xmlText"/>
+    <element id="TN.item.xmlText">
+      <path value="TN.item.xmlText"/>
       <representation value="xmlText"/>
       <short value="Allows for mixed text content"/>
       <comment value="This element is represented in XML as textual content. The actual name &quot;xmlText&quot; will not appear in a CDA instance."/>
@@ -217,8 +220,8 @@
         <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
       </type>
     </element>
-    <element id="EN.validTime">
-      <path value="EN.validTime"/>
+    <element id="TN.validTime">
+      <path value="TN.validTime"/>
       <label value="Valid Time"/>
       <definition value="An interval of time specifying the time during which the name is or was used for the entity. This accomodates the fact that people change names for people, places and things."/>
       <min value="0"/>
@@ -234,41 +237,41 @@
     </element>
   </snapshot>
   <differential>
-    <element id="EN">
-      <path value="EN"/>
+    <element id="TN">
+      <path value="TN"/>
       <definition value="A restriction of entity name that is effectively a simple string used for a simple name for things and places."/>
       <min value="1"/>
       <max value="*"/>
     </element>
-    <element id="EN.use">
-      <path value="EN.use"/>
+    <element id="TN.use">
+      <path value="TN.use"/>
       <binding>
         <strength value="required"/>
         <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAEntityNameUse"/>
       </binding>
     </element>
-    <element id="EN.item.delimiter">
-      <path value="EN.item.delimiter"/>
+    <element id="TN.item.delimiter">
+      <path value="TN.item.delimiter"/>
       <min value="0"/>
       <max value="0"/>
     </element>
-    <element id="EN.item.family">
-      <path value="EN.item.family"/>
+    <element id="TN.item.family">
+      <path value="TN.item.family"/>
       <min value="0"/>
       <max value="0"/>
     </element>
-    <element id="EN.item.given">
-      <path value="EN.item.given"/>
+    <element id="TN.item.given">
+      <path value="TN.item.given"/>
       <min value="0"/>
       <max value="0"/>
     </element>
-    <element id="EN.item.prefix">
-      <path value="EN.item.prefix"/>
+    <element id="TN.item.prefix">
+      <path value="TN.item.prefix"/>
       <min value="0"/>
       <max value="0"/>
     </element>
-    <element id="EN.item.suffix">
-      <path value="EN.item.suffix"/>
+    <element id="TN.item.suffix">
+      <path value="TN.item.suffix"/>
       <min value="0"/>
       <max value="0"/>
     </element>

@@ -1,0 +1,273 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "ENXP",
+  "language" : "en",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A character string token representing a part of a name. May have a type code signifying the role of the part in the whole entity name, and a qualifier code for more detail about the name part type. Typical name parts for person names are given names, and family names, titles, etc.</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics",
+    "valueCode" : "can-bind"
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-container",
+    "valueUri" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
+  }],
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ENXP",
+  "version" : "2.0.0-sd-202510-matchbox-patch",
+  "name" : "ENXP",
+  "title" : "ENXP: Entity Name Part (V3 Data Type)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2025-10-28T21:58:07+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "name" : "HL7 International - Structured Documents",
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    },
+    {
+      "system" : "email",
+      "value" : "structdog@lists.HL7.org"
+    }]
+  }],
+  "description" : "A character string token representing a part of a name. May have a type code signifying the role of the part in the whole entity name, and a qualifier code for more detail about the name part type. Typical name parts for person names are given names, and family names, titles, etc.",
+  "fhirVersion" : "5.0.0",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/ENXP",
+  "baseDefinition" : "http://hl7.org/cda/stds/core/StructureDefinition/ST",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "extension" : [{
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/snapshot-base-version",
+      "valueString" : "2.0.0-sd-202510-matchbox-patch"
+    }],
+    "element" : [{
+      "id" : "ENXP",
+      "path" : "ENXP",
+      "short" : "Base for all types and resources",
+      "definition" : "The character string data type stands for text data, primarily intended for machine processing (e.g., sorting, querying, indexing, etc.) Used for names, symbols, and formal expressions.",
+      "min" : 1,
+      "max" : "*",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "constraint" : [{
+        "key" : "text-null",
+        "severity" : "error",
+        "human" : "xmlText and nullFlavor are mutually exclusive (one must be present)",
+        "expression" : "(xmlText | nullFlavor).count() = 1",
+        "source" : "http://hl7.org/cda/stds/core/StructureDefinition/ST"
+      }],
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "ENXP.nullFlavor",
+      "path" : "ENXP.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ANY.nullFlavor",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
+      }
+    },
+    {
+      "id" : "ENXP.representation",
+      "path" : "ENXP.representation",
+      "representation" : ["xmlAttr"],
+      "definition" : "Specifies the representation of the binary data that is the content of the binary data value",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ST.representation",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "fixedCode" : "TXT"
+    },
+    {
+      "id" : "ENXP.mediaType",
+      "path" : "ENXP.mediaType",
+      "representation" : ["xmlAttr"],
+      "label" : "Media Type",
+      "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ST.mediaType",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "fixedCode" : "text/plain"
+    },
+    {
+      "id" : "ENXP.language",
+      "path" : "ENXP.language",
+      "representation" : ["xmlAttr"],
+      "label" : "Language",
+      "definition" : "For character based information the language property specifies the human language of the text.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ST.language",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }]
+    },
+    {
+      "id" : "ENXP.xmlText",
+      "path" : "ENXP.xmlText",
+      "representation" : ["xmlText"],
+      "short" : "Allows for mixed text content",
+      "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ST.xmlText",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "string",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+      }]
+    },
+    {
+      "id" : "ENXP.partType",
+      "path" : "ENXP.partType",
+      "representation" : ["xmlAttr"],
+      "label" : "Name Part Type Code",
+      "definition" : "Indicates whether the name part is a given name, family name, prefix, suffix, etc.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ENXP.partType",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-EntityNamePartType"
+      }
+    },
+    {
+      "id" : "ENXP.qualifier",
+      "path" : "ENXP.qualifier",
+      "representation" : ["xmlAttr"],
+      "label" : "Qualifier Code",
+      "definition" : "qualifier is a set of codes each of which specifies a certain subcategory of the name part in addition to the main name part type. For example, a given name may be flagged as a nickname, a family name may be a pseudonym or a name of public records.",
+      "min" : 0,
+      "max" : "*",
+      "base" : {
+        "path" : "ENXP.qualifier",
+        "min" : 0,
+        "max" : "*"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityNamePartQualifier"
+      }
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "ENXP",
+      "path" : "ENXP",
+      "min" : 1,
+      "max" : "*"
+    },
+    {
+      "id" : "ENXP.partType",
+      "path" : "ENXP.partType",
+      "representation" : ["xmlAttr"],
+      "label" : "Name Part Type Code",
+      "definition" : "Indicates whether the name part is a given name, family name, prefix, suffix, etc.",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://terminology.hl7.org/ValueSet/v3-EntityNamePartType"
+      }
+    },
+    {
+      "id" : "ENXP.qualifier",
+      "path" : "ENXP.qualifier",
+      "representation" : ["xmlAttr"],
+      "label" : "Qualifier Code",
+      "definition" : "qualifier is a set of codes each of which specifies a certain subcategory of the name part in addition to the main name part type. For example, a given name may be flagged as a nickname, a family name may be a pseudonym or a name of public records.",
+      "min" : 0,
+      "max" : "*",
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDAEntityNamePartQualifier"
+      }
+    }]
+  }
+}

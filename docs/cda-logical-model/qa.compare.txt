@@ -1,12 +1,12 @@
 ClinicalDocumentArchitecture : Validation Results
 =========================================
 
-err = 0, warn = 9, info = 0
+err = 8, warn = 88, info = 21
 $--
 Generated $--. FHIR version $-- for hl7.cda.uv.core#$-- (canonical = http://hl7.org/cda/stds/core)
- Build Errors : 0 / 9 / 0
- /Users/oegger/Documents/github/CDA-core-sd/input/examples/clinicaldocument-example : 0 / 1 / 17
- /Users/oegger/Documents/github/CDA-core-sd/input/hl7.cda.uv.core : 0 / 0 / 1
+ Build Errors : 420 / 14 / 0
+ /Users/oegger/Documents/github/CDA-core-sd/input/examples/clinicaldocument-example : 0 / 11 / 6
+ /Users/oegger/Documents/github/CDA-core-sd/input/hl7.cda.uv.core : 3 / 1 / 16
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/AD : 0 / 108 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/ADXP : 0 / 2 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/ANY : 0 / 0 / 1
@@ -28,7 +28,7 @@ Generated $--. FHIR version $-- for hl7.cda.uv.core#$-- (canonical = http://hl7.
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/CR : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/CS : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/CV : 0 / 0 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/ClinicalDocument : 0 / 8 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ClinicalDocument : 0 / 14 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/Component : 0 / 5 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/ComponentOf : 0 / 3 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/Consent : 0 / 7 / 1
@@ -70,20 +70,20 @@ Generated $--. FHIR version $-- for hl7.cda.uv.core#$-- (canonical = http://hl7.
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/InformationRecipient : 0 / 1 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/InfrastructureRoot : 0 / 2 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/IntendedRecipient : 0 / 1 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/LabCriterion : 0 / 3 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/LabPrecondition : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/LabCriterion : 0 / 4 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/LabPrecondition : 0 / 4 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/LabeledDrug : 0 / 5 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/LanguageCommunication : 0 / 1 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/LegalAuthenticator : 0 / 5 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/MO : 0 / 0 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/MaintainedEntity : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/MaintainedEntity : 0 / 3 / 2
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/ManufacturedProduct : 0 / 3 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/Material : 0 / 5 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/Material : 0 / 15 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/NonXMLBody : 0 / 5 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/ON : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/Observation : 0 / 4 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/ObservationMedia : 0 / 7 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/ObservationRange : 0 / 6 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ObservationRange : 0 / 8 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/Order : 0 / 3 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/Organization : 0 / 5 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/OrganizationPartOf : 0 / 3 / 1
@@ -102,13 +102,13 @@ Generated $--. FHIR version $-- for hl7.cda.uv.core#$-- (canonical = http://hl7.
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/Performer1 : 0 / 1 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/Performer2 : 0 / 3 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/Person : 0 / 10 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmContent : 0 / 3 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmIngredient : 0 / 3 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmMedicineClass : 0 / 3 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmPackagedMedicine : 0 / 5 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmSpecializedKind : 0 / 3 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmSubstance : 0 / 5 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmSuperContent : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmContent : 0 / 6 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmIngredient : 0 / 8 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmMedicineClass : 0 / 8 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmPackagedMedicine : 0 / 18 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmSpecializedKind : 0 / 6 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmSubstance : 0 / 10 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/PharmSuperContent : 0 / 4 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/Place : 0 / 5 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/PlayingEntity : 0 / 3 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/Precondition : 0 / 3 / 1
@@ -126,10 +126,11 @@ Generated $--. FHIR version $-- for hl7.cda.uv.core#$-- (canonical = http://hl7.
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/RelatedSubject : 0 / 1 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/SC : 0 / 2 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/ST : 0 / 4 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ST-dot-r2b : 0 / 5 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/SXCM-TS : 0 / 6 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/SXPR-TS : 0 / 7 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/Section : 0 / 12 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/ServiceEvent : 0 / 3 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/ServiceEvent : 0 / 5 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/Specimen : 0 / 3 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/SpecimenRole : 0 / 3 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/StructuredBody : 0 / 10 / 1
@@ -140,10 +141,11 @@ Generated $--. FHIR version $-- for hl7.cda.uv.core#$-- (canonical = http://hl7.
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/TEL : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/TN : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/TS : 0 / 0 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/bin : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/bin : 0 / 1 / 2
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/bl-simple : 0 / 1 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/bn : 0 / 1 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/codesystem/BinaryDataEncoding : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/codesystem/BinaryDataEncoding : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/codesystem/IGParametersCDAValidation : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/cs-simple : 0 / 1 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/int-simple : 0 / 1 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/oid : 0 / 1 / 1
@@ -157,11 +159,11 @@ Generated $--. FHIR version $-- for hl7.cda.uv.core#$-- (canonical = http://hl7.
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/uuid : 0 / 1 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/BinaryDataEncoding : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActClass : 0 / 0 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActClassObservation : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActClassObservation : 0 / 0 / 2
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActMood : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActMoodIntent : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActRelationshipType : 0 / 0 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActSubstanceAdministrationCode : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAActSubstanceAdministrationCode : 0 / 1 / 2
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDACompressionAlgorithm : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAContextControl : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAEntityCode : 0 / 0 / 1
@@ -169,17 +171,17 @@ Generated $--. FHIR version $-- for hl7.cda.uv.core#$-- (canonical = http://hl7.
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAEntityNameUse : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAInformationRecipientRole : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAMaterialEntityClassType : 0 / 0 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDANullFlavor : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDANullFlavor : 0 / 0 / 2
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAObservationInterpretation : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAParticipationType : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDAPostalAddressUse : 0 / 0 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDARoleClass : 0 / 1 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDARoleClassAssociative : 0 / 1 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDARoleClassMutualRelationship : 0 / 1 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDARoleClassRoot : 0 / 1 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDARoleClass : 1 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDARoleClassAssociative : 1 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDARoleClassMutualRelationship : 1 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDARoleClassRoot : 1 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDARoleCode : 0 / 0 / 1
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDASetOperator : 0 / 0 / 1
- /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDASignatureCode : 0 / 0 / 1
+ /Users/oegger/Documents/github/CDA-core-sd/input/resources/valueset/CDASignatureCode : 0 / 0 / 2
  /Users/oegger/Documents/github/CDA-core-sd/input/resources/xs-ID : 0 / 1 / 1
 </table>
 == n/a ==
@@ -192,8 +194,462 @@ WARNING: Unable to find ImplementationGuide.definition.resource.description for 
 WARNING: Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmSubstance.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list.
 WARNING: Unable to find ImplementationGuide.definition.resource.description for the resource StructureDefinition/PharmSuperContent.  Descriptions are strongly encouraged if they cannot be inferred from the resource to allow proper population of the artifact list.
 WARNING: The jira specification file appears to be out of date with the versions, artifacts and pages currently defined in the IG.  A proposed revised file to be reviewed and, if appropriate, submitted as a pull request against the XML folder in https://github.com/HL7/JIRA-Spec-Artifacts.  To see the differences, perform a file compare on 'template/jira-current.xml' (a normalized view of what is in Github) and 'template/jira-new.xml' (reflects current IG content)
+ERROR: en/StructureDefinition-AD.html#/html/body/div/div/div/div/div/p/a at Line 8103, column 41: The link 'StructureDefinition-AD.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-AD.html#/html/body/div/div/div/div/div/p/a at Line 8103, column 87: The link 'StructureDefinition-AD.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ADXP.html#/html/body/div/div/div/div/div/p/a at Line 997, column 41: The link 'StructureDefinition-ADXP.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ADXP.html#/html/body/div/div/div/div/div/p/a at Line 997, column 89: The link 'StructureDefinition-ADXP.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ANY.html#/html/body/div/div/div/div/div/ul/li/span/a at Line 256, column 1252: The link 'StructureDefinition-ST-dot-r2b.html' for "ST-dot-r2b: CharacterString with Value Attribute (V3 Data Type)" cannot be resolved
+ERROR: en/StructureDefinition-ANY.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 306, column 853: The link 'StructureDefinition-ST-dot-r2b.html' for "ST_dot_r2b" cannot be resolved
+ERROR: en/StructureDefinition-ANY.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 375, column 853: The link 'StructureDefinition-ST-dot-r2b.html' for "ST_dot_r2b" cannot be resolved
+ERROR: en/StructureDefinition-ANY.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 443, column 853: The link 'StructureDefinition-ST-dot-r2b.html' for "ST_dot_r2b" cannot be resolved
+ERROR: en/StructureDefinition-ANY.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 565, column 853: The link 'StructureDefinition-ST-dot-r2b.html' for "ST_dot_r2b" cannot be resolved
+ERROR: en/StructureDefinition-ANY.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 633, column 853: The link 'StructureDefinition-ST-dot-r2b.html' for "ST_dot_r2b" cannot be resolved
+ERROR: en/StructureDefinition-ANY.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 701, column 853: The link 'StructureDefinition-ST-dot-r2b.html' for "ST_dot_r2b" cannot be resolved
+ERROR: en/StructureDefinition-ANY.html#/html/body/div/div/div/div/div/p/a at Line 807, column 41: The link 'StructureDefinition-ANY.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ANY.html#/html/body/div/div/div/div/div/p/a at Line 807, column 88: The link 'StructureDefinition-ANY.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Act.html#/html/body/div/div/div/div/div/p/a at Line 2351, column 41: The link 'StructureDefinition-Act.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Act.html#/html/body/div/div/div/div/div/p/a at Line 2351, column 88: The link 'StructureDefinition-Act.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-AlternateIdentification.html#/html/body/div/div/div/div/div/p/a at Line 1025, column 41: The link 'StructureDefinition-AlternateIdentification.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-AlternateIdentification.html#/html/body/div/div/div/div/div/p/a at Line 1025, column 108: The link 'StructureDefinition-AlternateIdentification.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-AssignedAuthor.html#/html/body/div/div/div/div/div/p/a at Line 1723, column 41: The link 'StructureDefinition-AssignedAuthor.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-AssignedAuthor.html#/html/body/div/div/div/div/div/p/a at Line 1723, column 99: The link 'StructureDefinition-AssignedAuthor.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-AssignedCustodian.html#/html/body/div/div/div/div/div/p/a at Line 1289, column 41: The link 'StructureDefinition-AssignedCustodian.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-AssignedCustodian.html#/html/body/div/div/div/div/div/p/a at Line 1289, column 102: The link 'StructureDefinition-AssignedCustodian.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-AssignedEntity.html#/html/body/div/div/div/div/div/p/a at Line 1623, column 41: The link 'StructureDefinition-AssignedEntity.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-AssignedEntity.html#/html/body/div/div/div/div/div/p/a at Line 1623, column 99: The link 'StructureDefinition-AssignedEntity.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-AssociatedEntity.html#/html/body/div/div/div/div/div/p/a at Line 1547, column 41: The link 'StructureDefinition-AssociatedEntity.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-AssociatedEntity.html#/html/body/div/div/div/div/div/p/a at Line 1547, column 101: The link 'StructureDefinition-AssociatedEntity.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Authenticator.html#/html/body/div/div/div/div/div/p/a at Line 1553, column 41: The link 'StructureDefinition-Authenticator.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Authenticator.html#/html/body/div/div/div/div/div/p/a at Line 1553, column 98: The link 'StructureDefinition-Authenticator.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Author.html#/html/body/div/div/div/div/div/p/a at Line 1451, column 41: The link 'StructureDefinition-Author.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Author.html#/html/body/div/div/div/div/div/p/a at Line 1451, column 91: The link 'StructureDefinition-Author.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-AuthoringDevice.html#/html/body/div/div/div/div/div/p/a at Line 1765, column 41: The link 'StructureDefinition-AuthoringDevice.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-AuthoringDevice.html#/html/body/div/div/div/div/div/p/a at Line 1765, column 100: The link 'StructureDefinition-AuthoringDevice.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Authorization.html#/html/body/div/div/div/div/div/p/a at Line 1289, column 41: The link 'StructureDefinition-Authorization.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Authorization.html#/html/body/div/div/div/div/div/p/a at Line 1289, column 98: The link 'StructureDefinition-Authorization.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-BL.html#/html/body/div/div/div/div/div/p/a at Line 975, column 41: The link 'StructureDefinition-BL.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-BL.html#/html/body/div/div/div/div/div/p/a at Line 975, column 87: The link 'StructureDefinition-BL.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Birthplace.html#/html/body/div/div/div/div/div/p/a at Line 1289, column 41: The link 'StructureDefinition-Birthplace.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Birthplace.html#/html/body/div/div/div/div/div/p/a at Line 1289, column 95: The link 'StructureDefinition-Birthplace.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-CD.html#/html/body/div/div/div/div/div/p/a at Line 1054, column 41: The link 'StructureDefinition-CD.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-CD.html#/html/body/div/div/div/div/div/p/a at Line 1054, column 87: The link 'StructureDefinition-CD.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-CE.html#/html/body/div/div/div/div/div/p/a at Line 920, column 41: The link 'StructureDefinition-CE.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-CE.html#/html/body/div/div/div/div/div/p/a at Line 920, column 87: The link 'StructureDefinition-CE.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-CO.html#/html/body/div/div/div/div/div/p/a at Line 887, column 41: The link 'StructureDefinition-CO.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-CO.html#/html/body/div/div/div/div/div/p/a at Line 887, column 87: The link 'StructureDefinition-CO.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-CR.html#/html/body/div/div/div/div/div/p/a at Line 1019, column 41: The link 'StructureDefinition-CR.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-CR.html#/html/body/div/div/div/div/div/p/a at Line 1019, column 87: The link 'StructureDefinition-CR.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-CS.html#/html/body/div/div/div/div/div/p/a at Line 827, column 41: The link 'StructureDefinition-CS.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-CS.html#/html/body/div/div/div/div/div/p/a at Line 827, column 87: The link 'StructureDefinition-CS.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-CV.html#/html/body/div/div/div/div/div/p/a at Line 898, column 41: The link 'StructureDefinition-CV.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-CV.html#/html/body/div/div/div/div/div/p/a at Line 898, column 87: The link 'StructureDefinition-CV.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ClinicalDocument.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 357, column 700: The link 'StructureDefinition-ClinicalDocument-definitions.html#ClinicalDocument.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 139 targets)
+ERROR: en/StructureDefinition-ClinicalDocument.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 679, column 700: The link 'StructureDefinition-ClinicalDocument-definitions.html#ClinicalDocument.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 139 targets)
+ERROR: en/StructureDefinition-ClinicalDocument.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 1059, column 700: The link 'StructureDefinition-ClinicalDocument-definitions.html#ClinicalDocument.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 139 targets)
+ERROR: en/StructureDefinition-ClinicalDocument.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 1521, column 700: The link 'StructureDefinition-ClinicalDocument-definitions.html#ClinicalDocument.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 139 targets)
+ERROR: en/StructureDefinition-ClinicalDocument.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 1842, column 700: The link 'StructureDefinition-ClinicalDocument-definitions.html#ClinicalDocument.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 139 targets)
+ERROR: en/StructureDefinition-ClinicalDocument.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 2222, column 700: The link 'StructureDefinition-ClinicalDocument-definitions.html#ClinicalDocument.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 139 targets)
+ERROR: en/StructureDefinition-ClinicalDocument.html#/html/body/div/div/div/div/div/p/a at Line 2627, column 41: The link 'StructureDefinition-ClinicalDocument.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ClinicalDocument.html#/html/body/div/div/div/div/div/p/a at Line 2627, column 101: The link 'StructureDefinition-ClinicalDocument.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Component.html#/html/body/div/div/div/div/div/p/a at Line 1487, column 41: The link 'StructureDefinition-Component.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Component.html#/html/body/div/div/div/div/div/p/a at Line 1487, column 94: The link 'StructureDefinition-Component.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ComponentOf.html#/html/body/div/div/div/div/div/p/a at Line 1289, column 41: The link 'StructureDefinition-ComponentOf.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ComponentOf.html#/html/body/div/div/div/div/div/p/a at Line 1289, column 96: The link 'StructureDefinition-ComponentOf.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Consent.html#/html/body/div/div/div/div/div/p/a at Line 1783, column 41: The link 'StructureDefinition-Consent.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Consent.html#/html/body/div/div/div/div/div/p/a at Line 1783, column 92: The link 'StructureDefinition-Consent.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Criterion.html#/html/body/div/div/div/div/div/p/a at Line 2225, column 41: The link 'StructureDefinition-Criterion.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Criterion.html#/html/body/div/div/div/div/div/p/a at Line 2225, column 94: The link 'StructureDefinition-Criterion.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Custodian.html#/html/body/div/div/div/div/div/p/a at Line 1277, column 41: The link 'StructureDefinition-Custodian.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Custodian.html#/html/body/div/div/div/div/div/p/a at Line 1277, column 94: The link 'StructureDefinition-Custodian.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-CustodianOrganization.html#/html/body/div/div/div/div/div/p/a at Line 1539, column 41: The link 'StructureDefinition-CustodianOrganization.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-CustodianOrganization.html#/html/body/div/div/div/div/div/p/a at Line 1539, column 106: The link 'StructureDefinition-CustodianOrganization.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-DataEnterer.html#/html/body/div/div/div/div/div/p/a at Line 1419, column 41: The link 'StructureDefinition-DataEnterer.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-DataEnterer.html#/html/body/div/div/div/div/div/p/a at Line 1419, column 96: The link 'StructureDefinition-DataEnterer.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Device.html#/html/body/div/div/div/div/div/p/a at Line 1735, column 41: The link 'StructureDefinition-Device.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Device.html#/html/body/div/div/div/div/div/p/a at Line 1735, column 91: The link 'StructureDefinition-Device.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-DocumentationOf.html#/html/body/div/div/div/div/div/p/a at Line 1277, column 41: The link 'StructureDefinition-DocumentationOf.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-DocumentationOf.html#/html/body/div/div/div/div/div/p/a at Line 1277, column 100: The link 'StructureDefinition-DocumentationOf.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ED.html#/html/body/div/div/div/div/div/p/a at Line 1597, column 41: The link 'StructureDefinition-ED.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ED.html#/html/body/div/div/div/div/div/p/a at Line 1597, column 87: The link 'StructureDefinition-ED.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-EIVL-TS.html#/html/body/div/div/div/div/div/p/a at Line 859, column 41: The link 'StructureDefinition-EIVL-TS.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-EIVL-TS.html#/html/body/div/div/div/div/div/p/a at Line 859, column 92: The link 'StructureDefinition-EIVL-TS.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-EN.html#/html/body/div/div/div/div/div/p/a at Line 1370, column 41: The link 'StructureDefinition-EN.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-EN.html#/html/body/div/div/div/div/div/p/a at Line 1370, column 87: The link 'StructureDefinition-EN.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ENXP.html#/html/body/div/div/div/div/div/p/a at Line 1243, column 41: The link 'StructureDefinition-ENXP.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ENXP.html#/html/body/div/div/div/div/div/p/a at Line 1243, column 89: The link 'StructureDefinition-ENXP.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-EncompassingEncounter.html#/html/body/div/div/div/div/div/p/a at Line 2739, column 41: The link 'StructureDefinition-EncompassingEncounter.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-EncompassingEncounter.html#/html/body/div/div/div/div/div/p/a at Line 2739, column 106: The link 'StructureDefinition-EncompassingEncounter.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Encounter.html#/html/body/div/div/div/div/div/p/a at Line 2215, column 41: The link 'StructureDefinition-Encounter.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Encounter.html#/html/body/div/div/div/div/div/p/a at Line 2215, column 94: The link 'StructureDefinition-Encounter.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-EncounterParticipant.html#/html/body/div/div/div/div/div/p/a at Line 1321, column 41: The link 'StructureDefinition-EncounterParticipant.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-EncounterParticipant.html#/html/body/div/div/div/div/div/p/a at Line 1321, column 105: The link 'StructureDefinition-EncounterParticipant.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Entity.html#/html/body/div/div/div/div/div/p/a at Line 1557, column 41: The link 'StructureDefinition-Entity.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Entity.html#/html/body/div/div/div/div/div/p/a at Line 1557, column 91: The link 'StructureDefinition-Entity.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Entry.html#/html/body/div/div/div/div/div/p/a at Line 1711, column 41: The link 'StructureDefinition-Entry.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Entry.html#/html/body/div/div/div/div/div/p/a at Line 1711, column 90: The link 'StructureDefinition-Entry.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-EntryRelationship.html#/html/body/div/div/div/div/div/p/a at Line 1839, column 41: The link 'StructureDefinition-EntryRelationship.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-EntryRelationship.html#/html/body/div/div/div/div/div/p/a at Line 1839, column 102: The link 'StructureDefinition-EntryRelationship.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ExternalAct.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 332, column 697: The link 'StructureDefinition-ExternalAct-definitions.html#ExternalAct.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 59 targets)
+ERROR: en/StructureDefinition-ExternalAct.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 499, column 703: The link 'StructureDefinition-ExternalAct-definitions.html#ExternalAct.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 59 targets)
+ERROR: en/StructureDefinition-ExternalAct.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 724, column 703: The link 'StructureDefinition-ExternalAct-definitions.html#ExternalAct.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 59 targets)
+ERROR: en/StructureDefinition-ExternalAct.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 974, column 697: The link 'StructureDefinition-ExternalAct-definitions.html#ExternalAct.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 59 targets)
+ERROR: en/StructureDefinition-ExternalAct.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 1140, column 703: The link 'StructureDefinition-ExternalAct-definitions.html#ExternalAct.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 59 targets)
+ERROR: en/StructureDefinition-ExternalAct.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 1365, column 703: The link 'StructureDefinition-ExternalAct-definitions.html#ExternalAct.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 59 targets)
+ERROR: en/StructureDefinition-ExternalAct.html#/html/body/div/div/div/div/div/p/a at Line 1573, column 41: The link 'StructureDefinition-ExternalAct.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ExternalAct.html#/html/body/div/div/div/div/div/p/a at Line 1573, column 96: The link 'StructureDefinition-ExternalAct.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ExternalDocument.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 342, column 697: The link 'StructureDefinition-ExternalDocument-definitions.html#ExternalDocument.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 65 targets)
+ERROR: en/StructureDefinition-ExternalDocument.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 521, column 703: The link 'StructureDefinition-ExternalDocument-definitions.html#ExternalDocument.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 65 targets)
+ERROR: en/StructureDefinition-ExternalDocument.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 758, column 703: The link 'StructureDefinition-ExternalDocument-definitions.html#ExternalDocument.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 65 targets)
+ERROR: en/StructureDefinition-ExternalDocument.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 1022, column 697: The link 'StructureDefinition-ExternalDocument-definitions.html#ExternalDocument.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 65 targets)
+ERROR: en/StructureDefinition-ExternalDocument.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 1200, column 703: The link 'StructureDefinition-ExternalDocument-definitions.html#ExternalDocument.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 65 targets)
+ERROR: en/StructureDefinition-ExternalDocument.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 1437, column 703: The link 'StructureDefinition-ExternalDocument-definitions.html#ExternalDocument.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 65 targets)
+ERROR: en/StructureDefinition-ExternalDocument.html#/html/body/div/div/div/div/div/p/a at Line 1649, column 41: The link 'StructureDefinition-ExternalDocument.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ExternalDocument.html#/html/body/div/div/div/div/div/p/a at Line 1649, column 101: The link 'StructureDefinition-ExternalDocument.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ExternalObservation.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 332, column 697: The link 'StructureDefinition-ExternalObservation-definitions.html#ExternalObservation.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 59 targets)
+ERROR: en/StructureDefinition-ExternalObservation.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 499, column 703: The link 'StructureDefinition-ExternalObservation-definitions.html#ExternalObservation.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 59 targets)
+ERROR: en/StructureDefinition-ExternalObservation.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 724, column 703: The link 'StructureDefinition-ExternalObservation-definitions.html#ExternalObservation.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 59 targets)
+ERROR: en/StructureDefinition-ExternalObservation.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 974, column 697: The link 'StructureDefinition-ExternalObservation-definitions.html#ExternalObservation.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 59 targets)
+ERROR: en/StructureDefinition-ExternalObservation.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 1140, column 703: The link 'StructureDefinition-ExternalObservation-definitions.html#ExternalObservation.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 59 targets)
+ERROR: en/StructureDefinition-ExternalObservation.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 1365, column 703: The link 'StructureDefinition-ExternalObservation-definitions.html#ExternalObservation.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 59 targets)
+ERROR: en/StructureDefinition-ExternalObservation.html#/html/body/div/div/div/div/div/p/a at Line 1573, column 41: The link 'StructureDefinition-ExternalObservation.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ExternalObservation.html#/html/body/div/div/div/div/div/p/a at Line 1573, column 104: The link 'StructureDefinition-ExternalObservation.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ExternalProcedure.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 332, column 697: The link 'StructureDefinition-ExternalProcedure-definitions.html#ExternalProcedure.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 59 targets)
+ERROR: en/StructureDefinition-ExternalProcedure.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 501, column 703: The link 'StructureDefinition-ExternalProcedure-definitions.html#ExternalProcedure.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 59 targets)
+ERROR: en/StructureDefinition-ExternalProcedure.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 728, column 703: The link 'StructureDefinition-ExternalProcedure-definitions.html#ExternalProcedure.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 59 targets)
+ERROR: en/StructureDefinition-ExternalProcedure.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 980, column 697: The link 'StructureDefinition-ExternalProcedure-definitions.html#ExternalProcedure.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 59 targets)
+ERROR: en/StructureDefinition-ExternalProcedure.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 1148, column 703: The link 'StructureDefinition-ExternalProcedure-definitions.html#ExternalProcedure.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 59 targets)
+ERROR: en/StructureDefinition-ExternalProcedure.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 1375, column 703: The link 'StructureDefinition-ExternalProcedure-definitions.html#ExternalProcedure.sdtcAuthor' for "sdtcAuthor" cannot be resolved (valid targets: 59 targets)
+ERROR: en/StructureDefinition-ExternalProcedure.html#/html/body/div/div/div/div/div/p/a at Line 1585, column 41: The link 'StructureDefinition-ExternalProcedure.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ExternalProcedure.html#/html/body/div/div/div/div/div/p/a at Line 1585, column 102: The link 'StructureDefinition-ExternalProcedure.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Guardian.html#/html/body/div/div/div/div/div/p/a at Line 1693, column 41: The link 'StructureDefinition-Guardian.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Guardian.html#/html/body/div/div/div/div/div/p/a at Line 1693, column 93: The link 'StructureDefinition-Guardian.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-HealthCareFacility.html#/html/body/div/div/div/div/div/p/a at Line 1507, column 41: The link 'StructureDefinition-HealthCareFacility.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-HealthCareFacility.html#/html/body/div/div/div/div/div/p/a at Line 1507, column 103: The link 'StructureDefinition-HealthCareFacility.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-II.html#/html/body/div/div/div/div/div/p/a at Line 1073, column 41: The link 'StructureDefinition-II.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-II.html#/html/body/div/div/div/div/div/p/a at Line 1073, column 87: The link 'StructureDefinition-II.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-INT-POS.html#/html/body/div/div/div/div/div/p/a at Line 909, column 41: The link 'StructureDefinition-INT-POS.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-INT-POS.html#/html/body/div/div/div/div/div/p/a at Line 909, column 92: The link 'StructureDefinition-INT-POS.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-INT.html#/html/body/div/div/div/div/div/p/a at Line 976, column 41: The link 'StructureDefinition-INT.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-INT.html#/html/body/div/div/div/div/div/p/a at Line 976, column 88: The link 'StructureDefinition-INT.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-IVL-INT.html#/html/body/div/div/div/div/div/p/a at Line 1241, column 41: The link 'StructureDefinition-IVL-INT.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-IVL-INT.html#/html/body/div/div/div/div/div/p/a at Line 1241, column 92: The link 'StructureDefinition-IVL-INT.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-IVL-PQ.html#/html/body/div/div/div/div/div/p/a at Line 1273, column 41: The link 'StructureDefinition-IVL-PQ.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-IVL-PQ.html#/html/body/div/div/div/div/div/p/a at Line 1273, column 91: The link 'StructureDefinition-IVL-PQ.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-IVL-TS.html#/html/body/div/div/div/div/div/p/a at Line 1133, column 41: The link 'StructureDefinition-IVL-TS.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-IVL-TS.html#/html/body/div/div/div/div/div/p/a at Line 1133, column 91: The link 'StructureDefinition-IVL-TS.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-IVXB-INT.html#/html/body/div/div/div/div/div/p/a at Line 931, column 41: The link 'StructureDefinition-IVXB-INT.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-IVXB-INT.html#/html/body/div/div/div/div/div/p/a at Line 931, column 93: The link 'StructureDefinition-IVXB-INT.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-IVXB-PQ.html#/html/body/div/div/div/div/div/p/a at Line 823, column 41: The link 'StructureDefinition-IVXB-PQ.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-IVXB-PQ.html#/html/body/div/div/div/div/div/p/a at Line 823, column 92: The link 'StructureDefinition-IVXB-PQ.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-IVXB-TS.html#/html/body/div/div/div/div/div/p/a at Line 779, column 41: The link 'StructureDefinition-IVXB-TS.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-IVXB-TS.html#/html/body/div/div/div/div/div/p/a at Line 779, column 92: The link 'StructureDefinition-IVXB-TS.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-IdentifiedBy.html#/html/body/div/div/div/div/div/p/a at Line 837, column 41: The link 'StructureDefinition-IdentifiedBy.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-IdentifiedBy.html#/html/body/div/div/div/div/div/p/a at Line 837, column 97: The link 'StructureDefinition-IdentifiedBy.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-InFulfillmentOf.html#/html/body/div/div/div/div/div/p/a at Line 1289, column 41: The link 'StructureDefinition-InFulfillmentOf.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-InFulfillmentOf.html#/html/body/div/div/div/div/div/p/a at Line 1289, column 100: The link 'StructureDefinition-InFulfillmentOf.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-InFulfillmentOf1.html#/html/body/div/div/div/div/div/p/a at Line 1789, column 41: The link 'StructureDefinition-InFulfillmentOf1.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-InFulfillmentOf1.html#/html/body/div/div/div/div/div/p/a at Line 1789, column 101: The link 'StructureDefinition-InFulfillmentOf1.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Informant.html#/html/body/div/div/div/div/div/p/a at Line 1551, column 41: The link 'StructureDefinition-Informant.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Informant.html#/html/body/div/div/div/div/div/p/a at Line 1551, column 94: The link 'StructureDefinition-Informant.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-InformationRecipient.html#/html/body/div/div/div/div/div/p/a at Line 1289, column 41: The link 'StructureDefinition-InformationRecipient.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-InformationRecipient.html#/html/body/div/div/div/div/div/p/a at Line 1289, column 105: The link 'StructureDefinition-InformationRecipient.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-InfrastructureRoot.html#/html/body/div/div/div/div/div/p/a at Line 1141, column 41: The link 'StructureDefinition-InfrastructureRoot.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-InfrastructureRoot.html#/html/body/div/div/div/div/div/p/a at Line 1141, column 103: The link 'StructureDefinition-InfrastructureRoot.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-IntendedRecipient.html#/html/body/div/div/div/div/div/p/a at Line 1437, column 41: The link 'StructureDefinition-IntendedRecipient.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-IntendedRecipient.html#/html/body/div/div/div/div/div/p/a at Line 1437, column 102: The link 'StructureDefinition-IntendedRecipient.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-LabCriterion.html#/html/body/div/div/div/div/div/p/a at Line 1934, column 41: The link 'StructureDefinition-LabCriterion.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-LabCriterion.html#/html/body/div/div/div/div/div/p/a at Line 1934, column 97: The link 'StructureDefinition-LabCriterion.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-LabPrecondition.html#/html/body/div/div/div/div/div/p/a at Line 1055, column 41: The link 'StructureDefinition-LabPrecondition.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-LabPrecondition.html#/html/body/div/div/div/div/div/p/a at Line 1055, column 100: The link 'StructureDefinition-LabPrecondition.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-LabeledDrug.html#/html/body/div/div/div/div/div/p/a at Line 1443, column 41: The link 'StructureDefinition-LabeledDrug.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-LabeledDrug.html#/html/body/div/div/div/div/div/p/a at Line 1443, column 96: The link 'StructureDefinition-LabeledDrug.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-LanguageCommunication.html#/html/body/div/div/div/div/div/p/a at Line 1523, column 41: The link 'StructureDefinition-LanguageCommunication.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-LanguageCommunication.html#/html/body/div/div/div/div/div/p/a at Line 1523, column 106: The link 'StructureDefinition-LanguageCommunication.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-LegalAuthenticator.html#/html/body/div/div/div/div/div/p/a at Line 1663, column 41: The link 'StructureDefinition-LegalAuthenticator.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-LegalAuthenticator.html#/html/body/div/div/div/div/div/p/a at Line 1663, column 103: The link 'StructureDefinition-LegalAuthenticator.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-MO.html#/html/body/div/div/div/div/div/p/a at Line 989, column 41: The link 'StructureDefinition-MO.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-MO.html#/html/body/div/div/div/div/div/p/a at Line 989, column 87: The link 'StructureDefinition-MO.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-MaintainedEntity.html#/html/body/div/div/div/div/div/p/a at Line 1323, column 41: The link 'StructureDefinition-MaintainedEntity.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-MaintainedEntity.html#/html/body/div/div/div/div/div/p/a at Line 1323, column 101: The link 'StructureDefinition-MaintainedEntity.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ManufacturedProduct.html#/html/body/div/div/div/div/div/p/a at Line 1549, column 41: The link 'StructureDefinition-ManufacturedProduct.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ManufacturedProduct.html#/html/body/div/div/div/div/div/p/a at Line 1549, column 104: The link 'StructureDefinition-ManufacturedProduct.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Material.html#/html/body/div/div/div/div/div/p/a at Line 1719, column 41: The link 'StructureDefinition-Material.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Material.html#/html/body/div/div/div/div/div/p/a at Line 1719, column 93: The link 'StructureDefinition-Material.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-NonXMLBody.html#/html/body/div/div/div/div/div/p/a at Line 1555, column 41: The link 'StructureDefinition-NonXMLBody.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-NonXMLBody.html#/html/body/div/div/div/div/div/p/a at Line 1555, column 95: The link 'StructureDefinition-NonXMLBody.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ON.html#/html/body/div/div/div/div/div/p/a at Line 1101, column 41: The link 'StructureDefinition-ON.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ON.html#/html/body/div/div/div/div/div/p/a at Line 1101, column 87: The link 'StructureDefinition-ON.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Observation.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 329, column 700: The link 'StructureDefinition-Observation-definitions.html#Observation.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 152 targets)
+ERROR: en/StructureDefinition-Observation.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 402, column 166: The link 'StructureDefinition-ST-dot-r2b.html' for "ST_dot_r2b" cannot be resolved
+ERROR: en/StructureDefinition-Observation.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 859, column 694: The link 'StructureDefinition-Observation-definitions.html#Observation.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 152 targets)
+ERROR: en/StructureDefinition-Observation.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 932, column 164: The link 'StructureDefinition-ST-dot-r2b.html' for "ST_dot_r2b" cannot be resolved
+ERROR: en/StructureDefinition-Observation.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 1518, column 694: The link 'StructureDefinition-Observation-definitions.html#Observation.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 152 targets)
+ERROR: en/StructureDefinition-Observation.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 1591, column 164: The link 'StructureDefinition-ST-dot-r2b.html' for "ST_dot_r2b" cannot be resolved
+ERROR: en/StructureDefinition-Observation.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 2270, column 700: The link 'StructureDefinition-Observation-definitions.html#Observation.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 152 targets)
+ERROR: en/StructureDefinition-Observation.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 2343, column 166: The link 'StructureDefinition-ST-dot-r2b.html' for "ST_dot_r2b" cannot be resolved
+ERROR: en/StructureDefinition-Observation.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 2799, column 694: The link 'StructureDefinition-Observation-definitions.html#Observation.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 152 targets)
+ERROR: en/StructureDefinition-Observation.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 2872, column 164: The link 'StructureDefinition-ST-dot-r2b.html' for "ST_dot_r2b" cannot be resolved
+ERROR: en/StructureDefinition-Observation.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 3458, column 694: The link 'StructureDefinition-Observation-definitions.html#Observation.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 152 targets)
+ERROR: en/StructureDefinition-Observation.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 3531, column 164: The link 'StructureDefinition-ST-dot-r2b.html' for "ST_dot_r2b" cannot be resolved
+ERROR: en/StructureDefinition-Observation.html#/html/body/div/div/div/div/div/p/a at Line 4173, column 41: The link 'StructureDefinition-Observation.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Observation.html#/html/body/div/div/div/div/div/p/a at Line 4173, column 96: The link 'StructureDefinition-Observation.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ObservationMedia.html#/html/body/div/div/div/div/div/p/a at Line 1899, column 41: The link 'StructureDefinition-ObservationMedia.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ObservationMedia.html#/html/body/div/div/div/div/div/p/a at Line 1899, column 101: The link 'StructureDefinition-ObservationMedia.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ObservationRange.html#/html/body/div/div/div/div/div/p/a at Line 3291, column 41: The link 'StructureDefinition-ObservationRange.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ObservationRange.html#/html/body/div/div/div/div/div/p/a at Line 3291, column 101: The link 'StructureDefinition-ObservationRange.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Order.html#/html/body/div/div/div/div/div/p/a at Line 1631, column 41: The link 'StructureDefinition-Order.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Order.html#/html/body/div/div/div/div/div/p/a at Line 1631, column 90: The link 'StructureDefinition-Order.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Organization.html#/html/body/div/div/div/div/div/p/a at Line 1663, column 41: The link 'StructureDefinition-Organization.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Organization.html#/html/body/div/div/div/div/div/p/a at Line 1663, column 97: The link 'StructureDefinition-Organization.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-OrganizationPartOf.html#/html/body/div/div/div/div/div/p/a at Line 1527, column 41: The link 'StructureDefinition-OrganizationPartOf.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-OrganizationPartOf.html#/html/body/div/div/div/div/div/p/a at Line 1527, column 103: The link 'StructureDefinition-OrganizationPartOf.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Organizer.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 323, column 693: The link 'StructureDefinition-Organizer-definitions.html#Organizer.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 95 targets)
+ERROR: en/StructureDefinition-Organizer.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 567, column 699: The link 'StructureDefinition-Organizer-definitions.html#Organizer.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 95 targets)
+ERROR: en/StructureDefinition-Organizer.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 869, column 699: The link 'StructureDefinition-Organizer-definitions.html#Organizer.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 95 targets)
+ERROR: en/StructureDefinition-Organizer.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 1208, column 693: The link 'StructureDefinition-Organizer-definitions.html#Organizer.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 95 targets)
+ERROR: en/StructureDefinition-Organizer.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 1451, column 699: The link 'StructureDefinition-Organizer-definitions.html#Organizer.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 95 targets)
+ERROR: en/StructureDefinition-Organizer.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 1753, column 699: The link 'StructureDefinition-Organizer-definitions.html#Organizer.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 95 targets)
+ERROR: en/StructureDefinition-Organizer.html#/html/body/div/div/div/div/div/p/a at Line 2060, column 41: The link 'StructureDefinition-Organizer.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Organizer.html#/html/body/div/div/div/div/div/p/a at Line 2060, column 94: The link 'StructureDefinition-Organizer.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-OrganizerComponent.html#/html/body/div/div/div/div/div/p/a at Line 1807, column 41: The link 'StructureDefinition-OrganizerComponent.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-OrganizerComponent.html#/html/body/div/div/div/div/div/p/a at Line 1807, column 103: The link 'StructureDefinition-OrganizerComponent.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-PIVL-TS.html#/html/body/div/div/div/div/div/p/a at Line 939, column 41: The link 'StructureDefinition-PIVL-TS.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-PIVL-TS.html#/html/body/div/div/div/div/div/p/a at Line 939, column 92: The link 'StructureDefinition-PIVL-TS.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-PN.html#/html/body/div/div/div/div/div/p/a at Line 1227, column 41: The link 'StructureDefinition-PN.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-PN.html#/html/body/div/div/div/div/div/p/a at Line 1227, column 87: The link 'StructureDefinition-PN.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-PQ.html#/html/body/div/div/div/div/div/p/a at Line 824, column 41: The link 'StructureDefinition-PQ.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-PQ.html#/html/body/div/div/div/div/div/p/a at Line 824, column 87: The link 'StructureDefinition-PQ.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-PQR.html#/html/body/div/div/div/div/div/p/a at Line 933, column 41: The link 'StructureDefinition-PQR.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-PQR.html#/html/body/div/div/div/div/div/p/a at Line 933, column 88: The link 'StructureDefinition-PQR.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ParentDocument.html#/html/body/div/div/div/div/div/p/a at Line 1617, column 41: The link 'StructureDefinition-ParentDocument.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ParentDocument.html#/html/body/div/div/div/div/div/p/a at Line 1617, column 99: The link 'StructureDefinition-ParentDocument.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Participant1.html#/html/body/div/div/div/div/div/p/a at Line 1451, column 41: The link 'StructureDefinition-Participant1.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Participant1.html#/html/body/div/div/div/div/div/p/a at Line 1451, column 97: The link 'StructureDefinition-Participant1.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Participant2.html#/html/body/div/div/div/div/div/p/a at Line 1483, column 41: The link 'StructureDefinition-Participant2.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Participant2.html#/html/body/div/div/div/div/div/p/a at Line 1483, column 97: The link 'StructureDefinition-Participant2.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ParticipantRole.html#/html/body/div/div/div/div/div/p/a at Line 1711, column 41: The link 'StructureDefinition-ParticipantRole.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ParticipantRole.html#/html/body/div/div/div/div/div/p/a at Line 1711, column 100: The link 'StructureDefinition-ParticipantRole.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Patient.html#/html/body/div/div/div/div/div/p/a at Line 2586, column 41: The link 'StructureDefinition-Patient.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Patient.html#/html/body/div/div/div/div/div/p/a at Line 2586, column 92: The link 'StructureDefinition-Patient.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-PatientRole.html#/html/body/div/div/div/div/div/p/a at Line 1449, column 41: The link 'StructureDefinition-PatientRole.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-PatientRole.html#/html/body/div/div/div/div/div/p/a at Line 1449, column 96: The link 'StructureDefinition-PatientRole.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Performer1.html#/html/body/div/div/div/div/div/p/a at Line 1353, column 41: The link 'StructureDefinition-Performer1.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Performer1.html#/html/body/div/div/div/div/div/p/a at Line 1353, column 95: The link 'StructureDefinition-Performer1.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Performer2.html#/html/body/div/div/div/div/div/p/a at Line 1385, column 41: The link 'StructureDefinition-Performer2.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Performer2.html#/html/body/div/div/div/div/div/p/a at Line 1385, column 95: The link 'StructureDefinition-Performer2.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Person.html#/html/body/div/div/div/div/div/p/a at Line 1913, column 41: The link 'StructureDefinition-Person.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Person.html#/html/body/div/div/div/div/div/p/a at Line 1913, column 91: The link 'StructureDefinition-Person.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-PharmContent.html#/html/body/div/div/div/div/div/p/a at Line 604, column 41: The link 'StructureDefinition-PharmContent.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-PharmContent.html#/html/body/div/div/div/div/div/p/a at Line 604, column 97: The link 'StructureDefinition-PharmContent.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-PharmIngredient.html#/html/body/div/div/div/div/div/p/a at Line 636, column 41: The link 'StructureDefinition-PharmIngredient.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-PharmIngredient.html#/html/body/div/div/div/div/div/p/a at Line 636, column 100: The link 'StructureDefinition-PharmIngredient.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-PharmMedicineClass.html#/html/body/div/div/div/div/div/p/a at Line 636, column 41: The link 'StructureDefinition-PharmMedicineClass.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-PharmMedicineClass.html#/html/body/div/div/div/div/div/p/a at Line 636, column 103: The link 'StructureDefinition-PharmMedicineClass.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-PharmPackagedMedicine.html#/html/body/div/div/div/div/div/p/a at Line 796, column 41: The link 'StructureDefinition-PharmPackagedMedicine.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-PharmPackagedMedicine.html#/html/body/div/div/div/div/div/p/a at Line 796, column 106: The link 'StructureDefinition-PharmPackagedMedicine.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-PharmSpecializedKind.html#/html/body/div/div/div/div/div/p/a at Line 604, column 41: The link 'StructureDefinition-PharmSpecializedKind.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-PharmSpecializedKind.html#/html/body/div/div/div/div/div/p/a at Line 604, column 105: The link 'StructureDefinition-PharmSpecializedKind.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-PharmSubstance.html#/html/body/div/div/div/div/div/p/a at Line 668, column 41: The link 'StructureDefinition-PharmSubstance.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-PharmSubstance.html#/html/body/div/div/div/div/div/p/a at Line 668, column 99: The link 'StructureDefinition-PharmSubstance.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-PharmSuperContent.html#/html/body/div/div/div/div/div/p/a at Line 572, column 41: The link 'StructureDefinition-PharmSuperContent.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-PharmSuperContent.html#/html/body/div/div/div/div/div/p/a at Line 572, column 102: The link 'StructureDefinition-PharmSuperContent.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Place.html#/html/body/div/div/div/div/div/p/a at Line 1447, column 41: The link 'StructureDefinition-Place.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Place.html#/html/body/div/div/div/div/div/p/a at Line 1447, column 90: The link 'StructureDefinition-Place.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-PlayingEntity.html#/html/body/div/div/div/div/div/p/a at Line 1617, column 41: The link 'StructureDefinition-PlayingEntity.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-PlayingEntity.html#/html/body/div/div/div/div/div/p/a at Line 1617, column 98: The link 'StructureDefinition-PlayingEntity.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Precondition.html#/html/body/div/div/div/div/div/p/a at Line 1277, column 41: The link 'StructureDefinition-Precondition.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Precondition.html#/html/body/div/div/div/div/div/p/a at Line 1277, column 97: The link 'StructureDefinition-Precondition.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Precondition2.html#/html/body/div/div/div/div/div/p/a at Line 1821, column 41: The link 'StructureDefinition-Precondition2.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Precondition2.html#/html/body/div/div/div/div/div/p/a at Line 1821, column 98: The link 'StructureDefinition-Precondition2.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-PreconditionBase.html#/html/body/div/div/div/div/div/p/a at Line 1217, column 41: The link 'StructureDefinition-PreconditionBase.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-PreconditionBase.html#/html/body/div/div/div/div/div/p/a at Line 1217, column 101: The link 'StructureDefinition-PreconditionBase.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Procedure.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 324, column 693: The link 'StructureDefinition-Procedure-definitions.html#Procedure.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 116 targets)
+ERROR: en/StructureDefinition-Procedure.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 620, column 700: The link 'StructureDefinition-Procedure-definitions.html#Procedure.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 116 targets)
+ERROR: en/StructureDefinition-Procedure.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 974, column 700: The link 'StructureDefinition-Procedure-definitions.html#Procedure.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 116 targets)
+ERROR: en/StructureDefinition-Procedure.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 1373, column 693: The link 'StructureDefinition-Procedure-definitions.html#Procedure.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 116 targets)
+ERROR: en/StructureDefinition-Procedure.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 1668, column 700: The link 'StructureDefinition-Procedure-definitions.html#Procedure.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 116 targets)
+ERROR: en/StructureDefinition-Procedure.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 2022, column 700: The link 'StructureDefinition-Procedure-definitions.html#Procedure.sdtcCategory' for "sdtcCategory" cannot be resolved (valid targets: 116 targets)
+ERROR: en/StructureDefinition-Procedure.html#/html/body/div/div/div/div/div/p/a at Line 2389, column 41: The link 'StructureDefinition-Procedure.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Procedure.html#/html/body/div/div/div/div/div/p/a at Line 2389, column 94: The link 'StructureDefinition-Procedure.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-QTY.html#/html/body/div/div/div/div/div/p/a at Line 711, column 41: The link 'StructureDefinition-QTY.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-QTY.html#/html/body/div/div/div/div/div/p/a at Line 711, column 88: The link 'StructureDefinition-QTY.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-REAL.html#/html/body/div/div/div/div/div/p/a at Line 975, column 41: The link 'StructureDefinition-REAL.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-REAL.html#/html/body/div/div/div/div/div/p/a at Line 975, column 89: The link 'StructureDefinition-REAL.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-RTO-PQ-PQ.html#/html/body/div/div/div/div/div/p/a at Line 775, column 41: The link 'StructureDefinition-RTO-PQ-PQ.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-RTO-PQ-PQ.html#/html/body/div/div/div/div/div/p/a at Line 775, column 94: The link 'StructureDefinition-RTO-PQ-PQ.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-RecordTarget.html#/html/body/div/div/div/div/div/p/a at Line 1387, column 41: The link 'StructureDefinition-RecordTarget.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-RecordTarget.html#/html/body/div/div/div/div/div/p/a at Line 1387, column 97: The link 'StructureDefinition-RecordTarget.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Reference.html#/html/body/div/div/div/div/div/p/a at Line 1553, column 41: The link 'StructureDefinition-Reference.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Reference.html#/html/body/div/div/div/div/div/p/a at Line 1553, column 94: The link 'StructureDefinition-Reference.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-RegionOfInterest.html#/html/body/div/div/div/div/div/p/a at Line 1909, column 41: The link 'StructureDefinition-RegionOfInterest.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-RegionOfInterest.html#/html/body/div/div/div/div/div/p/a at Line 1909, column 101: The link 'StructureDefinition-RegionOfInterest.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-RelatedDocument.html#/html/body/div/div/div/div/div/p/a at Line 1289, column 41: The link 'StructureDefinition-RelatedDocument.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-RelatedDocument.html#/html/body/div/div/div/div/div/p/a at Line 1289, column 100: The link 'StructureDefinition-RelatedDocument.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-RelatedEntity.html#/html/body/div/div/div/div/div/p/a at Line 1495, column 41: The link 'StructureDefinition-RelatedEntity.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-RelatedEntity.html#/html/body/div/div/div/div/div/p/a at Line 1495, column 98: The link 'StructureDefinition-RelatedEntity.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-RelatedSubject.html#/html/body/div/div/div/div/div/p/a at Line 1417, column 41: The link 'StructureDefinition-RelatedSubject.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-RelatedSubject.html#/html/body/div/div/div/div/div/p/a at Line 1417, column 99: The link 'StructureDefinition-RelatedSubject.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-SC.html#/html/body/div/div/div/div/div/p/a at Line 1133, column 41: The link 'StructureDefinition-SC.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-SC.html#/html/body/div/div/div/div/div/p/a at Line 1133, column 87: The link 'StructureDefinition-SC.xlsx' for "Excel" cannot be resolved
+WARNING: /Users/oegger/Documents/github/CDA-core-sd/output/en/StructureDefinition-ST-r2b.html#/html/body/div/div/div/div/div/div/div/div/div/table/script at Line 307, column 353: The <script> containing the javascript '// 1a23faa2-6597-415'... is illegal and not allowed on the HL7 ci-build - need to put the script in a  .js file in a trusted template if this IG is to build on the HL7 ci-build (if it is justified and needed) (also in 1 other files)
+WARNING: /Users/oegger/Documents/github/CDA-core-sd/output/en/StructureDefinition-ST-r2b.html#/html/body/div/div/div/div/div/div/div/div/div/table/script at Line 383, column 353: The <script> containing the javascript '// 1a23faa2-6597-415'... is illegal and not allowed on the HL7 ci-build - need to put the script in a  .js file in a trusted template if this IG is to build on the HL7 ci-build (if it is justified and needed)
+WARNING: /Users/oegger/Documents/github/CDA-core-sd/output/en/StructureDefinition-ST-r2b.html#/html/body/div/div/div/div/div/div/div/div/div/table/script at Line 494, column 353: The <script> containing the javascript '// 1a23faa2-6597-415'... is illegal and not allowed on the HL7 ci-build - need to put the script in a  .js file in a trusted template if this IG is to build on the HL7 ci-build (if it is justified and needed)
+WARNING: /Users/oegger/Documents/github/CDA-core-sd/output/en/StructureDefinition-ST-r2b.html#/html/body/div/div/div/div/div/div/div/div/div/table/script at Line 725, column 353: The <script> containing the javascript '// 1a23faa2-6597-415'... is illegal and not allowed on the HL7 ci-build - need to put the script in a  .js file in a trusted template if this IG is to build on the HL7 ci-build (if it is justified and needed)
+WARNING: /Users/oegger/Documents/github/CDA-core-sd/output/en/StructureDefinition-ST-r2b.html#/html/body/div/div/div/div/div/div/div/div/div/table/script at Line 836, column 353: The <script> containing the javascript '// 1a23faa2-6597-415'... is illegal and not allowed on the HL7 ci-build - need to put the script in a  .js file in a trusted template if this IG is to build on the HL7 ci-build (if it is justified and needed)
+ERROR: en/StructureDefinition-ST-r2b.html#/html/body/div/div/div/div/div/p/a at Line 970, column 41: The link 'StructureDefinition-ST-r2b.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ST-r2b.html#/html/body/div/div/div/div/div/p/a at Line 970, column 91: The link 'StructureDefinition-ST-r2b.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ST-r2b.html#/html/body/div/div/div/div/div/p/a at Line 970, column 144: The link 'StructureDefinition-ST-r2b.sch' for "Schematron" cannot be resolved
+ERROR: en/StructureDefinition-ST.html#/html/body/div/div/div/div/div/p/a at Line 1074, column 41: The link 'StructureDefinition-ST.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ST.html#/html/body/div/div/div/div/div/p/a at Line 1074, column 87: The link 'StructureDefinition-ST.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-SXCM-TS.html#/html/body/div/div/div/div/div/p/a at Line 904, column 41: The link 'StructureDefinition-SXCM-TS.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-SXCM-TS.html#/html/body/div/div/div/div/div/p/a at Line 904, column 92: The link 'StructureDefinition-SXCM-TS.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-SXPR-TS.html#/html/body/div/div/div/div/div/p/a at Line 999, column 41: The link 'StructureDefinition-SXPR-TS.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-SXPR-TS.html#/html/body/div/div/div/div/div/p/a at Line 999, column 92: The link 'StructureDefinition-SXPR-TS.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Section.html#/html/body/div/div/div/div/div/p/a at Line 2251, column 41: The link 'StructureDefinition-Section.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Section.html#/html/body/div/div/div/div/div/p/a at Line 2251, column 92: The link 'StructureDefinition-Section.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ServiceEvent.html#/html/body/div/div/div/div/div/p/a at Line 1519, column 41: The link 'StructureDefinition-ServiceEvent.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ServiceEvent.html#/html/body/div/div/div/div/div/p/a at Line 1519, column 97: The link 'StructureDefinition-ServiceEvent.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Specimen.html#/html/body/div/div/div/div/div/p/a at Line 1277, column 41: The link 'StructureDefinition-Specimen.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Specimen.html#/html/body/div/div/div/div/div/p/a at Line 1277, column 93: The link 'StructureDefinition-Specimen.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-SpecimenRole.html#/html/body/div/div/div/div/div/p/a at Line 1353, column 41: The link 'StructureDefinition-SpecimenRole.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-SpecimenRole.html#/html/body/div/div/div/div/div/p/a at Line 1353, column 97: The link 'StructureDefinition-SpecimenRole.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-StructuredBody.html#/html/body/div/div/div/div/div/p/a at Line 1961, column 41: The link 'StructureDefinition-StructuredBody.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-StructuredBody.html#/html/body/div/div/div/div/div/p/a at Line 1961, column 99: The link 'StructureDefinition-StructuredBody.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Subject.html#/html/body/div/div/div/div/div/p/a at Line 1523, column 41: The link 'StructureDefinition-Subject.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Subject.html#/html/body/div/div/div/div/div/p/a at Line 1523, column 92: The link 'StructureDefinition-Subject.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-SubjectPerson.html#/html/body/div/div/div/div/div/p/a at Line 1757, column 41: The link 'StructureDefinition-SubjectPerson.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-SubjectPerson.html#/html/body/div/div/div/div/div/p/a at Line 1757, column 98: The link 'StructureDefinition-SubjectPerson.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-SubstanceAdministration.html#/html/body/div/div/div/div/div/p/a at Line 3313, column 41: The link 'StructureDefinition-SubstanceAdministration.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-SubstanceAdministration.html#/html/body/div/div/div/div/div/p/a at Line 3313, column 108: The link 'StructureDefinition-SubstanceAdministration.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-Supply.html#/html/body/div/div/div/div/div/p/a at Line 2947, column 41: The link 'StructureDefinition-Supply.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-Supply.html#/html/body/div/div/div/div/div/p/a at Line 2947, column 91: The link 'StructureDefinition-Supply.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-TEL.html#/html/body/div/div/div/div/div/p/a at Line 1305, column 41: The link 'StructureDefinition-TEL.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-TEL.html#/html/body/div/div/div/div/div/p/a at Line 1305, column 88: The link 'StructureDefinition-TEL.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 302, column 603: The link 'StructureDefinition-TN-definitions.html#TN' for "TN" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 307, column 697: The link 'StructureDefinition-TN-definitions.html#TN.use' for "@use" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 312, column 731: The link 'StructureDefinition-TN-definitions.html#TN.item' for "item" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 317, column 785: The link 'StructureDefinition-TN-definitions.html#TN.item.delimiter' for "delimiter" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 322, column 779: The link 'StructureDefinition-TN-definitions.html#TN.item.family' for "family" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 327, column 785: The link 'StructureDefinition-TN-definitions.html#TN.item.given' for "given" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 332, column 779: The link 'StructureDefinition-TN-definitions.html#TN.item.prefix' for "prefix" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 337, column 789: The link 'StructureDefinition-TN-definitions.html#TN.item.suffix' for "suffix" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 401, column 603: The link 'StructureDefinition-TN-definitions.html#TN' for "TN" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 406, column 711: The link 'StructureDefinition-TN-definitions.html#TN.nullFlavor' for "@nullFlavor" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 411, column 705: The link 'StructureDefinition-TN-definitions.html#TN.use' for "@use" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 416, column 736: The link 'StructureDefinition-TN-definitions.html#TN.item' for "item" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 421, column 797: The link 'StructureDefinition-TN-definitions.html#TN.item.xmlText' for "xmlText" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 426, column 703: The link 'StructureDefinition-TN-definitions.html#TN.validTime' for "validTime" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 535, column 603: The link 'StructureDefinition-TN-definitions.html#TN' for "TN" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 540, column 711: The link 'StructureDefinition-TN-definitions.html#TN.nullFlavor' for "@nullFlavor" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 545, column 705: The link 'StructureDefinition-TN-definitions.html#TN.use' for "@use" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 550, column 736: The link 'StructureDefinition-TN-definitions.html#TN.item' for "item" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 555, column 797: The link 'StructureDefinition-TN-definitions.html#TN.item.xmlText' for "xmlText" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 560, column 703: The link 'StructureDefinition-TN-definitions.html#TN.validTime' for "validTime" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 721, column 603: The link 'StructureDefinition-TN-definitions.html#TN' for "TN" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 726, column 697: The link 'StructureDefinition-TN-definitions.html#TN.use' for "@use" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 731, column 731: The link 'StructureDefinition-TN-definitions.html#TN.item' for "item" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 736, column 785: The link 'StructureDefinition-TN-definitions.html#TN.item.delimiter' for "delimiter" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 741, column 779: The link 'StructureDefinition-TN-definitions.html#TN.item.family' for "family" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 746, column 785: The link 'StructureDefinition-TN-definitions.html#TN.item.given' for "given" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 751, column 779: The link 'StructureDefinition-TN-definitions.html#TN.item.prefix' for "prefix" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 756, column 789: The link 'StructureDefinition-TN-definitions.html#TN.item.suffix' for "suffix" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 819, column 603: The link 'StructureDefinition-TN-definitions.html#TN' for "TN" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 824, column 711: The link 'StructureDefinition-TN-definitions.html#TN.nullFlavor' for "@nullFlavor" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 829, column 705: The link 'StructureDefinition-TN-definitions.html#TN.use' for "@use" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 834, column 736: The link 'StructureDefinition-TN-definitions.html#TN.item' for "item" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 839, column 797: The link 'StructureDefinition-TN-definitions.html#TN.item.xmlText' for "xmlText" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 844, column 703: The link 'StructureDefinition-TN-definitions.html#TN.validTime' for "validTime" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 953, column 603: The link 'StructureDefinition-TN-definitions.html#TN' for "TN" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 958, column 711: The link 'StructureDefinition-TN-definitions.html#TN.nullFlavor' for "@nullFlavor" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 963, column 705: The link 'StructureDefinition-TN-definitions.html#TN.use' for "@use" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 968, column 736: The link 'StructureDefinition-TN-definitions.html#TN.item' for "item" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 973, column 797: The link 'StructureDefinition-TN-definitions.html#TN.item.xmlText' for "xmlText" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/div/div/div/div/table/tr/td/a at Line 978, column 703: The link 'StructureDefinition-TN-definitions.html#TN.validTime' for "validTime" cannot be resolved (valid targets: 53 targets)
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/p/a at Line 1127, column 41: The link 'StructureDefinition-TN.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-TN.html#/html/body/div/div/div/div/div/p/a at Line 1127, column 87: The link 'StructureDefinition-TN.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-TS.html#/html/body/div/div/div/div/div/p/a at Line 758, column 41: The link 'StructureDefinition-TS.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-TS.html#/html/body/div/div/div/div/div/p/a at Line 758, column 87: The link 'StructureDefinition-TS.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-bin.html#/html/body/div/div/div/div/div/p/a at Line 715, column 41: The link 'StructureDefinition-bin.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-bin.html#/html/body/div/div/div/div/div/p/a at Line 715, column 88: The link 'StructureDefinition-bin.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-bin.html#/html/body/div/div/div/div/div/p/a at Line 715, column 138: The link 'StructureDefinition-bin.sch' for "Schematron" cannot be resolved
+ERROR: en/StructureDefinition-bl-simple.html#/html/body/div/div/div/div/div/p/a at Line 715, column 41: The link 'StructureDefinition-bl-simple.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-bl-simple.html#/html/body/div/div/div/div/div/p/a at Line 715, column 94: The link 'StructureDefinition-bl-simple.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-bl-simple.html#/html/body/div/div/div/div/div/p/a at Line 715, column 150: The link 'StructureDefinition-bl-simple.sch' for "Schematron" cannot be resolved
+ERROR: en/StructureDefinition-bn.html#/html/body/div/div/div/div/div/p/a at Line 715, column 41: The link 'StructureDefinition-bn.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-bn.html#/html/body/div/div/div/div/div/p/a at Line 715, column 87: The link 'StructureDefinition-bn.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-bn.html#/html/body/div/div/div/div/div/p/a at Line 715, column 136: The link 'StructureDefinition-bn.sch' for "Schematron" cannot be resolved
+ERROR: en/StructureDefinition-cs-simple.html#/html/body/div/div/div/div/div/p/a at Line 818, column 41: The link 'StructureDefinition-cs-simple.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-cs-simple.html#/html/body/div/div/div/div/div/p/a at Line 818, column 94: The link 'StructureDefinition-cs-simple.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-cs-simple.html#/html/body/div/div/div/div/div/p/a at Line 818, column 150: The link 'StructureDefinition-cs-simple.sch' for "Schematron" cannot be resolved
+ERROR: en/StructureDefinition-int-simple.html#/html/body/div/div/div/div/div/p/a at Line 715, column 41: The link 'StructureDefinition-int-simple.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-int-simple.html#/html/body/div/div/div/div/div/p/a at Line 715, column 95: The link 'StructureDefinition-int-simple.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-int-simple.html#/html/body/div/div/div/div/div/p/a at Line 715, column 152: The link 'StructureDefinition-int-simple.sch' for "Schematron" cannot be resolved
+ERROR: en/StructureDefinition-oid.html#/html/body/div/div/div/div/div/p/a at Line 817, column 41: The link 'StructureDefinition-oid.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-oid.html#/html/body/div/div/div/div/div/p/a at Line 817, column 88: The link 'StructureDefinition-oid.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-oid.html#/html/body/div/div/div/div/div/p/a at Line 817, column 138: The link 'StructureDefinition-oid.sch' for "Schematron" cannot be resolved
+ERROR: en/StructureDefinition-probability.html#/html/body/div/div/div/div/div/p/a at Line 735, column 41: The link 'StructureDefinition-probability.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-probability.html#/html/body/div/div/div/div/div/p/a at Line 735, column 96: The link 'StructureDefinition-probability.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-probability.html#/html/body/div/div/div/div/div/p/a at Line 735, column 154: The link 'StructureDefinition-probability.sch' for "Schematron" cannot be resolved
+ERROR: en/StructureDefinition-real-simple.html#/html/body/div/div/div/div/div/p/a at Line 715, column 41: The link 'StructureDefinition-real-simple.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-real-simple.html#/html/body/div/div/div/div/div/p/a at Line 715, column 96: The link 'StructureDefinition-real-simple.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-real-simple.html#/html/body/div/div/div/div/div/p/a at Line 715, column 154: The link 'StructureDefinition-real-simple.sch' for "Schematron" cannot be resolved
+ERROR: en/StructureDefinition-ruid.html#/html/body/div/div/div/div/div/p/a at Line 841, column 41: The link 'StructureDefinition-ruid.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ruid.html#/html/body/div/div/div/div/div/p/a at Line 841, column 89: The link 'StructureDefinition-ruid.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ruid.html#/html/body/div/div/div/div/div/p/a at Line 841, column 140: The link 'StructureDefinition-ruid.sch' for "Schematron" cannot be resolved
+ERROR: en/StructureDefinition-st-simple.html#/html/body/div/div/div/div/div/ul/li/span/a at Line 256, column 1035: The link 'StructureDefinition-ST-dot-r2b.html' for "ST-dot-r2b: CharacterString with Value Attribute (V3 Data Type)" cannot be resolved
+ERROR: en/StructureDefinition-st-simple.html#/html/body/div/div/div/div/div/p/a at Line 715, column 41: The link 'StructureDefinition-st-simple.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-st-simple.html#/html/body/div/div/div/div/div/p/a at Line 715, column 94: The link 'StructureDefinition-st-simple.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-st-simple.html#/html/body/div/div/div/div/div/p/a at Line 715, column 150: The link 'StructureDefinition-st-simple.sch' for "Schematron" cannot be resolved
+ERROR: en/StructureDefinition-ts-simple.html#/html/body/div/div/div/div/div/p/a at Line 735, column 41: The link 'StructureDefinition-ts-simple.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-ts-simple.html#/html/body/div/div/div/div/div/p/a at Line 735, column 94: The link 'StructureDefinition-ts-simple.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-ts-simple.html#/html/body/div/div/div/div/div/p/a at Line 735, column 150: The link 'StructureDefinition-ts-simple.sch' for "Schematron" cannot be resolved
+ERROR: en/StructureDefinition-uid.html#/html/body/div/div/div/div/div/p/a at Line 817, column 41: The link 'StructureDefinition-uid.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-uid.html#/html/body/div/div/div/div/div/p/a at Line 817, column 88: The link 'StructureDefinition-uid.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-uid.html#/html/body/div/div/div/div/div/p/a at Line 817, column 138: The link 'StructureDefinition-uid.sch' for "Schematron" cannot be resolved
+ERROR: en/StructureDefinition-url.html#/html/body/div/div/div/div/div/p/a at Line 715, column 41: The link 'StructureDefinition-url.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-url.html#/html/body/div/div/div/div/div/p/a at Line 715, column 88: The link 'StructureDefinition-url.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-url.html#/html/body/div/div/div/div/div/p/a at Line 715, column 138: The link 'StructureDefinition-url.sch' for "Schematron" cannot be resolved
+ERROR: en/StructureDefinition-uuid.html#/html/body/div/div/div/div/div/p/a at Line 819, column 41: The link 'StructureDefinition-uuid.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-uuid.html#/html/body/div/div/div/div/div/p/a at Line 819, column 89: The link 'StructureDefinition-uuid.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-uuid.html#/html/body/div/div/div/div/div/p/a at Line 819, column 140: The link 'StructureDefinition-uuid.sch' for "Schematron" cannot be resolved
+ERROR: en/StructureDefinition-xs-ID.html#/html/body/div/div/div/div/div/p/a at Line 715, column 41: The link 'StructureDefinition-xs-ID.csv' for "CSV" cannot be resolved
+ERROR: en/StructureDefinition-xs-ID.html#/html/body/div/div/div/div/div/p/a at Line 715, column 90: The link 'StructureDefinition-xs-ID.xlsx' for "Excel" cannot be resolved
+ERROR: en/StructureDefinition-xs-ID.html#/html/body/div/div/div/div/div/p/a at Line 715, column 142: The link 'StructureDefinition-xs-ID.sch' for "Schematron" cannot be resolved
+ERROR: en/downloads.html#/html/body/div/div/div/div/div/ul/li/table/tbody/tr/td/a at Line 167, column 28: The link 'definitions.xml.zip' for "xml" cannot be resolved
+ERROR: en/downloads.html#/html/body/div/div/div/div/div/ul/li/table/tbody/tr/td/a at Line 168, column 16: The link 'definitions.json.zip' for "json" cannot be resolved
+ERROR: en/downloads.html#/html/body/div/div/div/div/div/ul/li/a at Line 173, column 8: The link 'package.tgz' for "Package" cannot be resolved
+ERROR: /Users/oegger/Documents/github/CDA-core-sd/output/en/transformed-example.html: The html source does not contain the publish box <!--ReleaseHeader--><p id="publish-box">Publish Box goes here</p><!--EndReleaseHeader--> (see note at https://confluence.hl7.org/spaces/FHIR/pages/66930646/FHIR+Implementation+Guide+Publishing+Requirements#FHIRImplementationGuidePublishingRequirements-PublishBox)
 == input/examples/clinicaldocument-example.xml ==
+WARNING: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[1].section.entry[0].observation.classCode: The concept 'COND' is deprecated and its use should be reviewed
+WARNING: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[1].section.entry[1].observation.classCode: The concept 'COND' is deprecated and its use should be reviewed
+WARNING: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[1].section.entry[1].observation.reference[0].externalDocument.text.reference.value: No definition could be found for URL value 'HTN.cda'
+WARNING: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[1].section.entry[2].observation.classCode: The concept 'COND' is deprecated and its use should be reviewed
+WARNING: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[6].section.component[1].section.entry[0].observation.entryRelationship[0].regionOfInterest.entryRelationship[0].observationMedia.value.reference.value: No definition could be found for URL value 'lefthand.gif'
+WARNING: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[9].section.entry[0].observation.classCode: The concept 'COND' is deprecated and its use should be reviewed
+WARNING: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[9].section.entry[0].observation.reference[0].externalObservation.classCode: The concept 'COND' is deprecated and its use should be reviewed
+WARNING: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[9].section.entry[1].observation.classCode: The concept 'COND' is deprecated and its use should be reviewed
+WARNING: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[9].section.entry[1].observation.reference[0].externalObservation.classCode: The concept 'COND' is deprecated and its use should be reviewed
+WARNING: Binary/clinicaldocument-example: ClinicalDocument.component.structuredBody.component[9].section.entry[2].observation.classCode: The concept 'COND' is deprecated and its use should be reviewed
 == input/hl7.cda.uv.core.xml ==
+ERROR: ImplementationGuide/hl7.cda.uv.core: ImplementationGuide.definition.resource[18].extension[0]: The extension http://hl7.org/fhir/StructureDefinition/implementationguide-resource-format could not be found so is not allowed here
+ERROR: ImplementationGuide/hl7.cda.uv.core: ImplementationGuide.definition.resource[18].extension[0].url: No definition could be found for URL value 'http://hl7.org/fhir/StructureDefinition/implementationguide-resource-format'
+INFORMATION: ImplementationGuide/hl7.cda.uv.core: ImplementationGuide.definition.parameter[7].code: Reference to experimental CodeSystem http://hl7.org/fhir/guide-parameter-code|5.0.0
+INFORMATION: ImplementationGuide/hl7.cda.uv.core: ImplementationGuide.definition.parameter[8].code: Reference to experimental CodeSystem http://hl7.org/fhir/guide-parameter-code|5.0.0
+INFORMATION: ImplementationGuide/hl7.cda.uv.core: ImplementationGuide.definition.parameter[9].code: Reference to experimental CodeSystem http://hl7.org/fhir/guide-parameter-code|5.0.0
+INFORMATION: ImplementationGuide/hl7.cda.uv.core: ImplementationGuide.definition.parameter[10].code: Reference to experimental CodeSystem http://hl7.org/fhir/guide-parameter-code|5.0.0
+INFORMATION: ImplementationGuide/hl7.cda.uv.core: ImplementationGuide.definition.parameter[11].code: Reference to experimental CodeSystem http://hl7.org/fhir/guide-parameter-code|5.0.0
+INFORMATION: ImplementationGuide/hl7.cda.uv.core: ImplementationGuide.definition.parameter[12].code: Reference to experimental CodeSystem http://hl7.org/fhir/guide-parameter-code|5.0.0
+INFORMATION: ImplementationGuide/hl7.cda.uv.core: ImplementationGuide.definition.parameter[13].code: Reference to experimental CodeSystem http://hl7.org/fhir/guide-parameter-code|5.0.0
+INFORMATION: ImplementationGuide/hl7.cda.uv.core: ImplementationGuide.definition.parameter[14].code: Reference to experimental CodeSystem http://hl7.org/fhir/guide-parameter-code|5.0.0
+INFORMATION: ImplementationGuide/hl7.cda.uv.core: ImplementationGuide.definition.parameter[15].code: Reference to experimental CodeSystem http://hl7.org/fhir/guide-parameter-code|5.0.0
+INFORMATION: ImplementationGuide/hl7.cda.uv.core: ImplementationGuide.definition.parameter[16].code: Reference to experimental CodeSystem http://hl7.org/fhir/guide-parameter-code|5.0.0
+INFORMATION: ImplementationGuide/hl7.cda.uv.core: ImplementationGuide.definition.parameter[17].code: Reference to experimental CodeSystem http://hl7.org/fhir/guide-parameter-code|5.0.0
+INFORMATION: ImplementationGuide/hl7.cda.uv.core: ImplementationGuide.definition.parameter[18].code: Reference to experimental CodeSystem http://hl7.org/fhir/guide-parameter-code|5.0.0
+INFORMATION: ImplementationGuide/hl7.cda.uv.core: ImplementationGuide.definition.parameter[19].code: Reference to experimental CodeSystem http://hl7.org/fhir/guide-parameter-code|5.0.0
+INFORMATION: ImplementationGuide/hl7.cda.uv.core: ImplementationGuide.definition.parameter[20].code: Reference to experimental CodeSystem http://hl7.org/fhir/guide-parameter-code|5.0.0
+INFORMATION: ImplementationGuide/hl7.cda.uv.core: ImplementationGuide.definition.parameter[26].code: Reference to experimental CodeSystem http://hl7.org/fhir/guide-parameter-code|5.0.0
+ERROR: ImplementationGuide/hl7.cda.uv.core: ImplementationGuide.dependsOn[1]: The ImplementationGuide is based on FHIR version 5.0.0 but package hl7.terminology#5.3.0 is based on FHIR version 4.0.1. Use the package hl7.terminology.r5 instead
+WARNING: ImplementationGuide/hl7.cda.uv.core: ImplementationGuide.dependsOn[1]: The ImplementationGuide uses package hl7.terminology#5.3.0 released on 2023-09-08, but the most recent appropriate version is 6.5.0. This reference is getting old and the more recent version should be considered
 == input/resources/AD.xml ==
 == input/resources/ADXP.xml ==
 == input/resources/ANY.xml ==
@@ -216,6 +672,12 @@ WARNING: The jira specification file appears to be out of date with the versions
 == input/resources/CS.xml ==
 == input/resources/CV.xml ==
 == input/resources/ClinicalDocument.xml ==
+WARNING: StructureDefinition/ClinicalDocument: StructureDefinition.snapshot.element[17].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:hl7-at:v3'
+WARNING: StructureDefinition/ClinicalDocument: StructureDefinition.snapshot.element[18].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:hl7-at:v3'
+WARNING: StructureDefinition/ClinicalDocument: StructureDefinition.snapshot.element[19].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:hl7-at:v3'
+WARNING: StructureDefinition/ClinicalDocument: StructureDefinition.differential.element[13].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:hl7-at:v3'
+WARNING: StructureDefinition/ClinicalDocument: StructureDefinition.differential.element[14].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:hl7-at:v3'
+WARNING: StructureDefinition/ClinicalDocument: StructureDefinition.differential.element[15].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:hl7-at:v3'
 == input/resources/Component.xml ==
 == input/resources/ComponentOf.xml ==
 == input/resources/Consent.xml ==
@@ -258,19 +720,36 @@ WARNING: The jira specification file appears to be out of date with the versions
 == input/resources/InfrastructureRoot.xml ==
 == input/resources/IntendedRecipient.xml ==
 == input/resources/LabCriterion.xml ==
+WARNING: StructureDefinition/LabCriterion: StructureDefinition.extension[0].value.ofType(uri): No definition could be found for URL value 'urn:oid:1.3.6.1.4.1.19376.1.3.2'
 == input/resources/LabPrecondition.xml ==
+WARNING: StructureDefinition/LabPrecondition: StructureDefinition.extension[0].value.ofType(uri): No definition could be found for URL value 'urn:oid:1.3.6.1.4.1.19376.1.3.2'
+WARNING: StructureDefinition/LabPrecondition: StructureDefinition.snapshot.element[6].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:oid:1.3.6.1.4.1.19376.1.3.2'
+WARNING: StructureDefinition/LabPrecondition: StructureDefinition.differential.element[6].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:oid:1.3.6.1.4.1.19376.1.3.2'
 == input/resources/LabeledDrug.xml ==
 == input/resources/LanguageCommunication.xml ==
 == input/resources/LegalAuthenticator.xml ==
 == input/resources/MO.xml ==
 == input/resources/MaintainedEntity.xml ==
+INFORMATION: StructureDefinition/MaintainedEntity: StructureDefinition: Resource is not deprecated, but the description mentions deprecated - check whether it should be deprecated
 == input/resources/ManufacturedProduct.xml ==
 == input/resources/Material.xml ==
+WARNING: StructureDefinition/Material: StructureDefinition.snapshot.element[14].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/Material: StructureDefinition.snapshot.element[16].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/Material: StructureDefinition.snapshot.element[17].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/Material: StructureDefinition.snapshot.element[18].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/Material: StructureDefinition.snapshot.element[19].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/Material: StructureDefinition.differential.element[5].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/Material: StructureDefinition.differential.element[7].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/Material: StructureDefinition.differential.element[8].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/Material: StructureDefinition.differential.element[9].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/Material: StructureDefinition.differential.element[10].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
 == input/resources/NonXMLBody.xml ==
 == input/resources/ON.xml ==
 == input/resources/Observation.xml ==
 == input/resources/ObservationMedia.xml ==
 == input/resources/ObservationRange.xml ==
+WARNING: StructureDefinition/ObservationRange: StructureDefinition.snapshot.element[29].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:oid:1.3.6.1.4.1.19376.1.3.2'
+WARNING: StructureDefinition/ObservationRange: StructureDefinition.differential.element[11].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:oid:1.3.6.1.4.1.19376.1.3.2'
 == input/resources/Order.xml ==
 == input/resources/Organization.xml ==
 == input/resources/OrganizationPartOf.xml ==
@@ -290,12 +769,49 @@ WARNING: The jira specification file appears to be out of date with the versions
 == input/resources/Performer2.xml ==
 == input/resources/Person.xml ==
 == input/resources/PharmContent.xml ==
+WARNING: StructureDefinition/PharmContent: StructureDefinition.extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmContent: StructureDefinition.snapshot.element[2].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmContent: StructureDefinition.differential.element[2].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
 == input/resources/PharmIngredient.xml ==
+WARNING: StructureDefinition/PharmIngredient: StructureDefinition.extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmIngredient: StructureDefinition.snapshot.element[2].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmIngredient: StructureDefinition.snapshot.element[3].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmIngredient: StructureDefinition.differential.element[2].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmIngredient: StructureDefinition.differential.element[3].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
 == input/resources/PharmMedicineClass.xml ==
+WARNING: StructureDefinition/PharmMedicineClass: StructureDefinition.extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmMedicineClass: StructureDefinition.snapshot.element[2].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmMedicineClass: StructureDefinition.snapshot.element[3].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmMedicineClass: StructureDefinition.differential.element[2].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmMedicineClass: StructureDefinition.differential.element[3].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
 == input/resources/PharmPackagedMedicine.xml ==
+WARNING: StructureDefinition/PharmPackagedMedicine: StructureDefinition.extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmPackagedMedicine: StructureDefinition.snapshot.element[3].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmPackagedMedicine: StructureDefinition.snapshot.element[4].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmPackagedMedicine: StructureDefinition.snapshot.element[5].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmPackagedMedicine: StructureDefinition.snapshot.element[6].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmPackagedMedicine: StructureDefinition.snapshot.element[7].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmPackagedMedicine: StructureDefinition.snapshot.element[8].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmPackagedMedicine: StructureDefinition.differential.element[3].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmPackagedMedicine: StructureDefinition.differential.element[4].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmPackagedMedicine: StructureDefinition.differential.element[5].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmPackagedMedicine: StructureDefinition.differential.element[6].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmPackagedMedicine: StructureDefinition.differential.element[7].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmPackagedMedicine: StructureDefinition.differential.element[8].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
 == input/resources/PharmSpecializedKind.xml ==
+WARNING: StructureDefinition/PharmSpecializedKind: StructureDefinition.extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmSpecializedKind: StructureDefinition.snapshot.element[2].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmSpecializedKind: StructureDefinition.differential.element[2].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
 == input/resources/PharmSubstance.xml ==
+WARNING: StructureDefinition/PharmSubstance: StructureDefinition.extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmSubstance: StructureDefinition.snapshot.element[3].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmSubstance: StructureDefinition.snapshot.element[4].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmSubstance: StructureDefinition.differential.element[3].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmSubstance: StructureDefinition.differential.element[4].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
 == input/resources/PharmSuperContent.xml ==
+WARNING: StructureDefinition/PharmSuperContent: StructureDefinition.extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmSuperContent: StructureDefinition.snapshot.element[1].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
+WARNING: StructureDefinition/PharmSuperContent: StructureDefinition.differential.element[1].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:ihe:pharm'
 == input/resources/Place.xml ==
 == input/resources/PlayingEntity.xml ==
 == input/resources/Precondition.xml ==
@@ -313,10 +829,13 @@ WARNING: The jira specification file appears to be out of date with the versions
 == input/resources/RelatedSubject.xml ==
 == input/resources/SC.xml ==
 == input/resources/ST.xml ==
+== input/resources/ST-dot-r2b.xml ==
 == input/resources/SXCM-TS.xml ==
 == input/resources/SXPR-TS.xml ==
 == input/resources/Section.xml ==
 == input/resources/ServiceEvent.xml ==
+WARNING: StructureDefinition/ServiceEvent: StructureDefinition.snapshot.element[14].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:oid:1.3.6.1.4.1.19376.1.3.2'
+WARNING: StructureDefinition/ServiceEvent: StructureDefinition.differential.element[5].extension[0].value.ofType(uri): No definition could be found for URL value 'urn:oid:1.3.6.1.4.1.19376.1.3.2'
 == input/resources/Specimen.xml ==
 == input/resources/SpecimenRole.xml ==
 == input/resources/StructuredBody.xml ==
@@ -328,9 +847,12 @@ WARNING: The jira specification file appears to be out of date with the versions
 == input/resources/TN.xml ==
 == input/resources/TS.xml ==
 == input/resources/bin.xml ==
+INFORMATION: StructureDefinition/bin: StructureDefinition.snapshot.element[3].type[0].extension[1]: The extension http://hl7.org/fhir/StructureDefinition/regex|5.2.0 is deprecated with the note: 'This was deprecated in favor of using a constraint on the element using FHIRPath, since constraints allow for the provision of a human readable message associated with the regex'
 == input/resources/bl-simple.xml ==
 == input/resources/bn.xml ==
 == input/resources/CodeSystem/BinaryDataEncoding.xml ==
+WARNING: CodeSystem/BinaryDataEncoding: CodeSystem.concept[0]: HL7 Defined CodeSystems should ensure that every concept has a definition
+== input/resources/CodeSystem/IGParametersCDAValidation.xml ==
 == input/resources/cs-simple.xml ==
 == input/resources/int-simple.xml ==
 == input/resources/oid.xml ==
@@ -345,10 +867,13 @@ WARNING: The jira specification file appears to be out of date with the versions
 == input/resources/ValueSet/BinaryDataEncoding.xml ==
 == input/resources/ValueSet/CDAActClass.xml ==
 == input/resources/ValueSet/CDAActClassObservation.xml ==
+INFORMATION: ValueSet/CDAActClassObservation: ValueSet.compose.include[0].concept[0]: The concept 'CASE' is deprecated and its use should be reviewed
 == input/resources/ValueSet/CDAActMood.xml ==
 == input/resources/ValueSet/CDAActMoodIntent.xml ==
 == input/resources/ValueSet/CDAActRelationshipType.xml ==
 == input/resources/ValueSet/CDAActSubstanceAdministrationCode.xml ==
+INFORMATION: ValueSet/CDAActSubstanceAdministrationCode: ValueSet.compose.include[0]: The concepts in the value set include have not been validated because the code system is not known, and no terminology service supports it
+WARNING: ValueSet.where(id = 'CDAActSubstanceAdministrationCode'): Error from https://tx.fhir.org/r5: Unable to provide support for code system http://terminology.hl7.org/CodeSystem/v3-ActCode version 7.0.0 (known versions = 9.0.0)
 == input/resources/ValueSet/CDACompressionAlgorithm.xml ==
 == input/resources/ValueSet/CDAContextControl.xml ==
 == input/resources/ValueSet/CDAEntityCode.xml ==
@@ -357,14 +882,20 @@ WARNING: The jira specification file appears to be out of date with the versions
 == input/resources/ValueSet/CDAInformationRecipientRole.xml ==
 == input/resources/ValueSet/CDAMaterialEntityClassType.xml ==
 == input/resources/ValueSet/CDANullFlavor.xml ==
+INFORMATION: ValueSet/CDANullFlavor: ValueSet.compose.include[0].concept[0]: The concept 'NP' has a status of retired and its use should be reviewed
 == input/resources/ValueSet/CDAObservationInterpretation.xml ==
 == input/resources/ValueSet/CDAParticipationType.xml ==
 == input/resources/ValueSet/CDAPostalAddressUse.xml ==
 == input/resources/ValueSet/CDARoleClass.xml ==
+ERROR: ValueSet/CDARoleClass: ValueSet.compose.include[0].concept[14]: The code 'CASESBJ' is not valid in the system http://terminology.hl7.org/CodeSystem/v3-RoleClass (Unknown code 'CASESBJ' in the CodeSystem 'http://terminology.hl7.org/CodeSystem/v3-RoleClass' version '3.1.0')
 == input/resources/ValueSet/CDARoleClassAssociative.xml ==
+ERROR: ValueSet/CDARoleClassAssociative: ValueSet.compose.include[0].concept[14]: The code 'CASESBJ' is not valid in the system http://terminology.hl7.org/CodeSystem/v3-RoleClass (Unknown code 'CASESBJ' in the CodeSystem 'http://terminology.hl7.org/CodeSystem/v3-RoleClass' version '3.1.0')
 == input/resources/ValueSet/CDARoleClassMutualRelationship.xml ==
+ERROR: ValueSet/CDARoleClassMutualRelationship: ValueSet.compose.include[0].concept[14]: The code 'CASESBJ' is not valid in the system http://terminology.hl7.org/CodeSystem/v3-RoleClass (Unknown code 'CASESBJ' in the CodeSystem 'http://terminology.hl7.org/CodeSystem/v3-RoleClass' version '3.1.0')
 == input/resources/ValueSet/CDARoleClassRoot.xml ==
+ERROR: ValueSet/CDARoleClassRoot: ValueSet.compose.include[0].concept[14]: The code 'CASESBJ' is not valid in the system http://terminology.hl7.org/CodeSystem/v3-RoleClass (Unknown code 'CASESBJ' in the CodeSystem 'http://terminology.hl7.org/CodeSystem/v3-RoleClass' version '3.1.0')
 == input/resources/ValueSet/CDARoleCode.xml ==
 == input/resources/ValueSet/CDASetOperator.xml ==
 == input/resources/ValueSet/CDASignatureCode.xml ==
+INFORMATION: ValueSet/CDASignatureCode: ValueSet: Resource is not deprecated, but the description mentions deprecated - check whether it should be deprecated
 == input/resources/xs-ID.xml ==

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ValueSet xmlns="http://hl7.org/fhir">
+  <id value="CDASignatureCode"/>
+  <language value="en"/>
+  <text>
+    <status value="extensions"/><div xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><p class="res-header-id"><b>Generated Narrative: ValueSet CDASignatureCode</b></p><a name="CDASignatureCode"> </a><a name="hcCDASignatureCode"> </a><div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%"><p style="margin-bottom: 0px">Language: en</p></div><ul><li>Include these codes as defined in <a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationSignature.html"><code>http://terminology.hl7.org/CodeSystem/v3-ParticipationSignature</code></a><span title="Version is not explicitly stated, which means it is fixed to 2.1.0, the version found through the package references"> version &#x1F4E6;2.1.0</span><table class="none"><tr><td style="white-space:nowrap"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationSignature.html#v3-ParticipationSignature-S">S</a></td><td style="color: #cccccc">signed</td><td>Signature has been affixed, either written on file, or electronic (incl. digital) signature in Participation.signatureText.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-ParticipationSignature.html#v3-ParticipationSignature-X">X</a></td><td style="color: #cccccc">required</td><td>A signature for the service is required of this actor.</td></tr></table></li></ul></div>
+  </text>
+  <url value="http://hl7.org/cda/stds/core/ValueSet/CDASignatureCode"/>
+  <version value="2.0.0-sd-202510-matchbox-patch"/>
+  <name value="CDASignatureCode"/>
+  <title value="CDASignatureCode"/>
+  <status value="draft"/>
+  <experimental value="false"/>
+  <date value="2025-10-28T21:58:07+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <name value="HL7 International - Structured Documents"/>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+    <telecom>
+      <system value="email"/>
+      <value value="structdog@lists.HL7.org"/>
+    </telecom>
+  </contact>
+  <description value="A set of codes specifying whether and how the participant has attested his participation through a signature - limited to values allowed in original CDA definition.&#xA;&#xA;**Note:** CDA Release One represented either an intended (`X`) or actual (`S`) authenticator. CDA Release Two only represents an actual authenticator, so has deprecated the value of `X`."/>
+  <compose>
+    <include>
+      <system value="http://terminology.hl7.org/CodeSystem/v3-ParticipationSignature"/>
+      <concept>
+        <code value="S"/>
+      </concept>
+      <concept>
+        <code value="X"/>
+      </concept>
+    </include>
+  </compose>
+</ValueSet>

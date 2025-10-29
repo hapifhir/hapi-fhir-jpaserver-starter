@@ -23,18 +23,18 @@
     <valueString value="infrastructureRoot"/>
   </extension>
   <extension url="http://hl7.org/fhir/tools/StructureDefinition/type-profile-style">
-    <valueUri value="cda"/>
+    <valueCode value="cda"/>
   </extension>
   <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-container">
     <valueUri value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"/>
-  <version value="2.0.0-sd-202406-matchbox-patch"/>
+  <version value="2.0.1-sd-202510-matchbox-patch"/>
   <name value="InfrastructureRoot"/>
   <title value="InfrastructureRoot (Base Type for all CDA Classes)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2024-06-19T17:47:42+02:00"/>
+  <date value="2025-10-29T22:15:57+01:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
@@ -60,6 +60,9 @@
   <baseDefinition value="http://hl7.org/cda/stds/core/StructureDefinition/ANY"/>
   <derivation value="specialization"/>
   <snapshot>
+    <extension url="http://hl7.org/fhir/tools/StructureDefinition/snapshot-base-version">
+      <valueString value="2.0.1-sd-202510-matchbox-patch"/>
+    </extension>
     <element id="InfrastructureRoot">
       <path value="InfrastructureRoot"/>
       <short value="Base for all types and resources"/>
@@ -125,6 +128,12 @@
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
+      <constraint>
+        <key value="II-1"/>
+        <severity value="error"/>
+        <human value="An II instance must have either a root or an nullFlavor."/>
+        <expression value="root.exists() or nullFlavor.exists()"/>
+      </constraint>
     </element>
     <element id="InfrastructureRoot.typeId.nullFlavor">
       <path value="InfrastructureRoot.typeId.nullFlavor"/>

@@ -1,0 +1,160 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "0e56ebbd-666c-461b-9bdc-13902900384b-110",
+  "url" : "http://hl7.org/fhir/comparison/ValueSet/0e56ebbd-666c-461b-9bdc-13902900384b-110",
+  "name" : "UnionCDARoleClassAssociativeAndCDARoleClassAssociative",
+  "title" : "Union of CDARoleClassAssociative And CDARoleClassAssociative",
+  "status" : "draft",
+  "date" : "2025-10-29T22:16:25+01:00",
+  "compose" : {
+    "include" : [{
+      "concept" : [{
+        "code" : "LIC"
+      },
+      {
+        "code" : "NOT"
+      },
+      {
+        "code" : "PROV"
+      },
+      {
+        "code" : "CON"
+      },
+      {
+        "code" : "ECON"
+      },
+      {
+        "code" : "NOK"
+      },
+      {
+        "code" : "ASSIGNED"
+      },
+      {
+        "code" : "COMPAR"
+      },
+      {
+        "code" : "SGNOFF"
+      },
+      {
+        "code" : "AGNT"
+      },
+      {
+        "code" : "GUARD"
+      },
+      {
+        "code" : "EMP"
+      },
+      {
+        "code" : "MIL"
+      },
+      {
+        "code" : "INVSBJ"
+      },
+      {
+        "code" : "CASESBJ"
+      },
+      {
+        "code" : "RESBJ"
+      },
+      {
+        "code" : "CIT"
+      },
+      {
+        "code" : "COVPTY"
+      },
+      {
+        "code" : "CRINV"
+      },
+      {
+        "code" : "CRSPNSR"
+      },
+      {
+        "code" : "GUAR"
+      },
+      {
+        "code" : "PAT"
+      },
+      {
+        "code" : "PAYEE"
+      },
+      {
+        "code" : "PAYOR"
+      },
+      {
+        "code" : "POLHOLD"
+      },
+      {
+        "code" : "QUAL"
+      },
+      {
+        "code" : "SPNSR"
+      },
+      {
+        "code" : "STD"
+      },
+      {
+        "code" : "UNDWRT"
+      },
+      {
+        "code" : "CAREGIVER"
+      },
+      {
+        "code" : "PRS"
+      },
+      {
+        "code" : "DST"
+      },
+      {
+        "code" : "RET"
+      },
+      {
+        "code" : "MANU"
+      },
+      {
+        "code" : "THER"
+      },
+      {
+        "code" : "SDLOC"
+      },
+      {
+        "code" : "DSDLOC"
+      },
+      {
+        "code" : "ISDLOC"
+      },
+      {
+        "code" : "ACCESS"
+      },
+      {
+        "code" : "BIRTHPL"
+      },
+      {
+        "code" : "EXPR"
+      },
+      {
+        "code" : "HLD"
+      },
+      {
+        "code" : "HLTHCHRT"
+      },
+      {
+        "code" : "IDENT"
+      },
+      {
+        "code" : "MNT"
+      },
+      {
+        "code" : "OWN"
+      },
+      {
+        "code" : "RGPR"
+      },
+      {
+        "code" : "TERR"
+      },
+      {
+        "code" : "WRTE"
+      }]
+    }]
+  }
+}

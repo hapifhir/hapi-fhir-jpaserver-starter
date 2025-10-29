@@ -1,0 +1,189 @@
+# LabPrecondition (CDA Class) - Clinical Document Architecture v2.0.1-sd-202510-matchbox-patch
+
+* [**Table of Contents**](toc.md)
+* [**Artifacts Summary**](artifacts.md)
+* **LabPrecondition (CDA Class)**
+
+## Logical Model: LabPrecondition (CDA Class) 
+
+| | |
+| :--- | :--- |
+| *Official URL*:http://hl7.org/cda/stds/core/StructureDefinition/LabPrecondition | *Version*:2.0.1-sd-202510-matchbox-patch |
+| Active as of 2025-10-29 | *Computable Name*:CDAR2.LabPrecondition |
+
+ 
+The precondition class, derived from the ActRelationship class, is used along with the LabPrecondition class to express a condition that must hold true before some over activity occurs. 
+
+**Usages:**
+
+* Use this Logical Model: [ObservationRange (CDA Class)](StructureDefinition-ObservationRange.md)
+
+You can also check for [usages in the FHIR IG Statistics](https://packages2.fhir.org/xig/hl7.cda.uv.core|current/StructureDefinition/LabPrecondition)
+
+### Formal Views of Template Content
+
+ [Description of Template, Differentials, Snapshots and how the different presentations work](http://hl7.org/fhir/R5/profiling.html#presentation). 
+
+ 
+
+Other representations of profile: [CSV](StructureDefinition-LabPrecondition.csv), [Excel](StructureDefinition-LabPrecondition.xlsx) 
+
+
+
+## Resource Content
+
+```json
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "LabPrecondition",
+  "extension" : [
+    {
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+      "valueUri" : "urn:oid:1.3.6.1.4.1.19376.1.3.2"
+    },
+    {
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-name",
+      "valueString" : "LabPrecondition"
+    },
+    {
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-container",
+      "valueUri" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
+    }
+  ],
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/LabPrecondition",
+  "version" : "2.0.1-sd-202510-matchbox-patch",
+  "name" : "CDAR2.LabPrecondition",
+  "title" : "LabPrecondition (CDA Class)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2025-10-29T22:15:57+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [
+    {
+      "name" : "HL7 International - Structured Documents",
+      "telecom" : [
+        {
+          "system" : "url",
+          "value" : "http://www.hl7.org/Special/committees/structure"
+        },
+        {
+          "system" : "email",
+          "value" : "structdog@lists.HL7.org"
+        }
+      ]
+    }
+  ],
+  "description" : "The precondition class, derived from the ActRelationship class, is used along with the LabPrecondition class to express a condition that must hold true before some over activity occurs.",
+  "fhirVersion" : "5.0.0",
+  "mapping" : [
+    {
+      "identity" : "rim",
+      "uri" : "http://hl7.org/v3",
+      "name" : "RIM Mapping"
+    }
+  ],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/LabPrecondition",
+  "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
+  "derivation" : "specialization",
+  "differential" : {
+    "element" : [
+      {
+        "id" : "LabPrecondition",
+        "path" : "LabPrecondition",
+        "min" : 1,
+        "max" : "1"
+      },
+      {
+        "id" : "LabPrecondition.nullFlavor",
+        "path" : "LabPrecondition.nullFlavor",
+        "representation" : ["xmlAttr"],
+        "label" : "Exceptional Value Detail",
+        "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "code"
+          }
+        ],
+        "binding" : {
+          "strength" : "required",
+          "valueSet" : "http://terminology.hl7.org/ValueSet/v3-NullFlavor"
+        }
+      },
+      {
+        "id" : "LabPrecondition.typeCode",
+        "path" : "LabPrecondition.typeCode",
+        "representation" : ["xmlAttr"],
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "code"
+          }
+        ],
+        "binding" : {
+          "strength" : "required",
+          "valueSet" : "http://terminology.hl7.org/ValueSet/v3-ActRelationshipType"
+        }
+      },
+      {
+        "id" : "LabPrecondition.realmCode",
+        "path" : "LabPrecondition.realmCode",
+        "definition" : "When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question",
+        "min" : 0,
+        "max" : "*",
+        "type" : [
+          {
+            "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CS"
+          }
+        ]
+      },
+      {
+        "id" : "LabPrecondition.typeId",
+        "path" : "LabPrecondition.typeId",
+        "definition" : "When valued in an instance, this attribute signals the imposition of constraints defined in an HL7-specified message type. This might be a common type (also known as CMET in the messaging communication environment), or content included within a wrapper. The value of this attribute provides a unique identifier for the type in question.",
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+          }
+        ]
+      },
+      {
+        "id" : "LabPrecondition.templateId",
+        "path" : "LabPrecondition.templateId",
+        "definition" : "When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question",
+        "min" : 0,
+        "max" : "*",
+        "type" : [
+          {
+            "code" : "http://hl7.org/cda/stds/core/StructureDefinition/II"
+          }
+        ]
+      },
+      {
+        "id" : "LabPrecondition.criterion",
+        "extension" : [
+          {
+            "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+            "valueUri" : "urn:oid:1.3.6.1.4.1.19376.1.3.2"
+          }
+        ],
+        "path" : "LabPrecondition.criterion",
+        "min" : 1,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "http://hl7.org/cda/stds/core/StructureDefinition/LabCriterion"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+```

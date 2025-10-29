@@ -1,5 +1,6 @@
 @prefix fhir: <http://hl7.org/fhir/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -10,37 +11,75 @@
   fhir:id [ fhir:v "Material"] ; # 
   fhir:text [
      fhir:status [ fhir:v "generated" ] ;
-     fhir:div "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A subtype of Entity that is inanimate and locationally independent.</p>\n      <p>Materials are entities that are neither Living Subjects nor places. Manufactured or processed products are considered material, even if they originate as living matter. Materials come in a wide variety of physical forms and can pass through different states (ie. Gas, liquid, solid) while still retaining their physical composition and material characteristics.</p>\n      <p>Clarify the meaning of &quot;locationally independent&quot;; suggest removing it and supplanting with first Usage Note sentence.</p>\n      <p>Pharmaceutical substances (including active vaccines containing retarded virus), disposable supplies, durable equipment, implantable devices, food items (including meat or plant products), waste, traded goods.</p>\n    </div>"
+     fhir:div [ fhir:v "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A subtype of Entity that is inanimate and locationally independent.</p>\n      <p>Materials are entities that are neither Living Subjects nor places. Manufactured or processed products are considered material, even if they originate as living matter. Materials come in a wide variety of physical forms and can pass through different states (ie. Gas, liquid, solid) while still retaining their physical composition and material characteristics.</p>\n      <p>Clarify the meaning of \"locationally independent\"; suggest removing it and supplanting with first Usage Note sentence.</p>\n      <p>Pharmaceutical substances (including active vaccines containing retarded virus), disposable supplies, durable equipment, implantable devices, food items (including meat or plant products), waste, traded goods.</p>\n    </div>"^^rdf:XMLLiteral ]
   ] ; # 
   fhir:extension ( [
-     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/logical-target"^^xsd:anyURI ] ;
+     fhir:url [
+       fhir:v "http://hl7.org/fhir/tools/StructureDefinition/logical-target"^^xsd:anyURI ;
+       fhir:l <http://hl7.org/fhir/tools/StructureDefinition/logical-target>
+     ] ;
      fhir:value [
-       a fhir:boolean ;
+       a fhir:Boolean ;
        fhir:extension ( [
-         fhir:url [ fhir:v "http://hl7.org/fhir/StructureDefinition/data-absent-reason"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "not-applicable" ]
+         fhir:url [
+           fhir:v "http://hl7.org/fhir/StructureDefinition/data-absent-reason"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/fhir/StructureDefinition/data-absent-reason>
+         ] ;
+         fhir:value [
+           a fhir:Code ;
+           fhir:v "not-applicable"
+         ]
        ] )
      ]
   ] [
-     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/logical-container"^^xsd:anyURI ] ;
-     fhir:value [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"^^xsd:anyURI ]
+     fhir:url [
+       fhir:v "http://hl7.org/fhir/tools/StructureDefinition/logical-container"^^xsd:anyURI ;
+       fhir:l <http://hl7.org/fhir/tools/StructureDefinition/logical-container>
+     ] ;
+     fhir:value [
+       a fhir:Uri ;
+       fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"^^xsd:anyURI ;
+       fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument>
+     ]
   ] [
-     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ] ;
-     fhir:value [ fhir:v "urn:hl7-org:v3"^^xsd:anyURI ]
+     fhir:url [
+       fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ;
+       fhir:l <http://hl7.org/fhir/tools/StructureDefinition/xml-namespace>
+     ] ;
+     fhir:value [
+       a fhir:Uri ;
+       fhir:v "urn:hl7-org:v3"^^xsd:anyURI ;
+       fhir:l <urn:hl7-org:v3>
+     ]
   ] [
-     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-name"^^xsd:anyURI ] ;
-     fhir:value [ fhir:v "material" ]
+     fhir:url [
+       fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-name"^^xsd:anyURI ;
+       fhir:l <http://hl7.org/fhir/tools/StructureDefinition/xml-name>
+     ] ;
+     fhir:value [
+       a fhir:String ;
+       fhir:v "material"
+     ]
   ] [
-     fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/type-profile-style"^^xsd:anyURI ] ;
-     fhir:value [ fhir:v "cda"^^xsd:anyURI ]
+     fhir:url [
+       fhir:v "http://hl7.org/fhir/tools/StructureDefinition/type-profile-style"^^xsd:anyURI ;
+       fhir:l <http://hl7.org/fhir/tools/StructureDefinition/type-profile-style>
+     ] ;
+     fhir:value [
+       a fhir:Code ;
+       fhir:v "cda"
+     ]
   ] ) ; # 
-  fhir:url [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/Material"^^xsd:anyURI] ; # 
-  fhir:version [ fhir:v "2.0.0-sd-202406-matchbox-patch"] ; # 
+  fhir:url [
+     fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/Material"^^xsd:anyURI ;
+     fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/Material>
+  ] ; # 
+  fhir:version [ fhir:v "2.0.1-sd-202510-matchbox-patch"] ; # 
   fhir:name [ fhir:v "Material"] ; # 
   fhir:title [ fhir:v "Material (CDA Class)"] ; # 
   fhir:status [ fhir:v "active"] ; # 
-  fhir:experimental [ fhir:v "false"^^xsd:boolean] ; # 
-  fhir:date [ fhir:v "2024-06-19T17:47:42+02:00"^^xsd:dateTime] ; # 
+  fhir:experimental [ fhir:v false] ; # 
+  fhir:date [ fhir:v "2025-10-29T22:15:57+01:00"^^xsd:dateTime] ; # 
   fhir:publisher [ fhir:v "Health Level 7"] ; # 
   fhir:contact ( [
      fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
@@ -56,18 +95,34 @@
   fhir:fhirVersion [ fhir:v "5.0.0"] ; # 
   fhir:mapping ( [
      fhir:identity [ fhir:v "rim" ] ;
-     fhir:uri [ fhir:v "http://hl7.org/v3"^^xsd:anyURI ] ;
+     fhir:uri [
+       fhir:v "http://hl7.org/v3"^^xsd:anyURI ;
+       fhir:l <http://hl7.org/v3>
+     ] ;
      fhir:name [ fhir:v "RIM Mapping" ]
   ] ) ; # 
   fhir:kind [ fhir:v "logical"] ; # 
-  fhir:abstract [ fhir:v "false"^^xsd:boolean] ; # 
-  fhir:type [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/Material"^^xsd:anyURI] ; # 
+  fhir:abstract [ fhir:v false] ; # 
+  fhir:type [
+     fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/Material"^^xsd:anyURI ;
+     fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/Material>
+  ] ; # 
   fhir:baseDefinition [
      fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"^^xsd:anyURI ;
-     fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot>
+     fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot>
   ] ; # 
   fhir:derivation [ fhir:v "specialization"] ; # 
   fhir:snapshot [
+     fhir:extension ( [
+       fhir:url [
+         fhir:v "http://hl7.org/fhir/tools/StructureDefinition/snapshot-base-version"^^xsd:anyURI ;
+         fhir:l <http://hl7.org/fhir/tools/StructureDefinition/snapshot-base-version>
+       ] ;
+       fhir:value [
+         a fhir:String ;
+         fhir:v "2.0.1-sd-202510-matchbox-patch"
+       ]
+     ] ) ;
      fhir:element ( [
        fhir:id [ fhir:v "Material" ] ;
        fhir:path [ fhir:v "Material" ] ;
@@ -80,7 +135,7 @@
          fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
          fhir:max [ fhir:v "*" ]
        ] ;
-       fhir:isModifier [ fhir:v "false"^^xsd:boolean ] ;
+       fhir:isModifier [ fhir:v false ] ;
        fhir:mapping ( [
          fhir:identity [ fhir:v "rim" ] ;
          fhir:map [ fhir:v "n/a" ]
@@ -99,17 +154,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -124,7 +182,10 @@
          fhir:max [ fhir:v "*" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CS"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CS"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/CS>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "Material.typeId" ] ;
@@ -138,7 +199,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/II"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/II"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/II>
+         ]
+       ] ) ;
+       fhir:constraint ( [
+         fhir:key [ fhir:v "II-1" ] ;
+         fhir:severity [ fhir:v "error" ] ;
+         fhir:human [ fhir:v "An II instance must have either a root or an nullFlavor." ] ;
+         fhir:expression [ fhir:v "root.exists() or nullFlavor.exists()" ] ;
+         fhir:source [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "Material.typeId.nullFlavor" ] ;
@@ -154,17 +228,20 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor>
          ]
        ]
      ] [
@@ -181,10 +258,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -201,10 +281,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "boolean"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "boolean"^^xsd:anyURI ;
+           fhir:l fhir:boolean
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/bl-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/bl-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/bl-simple>
          ] )
        ] )
      ] [
@@ -221,19 +304,25 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/oid"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/oid>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/oid>
          ] [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/uuid"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/uuid>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/uuid>
          ] [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ruid"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/ruid>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ruid>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "2.16.840.1.113883.1.3" ]
+       fhir:fixed [
+         a fhir:String ;
+         fhir:v "2.16.840.1.113883.1.3"
+       ]
      ] [
        fhir:id [ fhir:v "Material.typeId.extension" ] ;
        fhir:path [ fhir:v "Material.typeId.extension" ] ;
@@ -248,10 +337,13 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "string"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "string"^^xsd:anyURI ;
+           fhir:l fhir:string
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/st-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/st-simple>
          ] )
        ] )
      ] [
@@ -266,7 +358,10 @@
          fhir:max [ fhir:v "*" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/II"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/II"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/II>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "Material.classCode" ] ;
@@ -280,18 +375,24 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "MMAT" ] ;
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "MMAT"
+       ] ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://terminology.hl7.org/ValueSet/v3-EntityClassManufacturedMaterial"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-EntityClassManufacturedMaterial>
+           fhir:l <http://terminology.hl7.org/ValueSet/v3-EntityClassManufacturedMaterial>
          ]
        ]
      ] [
@@ -306,18 +407,24 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "KIND" ] ;
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "KIND"
+       ] ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://terminology.hl7.org/ValueSet/v3-EntityDeterminerDetermined"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-EntityDeterminerDetermined>
+           fhir:l <http://terminology.hl7.org/ValueSet/v3-EntityDeterminerDetermined>
          ]
        ]
      ] [
@@ -331,13 +438,16 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CE"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CE"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/CE>
+         ]
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "example" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAMaterialEntityClassType"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAMaterialEntityClassType>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDAMaterialEntityClassType>
          ]
        ]
      ] [
@@ -351,13 +461,23 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/EN"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/EN"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/EN>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "Material.formCode" ] ;
        fhir:extension ( [
-         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "urn:ihe:pharm"^^xsd:anyURI ]
+         fhir:url [
+           fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/fhir/tools/StructureDefinition/xml-namespace>
+         ] ;
+         fhir:value [
+           a fhir:Uri ;
+           fhir:v "urn:ihe:pharm"^^xsd:anyURI ;
+           fhir:l <urn:ihe:pharm>
+         ]
        ] ) ;
        fhir:path [ fhir:v "Material.formCode" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -368,7 +488,10 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CE"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CE"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/CE>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "Material.lotNumberText" ] ;
@@ -381,13 +504,23 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "Material.expirationTime" ] ;
        fhir:extension ( [
-         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "urn:ihe:pharm"^^xsd:anyURI ]
+         fhir:url [
+           fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/fhir/tools/StructureDefinition/xml-namespace>
+         ] ;
+         fhir:value [
+           a fhir:Uri ;
+           fhir:v "urn:ihe:pharm"^^xsd:anyURI ;
+           fhir:l <urn:ihe:pharm>
+         ]
        ] ) ;
        fhir:path [ fhir:v "Material.expirationTime" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -398,13 +531,23 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "Material.asContent" ] ;
        fhir:extension ( [
-         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "urn:ihe:pharm"^^xsd:anyURI ]
+         fhir:url [
+           fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/fhir/tools/StructureDefinition/xml-namespace>
+         ] ;
+         fhir:value [
+           a fhir:Uri ;
+           fhir:v "urn:ihe:pharm"^^xsd:anyURI ;
+           fhir:l <urn:ihe:pharm>
+         ]
        ] ) ;
        fhir:path [ fhir:v "Material.asContent" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -415,13 +558,23 @@
          fhir:max [ fhir:v "1" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/PharmContent"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/PharmContent"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/PharmContent>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "Material.asSpecializedKind" ] ;
        fhir:extension ( [
-         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "urn:ihe:pharm"^^xsd:anyURI ]
+         fhir:url [
+           fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/fhir/tools/StructureDefinition/xml-namespace>
+         ] ;
+         fhir:value [
+           a fhir:Uri ;
+           fhir:v "urn:ihe:pharm"^^xsd:anyURI ;
+           fhir:l <urn:ihe:pharm>
+         ]
        ] ) ;
        fhir:path [ fhir:v "Material.asSpecializedKind" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -432,13 +585,23 @@
          fhir:max [ fhir:v "*" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/PharmSpecializedKind"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/PharmSpecializedKind"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/PharmSpecializedKind>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "Material.ingredient" ] ;
        fhir:extension ( [
-         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "urn:ihe:pharm"^^xsd:anyURI ]
+         fhir:url [
+           fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/fhir/tools/StructureDefinition/xml-namespace>
+         ] ;
+         fhir:value [
+           a fhir:Uri ;
+           fhir:v "urn:ihe:pharm"^^xsd:anyURI ;
+           fhir:l <urn:ihe:pharm>
+         ]
        ] ) ;
        fhir:path [ fhir:v "Material.ingredient" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
@@ -449,7 +612,10 @@
          fhir:max [ fhir:v "*" ]
        ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/PharmIngredient"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/PharmIngredient"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/PharmIngredient>
+         ]
        ] )
      ] )
   ] ; # 
@@ -466,18 +632,24 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "MMAT" ] ;
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "MMAT"
+       ] ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://terminology.hl7.org/ValueSet/v3-EntityClassManufacturedMaterial"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-EntityClassManufacturedMaterial>
+           fhir:l <http://terminology.hl7.org/ValueSet/v3-EntityClassManufacturedMaterial>
          ]
        ]
      ] [
@@ -487,18 +659,24 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "code"^^xsd:anyURI ] ;
+         fhir:code [
+           fhir:v "code"^^xsd:anyURI ;
+           fhir:l fhir:code
+         ] ;
          fhir:profile ( [
            fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/cs-simple>
          ] )
        ] ) ;
-       fhir:fixed [ fhir:v "KIND" ] ;
+       fhir:fixed [
+         a fhir:Code ;
+         fhir:v "KIND"
+       ] ;
        fhir:binding [
          fhir:strength [ fhir:v "required" ] ;
          fhir:valueSet [
            fhir:v "http://terminology.hl7.org/ValueSet/v3-EntityDeterminerDetermined"^^xsd:anyURI ;
-           fhir:link <http://terminology.hl7.org/ValueSet/v3-EntityDeterminerDetermined>
+           fhir:l <http://terminology.hl7.org/ValueSet/v3-EntityDeterminerDetermined>
          ]
        ]
      ] [
@@ -507,13 +685,16 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CE"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CE"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/CE>
+         ]
        ] ) ;
        fhir:binding [
          fhir:strength [ fhir:v "example" ] ;
          fhir:valueSet [
            fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAMaterialEntityClassType"^^xsd:anyURI ;
-           fhir:link <http://hl7.org/cda/stds/core/ValueSet/CDAMaterialEntityClassType>
+           fhir:l <http://hl7.org/cda/stds/core/ValueSet/CDAMaterialEntityClassType>
          ]
        ]
      ] [
@@ -522,19 +703,32 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/EN"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/EN"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/EN>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "Material.formCode" ] ;
        fhir:extension ( [
-         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "urn:ihe:pharm"^^xsd:anyURI ]
+         fhir:url [
+           fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/fhir/tools/StructureDefinition/xml-namespace>
+         ] ;
+         fhir:value [
+           a fhir:Uri ;
+           fhir:v "urn:ihe:pharm"^^xsd:anyURI ;
+           fhir:l <urn:ihe:pharm>
+         ]
        ] ) ;
        fhir:path [ fhir:v "Material.formCode" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CE"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/CE"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/CE>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "Material.lotNumberText" ] ;
@@ -542,55 +736,98 @@
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/ST"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/ST>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "Material.expirationTime" ] ;
        fhir:extension ( [
-         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "urn:ihe:pharm"^^xsd:anyURI ]
+         fhir:url [
+           fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/fhir/tools/StructureDefinition/xml-namespace>
+         ] ;
+         fhir:value [
+           a fhir:Uri ;
+           fhir:v "urn:ihe:pharm"^^xsd:anyURI ;
+           fhir:l <urn:ihe:pharm>
+         ]
        ] ) ;
        fhir:path [ fhir:v "Material.expirationTime" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "Material.asContent" ] ;
        fhir:extension ( [
-         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "urn:ihe:pharm"^^xsd:anyURI ]
+         fhir:url [
+           fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/fhir/tools/StructureDefinition/xml-namespace>
+         ] ;
+         fhir:value [
+           a fhir:Uri ;
+           fhir:v "urn:ihe:pharm"^^xsd:anyURI ;
+           fhir:l <urn:ihe:pharm>
+         ]
        ] ) ;
        fhir:path [ fhir:v "Material.asContent" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "1" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/PharmContent"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/PharmContent"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/PharmContent>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "Material.asSpecializedKind" ] ;
        fhir:extension ( [
-         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "urn:ihe:pharm"^^xsd:anyURI ]
+         fhir:url [
+           fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/fhir/tools/StructureDefinition/xml-namespace>
+         ] ;
+         fhir:value [
+           a fhir:Uri ;
+           fhir:v "urn:ihe:pharm"^^xsd:anyURI ;
+           fhir:l <urn:ihe:pharm>
+         ]
        ] ) ;
        fhir:path [ fhir:v "Material.asSpecializedKind" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "*" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/PharmSpecializedKind"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/PharmSpecializedKind"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/PharmSpecializedKind>
+         ]
        ] )
      ] [
        fhir:id [ fhir:v "Material.ingredient" ] ;
        fhir:extension ( [
-         fhir:url [ fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ] ;
-         fhir:value [ fhir:v "urn:ihe:pharm"^^xsd:anyURI ]
+         fhir:url [
+           fhir:v "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/fhir/tools/StructureDefinition/xml-namespace>
+         ] ;
+         fhir:value [
+           a fhir:Uri ;
+           fhir:v "urn:ihe:pharm"^^xsd:anyURI ;
+           fhir:l <urn:ihe:pharm>
+         ]
        ] ) ;
        fhir:path [ fhir:v "Material.ingredient" ] ;
        fhir:min [ fhir:v "0"^^xsd:nonNegativeInteger ] ;
        fhir:max [ fhir:v "*" ] ;
        fhir:type ( [
-         fhir:code [ fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/PharmIngredient"^^xsd:anyURI ]
+         fhir:code [
+           fhir:v "http://hl7.org/cda/stds/core/StructureDefinition/PharmIngredient"^^xsd:anyURI ;
+           fhir:l <http://hl7.org/cda/stds/core/StructureDefinition/PharmIngredient>
+         ]
        ] )
      ] )
   ] . # 

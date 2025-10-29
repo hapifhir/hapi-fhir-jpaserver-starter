@@ -3,7 +3,7 @@
 <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
-    <title>Overview - Clinical Document Architecture v2.0.0-sd-202406-matchbox-patch</title>
+    <title>Overview - Clinical Document Architecture v2.0.1-sd-202510-matchbox-patch</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="author" content="http://hl7.org/fhir"/>
@@ -18,6 +18,7 @@
     <link href="assets/css/pygments-manni.css" rel="stylesheet"/>
     <link href="assets/css/jquery-ui.css" rel="stylesheet"/>
   	<link href="assets/css/prism.css" rel="stylesheet" />
+  	<link href="assets/css/cqf.css" rel="stylesheet" />
     <!-- Placeholder for child template CSS declarations -->
     <link href="assets/css/hl7.css" rel="stylesheet"/>
     <link href="assets/css/cda.css" rel="stylesheet"/>
@@ -31,39 +32,41 @@
     <![endif]-->
 
     <!-- Favicons -->
-    <link rel="fhir-logo" sizes="144x144" href="assets/ico/icon-fhir-144.png"/>
-    <link rel="fhir-logo" sizes="114x114" href="assets/ico/icon-fhir-114.png"/>
-    <link rel="fhir-logo" sizes="72x72" href="assets/ico/icon-fhir-72.png"/>
-    <link rel="fhir-logo" href="assets/ico/icon-fhir-57.png"/>
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/icon-fhir-144.png"/>
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/icon-fhir-114.png"/>
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/icon-fhir-72.png"/>
+    <link rel="apple-touch-icon-precomposed" href="assets/ico/icon-fhir-57.png"/>
     <link rel="shortcut icon" href="assets/ico/favicon.png"/>
   </head>
   <body onload="document.body.style.opacity='1'">
 
 	  <script src="assets/js/prism.js"></script>
-
+    <script type="text/javascript" src="assets/js/mermaid.js"></script>
+    <script type="text/javascript" src="assets/js/mermaid-init.js"></script>
     <style type="text/css">h2{--heading-prefix:"2"}
     h3,h4,h5,h6{--heading-prefix:"2.0"}</style>
     <div id="segment-header" class="segment">  <!-- segment-header -->
       <div class="container">  <!-- container -->
+
         <!-- Placeholder for child template header declarations -->
 
         <div id="hl7-nav">
-          <a id="hl7-logo" no-external="true" href="http://hl7.org">
+          <a id="hl7-logo" data-no-external="true" href="http://hl7.org">
             <img height="50" alt="Visit the HL7 website" src="assets/images/hl7-logo-header.png"/>
           </a>
         </div>
         <div id="family-nav">
-          <a id="family-logo" no-external="true" href="http://hl7.org/cda"><img height="50" alt="Visit the CDA website" src="assets/images/cda_both_trans.jpg"/> </a>
+          <a id="family-logo" data-no-external="true" href="http://hl7.org/cda"><img height="50" alt="Visit the CDA website" src="assets/images/cda_both_trans.jpg"/> </a>
         </div>
         <div id="hl7-search">
-          <a id="hl7-search-lnk" no-external="true" href="http://hl7.org/fhir/search.cfm"><img alt="Search FHIR" src="assets/images/search.png"/></a>
+          <a id="hl7-search-lnk" data-no-external="true" href="http://hl7.org/fhir/search.cfm"><img alt="Search FHIR" src="assets/images/search.png"/></a>
         </div>
 
 
         <div id="ig-status">
           <p><span style="font-size:12pt;font-weight:bold">Clinical Document Architecture</span>
             <br/>
-            <span style="display:inline-block;">2.0.0-sd-202406-matchbox-patch - release
+            <span style="display:inline-block;">2.0.1-sd-202510-matchbox-patch - release
 
 
             </span>
@@ -134,7 +137,7 @@ h5:before{color:silver;counter-increment:detail;content:var(--heading-prefix) ".
 h6:before{color:silver;counter-increment:more-detail;content:var(--heading-prefix) "." counter(sub-section) "." counter(composite) "." counter(detail) "." counter(more-detail)" ";}
 </style>
 <div class="col-12">
-  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture - Local Development build (v2.0.0-sd-202406-matchbox-patch) built by the FHIR (HL7® FHIR® Standard) Build Tools. See the <a href="http://hl7.org/cda/stds/core/history.html">Directory of published versions</a></p><!--EndReleaseHeader-->
+  <!--ReleaseHeader--><p id="publish-box">Clinical Document Architecture - Local Development build (v2.0.1-sd-202510-matchbox-patch) built by the FHIR (HL7® FHIR® Standard) Build Tools. See the <a href='http://hl7.org/cda/stds/core/history.html'>Directory of published versions</a></p><!--EndReleaseHeader-->
   <h2>Overview</h2>
   
 
@@ -164,7 +167,7 @@ h6:before{color:silver;counter-increment:more-detail;content:var(--heading-prefi
 
 <h3 id="what-is-the-cda">What is the CDA</h3>
 
-<p>The HL7 Clinical Document Architecture (CDA) is a document markup standard that specifies the structure and semantics of “clinical documents” for the purpose of exchange. A clinical document is a documentation of clinical observations and services, with the following characteristics:</p>
+<p>The HL7 Clinical Document Architecture (CDA) is a document markup standard that specifies the structure and semantics of "clinical documents" for the purpose of exchange. A clinical document is a documentation of clinical observations and services, with the following characteristics:</p>
 
 <ul>
   <li>Persistence – A clinical document continues to exist in an unaltered state, for a time period defined by local and regulatory requirements (<strong>NOTE:</strong> There is a distinct scope of persistence for a clinical document, independent of the persistence of any XML-encoded CDA document instance).</li>
@@ -184,7 +187,7 @@ h6:before{color:silver;counter-increment:more-detail;content:var(--heading-prefi
 <ul>
   <li>CDA documents are encoded in Extensible Markup Language (XML). (<strong>NOTE:</strong> When alternate implementations are feasible, suitable conformance requirements will be issued so that in future the syntax may not be limited to XML.)</li>
   <li>CDA documents derive their machine processable meaning from the HL7 Reference Information Model (RIM) and use the HL7 Version 3 Data Types.</li>
-  <li>The CDA specification is richly expressive and flexible. Document-level, section-level and entry-level templates can be used to constrain the generic CDA specification (see <a href="#the-a-in-cda">The “A” in “CDA”</a>).</li>
+  <li>The CDA specification is richly expressive and flexible. Document-level, section-level and entry-level templates can be used to constrain the generic CDA specification (see <a href="#the-a-in-cda">The "A" in "CDA"</a>).</li>
 </ul>
 
 <h4 id="scope-of-the-cda">Scope of the CDA</h4>
@@ -276,23 +279,23 @@ h6:before{color:silver;counter-increment:more-detail;content:var(--heading-prefi
 <span class="nt">&lt;/ClinicalDocument&gt;</span>
 </code></pre></div></div>
 
-<h4 id="the-a-in-cda">The “A” in “CDA”</h4>
+<h4 id="the-a-in-cda">The "A" in "CDA"</h4>
 
-<p>The notion of CDA “levels” in CDA, Release One anticipated a hierarchical set of XML DTDs or XML Schemas to achieve the goals enumerated above (see <a href="#goals-and-design-principles">Goals and Design Principles</a>). This hierarchy formed an “architecture”, hence the “A” in “CDA”.</p>
+<p>The notion of CDA "levels" in CDA, Release One anticipated a hierarchical set of XML DTDs or XML Schemas to achieve the goals enumerated above (see <a href="#goals-and-design-principles">Goals and Design Principles</a>). This hierarchy formed an "architecture", hence the "A" in "CDA".</p>
 
 <p>While the notion of levels in CDA, Release Two remains constant, the approach to representing the hierarchies has changed. The current specification consists of a single CDA XML Schema, and the architecture arises from the ability to apply one or more of a hierarchical set of HL7 Templates, which serve to constrain the richness and flexibility of CDA.</p>
 
 <blockquote>
   <p><strong>NOTE:</strong> The CDA can be constrained by mechanisms defined in HL7 V3 Refinement and Localization. HL7 technical formalisms (e.g. HL7 Template specifications, HL7 Model Interchange Format) to constrain CDA are still in development at the time of writing this standard.</p>
 
-  <p>The RIM’s InfrastructureRoot class contains an attribute, templateId, which is available for use in CDA. Thus, while HL7 Templates are in flux at this time, CDA provides a mechanism to reference a template or implementation guide that has been assigned a unique identifier. Until there is a formal HL7 Template specification, there is no standardized process to test conformance against referenced templates.</p>
+  <p>The RIM's InfrastructureRoot class contains an attribute, templateId, which is available for use in CDA. Thus, while HL7 Templates are in flux at this time, CDA provides a mechanism to reference a template or implementation guide that has been assigned a unique identifier. Until there is a formal HL7 Template specification, there is no standardized process to test conformance against referenced templates.</p>
 
   <p>There is no requirement that CDA must be constrained. Implementations that use structured data elements to drive automated processes will typically require that they be either: (1) constrained by an appropriately refined model or other HL7 approved constraint language; or (2) comply with a detailed implementation guide that details the manner in which structured elements are to be represented and their intended interpretation to a level sufficient to ensure a degree of clinical safety that is appropriate to the use case that it is designed to address.</p>
 </blockquote>
 
 <p>There are many kinds of HL7 Templates that might be created. Among them, two are particularly relevant for clinical documents: (1) those that constrain the document sections based on the type of document (section-level templates); (2) those that constrain the entries within document sections (entry-level templates). In fact, a comparison can be made between the prior notion of CDA levels and the current notion of CDA with these two kinds of HL7 Templates:</p>
 
-<p>Table 1: Evolution of CDA “levels” from CDA, Release One to CDA, Release Two</p>
+<p>Table 1: Evolution of CDA "levels" from CDA, Release One to CDA, Release Two</p>
 
 <table class="grid">
   <thead>
@@ -376,12 +379,12 @@ h6:before{color:silver;counter-increment:more-detail;content:var(--heading-prefi
   <li>
     <p><strong>Document Analysis:</strong> The CDA Schema and conformant instances should adhere to the requirements of document analysis in derivation of the content model.</p>
 
-    <p><strong>NOTE:</strong> Document analysis is a process that might be thought of as the document equivalent of a use case. Document analysis looks at a single instance or class of documents and analyzes their structure and content, often representing this as a tree structure “elm” notation. Document analysis also looks at the business rules for the lifecycle of that document or document class. Traditionally, document analysis determines the content model and overall structure and style of XML.</p>
+    <p><strong>NOTE:</strong> Document analysis is a process that might be thought of as the document equivalent of a use case. Document analysis looks at a single instance or class of documents and analyzes their structure and content, often representing this as a tree structure "elm" notation. Document analysis also looks at the business rules for the lifecycle of that document or document class. Traditionally, document analysis determines the content model and overall structure and style of XML.</p>
 
-    <p>Document analysis is an iterative step in content model derivation – the “bottom up” approach to complement the “top down” derivation from the RIM. This will ensure that schemas and instances are not only RIM-derived, but represent recognizable artifacts in a simple manner.</p>
+    <p>Document analysis is an iterative step in content model derivation – the "bottom up" approach to complement the "top down" derivation from the RIM. This will ensure that schemas and instances are not only RIM-derived, but represent recognizable artifacts in a simple manner.</p>
   </li>
   <li><strong>Forward and Backward Compatibility:</strong> The CDA Schema should adhere to the requirements for forward and backward compatibility. (See <a href="#backwards-and-forwards-compatibility">Backwards and Forwards Compatibility</a>)</li>
-  <li><strong>Naming:</strong> While XML markup, by definition, is for machine processing, it should be optimized for human review, debug, and design. The CDA Schema is not “self-documenting”, but meaning should be clear from tag name and documentation (e.g., mapping to RIM). The human-language sense of a tag name should not be counterintuitive.</li>
+  <li><strong>Naming:</strong> While XML markup, by definition, is for machine processing, it should be optimized for human review, debug, and design. The CDA Schema is not "self-documenting", but meaning should be clear from tag name and documentation (e.g., mapping to RIM). The human-language sense of a tag name should not be counterintuitive.</li>
   <li><strong>Vocabulary:</strong> Vocabulary can be enumerated within the CDA Schema or in an external, referenced source. It is preferable to enumerate it when the vocabulary terms are both limited (not too large in number) and stable (not subject to change between ballot cycles). Where vocabulary is either too large or is subject to change, it is preferable to maintain it external to the CDA Schema and incorporate it by reference. In these cases, XML schema validation will not suffice for conformance.</li>
 </ul>
 
@@ -481,12 +484,12 @@ h6:before{color:silver;counter-increment:more-detail;content:var(--heading-prefi
 
 <p>A document, in a sense, is a contextual wrapper for its contents. Assertions in the document header are typically applicable to statements made in the body of the document, unless overridden. For instance, the patient identified in the header is assumed to be the subject of observations described in the body of the document, unless a different subject is explicitly stated, or the author identified in the header is assumed to be the author of the entire document, unless a different author is explicitly identified on a section. The objective of the CDA context rules are to make these practices explicit with relationship to the RIM, such that a computer will understand the context of a portion of a document the same way that a human interprets it.</p>
 
-<p>At the same time, there is no guarantee that machine processing will identify a mistaken application of contextual rules. If a physician records an “outside diagnosis” in narrative but does not nullify the “informant” context, machine processing will not identify the switch in attribution. This is a special case illustrating the limits of automated validation of electronic records and would apply regardless of the context inheritance mechanism. In other words, from some errors of encoding, there is no recovery other than human review.</p>
+<p>At the same time, there is no guarantee that machine processing will identify a mistaken application of contextual rules. If a physician records an "outside diagnosis" in narrative but does not nullify the "informant" context, machine processing will not identify the switch in attribution. This is a special case illustrating the limits of automated validation of electronic records and would apply regardless of the context inheritance mechanism. In other words, from some errors of encoding, there is no recovery other than human review.</p>
 
-<p>CDA’s approach to context, and the propagation of that context to nested document components, follows these design principles:</p>
+<p>CDA's approach to context, and the propagation of that context to nested document components, follows these design principles:</p>
 
 <ul>
-  <li>CDA uses the RIM context mechanism (contextControlCode for Participations; contextConductionInd for ActRelationships), and assigns fixed values to these attributes to accomplish the design objectives below, thus constraining the RIM context model. CDA extends the context propagation property to designated attributes of the CDA Header, which also propagate through any ActRelationship for which contextConductionInd=”true”.</li>
+  <li>CDA uses the RIM context mechanism (contextControlCode for Participations; contextConductionInd for ActRelationships), and assigns fixed values to these attributes to accomplish the design objectives below, thus constraining the RIM context model. CDA extends the context propagation property to designated attributes of the CDA Header, which also propagate through any ActRelationship for which contextConductionInd="true".</li>
   <li>The CDA Header sets context for the entire document. A propagating value specified in the document header holds true throughout the document, unless explicitly overridden. This principal applies to both Participations and to designated attributes of the CDA Header. Contextual header components (i.e., those that have propagating values) include:
     <ul>
       <li>Author</li>
@@ -529,7 +532,7 @@ h6:before{color:silver;counter-increment:more-detail;content:var(--heading-prefi
 
 <h4 id="technical-aspects-of-cda-context">Technical Aspects of CDA Context</h4>
 
-<p>The RIM defines the “context” of an act as those participants of the act that can be propagated to nested acts. In the RIM, whether or not contextual participants do propagate to nested acts depends on whether or not the intervening act relationship between parent and child act allows for conduction of context. The explicit representation of context, and whether or not the context on an act can propagate to nested acts, is expressed via the RIM attributes Participation.contextControlCode and ActRelationship.contextConductionInd. CDA constrains the general RIM context mechanism such that context always overrides and propagates, as shown in the following table.</p>
+<p>The RIM defines the "context" of an act as those participants of the act that can be propagated to nested acts. In the RIM, whether or not contextual participants do propagate to nested acts depends on whether or not the intervening act relationship between parent and child act allows for conduction of context. The explicit representation of context, and whether or not the context on an act can propagate to nested acts, is expressed via the RIM attributes Participation.contextControlCode and ActRelationship.contextConductionInd. CDA constrains the general RIM context mechanism such that context always overrides and propagates, as shown in the following table.</p>
 
 <table>
   <thead>
@@ -545,18 +548,18 @@ h6:before{color:silver;counter-increment:more-detail;content:var(--heading-prefi
       <td>Participation.contextControlCode</td>
       <td>1..1</td>
       <td>Mandatory (NULL values not permitted)</td>
-      <td>“OP” (overriding, propagating)</td>
+      <td>"OP" (overriding, propagating)</td>
     </tr>
     <tr>
       <td>ActRelationship.contextConductionInd       </td>
       <td>1..1</td>
       <td>Mandatory (NULL values not permitted)      </td>
-      <td>“true”*</td>
+      <td>"true"*</td>
     </tr>
   </tbody>
 </table>
 
-<p>* The one exception to this is entryRelationship.contextConductionInd, which is defaulted to “true”, but can be changed to “false”</p>
+<p>* The one exception to this is entryRelationship.contextConductionInd, which is defaulted to "true", but can be changed to "false"</p>
 
 <p>Where the context of a nested component is unknown, the propagated context must be overridden with a null-valued component, as shown in the following table.</p>
 
@@ -597,7 +600,7 @@ h6:before{color:silver;counter-increment:more-detail;content:var(--heading-prefi
   </tbody>
 </table>
 
-<p>The following exhibit illustrates the CDA context model. ClinicalDocument has an author participant, a confidentialityCode, and a languageCode, all of which will propagate to nested acts. The component act relationship going from ClinicalDocument to bodyChoice has contextConductionInd fixed as “true”, thus allowing for the propagation of context. The bodyChoice classes, NonXMLBody and StructuredBody, contain a confidentialityCode and languageCode which can be used to override the value specified in the header. The component act relationship going from StructuredBody to Section has contextConductionInd fixed at “true”, thus the context on StructuredBody will propagate through to Section. Section can override confidentialityCode, languageCode, and author. A null value for the Section’s author participant indicates that the author for that particular section is unknown.</p>
+<p>The following exhibit illustrates the CDA context model. ClinicalDocument has an author participant, a confidentialityCode, and a languageCode, all of which will propagate to nested acts. The component act relationship going from ClinicalDocument to bodyChoice has contextConductionInd fixed as "true", thus allowing for the propagation of context. The bodyChoice classes, NonXMLBody and StructuredBody, contain a confidentialityCode and languageCode which can be used to override the value specified in the header. The component act relationship going from StructuredBody to Section has contextConductionInd fixed at "true", thus the context on StructuredBody will propagate through to Section. Section can override confidentialityCode, languageCode, and author. A null value for the Section's author participant indicates that the author for that particular section is unknown.</p>
 
 <p><a href="L-ContextExample.gif"><img src="L-ContextExample.gif" alt="Context Conduction Example" style="max-width:100%" /></a></p>
 
@@ -626,7 +629,7 @@ h6:before{color:silver;counter-increment:more-detail;content:var(--heading-prefi
 
       <div class="inner-wrapper">
         <p>
-          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structure">Health Level 7</a>.  Package hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch based on <a style="color: var(--footer-hyperlink-text-color)" href="http://hl7.org/fhir/R5/">FHIR 5.0.0</a>. Generated <span title="Wed, Jun 19, 2024 17:47+0200">2024-06-19</span>
+          IG &#169; 2019+ <a style="color:var(--footer-hyperlink-text-color)" href="http://www.hl7.org/Special/committees/structure">Health Level 7</a>.  Package hl7.cda.uv.core#2.0.1-sd-202510-matchbox-patch based on <a style="color: var(--footer-hyperlink-text-color)" href="http://hl7.org/fhir/R5/">FHIR 5.0.0</a>. Generated <span title="Wed, Oct 29, 2025 22:15+0100">2025-10-29</span>
           <br/>
           <span style="color: var(--footer-highlight-text-color)">
                       Links: <a style="color: var(--footer-hyperlink-text-color)" href="toc.html">Table of Contents</a> |
@@ -648,7 +651,7 @@ h6:before{color:silver;counter-increment:more-detail;content:var(--heading-prefi
     <div class="container">  <!-- container -->
     </div>  <!-- /container -->
   </div>  <!-- /segment-post-footer -->
-  
+
   <!-- JS and analytics only. -->
   <!-- Bootstrap core JavaScript
   ================================================== -->
@@ -659,7 +662,6 @@ h6:before{color:silver;counter-increment:more-detail;content:var(--heading-prefi
   <script type="text/javascript" src="assets/js/clipboard.min.js"> </script>
   <script type="text/javascript" src="assets/js/clipboard-btn.js"> </script>
   <script type="text/javascript" src="assets/js/anchor-hover.js"> </script>
-  
   <!-- Analytics Below
   ================================================== -->
   </body>

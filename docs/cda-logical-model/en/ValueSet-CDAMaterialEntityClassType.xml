@@ -1,0 +1,718 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ValueSet xmlns="http://hl7.org/fhir">
+  <id value="CDAMaterialEntityClassType"/>
+  <language value="en"/>
+  <text>
+    <status value="extensions"/><div xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><p class="res-header-id"><b>Generated Narrative: ValueSet CDAMaterialEntityClassType</b></p><a name="CDAMaterialEntityClassType"> </a><a name="hcCDAMaterialEntityClassType"> </a><div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%"><p style="margin-bottom: 0px">Language: en</p></div><p>This value set includes codes based on the following rules:</p><ul><li>Include these codes as defined in <a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html"><code>http://terminology.hl7.org/CodeSystem/v3-EntityCode</code></a><span title="Version is not explicitly stated, which means it is fixed to 2.1.0, the version found through the package references"> version &#x1F4E6;2.1.0</span><table class="none"><tr><td style="white-space:nowrap"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-PKG">PKG</a></td><td style="color: #cccccc">Package</td><td>A material intended to hold other materials for purposes of storage or transportation</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-BAG">BAG</a></td><td style="color: #cccccc">Bag</td><td>A pouched or pendulous container.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-PACKT">PACKT</a></td><td style="color: #cccccc">Packet</td><td>A paper</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-PCH">PCH</a></td><td style="color: #cccccc">Pouch</td><td>A small bag or container made of a soft material.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-SACH">SACH</a></td><td style="color: #cccccc">Sachet</td><td>A small bag or packet containing a small portion of a substance.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-AMP">AMP</a></td><td style="color: #cccccc">Ampule</td><td>A small sealed glass container that holds a measured amount of a medicinal substance.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-MINIM">MINIM</a></td><td style="color: #cccccc">Minim</td><td>Individually dosed ophthalmic solution. One time eye dropper dispenser.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-NEBAMP">NEBAMP</a></td><td style="color: #cccccc">Nebuamp</td><td>Individually dosed inhalation solution.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-OVUL">OVUL</a></td><td style="color: #cccccc">Ovule</td><td>A container either glass or plastic and a narrow neck, for storing liquid.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-BOT">BOT</a></td><td style="color: #cccccc">Bottle</td><td>A container, typically rounded, either glass or plastic with a narrow neck and capable of storing liquid.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-BOTA">BOTA</a></td><td style="color: #cccccc">Amber Bottle</td><td>A bottle of yellow to brown color. Used to store light-sensitive materials</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-BOTD">BOTD</a></td><td style="color: #cccccc">Dropper Bottle</td><td>A bottle with a cap designed to release the contained liquid in droplets of a specific size.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-BOTG">BOTG</a></td><td style="color: #cccccc">Glass Bottle</td><td>A bottle made of glass</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-BOTP">BOTP</a></td><td style="color: #cccccc">Plastic Bottle</td><td>A bottle made of plastic</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-BOTPLY">BOTPLY</a></td><td style="color: #cccccc">Polyethylene Bottle</td><td>A bottle made of polyethylene</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-BOX">BOX</a></td><td style="color: #cccccc">Box</td><td>A 6-sided container commonly made from paper or cardboard used for solid forms.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-CAN">CAN</a></td><td style="color: #cccccc">Can</td><td>A metal container in which a material is hermetically sealed to enable storage over long periods.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-CART">CART</a></td><td style="color: #cccccc">Cartridge</td><td>A sealed container of liquid or powder intended to be loaded into a device.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-CNSTR">CNSTR</a></td><td style="color: #cccccc">Canister</td><td>A pressurized metal container holding a substance released as a spray or aerosol.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-JAR">JAR</a></td><td style="color: #cccccc">Jar</td><td>A container of glass, earthenware, plastic, etc. Top of the container has a diameter of similar size to the diameter of the container as a whole</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-JUG">JUG</a></td><td style="color: #cccccc">Jug</td><td>A deep vessel for holding liquids, with a handle and often with a spout or lip shape for pouring.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-TIN">TIN</a></td><td style="color: #cccccc">Tin</td><td>A lidded container made of thin sheet metal.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-TUB">TUB</a></td><td style="color: #cccccc">Tub</td><td>An open flat bottomed round container.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-TUBE">TUBE</a></td><td style="color: #cccccc">Tube</td><td>A long hollow rigid or flexible cylinder. Material is extruded by squeezing the container.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-VIAL">VIAL</a></td><td style="color: #cccccc">Vial</td><td>A small cylindrical glass for holding liquid medicines.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-BLSTRPK">BLSTRPK</a></td><td style="color: #cccccc">Blister Pack</td><td>A bubblepack. Medications sealed individually, separated into doses.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-CARD">CARD</a></td><td style="color: #cccccc">Card</td><td>A bubble pack card. Multiple individual/separated doses.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-COMPPKG">COMPPKG</a></td><td style="color: #cccccc">Compliance Package</td><td>A container intended to contain sufficient material for more than one use, but grouped or organized to provide individual access to sufficient material for a single use. Often used to ensure that the proper type and amount of material is consumed/expended for each use.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-DIALPK">DIALPK</a></td><td style="color: #cccccc">Dial Pack</td><td>Rotatable dispenser. Eg. Birth control package.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-DISK">DISK</a></td><td style="color: #cccccc">Disk</td><td>Object that is thin, flat, and circular. Doses of medication often contained in bubbles on the disk.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-DOSET">DOSET</a></td><td style="color: #cccccc">Dosette</td><td>Special packaging that will help patients take their medications on a regular basis.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-STRIP">STRIP</a></td><td style="color: #cccccc">Strip</td><td>A continuous strip of plastic sectioned into individual pouches, each one containing the quantity of 1 or more medications intended to be administered at a specific time</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-KIT">KIT</a></td><td style="color: #cccccc">Kit</td><td>A container for a diverse collection of products intended to be used together for some purpose (e.g. Medicinal kits often contain a syringe, a needle and the injectable medication).</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-SYSTM">SYSTM</a></td><td style="color: #cccccc">System</td><td>A kit in which the components are interconnected.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-LINE">LINE</a></td><td style="color: #cccccc">Line</td><td>A hollow tube used to administer a substance into a vein, artery or body cavity</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-IALINE">IALINE</a></td><td style="color: #cccccc">Intra-arterial Line</td><td>A line used to administer a substance into an artery</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-IVLINE">IVLINE</a></td><td style="color: #cccccc">Intraveneous Line</td><td>A line used to administer a substance into a vein</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-AINJ">AINJ</a></td><td style="color: #cccccc">AutoInjector</td><td>Automatically injects medication.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-PEN">PEN</a></td><td style="color: #cccccc">Pen</td><td>A device which can contain a cartridge for injection purposes. Eg. Insulin pen.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-SYR">SYR</a></td><td style="color: #cccccc">Syringe</td><td>A barrel with a plunger.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-APLCTR">APLCTR</a></td><td style="color: #cccccc">Applicator</td><td>A device used to apply a liquid or powder to a surface.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-INH">INH</a></td><td style="color: #cccccc">Inhaler</td><td>A small device used for inhaling medicine in the form of a vapour or gas in order to ease a respiratory condition such as asthma or to relieve nasal congestion.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-DSKS">DSKS</a></td><td style="color: #cccccc">Diskus</td><td>The device used to inhale the doses of medication contained in the disk form.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-DSKUNH">DSKUNH</a></td><td style="color: #cccccc">Diskhaler</td><td>The device used to inhale the doses of medication contained in the disk form.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-TRBINH">TRBINH</a></td><td style="color: #cccccc">Turbuhaler</td><td>Asthma medication delivery device.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-PMP">PMP</a></td><td style="color: #cccccc">Pump</td><td>A device that is used to raise, compress, or transfer liquids or gases and is operated by a piston or similar mechanism.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-ACDA">ACDA</a></td><td style="color: #cccccc">ACD Solution A</td><td>ACD Solution A of trisodium citrate, 22.0g/L; citric acid, 8.0 g/L; and dextrose 24.5 g/L. Used in Blood banking and histocompatibilty testing</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-ACDB">ACDB</a></td><td style="color: #cccccc">ACD Solution B</td><td>ACD Solution B of trisodium citrate, 13.2g/L; citric acid, 4.8 g/L; and dextrose 14.7 g/L. Used in Blood banking and histocompatibilty testing.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-ACET">ACET</a></td><td style="color: #cccccc">Acetic Acid</td><td>50% V/V acetic acid in water. Used as a urine preservative</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-AMIES">AMIES</a></td><td style="color: #cccccc">Amies transport medium</td><td>Sodium Chloride 3.0g, Potassium Chloride 0.2g, Calcium Chloride 0.1g, Magnesium Chloride 0.1g, Monopotassium Phosphate 0.2g, Disodium Phosphate 1.15g, Sodium Thiogly collate 1.0g, Distilled Water 1 liter</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-BACTM">BACTM</a></td><td style="color: #cccccc">Bacterial Transport medium</td><td>Any medium used to maintain bacterial viability (e.g. Stuart's, Cary-Blair, Amies)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-BF10">BF10</a></td><td style="color: #cccccc">Buffered 10% formalin</td><td>Formaldehyde 4% w/v; methyl alcohol 1% w/v; phosphate buffering salts. Tissue preservative</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-BOR">BOR</a></td><td style="color: #cccccc">Boric Acid</td><td>Powdered boric acid (usually 10 g) added to 24-hour urine collections as a preservative.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-BOUIN">BOUIN</a></td><td style="color: #cccccc">Bouin's solution</td><td>Picric acid, saturated aqueous solution (750.0 ml), 37-40% formalin (250.0 ml), glacial acetic acid (50.0 ml). Tissue preservative.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-BSKM">BSKM</a></td><td style="color: #cccccc">Buffered skim milk</td><td>50% skim milk in 0.01 M phosphate-buffered saline. Maintain virus viability</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-C32">C32</a></td><td style="color: #cccccc">3.2% Citrate</td><td>A 3.2% solution of Sodium Citrate in water. Used as a blood preservative</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-C38">C38</a></td><td style="color: #cccccc">3.8% Citrate</td><td>A 3.8% solution of Sodium Citrate in water. Used as a blood preservative</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-CARS">CARS</a></td><td style="color: #cccccc">Carson's Modified 10% formalin</td><td>A modification of buffered 10% formalin used as a general tissue preservative.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-CARY">CARY</a></td><td style="color: #cccccc">Cary Blair Medium</td><td>Sodium Thioglycollate 1.5 g, Disodium Hydrogen Phosphate 1.1 g, Sodium Chloride 5.0 g, Calcium Chloride 0.09 g, Agar 5.0 g, per Liter of Water</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-CHLTM">CHLTM</a></td><td style="color: #cccccc">Chlamydia transport medium</td><td>Any of a number of non-nutritive buffered media used to maintain Chlamydia viability during transportation to the laboratory</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-CTAD">CTAD</a></td><td style="color: #cccccc">CTAD</td><td>Buffered tri-sodium citrate solution with theophylline, adenosine and dipyridamole</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-EDTK15">EDTK15</a></td><td style="color: #cccccc">Potassium/K EDTA 15%</td><td>Potassium EDTA 15% solution in water</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-EDTK75">EDTK75</a></td><td style="color: #cccccc">Potassium/K EDTA 7.5%</td><td>Potassium EDTA 7.5% solution in water</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-EDTN">EDTN</a></td><td style="color: #cccccc">Sodium/Na EDTA</td><td>Sodium fluoride and Disodium EDTA</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-ENT">ENT</a></td><td style="color: #cccccc">Enteric bacteria transport medium</td><td>Any of a number of non-nutritive buffered media used to maintain enteric bacterial viability during transportation to the laboratory</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-F10">F10</a></td><td style="color: #cccccc">10% Formalin</td><td>A 10% v/v solution in water of formalin( a 37% solution of formaldehyde and water). Used for tissue preservation.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-FDP">FDP</a></td><td style="color: #cccccc">Thrombin NIH; soybean trypsin inhibitor</td><td>Thrombin plus soybean trypsin inhibitor. For use in identifying fibrn degredation products.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-FL10">FL10</a></td><td style="color: #cccccc">Sodium Fluoride, 10mg</td><td>Sodium fluoride, 10mg added as a urine preservative.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-FL100">FL100</a></td><td style="color: #cccccc">Sodium Fluoride, 100mg</td><td>Sodium fluoride, 100mg added as a urine preservative.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-HCL6">HCL6</a></td><td style="color: #cccccc">6N HCL</td><td>A solution of HCl containing 6moles of hydrogen ion/L. Used as a Urine Preservative.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-HEPA">HEPA</a></td><td style="color: #cccccc">Ammonium heparin</td><td>Ammonium heparin</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-HEPL">HEPL</a></td><td style="color: #cccccc">Lithium/Li Heparin</td><td>Lithium heparin salt</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-HEPN">HEPN</a></td><td style="color: #cccccc">Sodium/Na Heparin</td><td>Sodium heparin salt</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-HNO3">HNO3</a></td><td style="color: #cccccc">Nitric Acid</td><td>6N Nitric acid used to preserve urine for heavy metal analysis.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-JKM">JKM</a></td><td style="color: #cccccc">Jones Kendrick Medium</td><td>A transport medium formulated to maintain Bordetella pertussis viability.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-KARN">KARN</a></td><td style="color: #cccccc">Karnovsky's fixative</td><td>5% Glutaraldehyde, 4% Formaldehyde in 0.08M buffer. Tissue preservation</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-KOX">KOX</a></td><td style="color: #cccccc">Potassium Oxalate</td><td>Potassium oxalate and sodium fluoride in a 1.25:1 ratio</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-LIA">LIA</a></td><td style="color: #cccccc">Lithium iodoacetate</td><td>Iodoacetate lithium salt</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-M4">M4</a></td><td style="color: #cccccc">M4</td><td>Modified Hank's balanced salt solution supplemented with bovine serum albumin, gelatin, sucrose and glutamic acid. It is buffered to pH 7.3+ or - 0.2 with HEPES buffer. Phenol red is used to indicate pH. Vancomycin, Amphotericin B and Colistin are used to</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-M4RT">M4RT</a></td><td style="color: #cccccc">M4-RT</td><td>Modified Hank's balanced salt solution supplemented with bovine serum albumin, gelatin, sucrose and glutamic acid. It is buffered to pH 7.3+ or - 0.2 with Hepes buffer. Phenol red is used to indicate pH. Gentamicin and amphotericin B are used to inhibit c</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-M5">M5</a></td><td style="color: #cccccc">M5</td><td>Modified Hank's balanced salt solution supplemented with protein stabilizers, sucrose and glutamic acid. It is buffered to pH 7.3+ or - 0.2 with Hepes buffer. Phenol red is used to indicate pH. Vancomycin, Amphotericin B and Colistin are used to inhibit c</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-MICHTM">MICHTM</a></td><td style="color: #cccccc">Michel's transport medium</td><td>1M potassium citrate, pH 7.0 2.5 ml, 0.1M magnesium sulfate 5.0 ml, 0.1M N-ethyl malemide 5.0 ml, dH2O 87.5 ml, ammonium sulfate 55gm. Preserve antigens for Immunofluorescence procedures</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-MMDTM">MMDTM</a></td><td style="color: #cccccc">MMD transport medium</td><td>A buffered medium with ammonium sulfate added to preserve antigens for Immunofluorescence procedures</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-NAF">NAF</a></td><td style="color: #cccccc">Sodium Fluoride</td><td>Sodium fluoride</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-NONE">NONE</a></td><td style="color: #cccccc">None</td><td>No additive. Specifically identifes the specimen as having no additives.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-PAGE">PAGE</a></td><td style="color: #cccccc">Page's Saline</td><td>0.12 g NaCl, 0.004 g MgSO, 0.004 g, CaCl, 0.142 g Na2HPO4 and 0.136 g KH2PO4 per liter of distilled water. Maintain Acanthaoemba viability.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-PHENOL">PHENOL</a></td><td style="color: #cccccc">Phenol</td><td>Phenol. Urine preservative</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-PVA">PVA</a></td><td style="color: #cccccc">Polyvinylalcohol</td><td>Polyvinyl alcohol</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-RLM">RLM</a></td><td style="color: #cccccc">Reagan Lowe Medium</td><td>A transport medium formulated to maintain Bordetella pertussis viability.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-SILICA">SILICA</a></td><td style="color: #cccccc">Siliceous earth</td><td>Diatomaceous earth. For glucose determination blood samples</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-SPS">SPS</a></td><td style="color: #cccccc">Sodium polyanethol sulfonate 0.35% in 0.85% sodium chloride</td><td>Sodium polyanethol sulfonate in saline. Anticomplementary and antiphagocytic properties. Used in blood culture collection.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-SST">SST</a></td><td style="color: #cccccc">Serum Separator Tube</td><td>Polymer separator gel with clot activator</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-STUTM">STUTM</a></td><td style="color: #cccccc">Stuart transport medium</td><td>Sodium Glycerophosphate 10.0g, Calcium Chloride 0.1g, Mercaptoacetic Acid 1.0ml, Distilled Water 1 liter</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-THROM">THROM</a></td><td style="color: #cccccc">Thrombin</td><td>Thrombin. Accelerates clotting.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-THYMOL">THYMOL</a></td><td style="color: #cccccc">Thymol</td><td>2-Isopropyl-5-methyl phenol. A preservative for 24 Hr Urine samples</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-THYO">THYO</a></td><td style="color: #cccccc">Thyoglycolate broth</td><td>A nutritive medium with a reducing agent (sodium thioglycolate) which, due to a chemical reaction, removes oxygen from the broth.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-TOLU">TOLU</a></td><td style="color: #cccccc">Toluene</td><td>Also known as Methylbenzene; Toluol; Phenylmethane. A preservative for 24 Hr Urine samples</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-URETM">URETM</a></td><td style="color: #cccccc">Ureaplasma transport medium</td><td>A buffered salt solution with antifungal agents added for the collection and transport of Ureaplasma specimens.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-VIRTM">VIRTM</a></td><td style="color: #cccccc">Viral Transport medium</td><td>Sucrose 74.6g, Potassium hydrogenphosphate 0.52g, L-glutamic acid 0.72g, Bovine serum albumin 5.0g, Gentamicin 50mg, Potassium dihydrogenphosphate 1.25g, L-15 medium 9.9L, Water to 10L. Maintain Virus viability.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-WEST">WEST</a></td><td style="color: #cccccc">Buffered Citrate</td><td>3.8% Citrate buffered to a pH of 5.5 for Westergren Sedimentation Rate</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-BLDPRD">BLDPRD</a></td><td style="color: #cccccc">Blood Product</td><td>A manufactured product that is produced from the raw blood oi a donor with the intention of using it in a recipient transfusion.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-EntityCode.html#v3-EntityCode-VCCNE">VCCNE</a></td><td style="color: #cccccc">Vaccine</td><td>A Type of medicine that creates an immune protection without the recipient experiencing the disease.</td></tr></table></li><li>Include these codes as defined in <a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html"><code>http://terminology.hl7.org/CodeSystem/v3-SpecimenType</code></a><span title="Version is not explicitly stated, which means it is fixed to 2.1.1, the version found through the package references"> version &#x1F4E6;2.1.1</span><table class="none"><tr><td style="white-space:nowrap"><b>Code</b></td><td><b>Display</b></td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-ABS">ABS</a></td><td style="color: #cccccc">Abcess</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-AMN">AMN</a></td><td style="color: #cccccc">Amniotic fluid</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-ASP">ASP</a></td><td style="color: #cccccc">Aspirate</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-BBL">BBL</a></td><td style="color: #cccccc">Blood bag</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-BDY">BDY</a></td><td style="color: #cccccc">Whole body</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-BIFL">BIFL</a></td><td style="color: #cccccc">Bile fluid</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-BLD">BLD</a></td><td style="color: #cccccc">Whole blood</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-BLDA">BLDA</a></td><td style="color: #cccccc">Blood arterial</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-BLDC">BLDC</a></td><td style="color: #cccccc">Blood capillary</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-BLDCO">BLDCO</a></td><td style="color: #cccccc">Blood - cord</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-BLDV">BLDV</a></td><td style="color: #cccccc">Blood venous</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-BON">BON</a></td><td style="color: #cccccc">Bone</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-BPH">BPH</a></td><td style="color: #cccccc">Basophils</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-BPU">BPU</a></td><td style="color: #cccccc">Blood product unit</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-BRN">BRN</a></td><td style="color: #cccccc">Burn</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-BRO">BRO</a></td><td style="color: #cccccc">Bronchial</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-BRTH">BRTH</a></td><td style="color: #cccccc">Exhaled gas (=breath)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-EXG">EXG</a></td><td style="color: #cccccc">Exhaled gas (=breath)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-CALC">CALC</a></td><td style="color: #cccccc">Calculus (=Stone)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-STON">STON</a></td><td style="color: #cccccc">Calculus (=Stone)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-CDM">CDM</a></td><td style="color: #cccccc">Cardiac muscle</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-CNJT">CNJT</a></td><td style="color: #cccccc">Conjunctiva</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-CNL">CNL</a></td><td style="color: #cccccc">Cannula</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-COL">COL</a></td><td style="color: #cccccc">Colostrum</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-CRN">CRN</a></td><td style="color: #cccccc">Cornea</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-CSF">CSF</a></td><td style="color: #cccccc">Cerebral spinal fluid</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-CTP">CTP</a></td><td style="color: #cccccc">Catheter tip</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-CUR">CUR</a></td><td style="color: #cccccc">Curettage</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-CVM">CVM</a></td><td style="color: #cccccc">Cervical mucus</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-CVX">CVX</a></td><td style="color: #cccccc">Cervix</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-CYST">CYST</a></td><td style="color: #cccccc">Cyst</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-DIAF">DIAF</a></td><td style="color: #cccccc">Dialysis fluid</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-DOSE">DOSE</a></td><td style="color: #cccccc">Dose med or substance</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-DRN">DRN</a></td><td style="color: #cccccc">Drain</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-DUFL">DUFL</a></td><td style="color: #cccccc">Duodenal fluid</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-EAR">EAR</a></td><td style="color: #cccccc">Ear</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-EARW">EARW</a></td><td style="color: #cccccc">Ear wax (cerumen)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-ELT">ELT</a></td><td style="color: #cccccc">Electrode</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-ENDC">ENDC</a></td><td style="color: #cccccc">Endocardium</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-ENDM">ENDM</a></td><td style="color: #cccccc">Endometrium</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-EOS">EOS</a></td><td style="color: #cccccc">Eosinophils</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-EYE">EYE</a></td><td style="color: #cccccc">Eye</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-FIB">FIB</a></td><td style="color: #cccccc">Fibroblasts</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-FIST">FIST</a></td><td style="color: #cccccc">Fistula</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-FLT">FLT</a></td><td style="color: #cccccc">Filter</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-FLU">FLU</a></td><td style="color: #cccccc">Body fluid, unsp</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-FOOD">FOOD</a></td><td style="color: #cccccc">Food sample</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-GAS">GAS</a></td><td style="color: #cccccc">Gas</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-GAST">GAST</a></td><td style="color: #cccccc">Gastric fluid/contents</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-GEN">GEN</a></td><td style="color: #cccccc">Genital</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-GENC">GENC</a></td><td style="color: #cccccc">Genital cervix</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-GENF">GENF</a></td><td style="color: #cccccc">Genital fluid</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-GENL">GENL</a></td><td style="color: #cccccc">Genital lochia</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-GENV">GENV</a></td><td style="color: #cccccc">Genital vaginal</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-HAR">HAR</a></td><td style="color: #cccccc">Hair</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-IHG">IHG</a></td><td style="color: #cccccc">Inhaled Gas</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-ISLT">ISLT</a></td><td style="color: #cccccc">Isolate</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-IT">IT</a></td><td style="color: #cccccc">Intubation tube</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-LAM">LAM</a></td><td style="color: #cccccc">Lamella</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-LIQ">LIQ</a></td><td style="color: #cccccc">Liquid NOS</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-LN">LN</a></td><td style="color: #cccccc">Line</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-LNA">LNA</a></td><td style="color: #cccccc">Line arterial</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-LNV">LNV</a></td><td style="color: #cccccc">Line venous</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-LYM">LYM</a></td><td style="color: #cccccc">Lymphocytes</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-MAC">MAC</a></td><td style="color: #cccccc">Macrophages</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-MAR">MAR</a></td><td style="color: #cccccc">Marrow (bone)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-MBLD">MBLD</a></td><td style="color: #cccccc">Menstrual blood</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-MEC">MEC</a></td><td style="color: #cccccc">Meconium</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-MILK">MILK</a></td><td style="color: #cccccc">Breast milk</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-MLK">MLK</a></td><td style="color: #cccccc">Milk</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-NAIL">NAIL</a></td><td style="color: #cccccc">Nail</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-NOS">NOS</a></td><td style="color: #cccccc">Nose (nasal passage)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-PAFL">PAFL</a></td><td style="color: #cccccc">Pancreatic fluid</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-PAT">PAT</a></td><td style="color: #cccccc">Patient</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-PLAS">PLAS</a></td><td style="color: #cccccc">Plasma</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-PLB">PLB</a></td><td style="color: #cccccc">Plasma bag</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-PLC">PLC</a></td><td style="color: #cccccc">Placenta</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-PLR">PLR</a></td><td style="color: #cccccc">Pleural fluid (thoracentesis fld)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-PMN">PMN</a></td><td style="color: #cccccc">Polymorphonuclear neutrophils</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-PPP">PPP</a></td><td style="color: #cccccc">Platelet poor plasma</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-PRP">PRP</a></td><td style="color: #cccccc">Platelet rich plasma</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-PRT">PRT</a></td><td style="color: #cccccc">Peritoneal fluid /ascites</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-PUS">PUS</a></td><td style="color: #cccccc">Pus</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-RBC">RBC</a></td><td style="color: #cccccc">Erythrocytes</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-SAL">SAL</a></td><td style="color: #cccccc">Saliva</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-SER">SER</a></td><td style="color: #cccccc">Serum</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-SKM">SKM</a></td><td style="color: #cccccc">Skeletal muscle</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-SKN">SKN</a></td><td style="color: #cccccc">Skin</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-SMN">SMN</a></td><td style="color: #cccccc">Seminal fluid</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-SMPLS">SMPLS</a></td><td style="color: #cccccc">Seminal plasma</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-SNV">SNV</a></td><td style="color: #cccccc">Synovial fluid (Joint fluid)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-SPRM">SPRM</a></td><td style="color: #cccccc">Spermatozoa</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-SPT">SPT</a></td><td style="color: #cccccc">Sputum</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-SPTC">SPTC</a></td><td style="color: #cccccc">Sputum - coughed</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-SPTT">SPTT</a></td><td style="color: #cccccc">Sputum - tracheal aspirate</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-STL">STL</a></td><td style="color: #cccccc">Stool = Fecal</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-SWT">SWT</a></td><td style="color: #cccccc">Sweat</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-TEAR">TEAR</a></td><td style="color: #cccccc">Tears</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-THRB">THRB</a></td><td style="color: #cccccc">Thrombocyte (platelet)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-THRT">THRT</a></td><td style="color: #cccccc">Throat</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-TISG">TISG</a></td><td style="color: #cccccc">Tissue gall bladder</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-TISPL">TISPL</a></td><td style="color: #cccccc">Tissue placenta</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-TISS">TISS</a></td><td style="color: #cccccc">Tissue, unspecified</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-TISU">TISU</a></td><td style="color: #cccccc">Tissue ulcer</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-TLGI">TLGI</a></td><td style="color: #cccccc">Tissue large intestine</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-TLNG">TLNG</a></td><td style="color: #cccccc">Tissue lung</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-TSMI">TSMI</a></td><td style="color: #cccccc">Tissue small intestine Tissue ulcer</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-TUB">TUB</a></td><td style="color: #cccccc">Tube, unspecified</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-ULC">ULC</a></td><td style="color: #cccccc">Ulcer</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-UMB">UMB</a></td><td style="color: #cccccc">Umbilical blood</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-UMED">UMED</a></td><td style="color: #cccccc">Unknown medicine</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-UR">UR</a></td><td style="color: #cccccc">Urine</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-URC">URC</a></td><td style="color: #cccccc">Urine clean catch</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-URNS">URNS</a></td><td style="color: #cccccc">Urine sediment</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-URT">URT</a></td><td style="color: #cccccc">Urine catheter</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-URTH">URTH</a></td><td style="color: #cccccc">Urethra</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-USUB">USUB</a></td><td style="color: #cccccc">Unknown substance</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-VOM">VOM</a></td><td style="color: #cccccc">Vomitus</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-WAT">WAT</a></td><td style="color: #cccccc">Water</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-WBC">WBC</a></td><td style="color: #cccccc">Leukocytes</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-WICK">WICK</a></td><td style="color: #cccccc">Wick</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-WND">WND</a></td><td style="color: #cccccc">Wound</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-WNDA">WNDA</a></td><td style="color: #cccccc">Wound abscess</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-WNDD">WNDD</a></td><td style="color: #cccccc">Wound drainage</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-SpecimenType.html#v3-SpecimenType-WNDE">WNDE</a></td><td style="color: #cccccc">Wound exudate</td></tr></table></li></ul></div>
+  </text>
+  <url value="http://hl7.org/cda/stds/core/ValueSet/CDAMaterialEntityClassType"/>
+  <version value="2.0.0-sd-202510-matchbox-patch"/>
+  <name value="CDAMaterialEntityClassType"/>
+  <title value="CDAMaterialEntityClassType"/>
+  <status value="draft"/>
+  <experimental value="false"/>
+  <date value="2025-10-28T21:58:07+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <name value="HL7 International - Structured Documents"/>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+    <telecom>
+      <system value="email"/>
+      <value value="structdog@lists.HL7.org"/>
+    </telecom>
+  </contact>
+  <description value="Types of Material for EntityClass “MAT”"/>
+  <compose>
+    <include>
+      <system value="http://terminology.hl7.org/CodeSystem/v3-EntityCode"/>
+      <concept>
+        <code value="PKG"/>
+      </concept>
+      <concept>
+        <code value="BAG"/>
+      </concept>
+      <concept>
+        <code value="PACKT"/>
+      </concept>
+      <concept>
+        <code value="PCH"/>
+      </concept>
+      <concept>
+        <code value="SACH"/>
+      </concept>
+      <concept>
+        <code value="AMP"/>
+      </concept>
+      <concept>
+        <code value="MINIM"/>
+      </concept>
+      <concept>
+        <code value="NEBAMP"/>
+      </concept>
+      <concept>
+        <code value="OVUL"/>
+      </concept>
+      <concept>
+        <code value="BOT"/>
+      </concept>
+      <concept>
+        <code value="BOTA"/>
+      </concept>
+      <concept>
+        <code value="BOTD"/>
+      </concept>
+      <concept>
+        <code value="BOTG"/>
+      </concept>
+      <concept>
+        <code value="BOTP"/>
+      </concept>
+      <concept>
+        <code value="BOTPLY"/>
+      </concept>
+      <concept>
+        <code value="BOX"/>
+      </concept>
+      <concept>
+        <code value="CAN"/>
+      </concept>
+      <concept>
+        <code value="CART"/>
+      </concept>
+      <concept>
+        <code value="CNSTR"/>
+      </concept>
+      <concept>
+        <code value="JAR"/>
+      </concept>
+      <concept>
+        <code value="JUG"/>
+      </concept>
+      <concept>
+        <code value="TIN"/>
+      </concept>
+      <concept>
+        <code value="TUB"/>
+      </concept>
+      <concept>
+        <code value="TUBE"/>
+      </concept>
+      <concept>
+        <code value="VIAL"/>
+      </concept>
+      <concept>
+        <code value="BLSTRPK"/>
+      </concept>
+      <concept>
+        <code value="CARD"/>
+      </concept>
+      <concept>
+        <code value="COMPPKG"/>
+      </concept>
+      <concept>
+        <code value="DIALPK"/>
+      </concept>
+      <concept>
+        <code value="DISK"/>
+      </concept>
+      <concept>
+        <code value="DOSET"/>
+      </concept>
+      <concept>
+        <code value="STRIP"/>
+      </concept>
+      <concept>
+        <code value="KIT"/>
+      </concept>
+      <concept>
+        <code value="SYSTM"/>
+      </concept>
+      <concept>
+        <code value="LINE"/>
+      </concept>
+      <concept>
+        <code value="IALINE"/>
+      </concept>
+      <concept>
+        <code value="IVLINE"/>
+      </concept>
+      <concept>
+        <code value="AINJ"/>
+      </concept>
+      <concept>
+        <code value="PEN"/>
+      </concept>
+      <concept>
+        <code value="SYR"/>
+      </concept>
+      <concept>
+        <code value="APLCTR"/>
+      </concept>
+      <concept>
+        <code value="INH"/>
+      </concept>
+      <concept>
+        <code value="DSKS"/>
+      </concept>
+      <concept>
+        <code value="DSKUNH"/>
+      </concept>
+      <concept>
+        <code value="TRBINH"/>
+      </concept>
+      <concept>
+        <code value="PMP"/>
+      </concept>
+      <concept>
+        <code value="ACDA"/>
+      </concept>
+      <concept>
+        <code value="ACDB"/>
+      </concept>
+      <concept>
+        <code value="ACET"/>
+      </concept>
+      <concept>
+        <code value="AMIES"/>
+      </concept>
+      <concept>
+        <code value="BACTM"/>
+      </concept>
+      <concept>
+        <code value="BF10"/>
+      </concept>
+      <concept>
+        <code value="BOR"/>
+      </concept>
+      <concept>
+        <code value="BOUIN"/>
+      </concept>
+      <concept>
+        <code value="BSKM"/>
+      </concept>
+      <concept>
+        <code value="C32"/>
+      </concept>
+      <concept>
+        <code value="C38"/>
+      </concept>
+      <concept>
+        <code value="CARS"/>
+      </concept>
+      <concept>
+        <code value="CARY"/>
+      </concept>
+      <concept>
+        <code value="CHLTM"/>
+      </concept>
+      <concept>
+        <code value="CTAD"/>
+      </concept>
+      <concept>
+        <code value="EDTK15"/>
+      </concept>
+      <concept>
+        <code value="EDTK75"/>
+      </concept>
+      <concept>
+        <code value="EDTN"/>
+      </concept>
+      <concept>
+        <code value="ENT"/>
+      </concept>
+      <concept>
+        <code value="F10"/>
+      </concept>
+      <concept>
+        <code value="FDP"/>
+      </concept>
+      <concept>
+        <code value="FL10"/>
+      </concept>
+      <concept>
+        <code value="FL100"/>
+      </concept>
+      <concept>
+        <code value="HCL6"/>
+      </concept>
+      <concept>
+        <code value="HEPA"/>
+      </concept>
+      <concept>
+        <code value="HEPL"/>
+      </concept>
+      <concept>
+        <code value="HEPN"/>
+      </concept>
+      <concept>
+        <code value="HNO3"/>
+      </concept>
+      <concept>
+        <code value="JKM"/>
+      </concept>
+      <concept>
+        <code value="KARN"/>
+      </concept>
+      <concept>
+        <code value="KOX"/>
+      </concept>
+      <concept>
+        <code value="LIA"/>
+      </concept>
+      <concept>
+        <code value="M4"/>
+      </concept>
+      <concept>
+        <code value="M4RT"/>
+      </concept>
+      <concept>
+        <code value="M5"/>
+      </concept>
+      <concept>
+        <code value="MICHTM"/>
+      </concept>
+      <concept>
+        <code value="MMDTM"/>
+      </concept>
+      <concept>
+        <code value="NAF"/>
+      </concept>
+      <concept>
+        <code value="NONE"/>
+      </concept>
+      <concept>
+        <code value="PAGE"/>
+      </concept>
+      <concept>
+        <code value="PHENOL"/>
+      </concept>
+      <concept>
+        <code value="PVA"/>
+      </concept>
+      <concept>
+        <code value="RLM"/>
+      </concept>
+      <concept>
+        <code value="SILICA"/>
+      </concept>
+      <concept>
+        <code value="SPS"/>
+      </concept>
+      <concept>
+        <code value="SST"/>
+      </concept>
+      <concept>
+        <code value="STUTM"/>
+      </concept>
+      <concept>
+        <code value="THROM"/>
+      </concept>
+      <concept>
+        <code value="THYMOL"/>
+      </concept>
+      <concept>
+        <code value="THYO"/>
+      </concept>
+      <concept>
+        <code value="TOLU"/>
+      </concept>
+      <concept>
+        <code value="URETM"/>
+      </concept>
+      <concept>
+        <code value="VIRTM"/>
+      </concept>
+      <concept>
+        <code value="WEST"/>
+      </concept>
+      <concept>
+        <code value="BLDPRD"/>
+      </concept>
+      <concept>
+        <code value="VCCNE"/>
+      </concept>
+    </include>
+    <include>
+      <system value="http://terminology.hl7.org/CodeSystem/v3-SpecimenType"/>
+      <concept>
+        <code value="ABS"/>
+      </concept>
+      <concept>
+        <code value="AMN"/>
+      </concept>
+      <concept>
+        <code value="ASP"/>
+      </concept>
+      <concept>
+        <code value="BBL"/>
+      </concept>
+      <concept>
+        <code value="BDY"/>
+      </concept>
+      <concept>
+        <code value="BIFL"/>
+      </concept>
+      <concept>
+        <code value="BLD"/>
+      </concept>
+      <concept>
+        <code value="BLDA"/>
+      </concept>
+      <concept>
+        <code value="BLDC"/>
+      </concept>
+      <concept>
+        <code value="BLDCO"/>
+      </concept>
+      <concept>
+        <code value="BLDV"/>
+      </concept>
+      <concept>
+        <code value="BON"/>
+      </concept>
+      <concept>
+        <code value="BPH"/>
+      </concept>
+      <concept>
+        <code value="BPU"/>
+      </concept>
+      <concept>
+        <code value="BRN"/>
+      </concept>
+      <concept>
+        <code value="BRO"/>
+      </concept>
+      <concept>
+        <code value="BRTH"/>
+      </concept>
+      <concept>
+        <code value="EXG"/>
+      </concept>
+      <concept>
+        <code value="CALC"/>
+      </concept>
+      <concept>
+        <code value="STON"/>
+      </concept>
+      <concept>
+        <code value="CDM"/>
+      </concept>
+      <concept>
+        <code value="CNJT"/>
+      </concept>
+      <concept>
+        <code value="CNL"/>
+      </concept>
+      <concept>
+        <code value="COL"/>
+      </concept>
+      <concept>
+        <code value="CRN"/>
+      </concept>
+      <concept>
+        <code value="CSF"/>
+      </concept>
+      <concept>
+        <code value="CTP"/>
+      </concept>
+      <concept>
+        <code value="CUR"/>
+      </concept>
+      <concept>
+        <code value="CVM"/>
+      </concept>
+      <concept>
+        <code value="CVX"/>
+      </concept>
+      <concept>
+        <code value="CYST"/>
+      </concept>
+      <concept>
+        <code value="DIAF"/>
+      </concept>
+      <concept>
+        <code value="DOSE"/>
+      </concept>
+      <concept>
+        <code value="DRN"/>
+      </concept>
+      <concept>
+        <code value="DUFL"/>
+      </concept>
+      <concept>
+        <code value="EAR"/>
+      </concept>
+      <concept>
+        <code value="EARW"/>
+      </concept>
+      <concept>
+        <code value="ELT"/>
+      </concept>
+      <concept>
+        <code value="ENDC"/>
+      </concept>
+      <concept>
+        <code value="ENDM"/>
+      </concept>
+      <concept>
+        <code value="EOS"/>
+      </concept>
+      <concept>
+        <code value="EYE"/>
+      </concept>
+      <concept>
+        <code value="FIB"/>
+      </concept>
+      <concept>
+        <code value="FIST"/>
+      </concept>
+      <concept>
+        <code value="FLT"/>
+      </concept>
+      <concept>
+        <code value="FLU"/>
+      </concept>
+      <concept>
+        <code value="FOOD"/>
+      </concept>
+      <concept>
+        <code value="GAS"/>
+      </concept>
+      <concept>
+        <code value="GAST"/>
+      </concept>
+      <concept>
+        <code value="GEN"/>
+      </concept>
+      <concept>
+        <code value="GENC"/>
+      </concept>
+      <concept>
+        <code value="GENF"/>
+      </concept>
+      <concept>
+        <code value="GENL"/>
+      </concept>
+      <concept>
+        <code value="GENV"/>
+      </concept>
+      <concept>
+        <code value="HAR"/>
+      </concept>
+      <concept>
+        <code value="IHG"/>
+      </concept>
+      <concept>
+        <code value="ISLT"/>
+      </concept>
+      <concept>
+        <code value="IT"/>
+      </concept>
+      <concept>
+        <code value="LAM"/>
+      </concept>
+      <concept>
+        <code value="LIQ"/>
+      </concept>
+      <concept>
+        <code value="LN"/>
+      </concept>
+      <concept>
+        <code value="LNA"/>
+      </concept>
+      <concept>
+        <code value="LNV"/>
+      </concept>
+      <concept>
+        <code value="LYM"/>
+      </concept>
+      <concept>
+        <code value="MAC"/>
+      </concept>
+      <concept>
+        <code value="MAR"/>
+      </concept>
+      <concept>
+        <code value="MBLD"/>
+      </concept>
+      <concept>
+        <code value="MEC"/>
+      </concept>
+      <concept>
+        <code value="MILK"/>
+      </concept>
+      <concept>
+        <code value="MLK"/>
+      </concept>
+      <concept>
+        <code value="NAIL"/>
+      </concept>
+      <concept>
+        <code value="NOS"/>
+      </concept>
+      <concept>
+        <code value="PAFL"/>
+      </concept>
+      <concept>
+        <code value="PAT"/>
+      </concept>
+      <concept>
+        <code value="PLAS"/>
+      </concept>
+      <concept>
+        <code value="PLB"/>
+      </concept>
+      <concept>
+        <code value="PLC"/>
+      </concept>
+      <concept>
+        <code value="PLR"/>
+      </concept>
+      <concept>
+        <code value="PMN"/>
+      </concept>
+      <concept>
+        <code value="PPP"/>
+      </concept>
+      <concept>
+        <code value="PRP"/>
+      </concept>
+      <concept>
+        <code value="PRT"/>
+      </concept>
+      <concept>
+        <code value="PUS"/>
+      </concept>
+      <concept>
+        <code value="RBC"/>
+      </concept>
+      <concept>
+        <code value="SAL"/>
+      </concept>
+      <concept>
+        <code value="SER"/>
+      </concept>
+      <concept>
+        <code value="SKM"/>
+      </concept>
+      <concept>
+        <code value="SKN"/>
+      </concept>
+      <concept>
+        <code value="SMN"/>
+      </concept>
+      <concept>
+        <code value="SMPLS"/>
+      </concept>
+      <concept>
+        <code value="SNV"/>
+      </concept>
+      <concept>
+        <code value="SPRM"/>
+      </concept>
+      <concept>
+        <code value="SPT"/>
+      </concept>
+      <concept>
+        <code value="SPTC"/>
+      </concept>
+      <concept>
+        <code value="SPTT"/>
+      </concept>
+      <concept>
+        <code value="STL"/>
+      </concept>
+      <concept>
+        <code value="SWT"/>
+      </concept>
+      <concept>
+        <code value="TEAR"/>
+      </concept>
+      <concept>
+        <code value="THRB"/>
+      </concept>
+      <concept>
+        <code value="THRT"/>
+      </concept>
+      <concept>
+        <code value="TISG"/>
+      </concept>
+      <concept>
+        <code value="TISPL"/>
+      </concept>
+      <concept>
+        <code value="TISS"/>
+      </concept>
+      <concept>
+        <code value="TISU"/>
+      </concept>
+      <concept>
+        <code value="TLGI"/>
+      </concept>
+      <concept>
+        <code value="TLNG"/>
+      </concept>
+      <concept>
+        <code value="TSMI"/>
+      </concept>
+      <concept>
+        <code value="TUB"/>
+      </concept>
+      <concept>
+        <code value="ULC"/>
+      </concept>
+      <concept>
+        <code value="UMB"/>
+      </concept>
+      <concept>
+        <code value="UMED"/>
+      </concept>
+      <concept>
+        <code value="UR"/>
+      </concept>
+      <concept>
+        <code value="URC"/>
+      </concept>
+      <concept>
+        <code value="URNS"/>
+      </concept>
+      <concept>
+        <code value="URT"/>
+      </concept>
+      <concept>
+        <code value="URTH"/>
+      </concept>
+      <concept>
+        <code value="USUB"/>
+      </concept>
+      <concept>
+        <code value="VOM"/>
+      </concept>
+      <concept>
+        <code value="WAT"/>
+      </concept>
+      <concept>
+        <code value="WBC"/>
+      </concept>
+      <concept>
+        <code value="WICK"/>
+      </concept>
+      <concept>
+        <code value="WND"/>
+      </concept>
+      <concept>
+        <code value="WNDA"/>
+      </concept>
+      <concept>
+        <code value="WNDD"/>
+      </concept>
+      <concept>
+        <code value="WNDE"/>
+      </concept>
+    </include>
+  </compose>
+</ValueSet>

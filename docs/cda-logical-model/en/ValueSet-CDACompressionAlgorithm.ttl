@@ -1,0 +1,52 @@
+@prefix fhir: <http://hl7.org/fhir/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# - resource -------------------------------------------------------------------
+
+<http://hl7.org/cda/stds/core/ValueSet/CDACompressionAlgorithm> a fhir:ValueSet ;
+  fhir:nodeRole fhir:treeRoot ;
+  fhir:id [ fhir:v "CDACompressionAlgorithm"] ; # 
+  fhir:language [ fhir:v "en"] ; # 
+  fhir:text [
+     fhir:status [ fhir:v "extensions" ] ;
+     fhir:div "<div xml:lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\"><p class=\"res-header-id\"><b>Generated Narrative: ValueSet CDACompressionAlgorithm</b></p><a name=\"CDACompressionAlgorithm\"> </a><a name=\"hcCDACompressionAlgorithm\"> </a><div style=\"display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%\"><p style=\"margin-bottom: 0px\">Language: en</p></div><ul><li>Include these codes as defined in <a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-CompressionAlgorithm.html\"><code>http://terminology.hl7.org/CodeSystem/v3-CompressionAlgorithm</code></a><span title=\"Version is not explicitly stated, which means it is fixed to 2.1.1, the version found through the package references\"> version ?2.1.1</span><table class=\"none\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-CompressionAlgorithm.html#v3-CompressionAlgorithm-DF\">DF</a></td><td style=\"color: #cccccc\">deflate</td><td>The deflate compressed data format as specified in RFC 1951 \\[http://www.ietf.org/rfc/rfc1951.txt\\].</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-CompressionAlgorithm.html#v3-CompressionAlgorithm-GZ\">GZ</a></td><td style=\"color: #cccccc\">gzip</td><td>A compressed data format that is compatible with the widely used GZIP utility as specified in RFC 1952 \\[http://www.ietf.org/rfc/rfc1952.txt\\] (uses the deflate algorithm).</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-CompressionAlgorithm.html#v3-CompressionAlgorithm-ZL\">ZL</a></td><td style=\"color: #cccccc\">zlib</td><td>A compressed data format that also uses the deflate algorithm. Specified as RFC 1950 \\[http://www.ietf.org/rfc/rfc1952.txt\\]</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-CompressionAlgorithm.html#v3-CompressionAlgorithm-Z\">Z</a></td><td style=\"color: #cccccc\">compress</td><td>Original UNIX compress algorithm and file format using the LZC algorithm (a variant of LZW). Patent encumbered and less efficient than deflate.</td></tr></table></li></ul></div>"^^rdf:XMLLiteral
+  ] ; # 
+  fhir:url [ fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDACompressionAlgorithm"^^xsd:anyURI] ; # 
+  fhir:version [ fhir:v "2.0.0-sd-202510-matchbox-patch"] ; # 
+  fhir:name [ fhir:v "CDACompressionAlgorithm"] ; # 
+  fhir:title [ fhir:v "CDACompressionAlgorithm"] ; # 
+  fhir:status [ fhir:v "draft"] ; # 
+  fhir:experimental [ fhir:v false] ; # 
+  fhir:date [ fhir:v "2025-10-28T21:58:07+01:00"^^xsd:dateTime] ; # 
+  fhir:publisher [ fhir:v "Health Level 7"] ; # 
+  fhir:contact ( [
+     fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
+     fhir:telecom ( [
+       fhir:system [ fhir:v "url" ] ;
+       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structure" ]
+     ] [
+       fhir:system [ fhir:v "email" ] ;
+       fhir:value [ fhir:v "structdog@lists.HL7.org" ]
+     ] )
+  ] ) ; # 
+  fhir:description [ fhir:v "Type of compression algorithm used - limited to 4 concepts from original CDA definition"] ; # 
+  fhir:compose [
+     fhir:include ( [
+       fhir:system [ fhir:v "http://terminology.hl7.org/CodeSystem/v3-CompressionAlgorithm"^^xsd:anyURI ] ;
+       fhir:concept ( [
+         fhir:code [ fhir:v "DF" ]
+       ] [
+         fhir:code [ fhir:v "GZ" ]
+       ] [
+         fhir:code [ fhir:v "ZL" ]
+       ] [
+         fhir:code [ fhir:v "Z" ]
+       ] )
+     ] )
+  ] . # 
+
+# -------------------------------------------------------------------------------------
+

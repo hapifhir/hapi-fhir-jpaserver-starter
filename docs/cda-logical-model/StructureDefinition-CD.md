@@ -1,0 +1,291 @@
+# CD: ConceptDescriptor (V3 Data Type) - Clinical Document Architecture v2.0.1-sd-202510-matchbox-patch
+
+* [**Table of Contents**](toc.md)
+* [**Artifacts Summary**](artifacts.md)
+* **CD: ConceptDescriptor (V3 Data Type)**
+
+## Logical Model: CD: ConceptDescriptor (V3 Data Type) 
+
+| | |
+| :--- | :--- |
+| *Official URL*:http://hl7.org/cda/stds/core/StructureDefinition/CD | *Version*:2.0.1-sd-202510-matchbox-patch |
+| Active as of 2025-10-29 | *Computable Name*:CD |
+
+ 
+A concept descriptor represents any kind of concept usually by giving a code defined in a code system. A concept descriptor can contain the original text or phrase that served as the basis of the coding and one or more translations into different coding systems. A concept descriptor can also contain qualifiers to describe, e.g., the concept of a "left foot" as a postcoordinated term built from the primary code "FOOT" and the qualifier "LEFT". In cases of an exceptional value, the concept descriptor need not contain a code but only the original text describing that concept. 
+
+**Usages:**
+
+* Derived from this Logical Model: [CE: CodedWithEquivalents (V3 Data Type)](StructureDefinition-CE.md)
+* Use this Logical Model: [Act (CDA Class)](StructureDefinition-Act.md), [AlternateIdentification (CDA Class)](StructureDefinition-AlternateIdentification.md), [CD: ConceptDescriptor (V3 Data Type)](StructureDefinition-CD.md), [CR: ConceptRole (V3 Data Type)](StructureDefinition-CR.md)...Show 15 more,[ClinicalDocument (CDA Class)](StructureDefinition-ClinicalDocument.md),[Criterion (CDA Class)](StructureDefinition-Criterion.md),[Encounter (CDA Class)](StructureDefinition-Encounter.md),[ExternalAct (CDA Class)](StructureDefinition-ExternalAct.md),[ExternalDocument (CDA Class)](StructureDefinition-ExternalDocument.md),[ExternalObservation (CDA Class)](StructureDefinition-ExternalObservation.md),[ExternalProcedure (CDA Class)](StructureDefinition-ExternalProcedure.md),[LabCriterion (CDA Class)](StructureDefinition-LabCriterion.md),[Observation (CDA Class)](StructureDefinition-Observation.md),[ObservationRange (CDA Class)](StructureDefinition-ObservationRange.md),[Organizer (CDA Class)](StructureDefinition-Organizer.md),[ParentDocument (CDA Class)](StructureDefinition-ParentDocument.md),[Procedure (CDA Class)](StructureDefinition-Procedure.md),[SubstanceAdministration (CDA Class)](StructureDefinition-SubstanceAdministration.md)and[Supply (CDA Class)](StructureDefinition-Supply.md)
+
+You can also check for [usages in the FHIR IG Statistics](https://packages2.fhir.org/xig/hl7.cda.uv.core|current/StructureDefinition/CD)
+
+### Formal Views of Template Content
+
+ [Description of Template, Differentials, Snapshots and how the different presentations work](http://hl7.org/fhir/R5/profiling.html#presentation). 
+
+ 
+
+Other representations of profile: [CSV](StructureDefinition-CD.csv), [Excel](StructureDefinition-CD.xlsx) 
+
+
+
+## Resource Content
+
+```json
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "CD",
+  "extension" : [
+    {
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+      "_valueBoolean" : {
+        "extension" : [
+          {
+            "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+            "valueCode" : "not-applicable"
+          }
+        ]
+      }
+    },
+    {
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+      "valueUri" : "urn:hl7-org:v3"
+    },
+    {
+      "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-type-characteristics",
+      "valueCode" : "can-bind"
+    },
+    {
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/elementdefinition-binding-style",
+      "valueCode" : "CDA"
+    },
+    {
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-container",
+      "valueUri" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
+    }
+  ],
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/CD",
+  "version" : "2.0.1-sd-202510-matchbox-patch",
+  "name" : "CD",
+  "title" : "CD: ConceptDescriptor (V3 Data Type)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2025-10-29T22:15:57+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [
+    {
+      "name" : "HL7 International - Structured Documents",
+      "telecom" : [
+        {
+          "system" : "url",
+          "value" : "http://www.hl7.org/Special/committees/structure"
+        },
+        {
+          "system" : "email",
+          "value" : "structdog@lists.HL7.org"
+        }
+      ]
+    }
+  ],
+  "description" : "A concept descriptor represents any kind of concept usually by giving a code defined in a code system. A concept descriptor can contain the original text or phrase that served as the basis of the coding and one or more translations into different coding systems. A concept descriptor can also contain qualifiers to describe, e.g., the concept of a \"left foot\" as a postcoordinated term built from the primary code \"FOOT\" and the qualifier \"LEFT\". In cases of an exceptional value, the concept descriptor need not contain a code but only the original text describing that concept.",
+  "fhirVersion" : "5.0.0",
+  "mapping" : [
+    {
+      "identity" : "rim",
+      "uri" : "http://hl7.org/v3",
+      "name" : "RIM Mapping"
+    }
+  ],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/CD",
+  "baseDefinition" : "http://hl7.org/cda/stds/core/StructureDefinition/ANY",
+  "derivation" : "specialization",
+  "differential" : {
+    "element" : [
+      {
+        "id" : "CD",
+        "path" : "CD",
+        "definition" : "A concept descriptor represents any kind of concept usually by giving a code defined in a code system. A concept descriptor can contain the original text or phrase that served as the basis of the coding and one or more translations into different coding systems. A concept descriptor can also contain qualifiers to describe, e.g., the concept of a \"left foot\" as a postcoordinated term built from the primary code \"FOOT\" and the qualifier \"LEFT\". In exceptional cases, the concept descriptor need not contain a code but only the original text describing that concept.",
+        "min" : 1,
+        "max" : "*"
+      },
+      {
+        "id" : "CD.code",
+        "path" : "CD.code",
+        "representation" : ["xmlAttr"],
+        "label" : "Code",
+        "definition" : "The plain code symbol defined by the code system. For example, \"784.0\" is the code symbol of the ICD-9 code \"784.0\" for headache.",
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "code",
+            "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+          }
+        ]
+      },
+      {
+        "id" : "CD.codeSystem",
+        "path" : "CD.codeSystem",
+        "representation" : ["xmlAttr"],
+        "label" : "Code System",
+        "definition" : "Specifies the code system that defines the code.",
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "string",
+            "profile" : [
+              "http://hl7.org/cda/stds/core/StructureDefinition/oid",
+              "http://hl7.org/cda/stds/core/StructureDefinition/uuid",
+              "http://hl7.org/cda/stds/core/StructureDefinition/ruid"
+            ]
+          }
+        ]
+      },
+      {
+        "id" : "CD.codeSystemName",
+        "path" : "CD.codeSystemName",
+        "representation" : ["xmlAttr"],
+        "label" : "Code System Name",
+        "definition" : "The common name of the coding system.",
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "string",
+            "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+          }
+        ]
+      },
+      {
+        "id" : "CD.codeSystemVersion",
+        "path" : "CD.codeSystemVersion",
+        "representation" : ["xmlAttr"],
+        "label" : "Code System Version",
+        "definition" : "If applicable, a version descriptor defined specifically for the given code system.",
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "string",
+            "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+          }
+        ]
+      },
+      {
+        "id" : "CD.displayName",
+        "path" : "CD.displayName",
+        "representation" : ["xmlAttr"],
+        "label" : "Display Name",
+        "definition" : "A name or title for the code, under which the sending system shows the code value to its users.",
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "string",
+            "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+          }
+        ]
+      },
+      {
+        "id" : "CD.sdtcValueSet",
+        "extension" : [
+          {
+            "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+            "valueUri" : "urn:hl7-org:sdtc"
+          },
+          {
+            "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-name",
+            "valueString" : "valueSet"
+          }
+        ],
+        "path" : "CD.sdtcValueSet",
+        "representation" : ["xmlAttr"],
+        "definition" : "The valueSet extension adds an attribute for elements with a CD dataType which indicates the particular value set constraining the coded concept.",
+        "min" : 0,
+        "max" : "1",
+        "base" : {
+          "path" : "CD.valueSet",
+          "min" : 0,
+          "max" : "1"
+        },
+        "type" : [
+          {
+            "code" : "string",
+            "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/oid"]
+          }
+        ]
+      },
+      {
+        "id" : "CD.sdtcValueSetVersion",
+        "extension" : [
+          {
+            "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+            "valueUri" : "urn:hl7-org:sdtc"
+          },
+          {
+            "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-name",
+            "valueString" : "valueSetVersion"
+          }
+        ],
+        "path" : "CD.sdtcValueSetVersion",
+        "representation" : ["xmlAttr"],
+        "definition" : "The valueSetVersion extension adds an attribute for elements with a CD dataType which indicates the version of the particular value set constraining the coded concept.",
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "string",
+            "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+          }
+        ]
+      },
+      {
+        "id" : "CD.originalText",
+        "path" : "CD.originalText",
+        "label" : "Original Text",
+        "definition" : "The text or phrase used as the basis for the coding.",
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ED"
+          }
+        ]
+      },
+      {
+        "id" : "CD.qualifier",
+        "path" : "CD.qualifier",
+        "label" : "Qualifier",
+        "definition" : "Specifies additional codes that increase the specificity of the the primary code.",
+        "min" : 0,
+        "max" : "*",
+        "type" : [
+          {
+            "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CR"
+          }
+        ]
+      },
+      {
+        "id" : "CD.translation",
+        "path" : "CD.translation",
+        "representation" : ["typeAttr"],
+        "label" : "Translation",
+        "definition" : "A set of other concept descriptors that translate this concept descriptor into other code systems.",
+        "min" : 0,
+        "max" : "*",
+        "type" : [
+          {
+            "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CD"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+```

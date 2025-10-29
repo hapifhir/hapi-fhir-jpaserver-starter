@@ -1,2 +1,3 @@
-URL,Version,Status,OIDs,Name,Title,Descriptino,Used
-http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding,2.0.0-sd-202406-matchbox-patch,draft,,BinaryDataEncoding,Binary Data Encoding Code System,"Identifies the representation of binary data in a text field",
+URL,Version,Status,OIDs,Name,Title,Description,Used
+http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding,2.0.1-sd-202510-matchbox-patch,draft,,BinaryDataEncoding,Binary Data Encoding Code System,"Identifies the representation of binary data in a text field",
+http://hl7.org/cda/stds/core/CodeSystem/IGParametersCDAValidation,2.0.1-sd-202510-matchbox-patch,draft,,IGParametersCDAValidation,IG Parameters CDA Validation,"Code system for CDA validation parameters in the IG.",

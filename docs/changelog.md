@@ -1,10 +1,11 @@
-Release 4.0.15
+2025/11/03 Release 4.0.15
 
 - Upgrade Tomcat to fix [CVE-2025-55752](https://github.com/advisories/GHSA-wmwf-9ccg-fff5)
+- Update [CDA logical model](matchbox/cda-logical-model/) for ST.r2b (#439](https://github.com/ahdis/matchbox/issues/#439), see example [map](https://github.com/ahdis/matchbox/blob/nmain/matchbox-engine/src/test/resources/cda/cda-it-observation-st-r2b.map)
 
 2025/10/21 Release 4.0.14
 
-- Further MCP Server integration [#398](https://github.com/ahdis/matchbox/issues/398)
+- Further MCP Server integration (#398)
 
 2025/10/04 Release 4.0.13
 

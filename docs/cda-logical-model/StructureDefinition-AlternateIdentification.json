@@ -23,12 +23,12 @@
     "valueUri" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
   }],
   "url" : "http://hl7.org/cda/stds/core/StructureDefinition/AlternateIdentification",
-  "version" : "2.0.0-sd-202406-matchbox-patch",
+  "version" : "2.0.1-sd-202510-matchbox-patch",
   "name" : "AlternateIdentification",
   "title" : "AlternateIdentification (CDA Class)",
   "status" : "active",
   "experimental" : false,
-  "date" : "2024-06-19T17:47:42+02:00",
+  "date" : "2025-10-29T22:15:57+01:00",
   "publisher" : "Health Level 7",
   "contact" : [{
     "name" : "HL7 International - Structured Documents",
@@ -54,6 +54,10 @@
   "baseDefinition" : "http://hl7.org/fhir/StructureDefinition/Base",
   "derivation" : "specialization",
   "snapshot" : {
+    "extension" : [{
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/snapshot-base-version",
+      "valueString" : "5.0.0"
+    }],
     "element" : [{
       "id" : "AlternateIdentification",
       "path" : "AlternateIdentification",
@@ -119,7 +123,7 @@
       "id" : "AlternateIdentification.code",
       "extension" : [{
         "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
-        "valueUri" : "urn:hl7-org:v3"
+        "valueUri" : "urn:hl7-org:sdtc"
       }],
       "path" : "AlternateIdentification.code",
       "min" : 0,
@@ -137,7 +141,7 @@
       "id" : "AlternateIdentification.statusCode",
       "extension" : [{
         "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
-        "valueUri" : "urn:hl7-org:v3"
+        "valueUri" : "urn:hl7-org:sdtc"
       }],
       "path" : "AlternateIdentification.statusCode",
       "min" : 0,
@@ -159,7 +163,7 @@
       "id" : "AlternateIdentification.effectiveTime",
       "extension" : [{
         "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
-        "valueUri" : "urn:hl7-org:v3"
+        "valueUri" : "urn:hl7-org:sdtc"
       }],
       "path" : "AlternateIdentification.effectiveTime",
       "min" : 0,
@@ -218,7 +222,7 @@
       "id" : "AlternateIdentification.code",
       "extension" : [{
         "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
-        "valueUri" : "urn:hl7-org:v3"
+        "valueUri" : "urn:hl7-org:sdtc"
       }],
       "path" : "AlternateIdentification.code",
       "min" : 0,
@@ -231,7 +235,7 @@
       "id" : "AlternateIdentification.statusCode",
       "extension" : [{
         "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
-        "valueUri" : "urn:hl7-org:v3"
+        "valueUri" : "urn:hl7-org:sdtc"
       }],
       "path" : "AlternateIdentification.statusCode",
       "min" : 0,
@@ -248,7 +252,7 @@
       "id" : "AlternateIdentification.effectiveTime",
       "extension" : [{
         "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
-        "valueUri" : "urn:hl7-org:v3"
+        "valueUri" : "urn:hl7-org:sdtc"
       }],
       "path" : "AlternateIdentification.effectiveTime",
       "min" : 0,

@@ -1,0 +1,50 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "CDAActSubstanceAdministrationCode",
+  "language" : "en",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xml:lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\"><p class=\"res-header-id\"><b>Generated Narrative: ValueSet CDAActSubstanceAdministrationCode</b></p><a name=\"CDAActSubstanceAdministrationCode\"> </a><a name=\"hcCDAActSubstanceAdministrationCode\"> </a><div style=\"display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%\"><p style=\"margin-bottom: 0px\">Language: en</p></div><ul><li>Include these codes as defined in <a href=\"http://tx.fhir.org/r5\"><code>http://terminology.hl7.org/CodeSystem/v3-ActCode</code></a><span title=\"Version is explicitly stated to be 7.0.0\"> version &#x1F4CD;9.0.0</span><table class=\"none\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td></tr><tr><td>DRUG</td><td/></tr><tr><td>FD</td><td/></tr><tr><td>IMMUNIZ</td><td/></tr><tr><td>BOOSTER</td><td/></tr><tr><td>INITIMMUNIZ</td><td/></tr></table></li></ul></div>"
+  },
+  "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAActSubstanceAdministrationCode",
+  "version" : "2.0.0-sd-202510-matchbox-patch",
+  "name" : "CDAActSubstanceAdministrationCode",
+  "title" : "CDAActSubstanceAdministrationCode",
+  "status" : "draft",
+  "experimental" : false,
+  "date" : "2025-10-28T21:58:07+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "name" : "HL7 International - Structured Documents",
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    },
+    {
+      "system" : "email",
+      "value" : "structdog@lists.HL7.org"
+    }]
+  }],
+  "description" : "Describes the type of substance administration being performed.",
+  "compose" : {
+    "include" : [{
+      "system" : "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+      "version" : "7.0.0",
+      "concept" : [{
+        "code" : "DRUG"
+      },
+      {
+        "code" : "FD"
+      },
+      {
+        "code" : "IMMUNIZ"
+      },
+      {
+        "code" : "BOOSTER"
+      },
+      {
+        "code" : "INITIMMUNIZ"
+      }]
+    }]
+  }
+}

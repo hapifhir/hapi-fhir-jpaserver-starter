@@ -1,0 +1,43 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "0e56ebbd-666c-461b-9bdc-13902900384b-80",
+  "url" : "http://hl7.org/fhir/comparison/ValueSet/0e56ebbd-666c-461b-9bdc-13902900384b-80",
+  "name" : "UnionCDAEntityCodeAndCDAEntityCode",
+  "title" : "Union of CDAEntityCode And CDAEntityCode",
+  "status" : "draft",
+  "date" : "2025-10-29T22:16:25+01:00",
+  "compose" : {
+    "include" : [{
+      "valueSet" : ["http://hl7.org/cda/stds/core/ValueSet/CDAMaterialEntityClassType"]
+    },
+    {
+      "concept" : [{
+        "code" : "BED"
+      },
+      {
+        "code" : "BLDG"
+      },
+      {
+        "code" : "FLOOR"
+      },
+      {
+        "code" : "ROOM"
+      },
+      {
+        "code" : "WING"
+      },
+      {
+        "code" : "HHOLD"
+      },
+      {
+        "code" : "NAT"
+      },
+      {
+        "code" : "RELIG"
+      },
+      {
+        "code" : "PRAC"
+      }]
+    }]
+  }
+}

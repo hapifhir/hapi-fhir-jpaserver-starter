@@ -1,0 +1,8 @@
+"Id","Path","Slice Name","Alias(s)","Label","Min","Max","Must Support?","Is Modifier?","Is Summary?","Type(s)","Short","Definition","Comments","Requirements","Default Value","Meaning When Missing","Fixed Value","Pattern","Example","Minimum Value","Maximum Value","Maximum Length","Binding Strength","Binding Description","Binding Value Set","Code","Slicing Discriminator","Slicing Description","Slicing Ordered","Slicing Rules","Base Path","Base Min","Base Max","Condition(s)","Constraint(s)","Mapping: RIM Mapping"
+"ST_dot_r2b","ST_dot_r2b","","","",1,*,"","","","null {[]} {[]}
+","Base for all types and resources","A character string data type variant that uses a value attribute rather than element content.","","","","","","","","","",,,,,"",,,,"Base",0,*,"","value-null:value and nullFlavor are mutually exclusive (one must be present) {(value | nullFlavor).count() = 1}
+","n/a"
+"ST_dot_r2b.nullFlavor","ST_dot_r2b.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
+","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
+"ST_dot_r2b.value","ST_dot_r2b.value","","","Value",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
+","","The string value stored as an XML attribute rather than element content.","","","","","","","","","",,,,,"",,,,"ST_dot_r2b.value",0,1,"",""

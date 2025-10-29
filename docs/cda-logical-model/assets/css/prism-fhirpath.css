@@ -1,0 +1,38 @@
+/* Custom formatting for the code blocks */
+pre.language-fhirpath {
+    background-color: #eee;
+    text-shadow: unset;
+}
+
+pre.language-fhirpath code.language-fhirpath {
+    white-space: pre-wrap;
+    text-shadow: unset;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+    background: unset;
+}
+
+
+pre.language-fhirpath.stu {
+    margin-left: 20px;
+    overflow: unset;
+}
+pre.language-fhirpath.stu:after {
+    left: -16px;
+}
+
+/* inline fhirpath code blocks used in examples */
+:not(pre) > code.fhirpath {
+    background-color: #eee;
+    padding: 1px 4px;
+    border: 1px solid #cccccc;
+    font-size: 1em;
+    display: inline-block;
+    margin: 2px 0;
+    text-shadow: unset;
+}

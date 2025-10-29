@@ -97,3 +97,90 @@ function fhirTableInit(src) {
   fhirTableLoading = false;
 }
 
+function filterTree(table, text) {
+  if (!text) {
+     for (let i = 1; i < table.rows.length-1; i++) {
+      const row = table.rows[i];
+      row.style.display = '';
+      const cell = row.cells[4];
+      cell.style.display = '';
+    }
+  } else if (text.startsWith('.')) {
+    text = text.substring(1);
+    for (let i = 1; i < table.rows.length-1; i++) {
+      const row = table.rows[i];
+      let rowText = row.textContent || row.innerText
+      rowText = rowText.toLowerCase();
+
+      // Check if row contains the search text
+      if (rowText.includes(text)) {
+        let id = row.id;
+        while (id) {
+          document.getElementById(id).style.display = '';
+          id = id.substring(0, id.length - 1);
+        }
+      } else {
+        // Hide the row
+        row.style.display = 'none';
+      }
+    }
+  } else {
+    for (let i = 1; i < table.rows.length-1; i++) {
+      const row = table.rows[i];
+      const cell = row.cells[4];
+      let cellText = cell.textContent || cell.innerText
+      cellText = cellText.toLowerCase();
+
+      // Check if row contains the search text
+      if (cellText.includes(text)) {
+        // Show the row
+        cell.style.display = '';
+      } else {
+        // Hide the row
+        cell.style.display = 'none';
+      }
+    }
+  }
+}
+
+function filterDesc(table, prop, value, panel) {
+  let v = 'none';
+  if (value) {
+    v = '';
+  }
+  
+  panel.style.display = 'none';
+  localStorage.setItem('ht-table-states-'+prop, value);
+
+  for (let i = 1; i < table.rows.length-1; i++) {
+    const row = table.rows[i];
+    const cell = row.cells[4];
+    if (cell) {
+      for (let i = 0; i < cell.children.length; i++) {
+        const childElement = cell.children[i];
+        let classes = childElement.getAttribute('class');
+        if (classes.includes(prop)) {
+          childElement.style.display = v;
+        }
+      }
+    }
+  }
+}
+
+function hide() {
+  if (visiblePanel) {
+    visiblePanel.style.display = 'none';
+    visiblePanel = null;
+  }
+}
+
+function showPanel(button, table, panel) {
+  const rect1 = button.getBoundingClientRect();
+  panel.style.top = (rect1.bottom+10) + 'px';
+  panel.style.left = (rect1.left) + 'px';
+  panel.style.display = 'block';
+  visiblePanel = panel;
+  window.addEventListener('scroll', hide);
+  window.addEventListener('click', hide);
+  event.stopPropagation();
+}

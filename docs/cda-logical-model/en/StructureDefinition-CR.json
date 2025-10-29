@@ -1,0 +1,209 @@
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "CR",
+  "language" : "en",
+  "text" : {
+    "status" : "generated",
+    "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>A concept qualifier code with optionally named role. Both qualifier role and value codes must be defined by the coding system. For example, if SNOMED RT defines a concept &quot;leg&quot;, a role relation &quot;has-laterality&quot;, and another concept &quot;left&quot;, the concept role relation allows to add the qualifier &quot;has-laterality: left&quot; to a primary code &quot;leg&quot; to construct the meaning &quot;left leg&quot;.</p>\n    </div>"
+  },
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+    "_valueBoolean" : {
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+        "valueCode" : "not-applicable"
+      }]
+    }
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+    "valueUri" : "urn:hl7-org:v3"
+  },
+  {
+    "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-container",
+    "valueUri" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
+  }],
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/CR",
+  "version" : "2.0.0-sd-202510-matchbox-patch",
+  "name" : "CR",
+  "title" : "CR: ConceptRole (V3 Data Type)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2025-10-28T21:58:07+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "name" : "HL7 International - Structured Documents",
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    },
+    {
+      "system" : "email",
+      "value" : "structdog@lists.HL7.org"
+    }]
+  }],
+  "description" : "A concept qualifier code with optionally named role. Both qualifier role and value codes must be defined by the coding system of the CD containing the concept qualifier. For example, if SNOMED RT defines a concept \"leg\", a role relation \"has-laterality\", and another concept \"left\", the concept role relation allows to add the qualifier \"has-laterality: left\" to a primary code \"leg\" to construct the meaning \"left leg\".",
+  "fhirVersion" : "5.0.0",
+  "mapping" : [{
+    "identity" : "rim",
+    "uri" : "http://hl7.org/v3",
+    "name" : "RIM Mapping"
+  }],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/CR",
+  "baseDefinition" : "http://hl7.org/cda/stds/core/StructureDefinition/ANY",
+  "derivation" : "specialization",
+  "snapshot" : {
+    "extension" : [{
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/snapshot-base-version",
+      "valueString" : "2.0.0-sd-202510-matchbox-patch"
+    }],
+    "element" : [{
+      "id" : "CR",
+      "path" : "CR",
+      "short" : "Base for all types and resources",
+      "definition" : "A concept qualifier code with optionally named role. Both qualifier role and value codes must be defined by the coding system. For example, if SNOMED RT defines a concept \"leg\", a role relation \"has-laterality\", and another concept \"left\", the concept role relation allows to add the qualifier \"has-laterality: left\" to a primary code \"leg\" to construct the meaning \"left leg\".",
+      "min" : 1,
+      "max" : "*",
+      "base" : {
+        "path" : "Base",
+        "min" : 0,
+        "max" : "*"
+      },
+      "constraint" : [{
+        "key" : "value-null-cr",
+        "severity" : "error",
+        "human" : "Must contain value or nullFlavor. If nullFlavor is present, name and value must not be present.",
+        "expression" : "(value.exists() or nullFlavor.exists()) and (nullFlavor.exists() implies (name | value).empty())"
+      }],
+      "isModifier" : false,
+      "mapping" : [{
+        "identity" : "rim",
+        "map" : "n/a"
+      }]
+    },
+    {
+      "id" : "CR.nullFlavor",
+      "path" : "CR.nullFlavor",
+      "representation" : ["xmlAttr"],
+      "label" : "Exceptional Value Detail",
+      "definition" : "If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "ANY.nullFlavor",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "code",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+      }],
+      "binding" : {
+        "strength" : "required",
+        "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"
+      }
+    },
+    {
+      "id" : "CR.inverted",
+      "path" : "CR.inverted",
+      "representation" : ["xmlAttr"],
+      "label" : "Inversion Indicator",
+      "definition" : "Indicates if the sense of the role name is inverted. This can be used in cases where the underlying code system defines inversion but does not provide reciprocal pairs of role names. By default, inverted is false.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "CR.inverted",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "boolean",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/bn"]
+      }]
+    },
+    {
+      "id" : "CR.name",
+      "path" : "CR.name",
+      "label" : "Name",
+      "definition" : "Specifies the manner in which the concept role value contributes to the meaning of a code phrase. For example, if SNOMED RT defines a concept \"leg\", a role relation \"has-laterality\", and another concept \"left\", the concept role relation allows to add the qualifier \"has-laterality: left\" to a primary code \"leg\" to construct the meaning \"left leg\". In this example \"has-laterality\" is the CR.name.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "CR.name",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CV"
+      }]
+    },
+    {
+      "id" : "CR.value",
+      "path" : "CR.value",
+      "label" : "Value",
+      "definition" : "The concept that modifies the primary code of a code phrase through the role relation. For example, if SNOMED RT defines a concept \"leg\", a role relation \"has-laterality\", and another concept \"left\", the concept role relation allows adding the qualifier \"has-laterality: left\" to a primary code \"leg\" to construct the meaning \"left leg\". In this example \"left\" is the CR.value.",
+      "min" : 0,
+      "max" : "1",
+      "base" : {
+        "path" : "CR.value",
+        "min" : 0,
+        "max" : "1"
+      },
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CD"
+      }]
+    }]
+  },
+  "differential" : {
+    "element" : [{
+      "id" : "CR",
+      "path" : "CR",
+      "definition" : "A concept qualifier code with optionally named role. Both qualifier role and value codes must be defined by the coding system. For example, if SNOMED RT defines a concept \"leg\", a role relation \"has-laterality\", and another concept \"left\", the concept role relation allows to add the qualifier \"has-laterality: left\" to a primary code \"leg\" to construct the meaning \"left leg\".",
+      "min" : 1,
+      "max" : "*",
+      "constraint" : [{
+        "key" : "value-null-cr",
+        "severity" : "error",
+        "human" : "Must contain value or nullFlavor. If nullFlavor is present, name and value must not be present.",
+        "expression" : "(value.exists() or nullFlavor.exists()) and (nullFlavor.exists() implies (name | value).empty())"
+      }]
+    },
+    {
+      "id" : "CR.inverted",
+      "path" : "CR.inverted",
+      "representation" : ["xmlAttr"],
+      "label" : "Inversion Indicator",
+      "definition" : "Indicates if the sense of the role name is inverted. This can be used in cases where the underlying code system defines inversion but does not provide reciprocal pairs of role names. By default, inverted is false.",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "boolean",
+        "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/bn"]
+      }]
+    },
+    {
+      "id" : "CR.name",
+      "path" : "CR.name",
+      "label" : "Name",
+      "definition" : "Specifies the manner in which the concept role value contributes to the meaning of a code phrase. For example, if SNOMED RT defines a concept \"leg\", a role relation \"has-laterality\", and another concept \"left\", the concept role relation allows to add the qualifier \"has-laterality: left\" to a primary code \"leg\" to construct the meaning \"left leg\". In this example \"has-laterality\" is the CR.name.",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CV"
+      }]
+    },
+    {
+      "id" : "CR.value",
+      "path" : "CR.value",
+      "label" : "Value",
+      "definition" : "The concept that modifies the primary code of a code phrase through the role relation. For example, if SNOMED RT defines a concept \"leg\", a role relation \"has-laterality\", and another concept \"left\", the concept role relation allows adding the qualifier \"has-laterality: left\" to a primary code \"leg\" to construct the meaning \"left leg\". In this example \"left\" is the CR.value.",
+      "min" : 0,
+      "max" : "1",
+      "type" : [{
+        "code" : "http://hl7.org/cda/stds/core/StructureDefinition/CD"
+      }]
+    }]
+  }
+}

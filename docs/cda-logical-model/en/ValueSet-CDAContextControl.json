@@ -1,0 +1,46 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "CDAContextControl",
+  "language" : "en",
+  "text" : {
+    "status" : "extensions",
+    "div" : "<div xml:lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\"><p class=\"res-header-id\"><b>Generated Narrative: ValueSet CDAContextControl</b></p><a name=\"CDAContextControl\"> </a><a name=\"hcCDAContextControl\"> </a><div style=\"display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%\"><p style=\"margin-bottom: 0px\">Language: en</p></div><ul><li>Include these codes as defined in <a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ContextControl.html\"><code>http://terminology.hl7.org/CodeSystem/v3-ContextControl</code></a><span title=\"Version is not explicitly stated, which means it is fixed to 2.1.0, the version found through the package references\"> version &#x1F4E6;2.1.0</span><table class=\"none\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ContextControl.html#v3-ContextControl-AN\">AN</a></td><td style=\"color: #cccccc\">additive, non-propagating</td><td>The association adds to the existing context associated with the Act, but will not propagate to any descendant Acts reached by conducting ActRelationships (see contextControlCode). Examples: If an 'Author' Participation were marked as &quot;Additive, Non-Propagating&quot; it means that the author will be added to the set of author participations that have propagated from ancestor Acts for the purpose of this Act. However only the previously propagated authors will propagate to any child Acts that allow context to be propagated.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ContextControl.html#v3-ContextControl-AP\">AP</a></td><td style=\"color: #cccccc\">additive, propagating</td><td>The association adds to the existing context associated with the Act, and will propagate to any descendant Acts reached by conducting ActRelationships (see contextControlCode). Examples: If an 'Author' Participation were marked as &quot;Additive, Propagating&quot; it means that the author will be added to the set of author participations that have propagated from ancestor Acts, and will itself propagate with the other authors to any child Acts that allow context to be propagated.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ContextControl.html#v3-ContextControl-ON\">ON</a></td><td style=\"color: #cccccc\">overriding, non-propagating</td><td>The association is added to the existing context associated with the Act, but overrides an association with the same typeCode. However, this overriding association will not propagate to any descendant Acts reached by conducting ActRelationships (see contextControlCode). Examples: If an 'Author' Participation were marked as &quot;Overriding, Non-Propagating&quot; it means that the author will replace the set of author participations that have propagated from ancestor Acts. Furthermore, no author participations whatsoever will propagate to any child Acts that allow context to be propagated.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ContextControl.html#v3-ContextControl-OP\">OP</a></td><td style=\"color: #cccccc\">overriding, propagating</td><td>The association is added to the existing context associated with the Act, but overrides an association with the same typeCode. This overriding association will propagate to any descendant Acts reached by conducting ActRelationships (see contextControlCode). Examples: If an 'Author' Participation were marked as &quot;Overriding, Propagating&quot; it means that the author will replace the set of author participations that have propagated from ancestor Acts, and will itself be the only author to propagate to any child Acts that allow context to be propagated.</td></tr></table></li></ul></div>"
+  },
+  "url" : "http://hl7.org/cda/stds/core/ValueSet/CDAContextControl",
+  "version" : "2.0.0-sd-202510-matchbox-patch",
+  "name" : "CDAContextControl",
+  "title" : "CDAContextControl",
+  "status" : "draft",
+  "experimental" : false,
+  "date" : "2025-10-28T21:58:07+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [{
+    "name" : "HL7 International - Structured Documents",
+    "telecom" : [{
+      "system" : "url",
+      "value" : "http://www.hl7.org/Special/committees/structure"
+    },
+    {
+      "system" : "email",
+      "value" : "structdog@lists.HL7.org"
+    }]
+  }],
+  "description" : "A code that specifies how an ActRelationship or Participation contributes to the context of an Act, and whether it may be propagated to descendent Acts whose association allows such propagation.",
+  "compose" : {
+    "include" : [{
+      "system" : "http://terminology.hl7.org/CodeSystem/v3-ContextControl",
+      "concept" : [{
+        "code" : "AN"
+      },
+      {
+        "code" : "AP"
+      },
+      {
+        "code" : "ON"
+      },
+      {
+        "code" : "OP"
+      }]
+    }]
+  }
+}

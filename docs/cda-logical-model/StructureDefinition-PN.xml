@@ -24,12 +24,12 @@
     <valueUri value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/PN"/>
-  <version value="2.0.0-sd-202406-matchbox-patch"/>
+  <version value="2.0.1-sd-202510-matchbox-patch"/>
   <name value="PN"/>
   <title value="PN: PersonName (V3 Data Type)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2024-06-19T17:47:42+02:00"/>
+  <date value="2025-10-29T22:15:57+01:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
@@ -55,6 +55,9 @@
   <baseDefinition value="http://hl7.org/cda/stds/core/StructureDefinition/EN"/>
   <derivation value="specialization"/>
   <snapshot>
+    <extension url="http://hl7.org/fhir/tools/StructureDefinition/snapshot-base-version">
+      <valueString value="2.0.1-sd-202510-matchbox-patch"/>
+    </extension>
     <element id="PN">
       <path value="PN"/>
       <short value="Base for all types and resources"/>
@@ -126,7 +129,7 @@
       </extension>
       <path value="PN.item"/>
       <definition value="A series of items that constitute the name."/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="*"/>
       <base>
         <path value="EN.item"/>
@@ -255,7 +258,7 @@
     </element>
     <element id="PN.item">
       <path value="PN.item"/>
-      <min value="1"/>
+      <min value="0"/>
       <max value="*"/>
     </element>
   </differential>

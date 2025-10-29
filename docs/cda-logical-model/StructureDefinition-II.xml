@@ -21,12 +21,12 @@
     <valueUri value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
-  <version value="2.0.0-sd-202406-matchbox-patch"/>
+  <version value="2.0.1-sd-202510-matchbox-patch"/>
   <name value="II"/>
   <title value="II: InstanceIdentifier (V3 Data Type)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2024-06-19T17:47:42+02:00"/>
+  <date value="2025-10-29T22:15:57+01:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
@@ -52,6 +52,9 @@
   <baseDefinition value="http://hl7.org/cda/stds/core/StructureDefinition/ANY"/>
   <derivation value="specialization"/>
   <snapshot>
+    <extension url="http://hl7.org/fhir/tools/StructureDefinition/snapshot-base-version">
+      <valueString value="2.0.1-sd-202510-matchbox-patch"/>
+    </extension>
     <element id="II">
       <path value="II"/>
       <short value="Base for all types and resources"/>
@@ -63,6 +66,12 @@
         <min value="0"/>
         <max value="*"/>
       </base>
+      <constraint>
+        <key value="II-1"/>
+        <severity value="error"/>
+        <human value="An II instance must have either a root or an nullFlavor."/>
+        <expression value="root.exists() or nullFlavor.exists()"/>
+      </constraint>
       <isModifier value="false"/>
       <mapping>
         <identity value="rim"/>
@@ -167,6 +176,12 @@
       <definition value="An identifier that uniquely identifies a thing or object. Examples are object identifier for HL7 RIM objects, medical record number, order id, service catalog item id, Vehicle Identification Number (VIN), etc. Instance identifiers are defined based on ISO object identifiers."/>
       <min value="1"/>
       <max value="*"/>
+      <constraint>
+        <key value="II-1"/>
+        <severity value="error"/>
+        <human value="An II instance must have either a root or an nullFlavor."/>
+        <expression value="root.exists() or nullFlavor.exists()"/>
+      </constraint>
     </element>
     <element id="II.assigningAuthorityName">
       <path value="II.assigningAuthorityName"/>

@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ValueSet xmlns="http://hl7.org/fhir">
+  <id value="CDARoleCode"/>
+  <language value="en"/>
+  <text>
+    <status value="extensions"/><div xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><p class="res-header-id"><b>Generated Narrative: ValueSet CDARoleCode</b></p><a name="CDARoleCode"> </a><a name="hcCDARoleCode"> </a><div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%"><p style="margin-bottom: 0px">Language: en</p></div><ul><li>Include these codes as defined in <a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html"><code>http://terminology.hl7.org/CodeSystem/v3-RoleCode</code></a><span title="Version is not explicitly stated, which means it is fixed to 2.2.0, the version found through the package references"> version &#x1F4E6;2.2.0</span><table class="none"><tr><td style="white-space:nowrap"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-DX">DX</a></td><td style="color: #cccccc">Diagnostics or therapeutics unit</td><td>A practice setting where diagnostic procedures or therapeutic interventions are performed</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-CVDX">CVDX</a></td><td style="color: #cccccc">Cardiovascular diagnostics or therapeutics unit</td><td>A practice setting where cardiovascular diagnostic procedures or therapeutic interventions are performed (e.g., cardiac catheterization lab, echocardiography suite)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-CATH">CATH</a></td><td style="color: #cccccc">Cardiac catheterization lab</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-ECHO">ECHO</a></td><td style="color: #cccccc">Echocardiography lab</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-GIDX">GIDX</a></td><td style="color: #cccccc">Gastroenterology diagnostics or therapeutics lab</td><td>A practice setting where GI procedures (such as endoscopies) are performed</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-ENDOS">ENDOS</a></td><td style="color: #cccccc">Endoscopy lab</td><td>(X12N 261QD0000N)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-RADDX">RADDX</a></td><td style="color: #cccccc">Radiology diagnostics or therapeutics unit</td><td>A practice setting where radiology services (diagnostic or therapeutic) are provided (X12N 261QR0200N)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-RADO">RADO</a></td><td style="color: #cccccc">Radiation oncology unit</td><td>(X12N 261QX0203N)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-RNEU">RNEU</a></td><td style="color: #cccccc">Neuroradiology unit</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-HOSP">HOSP</a></td><td style="color: #cccccc">Hospital</td><td>An acute care institution that provides medical, surgical, or psychiatric care and treatment for the sick or the injured.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-CHR">CHR</a></td><td style="color: #cccccc">Chronic Care Facility</td><td>(1) A hospital including a physical plant and personnel that provides multidisciplinary diagnosis and treatment for diseases that have one or more of the following characteristics: is permanent; leaves residual disability; is caused by nonreversible pathological alteration; requires special training of the patient for rehabilitation; and/or may be expected to require a long period of supervision or care. In addition, patients require the safety, security, and shelter of these specialized inpatient or partial hospitalization settings. (2) A hospital that provides medical and skilled nursing services to patients with long-term illnesses who are not in an acute phase but who require an intensity of services not available in nursing homes</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-GACH">GACH</a></td><td style="color: #cccccc">Hospitals; General Acute Care Hospital</td><td>(X12N 282N00000N)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-MHSP">MHSP</a></td><td style="color: #cccccc">Military Hospital</td><td>A health care facility operated by the Department of Defense or other military operation.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PSYCHF">PSYCHF</a></td><td style="color: #cccccc">Psychatric Care Facility</td><td>Healthcare facility that cares for patients with psychiatric illness(s).</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-RH">RH</a></td><td style="color: #cccccc">Rehabilitation hospital</td><td>(X12N 283X00000N)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-RHAT">RHAT</a></td><td style="color: #cccccc">addiction treatment center</td><td>**Description:** A location that plays the role of delivering services which may include life training and/or social support to people with addictions.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-RHII">RHII</a></td><td style="color: #cccccc">intellectual impairment center</td><td>**Description:** A location that plays the role of delivering services which may include adaptation, rehabilitation and social integration services for people with intellectual and/or pervasive development disorders such as autism or severe behaviour disorder.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-RHMAD">RHMAD</a></td><td style="color: #cccccc">parents with adjustment difficulties center</td><td>**Description:** A location that plays the role of delivering services which may social support services for adolescents who are pregnant or have child and are experiencing adaptation issues/difficulties in their current or eventual parenting role.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-RHPI">RHPI</a></td><td style="color: #cccccc">physical impairment center</td><td>**Description:** A location that plays the role of delivering services which may include adaptation, rehabilitation and social integration services for people with physical impairments.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-RHPIH">RHPIH</a></td><td style="color: #cccccc">physical impairment - hearing center</td><td>**Description:** A location that plays the role of delivering services for people with hearing impairments.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-RHPIMS">RHPIMS</a></td><td style="color: #cccccc">physical impairment - motor skills center</td><td>**Description:** A location that plays the role of delivering services for people with motor skill impairments.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-RHPIVS">RHPIVS</a></td><td style="color: #cccccc">physical impairment - visual skills center</td><td>**Description:** A location that plays the role of delivering services for people with visual skill impairments.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-RHYAD">RHYAD</a></td><td style="color: #cccccc">youths with adjustment difficulties center</td><td>**Description:** A location that plays the role of delivering services which may include life training and/or social support services for the adaption, rehabilitation and social integration of youths with adjustment difficulties.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-HU">HU</a></td><td style="color: #cccccc">Hospital unit</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-BMTU">BMTU</a></td><td style="color: #cccccc">Bone marrow transplant unit</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-CCU">CCU</a></td><td style="color: #cccccc">Coronary care unit</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-CHEST">CHEST</a></td><td style="color: #cccccc">Chest unit</td><td>A specialty unit in hospital that focuses on chronic respirator patients and pulmonary failure</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-EPIL">EPIL</a></td><td style="color: #cccccc">Epilepsy unit</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-ER">ER</a></td><td style="color: #cccccc">Emergency room</td><td>The section of a health care facility for providing rapid treatment to victims of sudden illness or trauma.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-ETU">ETU</a></td><td style="color: #cccccc">Emergency trauma unit</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-HD">HD</a></td><td style="color: #cccccc">Hemodialysis unit</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-HLAB">HLAB</a></td><td style="color: #cccccc">hospital laboratory</td><td>**Description:** A location that plays the role of delivering services which may include tests done based on clinical specimens to get health information about a patient as pertaining to the diagnosis, treatment and prevention of disease. Hospital laboratories may be further divided into specialized units such as Anatomic Pathology, Microbiology, and Biochemistry.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-INLAB">INLAB</a></td><td style="color: #cccccc">inpatient laboratory</td><td>**Description:** A location that plays the role of delivering services which may include tests are done on clinical specimens to get health information about a patient pertaining to the diagnosis, treatment, and prevention of disease for a hospital visit longer than one day.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-OUTLAB">OUTLAB</a></td><td style="color: #cccccc">outpatient laboratory</td><td>**Description:** A location that plays the role of delivering services which may include tests are done on clinical specimens to get health information about a patient pertaining to the diagnosis, treatment, and prevention of disease for same day visits.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-HRAD">HRAD</a></td><td style="color: #cccccc">radiology unit</td><td>**Description:** A location that plays the role of delivering services which may include the branch of medicine that uses ionizing and non-ionizing radiation to diagnose and treat diseases. The radiology unit may be further divided into subspecialties such as Imaging, Cardiovascular, Thoracic, and Ultrasound.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-HUSCS">HUSCS</a></td><td style="color: #cccccc">specimen collection site</td><td>**Description:** A location that plays the role of delivering services which may include collecting specimens and/or samples from patients for laboratory testing purposes, but does not perform any tests or analysis functions.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-ICU">ICU</a></td><td style="color: #cccccc">Intensive care unit</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PEDICU">PEDICU</a></td><td style="color: #cccccc">Pediatric intensive care unit</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PEDNICU">PEDNICU</a></td><td style="color: #cccccc">Pediatric neonatal intensive care unit</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-INPHARM">INPHARM</a></td><td style="color: #cccccc">inpatient pharmacy</td><td>**Description:** A location that plays the role of delivering services which may include providing judicious, safe, efficacious, appropriate and cost effective use of medicines for treatment of patients for visits longer than one day. The distinction between inpatient pharmacies and retail (or outpatient) pharmacies is that they are part of a patient's continuity of care while staying in the hospital.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-MBL">MBL</a></td><td style="color: #cccccc">medical laboratory</td><td>**Description:** A location that plays the role of delivering services which include biochemistry, hematology, microbiology, immunochemistry, and toxicology.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-NCCS">NCCS</a></td><td style="color: #cccccc">Neurology critical care and stroke unit</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-NS">NS</a></td><td style="color: #cccccc">Neurosurgery unit</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-OUTPHARM">OUTPHARM</a></td><td style="color: #cccccc">outpatient pharmacy</td><td>**Description:** A location that plays the role of delivering services which may include providing judicious, safe, efficacious, appropriate and cost effective use of medicines for treatment of patients for outpatient visits and may also be used for discharge prescriptions.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PEDU">PEDU</a></td><td style="color: #cccccc">Pediatric unit</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PHU">PHU</a></td><td style="color: #cccccc">Psychiatric hospital unit</td><td>(X12N 273R00000N)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-RHU">RHU</a></td><td style="color: #cccccc">Rehabilitation hospital unit</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-SLEEP">SLEEP</a></td><td style="color: #cccccc">Sleep disorders unit</td><td>(X12N 261QA1200N)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-NCCF">NCCF</a></td><td style="color: #cccccc">Nursing or custodial care facility</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-SNF">SNF</a></td><td style="color: #cccccc">Skilled nursing facility</td><td>(X12N 314000000N)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-OF">OF</a></td><td style="color: #cccccc">Outpatient facility</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-ALL">ALL</a></td><td style="color: #cccccc">Allergy clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-AMPUT">AMPUT</a></td><td style="color: #cccccc">Amputee clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-BMTC">BMTC</a></td><td style="color: #cccccc">Bone marrow transplant clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-BREAST">BREAST</a></td><td style="color: #cccccc">Breast clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-CANC">CANC</a></td><td style="color: #cccccc">Child and adolescent neurology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-CAPC">CAPC</a></td><td style="color: #cccccc">Child and adolescent psychiatry clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-CARD">CARD</a></td><td style="color: #cccccc">Ambulatory Health Care Facilities; Clinic/Center; Rehabilitation: Cardiac Facilities</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PEDCARD">PEDCARD</a></td><td style="color: #cccccc">Pediatric cardiology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-COAG">COAG</a></td><td style="color: #cccccc">Coagulation clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-CRS">CRS</a></td><td style="color: #cccccc">Colon and rectal surgery clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-DERM">DERM</a></td><td style="color: #cccccc">Dermatology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-ENDO">ENDO</a></td><td style="color: #cccccc">Endocrinology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PEDE">PEDE</a></td><td style="color: #cccccc">Pediatric endocrinology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-ENT">ENT</a></td><td style="color: #cccccc">Otorhinolaryngology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-FMC">FMC</a></td><td style="color: #cccccc">Family medicine clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-GI">GI</a></td><td style="color: #cccccc">Gastroenterology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PEDGI">PEDGI</a></td><td style="color: #cccccc">Pediatric gastroenterology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-GIM">GIM</a></td><td style="color: #cccccc">General internal medicine clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-GYN">GYN</a></td><td style="color: #cccccc">Gynecology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-HEM">HEM</a></td><td style="color: #cccccc">Hematology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PEDHEM">PEDHEM</a></td><td style="color: #cccccc">Pediatric hematology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-HTN">HTN</a></td><td style="color: #cccccc">Hypertension clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-IEC">IEC</a></td><td style="color: #cccccc">Impairment evaluation center</td><td>Focuses on assessing disability</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-INFD">INFD</a></td><td style="color: #cccccc">Infectious disease clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PEDID">PEDID</a></td><td style="color: #cccccc">Pediatric infectious disease clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-INV">INV</a></td><td style="color: #cccccc">Infertility clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-LYMPH">LYMPH</a></td><td style="color: #cccccc">Lympedema clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-MGEN">MGEN</a></td><td style="color: #cccccc">Medical genetics clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-NEPH">NEPH</a></td><td style="color: #cccccc">Nephrology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PEDNEPH">PEDNEPH</a></td><td style="color: #cccccc">Pediatric nephrology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-NEUR">NEUR</a></td><td style="color: #cccccc">Neurology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-OB">OB</a></td><td style="color: #cccccc">Obstetrics clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-OMS">OMS</a></td><td style="color: #cccccc">Oral and maxillofacial surgery clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-ONCL">ONCL</a></td><td style="color: #cccccc">Medical oncology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PEDHO">PEDHO</a></td><td style="color: #cccccc">Pediatric oncology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-OPH">OPH</a></td><td style="color: #cccccc">Opthalmology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-OPTC">OPTC</a></td><td style="color: #cccccc">optometry clinic</td><td>**Description:** A location that plays the role of delivering services which may include examination, diagnosis, treatment, management, and prevention of diseases and disorders of the eye as well as prescribing and fitting appropriate corrective lenses (glasses or contact lenses) as needed. Optometry clinics may also provide tests for visual field screening, measuring intra-ocular pressure and ophthalmoscopy, as and when required.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-ORTHO">ORTHO</a></td><td style="color: #cccccc">Orthopedics clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-HAND">HAND</a></td><td style="color: #cccccc">Hand clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PAINCL">PAINCL</a></td><td style="color: #cccccc">Pain clinic</td><td>(X12N 261QP3300N)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PC">PC</a></td><td style="color: #cccccc">Primary care clinic</td><td>(X12N 261QP2300N)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PEDC">PEDC</a></td><td style="color: #cccccc">Pediatrics clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PEDRHEUM">PEDRHEUM</a></td><td style="color: #cccccc">Pediatric rheumatology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-POD">POD</a></td><td style="color: #cccccc">Podiatry clinic</td><td>(X12N 261QP1100N)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PREV">PREV</a></td><td style="color: #cccccc">Preventive medicine clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PROCTO">PROCTO</a></td><td style="color: #cccccc">Proctology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PROFF">PROFF</a></td><td style="color: #cccccc">Provider's Office</td><td>Location where healthcare service was delivered, identified as the healthcare provider's practice office.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PROS">PROS</a></td><td style="color: #cccccc">Prosthodontics clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PSI">PSI</a></td><td style="color: #cccccc">Psychology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PSY">PSY</a></td><td style="color: #cccccc">Psychiatry clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-RHEUM">RHEUM</a></td><td style="color: #cccccc">Rheumatology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-SPMED">SPMED</a></td><td style="color: #cccccc">Sports medicine clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-SU">SU</a></td><td style="color: #cccccc">Surgery clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PLS">PLS</a></td><td style="color: #cccccc">Plastic surgery clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-URO">URO</a></td><td style="color: #cccccc">Urology clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-TR">TR</a></td><td style="color: #cccccc">Transplant clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-TRAVEL">TRAVEL</a></td><td style="color: #cccccc">Travel and geographic medicine clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-WND">WND</a></td><td style="color: #cccccc">Wound clinic</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-RTF">RTF</a></td><td style="color: #cccccc">Residential treatment facility</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PRC">PRC</a></td><td style="color: #cccccc">Pain rehabilitation center</td><td/></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-SURF">SURF</a></td><td style="color: #cccccc">Substance use rehabilitation facility</td><td>(X12N 324500000N)</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-DADDR">DADDR</a></td><td style="color: #cccccc">Delivery Address</td><td>Location address where medical supplies were transported to for use.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-MOBL">MOBL</a></td><td style="color: #cccccc">Mobile Unit</td><td>Location (mobile) where healthcare service was delivered.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-AMB">AMB</a></td><td style="color: #cccccc">Ambulance</td><td>Location (mobile) where healthcare service was delivered, identified specifically as an ambulance.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PHARM">PHARM</a></td><td style="color: #cccccc">Pharmacy</td><td>Location where healthcare service was delivered, identified as a pharmacy.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-ACC">ACC</a></td><td style="color: #cccccc">accident site</td><td>Location of an accident where healthcare service was delivered, such as a roadside.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-COMM">COMM</a></td><td style="color: #cccccc">Community Location</td><td>Community location where healthcare is delivered.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-CSC">CSC</a></td><td style="color: #cccccc">community service center</td><td>**Description:** A location that plays the role of delivering services which may include providing front-line services to the population of a defined geographic area such as: healthcare services and social services, preventive or curative, rehabilitation or reintegration.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-PTRES">PTRES</a></td><td style="color: #cccccc">Patient's Residence</td><td>location where healthcare was delivered which is the residence of the Patient.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-SCHOOL">SCHOOL</a></td><td style="color: #cccccc">school</td><td>Location where healthcare service was delivered, identified as a school or educational facility.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-UPC">UPC</a></td><td style="color: #cccccc">underage protection center</td><td>**Description:** A location that plays the role of delivering services which may include: social emergency services required for a young person as required under any jurisdictional youth laws, child placement, and family mediation in the defined geographical area the SDL is responsible for. It may provide expertise in a judiciary setting on child custody, adoption and biological history research.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleCode.html#v3-RoleCode-WORK">WORK</a></td><td style="color: #cccccc">work site</td><td>Location where healthcare service was delivered, identified as a work place.</td></tr></table></li></ul></div>
+  </text>
+  <url value="http://hl7.org/cda/stds/core/ValueSet/CDARoleCode"/>
+  <version value="2.0.0-sd-202510-matchbox-patch"/>
+  <name value="CDARoleCode"/>
+  <title value="CDARoleCode"/>
+  <status value="draft"/>
+  <experimental value="false"/>
+  <date value="2025-10-28T21:58:07+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <name value="HL7 International - Structured Documents"/>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+    <telecom>
+      <system value="email"/>
+      <value value="structdog@lists.HL7.org"/>
+    </telecom>
+  </contact>
+  <description value="A set of codes further specifying the kind of Role; specific classification codes for further qualifying RoleClass codes."/>
+  <compose>
+    <include>
+      <system value="http://terminology.hl7.org/CodeSystem/v3-RoleCode"/>
+      <concept>
+        <code value="DX"/>
+      </concept>
+      <concept>
+        <code value="CVDX"/>
+      </concept>
+      <concept>
+        <code value="CATH"/>
+      </concept>
+      <concept>
+        <code value="ECHO"/>
+      </concept>
+      <concept>
+        <code value="GIDX"/>
+      </concept>
+      <concept>
+        <code value="ENDOS"/>
+      </concept>
+      <concept>
+        <code value="RADDX"/>
+      </concept>
+      <concept>
+        <code value="RADO"/>
+      </concept>
+      <concept>
+        <code value="RNEU"/>
+      </concept>
+      <concept>
+        <code value="HOSP"/>
+      </concept>
+      <concept>
+        <code value="CHR"/>
+      </concept>
+      <concept>
+        <code value="GACH"/>
+      </concept>
+      <concept>
+        <code value="MHSP"/>
+      </concept>
+      <concept>
+        <code value="PSYCHF"/>
+      </concept>
+      <concept>
+        <code value="RH"/>
+      </concept>
+      <concept>
+        <code value="RHAT"/>
+      </concept>
+      <concept>
+        <code value="RHII"/>
+      </concept>
+      <concept>
+        <code value="RHMAD"/>
+      </concept>
+      <concept>
+        <code value="RHPI"/>
+      </concept>
+      <concept>
+        <code value="RHPIH"/>
+      </concept>
+      <concept>
+        <code value="RHPIMS"/>
+      </concept>
+      <concept>
+        <code value="RHPIVS"/>
+      </concept>
+      <concept>
+        <code value="RHYAD"/>
+      </concept>
+      <concept>
+        <code value="HU"/>
+      </concept>
+      <concept>
+        <code value="BMTU"/>
+      </concept>
+      <concept>
+        <code value="CCU"/>
+      </concept>
+      <concept>
+        <code value="CHEST"/>
+      </concept>
+      <concept>
+        <code value="EPIL"/>
+      </concept>
+      <concept>
+        <code value="ER"/>
+      </concept>
+      <concept>
+        <code value="ETU"/>
+      </concept>
+      <concept>
+        <code value="HD"/>
+      </concept>
+      <concept>
+        <code value="HLAB"/>
+      </concept>
+      <concept>
+        <code value="INLAB"/>
+      </concept>
+      <concept>
+        <code value="OUTLAB"/>
+      </concept>
+      <concept>
+        <code value="HRAD"/>
+      </concept>
+      <concept>
+        <code value="HUSCS"/>
+      </concept>
+      <concept>
+        <code value="ICU"/>
+      </concept>
+      <concept>
+        <code value="PEDICU"/>
+      </concept>
+      <concept>
+        <code value="PEDNICU"/>
+      </concept>
+      <concept>
+        <code value="INPHARM"/>
+      </concept>
+      <concept>
+        <code value="MBL"/>
+      </concept>
+      <concept>
+        <code value="NCCS"/>
+      </concept>
+      <concept>
+        <code value="NS"/>
+      </concept>
+      <concept>
+        <code value="OUTPHARM"/>
+      </concept>
+      <concept>
+        <code value="PEDU"/>
+      </concept>
+      <concept>
+        <code value="PHU"/>
+      </concept>
+      <concept>
+        <code value="RHU"/>
+      </concept>
+      <concept>
+        <code value="SLEEP"/>
+      </concept>
+      <concept>
+        <code value="NCCF"/>
+      </concept>
+      <concept>
+        <code value="SNF"/>
+      </concept>
+      <concept>
+        <code value="OF"/>
+      </concept>
+      <concept>
+        <code value="ALL"/>
+      </concept>
+      <concept>
+        <code value="AMPUT"/>
+      </concept>
+      <concept>
+        <code value="BMTC"/>
+      </concept>
+      <concept>
+        <code value="BREAST"/>
+      </concept>
+      <concept>
+        <code value="CANC"/>
+      </concept>
+      <concept>
+        <code value="CAPC"/>
+      </concept>
+      <concept>
+        <code value="CARD"/>
+      </concept>
+      <concept>
+        <code value="PEDCARD"/>
+      </concept>
+      <concept>
+        <code value="COAG"/>
+      </concept>
+      <concept>
+        <code value="CRS"/>
+      </concept>
+      <concept>
+        <code value="DERM"/>
+      </concept>
+      <concept>
+        <code value="ENDO"/>
+      </concept>
+      <concept>
+        <code value="PEDE"/>
+      </concept>
+      <concept>
+        <code value="ENT"/>
+      </concept>
+      <concept>
+        <code value="FMC"/>
+      </concept>
+      <concept>
+        <code value="GI"/>
+      </concept>
+      <concept>
+        <code value="PEDGI"/>
+      </concept>
+      <concept>
+        <code value="GIM"/>
+      </concept>
+      <concept>
+        <code value="GYN"/>
+      </concept>
+      <concept>
+        <code value="HEM"/>
+      </concept>
+      <concept>
+        <code value="PEDHEM"/>
+      </concept>
+      <concept>
+        <code value="HTN"/>
+      </concept>
+      <concept>
+        <code value="IEC"/>
+      </concept>
+      <concept>
+        <code value="INFD"/>
+      </concept>
+      <concept>
+        <code value="PEDID"/>
+      </concept>
+      <concept>
+        <code value="INV"/>
+      </concept>
+      <concept>
+        <code value="LYMPH"/>
+      </concept>
+      <concept>
+        <code value="MGEN"/>
+      </concept>
+      <concept>
+        <code value="NEPH"/>
+      </concept>
+      <concept>
+        <code value="PEDNEPH"/>
+      </concept>
+      <concept>
+        <code value="NEUR"/>
+      </concept>
+      <concept>
+        <code value="OB"/>
+      </concept>
+      <concept>
+        <code value="OMS"/>
+      </concept>
+      <concept>
+        <code value="ONCL"/>
+      </concept>
+      <concept>
+        <code value="PEDHO"/>
+      </concept>
+      <concept>
+        <code value="OPH"/>
+      </concept>
+      <concept>
+        <code value="OPTC"/>
+      </concept>
+      <concept>
+        <code value="ORTHO"/>
+      </concept>
+      <concept>
+        <code value="HAND"/>
+      </concept>
+      <concept>
+        <code value="PAINCL"/>
+      </concept>
+      <concept>
+        <code value="PC"/>
+      </concept>
+      <concept>
+        <code value="PEDC"/>
+      </concept>
+      <concept>
+        <code value="PEDRHEUM"/>
+      </concept>
+      <concept>
+        <code value="POD"/>
+      </concept>
+      <concept>
+        <code value="PREV"/>
+      </concept>
+      <concept>
+        <code value="PROCTO"/>
+      </concept>
+      <concept>
+        <code value="PROFF"/>
+      </concept>
+      <concept>
+        <code value="PROS"/>
+      </concept>
+      <concept>
+        <code value="PSI"/>
+      </concept>
+      <concept>
+        <code value="PSY"/>
+      </concept>
+      <concept>
+        <code value="RHEUM"/>
+      </concept>
+      <concept>
+        <code value="SPMED"/>
+      </concept>
+      <concept>
+        <code value="SU"/>
+      </concept>
+      <concept>
+        <code value="PLS"/>
+      </concept>
+      <concept>
+        <code value="URO"/>
+      </concept>
+      <concept>
+        <code value="TR"/>
+      </concept>
+      <concept>
+        <code value="TRAVEL"/>
+      </concept>
+      <concept>
+        <code value="WND"/>
+      </concept>
+      <concept>
+        <code value="RTF"/>
+      </concept>
+      <concept>
+        <code value="PRC"/>
+      </concept>
+      <concept>
+        <code value="SURF"/>
+      </concept>
+      <concept>
+        <code value="DADDR"/>
+      </concept>
+      <concept>
+        <code value="MOBL"/>
+      </concept>
+      <concept>
+        <code value="AMB"/>
+      </concept>
+      <concept>
+        <code value="PHARM"/>
+      </concept>
+      <concept>
+        <code value="ACC"/>
+      </concept>
+      <concept>
+        <code value="COMM"/>
+      </concept>
+      <concept>
+        <code value="CSC"/>
+      </concept>
+      <concept>
+        <code value="PTRES"/>
+      </concept>
+      <concept>
+        <code value="SCHOOL"/>
+      </concept>
+      <concept>
+        <code value="UPC"/>
+      </concept>
+      <concept>
+        <code value="WORK"/>
+      </concept>
+    </include>
+  </compose>
+</ValueSet>

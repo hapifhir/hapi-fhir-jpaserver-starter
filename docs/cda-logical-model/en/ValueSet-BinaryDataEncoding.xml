@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ValueSet xmlns="http://hl7.org/fhir">
+  <id value="BinaryDataEncoding"/>
+  <language value="en"/>
+  <text>
+    <status value="generated"/><div xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><p class="res-header-id"><b>Generated Narrative: ValueSet BinaryDataEncoding</b></p><a name="BinaryDataEncoding"> </a><a name="hcBinaryDataEncoding"> </a><div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%"><p style="margin-bottom: 0px">Language: en</p></div><ul><li>Include all codes defined in <a href="CodeSystem-BinaryDataEncoding.html"><code>http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding</code></a><span title="Version is not explicitly stated, which means it is fixed to the version provided in this specification"> version &#x1F4E6;2.0.0-sd-202510-matchbox-patch</span></li></ul></div>
+  </text>
+  <url value="http://hl7.org/cda/stds/core/ValueSet/BinaryDataEncoding"/>
+  <version value="2.0.0-sd-202510-matchbox-patch"/>
+  <name value="BinaryDataEncoding"/>
+  <title value="CDABinaryDataEncoding"/>
+  <status value="draft"/>
+  <experimental value="false"/>
+  <date value="2025-10-28T21:58:07+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <name value="HL7 International - Structured Documents"/>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+    <telecom>
+      <system value="email"/>
+      <value value="structdog@lists.HL7.org"/>
+    </telecom>
+  </contact>
+  <description value="Identifies the representation of binary data in a text field"/>
+  <compose>
+    <include>
+      <system value="http://hl7.org/cda/stds/core/CodeSystem/BinaryDataEncoding"/>
+    </include>
+  </compose>
+</ValueSet>

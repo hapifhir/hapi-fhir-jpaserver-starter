@@ -10,7 +10,8 @@
 "ClinicalDocument.realmCode","ClinicalDocument.realmCode","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CS {[]} {[]}
 ","","When valued in an instance, this attribute signals the imposition of realm-specific constraints. The value of this attribute identifies the realm in question","","","","","","","","","",,,,,"",,,,"ClinicalDocument.realmCode",0,*,"",""
 "ClinicalDocument.typeId","ClinicalDocument.typeId","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
-","","ClinicalDocument.typeId is a technology-neutral explicit reference to this CDA, Release Two specification, and must be valued as follows: ClinicalDocument.typeId.root = ""2.16.840.1.113883.1.3"" (which is the OID for HL7 Registered models); ClinicalDocument.typeId.extension = ""POCD_HD000040"" (which is the unique identifier for the CDA, Release Two Hierarchical Description).","","","","","","","","","",,,,,"",,,,"ClinicalDocument.typeId",0,1,"",""
+","","ClinicalDocument.typeId is a technology-neutral explicit reference to this CDA, Release Two specification, and must be valued as follows: ClinicalDocument.typeId.root = ""2.16.840.1.113883.1.3"" (which is the OID for HL7 Registered models); ClinicalDocument.typeId.extension = ""POCD_HD000040"" (which is the unique identifier for the CDA, Release Two Hierarchical Description).","","","","","","","","","",,,,,"",,,,"ClinicalDocument.typeId",0,1,"","II-1:An II instance must have either a root or an nullFlavor. {root.exists() or nullFlavor.exists()}
+"
 "ClinicalDocument.typeId.nullFlavor","ClinicalDocument.typeId.nullFlavor","","","Exceptional Value Detail",0,1,"","","","code {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/cs-simple]]} {[]}
 ","","If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing.","","","","","","","","","",,"required","","http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor","",,,,"ANY.nullFlavor",0,1,"",""
 "ClinicalDocument.typeId.assigningAuthorityName","ClinicalDocument.typeId.assigningAuthorityName","","","Assigning Authority Name",0,1,"","","","string {[CanonicalType[http://hl7.org/cda/stds/core/StructureDefinition/st-simple]]} {[]}
@@ -25,6 +26,8 @@
 ","","When valued in an instance, this attribute signals the imposition of a set of template-defined constraints. The value of this attribute provides a unique identifier for the templates in question","","","","","","","","","",,,,,"",,,,"ClinicalDocument.templateId",0,*,"",""
 "ClinicalDocument.id","ClinicalDocument.id","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/II {[]} {[]}
 ","","","","","","","","","","","",,,,,"",,,,"ClinicalDocument.id",1,1,"",""
+"ClinicalDocument.sdtcCategory","ClinicalDocument.sdtcCategory","","","",0,*,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CD {[]} {[]}
+","","","","","","","","","","","",,,,,"",,,,"ClinicalDocument.sdtcCategory",0,*,"",""
 "ClinicalDocument.code","ClinicalDocument.code","","","",1,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/CE {[]} {[]}
 ","","","","","","","","","","","",,"example","","http://hl7.org/fhir/ValueSet/doc-typecodes","",,,,"ClinicalDocument.code",1,1,"",""
 "ClinicalDocument.title","ClinicalDocument.title","","","",0,1,"","","","http://hl7.org/cda/stds/core/StructureDefinition/ST {[]} {[]}

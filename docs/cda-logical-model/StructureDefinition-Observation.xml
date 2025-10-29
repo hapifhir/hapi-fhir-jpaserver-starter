@@ -25,15 +25,15 @@
     <valueUri value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
   </extension>
   <extension url="http://hl7.org/fhir/tools/StructureDefinition/type-profile-style">
-    <valueUri value="cda"/>
+    <valueCode value="cda"/>
   </extension>
   <url value="http://hl7.org/cda/stds/core/StructureDefinition/Observation"/>
-  <version value="2.0.0-sd-202406-matchbox-patch"/>
+  <version value="2.0.1-sd-202510-matchbox-patch"/>
   <name value="Observation"/>
   <title value="Observation (CDA Class)"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2024-06-19T17:47:42+02:00"/>
+  <date value="2025-10-29T22:15:57+01:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
@@ -59,6 +59,9 @@
   <baseDefinition value="http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"/>
   <derivation value="specialization"/>
   <snapshot>
+    <extension url="http://hl7.org/fhir/tools/StructureDefinition/snapshot-base-version">
+      <valueString value="2.0.1-sd-202510-matchbox-patch"/>
+    </extension>
     <element id="Observation">
       <path value="Observation"/>
       <short value="Base for all types and resources"/>
@@ -124,6 +127,13 @@
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
+      <constraint>
+        <key value="II-1"/>
+        <severity value="error"/>
+        <human value="An II instance must have either a root or an nullFlavor."/>
+        <expression value="root.exists() or nullFlavor.exists()"/>
+        <source value="http://hl7.org/cda/stds/core/StructureDefinition/InfrastructureRoot"/>
+      </constraint>
     </element>
     <element id="Observation.typeId.nullFlavor">
       <path value="Observation.typeId.nullFlavor"/>
@@ -297,6 +307,25 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
+    <element id="Observation.sdtcCategory">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
+        <valueString value="category"/>
+      </extension>
+      <path value="Observation.sdtcCategory"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="Observation.sdtcCategory"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CD"/>
+      </type>
+    </element>
     <element id="Observation.code">
       <path value="Observation.code"/>
       <representation value="typeAttr"/>
@@ -430,18 +459,6 @@
         <max value="*"/>
       </base>
       <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ANY"/>
-      </type>
-      <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/BL"/>
-      </type>
-      <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ED"/>
-      </type>
-      <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ST"/>
-      </type>
-      <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CD"/>
       </type>
       <type>
@@ -452,6 +469,9 @@
       </type>
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ST-dot-r2b"/>
       </type>
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CO"/>
@@ -472,19 +492,43 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/EN"/>
       </type>
       <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/INT"/>
-      </type>
-      <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/REAL"/>
       </type>
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/PQ"/>
       </type>
       <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ST"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/BL"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ED"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/INT"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/INT-POS"/>
+      </type>
+      <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/MO"/>
       </type>
       <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ON"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/PN"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/TN"/>
+      </type>
+      <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/TS"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/IVL-INT"/>
       </type>
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/IVL-PQ"/>
@@ -751,6 +795,12 @@
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
+      <constraint>
+        <key value="II-1"/>
+        <severity value="error"/>
+        <human value="An II instance must have either a root or an nullFlavor."/>
+        <expression value="root.exists() or nullFlavor.exists()"/>
+      </constraint>
     </element>
     <element id="Observation.referenceRange.typeId.nullFlavor">
       <path value="Observation.referenceRange.typeId.nullFlavor"/>
@@ -963,6 +1013,20 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/II"/>
       </type>
     </element>
+    <element id="Observation.sdtcCategory">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+        <valueUri value="urn:hl7-org:sdtc"/>
+      </extension>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-name">
+        <valueString value="category"/>
+      </extension>
+      <path value="Observation.sdtcCategory"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/CD"/>
+      </type>
+    </element>
     <element id="Observation.code">
       <path value="Observation.code"/>
       <representation value="typeAttr"/>
@@ -1051,18 +1115,6 @@
       <min value="0"/>
       <max value="*"/>
       <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ANY"/>
-      </type>
-      <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/BL"/>
-      </type>
-      <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ED"/>
-      </type>
-      <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ST"/>
-      </type>
-      <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CD"/>
       </type>
       <type>
@@ -1073,6 +1125,9 @@
       </type>
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CS"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ST-dot-r2b"/>
       </type>
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/CO"/>
@@ -1093,19 +1148,43 @@
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/EN"/>
       </type>
       <type>
-        <code value="http://hl7.org/cda/stds/core/StructureDefinition/INT"/>
-      </type>
-      <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/REAL"/>
       </type>
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/PQ"/>
       </type>
       <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ST"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/BL"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ED"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/INT"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/INT-POS"/>
+      </type>
+      <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/MO"/>
       </type>
       <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ON"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/PN"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/TN"/>
+      </type>
+      <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/TS"/>
+      </type>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/IVL-INT"/>
       </type>
       <type>
         <code value="http://hl7.org/cda/stds/core/StructureDefinition/IVL-PQ"/>

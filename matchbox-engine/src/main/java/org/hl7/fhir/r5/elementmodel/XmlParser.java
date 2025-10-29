@@ -87,6 +87,7 @@ import org.hl7.fhir.utilities.xhtml.XhtmlParser;
 import org.hl7.fhir.utilities.xml.IXMLWriter;
 import org.hl7.fhir.utilities.xml.XMLUtil;
 import org.hl7.fhir.utilities.xml.XMLWriter;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.ErrorHandler;
@@ -341,10 +342,20 @@ public class XmlParser extends ParserBase {
     return result;
   }
 
+  // matchbox patch: Datatype ST.r2b #439
+  public static String getXsiType(org.w3c.dom.Element element) {
+    Attr a = element.getAttributeNodeNS("http://www.w3.org/2001/XMLSchema-instance", "type");
+    String xsiType = (a == null ? null : a.getTextContent());
+    if (xsiType != null && xsiType.contains("."))
+      xsiType = xsiType.replace(".", "_dot_");
+    return xsiType;
+  }
+
   private void parseChildren(List<ValidationMessage> errors, String path, org.w3c.dom.Element node, Element element) throws FHIRFormatError, FHIRException, IOException, DefinitionException {
     // this parsing routine retains the original order in a the XML file, to support validation
     reapComments(node, element);
-    List<Property> properties = element.getProperty().getChildProperties(element.getName(), XMLUtil.getXsiType(node));
+    // matchbox-patch: Datatype ST.r2b #439
+    List<Property> properties = element.getProperty().getChildProperties(element.getName(), getXsiType(node));
     Property cgProp = getChoiceGroupProp(properties);
     Property mtProp = cgProp == null ? null : getTextProp(cgProp.getChildProperties(null, null));
 
@@ -498,6 +509,9 @@ public class XmlParser extends ParserBase {
                 } else {
                   if (xsiType.contains(":"))
                     xsiType = xsiType.substring(xsiType.indexOf(":")+1);
+                   // matchbox patch: Datatype ST.r2b #439
+                  if (xsiType.contains("."))
+                    xsiType = xsiType.replace(".", "_dot_");
                   n.setType(xsiType);
                   n.setExplicitType(xsiType);
                 }

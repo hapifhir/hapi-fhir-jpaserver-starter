@@ -1,0 +1,264 @@
+# ED: EncapsulatedData (V3 Data Type) - Clinical Document Architecture v2.0.1-sd-202510-matchbox-patch
+
+* [**Table of Contents**](toc.md)
+* [**Artifacts Summary**](artifacts.md)
+* **ED: EncapsulatedData (V3 Data Type)**
+
+## Logical Model: ED: EncapsulatedData (V3 Data Type) 
+
+| | |
+| :--- | :--- |
+| *Official URL*:http://hl7.org/cda/stds/core/StructureDefinition/ED | *Version*:2.0.1-sd-202510-matchbox-patch |
+| Active as of 2025-10-29 | *Computable Name*:ED |
+
+ 
+Data that is primarily intended for human interpretation or for further machine processing outside the scope of HL7. This includes unformatted or formatted written language, multimedia data, or structured information in as defined by a different standard (e.g., XML-signatures.) Instead of the data itself, an may contain only a reference (see .) Note that the data type is a specialization of the data type when the media type is text/plain. 
+
+**Usages:**
+
+* Use this Logical Model: [Act (CDA Class)](StructureDefinition-Act.md), [Authenticator (CDA Class)](StructureDefinition-Authenticator.md), [CD: ConceptDescriptor (V3 Data Type)](StructureDefinition-CD.md), [Criterion (CDA Class)](StructureDefinition-Criterion.md)...Show 22 more,[ED: EncapsulatedData (V3 Data Type)](StructureDefinition-ED.md),[Encounter (CDA Class)](StructureDefinition-Encounter.md),[Entity (CDA Class)](StructureDefinition-Entity.md),[ExternalAct (CDA Class)](StructureDefinition-ExternalAct.md),[ExternalDocument (CDA Class)](StructureDefinition-ExternalDocument.md),[ExternalObservation (CDA Class)](StructureDefinition-ExternalObservation.md),[ExternalProcedure (CDA Class)](StructureDefinition-ExternalProcedure.md),[LabCriterion (CDA Class)](StructureDefinition-LabCriterion.md),[LegalAuthenticator (CDA Class)](StructureDefinition-LegalAuthenticator.md),[NonXMLBody (CDA Class)](StructureDefinition-NonXMLBody.md),[Observation (CDA Class)](StructureDefinition-Observation.md),[ObservationMedia (CDA Class)](StructureDefinition-ObservationMedia.md),[ObservationRange (CDA Class)](StructureDefinition-ObservationRange.md),[Organizer (CDA Class)](StructureDefinition-Organizer.md),[ParentDocument (CDA Class)](StructureDefinition-ParentDocument.md),[Patient (CDA Class)](StructureDefinition-Patient.md),[Person (CDA Class)](StructureDefinition-Person.md),[PlayingEntity (CDA Class)](StructureDefinition-PlayingEntity.md),[Procedure (CDA Class)](StructureDefinition-Procedure.md),[SubjectPerson (CDA Class)](StructureDefinition-SubjectPerson.md),[SubstanceAdministration (CDA Class)](StructureDefinition-SubstanceAdministration.md)and[Supply (CDA Class)](StructureDefinition-Supply.md)
+
+You can also check for [usages in the FHIR IG Statistics](https://packages2.fhir.org/xig/hl7.cda.uv.core|current/StructureDefinition/ED)
+
+### Formal Views of Template Content
+
+ [Description of Template, Differentials, Snapshots and how the different presentations work](http://hl7.org/fhir/R5/profiling.html#presentation). 
+
+ 
+
+Other representations of profile: [CSV](StructureDefinition-ED.csv), [Excel](StructureDefinition-ED.xlsx) 
+
+
+
+## Resource Content
+
+```json
+{
+  "resourceType" : "StructureDefinition",
+  "id" : "ED",
+  "extension" : [
+    {
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-target",
+      "_valueBoolean" : {
+        "extension" : [
+          {
+            "url" : "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+            "valueCode" : "not-applicable"
+          }
+        ]
+      }
+    },
+    {
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/xml-namespace",
+      "valueUri" : "urn:hl7-org:v3"
+    },
+    {
+      "url" : "http://hl7.org/fhir/tools/StructureDefinition/logical-container",
+      "valueUri" : "http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"
+    }
+  ],
+  "url" : "http://hl7.org/cda/stds/core/StructureDefinition/ED",
+  "version" : "2.0.1-sd-202510-matchbox-patch",
+  "name" : "ED",
+  "title" : "ED: EncapsulatedData (V3 Data Type)",
+  "status" : "active",
+  "experimental" : false,
+  "date" : "2025-10-29T22:15:57+01:00",
+  "publisher" : "Health Level 7",
+  "contact" : [
+    {
+      "name" : "HL7 International - Structured Documents",
+      "telecom" : [
+        {
+          "system" : "url",
+          "value" : "http://www.hl7.org/Special/committees/structure"
+        },
+        {
+          "system" : "email",
+          "value" : "structdog@lists.HL7.org"
+        }
+      ]
+    }
+  ],
+  "description" : "Data that is primarily intended for human interpretation or for further machine processing outside the scope of HL7. This includes unformatted or formatted written language, multimedia data, or structured information in as defined by a different standard (e.g., XML-signatures.) Instead of the data itself, an may contain only a reference (see .) Note that the data type is a specialization of the data type when the media type is text/plain.",
+  "fhirVersion" : "5.0.0",
+  "mapping" : [
+    {
+      "identity" : "rim",
+      "uri" : "http://hl7.org/v3",
+      "name" : "RIM Mapping"
+    }
+  ],
+  "kind" : "logical",
+  "abstract" : false,
+  "type" : "http://hl7.org/cda/stds/core/StructureDefinition/ED",
+  "baseDefinition" : "http://hl7.org/cda/stds/core/StructureDefinition/ANY",
+  "derivation" : "specialization",
+  "differential" : {
+    "element" : [
+      {
+        "id" : "ED",
+        "path" : "ED",
+        "definition" : "Data that is primarily intended for human interpretation or for further machine processing is outside the scope of HL7. This includes unformatted or formatted written language, multimedia data, or structured information as defined by a different standard (e.g., XML-signatures.) Instead of the data itself, an ED may contain only a reference (see TEL.) Note that the ST data type is a specialization of when the is text/plain.",
+        "min" : 1,
+        "max" : "*",
+        "constraint" : [
+          {
+            "key" : "ed-base64",
+            "severity" : "error",
+            "human" : "If @representation='B64', then xmlText SHALL be a base64binary string.",
+            "expression" : "(representation.empty() or representation != 'B64') or xmlText.empty() or xmlText.matches('^(?:[A-Za-z0-9+//]{4})*(?:[A-Za-z0-9+//]{2}==|[A-Za-z0-9+//]{3}=)?$')"
+          }
+        ]
+      },
+      {
+        "id" : "ED.compression",
+        "path" : "ED.compression",
+        "representation" : ["xmlAttr"],
+        "label" : "Compression",
+        "definition" : "Indicates whether the raw byte data is compressed, and what compression algorithm was used.",
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "code",
+            "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+          }
+        ],
+        "binding" : {
+          "strength" : "required",
+          "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/CDACompressionAlgorithm"
+        }
+      },
+      {
+        "id" : "ED.integrityCheck",
+        "path" : "ED.integrityCheck",
+        "representation" : ["xmlAttr"],
+        "label" : "Integrity Check",
+        "definition" : "The integrity check is a short binary value representing a cryptographically strong checksum that is calculated over the binary data. The purpose of this property, when communicated with a reference is for anyone to validate later whether the reference still resolved to the same data that the reference resolved to when the encapsulated data value with reference was created.",
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "base64Binary",
+            "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/bin"]
+          }
+        ]
+      },
+      {
+        "id" : "ED.integrityCheckAlgorithm",
+        "path" : "ED.integrityCheckAlgorithm",
+        "representation" : ["xmlAttr"],
+        "label" : "Integrity Check Algorithm",
+        "definition" : "Specifies the algorithm used to compute the integrityCheck value. The cryptographically strong checksum algorithm Secure Hash Algorithm-1 (SHA-1) is currently the industry standard. It has superseded the MD5 algorithm only a couple of years ago, when certain flaws in the security of MD5 were discovered. Currently the SHA-1 hash algorithm is the default choice for the integrity check algorithm. Note that SHA-256 is also entering widespread usage.",
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "code",
+            "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+          }
+        ],
+        "binding" : {
+          "strength" : "required",
+          "valueSet" : "http://terminology.hl7.org/ValueSet/v3-IntegrityCheckAlgorithm|2.0.0"
+        }
+      },
+      {
+        "id" : "ED.language",
+        "path" : "ED.language",
+        "representation" : ["xmlAttr"],
+        "label" : "Language",
+        "definition" : "For character based information the language property specifies the human language of the text.",
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "code",
+            "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+          }
+        ]
+      },
+      {
+        "id" : "ED.mediaType",
+        "path" : "ED.mediaType",
+        "representation" : ["xmlAttr"],
+        "label" : "Media Type",
+        "definition" : "Identifies the type of the encapsulated data and identifies a method to interpret or render the data.",
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "code",
+            "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+          }
+        ],
+        "binding" : {
+          "strength" : "example",
+          "valueSet" : "http://terminology.hl7.org/ValueSet/v3-MediaType"
+        }
+      },
+      {
+        "id" : "ED.representation",
+        "path" : "ED.representation",
+        "representation" : ["xmlAttr"],
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "code",
+            "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"]
+          }
+        ],
+        "binding" : {
+          "strength" : "required",
+          "valueSet" : "http://hl7.org/cda/stds/core/ValueSet/BinaryDataEncoding"
+        }
+      },
+      {
+        "id" : "ED.xmlText",
+        "path" : "ED.xmlText",
+        "representation" : ["xmlText"],
+        "short" : "Allows for mixed text content. If @representation='B64', this SHALL be a base64binary string.",
+        "definition" : "Data that is primarily intended for human interpretation or for further machine processing is outside the scope of HL7. This includes unformatted or formatted written language, multimedia data, or structured information as defined by a different standard (e.g., XML-signatures.)",
+        "comment" : "This element is represented in XML as textual content. The actual name \"xmlText\" will not appear in a CDA instance.",
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "string",
+            "profile" : ["http://hl7.org/cda/stds/core/StructureDefinition/st-simple"]
+          }
+        ]
+      },
+      {
+        "id" : "ED.reference",
+        "path" : "ED.reference",
+        "label" : "Reference",
+        "definition" : "A telecommunication address (TEL), such as a URL for HTTP or FTP, which will resolve to precisely the same binary data that could as well have been provided as inline data.",
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "http://hl7.org/cda/stds/core/StructureDefinition/TEL"
+          }
+        ]
+      },
+      {
+        "id" : "ED.thumbnail",
+        "path" : "ED.thumbnail",
+        "label" : "Thumbnail",
+        "definition" : "An abbreviated rendition of the full data. A thumbnail requires significantly fewer resources than the full data, while still maintaining some distinctive similarity with the full data. A thumbnail is typically used with by-reference encapsulated data. It allows a user to select data more efficiently before actually downloading through the reference.",
+        "min" : 0,
+        "max" : "1",
+        "type" : [
+          {
+            "code" : "http://hl7.org/cda/stds/core/StructureDefinition/ED"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+```

@@ -1,0 +1,58 @@
+@prefix fhir: <http://hl7.org/fhir/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# - resource -------------------------------------------------------------------
+
+<http://hl7.org/cda/stds/core/ValueSet/CDAActMoodIntent> a fhir:ValueSet ;
+  fhir:nodeRole fhir:treeRoot ;
+  fhir:id [ fhir:v "CDAActMoodIntent"] ; # 
+  fhir:language [ fhir:v "en"] ; # 
+  fhir:text [
+     fhir:status [ fhir:v "extensions" ] ;
+     fhir:div "<div xml:lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\"><p class=\"res-header-id\"><b>Generated Narrative: ValueSet CDAActMoodIntent</b></p><a name=\"CDAActMoodIntent\"> </a><a name=\"hcCDAActMoodIntent\"> </a><div style=\"display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%\"><p style=\"margin-bottom: 0px\">Language: en</p></div><ul><li>Include these codes as defined in <a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html\"><code>http://terminology.hl7.org/CodeSystem/v3-ActMood</code></a><span title=\"Version is not explicitly stated, which means it is fixed to 2.1.1, the version found through the package references\"> version ?2.1.1</span><table class=\"none\"><tr><td style=\"white-space:nowrap\"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-INT\">INT</a></td><td style=\"color: #cccccc\">intent</td><td>**Definition:** An intention or plan for an act.<br/><br/>**&gt;UsageNotes:** The final outcome of the intent, the act that is intended to occur, is always an event. However the final outcome may be reached indirectly via steps through other intents, such as promise, permission request, or an appointment that may lead to an actual event to occur. Alternatively, the intended act may never occur.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-APT\">APT</a></td><td style=\"color: #cccccc\">appointment</td><td>**Definition:** An act that has been scheduled to be performed at a specific place and time.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-ARQ\">ARQ</a></td><td style=\"color: #cccccc\">appointment request</td><td>**Definition:** A request act that is specialized for the appointment scheduling request/fulfillment cycle. An appointment request is fulfilled only and completely by an appointment (APT), i.e., all that the appointment request intends is to create an appointment *(the actual act may well not happen if that is the professional decision during the appointment)*.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-PRMS\">PRMS</a></td><td style=\"color: #cccccc\">promise</td><td>**Definition:** A commitment to perform an act (may be either solicited or unsolicited). The committer becomes responsible to the other party for executing the act, and, as a consequence, the other party may rely on the first party to perform or cause to perform the act.<br/><br/>**UsageNotes:** Commitments may be retracted or cancelled.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-PRP\">PRP</a></td><td style=\"color: #cccccc\">proposal</td><td>**Definition:** A suggestion that an act might be performed. Not an explicit request, and professional responsibility may or may not be present.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-RQO\">RQO</a></td><td style=\"color: #cccccc\">request</td><td>**Definition:** A request act that is specialized for an event request/fulfillment cycle.<br/><br/>**UsageNotes:** The fulfillment cycle may involve intermediary fulfilling acts in moods such as PRMS, APT, or even another RQO before being fulfilled by the final event.<br/><br/>**UsageNotes:** The concepts of a \"request\" and an \"order\" are viewed as different, because there is an implication of a mandate associated with order. In practice, however, this distinction has no general functional value in the inter-operation of health care computing. \"Orders\" are commonly refused for a variety of clinical and business reasons, and the notion of a \"request\" obligates the recipient (the fulfiller) to respond to the sender (the author). Indeed, in many regions, including Australia and Europe, the common term used is \"request.\"<br/><br/>Thus, the concept embodies both notions, as there is no useful distinction to be made. If a mandate is to be associated with a request, this will be embodied in the \"local\" business rules applied to the transactions. Should HL7 desire to provide a distinction between these in the future, the individual concepts could be added as specializations of this concept.<br/><br/>The critical distinction here, is the difference between this concept and an \"intent\", of which it is a specialization. An intent involves decisions by a single party, the author. A request, however, involves decisions by two parties, the author and the fulfiller, with an obligation on the part of the fulfiller to respond to the request indicating that the fulfiller will indeed fulfill the request.</td></tr><tr><td><a href=\"http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-SLOT\">SLOT</a></td><td style=\"color: #cccccc\">resource slot</td><td>**Definition:** A kind of act that may occur during the specified time period.</td></tr></table></li></ul></div>"^^rdf:XMLLiteral
+  ] ; # 
+  fhir:url [ fhir:v "http://hl7.org/cda/stds/core/ValueSet/CDAActMoodIntent"^^xsd:anyURI] ; # 
+  fhir:version [ fhir:v "2.0.0-sd-202510-matchbox-patch"] ; # 
+  fhir:name [ fhir:v "CDAActMoodIntent"] ; # 
+  fhir:title [ fhir:v "CDAActMoodIntent"] ; # 
+  fhir:status [ fhir:v "draft"] ; # 
+  fhir:experimental [ fhir:v false] ; # 
+  fhir:date [ fhir:v "2025-10-28T21:58:07+01:00"^^xsd:dateTime] ; # 
+  fhir:publisher [ fhir:v "Health Level 7"] ; # 
+  fhir:contact ( [
+     fhir:name [ fhir:v "HL7 International - Structured Documents" ] ;
+     fhir:telecom ( [
+       fhir:system [ fhir:v "url" ] ;
+       fhir:value [ fhir:v "http://www.hl7.org/Special/committees/structure" ]
+     ] [
+       fhir:system [ fhir:v "email" ] ;
+       fhir:value [ fhir:v "structdog@lists.HL7.org" ]
+     ] )
+  ] ) ; # 
+  fhir:description [ fhir:v "An intention or plan to perform a service."] ; # 
+  fhir:compose [
+     fhir:include ( [
+       fhir:system [ fhir:v "http://terminology.hl7.org/CodeSystem/v3-ActMood"^^xsd:anyURI ] ;
+       fhir:concept ( [
+         fhir:code [ fhir:v "INT" ]
+       ] [
+         fhir:code [ fhir:v "APT" ]
+       ] [
+         fhir:code [ fhir:v "ARQ" ]
+       ] [
+         fhir:code [ fhir:v "PRMS" ]
+       ] [
+         fhir:code [ fhir:v "PRP" ]
+       ] [
+         fhir:code [ fhir:v "RQO" ]
+       ] [
+         fhir:code [ fhir:v "SLOT" ]
+       ] )
+     ] )
+  ] . # 
+
+# -------------------------------------------------------------------------------------
+

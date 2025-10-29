@@ -1,0 +1,186 @@
+/* CQFramework Content IGs */
+:root {
+  --navbar-bg-color: #105EAB; /* 2. Header container color */
+  --footer-bg-color: #505050; /* 3. Footer background color*/
+  --footer-container-bg-color: #105EAB; /* 4. Footer container color */
+  --btn-hover-color: #014384;  /* 6. Menu button hover color */
+}
+
+/* Generic settings common to all content IGs */
+:root {
+  --stripe-bg-color: #999999; /* 5. Header strip color */
+  --btn-active-color: #014384; /* 7. Menu button active color */
+  --btn-text-color: #e6e6e6; /* 8. Menu button text color */
+  --stu-note-background-color: #fff2ff; /* 19. (STU) Note box background color */
+  --stu-note-border-left-color: #ffa0ff; /* 20. (STU) Note box border color */
+}
+
+#hl7-nav {
+  line-height: 50px;
+  float: left;
+  margin-top: 4px;
+}
+
+#hl7-nav a {
+  color: inherit;
+}
+
+#hl7-logo {
+  float: left;
+  margin-left: 6px;
+}
+#hl7-search {
+  line-height: 50px;
+  float: right;
+  margin-top: 4px;
+  color: maroon;
+}
+#hl7-search a {
+  color: inherit;
+}
+#project-nav {
+  line-height: 50px;
+  float: left;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  color: #808080;
+}
+#project-logo {
+  float: left;
+  margin-left: 3px;
+}
+
+/* ----------note-to-balloters styling------*/
+
+.note-to-balloters::before {
+  white-space: pre;
+  content: "Note To Balloters\A ";
+  background-color: yellow;
+  color: red;
+  font-weight: bold;
+}
+.note-to-balloters, .stu-note{
+  margin: 5px;
+  padding: 10px;
+  border-left-style: solid;
+}
+
+.stu-note::before {
+  white-space: pre;
+  content: "STU Note\A ";
+  background-color: yellow;
+  color: red;
+  font-weight: bold;
+}
+
+/* 
+==================================
+JSON/XML/TTL Example Styling Start
+==================================
+*/
+
+pre.json {
+  width: 100%;
+  overflow: scroll;
+}
+
+pre.xml {
+  width: 100%;
+  overflow: scroll;
+}
+
+pre.rdf {
+  width: 100%;
+  overflow: scroll;
+}
+
+/* 
+==================================
+JSON/XML/RTL Example Styling End
+==================================
+*/
+
+
+/* 
+===============================
+Liquid Narrative Styling Start
+===============================
+*/
+
+.narrative-table {
+  border: 1pt inset rgb(0, 0, 0);
+  line-height: 10pt;
+  border-collapse: separate;
+  -webkit-border-horizontal-spacing: 2px;
+  -webkit-border-vertical-spacing: 2px;
+}
+
+.narrative-table>tbody {
+  display: table-row-group;
+  vertical-align: middle;
+}
+
+.narrative-table>tbody>tr {
+  display: table-row;
+  background-color: lightgray;
+  vertical-align: inherit;
+}
+
+.narrative-table>tbody>tr>th {
+  padding: 5px;
+}
+
+.section-header {
+  background-color: #656565;
+  color: whitesmoke;
+  vertical-align: inherit;
+}
+
+.row-header {
+  background-color: #656565;
+  color: whitesmoke;
+  vertical-align: inherit;
+}
+
+.tab-one {
+  padding-left: 5px;
+}
+
+@media (min-width: 768px) {
+  .row-header {
+    min-width: 138px;
+    max-width: 138px;
+  }
+
+  .content-container {
+    max-width: 576px;
+  }
+}
+
+@media (min-width: 992px) {
+  .row-header {
+    min-width: 181px;
+    max-width: 181px;
+  }
+
+  .content-container {
+    max-width: 745px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .row-header {
+    min-width: 213px;
+    max-width: 213px;
+  }
+
+  .content-container {
+    max-width: 873px;
+  }
+}
+
+/* 
+===============================
+Liquid Narrative Styling End
+===============================
+*/

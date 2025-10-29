@@ -1,6 +1,6 @@
 {
   "package": "hl7.cda.uv.core",
-  "version": "2.0.0-sd-202406-matchbox-patch",
+  "version": "2.0.1-sd-202510-matchbox-patch",
   "fhirVersion": "5.0.0",
   "extensions": [],
   "profiles": {},
@@ -46,6 +46,9 @@
     ],
     "http://hl7.org/fhir/tools/StructureDefinition/resource-information": [
       "ImplementationGuide.definition.resource"
+    ],
+    "http://hl7.org/fhir/tools/StructureDefinition/snapshot-base-version": [
+      "StructureDefinition.snapshot"
     ],
     "http://hl7.org/fhir/tools/StructureDefinition/type-profile-style": [
       "StructureDefinition"

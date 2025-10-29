@@ -3,15 +3,15 @@
 <ImplementationGuide xmlns="http://hl7.org/fhir">
   <id value="hl7.cda.uv.core"/>
   <text>
-    <status value="extensions"/><div xmlns="http://www.w3.org/1999/xhtml"><h2>ClinicalDocumentArchitecture</h2><p>The official URL for this implementation guide is: </p><pre>http://hl7.org/cda/stds/core/ImplementationGuide/hl7.cda.uv.core</pre></div>
+    <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml"><p class="res-header-id"><b>Generated Narrative: ImplementationGuide hl7.cda.uv.core</b></p><a name="hl7.cda.uv.core"> </a><a name="hchl7.cda.uv.core"> </a><h2>ClinicalDocumentArchitecture</h2><p>The official URL for this implementation guide is: </p><pre>http://hl7.org/cda/stds/core/ImplementationGuide/hl7.cda.uv.core</pre></div>
   </text>
   <url value="http://hl7.org/cda/stds/core/ImplementationGuide/hl7.cda.uv.core"/>
-  <version value="2.0.0-sd-202406-matchbox-patch"/>
+  <version value="2.0.1-sd-202510-matchbox-patch"/>
   <name value="ClinicalDocumentArchitecture"/>
   <title value="Clinical Document Architecture"/>
   <status value="active"/>
   <experimental value="false"/>
-  <date value="2024-06-19T17:47:42+02:00"/>
+  <date value="2025-10-29T22:15:57+01:00"/>
   <publisher value="Health Level 7"/>
   <contact>
     <name value="HL7 International - Structured Documents"/>
@@ -33,7 +33,7 @@
     </extension>
     <uri value="http://hl7.org/fhir/extensions/ImplementationGuide/hl7.fhir.uv.extensions"/>
     <packageId value="hl7.fhir.uv.extensions.r5"/>
-    <version value="5.1.0"/>
+    <version value="5.2.0"/>
   </dependsOn>
   <dependsOn id="terminology">
     <uri value="http://terminology.hl7.org/ImplementationGuide/hl7.terminology"/>
@@ -42,7 +42,7 @@
   </dependsOn>
   <definition>
     <extension url="http://hl7.org/fhir/tools/StructureDefinition/ig-internal-dependency">
-      <valueCode value="hl7.fhir.uv.tools#0.1.0"/>
+      <valueCode value="hl7.fhir.uv.tools.r5#0.8.0"/>
     </extension>
     <grouping id="classes">
       <name value="CDA Classes"/>
@@ -1416,6 +1416,17 @@
         <valueString value="StructureDefinition:logical"/>
       </extension>
       <reference>
+        <reference value="StructureDefinition/ST-dot-r2b"/>
+      </reference>
+      <name value="ST-dot-r2b: CharacterString with Value Attribute (V3 Data Type)"/>
+      <description value="A character string data type variant that uses a value attribute rather than element content. This datatype is primarily used to handle version numbers and other string values in CDA documents where the data is stored as an XML attribute."/>
+      <groupingId value="datatypes-complex"/>
+    </resource>
+    <resource>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/resource-information">
+        <valueString value="StructureDefinition:logical"/>
+      </extension>
+      <reference>
         <reference value="StructureDefinition/StructuredBody"/>
       </reference>
       <name value="StructuredBody (CDA Class)"/>
@@ -1672,7 +1683,7 @@
         <reference value="StructureDefinition/uuid"/>
       </reference>
       <name value="uuid: DCE Universal Unique Identifier"/>
-      <description value="A globally unique string representing a DCE Universal Unique Identifier (UUID) in the common UUID format that consists of 5 hyphen-separated groups of hexadecimal digits having 8, 4, 4, 4, and 12 places respectively.&#xA;&#xA;***NOTE:*** The output of UUID related programs and functions may use all sorts of forms, upper case, lower case, and with or without the hyphens that group the digits. This variate output must be postprocessed to conform to the HL7 specification, i.e., the hyphens must be inserted for the 8-4-4-4-12 grouping and all hexadecimal digits must be converted to upper case."/>
+      <description value="A globally unique string representing a DCE Universal Unique Identifier (UUID) in the common UUID format that consists of 5 hyphen-separated groups of hexadecimal digits having 8, 4, 4, 4, and 12 places respectively.&#xA;&#xA;***NOTE:*** The output of UUID related programs and functions may use all sorts of forms, upper case, lower case, and with or without the hyphens that group the digits. This variate output must be postprocessed to conform to the HL7 specification, i.e., the hyphens must be inserted for the 8-4-4-4-12 grouping. Historically, CDA also required that all hexadecimal digits must be converted to upper case, but due to real-world issues encountered when enforcing this rule, it has been relaxed to allow for upper or lower case letters. Additionally, FHIR requires that UUID's be communicated using only lower case letters, so for broader compatibility, implementers are encouraged to use lower case letters."/>
       <groupingId value="datatypes-simple"/>
     </resource>
     <resource>
@@ -1685,6 +1696,16 @@
       <name value="xs:ID"/>
       <description value="ID represents the ID attribute type from [XML 1.0 (Second Edition)]. The &quot;value space&quot; of ID is the set of all strings that &quot;match&quot; the NCName production in [Namespaces in XML]. The &quot;lexical space&quot; of ID is the set of all strings that &quot;match&quot; the NCName production in [Namespaces in XML]."/>
       <groupingId value="datatypes-xml"/>
+    </resource>
+    <resource>
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/resource-information">
+        <valueString value="CodeSystem"/>
+      </extension>
+      <reference>
+        <reference value="CodeSystem/IGParametersCDAValidation"/>
+      </reference>
+      <name value="IG Parameters CDA Validation"/>
+      <description value="Code system for CDA validation parameters in the IG."/>
     </resource>
     <resource>
       <extension url="http://hl7.org/fhir/tools/StructureDefinition/resource-information">

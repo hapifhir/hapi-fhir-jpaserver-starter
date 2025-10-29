@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ValueSet xmlns="http://hl7.org/fhir">
+  <id value="CDAActMood"/>
+  <language value="en"/>
+  <text>
+    <status value="extensions"/><div xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><p class="res-header-id"><b>Generated Narrative: ValueSet CDAActMood</b></p><a name="CDAActMood"> </a><a name="hcCDAActMood"> </a><div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%"><p style="margin-bottom: 0px">Language: en</p></div><ul><li>Include these codes as defined in <a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html"><code>http://terminology.hl7.org/CodeSystem/v3-ActMood</code></a><span title="Version is not explicitly stated, which means it is fixed to 2.1.1, the version found through the package references"> version &#x1F4E6;2.1.1</span><table class="none"><tr><td style="white-space:nowrap"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-INT">INT</a></td><td style="color: #cccccc">intent</td><td>**Definition:** An intention or plan for an act.<br/><br/>**&gt;UsageNotes:** The final outcome of the intent, the act that is intended to occur, is always an event. However the final outcome may be reached indirectly via steps through other intents, such as promise, permission request, or an appointment that may lead to an actual event to occur. Alternatively, the intended act may never occur.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-APT">APT</a></td><td style="color: #cccccc">appointment</td><td>**Definition:** An act that has been scheduled to be performed at a specific place and time.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-ARQ">ARQ</a></td><td style="color: #cccccc">appointment request</td><td>**Definition:** A request act that is specialized for the appointment scheduling request/fulfillment cycle. An appointment request is fulfilled only and completely by an appointment (APT), i.e., all that the appointment request intends is to create an appointment *(the actual act may well not happen if that is the professional decision during the appointment)*.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-PRMS">PRMS</a></td><td style="color: #cccccc">promise</td><td>**Definition:** A commitment to perform an act (may be either solicited or unsolicited). The committer becomes responsible to the other party for executing the act, and, as a consequence, the other party may rely on the first party to perform or cause to perform the act.<br/><br/>**UsageNotes:** Commitments may be retracted or cancelled.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-PRP">PRP</a></td><td style="color: #cccccc">proposal</td><td>**Definition:** A suggestion that an act might be performed. Not an explicit request, and professional responsibility may or may not be present.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-RQO">RQO</a></td><td style="color: #cccccc">request</td><td>**Definition:** A request act that is specialized for an event request/fulfillment cycle.<br/><br/>**UsageNotes:** The fulfillment cycle may involve intermediary fulfilling acts in moods such as PRMS, APT, or even another RQO before being fulfilled by the final event.<br/><br/>**UsageNotes:** The concepts of a &quot;request&quot; and an &quot;order&quot; are viewed as different, because there is an implication of a mandate associated with order. In practice, however, this distinction has no general functional value in the inter-operation of health care computing. &quot;Orders&quot; are commonly refused for a variety of clinical and business reasons, and the notion of a &quot;request&quot; obligates the recipient (the fulfiller) to respond to the sender (the author). Indeed, in many regions, including Australia and Europe, the common term used is &quot;request.&quot;<br/><br/>Thus, the concept embodies both notions, as there is no useful distinction to be made. If a mandate is to be associated with a request, this will be embodied in the &quot;local&quot; business rules applied to the transactions. Should HL7 desire to provide a distinction between these in the future, the individual concepts could be added as specializations of this concept.<br/><br/>The critical distinction here, is the difference between this concept and an &quot;intent&quot;, of which it is a specialization. An intent involves decisions by a single party, the author. A request, however, involves decisions by two parties, the author and the fulfiller, with an obligation on the part of the fulfiller to respond to the request indicating that the fulfiller will indeed fulfill the request.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-SLOT">SLOT</a></td><td style="color: #cccccc">resource slot</td><td>**Definition:** A kind of act that may occur during the specified time period.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-DEF">DEF</a></td><td style="color: #cccccc">definition</td><td>**Definition:** A definition of a kind of act that can occur .<br/><br/>**OpenIssue:** The semantic constructs embodied in DEF and CRT moods seem indistinguishable, and their uses can readily be determined by the context in which these are used. Therefore, this OpenIssue has been created to declare that it is likely that ActMood.DEF will be &quot;retired&quot; in the future in favor of the more general ActMood.CRT.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-EVN">EVN</a></td><td style="color: #cccccc">event (occurrence)</td><td>**Definition:** An act that actually happens (may be an ongoing act or a documentation of a past act).</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-EVN.46CRT">EVN.CRT</a></td><td style="color: #cccccc">event criterion</td><td>***Deprecation Comment:*** This concept This codes should no longer be used. Instead, set attribute Act.isCriterionInd to &quot;true&quot; and use the desired mood for your criterion.<br/><br/>**Definition:** A criterion (CRT) that has\_match = an event (EVN).</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-GOL">GOL</a></td><td style="color: #cccccc">Goal</td><td>**Definition:** An expectation that is considered to be desirable to occur in the future<br/><br/>**Examples:**Target weight below 80Kg, Stop smoking, Regain ability to walk, goal is to administer thrombolytics to candidate patients presenting with acute myocardial infarction.<br/><br/>**UsageNotes:** INT (intent) reflects a plan for the future, which is a declaration to do something. This contrasts with goal which doesn't represent an intention to act, merely a hope for an eventual result. A goal is distinct from the intended actions to reach that goal. &quot;I will reduce the dose of drug x to 20mg&quot; is an intent. &quot;I hope to be able to get the patient to the point where I can reduce the dose of drug x to 20mg&quot; is a goal. EXPEC (expectation) reflects a prediction rather than a hope. RSK (risk) reflects a potential negative event rather than a hope.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-OPT">OPT</a></td><td style="color: #cccccc">option</td><td>**Definition:** One of a set of acts that specify an option for the property values that the parent act may have. Typically used in definitions or orders to describe alternatives. An option can only be used as a group, that is, all assigned values must be used together. The actual mood of the act is the same as the parent act, and they must be linked by an actrelationship with type = OPTN.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-PERM">PERM</a></td><td style="color: #cccccc">permission</td><td>**Definition:** A kind of act that defines a permission that has been granted.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-ActMood.html#v3-ActMood-PERMRQ">PERMRQ</a></td><td style="color: #cccccc">permission request</td><td>**Definition:** A request for a permission to perform the act. Typically a payer (or possibly a supervisor) is being requested to give permission to perform the act. As opposed to the RQO, the requestee is not asked to perform or cause to perform the act but only to give the permission.</td></tr></table></li></ul></div>
+  </text>
+  <url value="http://hl7.org/cda/stds/core/ValueSet/CDAActMood"/>
+  <version value="2.0.0-sd-202510-matchbox-patch"/>
+  <name value="CDAActMood"/>
+  <title value="CDAActMood"/>
+  <status value="draft"/>
+  <experimental value="false"/>
+  <date value="2025-10-28T21:58:07+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <name value="HL7 International - Structured Documents"/>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+    <telecom>
+      <system value="email"/>
+      <value value="structdog@lists.HL7.org"/>
+    </telecom>
+  </contact>
+  <description value="A code distinguishing whether an Act is conceived of as a factual statement or in some other manner as a command, possibility, goal, etc."/>
+  <compose>
+    <include>
+      <system value="http://terminology.hl7.org/CodeSystem/v3-ActMood"/>
+      <concept>
+        <code value="INT"/>
+      </concept>
+      <concept>
+        <code value="APT"/>
+      </concept>
+      <concept>
+        <code value="ARQ"/>
+      </concept>
+      <concept>
+        <code value="PRMS"/>
+      </concept>
+      <concept>
+        <code value="PRP"/>
+      </concept>
+      <concept>
+        <code value="RQO"/>
+      </concept>
+      <concept>
+        <code value="SLOT"/>
+      </concept>
+      <concept>
+        <code value="DEF"/>
+      </concept>
+      <concept>
+        <code value="EVN"/>
+      </concept>
+      <concept>
+        <code value="EVN.CRT"/>
+      </concept>
+      <concept>
+        <code value="GOL"/>
+      </concept>
+      <concept>
+        <code value="OPT"/>
+      </concept>
+      <concept>
+        <code value="PERM"/>
+      </concept>
+      <concept>
+        <code value="PERMRQ"/>
+      </concept>
+    </include>
+  </compose>
+</ValueSet>

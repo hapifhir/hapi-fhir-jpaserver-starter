@@ -106,7 +106,7 @@ public class MatchboxEngine extends ValidationEngine {
 	public static final String PACKAGE_R4_UV_EXTENSIONS = "hl7.fhir.uv.extensions.r4#5.2.0";
 	public static final String PACKAGE_R5_UV_EXTENSIONS = "hl7.fhir.uv.extensions.r5#5.2.0";
 	public static final String PACKAGE_UV_XVER = "hl7.fhir.uv.xver#0.1.0@mb";
-	public static final String PACKAGE_CDA_UV_CORE = "hl7.cda.uv.core#2.0.0-sd-202406-matchbox-patch";
+	public static final String PACKAGE_CDA_UV_CORE = "hl7.cda.uv.core#2.0.1-sd-202510-matchbox-patch";
 
 	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MatchboxEngine.class);
 
@@ -586,6 +586,10 @@ public class MatchboxEngine extends ValidationEngine {
 
 		SimpleWorkerContext context = this.getContext();
 		StructureMap map = context.fetchResource(StructureMap.class, mapUri);
+		if (map==null) {
+			log.error("map not found" + map);
+			return null;
+		}
 		
 		String fhirVersionTarget = getFhirVersion(getCanonicalFromStructureMap(map, StructureMap.StructureMapModelMode.TARGET));
 		if (fhirVersionTarget !=null && (fhirVersionTarget.startsWith("4.0") || fhirVersionTarget.startsWith("4.3") || fhirVersionTarget.startsWith("5.0"))  && !fhirVersionTarget.equals(this.getVersion().substring(0, 3))) {

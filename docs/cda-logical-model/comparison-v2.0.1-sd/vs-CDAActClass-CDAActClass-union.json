@@ -1,0 +1,202 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "0e56ebbd-666c-461b-9bdc-13902900384b-56",
+  "url" : "http://hl7.org/fhir/comparison/ValueSet/0e56ebbd-666c-461b-9bdc-13902900384b-56",
+  "name" : "UnionCDAActClassAndCDAActClass",
+  "title" : "Union of CDAActClass And CDAActClass",
+  "status" : "draft",
+  "date" : "2025-10-29T22:16:25+01:00",
+  "compose" : {
+    "include" : [{
+      "concept" : [{
+        "code" : "FCNTRCT"
+      },
+      {
+        "code" : "COV"
+      },
+      {
+        "code" : "CNTRCT"
+      },
+      {
+        "code" : "CACT"
+      },
+      {
+        "code" : "ACTN"
+      },
+      {
+        "code" : "INFO"
+      },
+      {
+        "code" : "STC"
+      },
+      {
+        "code" : "CASE"
+      },
+      {
+        "code" : "OUTB"
+      },
+      {
+        "code" : "COND"
+      },
+      {
+        "code" : "OBSSER"
+      },
+      {
+        "code" : "OBSCOR"
+      },
+      {
+        "code" : "ROIBND"
+      },
+      {
+        "code" : "ROIOVL"
+      },
+      {
+        "code" : "OBS"
+      },
+      {
+        "code" : "ALRT"
+      },
+      {
+        "code" : "CLNTRL"
+      },
+      {
+        "code" : "CNOD"
+      },
+      {
+        "code" : "DGIMG"
+      },
+      {
+        "code" : "INVSTG"
+      },
+      {
+        "code" : "SPCOBS"
+      },
+      {
+        "code" : "SPLY"
+      },
+      {
+        "code" : "DIET"
+      },
+      {
+        "code" : "DOCCLIN"
+      },
+      {
+        "code" : "CDALVLONE"
+      },
+      {
+        "code" : "DOC"
+      },
+      {
+        "code" : "COMPOSITION"
+      },
+      {
+        "code" : "ENTRY"
+      },
+      {
+        "code" : "BATTERY"
+      },
+      {
+        "code" : "CLUSTER"
+      },
+      {
+        "code" : "EXTRACT"
+      },
+      {
+        "code" : "EHR"
+      },
+      {
+        "code" : "ORGANIZER"
+      },
+      {
+        "code" : "CATEGORY"
+      },
+      {
+        "code" : "DOCBODY"
+      },
+      {
+        "code" : "DOCSECT"
+      },
+      {
+        "code" : "TOPIC"
+      },
+      {
+        "code" : "FOLDER"
+      },
+      {
+        "code" : "ACT"
+      },
+      {
+        "code" : "ACCM"
+      },
+      {
+        "code" : "CONS"
+      },
+      {
+        "code" : "CTTEVENT"
+      },
+      {
+        "code" : "INC"
+      },
+      {
+        "code" : "INFRM"
+      },
+      {
+        "code" : "PCPR"
+      },
+      {
+        "code" : "REG"
+      },
+      {
+        "code" : "SPCTRT"
+      },
+      {
+        "code" : "ACCT"
+      },
+      {
+        "code" : "ACSN"
+      },
+      {
+        "code" : "ADJUD"
+      },
+      {
+        "code" : "CONTREG"
+      },
+      {
+        "code" : "DISPACT"
+      },
+      {
+        "code" : "ENC"
+      },
+      {
+        "code" : "INVE"
+      },
+      {
+        "code" : "LIST"
+      },
+      {
+        "code" : "MPROT"
+      },
+      {
+        "code" : "PROC"
+      },
+      {
+        "code" : "REV"
+      },
+      {
+        "code" : "SBADM"
+      },
+      {
+        "code" : "SUBST"
+      },
+      {
+        "code" : "TRNS"
+      },
+      {
+        "code" : "VERIF"
+      },
+      {
+        "code" : "XACT"
+      }]
+    }]
+  }
+}

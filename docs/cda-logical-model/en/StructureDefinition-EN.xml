@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <id value="EN"/>
+  <language value="en"/>
+  <text>
+    <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml">
+      <p>A name for a person, organization, place or thing. A sequence of name parts, such as given name or family name, prefix, suffix, etc. Examples for entity name values are &quot;Jim Bob Walton, Jr.&quot;, &quot;Health Level Seven, Inc.&quot;, &quot;Lake Tahoe&quot;, etc. An entity name may be as simple as a character string or may consist of several entity name parts, such as, &quot;Jim&quot;, &quot;Bob&quot;, &quot;Walton&quot;, and &quot;Jr.&quot;, &quot;Health Level Seven&quot; and &quot;Inc.&quot;, &quot;Lake&quot; and &quot;Tahoe&quot;.</p>
+    </div>
+  </text>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-target">
+    <valueBoolean>
+      <extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason">
+        <valueCode value="not-applicable"/>
+      </extension>
+    </valueBoolean>
+  </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-namespace">
+    <valueUri value="urn:hl7-org:v3"/>
+  </extension>
+  <extension url="http://hl7.org/fhir/tools/StructureDefinition/logical-container">
+    <valueUri value="http://hl7.org/cda/stds/core/StructureDefinition/ClinicalDocument"/>
+  </extension>
+  <url value="http://hl7.org/cda/stds/core/StructureDefinition/EN"/>
+  <version value="2.0.0-sd-202510-matchbox-patch"/>
+  <name value="EN"/>
+  <title value="EN: EntityName (V3 Data Type)"/>
+  <status value="active"/>
+  <experimental value="false"/>
+  <date value="2025-10-28T21:58:07+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <name value="HL7 International - Structured Documents"/>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+    <telecom>
+      <system value="email"/>
+      <value value="structdog@lists.HL7.org"/>
+    </telecom>
+  </contact>
+  <description value="A name for a person, organization, place or thing. A sequence of name parts, such as given name or family name, prefix, suffix, etc. Examples for entity name values are &quot;Jim Bob Walton, Jr.&quot;, &quot;Health Level Seven, Inc.&quot;, &quot;Lake Tahoe&quot;, etc. An entity name may be as simple as a character string or may consist of several entity name parts, such as, &quot;Jim&quot;, &quot;Bob&quot;, &quot;Walton&quot;, and &quot;Jr.&quot;, &quot;Health Level Seven&quot; and &quot;Inc.&quot;, &quot;Lake&quot; and &quot;Tahoe&quot;."/>
+  <fhirVersion value="5.0.0"/>
+  <mapping>
+    <identity value="rim"/>
+    <uri value="http://hl7.org/v3"/>
+    <name value="RIM Mapping"/>
+  </mapping>
+  <kind value="logical"/>
+  <abstract value="false"/>
+  <type value="http://hl7.org/cda/stds/core/StructureDefinition/EN"/>
+  <baseDefinition value="http://hl7.org/cda/stds/core/StructureDefinition/ANY"/>
+  <derivation value="specialization"/>
+  <snapshot>
+    <extension url="http://hl7.org/fhir/tools/StructureDefinition/snapshot-base-version">
+      <valueString value="2.0.0-sd-202510-matchbox-patch"/>
+    </extension>
+    <element id="EN">
+      <path value="EN"/>
+      <short value="Base for all types and resources"/>
+      <definition value="A name for a person, organization, place or thing. A sequence of name parts, such as given name or family name, prefix, suffix, etc. Examples for entity name values are &quot;Jim Bob Walton, Jr.&quot;, &quot;Health Level Seven, Inc.&quot;, &quot;Lake Tahoe&quot;, etc. An entity name may be as simple as a character string or may consist of several entity name parts, such as, &quot;Jim&quot;, &quot;Bob&quot;, &quot;Walton&quot;, and &quot;Jr.&quot;, &quot;Health Level Seven&quot; and &quot;Inc.&quot;, &quot;Lake&quot; and &quot;Tahoe&quot;."/>
+      <min value="1"/>
+      <max value="*"/>
+      <base>
+        <path value="Base"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <isModifier value="false"/>
+      <mapping>
+        <identity value="rim"/>
+        <map value="n/a"/>
+      </mapping>
+    </element>
+    <element id="EN.nullFlavor">
+      <path value="EN.nullFlavor"/>
+      <representation value="xmlAttr"/>
+      <label value="Exceptional Value Detail"/>
+      <definition value="If a value is an exceptional value (NULL-value), this specifies in what way and why proper information is missing."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="ANY.nullFlavor"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDANullFlavor"/>
+      </binding>
+    </element>
+    <element id="EN.use">
+      <path value="EN.use"/>
+      <representation value="xmlAttr"/>
+      <label value="Use Code"/>
+      <definition value="A set of codes advising a system or user which name in a set of like names to select for a given purpose. A name without specific use code might be a default name useful for any purpose, but a name with a specific use code would be preferred for that respective purpose"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="EN.use"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAEntityNameUse"/>
+      </binding>
+    </element>
+    <element id="EN.item">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-choice-group">
+        <valueBoolean value="true"/>
+      </extension>
+      <path value="EN.item"/>
+      <definition value="A series of items that constitute the name."/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="EN.item"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/fhir/StructureDefinition/Base"/>
+      </type>
+      <constraint>
+        <key value="EN-1"/>
+        <severity value="error"/>
+        <human value="Can only have only one of the possible item elements in each choice"/>
+        <expression value="(delimiter | family | given | prefix | suffix | xmlText).count() = 1"/>
+      </constraint>
+    </element>
+    <element id="EN.item.delimiter">
+      <path value="EN.item.delimiter"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="EN.item.delimiter"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
+      </type>
+    </element>
+    <element id="EN.item.family">
+      <path value="EN.item.family"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="EN.item.family"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
+      </type>
+    </element>
+    <element id="EN.item.given">
+      <path value="EN.item.given"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="EN.item.given"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
+      </type>
+    </element>
+    <element id="EN.item.prefix">
+      <path value="EN.item.prefix"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="EN.item.prefix"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
+      </type>
+    </element>
+    <element id="EN.item.suffix">
+      <path value="EN.item.suffix"/>
+      <min value="0"/>
+      <max value="*"/>
+      <base>
+        <path value="EN.item.suffix"/>
+        <min value="0"/>
+        <max value="*"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
+      </type>
+    </element>
+    <element id="EN.item.xmlText">
+      <path value="EN.item.xmlText"/>
+      <representation value="xmlText"/>
+      <short value="Allows for mixed text content"/>
+      <comment value="This element is represented in XML as textual content. The actual name &quot;xmlText&quot; will not appear in a CDA instance."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="EN.item.xmlText"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
+      </type>
+    </element>
+    <element id="EN.validTime">
+      <path value="EN.validTime"/>
+      <label value="Valid Time"/>
+      <definition value="An interval of time specifying the time during which the name is or was used for the entity. This accomodates the fact that people change names for people, places and things."/>
+      <min value="0"/>
+      <max value="1"/>
+      <base>
+        <path value="EN.validTime"/>
+        <min value="0"/>
+        <max value="1"/>
+      </base>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"/>
+      </type>
+    </element>
+  </snapshot>
+  <differential>
+    <element id="EN">
+      <path value="EN"/>
+      <definition value="A name for a person, organization, place or thing. A sequence of name parts, such as given name or family name, prefix, suffix, etc. Examples for entity name values are &quot;Jim Bob Walton, Jr.&quot;, &quot;Health Level Seven, Inc.&quot;, &quot;Lake Tahoe&quot;, etc. An entity name may be as simple as a character string or may consist of several entity name parts, such as, &quot;Jim&quot;, &quot;Bob&quot;, &quot;Walton&quot;, and &quot;Jr.&quot;, &quot;Health Level Seven&quot; and &quot;Inc.&quot;, &quot;Lake&quot; and &quot;Tahoe&quot;."/>
+      <min value="1"/>
+      <max value="*"/>
+    </element>
+    <element id="EN.use">
+      <path value="EN.use"/>
+      <representation value="xmlAttr"/>
+      <label value="Use Code"/>
+      <definition value="A set of codes advising a system or user which name in a set of like names to select for a given purpose. A name without specific use code might be a default name useful for any purpose, but a name with a specific use code would be preferred for that respective purpose"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="code"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/cs-simple"/>
+      </type>
+      <binding>
+        <strength value="required"/>
+        <valueSet value="http://hl7.org/cda/stds/core/ValueSet/CDAEntityNameUse"/>
+      </binding>
+    </element>
+    <element id="EN.item">
+      <extension url="http://hl7.org/fhir/tools/StructureDefinition/xml-choice-group">
+        <valueBoolean value="true"/>
+      </extension>
+      <path value="EN.item"/>
+      <definition value="A series of items that constitute the name."/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/fhir/StructureDefinition/Base"/>
+      </type>
+      <constraint>
+        <key value="EN-1"/>
+        <severity value="error"/>
+        <human value="Can only have only one of the possible item elements in each choice"/>
+        <expression value="(delimiter | family | given | prefix | suffix | xmlText).count() = 1"/>
+      </constraint>
+    </element>
+    <element id="EN.item.delimiter">
+      <path value="EN.item.delimiter"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
+      </type>
+    </element>
+    <element id="EN.item.family">
+      <path value="EN.item.family"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
+      </type>
+    </element>
+    <element id="EN.item.given">
+      <path value="EN.item.given"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
+      </type>
+    </element>
+    <element id="EN.item.prefix">
+      <path value="EN.item.prefix"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
+      </type>
+    </element>
+    <element id="EN.item.suffix">
+      <path value="EN.item.suffix"/>
+      <min value="0"/>
+      <max value="*"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/ENXP"/>
+      </type>
+    </element>
+    <element id="EN.item.xmlText">
+      <path value="EN.item.xmlText"/>
+      <representation value="xmlText"/>
+      <short value="Allows for mixed text content"/>
+      <comment value="This element is represented in XML as textual content. The actual name &quot;xmlText&quot; will not appear in a CDA instance."/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="string"/>
+        <profile value="http://hl7.org/cda/stds/core/StructureDefinition/st-simple"/>
+      </type>
+    </element>
+    <element id="EN.validTime">
+      <path value="EN.validTime"/>
+      <label value="Valid Time"/>
+      <definition value="An interval of time specifying the time during which the name is or was used for the entity. This accomodates the fact that people change names for people, places and things."/>
+      <min value="0"/>
+      <max value="1"/>
+      <type>
+        <code value="http://hl7.org/cda/stds/core/StructureDefinition/IVL-TS"/>
+      </type>
+    </element>
+  </differential>
+</StructureDefinition>

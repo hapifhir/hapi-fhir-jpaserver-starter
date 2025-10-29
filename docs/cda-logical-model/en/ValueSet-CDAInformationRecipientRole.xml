@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ValueSet xmlns="http://hl7.org/fhir">
+  <id value="CDAInformationRecipientRole"/>
+  <language value="en"/>
+  <text>
+    <status value="extensions"/><div xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><p class="res-header-id"><b>Generated Narrative: ValueSet CDAInformationRecipientRole</b></p><a name="CDAInformationRecipientRole"> </a><a name="hcCDAInformationRecipientRole"> </a><div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%"><p style="margin-bottom: 0px">Language: en</p></div><ul><li>Include these codes as defined in <a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleClass.html"><code>http://terminology.hl7.org/CodeSystem/v3-RoleClass</code></a><span title="Version is explicitly stated to be 3.1.0"> version &#x1F4CD;3.1.0</span><table class="none"><tr><td style="white-space:nowrap"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleClass.html#v3-RoleClass-ASSIGNED">ASSIGNED</a></td><td style="color: #cccccc">assigned entity</td><td>An agent role in which the agent is an Entity acting in the employ of an organization. The focus is on functional role on behalf of the organization, unlike the Employee role where the focus is on the 'Human Resources' relationship between the employee and the organization.</td></tr><tr><td><a href="http://terminology.hl7.org/5.3.0/CodeSystem-v3-RoleClass.html#v3-RoleClass-HLTHCHRT">HLTHCHRT</a></td><td style="color: #cccccc">health chart</td><td>The role of a material (player) that is the physical health chart belonging to an organization (scoper).</td></tr></table></li></ul></div>
+  </text>
+  <url value="http://hl7.org/cda/stds/core/ValueSet/CDAInformationRecipientRole"/>
+  <version value="2.0.0-sd-202510-matchbox-patch"/>
+  <name value="CDAInformationRecipientRole"/>
+  <title value="CDAInformationRecipientRole"/>
+  <status value="draft"/>
+  <experimental value="false"/>
+  <date value="2025-10-28T21:58:07+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <name value="HL7 International - Structured Documents"/>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+    <telecom>
+      <system value="email"/>
+      <value value="structdog@lists.HL7.org"/>
+    </telecom>
+  </contact>
+  <description value="Used to represent the role(s) of those who should receive a copy of a document - limited to values allowed in original CDA definition"/>
+  <compose>
+    <include>
+      <system value="http://terminology.hl7.org/CodeSystem/v3-RoleClass"/>
+      <version value="3.1.0"/>
+      <concept>
+        <code value="ASSIGNED"/>
+      </concept>
+      <concept>
+        <code value="HLTHCHRT"/>
+      </concept>
+    </include>
+  </compose>
+</ValueSet>

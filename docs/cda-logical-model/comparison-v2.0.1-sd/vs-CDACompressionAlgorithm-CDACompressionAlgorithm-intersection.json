@@ -1,0 +1,25 @@
+{
+  "resourceType" : "ValueSet",
+  "id" : "0e56ebbd-666c-461b-9bdc-13902900384b-75",
+  "url" : "http://hl7.org/fhir/comparison/ValueSet/0e56ebbd-666c-461b-9bdc-13902900384b-75",
+  "name" : "IntersectionCDACompressionAlgorithmAndCDACompressionAlgorithm",
+  "title" : "Intersection of CDACompressionAlgorithm And CDACompressionAlgorithm",
+  "status" : "draft",
+  "date" : "2025-10-29T22:16:25+01:00",
+  "compose" : {
+    "include" : [{
+      "concept" : [{
+        "code" : "DF"
+      },
+      {
+        "code" : "GZ"
+      },
+      {
+        "code" : "ZL"
+      },
+      {
+        "code" : "Z"
+      }]
+    }]
+  }
+}

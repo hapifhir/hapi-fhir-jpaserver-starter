@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<CodeSystem xmlns="http://hl7.org/fhir">
+  <id value="IGParametersCDAValidation"/>
+  <text>
+    <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml"><p class="res-header-id"><b>Generated Narrative: CodeSystem IGParametersCDAValidation</b></p><a name="IGParametersCDAValidation"> </a><a name="hcIGParametersCDAValidation"> </a><p>This case-sensitive code system <code>http://hl7.org/cda/stds/core/CodeSystem/IGParametersCDAValidation</code> defines the following codes:</p><table class="codes"><tr><td style="white-space:nowrap"><b>Code</b></td><td><b>Display</b></td><td><b>Definition</b></td></tr><tr><td style="white-space:nowrap">parent-template-id<a name="IGParametersCDAValidation-parent-template-id"> </a></td><td>Parent TemplateId</td><td>TemplateId from which all templates in this IG descend. A schematron warning will detect any teplateIds starting with this value that are not defined in the IG.</td></tr><tr><td style="white-space:nowrap">value-set-limit<a name="IGParametersCDAValidation-value-set-limit"> </a></td><td>ValueSet Limit</td><td>Maximum number of values to include in value set lookups.</td></tr></table></div>
+  </text>
+  <url value="http://hl7.org/cda/stds/core/CodeSystem/IGParametersCDAValidation"/>
+  <version value="2.0.1-sd-202510-matchbox-patch"/>
+  <name value="IGParametersCDAValidation"/>
+  <title value="IG Parameters CDA Validation"/>
+  <status value="draft"/>
+  <experimental value="false"/>
+  <date value="2025-10-29T22:15:57+01:00"/>
+  <publisher value="Health Level 7"/>
+  <contact>
+    <name value="HL7 International - Structured Documents"/>
+    <telecom>
+      <system value="url"/>
+      <value value="http://www.hl7.org/Special/committees/structure"/>
+    </telecom>
+    <telecom>
+      <system value="email"/>
+      <value value="structdog@lists.HL7.org"/>
+    </telecom>
+  </contact>
+  <description value="Code system for CDA validation parameters in the IG."/>
+  <caseSensitive value="true"/>
+  <content value="complete"/>
+  <count value="2"/>
+  <concept>
+    <code value="parent-template-id"/>
+    <display value="Parent TemplateId"/>
+    <definition value="TemplateId from which all templates in this IG descend. A schematron warning will detect any teplateIds starting with this value that are not defined in the IG."/>
+  </concept>
+  <concept>
+    <code value="value-set-limit"/>
+    <display value="ValueSet Limit"/>
+    <definition value="Maximum number of values to include in value set lookups."/>
+  </concept>
+</CodeSystem>
