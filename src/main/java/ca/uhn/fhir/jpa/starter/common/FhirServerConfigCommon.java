@@ -190,6 +190,8 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setSchedulingDisabled(!appProperties.getDao_scheduling_enabled());
 		jpaStorageSettings.setIndexStorageOptimized(appProperties.getIndex_storage_optimized());
 		jpaStorageSettings.setMatchUrlCacheEnabled(appProperties.getMatch_url_cache_enabled());
+		jpaStorageSettings.setMarkResourcesForReindexingUponSearchParameterChange(
+				appProperties.getMark_resources_for_reindexing_upon_search_parameter_change());
 		jpaStorageSettings.setDeleteEnabled(appProperties.getDelete_enabled());
 		jpaStorageSettings.setDeleteExpungeEnabled(appProperties.getDelete_expunge_enabled());
 		jpaStorageSettings.setExpungeEnabled(appProperties.getExpunge_enabled());
