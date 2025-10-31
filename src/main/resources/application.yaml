@@ -93,10 +93,10 @@ spring:
 
   datasource:
     # url: "jdbc:h2:file:./target/database/h2"
-    url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driver-class-name: org.h2.Driver
+#    url: jdbc:h2:mem:test_mem
+#    username: sa
+#    password: null
+#    driver-class-name: org.h2.Driver
     # max-active: 15     # (ignored with HikariCP; use hikari.maximum-pool-size)
     hikari:
       maximum-pool-size: 10
@@ -359,7 +359,7 @@ hapi:
     # comma-separated package names, will be @ComponentScan'ed by Spring to allow for creating custom Spring beans
 
     # custom-provider-classes:
-    # custom-interceptor-classes:
+    custom-interceptor-classes: nl.hinq.NviInterceptor
     # custom-provider-classes:
     
     # store_meta_source_information: NONE
