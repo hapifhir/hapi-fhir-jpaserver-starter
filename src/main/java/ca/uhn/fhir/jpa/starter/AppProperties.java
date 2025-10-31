@@ -812,8 +812,8 @@ public class AppProperties {
 		index_storage_optimized = theIndex_storage_optimized;
 	}
 
-	public Boolean getMark_resources_for_reindexing_upon_search_parameter_change() {
-		return mark_resources_for_reindexing_upon_search_parameter_change;
+	public boolean getMark_resources_for_reindexing_upon_search_parameter_change() {
+		return defaultIfNull(mark_resources_for_reindexing_upon_search_parameter_change, true);
 	}
 
 	public void setMark_resources_for_reindexing_upon_search_parameter_change(
