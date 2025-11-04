@@ -126,6 +126,7 @@ public class AppProperties {
 	private Map<String, RemoteSystem> remote_terminology_service = null;
 	private Boolean match_url_cache_enabled = false;
 	private Boolean index_storage_optimized = false;
+	private Boolean mark_resources_for_reindexing_upon_search_parameter_change = true;
 	private Integer reindex_thread_count = null;
 	private Integer expunge_thread_count = null;
 
@@ -809,6 +810,16 @@ public class AppProperties {
 
 	public void setIndex_storage_optimized(boolean theIndex_storage_optimized) {
 		index_storage_optimized = theIndex_storage_optimized;
+	}
+
+	public boolean getMark_resources_for_reindexing_upon_search_parameter_change() {
+		return defaultIfNull(mark_resources_for_reindexing_upon_search_parameter_change, true);
+	}
+
+	public void setMark_resources_for_reindexing_upon_search_parameter_change(
+			Boolean mark_resources_for_reindexing_upon_search_parameter_change) {
+		this.mark_resources_for_reindexing_upon_search_parameter_change =
+				mark_resources_for_reindexing_upon_search_parameter_change;
 	}
 
 	public Integer getReindex_thread_count() {
