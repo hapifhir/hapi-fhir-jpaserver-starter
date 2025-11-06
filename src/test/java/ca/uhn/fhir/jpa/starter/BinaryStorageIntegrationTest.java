@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -142,6 +143,7 @@ abstract class BaseBinaryStorageIntegrationTest {
 	}
 }
 
+@ActiveProfiles("test")
 @SpringBootTest(
 	webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
 	classes = Application.class,
@@ -212,6 +214,7 @@ class BinaryStorageDatabaseModeIT extends BaseBinaryStorageIntegrationTest {
 	}
 }
 
+@ActiveProfiles("test")
 @SpringBootTest(
 	webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
 	classes = Application.class,
@@ -267,6 +270,7 @@ class BinaryStorageFilesystemDefaultIT extends BaseBinaryStorageIntegrationTest 
 	}
 }
 
+@ActiveProfiles("test")
 @SpringBootTest(
 	webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
 	classes = Application.class,

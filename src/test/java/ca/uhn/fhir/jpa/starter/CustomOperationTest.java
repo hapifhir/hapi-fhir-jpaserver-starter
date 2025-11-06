@@ -11,7 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class}, properties = {
 		"hapi.fhir.custom-bean-packages=some.custom.pkg1",
 		"hapi.fhir.custom-provider-classes=some.custom.pkg1.CustomOperationBean,some.custom.pkg1.CustomOperationPojo",
