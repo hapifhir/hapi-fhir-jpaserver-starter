@@ -289,6 +289,7 @@ hapi:
     # Defaults to Runtime.getRuntime().availableProcessors() if not specified
     # reindex_thread_count: 4        # Number of threads to use for reindex operations
     # expunge_thread_count: 4        # Number of threads to use for expunge operations
+    # mark_resources_for_reindexing_upon_search_parameter_change: false
 
     # -------------------------------------------------------------------------------
     # G. Narrative & Validation
