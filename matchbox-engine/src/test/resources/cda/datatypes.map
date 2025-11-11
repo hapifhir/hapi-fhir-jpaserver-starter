@@ -198,18 +198,11 @@ group ADAddress(source src : AD, target tgt : Address) extends Any <<types>> {
     item.county as v -> tgt.district = (v.xmlText);
     item.city as v -> tgt.city = (v.xmlText);
     item.postalCode as v -> tgt.postalCode = (v.xmlText);
-    item.streetAddressLine as v -> tgt.line=(v.xmlText);
-    
-    item   -> tgt.line  as line then { 
-    item where src.censusTract.exists() then {
-      item.censusTract as v -> line.extension as ext1 then CensusTract(v, ext1) "line";
-    }"sfgfdsg";
-    } "CensusTract";
-
-    //share firstline "streetAddress";
-    //as streetAddress then{
-      //src.censusTract as v->tgt.line as line, line.extension as ext1 then CensusTract(v, ext1) "line";
-    //src.censusTract as v ->tgt.line as line, line.extension as ext1 then CensusTract(v, ext1) "line";
+    item.streetAddressLine as v -> tgt.line=(v.xmlText) as line then {
+      src.item as item2 then {
+        item2.censusTract as v -> line.extension as ext1 then CensusTract(v, ext1) "line";
+      } "innercensus";
+    } "item2";
     item.streetName as v -> tgt.line = (v.xmlText);
     item.houseNumber as v -> tgt.line = (v.xmlText);
   } "item";

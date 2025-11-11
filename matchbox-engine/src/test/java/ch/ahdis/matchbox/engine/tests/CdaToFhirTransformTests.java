@@ -31,27 +31,23 @@ import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.OperationOutcome.IssueSeverity;
 import org.hl7.fhir.r4.model.OperationOutcome.OperationOutcomeIssueComponent;
+import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.StructureMap;
-import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.context.FhirVersionEnum;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
-import java.util.spi.CalendarNameProvider;
 
 class CdaToFhirTransformTests {
 
@@ -173,6 +169,12 @@ class CdaToFhirTransformTests {
 		Composition composition = (Composition) resource.getEntryFirstRep().getResource();
 		assertNotNull(composition);
 		assertEquals("2022-03-30T11:24:26+01:00", composition.getDateElement().getValueAsString());
+		Patient patient = (Patient) resource.getEntry().stream()
+				.filter(e -> e.getResource() instanceof Patient)
+				.map(e -> e.getResource())
+				.findFirst()
+				.orElse(null);
+		assertEquals("058091", patient.getAddressFirstRep().getLine().getFirst().getExtension().getFirst().getValue().toString());
 	}
 
 	@Test
