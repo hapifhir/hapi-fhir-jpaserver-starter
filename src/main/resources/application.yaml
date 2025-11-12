@@ -365,7 +365,7 @@ hapi:
     # -------------------------------------------------------------------------------
     # comma-separated package names, will be @ComponentScan'ed by Spring to allow for creating custom Spring beans
 
-    # custom-provider-classes:
+    # custom-bean-packages:
     # custom-interceptor-classes:
     # custom-provider-classes:
     
