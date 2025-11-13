@@ -38,6 +38,12 @@ management:
 
 spring:
   # -------------------------------------------------------------------------------
+  # Application Name
+  # -------------------------------------------------------------------------------
+  application:
+    name: "@project.artifactId@"
+
+  # -------------------------------------------------------------------------------
   # A. Spring AI — Model Context Protocol (MCP)
   # -------------------------------------------------------------------------------
   ai:
@@ -81,6 +87,7 @@ spring:
   main:
     allow-bean-definition-overriding: false
     allow-circular-references: true
+    banner-mode: off
 
   autoconfigure:
     # This exclude is only needed for setups not using Elasticsearch where the elasticsearch sniff is not needed.
@@ -103,42 +110,41 @@ spring:
 
   jpa:
     properties:
-      hibernate:
-        format_sql: false
-        show_sql: false
-        # Hibernate dialect is auto-detected except for H2/Postgres.
-        # If using H2:     ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
-        # If using Postgres: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
-        dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+      hibernate.format_sql: false
+      hibernate.show_sql: false
+      # --- Hibernate dialect is auto-detected except for H2/Postgres. ---
+      # If using H2:       ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+      # If using Postgres: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
+      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+      # hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
 
-        # --- Optional Hibernate DDL & tuning (commented out from source) ---
-        hbm2ddl:
-          auto: update
-        jdbc:
-          batch_size: 20
-        cache:
-          use_query_cache: false
-          use_second_level_cache: false
-          use_structured_entries: false
-          use_minimal_puts: false
+      # --- Optional Hibernate DDL & tuning (commented out from source) ---
+      hibernate.hbm2ddl.auto: update
+      hibernate.jdbc.batch_size: 20
+      hibernate.cache.use_query_cache: false
+      hibernate.cache.use_second_level_cache: false
+      hibernate.cache.use_structured_entries: false
+      hibernate.cache.use_minimal_puts: false
 
-        # --- Hibernate Search (Lucene/Elasticsearch) ---
-        search:
-          enabled: false
-          # Lucene backend (default example)
-          # backend:
-          #   type: lucene
-          #   analysis:
-          #     configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
-          #   directory:
-          #     type: local-filesystem
-          #     root: target/lucenefiles
-          #   lucene_version: lucene_current
-          # Elasticsearch backend (alternative) — see also hapi.fhir.elasticsearch section in docs
-          # backend:
-          #   type: elasticsearch
-          #   analysis:
-          #     configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticAnalysisConfigurer
+      # --- Hibernate Search (Lucene/Elasticsearch) ---
+      hibernate.search.enabled: false
+      # hibernate.search.indexing.listeners.enabled: false
+      # hibernate.search.schema_management.strategy: create-or-validate
+      # --- Lucene backend configuration ---
+      # hibernate.search.backend.type: lucene
+      # hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
+      # hibernate.search.backend.directory.type: local-filesystem
+      # hibernate.search.backend.directory.root: ./target/lucenefiles
+      # hibernate.search.backend.lucene_version: lucene_current
+      # --- Elasticsearch backend configuration ---
+      # hibernate.search.backend.type: elasticsearch
+      # hibernate.search.backend.hosts: localhost:9200
+      # hibernate.search.backend.protocol: http
+      # hibernate.search.backend.username: elastic
+      # hibernate.search.backend.password: changeme
+      # hibernate.search.backend.analysis.configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticsearchAnalysisConfigurer
+      # hibernate.search.backend.layout.strategy: ca.uhn.fhir.jpa.search.elastic.IndexNamePrefixLayoutStrategy
+      # hibernate.search.backend.schema_management.settings_file: classpath:ca/uhn/fhir/jpa/elastic/index-settings.json
 
 # -------------------------------------------------------------------------------------
 # HAPI FHIR — grouped by domain
@@ -153,10 +159,25 @@ hapi:
     fhir_version: R4                            # DSTU2 | DSTU3 | R4 | R5
     # use_apache_address_strategy: false
     # use_apache_address_strategy_https: false
-    # custom_content_path: ./custom               # folder name must be 'custom'
+    custom_content_path: ./custom               # folder name must be 'custom'
     # app_content_path: ./configs/app            # served under /web/app
     # server_address: http://hapi.fhir.org/baseR4
     # defer_indexing_for_codesystems_of_size: 101
+
+    # -------------------------------------------------------------------------------
+    # A.1. Test Page Overlay
+    # -------------------------------------------------------------------------------
+    tester:
+      home:
+        name: Local Tester
+        server_address: 'http://localhost:8080/fhir'
+        refuse_to_fetch_third_party_urls: false
+        fhir_version: R4
+      global:
+        name: Global Tester
+        server_address: "http://hapi.fhir.org/baseR4"
+        refuse_to_fetch_third_party_urls: false
+        fhir_version: R4
 
     # -------------------------------------------------------------------------------
     # B. Implementation Guides (IG) & Package Install
