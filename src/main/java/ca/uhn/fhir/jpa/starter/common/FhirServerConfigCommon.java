@@ -303,6 +303,12 @@ public class FhirServerConfigCommon {
 					appProperties.getExpunge_thread_count());
 		}
 
+		// Determine index prefix from configuration
+		if (appProperties.getElasticsearch() != null) {
+			String indexPrefix = appProperties.getElasticsearch().getIndex_prefix();
+			jpaStorageSettings.setHSearchIndexPrefix(indexPrefix != null ? indexPrefix : "");
+		}
+
 		return jpaStorageSettings;
 	}
 
