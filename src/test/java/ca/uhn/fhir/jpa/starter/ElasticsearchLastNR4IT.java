@@ -167,7 +167,7 @@ class ElasticsearchLastNR4IT {
     public void initialize(
       ConfigurableApplicationContext configurableApplicationContext) {
       // Since the port is dynamically generated, replace the URL with one that has the correct port
-      TestPropertyValues.of("spring.elasticsearch.uris=" + embeddedElastic.getHost() +":" + embeddedElastic.getMappedPort(9200))
+      TestPropertyValues.of("spring.elasticsearch.uris=http://" + embeddedElastic.getHost() + ":" + embeddedElastic.getMappedPort(9200))
         .applyTo(configurableApplicationContext.getEnvironment());
 		 TestPropertyValues.of("spring.jpa.properties.hibernate.search.backend.hosts=" + embeddedElastic.getHost() +":" + embeddedElastic.getMappedPort(9200))
 			 .applyTo(configurableApplicationContext.getEnvironment());
