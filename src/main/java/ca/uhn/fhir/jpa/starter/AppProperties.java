@@ -129,6 +129,7 @@ public class AppProperties {
 	private Boolean mark_resources_for_reindexing_upon_search_parameter_change = true;
 	private Integer reindex_thread_count = null;
 	private Integer expunge_thread_count = null;
+	private Elasticsearch elasticsearch = null;
 
 	public List<String> getCustomInterceptorClasses() {
 		return custom_interceptor_classes;
@@ -847,6 +848,14 @@ public class AppProperties {
 		this.store_meta_source_information = store_meta_source_information;
 	}
 
+	public Elasticsearch getElasticsearch() {
+		return elasticsearch;
+	}
+
+	public void setElasticsearch(Elasticsearch elasticsearch) {
+		this.elasticsearch = elasticsearch;
+	}
+
 	public static class Cors {
 		private Boolean allow_Credentials = true;
 		private List<String> allowed_origin = List.of("*");
@@ -1194,6 +1203,19 @@ public class AppProperties {
 			public void setQuitWait(Boolean quitWait) {
 				this.quitWait = quitWait;
 			}
+		}
+	}
+
+	public static class Elasticsearch {
+
+		private String index_prefix = "";
+
+		public String getIndex_prefix() {
+			return index_prefix;
+		}
+
+		public void setIndex_prefix(String index_prefix) {
+			this.index_prefix = index_prefix;
 		}
 	}
 }
