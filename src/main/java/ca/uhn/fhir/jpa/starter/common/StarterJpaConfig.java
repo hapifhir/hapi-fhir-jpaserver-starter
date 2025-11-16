@@ -235,37 +235,52 @@ public class StarterJpaConfig {
 			Batch2JobRegisterer batch2JobRegisterer,
 			FhirContext fhirContext,
 			TransactionProcessor transactionProcessor,
-			IHapiPackageCacheManager iHapiPackageCacheManager) {
+			IHapiPackageCacheManager iHapiPackageCacheManager,
+			IInterceptorBroadcaster theInterceptorBroadcaster) {
 
 		batch2JobRegisterer.start();
 
 		if (appProperties.getImplementationGuides() != null) {
-			Map<String, ExtendedPackageInstallationSpec> guides = appProperties.getImplementationGuides();
-			for (Map.Entry<String, ExtendedPackageInstallationSpec> guidesEntry : guides.entrySet()) {
-				ExtendedPackageInstallationSpec packageInstallationSpec = guidesEntry.getValue();
-				if (appProperties.getInstall_transitive_ig_dependencies()) {
+			// Register interceptor to provide default partition for package installation when partitioning is enabled
+			PackageInstallationPartitionInterceptor partitionInterceptor = null;
+			if (appProperties.getPartitioning() != null && theInterceptorBroadcaster instanceof ca.uhn.fhir.interceptor.api.IInterceptorService) {
+				partitionInterceptor = new PackageInstallationPartitionInterceptor();
+				((ca.uhn.fhir.interceptor.api.IInterceptorService) theInterceptorBroadcaster).registerInterceptor(partitionInterceptor);
+			}
 
-					packageInstallationSpec
-							.addDependencyExclude("hl7.fhir.r2.core")
-							.addDependencyExclude("hl7.fhir.r3.core")
-							.addDependencyExclude("hl7.fhir.r4.core")
-							.addDependencyExclude("hl7.fhir.r5.core");
+			try {
+				Map<String, ExtendedPackageInstallationSpec> guides = appProperties.getImplementationGuides();
+				for (Map.Entry<String, ExtendedPackageInstallationSpec> guidesEntry : guides.entrySet()) {
+					ExtendedPackageInstallationSpec packageInstallationSpec = guidesEntry.getValue();
+					if (appProperties.getInstall_transitive_ig_dependencies()) {
+
+						packageInstallationSpec
+								.addDependencyExclude("hl7.fhir.r2.core")
+								.addDependencyExclude("hl7.fhir.r3.core")
+								.addDependencyExclude("hl7.fhir.r4.core")
+								.addDependencyExclude("hl7.fhir.r5.core");
+					}
+
+					packageInstallerSvc.install(packageInstallationSpec);
+
+					Set<String> extraResources = packageInstallationSpec.getAdditionalResourceFolders();
+					packageInstallationSpec.setPackageContents(iHapiPackageCacheManager
+							.loadPackageContents(packageInstallationSpec.getName(), packageInstallationSpec.getVersion())
+							.getBytes());
+
+					if (extraResources != null && !extraResources.isEmpty()) {
+						IBaseBundle transaction = AdditionalResourcesParser.bundleAdditionalResources(
+								extraResources, packageInstallationSpec, fhirContext);
+						transactionProcessor.transaction(
+								new SystemRequestDetails().setRequestPartitionId(RequestPartitionId.defaultPartition()),
+								transaction,
+								false);
+					}
 				}
-
-				packageInstallerSvc.install(packageInstallationSpec);
-
-				Set<String> extraResources = packageInstallationSpec.getAdditionalResourceFolders();
-				packageInstallationSpec.setPackageContents(iHapiPackageCacheManager
-						.loadPackageContents(packageInstallationSpec.getName(), packageInstallationSpec.getVersion())
-						.getBytes());
-
-				if (extraResources != null && !extraResources.isEmpty()) {
-					IBaseBundle transaction = AdditionalResourcesParser.bundleAdditionalResources(
-							extraResources, packageInstallationSpec, fhirContext);
-					transactionProcessor.transaction(
-							new SystemRequestDetails().setRequestPartitionId(RequestPartitionId.defaultPartition()),
-							transaction,
-							false);
+			} finally {
+				// Unregister the interceptor after package installation
+				if (partitionInterceptor != null && theInterceptorBroadcaster instanceof ca.uhn.fhir.interceptor.api.IInterceptorService) {
+					((ca.uhn.fhir.interceptor.api.IInterceptorService) theInterceptorBroadcaster).unregisterInterceptor(partitionInterceptor);
 				}
 			}
 		}
