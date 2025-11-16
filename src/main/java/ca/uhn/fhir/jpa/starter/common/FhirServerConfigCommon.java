@@ -278,15 +278,8 @@ public class FhirServerConfigCommon {
 		// Set store meta source information
 		ourLog.debug("Server configured to Store Meta Source: {}", appProperties.getStore_meta_source_information());
 		jpaStorageSettings.setStoreMetaSourceInformation(appProperties.getStore_meta_source_information());
-
-		jpaStorageSettings.setAllowContainsSearches(appProperties.getAllow_contains_searches());
-		jpaStorageSettings.setAllowExternalReferences(appProperties.getAllow_external_references());
 		jpaStorageSettings.setDefaultSearchParamsCanBeOverridden(
 				appProperties.getAllow_override_default_search_params());
-
-		jpaStorageSettings.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
-
-		jpaStorageSettings.setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
 		jpaStorageSettings.setIndexIdentifierOfType(appProperties.getEnable_index_of_type());
 
 		// Configure thread counts for reindex and expunge operations
