@@ -32,10 +32,7 @@ public class ElasticsearchConfig {
 
 		HttpHost[] hosts = uris.stream()
 				.map(URI::create)
-				.map(uri -> new HttpHost(
-						uri.getHost(),
-						uri.getPort(),
-						uri.getScheme()))
+				.map(uri -> new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme()))
 				.toArray(HttpHost[]::new);
 
 		RestClientBuilder builder = RestClient.builder(hosts);
@@ -44,20 +41,20 @@ public class ElasticsearchConfig {
 		if (properties.getUsername() != null && properties.getPassword() != null) {
 			BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 			credentialsProvider.setCredentials(
-					AuthScope.ANY,
-					new UsernamePasswordCredentials(properties.getUsername(), properties.getPassword()));
+					AuthScope.ANY, new UsernamePasswordCredentials(properties.getUsername(), properties.getPassword()));
 
-			builder.setHttpClientConfigCallback(httpClientBuilder ->
-					httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
+			builder.setHttpClientConfigCallback(
+					httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
 		}
 
 		// Configure connection and socket timeouts if needed
-		builder.setRequestConfigCallback(requestConfigBuilder ->
-				requestConfigBuilder
-						.setConnectTimeout(properties.getConnectionTimeout() != null
+		builder.setRequestConfigCallback(requestConfigBuilder -> requestConfigBuilder
+				.setConnectTimeout(
+						properties.getConnectionTimeout() != null
 								? (int) properties.getConnectionTimeout().toMillis()
 								: 5000)
-						.setSocketTimeout(properties.getSocketTimeout() != null
+				.setSocketTimeout(
+						properties.getSocketTimeout() != null
 								? (int) properties.getSocketTimeout().toMillis()
 								: 60000));
 
@@ -66,9 +63,7 @@ public class ElasticsearchConfig {
 
 	@Bean
 	public ElasticsearchClient elasticsearchClient(RestClient restClient) {
-		RestClientTransport transport = new RestClientTransport(
-				restClient,
-				new JacksonJsonpMapper());
+		RestClientTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
 		return new ElasticsearchClient(transport);
 	}
 }
