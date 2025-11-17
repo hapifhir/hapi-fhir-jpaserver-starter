@@ -24,7 +24,8 @@ import java.util.List;
  */
 @Configuration
 @Conditional(ElasticConfigCondition.class)
-public class ElasticsearchConfig {
+public class ElasticsearchConfig
+{
 
 	@Bean
 	public RestClient elasticsearchRestClient(ElasticsearchProperties properties) {

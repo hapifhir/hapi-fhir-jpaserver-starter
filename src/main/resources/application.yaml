@@ -277,7 +277,7 @@ hapi:
     # Elasticsearch Configuration
     # -------------------------------------------------------------------------------
     # elasticsearch:
-    #   index_prefix: "myprefix_"   # Prefix for all Elasticsearch indexes (e.g., myprefix_observation_index)
+    #   index_prefix: "myprefix"   # Prefix for all Elasticsearch indexes (e.g., myprefix_observation_index)
 
     # -------------------------------------------------------------------------------
     # E. Bulk Operations

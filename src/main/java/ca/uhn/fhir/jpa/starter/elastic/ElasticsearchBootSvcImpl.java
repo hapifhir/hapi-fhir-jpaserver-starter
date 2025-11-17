@@ -66,7 +66,7 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 		// Determine index prefix from configuration
 		if (appProperties.getElasticsearch() != null) {
 			String indexPrefix = appProperties.getElasticsearch().getIndex_prefix();
-			if (indexPrefix != null) {
+			if (indexPrefix != null && !sanitizeElasticsearchIndexName(indexPrefix).isEmpty()) {
 				// Set prefixed index names
 				this.observationIndexName = indexPrefix + "-" + OBSERVATION_INDEX_BASE_NAME;
 				this.observationCodeIndexName = indexPrefix + "-" + OBSERVATION_CODE_INDEX_BASE_NAME;
@@ -79,6 +79,34 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 		} catch (IOException theE) {
 			throw new RuntimeException(Msg.code(1175) + "Failed to create document index", theE);
 		}
+	}
+
+	/**
+	 * Sanitizes a string to be a valid Elasticsearch index name.
+	 * <p>
+	 * Elasticsearch index name requirements:
+	 * - Must be lowercase
+	 * - Can only contain: lowercase letters, numbers, hyphens (-), and underscores (_)
+	 * - Cannot start with: -, _, or +
+	 * - Cannot exceed 255 characters
+	 * <p>
+	 * This method performs the following transformations:
+	 * 1. Converts to lowercase
+	 * 2. Replaces any invalid characters with underscores
+	 * 3. Removes leading -, _, or + characters
+	 * 4. Truncates to 255 characters if necessary
+	 * 5. Trims any remaining whitespace
+	 *
+	 * @param name the string to sanitize
+	 * @return a valid Elasticsearch index name
+	 */
+	private String sanitizeElasticsearchIndexName(String name) {
+		String cleaned = name.toLowerCase().replaceAll("[^a-z0-9\\-_]", "_");
+		cleaned = cleaned.replaceAll("^[\\-_.]+", "");
+		if (cleaned.length() > 255) {
+			cleaned = cleaned.substring(0, 255);
+		}
+		return cleaned.trim();
 	}
 
 	private String getIndexSchema(String theSchemaFileName) throws IOException {
