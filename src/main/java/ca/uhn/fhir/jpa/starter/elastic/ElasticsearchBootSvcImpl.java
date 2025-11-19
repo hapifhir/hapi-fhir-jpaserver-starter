@@ -66,7 +66,8 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 		// Determine index prefix from configuration
 		if (appProperties.getElasticsearch() != null) {
 			String indexPrefix = appProperties.getElasticsearch().getIndex_prefix();
-			if (indexPrefix != null && !sanitizeElasticsearchIndexName(indexPrefix).isEmpty()) {
+			if (indexPrefix != null
+					&& !sanitizeElasticsearchIndexName(indexPrefix).isEmpty()) {
 				// Set prefixed index names
 				this.observationIndexName = indexPrefix + "-" + OBSERVATION_INDEX_BASE_NAME;
 				this.observationCodeIndexName = indexPrefix + "-" + OBSERVATION_CODE_INDEX_BASE_NAME;
