@@ -1,12 +1,12 @@
 package ca.uhn.fhir.jpa.starter;
 
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
 import ca.uhn.fhir.jpa.starter.elastic.ElasticsearchBootSvcImpl;
 import ca.uhn.fhir.jpa.starter.elastic.TestElasticsearchClientConfig;
-import ca.uhn.fhir.jpa.test.config.TestElasticsearchContainerHelper;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
@@ -18,6 +18,7 @@ import co.elastic.clients.json.JsonData;
 import jakarta.annotation.PreDestroy;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -61,7 +62,7 @@ class ElasticsearchLastNR4IT {
 	private FhirContext ourCtx;
 
 	@Container
-	public static ElasticsearchContainer embeddedElastic = TestElasticsearchContainerHelper.getEmbeddedElasticSearch();
+	public static ElasticsearchContainer embeddedElastic = getEmbeddedElasticSearch();
 
 	@Autowired
 	private ElasticsearchBootSvcImpl myElasticsearchSvc;
@@ -137,9 +138,13 @@ class ElasticsearchLastNR4IT {
 				// Fall through to index template approach when cluster setting is rejected
 			}
 
-			PutIndexTemplateResponse templateResponse = null;
+			PutIndexTemplateResponse templateResponse;
 			try {
-				templateResponse = client.indices().putIndexTemplate(b -> b.name("hapi-max-ngram-diff").indexPatterns("*").template(t -> t.settings(s -> s.maxNgramDiff(17))));
+				templateResponse = client.indices().putIndexTemplate(b -> b
+					.name("hapi-max-ngram-diff")
+					.indexPatterns("*")
+					.priority(500L)
+					.template(t -> t.settings(s -> s.maxNgramDiff(17))));
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -148,5 +153,20 @@ class ElasticsearchLastNR4IT {
 				throw new IllegalStateException("Unable to set index.max_ngram_diff via cluster settings or index template");
 			}
 		}
+	}
+
+
+	public static final String ELASTICSEARCH_VERSION = "8.19.7";
+	public static final String ELASTICSEARCH_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch:" + ELASTICSEARCH_VERSION;
+	public static ElasticsearchContainer getEmbeddedElasticSearch() {
+
+		return new ElasticsearchContainer(ELASTICSEARCH_IMAGE)
+			// the default is 4GB which is too much for our little tests
+			.withEnv("ES_JAVA_OPTS", "-Xms512m -Xmx512m")
+			// turn off security warnings
+			.withEnv("xpack.security.enabled", "false")
+			// turn off machine learning (we don't need it in tests anyways)
+			.withEnv("xpack.ml.enabled", "false")
+			.withStartupTimeout(Duration.of(300, SECONDS));
 	}
 }
