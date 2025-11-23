@@ -20,36 +20,40 @@ import org.springframework.util.StringUtils;
 @TestConfiguration
 public class TestElasticsearchClientConfig {
 
-    @Bean(destroyMethod = "close")
-    RestClient elasticRestClient(Environment environment) {
-        String uri = environment.getProperty("spring.elasticsearch.uris");
-        if (!StringUtils.hasText(uri)) {
-            throw new IllegalStateException("spring.elasticsearch.uris must be set for tests");
-        }
+	@Bean(destroyMethod = "close")
+	RestClient elasticRestClient(Environment environment) throws IllegalStateException {
+		String uri = environment.getProperty("spring.elasticsearch.uris");
+		if (!StringUtils.hasText(uri)) {
+			throw new IllegalStateException("spring.elasticsearch.uris must be set for tests");
+		}
 
-        HttpHost host = HttpHost.create(uri);
-        RestClientBuilder builder = RestClient.builder(host);
+		HttpHost host = HttpHost.create(uri);
+		RestClientBuilder builder = RestClient.builder(host);
 
-        String username = environment.getProperty("spring.elasticsearch.username");
-        String password = environment.getProperty("spring.elasticsearch.password");
-        if (StringUtils.hasText(username)) {
-            CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-            credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
-            builder.setHttpClientConfigCallback(httpClientBuilder ->
-                httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
-        }
+		String username = environment.getProperty("spring.elasticsearch.username");
+		String password = environment.getProperty("spring.elasticsearch.password");
+		if (StringUtils.hasText(username)) {
+			CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+			credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+			builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
+		}
 
-        return builder.build();
-    }
+		return builder.build();
+	}
 
-    @Bean(destroyMethod = "close")
-    ElasticsearchTransport elasticsearchTransport(RestClient restClient) {
-        return new RestClientTransport(restClient, new JacksonJsonpMapper());
-    }
+	@Bean(destroyMethod = "close")
+	ElasticsearchTransport elasticsearchTransport(RestClient restClient) {
+		return new RestClientTransport(restClient, new JacksonJsonpMapper());
+	}
 
-    @Bean
-    @ConditionalOnMissingBean
-    ElasticsearchClient elasticsearchClient(ElasticsearchTransport transport) {
-        return new ElasticsearchClient(transport);
-    }
+	@Bean
+	@ConditionalOnMissingBean
+	ElasticsearchClient createElasticsearchClient(ElasticsearchTransport transport) {
+		return new ElasticsearchClient(transport);
+	}
+
+	public static ElasticsearchClient createElasticsearchClient(Environment environment) {
+		TestElasticsearchClientConfig config = new TestElasticsearchClientConfig();
+		return new ElasticsearchClient(config.elasticsearchTransport(config.elasticRestClient(environment)));
+	}
 }
