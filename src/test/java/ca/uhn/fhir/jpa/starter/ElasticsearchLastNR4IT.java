@@ -19,9 +19,11 @@ import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
 import jakarta.annotation.PreDestroy;
+
 import java.io.IOException;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -60,178 +62,136 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @ExtendWith(SpringExtension.class)
 @Testcontainers
 @ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class}, properties =
-  {
-    "spring.datasource.url=jdbc:h2:mem:dbr4",
-    "hapi.fhir.fhir_version=r4",
-    "hapi.fhir.lastn_enabled=true",
-	 "hapi.fhir.store_resource_in_lucene_index_enabled=true",
-	 "hapi.fhir.advanced_lucene_indexing=true",
-	 "hapi.fhir.search_index_full_text_enabled=true",
-	  "hapi.fhir.cr_enabled=false",
-    // Because the port is set randomly, we will set the rest_url using the Initializer.
-    // "elasticsearch.rest_url='http://localhost:9200'",
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class}, properties = {
+	"spring.datasource.url=jdbc:h2:mem:dbr4",
+	"hapi.fhir.fhir_version=r4",
+	"hapi.fhir.lastn_enabled=true",
+	"hapi.fhir.store_resource_in_lucene_index_enabled=true",
+	"hapi.fhir.advanced_lucene_indexing=true",
+	"hapi.fhir.search_index_full_text_enabled=true",
+	"hapi.fhir.cr_enabled=false",
+	// Because the port is set randomly, we will set the rest_url using the Initializer.
+	// "elasticsearch.rest_url='http://localhost:9200'",
 
-	  "spring.elasticsearch.uris=http://localhost:9200",
-     "spring.elasticsearch.username=elastic",
-     "spring.elasticsearch.password=changeme",
-	  "spring.main.allow-bean-definition-overriding=true",
-	  "spring.jpa.properties.hibernate.search.enabled=true",
-	  "spring.jpa.properties.hibernate.search.backend.type=elasticsearch",
-	  "spring.jpa.properties.hibernate.search.backend.hosts=localhost:9200",
-	  "spring.jpa.properties.hibernate.search.backend.protocol=http",
-	  "spring.jpa.properties.hibernate.search.backend.analysis.configurer=ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticsearchAnalysisConfigurer"
-  })
+	"spring.elasticsearch.uris=http://localhost:9200",
+	"spring.elasticsearch.username=elastic",
+	"spring.elasticsearch.password=changeme",
+	"spring.main.allow-bean-definition-overriding=true",
+	"spring.jpa.properties.hibernate.search.enabled=true",
+	"spring.jpa.properties.hibernate.search.backend.type=elasticsearch",
+	"spring.jpa.properties.hibernate.search.backend.hosts=localhost:9200",
+	"spring.jpa.properties.hibernate.search.backend.protocol=http",
+	"spring.jpa.properties.hibernate.search.backend.analysis.configurer=ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticsearchAnalysisConfigurer"})
 @ContextConfiguration(initializers = ElasticsearchLastNR4IT.Initializer.class)
 @Import(TestElasticsearchClientConfig.class)
 class ElasticsearchLastNR4IT {
-  private IGenericClient ourClient;
-  private FhirContext ourCtx;
+	private IGenericClient ourClient;
+	private FhirContext ourCtx;
 
-  @Container
-  public static ElasticsearchContainer embeddedElastic = TestElasticsearchContainerHelper.getEmbeddedElasticSearch();
-
-  @Autowired
-  private ElasticsearchBootSvcImpl myElasticsearchSvc;
+	@Container
+	public static ElasticsearchContainer embeddedElastic = TestElasticsearchContainerHelper.getEmbeddedElasticSearch();
 
 	@Autowired
-	private Environment environment;
+	private ElasticsearchBootSvcImpl myElasticsearchSvc;
 
-  @BeforeAll
-  public static void beforeClass() throws IOException {
+	@PreDestroy
+	public void stop() {
+		embeddedElastic.stop();
+	}
 
-	  //System.out.println("App name = " + environment.getProperty("spring.application.name"));
+	@LocalServerPort
+	private int port;
 
-	  //Given
-	 // ElasticsearchClient elasticsearchHighLevelRestClient = ElasticsearchRestClientFactory.createElasticsearchHighLevelRestClient(
-//		  "http", embeddedElastic.getHost() + ":" + embeddedElastic.getMappedPort(9200), "", "");
+	@Test
+	void testLastN() throws IOException, InterruptedException {
+		Thread.sleep(2000);
 
-	  /* As of 2023-08-10, HAPI FHIR sets SubscriptionConstants.MAX_SUBSCRIPTION_RESULTS to 50000
-	  		which is in excess of elastic's default max_result_window. If MAX_SUBSCRIPTION_RESULTS is changed
-	  		to a value <= 10000, the following will no longer be necessary. - dotasek
-	  */
+		Patient pt = new Patient();
+		pt.addName().setFamily("Lastn").addGiven("Arthur");
+		IIdType id = ourClient.create().resource(pt).execute().getId().toUnqualifiedVersionless();
 
-	/*  elasticsearchHighLevelRestClient.indices().putTemplate(t->{
-		  t.name("hapi_fhir_template");
-		  t.indexPatterns("*");
-		  t.settings(new IndexSettings.Builder().maxResultWindow(50000).build());
-		  return t;
-	  });
-*/
-  }
+		Observation obs = new Observation();
+		obs.getSubject().setReferenceElement(id);
+		String observationCode = "testobservationcode";
+		String codeSystem = "http://testobservationcodesystem";
 
-  @PreDestroy
-  public void stop() {
-    embeddedElastic.stop();
-  }
+		obs.getCode().addCoding().setCode(observationCode).setSystem(codeSystem);
+		obs.setValue(new StringType(observationCode));
 
-  @LocalServerPort
-  private int port;
+		Date effectiveDtm = new GregorianCalendar().getTime();
+		obs.setEffective(new DateTimeType(effectiveDtm));
+		obs.getCategoryFirstRep().addCoding().setCode("testcategorycode").setSystem("http://testcategorycodesystem");
+		IIdType obsId = ourClient.create().resource(obs).execute().getId().toUnqualifiedVersionless();
 
-  @Test
-  void testLastN() throws IOException, InterruptedException {
-	 Thread.sleep(2000);
+		myElasticsearchSvc.refreshIndex(ElasticsearchSvcImpl.OBSERVATION_INDEX);
+		Thread.sleep(2000);
 
-    Patient pt = new Patient();
-    pt.addName().setFamily("Lastn").addGiven("Arthur");
-    IIdType id = ourClient.create().resource(pt).execute().getId().toUnqualifiedVersionless();
+		Parameters output = ourClient.operation().onType(Observation.class).named("lastn").withParameter(Parameters.class, "max", new IntegerType(1)).andParameter("subject", new StringType("Patient/" + id.getIdPart())).execute();
+		Bundle b = (Bundle) output.getParameter().get(0).getResource();
+		assertEquals(1, b.getTotal());
+		assertEquals(obsId, b.getEntry().get(0).getResource().getIdElement().toUnqualifiedVersionless());
+	}
 
-    Observation obs = new Observation();
-    obs.getSubject().setReferenceElement(id);
-    String observationCode = "testobservationcode";
-    String codeSystem = "http://testobservationcodesystem";
+	@BeforeEach
+	void beforeEach() throws IOException {
 
-    obs.getCode().addCoding().setCode(observationCode).setSystem(codeSystem);
-    obs.setValue(new StringType(observationCode));
+		ourCtx = FhirContext.forR4();
+		ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
+		ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
+		String ourServerBase = "http://localhost:" + port + "/fhir/";
+		ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
+		ourClient.registerInterceptor(new LoggingInterceptor(true));
+	}
 
-    Date effectiveDtm = new GregorianCalendar().getTime();
-    obs.setEffective(new DateTimeType(effectiveDtm));
-    obs.getCategoryFirstRep().addCoding().setCode("testcategorycode").setSystem("http://testcategorycodesystem");
-    IIdType obsId = ourClient.create().resource(obs).execute().getId().toUnqualifiedVersionless();
+	static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-    myElasticsearchSvc.refreshIndex(ElasticsearchSvcImpl.OBSERVATION_INDEX);
-	  Thread.sleep(2000);
+		@Override
+		public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+			if (!embeddedElastic.isRunning()) {
+				embeddedElastic.start();
+			}
 
-    Parameters output = ourClient.operation().onType(Observation.class).named("lastn")
-      .withParameter(Parameters.class, "max", new IntegerType(1))
-      .andParameter("subject", new StringType("Patient/" + id.getIdPart()))
-      .execute();
-    Bundle b = (Bundle) output.getParameter().get(0).getResource();
-    assertEquals(1, b.getTotal());
-    assertEquals(obsId, b.getEntry().get(0).getResource().getIdElement().toUnqualifiedVersionless());
-  }
+			String elasticHost = embeddedElastic.getHost();
+			int elasticPort = embeddedElastic.getMappedPort(9200);
+			setMaxNgramDiff(elasticHost, elasticPort, configurableApplicationContext.getEnvironment());
 
-  @BeforeEach
-  void beforeEach() throws IOException {
+			// Since the port is dynamically generated, replace the URL with one that has the correct port
+			TestPropertyValues.of("spring.elasticsearch.uris=" + elasticHost + ":" + elasticPort).applyTo(configurableApplicationContext.getEnvironment());
+			TestPropertyValues.of("spring.jpa.properties.hibernate.search.backend.hosts=" + elasticHost + ":" + elasticPort).applyTo(configurableApplicationContext.getEnvironment());
 
-    ourCtx = FhirContext.forR4();
-    ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
-    ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
-    String ourServerBase = "http://localhost:" + port + "/fhir/";
-    ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
-    ourClient.registerInterceptor(new LoggingInterceptor(true));
-  }
+		}
 
-  static class Initializer
-    implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+		private static void setMaxNgramDiff(String host, int port, Environment environment) {
+			RestClientBuilder builder = RestClient.builder(new HttpHost(host, port, "http"));
+			String username = environment.getProperty("spring.elasticsearch.username");
+			String password = environment.getProperty("spring.elasticsearch.password");
+			if (StringUtils.hasText(username)) {
+				CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+				credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+				builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
+			}
 
-    @Override
-    public void initialize(
-      ConfigurableApplicationContext configurableApplicationContext) {
-      if (!embeddedElastic.isRunning()) {
-        embeddedElastic.start();
-      }
+			try (RestClient restClient = builder.build(); ElasticsearchTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper())) {
+				ElasticsearchClient client = new ElasticsearchClient(transport);
 
-      String elasticHost = embeddedElastic.getHost();
-      int elasticPort = embeddedElastic.getMappedPort(9200);
-      setMaxNgramDiff(elasticHost, elasticPort, configurableApplicationContext.getEnvironment());
+				try {
+					PutClusterSettingsResponse clusterResponse = client.cluster().putSettings(s -> s.persistent("indices.max_ngram_diff", JsonData.of(17)));
+					if (clusterResponse.acknowledged()) {
+						return;
+					}
+				} catch (ElasticsearchException e) {
+					// Fall through to index template approach when cluster setting is rejected
+				}
 
-      // Since the port is dynamically generated, replace the URL with one that has the correct port
-      TestPropertyValues.of("spring.elasticsearch.uris=" + elasticHost +":" + elasticPort)
-        .applyTo(configurableApplicationContext.getEnvironment());
-		 TestPropertyValues.of("spring.jpa.properties.hibernate.search.backend.hosts=" + elasticHost +":" + elasticPort)
-			 .applyTo(configurableApplicationContext.getEnvironment());
+				PutIndexTemplateResponse templateResponse = client.indices().putIndexTemplate(b -> b.name("hapi-max-ngram-diff").indexPatterns("*").template(t -> t.settings(s -> s.maxNgramDiff(17))));
 
-    }
+				if (!templateResponse.acknowledged()) {
+					throw new IllegalStateException("Unable to set index.max_ngram_diff via cluster settings or index template");
+				}
+			} catch (IOException e) {
+				throw new IllegalStateException("Unable to set index.max_ngram_diff", e);
+			}
+		}
 
-    private static void setMaxNgramDiff(String host, int port, Environment environment) {
-      RestClientBuilder builder = RestClient.builder(new HttpHost(host, port, "http"));
-      String username = environment.getProperty("spring.elasticsearch.username");
-      String password = environment.getProperty("spring.elasticsearch.password");
-      if (StringUtils.hasText(username)) {
-        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
-        builder.setHttpClientConfigCallback(httpClientBuilder ->
-          httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
-      }
-
-      try (RestClient restClient = builder.build();
-           ElasticsearchTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper())) {
-        ElasticsearchClient client = new ElasticsearchClient(transport);
-
-        try {
-          PutClusterSettingsResponse clusterResponse = client.cluster()
-            .putSettings(s -> s.persistent("indices.max_ngram_diff", JsonData.of(17)));
-          if (clusterResponse.acknowledged()) {
-            return;
-          }
-        } catch (ElasticsearchException e) {
-          // Fall through to index template approach when cluster setting is rejected
-        }
-
-        PutIndexTemplateResponse templateResponse = client.indices().putIndexTemplate(b -> b
-          .name("hapi-max-ngram-diff")
-          .indexPatterns("*")
-          .template(t -> t.settings(s -> s.maxNgramDiff(17)))
-        );
-
-        if (!templateResponse.acknowledged()) {
-          throw new IllegalStateException("Unable to set index.max_ngram_diff via cluster settings or index template");
-        }
-      } catch (IOException e) {
-        throw new IllegalStateException("Unable to set index.max_ngram_diff", e);
-      }
-    }
-
-  }
+	}
 }
