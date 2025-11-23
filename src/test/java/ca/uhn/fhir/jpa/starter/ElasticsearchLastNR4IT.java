@@ -126,32 +126,32 @@ class ElasticsearchLastNR4IT {
 			TestPropertyValues.of("spring.elasticsearch.uris=" + elasticHost + ":" + elasticPort).applyTo(configurableApplicationContext.getEnvironment());
 			TestPropertyValues.of("spring.jpa.properties.hibernate.search.backend.hosts=" + elasticHost + ":" + elasticPort).applyTo(configurableApplicationContext.getEnvironment());
 
-			ElasticsearchClient client = TestElasticsearchClientConfig.createElasticsearchClient(configurableApplicationContext.getEnvironment());
+			try (ElasticsearchClient client = TestElasticsearchClientConfig.createElasticsearchClient(configurableApplicationContext.getEnvironment())) {
 
-			try {
-				PutClusterSettingsResponse clusterResponse = client.cluster().putSettings(s -> s.persistent("indices.max_ngram_diff", JsonData.of(17)));
-				if (clusterResponse.acknowledged()) {
-					return;
+				try {
+					PutClusterSettingsResponse clusterResponse = client.cluster().putSettings(s -> s.persistent("indices.max_ngram_diff", JsonData.of(17)));
+					if (clusterResponse.acknowledged()) {
+						return;
+					}
+				} catch (ElasticsearchException | IOException e) {
+					// Fall through to index template approach when cluster setting is rejected
 				}
-			} catch (ElasticsearchException | IOException e) {
-				// Fall through to index template approach when cluster setting is rejected
-			}
 
-			PutIndexTemplateResponse templateResponse;
-			try {
-				templateResponse = client.indices().putIndexTemplate(b -> b
-					.name("hapi-max-ngram-diff")
-					.indexPatterns("*")
-					.priority(500L)
-					.template(t -> t.settings(s -> s.maxNgramDiff(17))));
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
+				PutIndexTemplateResponse templateResponse;
+				try {
+					templateResponse = client.indices().putIndexTemplate(b -> b
+						.name("hapi-max-ngram-diff")
+						.indexPatterns("*")
+						.priority(500L)
+						.template(t -> t.settings(s -> s.maxNgramDiff(17))));
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
 
-			if (!templateResponse.acknowledged()) {
-				throw new IllegalStateException("Unable to set index.max_ngram_diff via cluster settings or index template");
+				if (!templateResponse.acknowledged()) {
+					throw new IllegalStateException("Unable to set index.max_ngram_diff via cluster settings or index template");
+				}
 			}
-		}
 	}
 
 
