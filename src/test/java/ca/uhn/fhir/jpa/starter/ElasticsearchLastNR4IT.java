@@ -95,7 +95,6 @@ class ElasticsearchLastNR4IT {
 		IIdType obsId = ourClient.create().resource(obs).execute().getId().toUnqualifiedVersionless();
 
 		myElasticsearchSvc.refreshIndex(ElasticsearchSvcImpl.OBSERVATION_INDEX);
-		Thread.sleep(2000);
 
 		Parameters output = ourClient.operation().onType(Observation.class).named("lastn").withParameter(Parameters.class, "max", new IntegerType(1)).andParameter("subject", new StringType("Patient/" + id.getIdPart())).execute();
 		Bundle b = (Bundle) output.getParameter().get(0).getResource();
