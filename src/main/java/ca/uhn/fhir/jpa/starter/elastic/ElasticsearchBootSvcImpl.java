@@ -49,14 +49,14 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 
 	private static final String OBSERVATION_RESOURCE_NAME = "Observation";
 
-	private final ElasticsearchClient myRestHighLevelClient;
+	private final ElasticsearchClient elasticsearchClient;
 
 	private final FhirContext myContext;
 
 	public ElasticsearchBootSvcImpl(ElasticsearchClient client, FhirContext fhirContext) {
 
 		myContext = fhirContext;
-		myRestHighLevelClient = client;
+		elasticsearchClient = client;
 
 		try {
 			createObservationIndexIfMissing();
@@ -100,7 +100,7 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 	}
 
 	private boolean createIndex(String theIndexName, String theMapping) throws IOException {
-		return myRestHighLevelClient
+		return elasticsearchClient
 				.indices()
 				.create(cir -> cir.index(theIndexName).withJson(new StringReader(theMapping)))
 				.acknowledged();
@@ -108,7 +108,7 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 
 	private boolean indexExists(String theIndexName) throws IOException {
 		ExistsRequest request = new ExistsRequest.Builder().index(theIndexName).build();
-		return myRestHighLevelClient.indices().exists(request).value();
+		return elasticsearchClient.indices().exists(request).value();
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 		SearchRequest searchRequest = buildObservationResourceSearchRequest(thePids);
 		try {
 			SearchResponse<ObservationJson> observationDocumentResponse =
-					myRestHighLevelClient.search(searchRequest, ObservationJson.class);
+					elasticsearchClient.search(searchRequest, ObservationJson.class);
 			List<Hit<ObservationJson>> observationDocumentHits =
 					observationDocumentResponse.hits().hits();
 			IParser parser = TolerantJsonParser.createWithLenientErrorHandling(myContext, null);
@@ -158,6 +158,6 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 
 	@VisibleForTesting
 	public void refreshIndex(String theIndexName) throws IOException {
-		myRestHighLevelClient.indices().refresh(fn -> fn.index(theIndexName));
+		elasticsearchClient.indices().refresh(fn -> fn.index(theIndexName));
 	}
 }

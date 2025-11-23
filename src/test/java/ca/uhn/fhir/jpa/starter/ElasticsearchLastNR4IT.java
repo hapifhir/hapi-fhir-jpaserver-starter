@@ -5,16 +5,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
 import ca.uhn.fhir.jpa.starter.elastic.ElasticsearchBootSvcImpl;
+import ca.uhn.fhir.jpa.starter.elastic.TestElasticsearchClientConfig;
 import ca.uhn.fhir.jpa.test.config.TestElasticsearchContainerHelper;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import jakarta.annotation.PreDestroy;
 import java.io.IOException;
-
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Date;
 import java.util.GregorianCalendar;
-
-import jakarta.annotation.PreDestroy;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.DateTimeType;
@@ -25,7 +29,6 @@ import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.StringType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +37,7 @@ import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -43,7 +47,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @ExtendWith(SpringExtension.class)
 @Testcontainers
-@Disabled
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class}, properties =
   {
@@ -68,6 +71,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 	  "spring.jpa.properties.hibernate.search.backend.analysis.configurer=ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticsearchAnalysisConfigurer"
   })
 @ContextConfiguration(initializers = ElasticsearchLastNR4IT.Initializer.class)
+@Import(TestElasticsearchClientConfig.class)
 class ElasticsearchLastNR4IT {
   private IGenericClient ourClient;
   private FhirContext ourCtx;
@@ -78,8 +82,12 @@ class ElasticsearchLastNR4IT {
   @Autowired
   private ElasticsearchBootSvcImpl myElasticsearchSvc;
 
+  @Autowired
+  private ElasticsearchClient elasticsearchClient;
+
   @BeforeAll
   public static void beforeClass() throws IOException {
+
 	  //Given
 	 // ElasticsearchClient elasticsearchHighLevelRestClient = ElasticsearchRestClientFactory.createElasticsearchHighLevelRestClient(
 //		  "http", embeddedElastic.getHost() + ":" + embeddedElastic.getMappedPort(9200), "", "");
@@ -148,7 +156,6 @@ class ElasticsearchLastNR4IT {
     String ourServerBase = "http://localhost:" + port + "/fhir/";
     ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
     ourClient.registerInterceptor(new LoggingInterceptor(true));
-
   }
 
   static class Initializer
@@ -157,11 +164,58 @@ class ElasticsearchLastNR4IT {
     @Override
     public void initialize(
       ConfigurableApplicationContext configurableApplicationContext) {
+      if (!embeddedElastic.isRunning()) {
+        embeddedElastic.start();
+      }
+
+      String elasticHost = embeddedElastic.getHost();
+      int elasticPort = embeddedElastic.getMappedPort(9200);
+      setMaxNgramDiff(elasticHost, elasticPort);
+
       // Since the port is dynamically generated, replace the URL with one that has the correct port
-      TestPropertyValues.of("spring.elasticsearch.uris=" + embeddedElastic.getHost() +":" + embeddedElastic.getMappedPort(9200))
+      TestPropertyValues.of("spring.elasticsearch.uris=" + elasticHost +":" + elasticPort)
         .applyTo(configurableApplicationContext.getEnvironment());
-		 TestPropertyValues.of("spring.jpa.properties.hibernate.search.backend.hosts=" + embeddedElastic.getHost() +":" + embeddedElastic.getMappedPort(9200))
+		 TestPropertyValues.of("spring.jpa.properties.hibernate.search.backend.hosts=" + elasticHost +":" + elasticPort)
 			 .applyTo(configurableApplicationContext.getEnvironment());
+
+    }
+
+    private static void setMaxNgramDiff(String host, int port) {
+      HttpClient httpClient = HttpClient.newHttpClient();
+
+      try {
+        HttpResponse<String> clusterUpdateResponse = httpClient.send(
+          HttpRequest.newBuilder()
+            .uri(URI.create("http://" + host + ":" + port + "/_cluster/settings"))
+            .header("Content-Type", "application/json")
+            .PUT(HttpRequest.BodyPublishers.ofString("{\"persistent\":{\"indices.max_ngram_diff\":17}}"))
+            .build(),
+          HttpResponse.BodyHandlers.ofString());
+
+        if (clusterUpdateResponse.statusCode() < 300) {
+          return;
+        }
+
+        HttpResponse<String> templateResponse = httpClient.send(
+          HttpRequest.newBuilder()
+            .uri(URI.create("http://" + host + ":" + port + "/_index_template/hapi-max-ngram-diff"))
+            .header("Content-Type", "application/json")
+            .PUT(HttpRequest.BodyPublishers.ofString(
+              "{\"index_patterns\":[\"*\"],\"template\":{\"settings\":{\"index\":{\"max_ngram_diff\":17}}}}"))
+            .build(),
+          HttpResponse.BodyHandlers.ofString());
+
+        if (templateResponse.statusCode() >= 300) {
+          throw new IllegalStateException("Unable to set index.max_ngram_diff. Cluster status: "
+            + clusterUpdateResponse.statusCode() + " Body: " + clusterUpdateResponse.body()
+            + " Template status: " + templateResponse.statusCode() + " Body: " + templateResponse.body());
+        }
+      } catch (IOException e) {
+        throw new IllegalStateException("Unable to set index.max_ngram_diff", e);
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        throw new IllegalStateException("Interrupted while setting index.max_ngram_diff", e);
+      }
     }
 
   }
