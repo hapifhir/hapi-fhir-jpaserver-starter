@@ -96,6 +96,7 @@ class ElasticsearchLastNR4IT {
 
 		myElasticsearchSvc.refreshIndex(ElasticsearchSvcImpl.OBSERVATION_INDEX);
 
+		Thread.sleep(2000);
 		Parameters output = ourClient.operation().onType(Observation.class).named("lastn").withParameter(Parameters.class, "max", new IntegerType(1)).andParameter("subject", new StringType("Patient/" + id.getIdPart())).execute();
 		Bundle b = (Bundle) output.getParameter().get(0).getResource();
 		assertEquals(1, b.getTotal());
@@ -126,37 +127,38 @@ class ElasticsearchLastNR4IT {
 			TestPropertyValues.of("spring.elasticsearch.uris=" + elasticHost + ":" + elasticPort).applyTo(configurableApplicationContext.getEnvironment());
 			TestPropertyValues.of("spring.jpa.properties.hibernate.search.backend.hosts=" + elasticHost + ":" + elasticPort).applyTo(configurableApplicationContext.getEnvironment());
 
-			try (ElasticsearchClient client = TestElasticsearchClientConfig.createElasticsearchClient(configurableApplicationContext.getEnvironment())) {
+			ElasticsearchClient client = TestElasticsearchClientConfig.createElasticsearchClient(configurableApplicationContext.getEnvironment());
 
-				try {
-					PutClusterSettingsResponse clusterResponse = client.cluster().putSettings(s -> s.persistent("indices.max_ngram_diff", JsonData.of(17)));
-					if (clusterResponse.acknowledged()) {
-						return;
-					}
-				} catch (ElasticsearchException | IOException e) {
-					// Fall through to index template approach when cluster setting is rejected
+			try {
+				PutClusterSettingsResponse clusterResponse = client.cluster().putSettings(s -> s.persistent("indices.max_ngram_diff", JsonData.of(17)));
+				if (clusterResponse.acknowledged()) {
+					return;
 				}
-
-				PutIndexTemplateResponse templateResponse;
-				try {
-					templateResponse = client.indices().putIndexTemplate(b -> b
-						.name("hapi-max-ngram-diff")
-						.indexPatterns("*")
-						.priority(500L)
-						.template(t -> t.settings(s -> s.maxNgramDiff(17))));
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-
-				if (!templateResponse.acknowledged()) {
-					throw new IllegalStateException("Unable to set index.max_ngram_diff via cluster settings or index template");
-				}
+			} catch (ElasticsearchException | IOException e) {
+				// Fall through to index template approach when cluster setting is rejected
 			}
+
+			PutIndexTemplateResponse templateResponse;
+			try {
+				templateResponse = client.indices().putIndexTemplate(b -> b
+					.name("hapi-max-ngram-diff")
+					.indexPatterns("*")
+					.priority(500L)
+					.template(t -> t.settings(s -> s.maxNgramDiff(17))));
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+
+			if (!templateResponse.acknowledged()) {
+				throw new IllegalStateException("Unable to set index.max_ngram_diff via cluster settings or index template");
+			}
+		}
 	}
 
 
 	public static final String ELASTICSEARCH_VERSION = "8.19.7";
 	public static final String ELASTICSEARCH_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch:" + ELASTICSEARCH_VERSION;
+
 	public static ElasticsearchContainer getEmbeddedElasticSearch() {
 
 		return new ElasticsearchContainer(ELASTICSEARCH_IMAGE)
