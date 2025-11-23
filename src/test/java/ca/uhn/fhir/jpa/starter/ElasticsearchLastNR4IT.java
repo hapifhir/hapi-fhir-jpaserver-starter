@@ -11,14 +11,24 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import co.elastic.clients.elasticsearch.cluster.PutClusterSettingsResponse;
+import co.elastic.clients.elasticsearch.indices.PutIndexTemplateResponse;
+import co.elastic.clients.json.JsonData;
+import co.elastic.clients.json.jackson.JacksonJsonpMapper;
+import co.elastic.clients.transport.ElasticsearchTransport;
+import co.elastic.clients.transport.rest_client.RestClientTransport;
 import jakarta.annotation.PreDestroy;
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.DateTimeType;
@@ -38,9 +48,11 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.util.StringUtils;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -82,11 +94,13 @@ class ElasticsearchLastNR4IT {
   @Autowired
   private ElasticsearchBootSvcImpl myElasticsearchSvc;
 
-  @Autowired
-  private ElasticsearchClient elasticsearchClient;
+	@Autowired
+	private Environment environment;
 
   @BeforeAll
   public static void beforeClass() throws IOException {
+
+	  //System.out.println("App name = " + environment.getProperty("spring.application.name"));
 
 	  //Given
 	 // ElasticsearchClient elasticsearchHighLevelRestClient = ElasticsearchRestClientFactory.createElasticsearchHighLevelRestClient(
@@ -170,7 +184,7 @@ class ElasticsearchLastNR4IT {
 
       String elasticHost = embeddedElastic.getHost();
       int elasticPort = embeddedElastic.getMappedPort(9200);
-      setMaxNgramDiff(elasticHost, elasticPort);
+      setMaxNgramDiff(elasticHost, elasticPort, configurableApplicationContext.getEnvironment());
 
       // Since the port is dynamically generated, replace the URL with one that has the correct port
       TestPropertyValues.of("spring.elasticsearch.uris=" + elasticHost +":" + elasticPort)
@@ -180,41 +194,42 @@ class ElasticsearchLastNR4IT {
 
     }
 
-    private static void setMaxNgramDiff(String host, int port) {
-      HttpClient httpClient = HttpClient.newHttpClient();
+    private static void setMaxNgramDiff(String host, int port, Environment environment) {
+      RestClientBuilder builder = RestClient.builder(new HttpHost(host, port, "http"));
+      String username = environment.getProperty("spring.elasticsearch.username");
+      String password = environment.getProperty("spring.elasticsearch.password");
+      if (StringUtils.hasText(username)) {
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+        builder.setHttpClientConfigCallback(httpClientBuilder ->
+          httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
+      }
 
-      try {
-        HttpResponse<String> clusterUpdateResponse = httpClient.send(
-          HttpRequest.newBuilder()
-            .uri(URI.create("http://" + host + ":" + port + "/_cluster/settings"))
-            .header("Content-Type", "application/json")
-            .PUT(HttpRequest.BodyPublishers.ofString("{\"persistent\":{\"indices.max_ngram_diff\":17}}"))
-            .build(),
-          HttpResponse.BodyHandlers.ofString());
+      try (RestClient restClient = builder.build();
+           ElasticsearchTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper())) {
+        ElasticsearchClient client = new ElasticsearchClient(transport);
 
-        if (clusterUpdateResponse.statusCode() < 300) {
-          return;
+        try {
+          PutClusterSettingsResponse clusterResponse = client.cluster()
+            .putSettings(s -> s.persistent("indices.max_ngram_diff", JsonData.of(17)));
+          if (clusterResponse.acknowledged()) {
+            return;
+          }
+        } catch (ElasticsearchException e) {
+          // Fall through to index template approach when cluster setting is rejected
         }
 
-        HttpResponse<String> templateResponse = httpClient.send(
-          HttpRequest.newBuilder()
-            .uri(URI.create("http://" + host + ":" + port + "/_index_template/hapi-max-ngram-diff"))
-            .header("Content-Type", "application/json")
-            .PUT(HttpRequest.BodyPublishers.ofString(
-              "{\"index_patterns\":[\"*\"],\"template\":{\"settings\":{\"index\":{\"max_ngram_diff\":17}}}}"))
-            .build(),
-          HttpResponse.BodyHandlers.ofString());
+        PutIndexTemplateResponse templateResponse = client.indices().putIndexTemplate(b -> b
+          .name("hapi-max-ngram-diff")
+          .indexPatterns("*")
+          .template(t -> t.settings(s -> s.maxNgramDiff(17)))
+        );
 
-        if (templateResponse.statusCode() >= 300) {
-          throw new IllegalStateException("Unable to set index.max_ngram_diff. Cluster status: "
-            + clusterUpdateResponse.statusCode() + " Body: " + clusterUpdateResponse.body()
-            + " Template status: " + templateResponse.statusCode() + " Body: " + templateResponse.body());
+        if (!templateResponse.acknowledged()) {
+          throw new IllegalStateException("Unable to set index.max_ngram_diff via cluster settings or index template");
         }
       } catch (IOException e) {
         throw new IllegalStateException("Unable to set index.max_ngram_diff", e);
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-        throw new IllegalStateException("Interrupted while setting index.max_ngram_diff", e);
       }
     }
 
