@@ -82,7 +82,7 @@ mvn verify
 2. Skip only integration tests: `mvn clean package` (runs unit tests only)
 3. Update test fixtures to match new database (more work)
 
-The README explicitly documents this at line 349:
+The README explicitly documents this in the PostgreSQL configuration section:
 > "Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicitly skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether."
 
 ## Project Structure & Key Files
@@ -106,7 +106,7 @@ src/main/java/ca/uhn/fhir/jpa/starter/
 └── web/                      # Web/REST controllers
 
 src/main/resources/
-├── application.yaml          # Main configuration (436 lines)
+├── application.yaml          # Main configuration (~430+ lines)
 ├── application-cds.yaml      # Clinical reasoning profile
 ├── logback.xml              # Logging configuration
 └── mdm-rules.json           # MDM matching rules
@@ -121,7 +121,7 @@ src/test/java/ca/uhn/fhir/jpa/starter/
 ```
 
 ### Configuration Files
-- `pom.xml` - Maven build configuration (750 lines)
+- `pom.xml` - Maven build configuration (~750 lines)
 - `application.yaml` - Runtime configuration, datasource, HAPI FHIR settings
 - `Dockerfile` - Multi-stage build (distroless for production, tomcat for debugging)
 - `docker-compose.yml` - PostgreSQL + HAPI FHIR setup
