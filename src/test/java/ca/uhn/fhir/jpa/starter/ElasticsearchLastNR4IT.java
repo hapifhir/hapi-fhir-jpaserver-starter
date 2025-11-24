@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
 import ca.uhn.fhir.jpa.starter.elastic.ElasticsearchBootSvcImpl;
-import ca.uhn.fhir.jpa.starter.elastic.TestElasticsearchClientConfig;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
@@ -15,6 +14,8 @@ import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch.cluster.PutClusterSettingsResponse;
 import co.elastic.clients.elasticsearch.indices.PutIndexTemplateResponse;
 import co.elastic.clients.json.JsonData;
+import co.elastic.clients.json.jackson.JacksonJsonpMapper;
+import co.elastic.clients.transport.rest_client.RestClientTransport;
 import jakarta.annotation.PreDestroy;
 
 import java.io.IOException;
@@ -22,6 +23,13 @@ import java.time.Duration;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.DateTimeType;
@@ -39,10 +47,11 @@ import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Import;
+import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.util.StringUtils;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -50,13 +59,31 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @ExtendWith(SpringExtension.class)
 @Testcontainers
 @ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class}, properties = {"spring.datasource.url=jdbc:h2:mem:dbr4", "hapi.fhir.fhir_version=r4", "hapi.fhir.lastn_enabled=true", "hapi.fhir.store_resource_in_lucene_index_enabled=true", "hapi.fhir.advanced_lucene_indexing=true", "hapi.fhir.search_index_full_text_enabled=true", "hapi.fhir.cr_enabled=false",
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class}, properties = {
+	"spring.datasource.url=jdbc:h2:mem:dbr4",
+
+	// Override the default exclude configuration for the Elasticsearch client.
+	"spring.autoconfigure.exclude=",
+
+	"hapi.fhir.fhir_version=r4",
+	"hapi.fhir.lastn_enabled=true",
+	"hapi.fhir.store_resource_in_lucene_index_enabled=true",
+	"hapi.fhir.advanced_lucene_indexing=true",
+	"hapi.fhir.search_index_full_text_enabled=true",
+
 	// Because the port is set randomly, we will set the rest_url using the Initializer.
 	// "elasticsearch.rest_url='http://localhost:9200'",
 
-	"spring.elasticsearch.uris=http://localhost:9200", "spring.elasticsearch.username=elastic", "spring.elasticsearch.password=changeme", "spring.main.allow-bean-definition-overriding=true", "spring.jpa.properties.hibernate.search.enabled=true", "spring.jpa.properties.hibernate.search.backend.type=elasticsearch", "spring.jpa.properties.hibernate.search.backend.hosts=localhost:9200", "spring.jpa.properties.hibernate.search.backend.protocol=http", "spring.jpa.properties.hibernate.search.backend.analysis.configurer=ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticsearchAnalysisConfigurer"})
+	"spring.elasticsearch.uris=http://localhost:9200",
+	"spring.elasticsearch.username=elastic",
+	"spring.elasticsearch.password=changeme",
+	"spring.main.allow-bean-definition-overriding=true",
+	"spring.jpa.properties.hibernate.search.enabled=true",
+	"spring.jpa.properties.hibernate.search.backend.type=elasticsearch",
+	"spring.jpa.properties.hibernate.search.backend.hosts=localhost:9200",
+	"spring.jpa.properties.hibernate.search.backend.protocol=http",
+	"spring.jpa.properties.hibernate.search.backend.analysis.configurer=ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticsearchAnalysisConfigurer"})
 @ContextConfiguration(initializers = ElasticsearchLastNR4IT.Initializer.class)
-@Import(TestElasticsearchClientConfig.class)
 class ElasticsearchLastNR4IT {
 	private IGenericClient ourClient;
 	private FhirContext ourCtx;
@@ -127,7 +154,7 @@ class ElasticsearchLastNR4IT {
 			TestPropertyValues.of("spring.elasticsearch.uris=" + elasticHost + ":" + elasticPort).applyTo(configurableApplicationContext.getEnvironment());
 			TestPropertyValues.of("spring.jpa.properties.hibernate.search.backend.hosts=" + elasticHost + ":" + elasticPort).applyTo(configurableApplicationContext.getEnvironment());
 
-			ElasticsearchClient client = TestElasticsearchClientConfig.createElasticsearchClient(configurableApplicationContext.getEnvironment());
+			ElasticsearchClient client = buildElasticRestClient(configurableApplicationContext.getEnvironment());
 
 			try {
 				PutClusterSettingsResponse clusterResponse = client.cluster().putSettings(s -> s.persistent("indices.max_ngram_diff", JsonData.of(17)));
@@ -169,5 +196,25 @@ class ElasticsearchLastNR4IT {
 			// turn off machine learning (we don't need it in tests anyways)
 			.withEnv("xpack.ml.enabled", "false")
 			.withStartupTimeout(Duration.of(300, SECONDS));
+	}
+
+	static ElasticsearchClient buildElasticRestClient(Environment environment) throws IllegalStateException {
+		String uri = environment.getProperty("spring.elasticsearch.uris");
+		if (!StringUtils.hasText(uri)) {
+			throw new IllegalStateException("spring.elasticsearch.uris must be set for tests");
+		}
+
+		HttpHost host = HttpHost.create(uri);
+		RestClientBuilder builder = RestClient.builder(host);
+
+		String username = environment.getProperty("spring.elasticsearch.username");
+		String password = environment.getProperty("spring.elasticsearch.password");
+		if (StringUtils.hasText(username)) {
+			CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+			credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+			builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
+		}
+
+		return new ElasticsearchClient(new RestClientTransport(builder.build(), new JacksonJsonpMapper()));
 	}
 }
