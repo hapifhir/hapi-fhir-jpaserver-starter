@@ -83,7 +83,7 @@ mvn verify
 3. Update test fixtures to match new database (more work)
 
 The README explicitly documents this in the PostgreSQL configuration section:
-> "Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicitly skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether."
+> "Because the integration tests within the project rely on the default H2 database configuration, it is important to either explicitly skip the integration tests during the build process, i.e., `mvn install -DskipTests`, or delete the tests altogether. Failure to skip or delete the tests once you've configured PostgreSQL for the datasource.driver, datasource.url, and hibernate.dialect as outlined above will result in build errors and compilation failure."
 
 ## Project Structure & Key Files
 
