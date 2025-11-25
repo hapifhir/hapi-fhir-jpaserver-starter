@@ -150,7 +150,7 @@ public class StarterJpaConfig {
 	@Primary
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-			ElasticsearchBootSvcImpl elasticsearchSvc,
+			Optional<ElasticsearchBootSvcImpl> elasticsearchSvc,
 			JpaProperties theJpaProperties,
 			DataSource myDataSource,
 			ConfigurableListableBeanFactory myConfigurableListableBeanFactory,
