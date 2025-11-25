@@ -1,11 +1,11 @@
 package ca.uhn.fhir.jpa.starter;
 
-import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
 import ca.uhn.fhir.jpa.starter.elastic.ElasticsearchBootSvcImpl;
+import ca.uhn.fhir.jpa.test.config.TestElasticsearchContainerHelper;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
@@ -19,7 +19,6 @@ import co.elastic.clients.transport.rest_client.RestClientTransport;
 import jakarta.annotation.PreDestroy;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -50,6 +49,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.StringUtils;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
@@ -58,7 +59,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @ExtendWith(SpringExtension.class)
 @Testcontainers
-@ActiveProfiles("test")
+@ActiveProfiles("test,elastic")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class}, properties = {
 	"spring.datasource.url=jdbc:h2:mem:dbr4",
 
@@ -66,30 +67,17 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 	"spring.autoconfigure.exclude=",
 
 	"hapi.fhir.fhir_version=r4",
-	"hapi.fhir.lastn_enabled=true",
-	"hapi.fhir.store_resource_in_lucene_index_enabled=true",
-	"hapi.fhir.advanced_lucene_indexing=true",
-	"hapi.fhir.search_index_full_text_enabled=true",
 
 	// Because the port is set randomly, we will set the rest_url using the Initializer.
 	// "elasticsearch.rest_url='http://localhost:9200'",
-
-	"spring.elasticsearch.uris=http://localhost:9200",
-	"spring.elasticsearch.username=elastic",
-	"spring.elasticsearch.password=changeme",
-	"spring.main.allow-bean-definition-overriding=true",
-	"spring.jpa.properties.hibernate.search.enabled=true",
-	"spring.jpa.properties.hibernate.search.backend.type=elasticsearch",
-	"spring.jpa.properties.hibernate.search.backend.hosts=localhost:9200",
-	"spring.jpa.properties.hibernate.search.backend.protocol=http",
-	"spring.jpa.properties.hibernate.search.backend.analysis.configurer=ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticsearchAnalysisConfigurer"})
+})
 @ContextConfiguration(initializers = ElasticsearchLastNR4IT.Initializer.class)
 class ElasticsearchLastNR4IT {
 	private IGenericClient ourClient;
 	private FhirContext ourCtx;
 
 	@Container
-	public static ElasticsearchContainer embeddedElastic = getEmbeddedElasticSearch();
+	public static ElasticsearchContainer embeddedElastic = TestElasticsearchContainerHelper.getEmbeddedElasticSearch();
 
 	@Autowired
 	private ElasticsearchBootSvcImpl myElasticsearchSvc;
@@ -101,6 +89,15 @@ class ElasticsearchLastNR4IT {
 
 	@LocalServerPort
 	private int port;
+
+	@DynamicPropertySource
+	static void configureProperties(DynamicPropertyRegistry registry) {
+		registry.add("spring.datasource.password", embeddedElastic::getHttpHostAddress);
+	}
+
+
+	@Autowired
+	ConfigurableApplicationContext configurableApplicationContext;
 
 	@Test
 	void testLastN() throws IOException, InterruptedException {
@@ -133,12 +130,17 @@ class ElasticsearchLastNR4IT {
 	@BeforeEach
 	void beforeEach() {
 
+		String elasticHost = embeddedElastic.getHost();
+		int elasticPort = embeddedElastic.getMappedPort(9200);
+		TestPropertyValues.of("spring.elasticsearch.uris=" + elasticHost + ":" + elasticPort).applyTo(configurableApplicationContext.getEnvironment());
 		ourCtx = FhirContext.forR4();
 		ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
 		ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
 		String ourServerBase = "http://localhost:" + port + "/fhir/";
 		ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
 		ourClient.registerInterceptor(new LoggingInterceptor(true));
+
+		//buildElasticRestClient(configurableApplicationContext.getEnvironment());
 	}
 
 	static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
@@ -152,11 +154,10 @@ class ElasticsearchLastNR4IT {
 			int elasticPort = embeddedElastic.getMappedPort(9200);
 			// Since the port is dynamically generated, replace the URL with one that has the correct port
 			TestPropertyValues.of("spring.elasticsearch.uris=" + elasticHost + ":" + elasticPort).applyTo(configurableApplicationContext.getEnvironment());
-			TestPropertyValues.of("spring.jpa.properties.hibernate.search.backend.hosts=" + elasticHost + ":" + elasticPort).applyTo(configurableApplicationContext.getEnvironment());
 
-			ElasticsearchClient client = buildElasticRestClient(configurableApplicationContext.getEnvironment());
+			//ElasticsearchClient client = buildElasticRestClient(configurableApplicationContext.getEnvironment());
 
-			try {
+			/*try {
 				PutClusterSettingsResponse clusterResponse = client.cluster().putSettings(s -> s.persistent("indices.max_ngram_diff", JsonData.of(17)));
 				if (clusterResponse.acknowledged()) {
 					return;
@@ -178,26 +179,10 @@ class ElasticsearchLastNR4IT {
 
 			if (!templateResponse.acknowledged()) {
 				throw new IllegalStateException("Unable to set index.max_ngram_diff via cluster settings or index template");
-			}
+			}*/
 		}
 	}
-
-
-	public static final String ELASTICSEARCH_VERSION = "8.19.7";
-	public static final String ELASTICSEARCH_IMAGE = "docker.elastic.co/elasticsearch/elasticsearch:" + ELASTICSEARCH_VERSION;
-
-	public static ElasticsearchContainer getEmbeddedElasticSearch() {
-
-		return new ElasticsearchContainer(ELASTICSEARCH_IMAGE)
-			// the default is 4GB which is too much for our little tests
-			.withEnv("ES_JAVA_OPTS", "-Xms512m -Xmx512m")
-			// turn off security warnings
-			.withEnv("xpack.security.enabled", "false")
-			// turn off machine learning (we don't need it in tests anyways)
-			.withEnv("xpack.ml.enabled", "false")
-			.withStartupTimeout(Duration.of(300, SECONDS));
-	}
-
+/*
 	static ElasticsearchClient buildElasticRestClient(Environment environment) throws IllegalStateException {
 		String uri = environment.getProperty("spring.elasticsearch.uris");
 		if (!StringUtils.hasText(uri)) {
@@ -216,5 +201,5 @@ class ElasticsearchLastNR4IT {
 		}
 
 		return new ElasticsearchClient(new RestClientTransport(builder.build(), new JacksonJsonpMapper()));
-	}
+	}*/
 }
