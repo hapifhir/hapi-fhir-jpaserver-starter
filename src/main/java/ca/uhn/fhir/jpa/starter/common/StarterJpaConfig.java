@@ -50,6 +50,7 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
+import ca.uhn.fhir.jpa.starter.elastic.ElasticsearchBootSvcImpl;
 import ca.uhn.fhir.jpa.starter.ig.ExtendedPackageInstallationSpec;
 import ca.uhn.fhir.jpa.starter.ig.IImplementationGuideOperationProvider;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
@@ -149,6 +150,7 @@ public class StarterJpaConfig {
 	@Primary
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+			Optional<ElasticsearchBootSvcImpl> elasticsearchSvc,
 			JpaProperties theJpaProperties,
 			DataSource myDataSource,
 			ConfigurableListableBeanFactory myConfigurableListableBeanFactory,
