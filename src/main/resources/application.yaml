@@ -92,11 +92,10 @@ spring:
     fail-on-missing-locations: false
 
   datasource:
-    # url: "jdbc:h2:file:./target/database/h2"
-    url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://localhost:5432/hapi
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
     # max-active: 15     # (ignored with HikariCP; use hikari.maximum-pool-size)
     hikari:
       maximum-pool-size: 10
@@ -109,7 +108,7 @@ spring:
         # Hibernate dialect is auto-detected except for H2/Postgres.
         # If using H2:     ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
         # If using Postgres: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
-        dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+        dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
 
         # --- Optional Hibernate DDL & tuning (commented out from source) ---
         hbm2ddl:
@@ -124,16 +123,16 @@ spring:
 
         # --- Hibernate Search (Lucene/Elasticsearch) ---
         search:
-          enabled: false
+          enabled: true
           # Lucene backend (default example)
-          # backend:
-          #   type: lucene
-          #   analysis:
-          #     configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
-          #   directory:
-          #     type: local-filesystem
-          #     root: target/lucenefiles
-          #   lucene_version: lucene_current
+          backend:
+            type: lucene
+            analysis:
+              configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
+            directory:
+              type: local-filesystem
+              root: target/lucenefiles
+            lucene_version: lucene_current
           # Elasticsearch backend (alternative) — see also hapi.fhir.elasticsearch section in docs
           # backend:
           #   type: elasticsearch
