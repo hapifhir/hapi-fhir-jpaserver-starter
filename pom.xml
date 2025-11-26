@@ -28,7 +28,7 @@
     <packaging>war</packaging>
 
     <prerequisites>
-        <maven>3.8.3</maven>
+        <maven>3.9.0</maven>
     </prerequisites>
 
     <name>HAPI FHIR JPA Server - Starter Project</name>
