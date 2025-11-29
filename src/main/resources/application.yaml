@@ -159,7 +159,7 @@ hapi:
     fhir_version: R4                            # DSTU2 | DSTU3 | R4 | R5
     # use_apache_address_strategy: false
     # use_apache_address_strategy_https: false
-    custom_content_path: ./custom               # folder name must be 'custom'
+    # custom_content_path: ./custom               # folder name must be 'custom'
     # app_content_path: ./configs/app            # served under /web/app
     # server_address: http://hapi.fhir.org/baseR4
     # defer_indexing_for_codesystems_of_size: 101
