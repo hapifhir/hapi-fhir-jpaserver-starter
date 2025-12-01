@@ -177,9 +177,15 @@ hapi:
     # additionalResourceFolders:
     #   - example
     #   - example2
-    # supported_resource_types:
-    #   - Patient
-    #   - Observation
+    supported_resource_types:
+      - CodeSystem
+      - ValueSet
+      - ConceptMap
+      # These should not be enabled but are necessary for the server to start due to this bug:
+      # https://github.com/hapifhir/hapi-fhir-jpaserver-starter/issues/830
+      - Patient
+      - Provenance
+      - Task
     # allowed_bundle_types: COLLECTION,DOCUMENT,MESSAGE,TRANSACTION,TRANSACTIONRESPONSE,BATCH,BATCHRESPONSE,HISTORY,SEARCHSET
 
     # -------------------------------------------------------------------------------
