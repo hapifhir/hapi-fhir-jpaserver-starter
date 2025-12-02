@@ -26,6 +26,15 @@ In order to use this sample, you should have:
 ### or
  - Docker, as the entire project can be built using multistage docker (with both JDK and maven wrapped in docker) or used directly from [Docker Hub](https://hub.docker.com/r/hapiproject/hapi)
 
+## Run using locally built hapi-fhir dependency
+
+1. Check out this repository as well as hapi-fhir or a fork of it, e.g. https://github.com/SwissHDS/hapi-fhir
+2. Set a new version in the hapi-fhir directory. E.g. if the current version is `8.7.0-SNAPSHOT`, replace it with something like `8.7.0-LOCAL`.
+3. Build hapi-fhir with `./mvnw clean install -P FASTINSTALL`. If problems arise, consider upgrading Maven using `./mvnw -N wrapper:wrapper -Dmaven=3.9.0`.
+   If Maven reports that the `-Dmaven.multiModuleProjectDirectory` flag is needed, add it to the command, e.g. like this `./mvnw -Dmaven.multiModuleProjectDirectory -N wrapper:wrapper -Dmaven=3.9.0`.
+   This step adds the artifacts to the local maven registry so they are available in the next step.
+4. Set the used hapi-fhir version in this repository in [pom.xml](./pom.xml) to the one used in step 2, e.g. `8.7.0-LOCAL`.
+
 ## Running via [Docker Hub](https://hub.docker.com/r/hapiproject/hapi)
 
 Each tagged/released version of `hapi-fhir-jpaserver` is built as a Docker image and published to Docker hub. To run the published Docker image from DockerHub:
