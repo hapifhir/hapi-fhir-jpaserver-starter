@@ -33,8 +33,7 @@ public class APIKeyInterceptor extends AuthorizationInterceptor {
 	@Override
 	public List<IAuthRule> buildRuleList(RequestDetails theRequestDetails) {
 
-		// In this basic example we have hardcoded API Keys.
-		boolean userIsAdmin = false;
+		// In this basic example we have API Keys configured in application.yaml.
 		String apiKey = theRequestDetails.getHeader("X-API-KEY");
 		logger.info("API Key from header is {}.", apiKey);
 
