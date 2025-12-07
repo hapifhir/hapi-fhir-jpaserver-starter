@@ -440,3 +440,9 @@ hapi:
     # R. LastN (analytics)
     # -------------------------------------------------------------------------------
     # lastn_enabled: true
+
+security:
+  api-keys: >
+    300a78e1-0e27-4261-ac0b-b1eea5889038,
+    ab50cdf2-7dfc-4195-a392-e171c4958e89, 
+    9e1cac58-0dfd-4fdd-ba84-5d29e8b0e204
