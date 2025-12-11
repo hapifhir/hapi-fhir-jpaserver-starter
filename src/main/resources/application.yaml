@@ -247,15 +247,15 @@ hapi:
     # -------------------------------------------------------------------------------
     # NOTE: Extended Lucene/Elasticsearch indexing is experimental.
     # See https://hapifhir.io/hapi-fhir/docs/server_jpa/elastic.html
-    advanced_lucene_indexing: false
-    search_index_full_text_enabled: false
-    # language_search_parameter_enabled: true
-    # upliftedRefchains_enabled: true
-    # index_storage_optimized: false
-    # enable_index_missing_fields: false
-    # enable_index_of_type: true
-    # enable_index_contained_resource: false
-    # store_resource_in_lucene_index_enabled: true
+    advanced_lucene_indexing: true
+    search_index_full_text_enabled: true
+    language_search_parameter_enabled: true
+    upliftedRefchains_enabled: true
+    index_storage_optimized: true
+    enable_index_missing_fields: false
+    enable_index_of_type: true
+    enable_index_contained_resource: false
+    store_resource_in_lucene_index_enabled: false
 
     # -------------------------------------------------------------------------------
     # E. Bulk Operations
