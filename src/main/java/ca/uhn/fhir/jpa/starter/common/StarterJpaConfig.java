@@ -52,6 +52,7 @@ import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
 import ca.uhn.fhir.jpa.starter.ig.ExtendedPackageInstallationSpec;
 import ca.uhn.fhir.jpa.starter.ig.IImplementationGuideOperationProvider;
+import ca.uhn.fhir.jpa.starter.interceptor.APIKeyInterceptor;
 import ca.uhn.fhir.jpa.starter.terminology.TerminologyCapabilityInterceptor;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceCountCache;
@@ -338,7 +339,8 @@ public class StarterJpaConfig {
 			Optional<IpsOperationProvider> theIpsOperationProvider,
 			Optional<IImplementationGuideOperationProvider> implementationGuideOperationProvider,
 			DiffProvider diffProvider,
-			TxResourceValidationSupport txResourceValidationSupport) {
+			TxResourceValidationSupport txResourceValidationSupport,
+			APIKeyInterceptor theAPIKeyInterceptor) {
 		RestfulServer fhirServer = new RestfulServer(fhirSystemDao.getContext());
 
 		if (theValidationSupport instanceof ValidationSupportChain chain) {
@@ -405,6 +407,7 @@ public class StarterJpaConfig {
 
 		fhirServer.registerInterceptor(loggingInterceptor);
 		fhirServer.registerInterceptor(new TerminologyCapabilityInterceptor());
+  		fhirServer.registerInterceptor(theAPIKeyInterceptor);
 
 		implementationGuideOperationProvider.ifPresent(fhirServer::registerProvider);
 
