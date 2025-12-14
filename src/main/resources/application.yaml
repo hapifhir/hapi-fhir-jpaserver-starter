@@ -63,8 +63,8 @@ spring:
   datasource:
   # postgres
     url: jdbc:postgresql://localhost:5432/hapi
-    username: admin
-    password: admin
+    username: app
+    password: app-password
     driver-class-name: org.postgresql.Driver
 
   # h2 in memory
@@ -187,7 +187,6 @@ hapi:
       clientIdHeaderName: client_id
 
   # D. Search & Indexing
-
     advanced_lucene_indexing: true
     search_index_full_text_enabled: true
     language_search_parameter_enabled: true
@@ -329,7 +328,7 @@ hapi:
 
 # Values of X-API-KEY header required for write access. The values shall be GitHub secret keys of repositories
 # used for authoring of value sets, concept maps and code systems. Required when the APIKeyInterceptor is activated
-# (see section M. Extensibility). Use the following keys for tests only, never in production. 
+# (see section M. Extensibility). Use the following keys for tests only, never in production.
 security:
   api-keys: >
     300a78e1-0e27-4261-ac0b-b1eea5889038,
