@@ -67,10 +67,21 @@ public class APIKeyInterceptor extends AuthorizationInterceptor {
 			.read()
 			.resourcesOfType(type)
 			.withAnyId();
+
+		// allow the operation for the type
 		for (String operation : operations) {
 			builder.allow()
 				.operation().named(operation)
 				.onType(type)
+				.andAllowAllResponses();
+		}
+
+		// allow the operations for any instance of type
+		for (String operation : operations) {
+			builder.allow()
+				.operation()
+				.named(operation)
+				.onInstancesOfType(type)
 				.andAllowAllResponses();
 		}
 	}
