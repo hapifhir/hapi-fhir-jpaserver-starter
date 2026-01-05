@@ -7,18 +7,10 @@ affinity:
             - key: eks.amazonaws.com/nodegroup
               operator: In
               values:
-                - sensitive_workload_node_group
+                - hapi_fhir_jpaserver_workload_node_group
 
 tolerations:
   - effect: NoSchedule
-    key: airbyte_workload
-    operator: Equal
-    value: "true"
-  - effect: NoSchedule
-    key: airflow_workload
-    operator: Equal
-    value: "true"
-  - effect: NoSchedule
-    key: sensitive_workload
+    key: platform.sil.io/hapi_fhir_jpaserver_workload
     operator: Equal
     value: "true"
