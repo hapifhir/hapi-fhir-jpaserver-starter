@@ -1,1 +1,16 @@
 ---
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: eks.amazonaws.com/nodegroup
+              operator: In
+              values:
+                - hapi_fhir_jpaserver_workload_node_group
+
+tolerations:
+  - effect: NoSchedule
+    key: platform.sil.io/hapi_fhir_jpaserver_workload
+    operator: Equal
+    value: "true"
