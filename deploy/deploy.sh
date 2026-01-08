@@ -17,9 +17,8 @@ helm upgrade \
     --set externalDatabase.user="${DB_USER}" \
     --set externalDatabase.password="${DB_PASSWORD}" \
     --set externalDatabase.database="${DB_NAME}" \
-    --set ingress.hosts[0].host="${DOMAIN_NAME}" \
-    --set ingress.tls[0].hosts[0]="${DOMAIN_NAME}" \
-    --set ingress.tls[0].secretName="letsencrypt-prod" \
+    --set gateway.host="${DOMAIN_NAME}" \
+    --set ingress.enabled=false \
     --version="0.17.3" \
     --wait \
     --timeout 300s \

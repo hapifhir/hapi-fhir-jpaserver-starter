@@ -51,6 +51,10 @@ service:
   # -- port where the server will be exposed at
   port: 8080
 
+gateway:
+  enabled: true
+  host: ""
+
 ingress:
   # -- whether to create an Ingress to expose the FHIR server HTTP endpoint
   enabled: true

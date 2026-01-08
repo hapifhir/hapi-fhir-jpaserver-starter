@@ -1,0 +1,76 @@
+{{- if .Values.gateway.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ .Release.Name }}-gateway
+  namespace: apisix-gateway
+  annotations:
+      cert-manager.io/issuer: {{ .Release.Name }}-issuer
+spec:
+  gatewayClassName: apisix
+  listeners:
+  - name: http
+    hostname: {{ .Values.gateway.host }} # for acme challenge
+    port: 80
+    protocol: HTTP
+    allowedRoutes:
+      namespaces:
+        from: All
+  - name: https
+    hostname: {{ .Values.gateway.host }}
+    protocol: HTTPS
+    port: 443
+    allowedRoutes:
+      namespaces:
+        from: All
+    tls:
+      mode: Terminate
+      certificateRefs:
+        - name: {{ .Release.Name }}-tls
+          kind: Secret
+  infrastructure:
+    parametersRef:
+      group: apisix.apache.org
+      kind: GatewayProxy
+      name: apisix-config
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ .Release.Name }}-http-route
+  namespace: {{ .Release.Namespace }}
+spec:
+  hostnames:
+  - {{ .Values.gateway.host }}
+  parentRefs:
+  - name: {{ .Release.Name }}-gateway
+    namespace: apisix-gateway
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: "/"
+    backendRefs:
+    - name: {{ include "hapi-fhir-jpaserver.fullname" . }}
+      port: {{ .Values.service.port }}
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  annotations:
+  name: {{ .Release.Name }}-issuer
+  namespace: apisix-gateway
+spec:
+  acme:
+    email: platform@savannahinformatics.com
+    privateKeySecretRef:
+      name: {{ .Release.Name }}-tls
+    server: https://acme-v02.api.letsencrypt.org/directory
+    solvers:
+    - http01:
+        gatewayHTTPRoute:
+          parentRefs:
+          - name: {{ .Release.Name }}-gateway
+            namespace: apisix-gateway
+            kind: Gateway
+{{- end }}
