@@ -266,17 +266,15 @@ tests:
   #   memory: 128Mi
 
 # -- additional Spring Boot application config. Mounted as a file and automatically loaded by the application.
-extraConfig:
-  ""
-  # # For example:
-  # |
-  # hapi:
-  #   fhir:
-  #     implementationguides:
-  #       gh_0_1_0:
-  #         url: https://build.fhir.org/ig/hl7-eu/gravitate-health/package.tgz
-  #         name: hl7.eu.fhir.gh
-  #         version: 0.1.0
+extraConfig: |
+  hapi:
+    fhir:
+      terminology:
+        valueset_preexpansion_mode: STORE_AND_EXPAND
+        valueset_expansion_mode: PERFORM_NAIVE_EXPANSION
+        valueset_membership_mode: USE_EXPANSION
+        code_lookup_mode: USE_VALIDATE_CODE_OPERATION
+        maximum_expansion_size: 5000
 
 autoscaling:
   enabled: false
