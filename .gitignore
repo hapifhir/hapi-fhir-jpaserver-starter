@@ -1,5 +1,6 @@
 *.orig
 target/
+cli/
 *.iml
 
 # Compiled class file

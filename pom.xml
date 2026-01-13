@@ -20,7 +20,7 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <version>8.4.0</version>
+        <version>8.7.0-LOCAL</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
@@ -49,7 +49,6 @@
 
     <dependencyManagement>
        <dependencies>
-
             <dependency>
                <groupId>org.glassfish.jaxb</groupId>
                <artifactId>jaxb-runtime</artifactId>
