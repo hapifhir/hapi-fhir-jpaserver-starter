@@ -1,4 +1,3 @@
-version: "3"
 services:
   hapi-fhir-jpaserver-start:
     build: .
@@ -8,18 +7,29 @@ services:
       SPRING_DATASOURCE_URL: "jdbc:postgresql://hapi-fhir-postgres:5432/hapi"
       SPRING_DATASOURCE_USERNAME: "admin"
       SPRING_DATASOURCE_PASSWORD: "admin"
-      SPRING_DATASOURCE_DRIVERCLASSNAME: "org.postgresql.Driver"
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: "org.postgresql.Driver"
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
     ports:
       - "8080:8080"
+    depends_on:
+      hapi-fhir-postgres:
+        condition: service_healthy
   hapi-fhir-postgres:
-    image: postgres:17-alpine
+    image: postgres:16-alpine
     container_name: hapi-fhir-postgres
     restart: always
     environment:
       POSTGRES_DB: "hapi"
       POSTGRES_USER: "admin"
       POSTGRES_PASSWORD: "admin"
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U admin -d hapi' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      start_period: 5s
+      retries: 5
     volumes:
       - hapi-fhir-postgres:/var/lib/postgresql/data
+
 volumes:
   hapi-fhir-postgres:
