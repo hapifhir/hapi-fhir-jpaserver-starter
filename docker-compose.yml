@@ -12,7 +12,7 @@ services:
     ports:
       - "8080:8080"
   hapi-fhir-postgres:
-    image: postgres:15-alpine
+    image: postgres:17-alpine
     container_name: hapi-fhir-postgres
     restart: always
     environment:
