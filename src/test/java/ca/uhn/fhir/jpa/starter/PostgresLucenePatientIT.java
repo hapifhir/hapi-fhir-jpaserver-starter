@@ -14,6 +14,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -26,18 +27,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Testcontainers
 @ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class}, properties = {
-    "hapi.fhir.fhir_version=r4",
-    "hapi.fhir.cr_enabled=false",
-    "hapi.fhir.advanced_lucene_indexing=true",
-    "hapi.fhir.store_resource_in_lucene_index_enabled=true",
-    "hapi.fhir.search_index_full_text_enabled=true",
-    "spring.main.allow-bean-definition-overriding=true",
-    "spring.jpa.properties.hibernate.search.enabled=true",
-    "spring.jpa.properties.hibernate.search.backend.type=lucene",
-    "spring.jpa.properties.hibernate.search.backend.analysis.configurer=ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer",
-    "spring.jpa.properties.hibernate.search.backend.directory.type=local-heap"
-})
+@TestPropertySource(locations = "classpath:test-postgres-lucene.yaml")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class})
 class PostgresLucenePatientIT {
 
   @Container
