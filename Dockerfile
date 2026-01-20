@@ -18,7 +18,7 @@ RUN mkdir /app && cp /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /app/main.
 
 ########### Use the official Tomcat image as base image for the Tomcat variant
 ########### it can be built using eg. `docker build --target tomcat .`
-FROM docker.io/library/tomcat:10-jre21-temurin-noble as tomcat
+FROM docker.io/library/tomcat:10-jre21-temurin-noble AS tomcat
 
 USER root
 RUN rm -rf /usr/local/tomcat/webapps/ROOT && \
