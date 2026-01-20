@@ -1,7 +1,7 @@
-FROM docker.io/library/maven:3.9.9-eclipse-temurin-17 AS build-hapi
+FROM docker.io/library/maven:3.9.12-eclipse-temurin-17 AS build-hapi
 WORKDIR /tmp/hapi-fhir-jpaserver-starter
 
-ARG OPENTELEMETRY_JAVA_AGENT_VERSION=2.13.1
+ARG OPENTELEMETRY_JAVA_AGENT_VERSION=2.24.0
 RUN curl -LSsO https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v${OPENTELEMETRY_JAVA_AGENT_VERSION}/opentelemetry-javaagent.jar
 
 COPY pom.xml .
@@ -16,28 +16,26 @@ RUN mvn package -DskipTests spring-boot:repackage -Pboot
 RUN mkdir /app && cp /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /app/main.war
 
 
-########### bitnami tomcat version is suitable for debugging and comes with a shell
+########### Use the official Tomcat image as base image for the Tomcat variant
 ########### it can be built using eg. `docker build --target tomcat .`
-FROM docker.io/bitnamilegacy/tomcat:10.1.43-debian-12-r0 AS tomcat
+FROM docker.io/library/tomcat:10-jre21-temurin-noble AS tomcat
 
 USER root
-RUN rm -rf /opt/bitnami/tomcat/webapps/ROOT && \
-    mkdir -p /opt/bitnami/hapi/data/hapi/lucenefiles && \
-    chown -R 1001:1001 /opt/bitnami/hapi/data/hapi/lucenefiles && \
-    chmod 775 /opt/bitnami/hapi/data/hapi/lucenefiles
+RUN rm -rf /usr/local/tomcat/webapps/ROOT && \
+    mkdir -p /usr/local/tomcat/data/hapi/lucenefiles && \
+    chown -R 65532:65532 /usr/local/tomcat/data/hapi/lucenefiles && \
+    chmod 775 /usr/local/tomcat/data/hapi/lucenefiles
 
-RUN mkdir -p /target && chown -R 1001:1001 target
-USER 1001
+RUN mkdir -p /target && chown -R 65532:65532 /target
+USER 65532
 
-COPY --chown=1001:1001 catalina.properties /opt/bitnami/tomcat/conf/catalina.properties
-COPY --chown=1001:1001 server.xml /opt/bitnami/tomcat/conf/server.xml
-COPY --from=build-hapi --chown=1001:1001 /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /opt/bitnami/tomcat/webapps/ROOT.war
-COPY --from=build-hapi --chown=1001:1001 /tmp/hapi-fhir-jpaserver-starter/opentelemetry-javaagent.jar /app
-
-ENV ALLOW_EMPTY_PASSWORD=yes
+COPY --chown=65532:65532 catalina.properties /usr/local/tomcat/conf/catalina.properties
+COPY --chown=65532:65532 server.xml /usr/local/tomcat/conf/server.xml
+COPY --from=build-hapi --chown=65532:65532 /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /usr/local/tomcat/webapps/ROOT.war
+COPY --from=build-hapi --chown=65532:65532 /tmp/hapi-fhir-jpaserver-starter/opentelemetry-javaagent.jar /app
 
 ########### distroless brings focus on security and runs on plain spring boot - this is the default image
-FROM gcr.io/distroless/java17-debian12:nonroot AS default
+FROM gcr.io/distroless/java21-debian13:nonroot AS default
 # 65532 is the nonroot user's uid
 # used here instead of the name to allow Kubernetes to easily detect that the container
 # is running as a non-root (uid != 0) user.
