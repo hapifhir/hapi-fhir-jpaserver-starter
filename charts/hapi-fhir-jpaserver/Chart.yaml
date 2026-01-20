@@ -13,7 +13,7 @@ dependencies:
   - name: common
     repository: oci://registry-1.docker.io/bitnamicharts
     version: 2.31.3
-appVersion: 8.6.1
+appVersion: 8.6.0
 version: 0.22.0
 annotations:
   artifacthub.io/license: Apache-2.0
