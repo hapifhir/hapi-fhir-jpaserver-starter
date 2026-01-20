@@ -26,15 +26,13 @@ RUN rm -rf /usr/local/tomcat/webapps/ROOT && \
     chown -R 65532:65532 /usr/local/tomcat/data/hapi/lucenefiles && \
     chmod 775 /usr/local/tomcat/data/hapi/lucenefiles
 
-RUN mkdir -p /target && chown -R 65532:65532 target
+RUN mkdir -p /target && chown -R 65532:65532 /target
 USER 65532
 
 COPY --chown=65532:65532 catalina.properties /usr/local/tomcat/conf/catalina.properties
 COPY --chown=65532:65532 server.xml /usr/local/tomcat/conf/server.xml
 COPY --from=build-hapi --chown=65532:65532 /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /usr/local/tomcat/webapps/ROOT.war
 COPY --from=build-hapi --chown=65532:65532 /tmp/hapi-fhir-jpaserver-starter/opentelemetry-javaagent.jar /app
-
-ENV ALLOW_EMPTY_PASSWORD=yes
 
 ########### distroless brings focus on security and runs on plain spring boot - this is the default image
 FROM gcr.io/distroless/java21-debian13:nonroot AS default
