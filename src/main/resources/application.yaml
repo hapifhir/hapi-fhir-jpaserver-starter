@@ -42,6 +42,12 @@ spring:
 #    username: elastic
 #    password: elastic
   # -------------------------------------------------------------------------------
+  # Application Name
+  # -------------------------------------------------------------------------------
+  application:
+    name: "@project.artifactId@"
+
+  # -------------------------------------------------------------------------------
   # A. Spring AI — Model Context Protocol (MCP)
   # -------------------------------------------------------------------------------
   ai:
@@ -85,6 +91,7 @@ spring:
   main:
     allow-bean-definition-overriding: false
     allow-circular-references: true
+    banner-mode: off
 
   autoconfigure:
     # This exclude is only needed for setups not using Elasticsearch where the elasticsearch sniff is not needed.
@@ -274,6 +281,12 @@ hapi:
     # store_resource_in_lucene_index_enabled: true
 
     # -------------------------------------------------------------------------------
+    # Elasticsearch Configuration
+    # -------------------------------------------------------------------------------
+    # elasticsearch:
+    #   index_prefix: "myprefix"   # Prefix for all Elasticsearch indexes (e.g., myprefix_observation_index)
+
+    # -------------------------------------------------------------------------------
     # E. Bulk Operations
     # -------------------------------------------------------------------------------
     bulk_export_enabled: false
@@ -455,3 +468,13 @@ hapi:
     # R. LastN (analytics)
     # -------------------------------------------------------------------------------
     # lastn_enabled: true
+    
+    # -------------------------------------------------------------------------------
+    # S. Testers (webui)
+    # -------------------------------------------------------------------------------
+    tester:
+      home:
+        name: Local Tester
+        server_address: 'http://localhost:8080/fhir'
+        refuse_to_fetch_third_party_urls: false
+        fhir_version: R4

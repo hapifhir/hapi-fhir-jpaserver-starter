@@ -1,7 +1,5 @@
 package ca.uhn.fhir.jpa.starter;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
 import ca.uhn.fhir.jpa.starter.elastic.ElasticsearchBootSvcImpl;
@@ -10,19 +8,8 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 import jakarta.annotation.PreDestroy;
-
-import java.io.IOException;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
 import org.hl7.fhir.instance.model.api.IIdType;
-import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.DateTimeType;
-import org.hl7.fhir.r4.model.IntegerType;
-import org.hl7.fhir.r4.model.Observation;
-import org.hl7.fhir.r4.model.Parameters;
-import org.hl7.fhir.r4.model.Patient;
-import org.hl7.fhir.r4.model.StringType;
+import org.hl7.fhir.r4.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,9 +24,15 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.io.IOException;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @ExtendWith(SpringExtension.class)
 @Testcontainers
-@ActiveProfiles("test,elastic")
+@ActiveProfiles({"test", "elastic"})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class}, properties = {"spring.datasource.url=jdbc:h2:mem:dbr4",
 	// Override the default exclude configuration for the Elasticsearch client.
 	"spring.autoconfigure.exclude=", "hapi.fhir.fhir_version=r4"
@@ -63,7 +56,13 @@ class ElasticsearchLastNR4IT {
 
 	@DynamicPropertySource
 	static void configureProperties(DynamicPropertyRegistry registry) {
-		registry.add("spring.elasticsearch.uris", embeddedElastic::getHttpHostAddress);
+
+		registry.add("spring.elasticsearch.uris", () -> "http://" + embeddedElastic.getHttpHostAddress());
+
+		registry.add("spring.jpa.properties.hibernate.search.backend.hosts", embeddedElastic::getHttpHostAddress);
+		registry.add("spring.jpa.properties.hibernate.search.backend.protocol", () -> "http");
+		registry.add("spring.jpa.properties.hibernate.search.backend.username", () -> "");
+		registry.add("spring.jpa.properties.hibernate.search.backend.password", () -> "");
 	}
 
 	@Test
@@ -103,5 +102,6 @@ class ElasticsearchLastNR4IT {
 		String ourServerBase = "http://localhost:" + port + "/fhir/";
 		ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
 		ourClient.registerInterceptor(new LoggingInterceptor(true));
+
 	}
 }

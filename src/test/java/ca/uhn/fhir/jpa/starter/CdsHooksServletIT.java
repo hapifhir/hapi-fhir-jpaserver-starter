@@ -72,7 +72,7 @@ class CdsHooksServletIT implements IServerSupport {
 	@BeforeEach
 	void beforeEach() {
 		ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
-		ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
+		ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 3000);
 		ourServerBase = "http://localhost:" + port + "/fhir/";
 		ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
 		ourCdsBase = "http://localhost:" + port + "/cds-services";

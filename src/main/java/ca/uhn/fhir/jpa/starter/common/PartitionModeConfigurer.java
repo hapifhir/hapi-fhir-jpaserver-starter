@@ -34,7 +34,9 @@ public class PartitionModeConfigurer {
 			myPartitionSettings.setUnnamedPartitionMode(true);
 		} else if (partitioning.getRequest_tenant_partitioning_mode()) {
 			ourLog.info("Partitioning mode enabled in: Request tenant partitioning mode");
-			myRestfulServer.registerInterceptor(new RequestTenantPartitionInterceptor());
+			RequestTenantPartitionInterceptor tenantPartitionInterceptor = new RequestTenantPartitionInterceptor();
+			tenantPartitionInterceptor.setPartitionSettings(myPartitionSettings);
+			myRestfulServer.registerInterceptor(tenantPartitionInterceptor);
 			myRestfulServer.setTenantIdentificationStrategy(new UrlBaseTenantIdentificationStrategy());
 		}
 

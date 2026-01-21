@@ -1,0 +1,22 @@
+hapi:
+  fhir:
+    fhir_version: r4
+    cr_enabled: false
+    advanced_lucene_indexing: true
+    store_resource_in_lucene_index_enabled: true
+    search_index_full_text_enabled: true
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  jpa:
+    properties:
+      hibernate:
+        search:
+          enabled: true
+          backend:
+            type: lucene
+            analysis:
+              configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
+            directory:
+              type: local-heap

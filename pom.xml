@@ -5,8 +5,22 @@
 
     <properties>
         <java.version>17</java.version>
-        <hapi.fhir.jpa.server.starter.revision>4</hapi.fhir.jpa.server.starter.revision>
-        <clinical-reasoning.version>3.28.0</clinical-reasoning.version>
+        <hapi.fhir.jpa.server.starter.revision>1</hapi.fhir.jpa.server.starter.revision>
+        <clinical-reasoning.version>4.0.0</clinical-reasoning.version>
+
+        <!-- Plugins Versions -->
+        <maven.failsafe.version>3.5.4</maven.failsafe.version>
+        <maven.fire.version>${maven.failsafe.version}</maven.fire.version>
+        <maven.dependency.version>3.9.0</maven.dependency.version>
+        <maven.compiler.version>3.14.1</maven.compiler.version>
+
+        <!-- Dependencies Versions -->
+        <spring.ai.version>1.1.2</spring.ai.version>
+        <awaitility.version>4.3.0</awaitility.version>
+        <micrometer.version>1.16.2</micrometer.version>
+        <commons.logging.version>1.3.5</commons.logging.version>
+        <spring_boot_version>3.5.9</spring_boot_version>
+        <postgresql.version>42.7.9</postgresql.version>
     </properties>
 
     <!-- one-liner to take you to the cloud with settings form the application.yaml file: -->
@@ -20,7 +34,7 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <version>8.4.0</version>
+        <version>8.6.1</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
@@ -73,6 +87,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
         </dependency>
         <dependency>
           <groupId>com.microsoft.sqlserver</groupId>
@@ -189,13 +204,16 @@
 
         <!-- HAPI-FHIR uses Logback for logging support. The logback library is included automatically by Maven as a part of the hapi-fhir-base dependency, but you also need to include a logging library. Logback
             is used here, but log4j would also be fine. -->
+        <!-- Fixes CVE-2025-11226 -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <version>1.5.19</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
+            <version>1.5.19</version>
         </dependency>
 
         <!-- Needed for JEE/Servlet support -->
@@ -222,7 +240,7 @@
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
-            <version>1.2</version>
+            <version>${commons.logging.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -293,7 +311,7 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
-            <version>2.0.2</version>
+            <version>2.0.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -347,7 +365,7 @@
         <dependency>
             <groupId>org.awaitility</groupId>
             <artifactId>awaitility</artifactId>
-            <version>4.2.0</version>
+            <version>${awaitility.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -367,41 +385,41 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-core</artifactId>
-            <version>1.13.3</version>
+            <version>${micrometer.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-prometheus -->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
-            <version>1.13.3</version>
+            <version>${micrometer.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-prometheus-simpleclient -->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus-simpleclient</artifactId>
-            <version>1.13.3</version>
+            <version>${micrometer.version}</version>
         </dependency>
 
 
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>5.0.1</version>
+            <version>5.1.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-mcp</artifactId>
-            <version>1.1.0-M2</version>
+            <version>${spring.ai.version}</version>
         </dependency>
 
         <!--implementation("org.springframework.ai:spring-ai-starter-mcp-server-webmvc:1.1.0-M1")-->
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-starter-mcp-server</artifactId>
-            <version>1.1.0-M2</version>
+            <version>${spring.ai.version}</version>
         </dependency>
 
         <dependency>
@@ -431,17 +449,25 @@
 
     <build>
 
+        <!-- Enabling resource filtering -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>${maven.dependency.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.4.0</version>
+                    <artifactId>maven-fire-plugin</artifactId>
+                    <version>${maven.fire.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -473,11 +499,24 @@
                 </executions>
             </plugin>
 
+            <!-- Resources plugin: sets custom delimiter '@' for placeholder substitutions -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <delimiters>
+                        <delimiter>@</delimiter>
+                    </delimiters>
+                    <useDefaultDelimiters>false</useDefaultDelimiters>
+                </configuration>
+            </plugin>
+
             <!-- Tell Maven which Java source version you want to use -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>${maven.compiler.version}</version>
                 <configuration>
                     <release>${java.version}</release>
                 </configuration>
@@ -508,7 +547,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.4.0</version>
+                <version>${maven.failsafe.version}</version>
                 <configuration>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                 </configuration>
@@ -680,62 +719,6 @@
                 </dependency>
             </dependencies>
         </profile>
-        <profile>
-            <id>ossrh-repo</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-                <property>
-                    <name>deployToSonatype</name>
-                </property>
-            </activation>
-            <distributionManagement>
-                <snapshotRepository>
-                    <id>ossrh</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-                </snapshotRepository>
-                <repository>
-                    <id>ossrh</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                </repository>
-            </distributionManagement>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.13</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                                <configuration>
-                                    <keyname>${gpg.keyname}</keyname>
-                                    <passphraseServerId>${gpg.keyname}</passphraseServerId>
-                                    <gpgArguments>
-                                        <arg>--pinentry-mode</arg>
-                                        <arg>loopback</arg>
-                                    </gpgArguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <!-- For connecting to GCP CloudSQL Postgres instances:
         https://github.com/GoogleCloudPlatform/cloud-sql-jdbc-socket-factory/blob/main/docs/jdbc.md#postgres-1
         Needs 'boot' profile as well. -->
@@ -745,7 +728,7 @@
                 <dependency>
                     <groupId>com.google.cloud.sql</groupId>
                     <artifactId>postgres-socket-factory</artifactId>
-                    <version>1.17.0</version>
+                    <version>1.28.0</version>
                 </dependency>
             </dependencies>
         </profile>       
