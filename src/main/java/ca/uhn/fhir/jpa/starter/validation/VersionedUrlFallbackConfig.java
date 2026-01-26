@@ -21,11 +21,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class VersionedUrlFallbackConfig {
 
-    private static final Logger ourLog = LoggerFactory.getLogger(VersionedUrlFallbackConfig.class);
+	private static final Logger ourLog = LoggerFactory.getLogger(VersionedUrlFallbackConfig.class);
 
-    public VersionedUrlFallbackConfig(FhirContext theFhirContext, ValidationSupportChain theValidationSupportChain) {
-        ourLog.info("Adding VersionedUrlFallbackValidationSupport to validation chain");
-        theValidationSupportChain.addValidationSupport(0,
-                new VersionedUrlFallbackValidationSupport(theFhirContext, theValidationSupportChain));
-    }
+	public VersionedUrlFallbackConfig(FhirContext theFhirContext, ValidationSupportChain theValidationSupportChain) {
+		ourLog.info("Adding VersionedUrlFallbackValidationSupport to validation chain");
+		theValidationSupportChain.addValidationSupport(
+				0, new VersionedUrlFallbackValidationSupport(theFhirContext, theValidationSupportChain));
+	}
 }
