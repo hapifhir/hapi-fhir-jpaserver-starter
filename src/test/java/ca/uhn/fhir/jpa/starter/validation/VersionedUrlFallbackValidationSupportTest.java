@@ -1,9 +1,12 @@
 package ca.uhn.fhir.jpa.starter.validation;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.context.support.IValidationSupport;
+import org.hl7.fhir.common.hapi.validation.support.ValidationSupportChain;
 import org.hl7.fhir.r4.model.StructureDefinition;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -11,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Set;
 
+import static ca.uhn.fhir.context.support.IValidationSupport.URL_PREFIX_STRUCTURE_DEFINITION;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -199,6 +203,102 @@ class VersionedUrlFallbackValidationSupportTest {
     @Test
     void testDefaultUrlPrefix() {
         assertEquals("http://hl7.org/fhir/StructureDefinition/",
-                VersionedUrlFallbackValidationSupport.DEFAULT_URL_PREFIX);
+			  URL_PREFIX_STRUCTURE_DEFINITION);
+    }
+
+    /**
+     * Integration tests using real DefaultProfileValidationSupport instead of mocks.
+     * This tests the actual fallback behavior with FHIR's built-in profiles.
+     */
+    @Nested
+    class WithRealValidationChain {
+
+        private FhirContext myFhirContext;
+        private ValidationSupportChain myValidationChain;
+        private VersionedUrlFallbackValidationSupport mySvc;
+
+        @BeforeEach
+        void setUp() {
+            myFhirContext = FhirContext.forR4Cached();
+
+            // Create a validation chain with the real DefaultProfileValidationSupport
+            // which contains all built-in FHIR R4 StructureDefinitions
+            myValidationChain = new ValidationSupportChain(new DefaultProfileValidationSupport(myFhirContext));
+
+            // Wrap the chain with our fallback support, similar to production setup
+            mySvc = new VersionedUrlFallbackValidationSupport(myFhirContext, myValidationChain);
+        }
+
+        @Test
+        void testFallbackToNonVersionedUrl_WithRealDefaultProfile() {
+            // The DefaultProfileValidationSupport has Organization without version suffix.
+            // When we request versioned URL, it should fall back and find it.
+            String versionedUrl = "http://hl7.org/fhir/StructureDefinition/Organization|4.0.1";
+
+            var result = mySvc.fetchStructureDefinition(versionedUrl);
+
+            assertNotNull(result, "Should find Organization via fallback to non-versioned URL");
+            assertInstanceOf(StructureDefinition.class, result);
+            StructureDefinition sd = (StructureDefinition) result;
+            assertEquals("http://hl7.org/fhir/StructureDefinition/Organization", sd.getUrl());
+            assertEquals("Organization", sd.getName());
+        }
+
+        @Test
+        void testFallbackForPatient_WithRealDefaultProfile() {
+            String versionedUrl = "http://hl7.org/fhir/StructureDefinition/Patient|4.0.1";
+
+            var result = mySvc.fetchStructureDefinition(versionedUrl);
+
+            assertNotNull(result, "Should find Patient via fallback");
+            assertInstanceOf(StructureDefinition.class, result);
+            StructureDefinition sd = (StructureDefinition) result;
+            assertEquals("http://hl7.org/fhir/StructureDefinition/Patient", sd.getUrl());
+        }
+
+        @Test
+        void testFetchResource_WithRealDefaultProfile() {
+            String versionedUrl = "http://hl7.org/fhir/StructureDefinition/Observation|4.0.1";
+
+            var result = mySvc.fetchResource(StructureDefinition.class, versionedUrl);
+
+            assertNotNull(result, "Should find Observation via fetchResource fallback");
+            assertEquals("http://hl7.org/fhir/StructureDefinition/Observation", result.getUrl());
+        }
+
+        @Test
+        void testNonExistentResource_ReturnsNull() {
+            String versionedUrl = "http://hl7.org/fhir/StructureDefinition/NonExistentResource|1.0.0";
+
+            var result = mySvc.fetchStructureDefinition(versionedUrl);
+
+            assertNull(result, "Should return null for non-existent resource");
+        }
+
+        @Test
+        void testNonVersionedUrl_PassesThrough() {
+            // Non-versioned URLs should return null from the fallback support
+            // (they're handled by DefaultProfileValidationSupport directly in a real chain)
+            String nonVersionedUrl = "http://hl7.org/fhir/StructureDefinition/Patient";
+
+            var result = mySvc.fetchStructureDefinition(nonVersionedUrl);
+
+            // The fallback support returns null for non-versioned URLs
+            // In a real setup, the chain would handle this
+            assertNull(result);
+        }
+
+        @Test
+        void testDataTypeProfiles_WithRealDefaultProfile() {
+            // Test that data type StructureDefinitions also work
+            String versionedUrl = "http://hl7.org/fhir/StructureDefinition/HumanName|4.0.1";
+
+            var result = mySvc.fetchStructureDefinition(versionedUrl);
+
+            assertNotNull(result, "Should find HumanName data type via fallback");
+            assertInstanceOf(StructureDefinition.class, result);
+            assertEquals("http://hl7.org/fhir/StructureDefinition/HumanName",
+                    ((StructureDefinition) result).getUrl());
+        }
     }
 }
