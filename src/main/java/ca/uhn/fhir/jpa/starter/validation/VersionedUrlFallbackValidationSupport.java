@@ -13,9 +13,10 @@ import java.util.function.Function;
  * A validation support that provides fallback behavior for versioned canonical URLs.
  *
  * When a versioned URL like "http://hl7.org/fhir/StructureDefinition/Organization|4.0.1"
- * is requested, this support attempts fallback lookups in order:
- * 1. Major.minor version (e.g., 4.0.1 -> 4.0)
- * 2. Non-versioned URL
+ * is requested, this support attempts lookups in order:
+ * 1. Exact versioned URL as requested
+ * 2. Major.minor version (e.g., 4.0.1 -> 4.0)
+ * 3. Non-versioned URL
  *
  * For non-versioned URLs or URLs not matching the configured prefixes, this support
  * returns null to let other supports in the chain handle the request.
@@ -88,11 +89,17 @@ public class VersionedUrlFallbackValidationSupport implements IValidationSupport
 
 		String version = theUrl.substring(pipeIndex + 1);
 
+		// Try exact versioned URL first
+		T result = theFetcher.apply(theUrl);
+		if (result != null) {
+			return result;
+		}
+
 		// Try major.minor version fallback (e.g., 4.0.1 -> 4.0)
 		String majorMinorVersion = extractMajorMinorVersion(version);
 		if (majorMinorVersion != null && !majorMinorVersion.equals(version)) {
 			String majorMinorUrl = baseUrl + "|" + majorMinorVersion;
-			T result = theFetcher.apply(majorMinorUrl);
+			result = theFetcher.apply(majorMinorUrl);
 			if (result != null) {
 				ourLog.warn(
 						"Requested versioned canonical '{}' not found, falling back to major.minor version '{}'",
@@ -103,7 +110,7 @@ public class VersionedUrlFallbackValidationSupport implements IValidationSupport
 		}
 
 		// Try non-versioned URL fallback
-		T result = theFetcher.apply(baseUrl);
+		result = theFetcher.apply(baseUrl);
 		if (result != null) {
 			ourLog.warn(
 					"Requested versioned canonical '{}' not found, falling back to non-versioned '{}'",
