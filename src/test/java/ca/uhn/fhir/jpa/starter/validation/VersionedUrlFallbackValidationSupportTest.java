@@ -20,7 +20,6 @@ class VersionedUrlFallbackValidationSupportTest {
     private static final String BASE_FHIR_SD_PREFIX = "http://hl7.org/fhir/StructureDefinition/";
     private static final String ORGANIZATION_URL = BASE_FHIR_SD_PREFIX + "Organization";
     private static final String ORGANIZATION_URL_VERSIONED = ORGANIZATION_URL + "|4.0.1";
-    private static final String ORGANIZATION_URL_MAJOR_MINOR = ORGANIZATION_URL + "|4.0";
 
     private static final String CUSTOM_SD_URL = "http://example.com/StructureDefinition/MyProfile";
     private static final String CUSTOM_SD_URL_VERSIONED = CUSTOM_SD_URL + "|1.0.0";
@@ -54,18 +53,16 @@ class VersionedUrlFallbackValidationSupportTest {
         assertNotNull(result);
         assertSame(sd, result);
         verify(myChain).fetchStructureDefinition(ORGANIZATION_URL_VERSIONED);
-        verify(myChain, never()).fetchStructureDefinition(ORGANIZATION_URL_MAJOR_MINOR);
         verify(myChain, never()).fetchStructureDefinition(ORGANIZATION_URL);
     }
 
     @Test
-    void testFallbackToNonVersionedUrl_WhenMajorMinorNotFound() {
-        // Setup: exact and major.minor return null, non-versioned returns a resource
+    void testFallbackToNonVersionedUrl() {
+        // Setup: exact versioned URL not found, non-versioned returns a resource
         StructureDefinition sd = new StructureDefinition();
         sd.setUrl(ORGANIZATION_URL);
 
         when(myChain.fetchStructureDefinition(ORGANIZATION_URL_VERSIONED)).thenReturn(null);
-        when(myChain.fetchStructureDefinition(ORGANIZATION_URL_MAJOR_MINOR)).thenReturn(null);
         when(myChain.fetchStructureDefinition(ORGANIZATION_URL)).thenReturn(sd);
 
         // Execute
@@ -75,29 +72,7 @@ class VersionedUrlFallbackValidationSupportTest {
         assertNotNull(result);
         assertSame(sd, result);
         verify(myChain).fetchStructureDefinition(ORGANIZATION_URL_VERSIONED);
-        verify(myChain).fetchStructureDefinition(ORGANIZATION_URL_MAJOR_MINOR);
         verify(myChain).fetchStructureDefinition(ORGANIZATION_URL);
-    }
-
-    @Test
-    void testFallbackToMajorMinorVersion_WhenAvailable() {
-        // Setup: exact not found, major.minor version exists
-        StructureDefinition sd = new StructureDefinition();
-        sd.setUrl(ORGANIZATION_URL);
-        sd.setVersion("4.0");
-
-        when(myChain.fetchStructureDefinition(ORGANIZATION_URL_VERSIONED)).thenReturn(null);
-        when(myChain.fetchStructureDefinition(ORGANIZATION_URL_MAJOR_MINOR)).thenReturn(sd);
-
-        // Execute
-        var result = mySvc.fetchStructureDefinition(ORGANIZATION_URL_VERSIONED);
-
-        // Verify: returns major.minor match, doesn't try non-versioned
-        assertNotNull(result);
-        assertSame(sd, result);
-        verify(myChain).fetchStructureDefinition(ORGANIZATION_URL_VERSIONED);
-        verify(myChain).fetchStructureDefinition(ORGANIZATION_URL_MAJOR_MINOR);
-        verify(myChain, never()).fetchStructureDefinition(ORGANIZATION_URL);
     }
 
     @Test
@@ -130,7 +105,6 @@ class VersionedUrlFallbackValidationSupportTest {
         sd.setUrl(CUSTOM_SD_URL);
 
         when(myChain.fetchStructureDefinition(CUSTOM_SD_URL_VERSIONED)).thenReturn(null);
-        when(myChain.fetchStructureDefinition(CUSTOM_SD_URL + "|1.0")).thenReturn(null);
         when(myChain.fetchStructureDefinition(CUSTOM_SD_URL)).thenReturn(sd);
 
         // Execute
@@ -150,7 +124,6 @@ class VersionedUrlFallbackValidationSupportTest {
         sd.setUrl(CUSTOM_SD_URL);
 
         when(myChain.fetchStructureDefinition(CUSTOM_SD_URL_VERSIONED)).thenReturn(null);
-        when(myChain.fetchStructureDefinition(CUSTOM_SD_URL + "|1.0")).thenReturn(null);
         when(myChain.fetchStructureDefinition(CUSTOM_SD_URL)).thenReturn(sd);
 
         // Execute
@@ -168,7 +141,6 @@ class VersionedUrlFallbackValidationSupportTest {
         sd.setUrl(ORGANIZATION_URL);
 
         when(myChain.fetchResource(StructureDefinition.class, ORGANIZATION_URL_VERSIONED)).thenReturn(null);
-        when(myChain.fetchResource(StructureDefinition.class, ORGANIZATION_URL_MAJOR_MINOR)).thenReturn(null);
         when(myChain.fetchResource(StructureDefinition.class, ORGANIZATION_URL)).thenReturn(sd);
 
         // Execute
@@ -200,28 +172,9 @@ class VersionedUrlFallbackValidationSupportTest {
     }
 
     @Test
-    void testNoMajorMinorFallback_WhenOnlyMajorVersion() {
-        // Setup: version is just "4" (no minor), so no major.minor fallback possible
-        String urlWithMajorOnly = ORGANIZATION_URL + "|4";
-
-        when(myChain.fetchStructureDefinition(urlWithMajorOnly)).thenReturn(null);
-        when(myChain.fetchStructureDefinition(ORGANIZATION_URL)).thenReturn(null);
-
-        // Execute
-        var result = mySvc.fetchStructureDefinition(urlWithMajorOnly);
-
-        // Verify: should try exact, then non-versioned (no major.minor since version has no minor part)
-        assertNull(result);
-        verify(myChain).fetchStructureDefinition(urlWithMajorOnly);
-        verify(myChain).fetchStructureDefinition(ORGANIZATION_URL);
-        verifyNoMoreInteractions(myChain);
-    }
-
-    @Test
     void testReturnsNull_WhenNoFallbackSucceeds() {
         // Setup: nothing found in any lookup
         when(myChain.fetchStructureDefinition(ORGANIZATION_URL_VERSIONED)).thenReturn(null);
-        when(myChain.fetchStructureDefinition(ORGANIZATION_URL_MAJOR_MINOR)).thenReturn(null);
         when(myChain.fetchStructureDefinition(ORGANIZATION_URL)).thenReturn(null);
 
         // Execute
@@ -230,26 +183,7 @@ class VersionedUrlFallbackValidationSupportTest {
         // Verify
         assertNull(result);
         verify(myChain).fetchStructureDefinition(ORGANIZATION_URL_VERSIONED);
-        verify(myChain).fetchStructureDefinition(ORGANIZATION_URL_MAJOR_MINOR);
         verify(myChain).fetchStructureDefinition(ORGANIZATION_URL);
-    }
-
-    @Test
-    void testNoMajorMinorFallback_WhenMajorMinorSameAsVersion() {
-        // Setup: version is "4.0" which equals major.minor, so skip major.minor fallback
-        String urlWithMajorMinorOnly = ORGANIZATION_URL + "|4.0";
-
-        when(myChain.fetchStructureDefinition(urlWithMajorMinorOnly)).thenReturn(null);
-        when(myChain.fetchStructureDefinition(ORGANIZATION_URL)).thenReturn(null);
-
-        // Execute
-        var result = mySvc.fetchStructureDefinition(urlWithMajorMinorOnly);
-
-        // Verify: should try exact, skip major.minor fallback (same as requested), then try non-versioned
-        assertNull(result);
-        verify(myChain).fetchStructureDefinition(urlWithMajorMinorOnly);
-        verify(myChain).fetchStructureDefinition(ORGANIZATION_URL);
-        verifyNoMoreInteractions(myChain);
     }
 
     @Test

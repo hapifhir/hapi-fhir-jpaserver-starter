@@ -13,10 +13,8 @@ import java.util.function.Function;
  * A validation support that provides fallback behavior for versioned canonical URLs.
  *
  * When a versioned URL like "http://hl7.org/fhir/StructureDefinition/Organization|4.0.1"
- * is requested, this support attempts lookups in order:
- * 1. Exact versioned URL as requested
- * 2. Major.minor version (e.g., 4.0.1 -> 4.0)
- * 3. Non-versioned URL
+ * is requested, this support first tries the exact versioned URL, then falls back to
+ * the non-versioned URL if not found.
  *
  * For non-versioned URLs or URLs not matching the configured prefixes, this support
  * returns null to let other supports in the chain handle the request.
@@ -87,26 +85,10 @@ public class VersionedUrlFallbackValidationSupport implements IValidationSupport
 			return null;
 		}
 
-		String version = theUrl.substring(pipeIndex + 1);
-
 		// Try exact versioned URL first
 		T result = theFetcher.apply(theUrl);
 		if (result != null) {
 			return result;
-		}
-
-		// Try major.minor version fallback (e.g., 4.0.1 -> 4.0)
-		String majorMinorVersion = extractMajorMinorVersion(version);
-		if (majorMinorVersion != null && !majorMinorVersion.equals(version)) {
-			String majorMinorUrl = baseUrl + "|" + majorMinorVersion;
-			result = theFetcher.apply(majorMinorUrl);
-			if (result != null) {
-				ourLog.warn(
-						"Requested versioned canonical '{}' not found, falling back to major.minor version '{}'",
-						theUrl,
-						majorMinorUrl);
-				return result;
-			}
 		}
 
 		// Try non-versioned URL fallback
@@ -132,22 +114,6 @@ public class VersionedUrlFallbackValidationSupport implements IValidationSupport
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Extracts major.minor version from a full version string.
-	 * For example: "4.0.1" -> "4.0", "4.0" -> "4.0", "4" -> null
-	 */
-	private String extractMajorMinorVersion(String version) {
-		if (version == null || version.isEmpty()) {
-			return null;
-		}
-
-		String[] parts = version.split("\\.");
-		if (parts.length >= 2) {
-			return parts[0] + "." + parts[1];
-		}
-		return null;
 	}
 
 	@Override
