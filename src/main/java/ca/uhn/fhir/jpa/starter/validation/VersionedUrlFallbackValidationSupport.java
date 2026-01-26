@@ -26,8 +26,6 @@ public class VersionedUrlFallbackValidationSupport implements IValidationSupport
 
 	private static final Logger ourLog = LoggerFactory.getLogger(VersionedUrlFallbackValidationSupport.class);
 
-	public static final String DEFAULT_URL_PREFIX = "http://hl7.org/fhir/StructureDefinition/";
-
 	private final FhirContext myFhirContext;
 	private final IValidationSupport myChain;
 	private final Set<String> myUrlPrefixes;
@@ -37,7 +35,7 @@ public class VersionedUrlFallbackValidationSupport implements IValidationSupport
 	 * (http://hl7.org/fhir/StructureDefinition/).
 	 */
 	public VersionedUrlFallbackValidationSupport(FhirContext theFhirContext, IValidationSupport theChain) {
-		this(theFhirContext, theChain, Set.of(DEFAULT_URL_PREFIX));
+		this(theFhirContext, theChain, Set.of(URL_PREFIX_STRUCTURE_DEFINITION));
 	}
 
 	/**
