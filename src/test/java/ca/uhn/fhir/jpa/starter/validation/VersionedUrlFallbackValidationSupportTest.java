@@ -203,7 +203,7 @@ class VersionedUrlFallbackValidationSupportTest {
     @Test
     void testDefaultUrlPrefix() {
         assertEquals("http://hl7.org/fhir/StructureDefinition/",
-			  URL_PREFIX_STRUCTURE_DEFINITION);
+                URL_PREFIX_STRUCTURE_DEFINITION);
     }
 
     /**
