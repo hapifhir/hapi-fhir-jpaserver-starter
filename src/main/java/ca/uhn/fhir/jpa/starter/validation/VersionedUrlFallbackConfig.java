@@ -11,9 +11,7 @@ import org.springframework.context.annotation.Configuration;
  *
  * This wraps the validation support chain to add fallback logic for versioned canonical URLs.
  * When a versioned URL like "http://hl7.org/fhir/StructureDefinition/Organization|4.0.1"
- * cannot be found, it will automatically fall back to:
- * 1. Major.minor version (e.g., |4.0)
- * 2. Non-versioned URL (without the |version suffix)
+ * cannot be found, it will automatically fall back to Non-versioned URL (without the |version suffix)
  *
  * This is useful when Implementation Guides reference versioned base FHIR resources
  * that aren't loaded with exact version matching.
