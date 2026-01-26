@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * A validation support that provides fallback behavior for versioned canonical URLs.
@@ -64,65 +65,21 @@ public class VersionedUrlFallbackValidationSupport implements IValidationSupport
 
     @Override
     public <T extends IBaseResource> T fetchResource(Class<T> theClass, String theUri) {
+        return doFetchWithFallback(theUri, uri -> myChain.fetchResource(theClass, uri));
+    }
+
+    @Override
+    public IBaseResource fetchStructureDefinition(String theUrl) {
+        return doFetchWithFallback(theUrl, myChain::fetchStructureDefinition);
+    }
+
+    private <T extends IBaseResource> T doFetchWithFallback(String theUrl, Function<String, T> theFetcher) {
         // If we're already in a fallback lookup, don't do anything to avoid recursion
         if (Boolean.TRUE.equals(myInFallback.get())) {
             return null;
         }
 
         // Check if this is a versioned URL (contains |)
-        int pipeIndex = theUri.indexOf('|');
-        if (pipeIndex <= 0) {
-            // Not a versioned URL, let other supports handle it
-            return null;
-        }
-
-        String baseUrl = theUri.substring(0, pipeIndex);
-
-        // Check if this URL matches our configured prefixes
-        if (!matchesPrefix(baseUrl)) {
-            return null;
-        }
-
-        String version = theUri.substring(pipeIndex + 1);
-
-        try {
-            myInFallback.set(Boolean.TRUE);
-
-            // Try major.minor version fallback (e.g., 4.0.1 -> 4.0)
-            String majorMinorVersion = extractMajorMinorVersion(version);
-            if (majorMinorVersion != null && !majorMinorVersion.equals(version)) {
-                String majorMinorUri = baseUrl + "|" + majorMinorVersion;
-                T result = myChain.fetchResource(theClass, majorMinorUri);
-                if (result != null) {
-                    ourLog.warn("Requested versioned canonical '{}' not found, falling back to major.minor version '{}'",
-                            theUri, majorMinorUri);
-                    return result;
-                }
-            }
-
-            // Try non-versioned URL fallback
-            T result = myChain.fetchResource(theClass, baseUrl);
-            if (result != null) {
-                ourLog.warn("Requested versioned canonical '{}' not found, falling back to non-versioned '{}'",
-                        theUri, baseUrl);
-                return result;
-            }
-
-        } finally {
-            myInFallback.set(Boolean.FALSE);
-        }
-
-        return null;
-    }
-
-    @Override
-    public IBaseResource fetchStructureDefinition(String theUrl) {
-        // If we're already in a fallback lookup, don't do anything to avoid recursion
-        if (Boolean.TRUE.equals(myInFallback.get())) {
-            return null;
-        }
-
-        // Check if this is a versioned URL
         int pipeIndex = theUrl.indexOf('|');
         if (pipeIndex <= 0) {
             // Not a versioned URL, let other supports handle it
@@ -141,22 +98,22 @@ public class VersionedUrlFallbackValidationSupport implements IValidationSupport
         try {
             myInFallback.set(Boolean.TRUE);
 
-            // Try major.minor version fallback
+            // Try major.minor version fallback (e.g., 4.0.1 -> 4.0)
             String majorMinorVersion = extractMajorMinorVersion(version);
             if (majorMinorVersion != null && !majorMinorVersion.equals(version)) {
-                String majorMinorUri = baseUrl + "|" + majorMinorVersion;
-                IBaseResource result = myChain.fetchStructureDefinition(majorMinorUri);
+                String majorMinorUrl = baseUrl + "|" + majorMinorVersion;
+                T result = theFetcher.apply(majorMinorUrl);
                 if (result != null) {
-                    ourLog.warn("Requested versioned StructureDefinition '{}' not found, falling back to major.minor version '{}'",
-                            theUrl, majorMinorUri);
+                    ourLog.warn("Requested versioned canonical '{}' not found, falling back to major.minor version '{}'",
+                            theUrl, majorMinorUrl);
                     return result;
                 }
             }
 
             // Try non-versioned URL fallback
-            IBaseResource result = myChain.fetchStructureDefinition(baseUrl);
+            T result = theFetcher.apply(baseUrl);
             if (result != null) {
-                ourLog.warn("Requested versioned StructureDefinition '{}' not found, falling back to non-versioned '{}'",
+                ourLog.warn("Requested versioned canonical '{}' not found, falling back to non-versioned '{}'",
                         theUrl, baseUrl);
                 return result;
             }
