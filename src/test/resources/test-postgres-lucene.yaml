@@ -9,9 +9,17 @@ hapi:
 spring:
   main:
     allow-bean-definition-overriding: true
+  # PostgreSQL datasource properties - set dynamically by TestContainerHelper.registerPostgresProperties()
+  datasource:
+    url: # Set dynamically from PostgreSQLContainer
+    username: # Set dynamically from PostgreSQLContainer
+    password: # Set dynamically from PostgreSQLContainer
+    driver-class-name: # Set dynamically from PostgreSQLContainer
   jpa:
     properties:
       hibernate:
+        # PostgreSQL dialect - set dynamically by TestContainerHelper.registerPostgresProperties()
+        dialect: # Set dynamically to ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
         search:
           enabled: true
           backend:
