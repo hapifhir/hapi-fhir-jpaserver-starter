@@ -190,6 +190,8 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setSchedulingDisabled(!appProperties.getDao_scheduling_enabled());
 		jpaStorageSettings.setIndexStorageOptimized(appProperties.getIndex_storage_optimized());
 		jpaStorageSettings.setMatchUrlCacheEnabled(appProperties.getMatch_url_cache_enabled());
+		jpaStorageSettings.setMarkResourcesForReindexingUponSearchParameterChange(
+				appProperties.getMark_resources_for_reindexing_upon_search_parameter_change());
 		jpaStorageSettings.setDeleteEnabled(appProperties.getDelete_enabled());
 		jpaStorageSettings.setDeleteExpungeEnabled(appProperties.getDelete_expunge_enabled());
 		jpaStorageSettings.setExpungeEnabled(appProperties.getExpunge_enabled());
@@ -276,15 +278,8 @@ public class FhirServerConfigCommon {
 		// Set store meta source information
 		ourLog.debug("Server configured to Store Meta Source: {}", appProperties.getStore_meta_source_information());
 		jpaStorageSettings.setStoreMetaSourceInformation(appProperties.getStore_meta_source_information());
-
-		jpaStorageSettings.setAllowContainsSearches(appProperties.getAllow_contains_searches());
-		jpaStorageSettings.setAllowExternalReferences(appProperties.getAllow_external_references());
 		jpaStorageSettings.setDefaultSearchParamsCanBeOverridden(
 				appProperties.getAllow_override_default_search_params());
-
-		jpaStorageSettings.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
-
-		jpaStorageSettings.setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
 		jpaStorageSettings.setIndexIdentifierOfType(appProperties.getEnable_index_of_type());
 
 		// Configure thread counts for reindex and expunge operations
@@ -299,6 +294,12 @@ public class FhirServerConfigCommon {
 			ourLog.info(
 					"Server configured to use {} threads for expunge operations",
 					appProperties.getExpunge_thread_count());
+		}
+
+		// Determine index prefix from configuration
+		if (appProperties.getElasticsearch() != null) {
+			String indexPrefix = appProperties.getElasticsearch().getIndex_prefix();
+			jpaStorageSettings.setHSearchIndexPrefix(indexPrefix != null ? indexPrefix : "");
 		}
 
 		return jpaStorageSettings;

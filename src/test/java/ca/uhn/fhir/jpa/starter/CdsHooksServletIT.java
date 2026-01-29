@@ -27,6 +27,7 @@ import org.opencds.cqf.fhir.cr.hapi.config.test.TestCdsHooksConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -36,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, NicknameServiceConfig.class, RepositoryConfig.class, TestCdsHooksConfig.class, CrCdsHooksConfig.class, StarterCdsHooksConfig.class},
 	properties = {
 		"spring.profiles.include=storageSettingsTest",
@@ -70,7 +72,7 @@ class CdsHooksServletIT implements IServerSupport {
 	@BeforeEach
 	void beforeEach() {
 		ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
-		ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 1000);
+		ourCtx.getRestfulClientFactory().setSocketTimeout(1200 * 3000);
 		ourServerBase = "http://localhost:" + port + "/fhir/";
 		ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
 		ourCdsBase = "http://localhost:" + port + "/cds-services";

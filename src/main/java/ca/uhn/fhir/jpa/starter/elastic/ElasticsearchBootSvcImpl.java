@@ -6,6 +6,7 @@ import ca.uhn.fhir.jpa.dao.TolerantJsonParser;
 import ca.uhn.fhir.jpa.search.lastn.ElasticsearchSvcImpl;
 import ca.uhn.fhir.jpa.search.lastn.IElasticsearchSvc;
 import ca.uhn.fhir.jpa.search.lastn.json.ObservationJson;
+import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.api.server.storage.IResourcePersistentId;
 import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
@@ -33,8 +34,8 @@ import java.util.stream.Collectors;
 public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 
 	// Index Constants
-	public static final String OBSERVATION_INDEX = "observation_index";
-	public static final String OBSERVATION_CODE_INDEX = "code_index";
+	public static final String OBSERVATION_INDEX_BASE_NAME = "observation_index";
+	public static final String OBSERVATION_CODE_INDEX_BASE_NAME = "code_index";
 	public static final String OBSERVATION_INDEX_SCHEMA_FILE = "ObservationIndexSchema.json";
 	public static final String OBSERVATION_CODE_INDEX_SCHEMA_FILE = "ObservationCodeIndexSchema.json";
 
@@ -53,10 +54,25 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 
 	private final FhirContext myContext;
 
-	public ElasticsearchBootSvcImpl(ElasticsearchClient client, FhirContext fhirContext) {
+	// Prefixed index names
+	private String observationIndexName = OBSERVATION_INDEX_BASE_NAME;
+	private String observationCodeIndexName = OBSERVATION_CODE_INDEX_BASE_NAME;
+
+	public ElasticsearchBootSvcImpl(ElasticsearchClient client, FhirContext fhirContext, AppProperties appProperties) {
 
 		myContext = fhirContext;
 		myRestHighLevelClient = client;
+
+		// Determine index prefix from configuration
+		if (appProperties.getElasticsearch() != null) {
+			String indexPrefix = appProperties.getElasticsearch().getIndex_prefix();
+			if (indexPrefix != null
+					&& !sanitizeElasticsearchIndexName(indexPrefix).isEmpty()) {
+				// Set prefixed index names
+				this.observationIndexName = indexPrefix + "-" + OBSERVATION_INDEX_BASE_NAME;
+				this.observationCodeIndexName = indexPrefix + "-" + OBSERVATION_CODE_INDEX_BASE_NAME;
+			}
+		}
 
 		try {
 			createObservationIndexIfMissing();
@@ -64,6 +80,34 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 		} catch (IOException theE) {
 			throw new RuntimeException(Msg.code(1175) + "Failed to create document index", theE);
 		}
+	}
+
+	/**
+	 * Sanitizes a string to be a valid Elasticsearch index name.
+	 * <p>
+	 * Elasticsearch index name requirements:
+	 * - Must be lowercase
+	 * - Can only contain: lowercase letters, numbers, hyphens (-), and underscores (_)
+	 * - Cannot start with: -, _, or +
+	 * - Cannot exceed 255 characters
+	 * <p>
+	 * This method performs the following transformations:
+	 * 1. Converts to lowercase
+	 * 2. Replaces any invalid characters with underscores
+	 * 3. Removes leading -, _, or + characters
+	 * 4. Truncates to 255 characters if necessary
+	 * 5. Trims any remaining whitespace
+	 *
+	 * @param name the string to sanitize
+	 * @return a valid Elasticsearch index name
+	 */
+	private String sanitizeElasticsearchIndexName(String name) {
+		String cleaned = name.toLowerCase().replaceAll("[^a-z0-9\\-_]", "_");
+		cleaned = cleaned.replaceAll("^[\\-_.]+", "");
+		if (cleaned.length() > 255) {
+			cleaned = cleaned.substring(0, 255);
+		}
+		return cleaned.trim();
 	}
 
 	private String getIndexSchema(String theSchemaFileName) throws IOException {
@@ -80,21 +124,21 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 	}
 
 	private void createObservationIndexIfMissing() throws IOException {
-		if (indexExists(OBSERVATION_INDEX)) {
+		if (indexExists(observationIndexName)) {
 			return;
 		}
 		String observationMapping = getIndexSchema(OBSERVATION_INDEX_SCHEMA_FILE);
-		if (!createIndex(OBSERVATION_INDEX, observationMapping)) {
+		if (!createIndex(observationIndexName, observationMapping)) {
 			throw new RuntimeException(Msg.code(1176) + "Failed to create observation index");
 		}
 	}
 
 	private void createObservationCodeIndexIfMissing() throws IOException {
-		if (indexExists(OBSERVATION_CODE_INDEX)) {
+		if (indexExists(observationCodeIndexName)) {
 			return;
 		}
 		String observationCodeMapping = getIndexSchema(OBSERVATION_CODE_INDEX_SCHEMA_FILE);
-		if (!createIndex(OBSERVATION_CODE_INDEX, observationCodeMapping)) {
+		if (!createIndex(observationCodeIndexName, observationCodeMapping)) {
 			throw new RuntimeException(Msg.code(1177) + "Failed to create observation code index");
 		}
 	}
@@ -147,7 +191,7 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 				.map(v -> FieldValue.of(v))
 				.collect(Collectors.toList());
 
-		return SearchRequest.of(sr -> sr.index(OBSERVATION_INDEX)
+		return SearchRequest.of(sr -> sr.index(observationIndexName)
 				.query(qb -> qb.bool(bb -> bb.must(bbm -> {
 					bbm.terms(terms ->
 							terms.field(OBSERVATION_IDENTIFIER_FIELD_NAME).terms(termsb -> termsb.value(values)));
@@ -159,5 +203,21 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 	@VisibleForTesting
 	public void refreshIndex(String theIndexName) throws IOException {
 		myRestHighLevelClient.indices().refresh(fn -> fn.index(theIndexName));
+	}
+
+	/**
+	 * Get the observation index name (with prefix if configured)
+	 * @return the observation index name
+	 */
+	public String getObservationIndexName() {
+		return observationIndexName;
+	}
+
+	/**
+	 * Get the observation code index name (with prefix if configured)
+	 * @return the observation code index name
+	 */
+	public String getObservationCodeIndexName() {
+		return observationCodeIndexName;
 	}
 }

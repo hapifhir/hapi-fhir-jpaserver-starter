@@ -38,6 +38,12 @@ management:
 
 spring:
   # -------------------------------------------------------------------------------
+  # Application Name
+  # -------------------------------------------------------------------------------
+  application:
+    name: "@project.artifactId@"
+
+  # -------------------------------------------------------------------------------
   # A. Spring AI — Model Context Protocol (MCP)
   # -------------------------------------------------------------------------------
   ai:
@@ -81,6 +87,7 @@ spring:
   main:
     allow-bean-definition-overriding: false
     allow-circular-references: true
+    banner-mode: off
 
   autoconfigure:
     # This exclude is only needed for setups not using Elasticsearch where the elasticsearch sniff is not needed.
@@ -253,6 +260,12 @@ hapi:
     # store_resource_in_lucene_index_enabled: true
 
     # -------------------------------------------------------------------------------
+    # Elasticsearch Configuration
+    # -------------------------------------------------------------------------------
+    # elasticsearch:
+    #   index_prefix: "myprefix"   # Prefix for all Elasticsearch indexes (e.g., myprefix_observation_index)
+
+    # -------------------------------------------------------------------------------
     # E. Bulk Operations
     # -------------------------------------------------------------------------------
     bulk_export_enabled: false
@@ -283,6 +296,7 @@ hapi:
     # Defaults to Runtime.getRuntime().availableProcessors() if not specified
     # reindex_thread_count: 4        # Number of threads to use for reindex operations
     # expunge_thread_count: 4        # Number of threads to use for expunge operations
+    # mark_resources_for_reindexing_upon_search_parameter_change: false
 
     # -------------------------------------------------------------------------------
     # G. Narrative & Validation
@@ -358,7 +372,7 @@ hapi:
     # -------------------------------------------------------------------------------
     # comma-separated package names, will be @ComponentScan'ed by Spring to allow for creating custom Spring beans
 
-    # custom-provider-classes:
+    # custom-bean-packages:
     # custom-interceptor-classes:
     # custom-provider-classes:
     
@@ -433,3 +447,13 @@ hapi:
     # R. LastN (analytics)
     # -------------------------------------------------------------------------------
     # lastn_enabled: true
+    
+    # -------------------------------------------------------------------------------
+    # S. Testers (webui)
+    # -------------------------------------------------------------------------------
+    tester:
+      home:
+        name: Local Tester
+        server_address: 'http://localhost:8080/fhir'
+        refuse_to_fetch_third_party_urls: false
+        fhir_version: R4

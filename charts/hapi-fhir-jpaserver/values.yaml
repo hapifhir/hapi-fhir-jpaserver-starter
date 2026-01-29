@@ -7,7 +7,7 @@ image:
   # -- the path inside the repository
   repository: hapiproject/hapi
   # -- the image tag. As of v5.7.0, this is the `distroless` flavor by default, add `-tomcat` to use the Tomcat-based image.
-  tag: "v8.2.0-1@sha256:e85ded02f60e25a66e6d9423ea71f3ebc9494e3a69bdd7d7dbfa31b8aa5b2fe9"
+  tag: "v8.6.0-1@sha256:7611e4d6601f35dd8c223ed2ed47a2807be06976f71b2e5990e6541bbc90c16f"
   # -- image pullPolicy to use
   pullPolicy: IfNotPresent
 

@@ -1,0 +1,32 @@
+hapi:
+  fhir:
+    fhir_version: r4
+    cr_enabled: false
+    lastn_enabled: true
+    advanced_lucene_indexing: true
+    store_resource_in_lucene_index_enabled: true
+    search_index_full_text_enabled: true
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  # H2 in-memory datasource for this test
+  datasource:
+    url: jdbc:h2:mem:dbr4
+  # Elasticsearch URI - set dynamically for ElasticConfigCondition to enable ElasticsearchBootSvcImpl
+  elasticsearch:
+    uris: # Set dynamically from ElasticsearchContainer via TestContainerHelper.getElasticsearchHttpUrl()
+  jpa:
+    properties:
+      hibernate:
+        search:
+          enabled: true
+          backend:
+            type: elasticsearch
+            analysis:
+              configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticAnalysisConfigurer
+            # Elasticsearch connection properties - set dynamically by TestContainerHelper.registerElasticsearchProperties()
+            hosts: # Set dynamically from ElasticsearchContainer
+            protocol: # Set dynamically to "http"
+            username: # Set dynamically to ""
+            password: # Set dynamically to ""

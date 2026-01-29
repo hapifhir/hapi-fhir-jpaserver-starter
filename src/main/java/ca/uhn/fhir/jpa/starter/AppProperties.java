@@ -126,8 +126,10 @@ public class AppProperties {
 	private Map<String, RemoteSystem> remote_terminology_service = null;
 	private Boolean match_url_cache_enabled = false;
 	private Boolean index_storage_optimized = false;
+	private Boolean mark_resources_for_reindexing_upon_search_parameter_change = true;
 	private Integer reindex_thread_count = null;
 	private Integer expunge_thread_count = null;
+	private Elasticsearch elasticsearch = null;
 
 	public List<String> getCustomInterceptorClasses() {
 		return custom_interceptor_classes;
@@ -811,6 +813,16 @@ public class AppProperties {
 		index_storage_optimized = theIndex_storage_optimized;
 	}
 
+	public boolean getMark_resources_for_reindexing_upon_search_parameter_change() {
+		return defaultIfNull(mark_resources_for_reindexing_upon_search_parameter_change, true);
+	}
+
+	public void setMark_resources_for_reindexing_upon_search_parameter_change(
+			Boolean mark_resources_for_reindexing_upon_search_parameter_change) {
+		this.mark_resources_for_reindexing_upon_search_parameter_change =
+				mark_resources_for_reindexing_upon_search_parameter_change;
+	}
+
 	public Integer getReindex_thread_count() {
 		return reindex_thread_count;
 	}
@@ -834,6 +846,14 @@ public class AppProperties {
 	public void setStore_meta_source_information(
 			JpaStorageSettings.StoreMetaSourceInformationEnum store_meta_source_information) {
 		this.store_meta_source_information = store_meta_source_information;
+	}
+
+	public Elasticsearch getElasticsearch() {
+		return elasticsearch;
+	}
+
+	public void setElasticsearch(Elasticsearch elasticsearch) {
+		this.elasticsearch = elasticsearch;
 	}
 
 	public static class Cors {
@@ -1183,6 +1203,19 @@ public class AppProperties {
 			public void setQuitWait(Boolean quitWait) {
 				this.quitWait = quitWait;
 			}
+		}
+	}
+
+	public static class Elasticsearch {
+
+		private String index_prefix = "";
+
+		public String getIndex_prefix() {
+			return index_prefix;
+		}
+
+		public void setIndex_prefix(String index_prefix) {
+			this.index_prefix = index_prefix;
 		}
 	}
 }
