@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.jpa.starter.common.TestContainerHelper;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
@@ -33,48 +34,27 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class PostgresElasticsearchPatientIT {
 
   @Container
-  private static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:16-alpine")
-    .withDatabaseName("hapi")
-    .withUsername("fhiruser")
-    .withPassword("fhirpass");
+  private static final PostgreSQLContainer<?> POSTGRES = TestContainerHelper.newPostgresContainer();
 
   @Container
-  private static final ElasticsearchContainer ELASTICSEARCH = new ElasticsearchContainer(
-    "docker.elastic.co/elasticsearch/elasticsearch:8.11.0"
-  )
-    .withEnv("xpack.security.enabled", "false")
-    .withEnv("discovery.type", "single-node")
-    .withEnv("ES_JAVA_OPTS", "-Xms512m -Xmx512m");
+  private static final ElasticsearchContainer ELASTICSEARCH = TestContainerHelper.newElasticsearchContainer();
 
   @DynamicPropertySource
   static void registerDatasourceProperties(DynamicPropertyRegistry registry) {
-    // PostgreSQL configuration
-    registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
-    registry.add("spring.datasource.username", POSTGRES::getUsername);
-    registry.add("spring.datasource.password", POSTGRES::getPassword);
-    registry.add("spring.datasource.driver-class-name", POSTGRES::getDriverClassName);
-    registry.add("spring.jpa.properties.hibernate.dialect", () -> "ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect");
-
-    // Elasticsearch configuration
-    registry.add("spring.jpa.properties.hibernate.search.backend.hosts", ELASTICSEARCH::getHttpHostAddress);
-    registry.add("spring.jpa.properties.hibernate.search.backend.protocol", () -> "http");
-    registry.add("spring.jpa.properties.hibernate.search.backend.username", () -> "");
-    registry.add("spring.jpa.properties.hibernate.search.backend.password", () -> "");
+    TestContainerHelper.registerPostgresAndElasticsearchProperties(registry, POSTGRES, ELASTICSEARCH);
   }
 
   @LocalServerPort
   private int port;
 
   private IGenericClient ourClient;
-  private FhirContext ourCtx;
 
   @BeforeEach
   void beforeEach() {
-    ourCtx = FhirContext.forR4();
-    ourCtx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
-    ourCtx.getRestfulClientFactory().setSocketTimeout((int) Duration.ofMinutes(20).toMillis());
-    String ourServerBase = "http://localhost:" + port + "/fhir/";
-    ourClient = ourCtx.newRestfulGenericClient(ourServerBase);
+    FhirContext ctx = FhirContext.forR4();
+    ctx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
+    ctx.getRestfulClientFactory().setSocketTimeout((int) Duration.ofMinutes(20).toMillis());
+    ourClient = ctx.newRestfulGenericClient("http://localhost:" + port + "/fhir/");
     ourClient.registerInterceptor(new LoggingInterceptor(true));
   }
 
