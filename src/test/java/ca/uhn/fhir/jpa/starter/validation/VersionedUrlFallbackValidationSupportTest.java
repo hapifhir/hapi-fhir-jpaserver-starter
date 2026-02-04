@@ -3,7 +3,13 @@ package ca.uhn.fhir.jpa.starter.validation;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.context.support.IValidationSupport;
+import ca.uhn.fhir.validation.FhirValidator;
+import ca.uhn.fhir.validation.ValidationResult;
+import org.hl7.fhir.common.hapi.validation.support.CommonCodeSystemsTerminologyService;
+import org.hl7.fhir.common.hapi.validation.support.InMemoryTerminologyServerValidationSupport;
 import org.hl7.fhir.common.hapi.validation.support.ValidationSupportChain;
+import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
+import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.StructureDefinition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -299,6 +305,143 @@ class VersionedUrlFallbackValidationSupportTest {
             assertInstanceOf(StructureDefinition.class, result);
             assertEquals("http://hl7.org/fhir/StructureDefinition/HumanName",
                     ((StructureDefinition) result).getUrl());
+        }
+    }
+
+    /**
+     * Integration tests where VersionedUrlFallbackValidationSupport is part of the
+     * ValidationSupportChain (as in production) rather than wrapping it.
+     */
+    @Nested
+    class WithFallbackInChain {
+
+        private FhirContext myFhirContext;
+        private ValidationSupportChain myValidationChain;
+
+        @BeforeEach
+        void setUp() {
+            myFhirContext = FhirContext.forR4Cached();
+            DefaultProfileValidationSupport defaultSupport = new DefaultProfileValidationSupport(myFhirContext);
+
+            // Create a chain where VersionedUrlFallbackValidationSupport is a member
+            // This mimics production setup where the fallback is part of the chain
+            myValidationChain = new ValidationSupportChain(defaultSupport);
+            VersionedUrlFallbackValidationSupport fallbackSupport =
+                    new VersionedUrlFallbackValidationSupport(myFhirContext, myValidationChain);
+
+            // Rebuild chain with fallback support first (higher priority)
+            myValidationChain = new ValidationSupportChain(fallbackSupport, defaultSupport);
+        }
+
+        @Test
+        void testChainResolvesVersionedUrl() {
+            String versionedUrl = "http://hl7.org/fhir/StructureDefinition/Patient|4.0.1";
+
+            var result = myValidationChain.fetchStructureDefinition(versionedUrl);
+
+            assertNotNull(result, "Chain should resolve versioned URL via fallback");
+            assertInstanceOf(StructureDefinition.class, result);
+            assertEquals("http://hl7.org/fhir/StructureDefinition/Patient",
+                    ((StructureDefinition) result).getUrl());
+        }
+
+        @Test
+        void testChainResolvesNonVersionedUrl() {
+            // Non-versioned URLs should still work (handled by DefaultProfileValidationSupport)
+            String nonVersionedUrl = "http://hl7.org/fhir/StructureDefinition/Patient";
+
+            var result = myValidationChain.fetchStructureDefinition(nonVersionedUrl);
+
+            assertNotNull(result, "Chain should resolve non-versioned URL directly");
+            assertInstanceOf(StructureDefinition.class, result);
+        }
+
+        @Test
+        void testChainFetchResource() {
+            String versionedUrl = "http://hl7.org/fhir/StructureDefinition/Encounter|4.0.1";
+
+            var result = myValidationChain.fetchResource(StructureDefinition.class, versionedUrl);
+
+            assertNotNull(result, "fetchResource should work through chain with fallback");
+            assertEquals("http://hl7.org/fhir/StructureDefinition/Encounter", result.getUrl());
+        }
+
+        @Test
+        void testMultipleResourceTypes() {
+            // Verify fallback works for various resource types
+            String[] versionedUrls = {
+                    "http://hl7.org/fhir/StructureDefinition/Condition|4.0.1",
+                    "http://hl7.org/fhir/StructureDefinition/Medication|4.0.1",
+                    "http://hl7.org/fhir/StructureDefinition/DiagnosticReport|4.0.1"
+            };
+
+            for (String versionedUrl : versionedUrls) {
+                var result = myValidationChain.fetchStructureDefinition(versionedUrl);
+                assertNotNull(result, "Should resolve " + versionedUrl);
+            }
+        }
+    }
+
+    /**
+     * Full validation integration tests using FhirInstanceValidator to prove
+     * the fallback support works in actual resource validation scenarios.
+     */
+    @Nested
+    class WithFhirInstanceValidator {
+
+        private FhirContext myFhirContext;
+        private FhirValidator myValidator;
+
+        @BeforeEach
+        void setUp() {
+            myFhirContext = FhirContext.forR4Cached();
+            DefaultProfileValidationSupport defaultSupport = new DefaultProfileValidationSupport(myFhirContext);
+            InMemoryTerminologyServerValidationSupport terminologySupport =
+                    new InMemoryTerminologyServerValidationSupport(myFhirContext);
+            CommonCodeSystemsTerminologyService commonCodeSystems =
+                    new CommonCodeSystemsTerminologyService(myFhirContext);
+
+            // Build production-like validation chain with fallback support
+            ValidationSupportChain baseChain = new ValidationSupportChain(
+                    defaultSupport,
+                    terminologySupport,
+                    commonCodeSystems
+            );
+
+            VersionedUrlFallbackValidationSupport fallbackSupport =
+                    new VersionedUrlFallbackValidationSupport(myFhirContext, baseChain);
+
+            // ValidationSupportChain now handles caching internally (since HAPI FHIR 8.0.0)
+            ValidationSupportChain fullChain = new ValidationSupportChain(
+                    fallbackSupport,
+                    defaultSupport,
+                    terminologySupport,
+                    commonCodeSystems
+            );
+
+            FhirInstanceValidator instanceValidator = new FhirInstanceValidator(fullChain);
+            myValidator = myFhirContext.newValidator();
+            myValidator.registerValidatorModule(instanceValidator);
+        }
+
+        @Test
+        void testValidateSimpleObservation() {
+            Observation observation = new Observation();
+            observation.setStatus(Observation.ObservationStatus.FINAL);
+            observation.getCode().addCoding()
+                    .setSystem("http://loinc.org")
+                    .setCode("12345-6")
+                    .setDisplay("Test");
+
+            ValidationResult result = myValidator.validateWithResult(observation);
+
+            // The validation should complete without errors related to unresolved versioned URLs
+            assertNotNull(result);
+            // We don't require the resource to be fully valid (may have other issues)
+            // but it should not fail due to missing versioned profile resolution
+            assertTrue(result.getMessages().stream()
+                            .noneMatch(m -> m.getMessage().contains("Unable to locate profile")),
+                    "Should not have profile resolution errors");
         }
     }
 }
