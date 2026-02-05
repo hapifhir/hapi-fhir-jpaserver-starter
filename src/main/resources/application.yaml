@@ -302,9 +302,10 @@ hapi:
     # G. Narrative & Validation
     # -------------------------------------------------------------------------------
     narrative_enabled: false
-    # validation:
+    validation:
     #   requests_enabled: true
     #   responses_enabled: true
+      support_chain_cache_enabled: false
 
     # -------------------------------------------------------------------------------
     # H. MDM (Master Data Management)

@@ -296,6 +296,7 @@ hapi:
     # validation:
     #   requests_enabled: true
     #   responses_enabled: true
+    #   support_chain_cache_enabled: true
 
     # -------------------------------------------------------------------------------
     # H. MDM (Master Data Management)
