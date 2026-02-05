@@ -7,6 +7,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+/**
+ * Disables the ValidationSupportChain cache when configured via
+ * {@code hapi.fhir.validation.support_chain_cache_enabled}.
+ * Use this when remote terminology responses must always be fresh or when
+ * troubleshooting cache-related behavior.
+ */
 public class ValidationSupportChainCacheConfig {
 
 	@Bean
