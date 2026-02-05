@@ -962,6 +962,7 @@ public class AppProperties {
 
 		private Boolean requests_enabled = false;
 		private Boolean responses_enabled = false;
+		private Boolean support_chain_cache_enabled = true;
 
 		public Boolean getRequests_enabled() {
 			return requests_enabled;
@@ -977,6 +978,14 @@ public class AppProperties {
 
 		public void setResponses_enabled(Boolean responses_enabled) {
 			this.responses_enabled = responses_enabled;
+		}
+
+		public Boolean getSupport_chain_cache_enabled() {
+			return support_chain_cache_enabled;
+		}
+
+		public void setSupport_chain_cache_enabled(Boolean support_chain_cache_enabled) {
+			this.support_chain_cache_enabled = support_chain_cache_enabled;
 		}
 	}
 
