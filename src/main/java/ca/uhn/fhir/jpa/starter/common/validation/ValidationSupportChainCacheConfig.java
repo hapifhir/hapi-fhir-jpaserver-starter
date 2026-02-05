@@ -14,8 +14,7 @@ public class ValidationSupportChainCacheConfig {
 		return new BeanPostProcessor() {
 			@Override
 			public Object postProcessAfterInitialization(Object bean, String beanName) {
-				if (!Boolean.TRUE.equals(
-								theAppProperties.getValidation().getSupport_chain_cache_enabled())
+				if (!Boolean.TRUE.equals(theAppProperties.getValidation().getSupport_chain_cache_enabled())
 						&& bean instanceof ValidationSupportChain.CacheConfiguration
 						&& "validationSupportChainCacheConfiguration".equals(beanName)) {
 					return ValidationSupportChain.CacheConfiguration.disabled();
