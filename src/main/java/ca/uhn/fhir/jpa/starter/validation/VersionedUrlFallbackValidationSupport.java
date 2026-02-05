@@ -22,6 +22,7 @@ import java.util.function.Function;
  * This addresses issues where profiles reference versioned base FHIR resources that
  * aren't available with exact version matching in the validation context.
  */
+//TODO: this should be fixed in core
 public class VersionedUrlFallbackValidationSupport implements IValidationSupport {
 
 	private static final Logger ourLog = LoggerFactory.getLogger(VersionedUrlFallbackValidationSupport.class);
