@@ -1,0 +1,50 @@
+spring:
+  elasticsearch:
+    uris: http://localhost:9200
+    username: elastic
+    password: elastic
+
+  autoconfigure:
+    # This empty exclude is needed to override the default exclusion of the Elasticsearch configuration.
+    exclude:
+
+  jpa:
+    properties:
+      hibernate:
+        # --- Hibernate Search (Lucene/Elasticsearch) ---
+        # Note: the following values should be kept in sync with ca.uhn.fhir.jpa.search.elastic.ElasticsearchHibernatePropertiesBuilder
+        search:
+          schema_management:
+            strategy: CREATE
+          enabled: true
+          backend:
+            layout:
+              strategy: ca.uhn.fhir.jpa.search.elastic.IndexNamePrefixLayoutStrategy
+            type: elasticsearch
+            protocol: http
+            analysis:
+              configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticsearchAnalysisConfigurer
+            scroll_timeout: 60
+            schema_management:
+              settings_file: ca/uhn/fhir/jpa/elastic/index-settings.json
+              minimal_required_status_wait_timeout: 10000
+              minimal_required_status: YELLOW
+
+            dynamic_mapping: true
+          indexing:
+            plan:
+              synchronization:
+                strategy: async
+
+# -------------------------------------------------------------------------------------
+# HAPI FHIR — grouped by domain
+# -------------------------------------------------------------------------------------
+hapi:
+  fhir:
+    # -------------------------------------------------------------------------------
+    # D. Search & Indexing
+    # -------------------------------------------------------------------------------
+    # NOTE: Extended Lucene/Elasticsearch indexing is experimental.
+    # See https://hapifhir.io/hapi-fhir/docs/server_jpa/elastic.html
+    advanced_lucene_indexing: true
+    search_index_full_text_enabled: true
