@@ -34,6 +34,8 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @Testcontainers
 @ActiveProfiles("test")
 @TestPropertySource(locations = "classpath:test-elasticsearch-lastn.yaml")
@@ -43,32 +45,26 @@ class ElasticsearchLastNR4IT {
 
 	@Container
 	private static final ElasticsearchContainer ELASTICSEARCH = TestContainerHelper.newElasticsearchContainer()
-    // Set index defaults to handle HAPI FHIR's MAX_SUBSCRIPTION_RESULTS (50000)
-    .withEnv("indices.query.bool.max_clause_count", "50000");
-
-  @DynamicPropertySource
-  static void registerElasticsearchProperties(DynamicPropertyRegistry registry) {
-    TestContainerHelper.registerElasticsearchProperties(registry, ELASTICSEARCH);
-    // Also register spring.elasticsearch.uris for ElasticConfigCondition to enable ElasticsearchBootSvcImpl
-    registry.add("spring.elasticsearch.uris", () -> TestContainerHelper.getElasticsearchHttpUrl(ELASTICSEARCH));
-  }
-
-	@Autowired
-	private ElasticsearchBootSvcImpl myElasticsearchSvc;
-
-  @LocalServerPort
-  private int port;
+		// Set index defaults to handle HAPI FHIR's MAX_SUBSCRIPTION_RESULTS (50000)
+		.withEnv("indices.query.bool.max_clause_count", "50000");
 
 	@DynamicPropertySource
-	static void configureProperties(DynamicPropertyRegistry registry) {
+	static void registerElasticsearchProperties(DynamicPropertyRegistry registry) {
+		TestContainerHelper.registerElasticsearchProperties(registry, ELASTICSEARCH);
+		// Also register spring.elasticsearch.uris for ElasticConfigCondition to enable ElasticsearchBootSvcImpl
+		registry.add("spring.elasticsearch.uris", () -> TestContainerHelper.getElasticsearchHttpUrl(ELASTICSEARCH));
 
-		registry.add("spring.elasticsearch.uris", () -> "http://" + embeddedElastic.getHttpHostAddress());
-
-		registry.add("spring.jpa.properties.hibernate.search.backend.hosts", embeddedElastic::getHttpHostAddress);
+		registry.add("spring.jpa.properties.hibernate.search.backend.hosts", ELASTICSEARCH::getHttpHostAddress);
 		registry.add("spring.jpa.properties.hibernate.search.backend.protocol", () -> "http");
 		registry.add("spring.jpa.properties.hibernate.search.backend.username", () -> "");
 		registry.add("spring.jpa.properties.hibernate.search.backend.password", () -> "");
 	}
+
+	@Autowired
+	private ElasticsearchBootSvcImpl myElasticsearchSvc;
+
+	@LocalServerPort
+	private int port;
 
 	@Test
 	void testLastN() throws IOException, InterruptedException {
@@ -98,12 +94,12 @@ class ElasticsearchLastNR4IT {
 		assertEquals(obsId, b.getEntry().get(0).getResource().getIdElement().toUnqualifiedVersionless());
 	}
 
-  @BeforeEach
-  void beforeEach() {
-    FhirContext ctx = FhirContext.forR4();
-    ctx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
-    ctx.getRestfulClientFactory().setSocketTimeout((int) Duration.ofMinutes(20).toMillis());
-    ourClient = ctx.newRestfulGenericClient("http://localhost:" + port + "/fhir/");
-    ourClient.registerInterceptor(new LoggingInterceptor(true));
-  }
+	@BeforeEach
+	void beforeEach() {
+		FhirContext ctx = FhirContext.forR4();
+		ctx.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
+		ctx.getRestfulClientFactory().setSocketTimeout((int) Duration.ofMinutes(20).toMillis());
+		ourClient = ctx.newRestfulGenericClient("http://localhost:" + port + "/fhir/");
+		ourClient.registerInterceptor(new LoggingInterceptor(true));
+	}
 }

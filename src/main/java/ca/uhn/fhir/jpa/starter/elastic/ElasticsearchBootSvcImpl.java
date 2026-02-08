@@ -50,7 +50,7 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 
 	private static final String OBSERVATION_RESOURCE_NAME = "Observation";
 
-	private final ElasticsearchClient elasticsearchClient;
+	private final ElasticsearchClient myElasticsearchClient;
 
 	private final FhirContext myContext;
 
@@ -61,7 +61,7 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 	public ElasticsearchBootSvcImpl(ElasticsearchClient client, FhirContext fhirContext, AppProperties appProperties) {
 
 		myContext = fhirContext;
-		elasticsearchClient = client;
+		myElasticsearchClient = client;
 
 		// Determine index prefix from configuration
 		if (appProperties.getElasticsearch() != null) {
@@ -144,7 +144,7 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 	}
 
 	private boolean createIndex(String theIndexName, String theMapping) throws IOException {
-		return elasticsearchClient
+		return myElasticsearchClient
 				.indices()
 				.create(cir -> cir.index(theIndexName).withJson(new StringReader(theMapping)))
 				.acknowledged();
@@ -152,7 +152,7 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 
 	private boolean indexExists(String theIndexName) throws IOException {
 		ExistsRequest request = new ExistsRequest.Builder().index(theIndexName).build();
-		return elasticsearchClient.indices().exists(request).value();
+		return myElasticsearchClient.indices().exists(request).value();
 	}
 
 	@Override
@@ -165,7 +165,7 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 		SearchRequest searchRequest = buildObservationResourceSearchRequest(thePids);
 		try {
 			SearchResponse<ObservationJson> observationDocumentResponse =
-					elasticsearchClient.search(searchRequest, ObservationJson.class);
+					myElasticsearchClient.search(searchRequest, ObservationJson.class);
 			List<Hit<ObservationJson>> observationDocumentHits =
 					observationDocumentResponse.hits().hits();
 			IParser parser = TolerantJsonParser.createWithLenientErrorHandling(myContext, null);
@@ -202,7 +202,7 @@ public class ElasticsearchBootSvcImpl implements IElasticsearchSvc {
 
 	@VisibleForTesting
 	public void refreshIndex(String theIndexName) throws IOException {
-		elasticsearchClient.indices().refresh(fn -> fn.index(theIndexName));
+		myElasticsearchClient.indices().refresh(fn -> fn.index(theIndexName));
 	}
 
 	/**
