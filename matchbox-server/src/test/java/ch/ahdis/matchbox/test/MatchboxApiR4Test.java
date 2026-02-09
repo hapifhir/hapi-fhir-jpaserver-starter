@@ -15,6 +15,7 @@ import org.hl7.fhir.r4.model.OperationOutcome.IssueSeverity;
 import org.hl7.fhir.r4.model.OperationOutcome.OperationOutcomeIssueComponent;
 import org.hl7.fhir.r4.model.Parameters;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -70,8 +71,7 @@ class MatchboxApiR4Test {
 				</text>
 			</Patient>""";
 
-		IBaseOperationOutcome operationOutcome = this.validationClient.validate(patient,
-																										"http://hl7.org/fhir/StructureDefinition/Patient");
+		IBaseOperationOutcome operationOutcome = this.validationClient.validate(patient, profileCore("Patient"));
 		assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
 
 		String sessionIdFirst = getSessionId(operationOutcome);
@@ -95,7 +95,7 @@ class MatchboxApiR4Test {
 			</Practitioner>""";
 
 		// tests against base core profile
-		String profileCore = "http://hl7.org/fhir/StructureDefinition/Practitioner";
+		String profileCore = profileCore("Practitioner");
 		IBaseOperationOutcome operationOutcome = validationClient.validate(resource, profileCore);
 		String sessionIdCore = getSessionId(operationOutcome);
 		assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
@@ -239,7 +239,7 @@ class MatchboxApiR4Test {
 		// validationClient.validate(getContent("ehs-431.json"),
 		// "http://fhir.ch/ig/ch-emed/StructureDefinition/ch-emed-document-medicationcard");
 		IBaseOperationOutcome operationOutcome = validationClient.validate(getContent("ehs-431.json"),
-																								 "http://hl7.org/fhir/StructureDefinition/Bundle");
+																								 profileCore("Bundle"));
 		log.debug(FHIR_CONTEXT.newJsonParser().encodeResourceToString(operationOutcome));
 		assertEquals(1, getValidationFailures((OperationOutcome) operationOutcome));
 	}
@@ -247,7 +247,7 @@ class MatchboxApiR4Test {
 	@Test
 	void validateEhs431Gazelle() throws Exception {
 		ValidationReport report = this.validateWithGazelle(getContent("ehs-431.json"),
-																			"http://hl7.org/fhir/StructureDefinition/Bundle");
+																			profileCore("Bundle"));
 		assertEquals(1, getValidationFailures(report));
 	}
 
@@ -255,7 +255,7 @@ class MatchboxApiR4Test {
 		// https://gazelle.ihe.net/jira/browse/EHS-419
 	void validateEhs419() throws IOException {
 		IBaseOperationOutcome operationOutcome = validationClient.validate(getContent("ehs-419.json"),
-																								 "http://hl7.org/fhir/StructureDefinition/Patient");
+																								 profileCore("Patient"));
 		log.debug(FHIR_CONTEXT.newJsonParser().encodeResourceToString(operationOutcome));
 		assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
 	}
@@ -282,7 +282,7 @@ class MatchboxApiR4Test {
 						"</RelatedPerson>";
 
 		IBaseOperationOutcome operationOutcome = this.validationClient.validate(patient,
-																										"http://hl7.org/fhir/StructureDefinition/RelatedPerson");
+																										profileCore("RelatedPerson"));
 		assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
 	}
 
@@ -349,6 +349,45 @@ class MatchboxApiR4Test {
 		IBaseOperationOutcome operationOutcome = this.validationClient.validate(encounter,
 																			"http://matchbox.health/ig/test/r4/StructureDefinition/encounter-ext-r5");
 		assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
+	}
+
+	@Test
+	@Disabled("For some reason, the validation engine does not fail on unknown extensions with the default configuration, needs further investigation")
+	void validateUnknownExtensionIsRejectedByDefault() throws Exception {
+		final var patient = getContent("patient-dicom.json");
+		final var operationOutcome = this.validationClient.validate(patient, profileCore("Patient"));
+		assertEquals(1, getValidationFailures((OperationOutcome) operationOutcome));
+	}
+
+	@Test
+	void validateUnknownExtensionIsAcceptedWithAny() throws Exception {
+		final var patient = getContent("patient-dicom.json");
+		final var parameters = new Parameters();
+		parameters.addParameter("extensions", "any");
+
+		final var operationOutcome = this.validationClient.validate(patient, profileCore("Patient"), parameters);
+		assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
+	}
+
+	@Test
+	void validateUnknownExtensionIsAcceptedWithValidDomain() throws Exception {
+		final var patient = getContent("patient-dicom.json");
+		final var parameters = new Parameters();
+		parameters.addParameter("extensions", "http://nema.org");
+
+		final var operationOutcome = this.validationClient.validate(patient, profileCore("Patient"), parameters);
+		assertEquals(0, getValidationFailures((OperationOutcome) operationOutcome));
+	}
+
+	@Test
+	@Disabled("For some reason, the validation engine does not fail on unknown extensions with the default configuration, needs further investigation")
+	void validateUnknownExtensionIsRejectedWithWrongDomain() throws Exception {
+		final var patient = getContent("patient-dicom.json");
+		final var parameters = new Parameters();
+		parameters.addParameter("extensions", "http://fhir.ch");
+
+		final var operationOutcome = this.validationClient.validate(patient, profileCore("Patient"), parameters);
+		assertEquals(1, getValidationFailures((OperationOutcome) operationOutcome));
 	}
 
 
@@ -472,5 +511,9 @@ class MatchboxApiR4Test {
 
 	private static int getValidationFailures(final ValidationReport report) {
 		return report.getCounters().getNumberOfFailedWithErrors() + report.getCounters().getNumberOfUnexpectedErrors();
+	}
+
+	private static String profileCore(final String resourceName) {
+		return "http://hl7.org/fhir/StructureDefinition/" + resourceName;
 	}
 }

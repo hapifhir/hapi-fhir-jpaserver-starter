@@ -4,10 +4,12 @@ import ch.ahdis.matchbox.engine.MatchboxEngine;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
-import org.hl7.fhir.utilities.FhirPublication;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +41,12 @@ class R4ValidationTests {
 		this.careplanRaw = this.loadSample("careplan.xml");
 		this.measureRaw = this.loadSample("measure.xml");
 		this.relatedPerson = this.loadSample("RelatedPerson-BiologicalFather.json");
+	}
+
+	@BeforeEach
+	void resetEngine() {
+		this.engine.setAnyExtensionsAllowed(false);
+		this.engine.setExtensionDomains(List.of());
 	}
 
 	/**
@@ -136,6 +144,44 @@ class R4ValidationTests {
 		//final String invalidObservation = observationRaw.replace("{{UNIT}}", "non-existent-code");
 		//final var errors = this.expectInvalid(invalidObservation, Manager.FhirFormat.XML, "http://hl7.org/fhir/StructureDefinition/Observation");
 		//assertEquals(1, errors.size());
+	}
+
+	/**
+	 * We validate a Patient resource with a CH Core extension that isn't known by the validator.
+	 * By default, this should be rejected (anyExtensionsAllowed = false and extensionDomains = []).
+	 */
+	@Test
+	void testUnknownExtensionIsRejectedByDefault() throws Exception {
+		final String resourceWithUnknownExtension = this.loadSample("patient-with-extension.json");
+		this.expectInvalid(resourceWithUnknownExtension, Manager.FhirFormat.JSON, "http://hl7" +
+			".org/fhir/StructureDefinition/Patient");
+	}
+
+	/**
+	 * The same Patient should be valid with anyExtensionsAllowed = true.
+	 */
+	@Test
+	void testUnknownExtensionCanBeAcceptedWithAny() throws Exception {
+		this.engine.setAnyExtensionsAllowed(true);
+		final String resourceWithUnknownExtension = this.loadSample("patient-with-extension.json");
+		this.expectValid(resourceWithUnknownExtension, Manager.FhirFormat.JSON, "http://hl7.org/fhir/StructureDefinition/Patient");
+	}
+
+	/**
+	 * The same Patient should be valid if we allow the specific domain of the extension.
+	 * We test different inputs for the domain: from the exact extension URL, to the DNS name only.
+	 */
+	@ParameterizedTest
+	@ValueSource(strings = {
+		"http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-patient-ech-11-placeoforigin",
+		"http://fhir.ch/ig/ch-core/",
+		"http://fhir.ch/",
+		"http://fhir.ch",
+	})
+	void testUnknownExtensionCanBeAcceptedWithDomain(final String allowedDomain) throws Exception {
+		this.engine.setExtensionDomains(List.of(allowedDomain));
+		final String resourceWithUnknownExtension = this.loadSample("patient-with-extension.json");
+		this.expectValid(resourceWithUnknownExtension, Manager.FhirFormat.JSON, "http://hl7.org/fhir/StructureDefinition/Patient");
 	}
 
 	/**

@@ -556,10 +556,8 @@ public class MatchboxEngineSupport {
 		validator.setDoNative(cli.isDoNative());
 		validator.setHintAboutNonMustSupport(cli.isHintAboutNonMustSupport());
 		validator.setAnyExtensionsAllowed(false);
-		if (cli.getExtensions() == null ) {
-			validator.setAnyExtensionsAllowed(false);
-		} else {
-			for (String s : cli.getExtensions()) {
+		if (cli.getExtensions() != null) {
+			for (final String s : cli.getExtensions()) {
 				if ("any".equals(s)) {
 					validator.setAnyExtensionsAllowed(true);
 				} else {	

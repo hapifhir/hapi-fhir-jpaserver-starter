@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -1229,7 +1230,18 @@ public class MatchboxEngine extends ValidationEngine {
 		if (advisor != null) {
 			return ((ch.ahdis.matchbox.engine.ValidationPolicyAdvisor) advisor).getSuppressedErrorMessages();
 		}
-		return null;
+		return Collections.emptyList();
+	}
+
+	@Override
+	public InstanceValidator getValidator(final FhirFormat format) throws FHIRException, IOException {
+		final var validator = super.getValidator(format);
+		validator.setAnyExtensionsAllowed(this.isAnyExtensionsAllowed());
+		validator.getExtensionDomains().clear();
+		if (this.getExtensionDomains() != null) {
+			validator.getExtensionDomains().addAll(this.getExtensionDomains());
+		}
+		return validator;
 	}
 
 	/**

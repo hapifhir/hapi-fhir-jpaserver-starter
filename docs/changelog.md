@@ -1,4 +1,9 @@
+Unreleased Release 4.0.18
+
+- fix forwarding of `anyExtensionsAllowed`/`extensionDomains` in the validator (#464)
+
 2026/01/27 Release 4.0.17
+
 - fixed search params not being included in the call to the server (#453)
 - unrestrict transport layer jackson for mcp (#455)
 - memory error / security issue (#457)
