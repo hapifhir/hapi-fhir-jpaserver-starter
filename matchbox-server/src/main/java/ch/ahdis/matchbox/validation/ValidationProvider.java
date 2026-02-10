@@ -231,7 +231,7 @@ public class ValidationProvider {
 
 		var oo = this.getOperationOutcome(sha3Hex, messages, profile, engine, millis, cliContext);
 
-		Boolean aiUsed = false;
+		boolean aiUsed = false;
 
 		Boolean aiAnalyze = null;
 		// check if the request ai analyze parameter is set to true or false
@@ -264,6 +264,7 @@ public class ValidationProvider {
 			}
 		}
 
+		// here should also be an if Statement, if statistics are enabled in the configuration.
 		this.saveStatistics(oo, profile, millis, aiUsed);
 
 		return this.matchboxFhirVersion.convertForResponse(oo);
@@ -436,16 +437,29 @@ public class ValidationProvider {
 		return outcome;
 	}
 
-	public void saveStatistics(OperationOutcome oo, String profile, Long duration, Boolean aiUsed) {
+	/**
+	 * This method extracts Statistics (Errorcount, packages used, ...) from the current OO. These then get stored in the
+	 * database together with the profile, duration and aiUsed attribute.
+	 * @param oo Current OperationOutcome response; used to extract statistics
+	 * @param profile Current FHIR profile selected
+	 * @param duration Amount of milliseconds the validation took
+	 * @param aiUsed States if AI analysis was used
+	 */
+	public void saveStatistics(OperationOutcome oo, String profile, Long duration, boolean aiUsed) {
+		// create new Statistics Entity (new row in table)
 		StatisticsEntity statsEntity = new StatisticsEntity();
 
+		// initialize all the helper variables
 		int nbFatals = 0;
 		int nbErrors = 0;
 		int nbWarnings = 0;
 		int nbInfos = 0;
-		Boolean validationSuccess = false;
+		boolean validationSuccess = false;
+
+		// get the current timestamp to save in the database
 		LocalDateTime timestamp = LocalDateTime.now();
 
+		// iterate through every issue in the OO and update the severity count
 		for (var issue : oo.getIssue()) {
 			switch (issue.getSeverity()) {
 				case FATAL -> nbFatals++;
@@ -454,10 +468,12 @@ public class ValidationProvider {
 				case INFORMATION -> nbInfos++;
 			}
 		}
+		// check if the validation was flagged as successful
 		if (nbFatals == 0 && nbErrors == 0) {
 			validationSuccess = true;
 		}
 
+		// extract all packages and store them in a list
 		List<String> usedPackagesList = new ArrayList<>();
 		if (!oo.getIssue().isEmpty()) {
 			var matchboxExtensionIssue = oo.getIssue().getFirst().getExtensionByUrl("http://matchbox.health/validation");
@@ -467,8 +483,10 @@ public class ValidationProvider {
 				}
 			}
 		}
+		// convert the list into a single string divided by ", "
 		String usedPackagesString = String.join(", ", usedPackagesList);
 
+		// set all the fields with the corresponding parameters
 		statsEntity.setProfile(profile);
 		statsEntity.setPackages(usedPackagesString);
 		statsEntity.setNumberOfInfos(nbInfos);
@@ -478,17 +496,10 @@ public class ValidationProvider {
 		statsEntity.setTimestamp(timestamp);
 		statsEntity.setDurationMillis(duration);
 		statsEntity.setAiUsed(aiUsed);
+		statsEntity.setSuccess(validationSuccess);
 
-//		System.out.println("LOG OperationOutcome");
-//		System.out.println("Profile: " + profile);
-//		System.out.println("ValidationSuccess: " + validationSuccess);
-//		System.out.println("nbFatals: " + nbFatals);
-//		System.out.println("nbErrors: " + nbErrors);
-//		System.out.println("nbWarnings: " + nbWarnings);
-//		System.out.println("nbInfos: " + nbInfos);
-//		System.out.println("AIused: " + aiUsed);
-//		System.out.println("Millis: " + duration);
-//		System.out.println("UsedPackages: " + usedPackagesString);
+		// save to the database
+		this.statisticsDao.save(statsEntity);
 
 	}
 }
