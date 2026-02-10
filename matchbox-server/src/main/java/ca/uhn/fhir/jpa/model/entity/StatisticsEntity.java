@@ -59,5 +59,10 @@ public class StatisticsEntity {
   @Getter
   @Column(name = "AI_USED", nullable = false)
   private Boolean aiUsed;
+  
+  @Setter
+  @Getter
+  @Column(name = "SUCCESS", nullable = false)
+  private Boolean success;
 
 }
