@@ -22,6 +22,8 @@ package ch.ahdis.matchbox.validation;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
+import ca.uhn.fhir.jpa.dao.data.IStatisticsDao;
+import ca.uhn.fhir.jpa.model.entity.StatisticsEntity;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.api.EncodingEnum;
@@ -58,6 +60,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,6 +92,9 @@ public class ValidationProvider {
 
 	@Autowired
 	private PlatformTransactionManager myTxManager;
+
+	@Autowired
+	private IStatisticsDao statisticsDao;
 
 //	@Operation(name = "$canonical", manualRequest = true, idempotent = true, returnParameters = {
 //			@OperationParam(name = "return", type = IBase.class, min = 1, max = 1) })
@@ -225,6 +231,8 @@ public class ValidationProvider {
 
 		var oo = this.getOperationOutcome(sha3Hex, messages, profile, engine, millis, cliContext);
 
+		Boolean aiUsed = false;
+
 		Boolean aiAnalyze = null;
 		// check if the request ai analyze parameter is set to true or false
 		if (theRequest.getParameter("analyzeOutcomeWithAI") != null) {
@@ -248,12 +256,15 @@ public class ValidationProvider {
 				String json = FhirContext.forR5Cached().newJsonParser().encodeResourceToString(oo);
 				String aiResult = openAIConnector.interpretWithMatchbox(contentString, json);
 				oo = this.addAIIssueToOperationOutcome(oo, aiResult);
+				aiUsed = true;
 			} catch (Exception e) {
 				log.error("Error during AI analysis", e);
 				// add the error to the OperationOutcome, so the client still gets the validation result
 				oo = this.addExceptionToOperationOutcome(oo, e);
 			}
 		}
+
+		this.saveStatistics(oo, profile, millis, aiUsed);
 
 		return this.matchboxFhirVersion.convertForResponse(oo);
 	}
@@ -423,5 +434,61 @@ public class ValidationProvider {
 			.setCode(OperationOutcome.IssueType.EXCEPTION)
 			.setDiagnostics(e.getLocalizedMessage());
 		return outcome;
+	}
+
+	public void saveStatistics(OperationOutcome oo, String profile, Long duration, Boolean aiUsed) {
+		StatisticsEntity statsEntity = new StatisticsEntity();
+
+		int nbFatals = 0;
+		int nbErrors = 0;
+		int nbWarnings = 0;
+		int nbInfos = 0;
+		Boolean validationSuccess = false;
+		LocalDateTime timestamp = LocalDateTime.now();
+
+		for (var issue : oo.getIssue()) {
+			switch (issue.getSeverity()) {
+				case FATAL -> nbFatals++;
+				case ERROR -> nbErrors++;
+				case WARNING -> nbWarnings++;
+				case INFORMATION -> nbInfos++;
+			}
+		}
+		if (nbFatals == 0 && nbErrors == 0) {
+			validationSuccess = true;
+		}
+
+		List<String> usedPackagesList = new ArrayList<>();
+		if (!oo.getIssue().isEmpty()) {
+			var matchboxExtensionIssue = oo.getIssue().getFirst().getExtensionByUrl("http://matchbox.health/validation");
+			for (var ext : matchboxExtensionIssue.getExtension()) {
+				if ("package".equals(ext.getUrl()) && ext.hasValue()) {
+					usedPackagesList.add(ext.getValue().toString());
+				}
+			}
+		}
+		String usedPackagesString = String.join(", ", usedPackagesList);
+
+		statsEntity.setProfile(profile);
+		statsEntity.setPackages(usedPackagesString);
+		statsEntity.setNumberOfInfos(nbInfos);
+		statsEntity.setNumberOfWarnings(nbWarnings);
+		statsEntity.setNumberOfErrors(nbErrors);
+		statsEntity.setNumberOfFatals(nbFatals);
+		statsEntity.setTimestamp(timestamp);
+		statsEntity.setDurationMillis(duration);
+		statsEntity.setAiUsed(aiUsed);
+
+//		System.out.println("LOG OperationOutcome");
+//		System.out.println("Profile: " + profile);
+//		System.out.println("ValidationSuccess: " + validationSuccess);
+//		System.out.println("nbFatals: " + nbFatals);
+//		System.out.println("nbErrors: " + nbErrors);
+//		System.out.println("nbWarnings: " + nbWarnings);
+//		System.out.println("nbInfos: " + nbInfos);
+//		System.out.println("AIused: " + aiUsed);
+//		System.out.println("Millis: " + duration);
+//		System.out.println("UsedPackages: " + usedPackagesString);
+
 	}
 }
