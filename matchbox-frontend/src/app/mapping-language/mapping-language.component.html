@@ -10,57 +10,67 @@
           accept=".json"
           placeholder="Upload source"
           type="file"
-        />
-      </mat-card-actions>
-      <textarea [formControl]="source" cols="400" matNativeControl rows="15">
-      </textarea>
-    </mat-form-field>
-  </mat-card-content>
-</mat-card>
+          />
+        </mat-card-actions>
+        <textarea [formControl]="source" cols="400" matNativeControl rows="15">
+        </textarea>
+      </mat-form-field>
+    </mat-card-content>
+  </mat-card>
 
-<mat-card class="card-maps">
-  <mat-card-content>
-    <mat-card-header>
-      <mat-card-title>FHIR Mapping Language map</mat-card-title>
-    </mat-card-header>
-    <mat-form-field class="fixtextarea">
-      <mat-card-actions>
-        <input
-          (change)="fileChange($event)"
-          accept=".map"
-          placeholder="Upload map"
-          type="file"
-        />
-      </mat-card-actions>
-      <textarea [formControl]="map" cols="400" matNativeControl rows="20">
-      </textarea>
-    </mat-form-field>
-    <mat-error *ngIf="operationOutcome">
-      <ul>
-        <li *ngFor="let issue of operationOutcome.issue">
-          {{ issue.diagnostics }}
-        </li>
-      </ul>
-    </mat-error>
-    <mat-hint *ngIf="structureMap"
-    >Successfully created on server: {{ structureMap.url }}
-    </mat-hint
-    >
-  </mat-card-content>
-</mat-card>
+  <mat-card class="card-maps">
+    <mat-card-content>
+      <mat-card-header>
+        <mat-card-title>FHIR Mapping Language map</mat-card-title>
+      </mat-card-header>
+      <mat-form-field class="fixtextarea">
+        <mat-card-actions>
+          <input
+            (change)="fileChange($event)"
+            accept=".map"
+            placeholder="Upload map"
+            type="file"
+            />
+          </mat-card-actions>
+          <textarea [formControl]="map" cols="400" matNativeControl rows="20">
+          </textarea>
+        </mat-form-field>
+        @if (operationOutcome) {
+          <mat-error>
+            <ul>
+              @for (issue of operationOutcome.issue; track issue) {
+                <li>
+                  {{ issue.diagnostics }}
+                </li>
+              }
+            </ul>
+          </mat-error>
+        }
+        @if (structureMap) {
+          <mat-hint
+            >Successfully created on server: {{ structureMap.url }}
+            </mat-hint
+            >
+        }
+      </mat-card-content>
+    </mat-card>
 
-<mat-card class="card-maps">
-  <mat-card-content>
-    <mat-card-header>
-      <mat-card-title>Transformed</mat-card-title>
-    </mat-card-header>
-    <mat-error *ngIf="operationOutcomeTransformed">
-      <ul>
-        <li *ngFor="let issue of operationOutcomeTransformed.issue">
-          {{ issue.diagnostics }}
-        </li>
-      </ul>
-    </mat-error>
-    <pre>{{ transformed | json }}</pre>
-  </mat-card-content>
-</mat-card>
+    <mat-card class="card-maps">
+      <mat-card-content>
+        <mat-card-header>
+          <mat-card-title>Transformed</mat-card-title>
+        </mat-card-header>
+        @if (operationOutcomeTransformed) {
+          <mat-error>
+            <ul>
+              @for (issue of operationOutcomeTransformed.issue; track issue) {
+                <li>
+                  {{ issue.diagnostics }}
+                </li>
+              }
+            </ul>
+          </mat-error>
+        }
+        <pre>{{ transformed | json }}</pre>
+      </mat-card-content>
+    </mat-card>

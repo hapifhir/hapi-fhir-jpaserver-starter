@@ -10,10 +10,17 @@
     </tr>
     </thead>
     <tbody>
-    <tr  (click)="selectRow(ig)"  [ngStyle]="isCurrent(ig) ? {'background-color': 'lightyellow'} : {}"    *ngFor="let ig of igs">
-      <td>{{ ig.packageId }}</td>
-      <td class="secondary">{{ ig.version }}</td>
-      <td class="secondary">{{ ig.title }}</td>
+    @for (ig of igs; track ig.url) {
+      <tr (click)="selectRow(ig)" [ngStyle]="isCurrent(ig) ? {'background-color': 'lightyellow'} : {}">
+        <td>{{ ig.packageId }}</td>
+        <td class="secondary">{{ ig.version }}</td>
+        <td class="secondary">{{ ig.title }}</td>
+      </tr>
+    } @empty {
+      <tr>
+        <td colspan="3">No ImplementationGuides installed on the server</td>
+      </tr>
+    }
     </tbody>
   </table>
 </div>
@@ -41,22 +48,22 @@
   </mat-form-field>
 
   <button (click)="onSubmit()" type="submit">Upload</button>
-  <ng-container *ngIf="selection"
-  >&nbsp;
+  @if (selection) {
+    &nbsp;
     <button (click)="onUpdate()" type="submit">Update</button>
-  </ng-container>
-  <ng-container *ngIf="selection"
-  >&nbsp;
-    <button (click)="onDelete()" type="submit">Delete</button>
-  </ng-container>
+  } @if (selection) {
+  &nbsp;
+  <button (click)="onDelete()" type="submit">Delete</button>
+}
 </div>
 
-<ng-container *ngIf="update">
+@if (update) {
   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-</ng-container>
-
-<div *ngIf="errorMessage" class="white-block logs">
-  <h2>Result of the last operation</h2>
-
-  <app-operation-result *ngIf="operationResult" [operationResult]="operationResult"></app-operation-result>
-</div>
+} @if (errorMessage) {
+  <div class="white-block logs">
+    <h2>Result of the last operation</h2>
+    @if (operationResult) {
+      <app-operation-result [operationResult]="operationResult"></app-operation-result>
+    }
+  </div>
+}

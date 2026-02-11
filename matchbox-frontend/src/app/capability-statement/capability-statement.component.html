@@ -5,9 +5,13 @@
     CapabilityStatement of the server: <code>{{ client.baseUrl }}</code>
   </p>
 
-  <mat-spinner *ngIf="loading"></mat-spinner>
+  @if (loading) {
+    <mat-spinner></mat-spinner>
+  }
 
   <div id="code"></div>
 
-  <app-operation-result *ngIf="operationResult" [operationResult]="operationResult"></app-operation-result>
+  @if (operationResult) {
+    <app-operation-result [operationResult]="operationResult"></app-operation-result>
+  }
 </div>

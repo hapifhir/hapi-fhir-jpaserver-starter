@@ -1,15 +1,29 @@
-<ul *ngIf="result" [ngClass]="{'clickable': reactsToClick}">
-  <li *ngFor="let issue of result.issues" class="issue {{ issue.severity }}"
-       (click)="select.emit(issue)">
-    <span class="severity">{{ issue.severity }}</span>
-    <span [innerHtml]="getTemplateHeaderLine(issue)"></span><br/>
-    <span *ngIf="issue.details" class="details">{{ issue.details }}</span>
-    <p *ngIf="!issue.markdown">{{ issue.text }}</p>
-    <markdown *ngIf="issue.markdown" [data]="issue.text"></markdown>
-    <ol *ngIf="issue.sliceInfo.length">
-      <li *ngFor="let sliceInfo of issue.sliceInfo" class="slice">
-        {{ sliceInfo }}
+@if (result) {
+  <ul [ngClass]="{'clickable': reactsToClick}">
+    @for (issue of result.issues; track issue) {
+      <li class="issue {{ issue.severity }}"
+        (click)="select.emit(issue)">
+        <span class="severity">{{ issue.severity }}</span>
+        <span [innerHtml]="getTemplateHeaderLine(issue)"></span><br/>
+        @if (issue.details) {
+          <span class="details">{{ issue.details }}</span>
+        }
+        @if (!issue.markdown) {
+          <p>{{ issue.text }}</p>
+        }
+        @if (issue.markdown) {
+          <markdown [data]="issue.text"></markdown>
+        }
+        @if (issue.sliceInfo.length) {
+          <ol>
+            @for (sliceInfo of issue.sliceInfo; track sliceInfo) {
+              <li class="slice">
+                {{ sliceInfo }}
+              </li>
+            }
+          </ol>
+        }
       </li>
-    </ol>
-  </li>
-</ul>
+    }
+  </ul>
+}
