@@ -58,8 +58,8 @@
         <okhttp_version>4.12.0</okhttp_version>
         <log4j_to_slf4j_version>2.19.0</log4j_to_slf4j_version>
         <spring_version>6.1.21</spring_version>
-        <spring_context_version>6.1.20</spring_context_version>
-        <spring_boot_version>3.3.11</spring_boot_version>
+        <spring_context_version>6.1.21</spring_context_version>
+        <spring_boot_version>3.3.13</spring_boot_version>
         <testcontainers_version>1.21.1</testcontainers_version>
         <ucum_version>1.0.10</ucum_version>
 
