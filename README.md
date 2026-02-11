@@ -73,12 +73,24 @@ docker run -p 8090:8080 -v $(pwd)/yourLocalFolder:/configs -e "--spring.config.l
 ```
 Here, the configuration file (*another.application.yaml*) is placed locally in the folder *yourLocalFolder*.
 
-
-
 ```
 docker run -p 8090:8080 -e "--spring.config.location=classpath:/another.application.yaml" hapiproject/hapi:latest
 ```
 Here, the configuration file (*another.application.yaml*) is part of the compiled set of resources.
+
+### Configuration with additional override files
+
+You can layer additional configuration files on top of the default application.yaml while preserving all the base settings. This approach allows you to create specific override files for different environments without duplicating the entire configuration.
+
+```bash
+# Using Maven
+mvn spring-boot:run -Dspring-boot.run.arguments="--spring.config.additional-location=classpath:your-overrides.yaml"
+
+# Using Docker
+docker run -p 8080:8080 -e "--spring.config.additional-location=classpath:your-overrides.yaml" hapiproject/hapi:latest
+```
+
+Here, the additional configuration file (*your-overrides.yaml*) contains only the specific properties you want to override or add, while all default values from application.yaml remain unchanged.
 
 ### One-liner for quickly getting an Implementation Guide installed into HAPI
 
