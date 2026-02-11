@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FhirConfigService } from './fhirConfig.service';
 import { TranslateService } from '@ngx-translate/core';
 import {HashUrlRedirectionService} from "./util/hash-url-redirection-service";
+import { environment } from '../environments/environment';
 
 @Component({
     selector: 'app-root',
@@ -20,18 +21,13 @@ export class AppComponent {
       hashUrlRedirectionService.redirectHashUrl();
     }
 
-    translateService.setDefaultLang('de');
+    translateService.setFallbackLang('de');
     translateService.use(translateService.getBrowserLang());
 
-    let base = location.origin;
-    if (base === 'http://localhost:4200') {
-      console.log('note: using local dev mag system for ' + location.origin);
-      // You can also use /proxy/testahdisch
-      fhirConfigService.changeFhirMicroService('http://localhost:8080/matchboxv3/fhir');
-    } else {
-      const url: string = (window as any).MATCHBOX_BASE_PATH + '/fhir';
-      fhirConfigService.changeFhirMicroService(url);
-      console.log('fhir endpoint ' + url);
-    }
+    // Setting the FHIR server URL from the environment configuration.
+    // This allows us to switch between different FHIR servers (e.g., for development, testing, production) without changing the code.
+    const fhirServerUrl = environment.fhirServerUrl();
+    console.info(`INFO: connecting to the FHIR server at ${fhirServerUrl}`);
+    fhirConfigService.changeFhirMicroService(fhirServerUrl);
   }
 }

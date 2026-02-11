@@ -67,11 +67,11 @@
       <div class="buttons">
         <span *ngIf="!profileLocked" class="profile-lock unlocked">
           <mat-icon (click)="profileLocked = !profileLocked" title="Lock the profile">lock_open</mat-icon>
-          <span title="The profile will be updated automatically when validating a new resource">profile unlocked</span>
+          <span title="Unlocked means the profile will be updated automatically when selecting a new resource">profile unlocked</span>
         </span>
         <span *ngIf="profileLocked" class="profile-lock locked">
           <mat-icon (click)="profileLocked = !profileLocked" title="Unlock the profile">lock_close</mat-icon>
-          <span title="The profile won't be updated when validating a new resource">profile locked</span>
+          <span title="Locked means the profile won't be updated when selecting a new resource">profile locked</span>
         </span>
 
         <button color="primary" mat-raised-button (click)="onValidationButtonClick()">Validate</button>
@@ -87,11 +87,11 @@
         </mat-form-field>
         <mat-form-field class="column50" *ngIf="setting.param.type === 'string' && setting.param.max === '*'">
           <mat-label>{{ setting.param.name }}</mat-label>
-          <textarea [formControl]="setting.formControl" 
-            matInput 
-            cdkTextareaAutosize 
+          <textarea [formControl]="setting.formControl"
+            matInput
+            cdkTextareaAutosize
             cdkAutosizeMinRows="3"
-            cdkAutosizeMaxRows="10"></textarea>        
+            cdkAutosizeMaxRows="10"></textarea>
         </mat-form-field>
         <mat-checkbox *ngIf="setting.param.type === 'boolean'" [formControl]="setting.formControl">
           {{ setting.param.name }}

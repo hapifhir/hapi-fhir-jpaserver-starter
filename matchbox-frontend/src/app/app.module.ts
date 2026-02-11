@@ -1,8 +1,8 @@
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AppComponent } from './app.component';
 import { CapabilityStatementComponent } from './capability-statement/capability-statement.component';
 import { HomeComponent } from './home/home.component';
@@ -59,10 +59,6 @@ const routes: Routes = [
   },
 ];
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -93,11 +89,10 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   providers: [
     provideTranslateService({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: createTranslateLoader,
-        deps: [HttpClient],
-      },
+      loader: provideTranslateHttpLoader({
+        prefix: './assets/i18n/',
+        suffix: '.json',
+      }),
     }),
     {
       provide: HIGHLIGHT_OPTIONS,

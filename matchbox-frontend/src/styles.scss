@@ -4,8 +4,8 @@
 @use 'ngx-toastr/toastr';
 @use "sass:map";
 
-@include mat.core();
-@include mat.core-theme(variables.$theme);
+@include mat.elevation-classes();
+@include mat.app-background();
 @include mat.all-component-themes(variables.$theme);
 @include mat.all-component-typographies(variables.$theme);
 

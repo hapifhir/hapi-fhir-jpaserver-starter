@@ -2,12 +2,14 @@
   "/proxy/localhost": {
     "target": "http://localhost:8080",
     "secure": false,
-    "pathRewrite": {"^/proxy/localhost" : ""}
+    "pathRewrite": { "^/proxy/localhost": "/matchboxv3/fhir" },
+    "logLevel": "debug"
   },
   "/proxy/testahdisch": {
     "target": "https://test.ahdis.ch",
     "secure": false,
     "changeOrigin": true,
-    "pathRewrite": {"^/proxy/testahdisch" : ""}
+    "pathRewrite": { "^/proxy/testahdisch": "/matchboxv3/fhir" },
+    "logLevel": "debug"
   }
 }
