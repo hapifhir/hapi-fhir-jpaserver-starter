@@ -270,6 +270,7 @@ hapi:
     # -------------------------------------------------------------------------------
     bulk_export_enabled: false
     bulk_import_enabled: false
+    bulk_export_file_retention_period_hours: 2
 
     # -------------------------------------------------------------------------------
     # F. Write / Delete / Integrity
