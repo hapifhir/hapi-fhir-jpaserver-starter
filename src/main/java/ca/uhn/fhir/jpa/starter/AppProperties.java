@@ -862,8 +862,7 @@ public class AppProperties {
 		return bulk_export_file_retention_period_hours;
 	}
 
-	public void setBulk_export_file_retention_period_hours(
-			Integer bulk_export_file_retention_period_hours) {
+	public void setBulk_export_file_retention_period_hours(Integer bulk_export_file_retention_period_hours) {
 		this.bulk_export_file_retention_period_hours = bulk_export_file_retention_period_hours;
 	}
 
