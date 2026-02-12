@@ -1,4 +1,4 @@
-Unreleased Release 4.0.18
+2026/02/12 Release 4.0.18
 
 - fix forwarding of `anyExtensionsAllowed`/`extensionDomains` in the validator (#464)
 - update dependencies
