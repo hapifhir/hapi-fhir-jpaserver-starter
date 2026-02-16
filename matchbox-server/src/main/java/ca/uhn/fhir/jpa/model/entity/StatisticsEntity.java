@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
@@ -48,7 +49,8 @@ public class StatisticsEntity {
   @Setter
   @Getter
   @Column(name = "TIMESTAMP", nullable = false)
-  private LocalDateTime timestamp;
+  @Temporal(TemporalType.TIMESTAMP)
+  private Instant timestamp;
 
   @Setter
   @Getter

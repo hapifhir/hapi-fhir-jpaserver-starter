@@ -60,6 +60,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -462,7 +463,7 @@ public class ValidationProvider {
 		boolean validationSuccess = false;
 
 		// get the current timestamp to save in the database
-		LocalDateTime timestamp = LocalDateTime.now();
+		Instant timestamp = Instant.now();
 
 		// iterate through every issue in the OO and update the severity count
 		for (var issue : oo.getIssue()) {
