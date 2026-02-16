@@ -265,7 +265,7 @@ public class ValidationProvider {
 		}
 
 		try {
-			this.saveStatistics(oo, profile, millis, aiUsed);
+			this.saveStatistics(oo, profile, millis, aiUsed, engine);
 		} catch (Exception e) {
 			log.error("Error while saving statistics: ", e);
 		}
@@ -441,14 +441,16 @@ public class ValidationProvider {
 	}
 
 	/**
-	 * This method extracts Statistics (Errorcount, packages used, ...) from the current OO. These then get stored in the
-	 * database together with the profile, duration and aiUsed attribute.
+	 * This method extracts Statistics (Error count, packages used, ...) from the current OO. These then get stored in
+	 * the database together with the profile, duration and aiUsed attribute.
 	 * @param oo Current OperationOutcome response; used to extract statistics
 	 * @param profile Current FHIR profile selected
 	 * @param duration Amount of milliseconds the validation took
 	 * @param aiUsed States if AI analysis was used
+	 * @param engine Takes the used Matchboxengine to extract the loaded packages.
 	 */
-	public void saveStatistics(OperationOutcome oo, String profile, Long duration, boolean aiUsed) {
+	public void saveStatistics(OperationOutcome oo, String profile, Long duration,
+										boolean aiUsed, MatchboxEngine engine) {
 		// create new Statistics Entity (new row in table)
 		final var statsEntity = new StatisticsEntity();
 
@@ -476,18 +478,8 @@ public class ValidationProvider {
 			validationSuccess = true;
 		}
 
-		// extract all packages and store them in a list
-		List<String> usedPackagesList = new ArrayList<>();
-		if (!oo.getIssue().isEmpty()) {
-			var matchboxExtensionIssue = oo.getIssue().getFirst().getExtensionByUrl("http://matchbox.health/validation");
-			for (var ext : matchboxExtensionIssue.getExtension()) {
-				if ("package".equals(ext.getUrl()) && ext.hasValue()) {
-					usedPackagesList.add(ext.getValue().toString());
-				}
-			}
-		}
-		// convert the list into a single string divided by ", "
-		String usedPackagesString = String.join(", ", usedPackagesList);
+		// extract all packages from the Matchbox engine and join them in a String
+		final String usedPackagesString = String.join(",", engine.getContext().getLoadedPackages());
 
 		// set all the fields with the corresponding parameters
 		statsEntity.setProfile(profile);
