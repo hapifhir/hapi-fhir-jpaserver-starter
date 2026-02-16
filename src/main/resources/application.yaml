@@ -424,9 +424,9 @@ hapi:
     #   validation:
     #     requests_enabled: true
     #     responses_enabled: true
-    binary_storage_enabled: true
-    binary_storage_mode: FILESYSTEM
-    binary_storage_filesystem_base_directory: /binstore
+    #   binary_storage_enabled: true
+    #   binary_storage_mode: FILESYSTEM
+    #   binary_storage_filesystem_base_directory: /binstore
     # When binary_storage_mode is FILESYSTEM and this value is not set,
     # the starter defaults to 102400 bytes so smaller binaries stay inline.
     binary_storage_minimum_binary_size: 4000
