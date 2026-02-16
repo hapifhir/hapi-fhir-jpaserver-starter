@@ -430,7 +430,7 @@ hapi:
     #   binary_storage_filesystem_base_directory: /binstore
     # When binary_storage_mode is FILESYSTEM and this value is not set,
     # the starter defaults to 102400 bytes so smaller binaries stay inline.
-    inline_resource_storage_below_size: 4000
+    binary_storage_minimum_binary_size: 4000
 
     # -------------------------------------------------------------------------------
     # P. Remote Terminology Service (disabled by default)

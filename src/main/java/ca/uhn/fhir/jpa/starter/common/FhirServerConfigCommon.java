@@ -227,11 +227,6 @@ public class FhirServerConfigCommon {
 			jpaStorageSettings.setLastNEnabled(true);
 		}
 
-		Integer inlineResourceThreshold = resolveInlineResourceThreshold(appProperties);
-		if (inlineResourceThreshold != null && inlineResourceThreshold != 0) {
-			jpaStorageSettings.setInlineResourceTextBelowSize(inlineResourceThreshold);
-		}
-
 		jpaStorageSettings.setStoreResourceInHSearchIndex(appProperties.getStore_resource_in_lucene_index_enabled());
 		jpaStorageSettings.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
 		jpaStorageSettings.setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
@@ -403,7 +398,7 @@ public class FhirServerConfigCommon {
 	}
 
 	private Integer resolveInlineResourceThreshold(AppProperties appProperties) {
-		Integer inlineResourceThreshold = appProperties.getInline_resource_storage_below_size();
+		Integer inlineResourceThreshold = appProperties.getBinary_storage_minimum_binary_size();
 		if (inlineResourceThreshold == null
 				&& appProperties.getBinary_storage_mode() == AppProperties.BinaryStorageMode.FILESYSTEM) {
 			return DEFAULT_FILESYSTEM_INLINE_THRESHOLD;

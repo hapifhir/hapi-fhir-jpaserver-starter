@@ -15,7 +15,6 @@ import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.config.ThreadPoolFactoryConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
-import ca.uhn.fhir.jpa.binary.interceptor.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
 import ca.uhn.fhir.jpa.config.util.HapiEntityManagerFactoryUtil;
 import ca.uhn.fhir.jpa.config.util.ResourceCountCacheUtil;
@@ -323,7 +322,6 @@ public class StarterJpaConfig {
 			Optional<CorsInterceptor> corsInterceptor,
 			IInterceptorBroadcaster interceptorBroadcaster,
 			Optional<BinaryAccessProvider> binaryAccessProvider,
-			BinaryStorageInterceptor binaryStorageInterceptor,
 			IValidatorModule validatorModule,
 			Optional<GraphQLProvider> graphQLProvider,
 			BulkDataExportProvider bulkDataExportProvider,
@@ -455,7 +453,6 @@ public class StarterJpaConfig {
 		// Binary Storage
 		if (appProperties.getBinary_storage_enabled() && binaryAccessProvider.isPresent()) {
 			fhirServer.registerProvider(binaryAccessProvider.get());
-			fhirServer.registerInterceptor(binaryStorageInterceptor);
 		}
 
 		// Validation
