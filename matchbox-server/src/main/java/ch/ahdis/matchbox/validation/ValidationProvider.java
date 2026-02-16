@@ -61,7 +61,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,7 +93,8 @@ public class ValidationProvider {
 	@Autowired
 	private PlatformTransactionManager myTxManager;
 
-	@Autowired
+	@Autowired(required = false)
+	@Nullable
 	private IStatisticsDao statisticsDao;
 
 //	@Operation(name = "$canonical", manualRequest = true, idempotent = true, returnParameters = {
@@ -265,10 +265,12 @@ public class ValidationProvider {
 			}
 		}
 
-		try {
-			this.saveStatistics(oo, profile, millis, aiUsed, engine);
-		} catch (Exception e) {
-			log.error("Error while saving statistics: ", e);
+		if (this.statisticsDao != null) {
+			try {
+				this.saveStatistics(oo, profile, millis, aiUsed, engine);
+			} catch (Exception e) {
+				log.error("Error while saving statistics: ", e);
+			}
 		}
 
 		return this.matchboxFhirVersion.convertForResponse(oo);
