@@ -28,22 +28,22 @@ public class StatisticsEntity {
 
   @Setter
   @Getter
-  @Column(name = "NUMBER_OF_INFORMATIONS", nullable = false)
+  @Column(name = "NUMBER_OF_INFORMATIONS", nullable = false, columnDefinition = "TINYINT UNSIGNED")
   private Integer numberOfInfos;
 
   @Setter
   @Getter
-  @Column(name = "NUMBER_OF_WARNINGS", nullable = false)
+  @Column(name = "NUMBER_OF_WARNINGS", nullable = false, columnDefinition = "TINYINT UNSIGNED")
   private Integer numberOfWarnings;
 
   @Setter
   @Getter
-  @Column(name = "NUMBER_OF_ERRORS", nullable = false)
+  @Column(name = "NUMBER_OF_ERRORS", nullable = false, columnDefinition = "TINYINT UNSIGNED")
   private Integer numberOfErrors;
 
   @Setter
   @Getter
-  @Column(name = "NUMBER_OF_FATALS", nullable = false)
+  @Column(name = "NUMBER_OF_FATALS", nullable = false, columnDefinition = "TINYINT UNSIGNED")
   private Integer numberOfFatals;
 
   @Setter
@@ -54,7 +54,7 @@ public class StatisticsEntity {
 
   @Setter
   @Getter
-  @Column(name = "DURATION", nullable = false)
+  @Column(name = "DURATION", nullable = false, columnDefinition = "INT UNSIGNED")
   private Long durationMillis;
 
   @Setter
