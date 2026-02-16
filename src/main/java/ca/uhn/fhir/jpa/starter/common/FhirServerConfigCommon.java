@@ -302,6 +302,12 @@ public class FhirServerConfigCommon {
 			jpaStorageSettings.setHSearchIndexPrefix(indexPrefix != null ? indexPrefix : "");
 		}
 
+		// Configure the bulk export file retention period
+		if (appProperties.getBulk_export_file_retention_period_hours() != null) {
+			jpaStorageSettings.setBulkExportFileRetentionPeriodHours(
+					appProperties.getBulk_export_file_retention_period_hours());
+		}
+
 		return jpaStorageSettings;
 	}
 

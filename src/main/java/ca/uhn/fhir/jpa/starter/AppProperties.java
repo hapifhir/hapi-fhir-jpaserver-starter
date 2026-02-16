@@ -131,6 +131,8 @@ public class AppProperties {
 	private Integer expunge_thread_count = null;
 	private Elasticsearch elasticsearch = null;
 
+	private Integer bulk_export_file_retention_period_hours = 2;
+
 	public List<String> getCustomInterceptorClasses() {
 		return custom_interceptor_classes;
 	}
@@ -854,6 +856,14 @@ public class AppProperties {
 
 	public void setElasticsearch(Elasticsearch elasticsearch) {
 		this.elasticsearch = elasticsearch;
+	}
+
+	public Integer getBulk_export_file_retention_period_hours() {
+		return bulk_export_file_retention_period_hours;
+	}
+
+	public void setBulk_export_file_retention_period_hours(Integer bulk_export_file_retention_period_hours) {
+		this.bulk_export_file_retention_period_hours = bulk_export_file_retention_period_hours;
 	}
 
 	public static class Cors {
