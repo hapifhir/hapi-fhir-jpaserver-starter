@@ -264,8 +264,11 @@ public class ValidationProvider {
 			}
 		}
 
-		// here should also be an if Statement, if statistics are enabled in the configuration.
-		this.saveStatistics(oo, profile, millis, aiUsed);
+		try {
+			this.saveStatistics(oo, profile, millis, aiUsed);
+		} catch (Exception e) {
+			log.error("Error while saving statistics: ", e);
+		}
 
 		return this.matchboxFhirVersion.convertForResponse(oo);
 	}
@@ -447,7 +450,7 @@ public class ValidationProvider {
 	 */
 	public void saveStatistics(OperationOutcome oo, String profile, Long duration, boolean aiUsed) {
 		// create new Statistics Entity (new row in table)
-		StatisticsEntity statsEntity = new StatisticsEntity();
+		final var statsEntity = new StatisticsEntity();
 
 		// initialize all the helper variables
 		int nbFatals = 0;
