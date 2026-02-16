@@ -91,6 +91,8 @@ matchbox:
       suppressWarnInfo:
         hl7.fhir.r4.core#4.0.1:
           #- "Constraint failed: dom-6:"
+  validation:
+    save-statistics: false
 logging:
   config: classpath:logback.xml # This is needed, otherwise Logback will load logback-test.xml in priority
   level:
