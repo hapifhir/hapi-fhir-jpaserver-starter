@@ -15,7 +15,6 @@ import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.config.ThreadPoolFactoryConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
-import ca.uhn.fhir.jpa.binary.interceptor.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
 import ca.uhn.fhir.jpa.config.util.HapiEntityManagerFactoryUtil;
 import ca.uhn.fhir.jpa.config.util.ResourceCountCacheUtil;
@@ -50,6 +49,7 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
+import ca.uhn.fhir.jpa.starter.elastic.ElasticsearchBootSvcImpl;
 import ca.uhn.fhir.jpa.starter.ig.ExtendedPackageInstallationSpec;
 import ca.uhn.fhir.jpa.starter.ig.IImplementationGuideOperationProvider;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
@@ -149,6 +149,7 @@ public class StarterJpaConfig {
 	@Primary
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+			Optional<ElasticsearchBootSvcImpl> elasticsearchSvc,
 			JpaProperties theJpaProperties,
 			DataSource myDataSource,
 			ConfigurableListableBeanFactory myConfigurableListableBeanFactory,
@@ -321,7 +322,6 @@ public class StarterJpaConfig {
 			Optional<CorsInterceptor> corsInterceptor,
 			IInterceptorBroadcaster interceptorBroadcaster,
 			Optional<BinaryAccessProvider> binaryAccessProvider,
-			BinaryStorageInterceptor binaryStorageInterceptor,
 			IValidatorModule validatorModule,
 			Optional<GraphQLProvider> graphQLProvider,
 			BulkDataExportProvider bulkDataExportProvider,
@@ -453,7 +453,6 @@ public class StarterJpaConfig {
 		// Binary Storage
 		if (appProperties.getBinary_storage_enabled() && binaryAccessProvider.isPresent()) {
 			fhirServer.registerProvider(binaryAccessProvider.get());
-			fhirServer.registerInterceptor(binaryStorageInterceptor);
 		}
 
 		// Validation

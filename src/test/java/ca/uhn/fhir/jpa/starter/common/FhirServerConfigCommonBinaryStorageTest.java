@@ -48,7 +48,7 @@ class FhirServerConfigCommonBinaryStorageTest {
 	void filesystemModeHonoursExplicitMinimum() throws Exception {
 		AppProperties props = new AppProperties();
 		props.setBinary_storage_mode(AppProperties.BinaryStorageMode.FILESYSTEM);
-		props.setInline_resource_storage_below_size(4096);
+		props.setBinary_storage_minimum_binary_size(4096);
 		Path baseDir = tempDir.resolve("fs-min-explicit");
 		Files.createDirectories(baseDir);
 		props.setBinary_storage_filesystem_base_directory(baseDir.toString());
@@ -62,7 +62,7 @@ class FhirServerConfigCommonBinaryStorageTest {
 	void filesystemModeSupportsZeroMinimumWhenExplicit() throws Exception {
 		AppProperties props = new AppProperties();
 		props.setBinary_storage_mode(AppProperties.BinaryStorageMode.FILESYSTEM);
-		props.setInline_resource_storage_below_size(0);
+		props.setBinary_storage_minimum_binary_size(0);
 		Path baseDir = tempDir.resolve("fs-zero");
 		Files.createDirectories(baseDir);
 		props.setBinary_storage_filesystem_base_directory(baseDir.toString());
