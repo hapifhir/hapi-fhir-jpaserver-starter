@@ -57,6 +57,7 @@ import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
 import ch.ahdis.matchbox.packages.*;
 import ch.ahdis.matchbox.providers.*;
 import ch.ahdis.matchbox.questionnaire.*;
+import ch.ahdis.matchbox.statistics.StatisticsObservationProvider;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 import ch.ahdis.matchbox.validation.ValidationProvider;
@@ -124,7 +125,8 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 															 final Optional<ImplementationGuideProviderR4> implementationGuideResourceProviderR4,
 															 final Optional<ImplementationGuideProviderR4B> implementationGuideResourceProviderR4B,
 															 final Optional<ImplementationGuideProviderR5> implementationGuideResourceProviderR5,
-															 final ValidationProvider validationProvider) {
+															 final ValidationProvider validationProvider,
+															 final StatisticsObservationProvider statisticsObservationProvider) {
 
 		final var fhirServer = super.restfulServer(fhirSystemDao,
 																 appProperties,
@@ -162,6 +164,7 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 
 		fhirServer.registerProviders(
 			validationProvider,
+			statisticsObservationProvider,
 			structureDefinitionProvider,
 			structureMapListProvider
 		);

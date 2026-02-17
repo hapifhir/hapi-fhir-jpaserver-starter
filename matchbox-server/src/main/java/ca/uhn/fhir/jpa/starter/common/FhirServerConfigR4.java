@@ -1,5 +1,16 @@
 package ca.uhn.fhir.jpa.starter.common;
 
+import ca.uhn.fhir.jpa.dao.data.IStatisticsDao;
+import ch.ahdis.matchbox.packages.ImplementationGuideProviderR4;
+import ch.ahdis.matchbox.statistics.StatisticsObservationProvider;
+import ch.ahdis.matchbox.util.MatchboxEngineSupport;
+import ch.ahdis.matchbox.validation.ValidationProvider;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
+
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import ca.uhn.fhir.jpa.config.r4.JpaR4Config;
@@ -7,10 +18,8 @@ import ca.uhn.fhir.jpa.dao.JpaResourceDao;
 import ca.uhn.fhir.jpa.starter.annotations.OnMatchboxOnlyOneEnginePresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
 import ch.ahdis.matchbox.config.MatchboxJpaConfig;
-import ch.ahdis.matchbox.packages.ImplementationGuideProviderR4;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR4;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR4;
-import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import org.hl7.fhir.r4.model.ImplementationGuide;
 import org.hl7.fhir.r4.model.StructureMap;
 import org.springframework.context.annotation.*;
@@ -24,6 +33,16 @@ public class FhirServerConfigR4 {
 
   public FhirServerConfigR4(final FhirContext fhirContext) {
     this.fhirContext = fhirContext;
+  }
+
+  @Bean
+  public ValidationProvider validationProvider() {
+    return new ValidationProvider();
+  }
+
+  @Bean
+  public StatisticsObservationProvider statisticsObservationProvider(IStatisticsDao statisticsDao) {
+    return new StatisticsObservationProvider(statisticsDao);
   }
 
   @Bean
