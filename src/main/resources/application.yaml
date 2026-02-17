@@ -35,6 +35,10 @@ management:
     metrics:
       export:
         enabled: true
+  metrics:
+    enable:
+      process.cpu: false
+      system.cpu: false
 
 spring:
   # -------------------------------------------------------------------------------

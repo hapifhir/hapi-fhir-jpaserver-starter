@@ -4,3 +4,9 @@ hapi:
     advanced_lucene_indexing: false
     search_index_full_text_enabled: false
     mdm_enabled: false
+
+management:
+  metrics:
+    enable:
+      process.cpu: false
+      system.cpu: false

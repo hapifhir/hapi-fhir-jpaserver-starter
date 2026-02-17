@@ -25,7 +25,10 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
 
 @ServletComponentScan(basePackageClasses = {RestfulServer.class})
-@SpringBootApplication(exclude = {ThymeleafAutoConfiguration.class})
+@SpringBootApplication(exclude = {
+	ThymeleafAutoConfiguration.class,
+	org.springframework.boot.actuate.autoconfigure.metrics.SystemMetricsAutoConfiguration.class
+})
 @Import({
 	StarterCrR4Config.class,
 	StarterCrDstu3Config.class,
