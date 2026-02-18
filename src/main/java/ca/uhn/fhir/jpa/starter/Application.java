@@ -2,14 +2,8 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.batch2.jobs.config.Batch2JobsConfig;
 import ca.uhn.fhir.jpa.batch2.JpaBatch2Config;
-import ca.uhn.fhir.jpa.starter.annotations.OnEitherVersion;
-import ca.uhn.fhir.jpa.starter.cdshooks.StarterCdsHooksConfig;
-import ca.uhn.fhir.jpa.starter.cr.StarterCrDstu3Config;
-import ca.uhn.fhir.jpa.starter.cr.StarterCrR4Config;
-import ca.uhn.fhir.jpa.starter.mdm.MdmConfig;
 import ca.uhn.fhir.jpa.subscription.channel.config.SubscriptionChannelConfig;
 import ca.uhn.fhir.jpa.subscription.match.config.SubscriptionProcessorConfig;
-import ca.uhn.fhir.jpa.subscription.match.config.WebsocketDispatcherConfig;
 import ca.uhn.fhir.jpa.subscription.submit.config.SubscriptionSubmitterConfig;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +21,9 @@ import org.springframework.context.annotation.Import;
 @ServletComponentScan(basePackageClasses = {RestfulServer.class})
 @SpringBootApplication(exclude = {ThymeleafAutoConfiguration.class})
 @Import({
-	StarterCrR4Config.class,
-	StarterCrDstu3Config.class,
-	StarterCdsHooksConfig.class,
 	SubscriptionSubmitterConfig.class,
 	SubscriptionProcessorConfig.class,
 	SubscriptionChannelConfig.class,
-	WebsocketDispatcherConfig.class,
-	MdmConfig.class,
 	JpaBatch2Config.class,
 	Batch2JobsConfig.class
 })
@@ -52,7 +41,6 @@ public class Application extends SpringBootServletInitializer {
 	AutowireCapableBeanFactory beanFactory;
 
 	@Bean
-	@Conditional(OnEitherVersion.class)
 	public ServletRegistrationBean hapiServletRegistration(RestfulServer restfulServer) {
 		ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean();
 		beanFactory.autowireBean(restfulServer);

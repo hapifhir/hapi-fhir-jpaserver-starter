@@ -9,6 +9,7 @@ import ca.uhn.fhir.jpa.starter.common.StarterJpaConfig;
 import ca.uhn.fhir.jpa.starter.common.validation.OnRemoteTerminologyPresent;
 import org.hl7.fhir.common.hapi.validation.support.RemoteTerminologyServiceValidationSupport;
 import org.hl7.fhir.common.hapi.validation.support.ValidationSupportChain;
+import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -44,12 +45,13 @@ public class TerminologyConfig {
 
 						@Override
 						public CodeValidationResult validateCode(
-								ValidationSupportContext theValidationSupportContext,
-								ConceptValidationOptions theOptions,
-								String theCodeSystem,
-								String theCode,
-								String theDisplay,
-								String theValueSetUrl) {
+							ValidationSupportContext theValidationSupportContext,
+							ConceptValidationOptions theOptions,
+							String theCodeSystem,
+							String theCode,
+							String theDisplay,
+							String theValueSetUrl,
+							IBaseResource theValueSet) {
 							if (remoteSystem.getSystem().equalsIgnoreCase(theCodeSystem)) {
 								return super.validateCode(
 										theValidationSupportContext,
@@ -57,7 +59,8 @@ public class TerminologyConfig {
 										theCodeSystem,
 										theCode,
 										theDisplay,
-										theValueSetUrl);
+										theValueSetUrl,
+										theValueSet);
 							}
 							return null;
 						}

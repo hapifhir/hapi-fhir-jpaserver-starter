@@ -1,12 +1,8 @@
 package ca.uhn.fhir.jpa.starter.common;
 
 import ca.uhn.fhir.batch2.config.Batch2JobRegisterer;
-import ca.uhn.fhir.batch2.jobs.export.BulkDataExportProvider;
-import ca.uhn.fhir.batch2.jobs.imprt.BulkDataImportProvider;
-import ca.uhn.fhir.batch2.jobs.reindex.ReindexProvider;
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.interceptor.model.RequestPartitionId;
@@ -15,8 +11,7 @@ import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.config.ThreadPoolFactoryConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
-import ca.uhn.fhir.jpa.binary.interceptor.BinaryStorageInterceptor;
-import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
+import ca.uhn.fhir.jpa.config.r4.JpaR4Config;
 import ca.uhn.fhir.jpa.config.util.HapiEntityManagerFactoryUtil;
 import ca.uhn.fhir.jpa.config.util.ResourceCountCacheUtil;
 import ca.uhn.fhir.jpa.dao.FulltextSearchSvcImpl;
@@ -25,12 +20,9 @@ import ca.uhn.fhir.jpa.dao.TransactionProcessor;
 import ca.uhn.fhir.jpa.dao.search.HSearchSortHelperImpl;
 import ca.uhn.fhir.jpa.dao.search.IHSearchSortHelper;
 import ca.uhn.fhir.jpa.delete.ThreadSafeResourceDeleterSvc;
-import ca.uhn.fhir.jpa.graphql.GraphQLProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
 import ca.uhn.fhir.jpa.interceptor.UserRequestRetryVersionConflictsInterceptor;
 import ca.uhn.fhir.jpa.interceptor.validation.RepositoryValidatingInterceptor;
-import ca.uhn.fhir.jpa.ips.provider.IpsOperationProvider;
-import ca.uhn.fhir.jpa.model.config.SubscriptionSettings;
 import ca.uhn.fhir.jpa.packages.AdditionalResourcesParser;
 import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
@@ -38,11 +30,8 @@ import ca.uhn.fhir.jpa.provider.DaoRegistryResourceSupportedSvc;
 import ca.uhn.fhir.jpa.provider.DiffProvider;
 import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
 import ca.uhn.fhir.jpa.provider.JpaCapabilityStatementProvider;
-import ca.uhn.fhir.jpa.provider.JpaConformanceProviderDstu2;
-import ca.uhn.fhir.jpa.provider.SubscriptionTriggeringProvider;
 import ca.uhn.fhir.jpa.provider.TerminologyUploaderProvider;
 import ca.uhn.fhir.jpa.provider.ValueSetOperationProvider;
-import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.IStaleSearchDeletingSvc;
 import ca.uhn.fhir.jpa.search.StaleSearchDeletingSvcImpl;
@@ -54,9 +43,7 @@ import ca.uhn.fhir.jpa.starter.ig.ExtendedPackageInstallationSpec;
 import ca.uhn.fhir.jpa.starter.ig.IImplementationGuideOperationProvider;
 import ca.uhn.fhir.jpa.starter.interceptor.APIKeyInterceptor;
 import ca.uhn.fhir.jpa.starter.terminology.TerminologyCapabilityInterceptor;
-import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceCountCache;
-import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.narrative2.NullNarrativeGenerator;
 import ca.uhn.fhir.rest.api.IResourceSupportedSvc;
@@ -95,7 +82,6 @@ import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -111,9 +97,7 @@ import javax.sql.DataSource;
 import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory.ENABLE_REPOSITORY_VALIDATING_INTERCEPTOR;
 
 @Configuration
-// allow users to configure custom packages to scan for additional beans
-@ComponentScan(basePackages = {"${hapi.fhir.custom-bean-packages:}"})
-@Import(ThreadPoolFactoryConfig.class)
+@Import({ThreadPoolFactoryConfig.class, JpaR4Config.class})
 public class StarterJpaConfig {
 
 	private static final Logger ourLog = LoggerFactory.getLogger(StarterJpaConfig.class);
@@ -311,32 +295,21 @@ public class StarterJpaConfig {
 			IFhirSystemDao<?, ?> fhirSystemDao,
 			AppProperties appProperties,
 			DaoRegistry daoRegistry,
-			Optional<MdmProviderLoader> mdmProviderProvider,
 			IJpaSystemProvider jpaSystemProvider,
 			ResourceProviderFactory resourceProviderFactory,
 			JpaStorageSettings jpaStorageSettings,
-			SubscriptionSettings subscriptionSettings,
 			ISearchParamRegistry searchParamRegistry,
 			IValidationSupport theValidationSupport,
 			DatabaseBackedPagingProvider databaseBackedPagingProvider,
 			LoggingInterceptor loggingInterceptor,
-			Optional<TerminologyUploaderProvider> terminologyUploaderProvider,
-			Optional<SubscriptionTriggeringProvider> subscriptionTriggeringProvider,
+			TerminologyUploaderProvider terminologyUploaderProvider,
 			Optional<CorsInterceptor> corsInterceptor,
 			IInterceptorBroadcaster interceptorBroadcaster,
-			Optional<BinaryAccessProvider> binaryAccessProvider,
-			BinaryStorageInterceptor binaryStorageInterceptor,
 			IValidatorModule validatorModule,
-			Optional<GraphQLProvider> graphQLProvider,
-			BulkDataExportProvider bulkDataExportProvider,
-			BulkDataImportProvider bulkDataImportProvider,
 			ValueSetOperationProvider theValueSetOperationProvider,
-			ReindexProvider reindexProvider,
 			Optional<RepositoryValidatingInterceptor> repositoryValidatingInterceptor,
-			IPackageInstallerSvc packageInstallerSvc,
 			ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc,
 			ApplicationContext appContext,
-			Optional<IpsOperationProvider> theIpsOperationProvider,
 			Optional<IImplementationGuideOperationProvider> implementationGuideOperationProvider,
 			DiffProvider diffProvider,
 			TxResourceValidationSupport txResourceValidationSupport,
@@ -361,8 +334,6 @@ public class StarterJpaConfig {
 		} else {
 			fhirSystemDao.getContext().setNarrativeGenerator(new NullNarrativeGenerator());
 		}
-
-		if (appProperties.getMdm_enabled()) mdmProviderProvider.get().loadProvider();
 
 		fhirServer.registerProviders(resourceProviderFactory.createProviders());
 		fhirServer.registerProvider(jpaSystemProvider);
@@ -428,44 +399,14 @@ public class StarterJpaConfig {
 			fhirServer.setServerAddressStrategy(new IncomingRequestAddressStrategy());
 		}
 
-		/*
-		 * If you are using DSTU3+, you may want to add a terminology uploader, which allows
-		 * uploading of external terminologies such as Snomed CT. Note that this uploader
-		 * does not have any security attached (any anonymous user may use it by default)
-		 * so it is a potential security vulnerability. Consider using an AuthorizationInterceptor
-		 * with this feature.
-		 */
-		if (fhirSystemDao
-				.getContext()
-				.getVersion()
-				.getVersion()
-				.isEqualOrNewerThan(FhirVersionEnum.DSTU3)) { // <-- ENABLED RIGHT NOW
-			fhirServer.registerProvider(terminologyUploaderProvider.get());
-		}
-
-		// If you want to enable the $trigger-subscription operation to allow
-		// manual triggering of a subscription delivery, enable this provider
-		if (true) { // <-- ENABLED RIGHT NOW
-			fhirServer.registerProvider(subscriptionTriggeringProvider.get());
-		}
+		fhirServer.registerProvider(terminologyUploaderProvider);
 
 		corsInterceptor.ifPresent(fhirServer::registerInterceptor);
-
-		if (!subscriptionSettings.getSupportedSubscriptionTypes().isEmpty()) {
-			// Subscription debug logging
-			fhirServer.registerInterceptor(new SubscriptionDebugLogInterceptor());
-		}
 
 		if (appProperties.getAllow_cascading_deletes()) {
 			CascadingDeleteInterceptor cascadingDeleteInterceptor = new CascadingDeleteInterceptor(
 					fhirSystemDao.getContext(), daoRegistry, interceptorBroadcaster, theThreadSafeResourceDeleterSvc);
 			fhirServer.registerInterceptor(cascadingDeleteInterceptor);
-		}
-
-		// Binary Storage
-		if (appProperties.getBinary_storage_enabled() && binaryAccessProvider.isPresent()) {
-			fhirServer.registerProvider(binaryAccessProvider.get());
-			fhirServer.registerInterceptor(binaryStorageInterceptor);
 		}
 
 		// Validation
@@ -485,32 +426,12 @@ public class StarterJpaConfig {
 			}
 		}
 
-		// GraphQL
-		if (appProperties.getGraphql_enabled()) {
-			if (fhirSystemDao.getContext().getVersion().getVersion().isEqualOrNewerThan(FhirVersionEnum.DSTU3)) {
-				fhirServer.registerProvider(graphQLProvider.get());
-			}
-		}
-
 		if (appProperties.getOpenapi_enabled()) {
 			fhirServer.registerInterceptor(new OpenApiInterceptor());
 		}
 
-		// Bulk Export
-		if (appProperties.getBulk_export_enabled()) {
-			fhirServer.registerProvider(bulkDataExportProvider);
-		}
-
-		// Bulk Import
-		if (appProperties.getBulk_import_enabled()) {
-			fhirServer.registerProvider(bulkDataImportProvider);
-		}
-
 		// valueSet Operations i.e $expand
 		fhirServer.registerProvider(theValueSetOperationProvider);
-
-		// reindex Provider $reindex
-		fhirServer.registerProvider(reindexProvider);
 
 		// Validation
 		repositoryValidatingInterceptor.ifPresent(fhirServer::registerInterceptor);
@@ -520,9 +441,6 @@ public class StarterJpaConfig {
 
 		// register custom interceptors
 		registerCustomInterceptors(fhirServer, appContext, appProperties.getCustomInterceptorClasses());
-
-		// register the IPS Provider
-		theIpsOperationProvider.ifPresent(fhirServer::registerProvider);
 
 		if (appProperties.getUserRequestRetryVersionConflictsInterceptorEnabled()) {
 			fhirServer.registerInterceptor(new UserRequestRetryVersionConflictsInterceptor());
@@ -622,38 +540,9 @@ public class StarterJpaConfig {
 			JpaStorageSettings jpaStorageSettings,
 			ISearchParamRegistry searchParamRegistry,
 			IValidationSupport theValidationSupport) {
-		FhirVersionEnum fhirVersion = fhirSystemDao.getContext().getVersion().getVersion();
-		if (fhirVersion == FhirVersionEnum.DSTU2) {
-			JpaConformanceProviderDstu2 confProvider =
-					new JpaConformanceProviderDstu2(fhirServer, fhirSystemDao, jpaStorageSettings);
-			confProvider.setImplementationDescription("HAPI FHIR DSTU2 Server");
-			return confProvider;
-		} else if (fhirVersion == FhirVersionEnum.DSTU3) {
-
-			JpaConformanceProviderDstu3 confProvider =
-					new JpaConformanceProviderDstu3(fhirServer, fhirSystemDao, jpaStorageSettings, searchParamRegistry);
-			confProvider.setImplementationDescription("HAPI FHIR DSTU3 Server");
-			return confProvider;
-		} else if (fhirVersion == FhirVersionEnum.R4) {
-
-			JpaCapabilityStatementProvider confProvider = new JpaCapabilityStatementProvider(
-					fhirServer, fhirSystemDao, jpaStorageSettings, searchParamRegistry, theValidationSupport);
-			confProvider.setImplementationDescription("HAPI FHIR R4 Server");
-			return confProvider;
-		} else if (fhirVersion == FhirVersionEnum.R4B) {
-
-			JpaCapabilityStatementProvider confProvider = new JpaCapabilityStatementProvider(
-					fhirServer, fhirSystemDao, jpaStorageSettings, searchParamRegistry, theValidationSupport);
-			confProvider.setImplementationDescription("HAPI FHIR R4B Server");
-			return confProvider;
-		} else if (fhirVersion == FhirVersionEnum.R5) {
-
-			JpaCapabilityStatementProvider confProvider = new JpaCapabilityStatementProvider(
-					fhirServer, fhirSystemDao, jpaStorageSettings, searchParamRegistry, theValidationSupport);
-			confProvider.setImplementationDescription("HAPI FHIR R5 Server");
-			return confProvider;
-		} else {
-			throw new IllegalStateException();
-		}
+		JpaCapabilityStatementProvider confProvider = new JpaCapabilityStatementProvider(
+				fhirServer, fhirSystemDao, jpaStorageSettings, searchParamRegistry, theValidationSupport);
+		confProvider.setImplementationDescription("HAPI FHIR R4 Server");
+		return confProvider;
 	}
 }

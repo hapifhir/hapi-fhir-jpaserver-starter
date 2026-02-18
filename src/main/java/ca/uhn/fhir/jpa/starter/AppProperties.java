@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
+import static org.apache.commons.lang3.ObjectUtils.getIfNull;
 
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "hapi.fhir")
@@ -31,11 +31,7 @@ public class AppProperties {
 	private final Set<String> logical_urls = new HashSet<>();
 	private final List<String> custom_interceptor_classes = new ArrayList<>();
 	private final List<String> custom_provider_classes = new ArrayList<>();
-	private Boolean cr_enabled = false;
-	private Boolean ips_enabled = false;
 	private Boolean openapi_enabled = false;
-	private Boolean mdm_enabled = false;
-	private String mdm_rules_json_location = "mdm-rules.json";
 	private boolean advanced_lucene_indexing = false;
 	private boolean search_index_full_text_enabled = false;
 	private boolean enable_index_of_type = false;
@@ -60,18 +56,7 @@ public class AppProperties {
 	private Boolean fhirpath_interceptor_enabled = false;
 	private Boolean filter_search_enabled = true;
 	private Boolean graphql_enabled = false;
-	private Boolean binary_storage_enabled = false;
-
-	public enum BinaryStorageMode {
-		DATABASE,
-		FILESYSTEM
-	}
-
-	private BinaryStorageMode binary_storage_mode = BinaryStorageMode.DATABASE;
-	private String binary_storage_filesystem_base_directory;
 	private Integer inline_resource_storage_below_size;
-	private Boolean bulk_export_enabled = false;
-	private Boolean bulk_import_enabled = false;
 	private Boolean default_pretty_print = true;
 	private Integer default_page_size = 20;
 	private Integer max_binary_size = null;
@@ -89,11 +74,8 @@ public class AppProperties {
 	private Boolean narrative_enabled = true;
 	private Boolean ig_runtime_upload_enabled = false;
 	private Validation validation = new Validation();
-	private Map<String, Tester> tester = null;
 	private Logger logger = new Logger();
-	private Subscription subscription = new Subscription();
 	private Cors cors = null;
-	private Partitioning partitioning = null;
 	private Boolean validate_resource_status_for_package_upload = true;
 	private Boolean install_transitive_ig_dependencies = true;
 
@@ -178,46 +160,6 @@ public class AppProperties {
 		this.implementationGuides = implementationGuides;
 	}
 
-	public Partitioning getPartitioning() {
-		return partitioning;
-	}
-
-	public void setPartitioning(Partitioning partitioning) {
-		this.partitioning = partitioning;
-	}
-
-	public Boolean getCr_enabled() {
-		return cr_enabled;
-	}
-
-	public void setCr_enabled(Boolean cr_enabled) {
-		this.cr_enabled = cr_enabled;
-	}
-
-	public Boolean getIps_enabled() {
-		return ips_enabled;
-	}
-
-	public void setIps_enabled(Boolean ips_enabled) {
-		this.ips_enabled = ips_enabled;
-	}
-
-	public Boolean getMdm_enabled() {
-		return mdm_enabled;
-	}
-
-	public void setMdm_enabled(Boolean mdm_enabled) {
-		this.mdm_enabled = mdm_enabled;
-	}
-
-	public String getMdm_rules_json_location() {
-		return mdm_rules_json_location;
-	}
-
-	public void setMdm_rules_json_location(String mdm_rules_json_location) {
-		this.mdm_rules_json_location = mdm_rules_json_location;
-	}
-
 	public Cors getCors() {
 		return cors;
 	}
@@ -240,14 +182,6 @@ public class AppProperties {
 
 	public void setServer_address(String server_address) {
 		this.server_address = server_address;
-	}
-
-	public Subscription getSubscription() {
-		return subscription;
-	}
-
-	public void setSubscription(Subscription subscription) {
-		this.subscription = subscription;
 	}
 
 	public Boolean getDefault_pretty_print() {
@@ -395,7 +329,7 @@ public class AppProperties {
 	}
 
 	public boolean getDelete_enabled() {
-		return defaultIfNull(delete_enabled, true);
+		return getIfNull(delete_enabled, true);
 	}
 
 	public void setDelete_enabled(boolean theDelete_enabled) {
@@ -486,52 +420,12 @@ public class AppProperties {
 		this.graphql_enabled = graphql_enabled;
 	}
 
-	public Boolean getBinary_storage_enabled() {
-		return binary_storage_enabled;
-	}
-
-	public void setBinary_storage_enabled(Boolean binary_storage_enabled) {
-		this.binary_storage_enabled = binary_storage_enabled;
-	}
-
-	public BinaryStorageMode getBinary_storage_mode() {
-		return binary_storage_mode;
-	}
-
-	public void setBinary_storage_mode(BinaryStorageMode binary_storage_mode) {
-		this.binary_storage_mode = binary_storage_mode;
-	}
-
-	public String getBinary_storage_filesystem_base_directory() {
-		return binary_storage_filesystem_base_directory;
-	}
-
-	public void setBinary_storage_filesystem_base_directory(String binary_storage_filesystem_base_directory) {
-		this.binary_storage_filesystem_base_directory = binary_storage_filesystem_base_directory;
-	}
-
 	public Integer getInline_resource_storage_below_size() {
 		return inline_resource_storage_below_size;
 	}
 
 	public void setInline_resource_storage_below_size(Integer inline_resource_storage_below_size) {
 		this.inline_resource_storage_below_size = inline_resource_storage_below_size;
-	}
-
-	public Boolean getBulk_export_enabled() {
-		return bulk_export_enabled;
-	}
-
-	public void setBulk_export_enabled(Boolean bulk_export_enabled) {
-		this.bulk_export_enabled = bulk_export_enabled;
-	}
-
-	public Boolean getBulk_import_enabled() {
-		return bulk_import_enabled;
-	}
-
-	public void setBulk_import_enabled(Boolean bulk_import_enabled) {
-		this.bulk_import_enabled = bulk_import_enabled;
 	}
 
 	public EncodingEnum getDefault_encoding() {
@@ -584,14 +478,6 @@ public class AppProperties {
 		} else {
 			this.reuse_cached_search_results_millis = reuse_cached_search_results_millis;
 		}
-	}
-
-	public Map<String, Tester> getTester() {
-		return tester;
-	}
-
-	public void setTester(Map<String, Tester> tester) {
-		this.tester = tester;
 	}
 
 	public Boolean getNarrative_enabled() {
@@ -797,7 +683,7 @@ public class AppProperties {
 	}
 
 	public boolean getMatch_url_cache_enabled() {
-		return defaultIfNull(match_url_cache_enabled, false);
+		return getIfNull(match_url_cache_enabled, false);
 	}
 
 	public void setMatch_url_cache_enabled(boolean theMatchUrlCacheEnabled) {
@@ -805,7 +691,7 @@ public class AppProperties {
 	}
 
 	public boolean getIndex_storage_optimized() {
-		return defaultIfNull(index_storage_optimized, false);
+		return getIfNull(index_storage_optimized, false);
 	}
 
 	public void setIndex_storage_optimized(boolean theIndex_storage_optimized) {
@@ -813,7 +699,7 @@ public class AppProperties {
 	}
 
 	public boolean getMark_resources_for_reindexing_upon_search_parameter_change() {
-		return defaultIfNull(mark_resources_for_reindexing_upon_search_parameter_change, true);
+		return getIfNull(mark_resources_for_reindexing_upon_search_parameter_change, true);
 	}
 
 	public void setMark_resources_for_reindexing_upon_search_parameter_change(
@@ -909,46 +795,6 @@ public class AppProperties {
 		}
 	}
 
-	public static class Tester {
-
-		private String name;
-		private String server_address;
-		private Boolean refuse_to_fetch_third_party_urls = true;
-		private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
-
-		public FhirVersionEnum getFhir_version() {
-			return fhir_version;
-		}
-
-		public void setFhir_version(FhirVersionEnum fhir_version) {
-			this.fhir_version = fhir_version;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public String getServer_address() {
-			return server_address;
-		}
-
-		public void setServer_address(String server_address) {
-			this.server_address = server_address;
-		}
-
-		public Boolean getRefuse_to_fetch_third_party_urls() {
-			return refuse_to_fetch_third_party_urls;
-		}
-
-		public void setRefuse_to_fetch_third_party_urls(Boolean refuse_to_fetch_third_party_urls) {
-			this.refuse_to_fetch_third_party_urls = refuse_to_fetch_third_party_urls;
-		}
-	}
-
 	public static class Validation {
 
 		private Boolean requests_enabled = false;
@@ -971,78 +817,6 @@ public class AppProperties {
 		}
 	}
 
-	public static class Partitioning {
-
-		private Boolean partitioning_include_in_search_hashes = false;
-		private Boolean allow_references_across_partitions = false;
-		private Boolean conditional_create_duplicate_identifiers_enabled = false;
-		private Boolean database_partition_mode_enabled = false;
-		private Boolean patient_id_partitioning_mode = false;
-		private Integer default_partition_id = 0;
-		private boolean request_tenant_partitioning_mode = true;
-
-		public boolean isRequest_tenant_partitioning_mode() {
-			return request_tenant_partitioning_mode;
-		}
-
-		public Integer getDefault_partition_id() {
-			return default_partition_id;
-		}
-
-		public void setDefault_partition_id(Integer theDefault_partition_id) {
-			default_partition_id = theDefault_partition_id;
-		}
-
-		public Boolean getDatabase_partition_mode_enabled() {
-			return database_partition_mode_enabled;
-		}
-
-		public void setDatabase_partition_mode_enabled(Boolean theDatabase_partition_mode_enabled) {
-			database_partition_mode_enabled = theDatabase_partition_mode_enabled;
-		}
-
-		public Boolean getPatient_id_partitioning_mode() {
-			return patient_id_partitioning_mode;
-		}
-
-		public void setPatient_id_partitioning_mode(Boolean thePatient_id_partitioning_mode) {
-			patient_id_partitioning_mode = thePatient_id_partitioning_mode;
-		}
-
-		public Boolean getPartitioning_include_in_search_hashes() {
-			return partitioning_include_in_search_hashes;
-		}
-
-		public void setPartitioning_include_in_search_hashes(Boolean partitioning_include_in_search_hashes) {
-			this.partitioning_include_in_search_hashes = partitioning_include_in_search_hashes;
-		}
-
-		public Boolean getAllow_references_across_partitions() {
-			return allow_references_across_partitions;
-		}
-
-		public void setAllow_references_across_partitions(Boolean allow_references_across_partitions) {
-			this.allow_references_across_partitions = allow_references_across_partitions;
-		}
-
-		public Boolean getConditional_create_duplicate_identifiers_enabled() {
-			return conditional_create_duplicate_identifiers_enabled;
-		}
-
-		public void setConditional_create_duplicate_identifiers_enabled(
-				Boolean conditional_create_duplicate_identifiers_enabled) {
-			this.conditional_create_duplicate_identifiers_enabled = conditional_create_duplicate_identifiers_enabled;
-		}
-
-		public boolean getRequest_tenant_partitioning_mode() {
-			return request_tenant_partitioning_mode;
-		}
-
-		public void setRequest_tenant_partitioning_mode(boolean theRequest_tenant_partitioning_mode) {
-			request_tenant_partitioning_mode = theRequest_tenant_partitioning_mode;
-		}
-	}
-
 	public static class RemoteSystem {
 		private String system;
 		private String url;
@@ -1061,139 +835,6 @@ public class AppProperties {
 
 		public void setUrl(String url) {
 			this.url = url;
-		}
-	}
-
-	public static class Subscription {
-
-		private Boolean resthook_enabled = false;
-		private Boolean websocket_enabled = false;
-		private Email email = null;
-		private Integer polling_interval_ms = null;
-		private Boolean immediately_queued = false;
-
-		public Boolean getResthook_enabled() {
-			return resthook_enabled;
-		}
-
-		public void setResthook_enabled(Boolean resthook_enabled) {
-			this.resthook_enabled = resthook_enabled;
-		}
-
-		public Boolean getWebsocket_enabled() {
-			return websocket_enabled;
-		}
-
-		public void setWebsocket_enabled(Boolean websocket_enabled) {
-			this.websocket_enabled = websocket_enabled;
-		}
-
-		public Email getEmail() {
-			return email;
-		}
-
-		public void setEmail(Email email) {
-			this.email = email;
-		}
-
-		public Integer getPolling_interval_ms() {
-			return polling_interval_ms;
-		}
-
-		public void setPolling_interval_ms(Integer polling_interval_ms) {
-			this.polling_interval_ms = polling_interval_ms;
-		}
-
-		public Boolean getImmediately_queued() {
-			return immediately_queued;
-		}
-
-		public void setImmediately_queued(Boolean immediately_queued) {
-			this.immediately_queued = immediately_queued;
-		}
-
-		public static class Email {
-			private String from;
-			private String host;
-			private Integer port = 25;
-			private String username;
-			private String password;
-			private Boolean auth = false;
-			private Boolean startTlsEnable = false;
-			private Boolean startTlsRequired = false;
-			private Boolean quitWait = false;
-
-			public String getFrom() {
-				return from;
-			}
-
-			public void setFrom(String from) {
-				this.from = from;
-			}
-
-			public String getHost() {
-				return host;
-			}
-
-			public void setHost(String host) {
-				this.host = host;
-			}
-
-			public Integer getPort() {
-				return port;
-			}
-
-			public void setPort(Integer port) {
-				this.port = port;
-			}
-
-			public String getUsername() {
-				return username;
-			}
-
-			public void setUsername(String username) {
-				this.username = username;
-			}
-
-			public String getPassword() {
-				return password;
-			}
-
-			public void setPassword(String password) {
-				this.password = password;
-			}
-
-			public Boolean getAuth() {
-				return auth;
-			}
-
-			public void setAuth(Boolean auth) {
-				this.auth = auth;
-			}
-
-			public Boolean getStartTlsEnable() {
-				return startTlsEnable;
-			}
-
-			public void setStartTlsEnable(Boolean startTlsEnable) {
-				this.startTlsEnable = startTlsEnable;
-			}
-
-			public Boolean getStartTlsRequired() {
-				return startTlsRequired;
-			}
-
-			public void setStartTlsRequired(Boolean startTlsRequired) {
-				this.startTlsRequired = startTlsRequired;
-			}
-
-			public Boolean getQuitWait() {
-				return quitWait;
-			}
-
-			public void setQuitWait(Boolean quitWait) {
-				this.quitWait = quitWait;
-			}
 		}
 	}
 }

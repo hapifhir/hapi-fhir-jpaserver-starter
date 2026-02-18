@@ -29,8 +29,6 @@ import org.springframework.util.Assert;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
-
 /**
  * This is the primary configuration file for the example server
  */
@@ -69,32 +67,6 @@ public class FhirServerConfigCommon {
 				"Server configured to auto-version references at paths {}",
 				appProperties.getAuto_version_reference_at_paths());
 
-		if (appProperties.getSubscription().getEmail() != null) {
-			AppProperties.Subscription.Email email =
-					appProperties.getSubscription().getEmail();
-			ourLog.info(
-					"Server is configured to enable email with host '{}' and port {}",
-					email.getHost(),
-					email.getPort());
-			ourLog.info("Server will use '{}' as the from email address", email.getFrom());
-
-			if (!Strings.isNullOrEmpty(email.getUsername())) {
-				ourLog.info("Server is configured to use username '{}' for email", email.getUsername());
-			}
-
-			if (!Strings.isNullOrEmpty(email.getPassword())) {
-				ourLog.info("Server is configured to use a password for email");
-			}
-		}
-
-		if (appProperties.getSubscription().getResthook_enabled()) {
-			ourLog.info("REST-hook subscriptions enabled");
-		}
-
-		if (appProperties.getSubscription().getEmail() != null) {
-			ourLog.info("Email subscriptions enabled");
-		}
-
 		if (appProperties.getEnable_index_contained_resource() == Boolean.TRUE) {
 			ourLog.info("Indexed on contained resource enabled");
 		}
@@ -115,49 +87,8 @@ public class FhirServerConfigCommon {
 	}
 
 	@Bean
-	public SubscriptionSettings subscriptionSettings(AppProperties appProperties) {
-		SubscriptionSettings subscriptionSettings = new SubscriptionSettings();
-		if (appProperties.getSubscription() != null) {
-			if (appProperties.getSubscription().getEmail() != null)
-				subscriptionSettings.setEmailFromAddress(
-						appProperties.getSubscription().getEmail().getFrom());
-
-			// Subscriptions are enabled by channel type
-			if (appProperties.getSubscription().getResthook_enabled()) {
-				ourLog.info("Enabling REST-hook subscriptions");
-				subscriptionSettings.addSupportedSubscriptionType(
-						org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.RESTHOOK);
-			}
-			if (appProperties.getSubscription().getEmail() != null) {
-				ourLog.info("Enabling email subscriptions");
-				subscriptionSettings.addSupportedSubscriptionType(
-						org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.EMAIL);
-			}
-			if (appProperties.getSubscription().getWebsocket_enabled()) {
-				ourLog.info("Enabling websocket subscriptions");
-				subscriptionSettings.addSupportedSubscriptionType(
-						org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.WEBSOCKET);
-			}
-			if (appProperties.getSubscription().getPolling_interval_ms() != null) {
-				ourLog.info(
-						"Setting subscription polling interval to {} ms",
-						appProperties.getSubscription().getPolling_interval_ms());
-				subscriptionSettings.setSubscriptionIntervalInMs(
-						appProperties.getSubscription().getPolling_interval_ms());
-			}
-			if (appProperties.getSubscription().getImmediately_queued()) {
-				ourLog.info("Subscription update will be queued immediately");
-				subscriptionSettings.setSubscriptionChangeQueuedImmediately(
-						appProperties.getSubscription().getImmediately_queued());
-			}
-		}
-		if (appProperties.getMdm_enabled()) {
-			// MDM requires the subscription of type message
-			ourLog.info("Enabling message subscriptions");
-			subscriptionSettings.addSupportedSubscriptionType(
-					org.hl7.fhir.dstu2.model.Subscription.SubscriptionChannelType.MESSAGE);
-		}
-		return subscriptionSettings;
+	public SubscriptionSettings subscriptionSettings() {
+		return new SubscriptionSettings();
 	}
 	/**
 	 * Configure FHIR properties around the JPA server via this bean
@@ -227,7 +158,7 @@ public class FhirServerConfigCommon {
 			jpaStorageSettings.setLastNEnabled(true);
 		}
 
-		Integer inlineResourceThreshold = resolveInlineResourceThreshold(appProperties);
+		Integer inlineResourceThreshold = appProperties.getInline_resource_storage_below_size();
 		if (inlineResourceThreshold != null && inlineResourceThreshold != 0) {
 			jpaStorageSettings.setInlineResourceTextBelowSize(inlineResourceThreshold);
 		}
@@ -312,45 +243,8 @@ public class FhirServerConfigCommon {
 	}
 
 	@Bean
-	public PartitionSettings partitionSettings(AppProperties appProperties) {
-		PartitionSettings retVal = new PartitionSettings();
-
-		// Partitioning
-		if (appProperties.getPartitioning() != null) {
-			retVal.setPartitioningEnabled(true);
-			boolean databasePartitionModeEnabled =
-					defaultIfNull(appProperties.getPartitioning().getDatabase_partition_mode_enabled(), Boolean.FALSE);
-			Integer defaultPartitionId = appProperties.getPartitioning().getDefault_partition_id();
-			if (databasePartitionModeEnabled) {
-				retVal.setDatabasePartitionMode(true);
-				defaultPartitionId = defaultIfNull(defaultPartitionId, 0);
-			}
-			retVal.setDefaultPartitionId(defaultPartitionId);
-			retVal.setIncludePartitionInSearchHashes(
-					appProperties.getPartitioning().getPartitioning_include_in_search_hashes());
-			if (appProperties.getPartitioning().getAllow_references_across_partitions()) {
-				retVal.setAllowReferencesAcrossPartitions(CrossPartitionReferenceMode.ALLOWED_UNQUALIFIED);
-			} else {
-				retVal.setAllowReferencesAcrossPartitions(CrossPartitionReferenceMode.NOT_ALLOWED);
-			}
-			retVal.setConditionalCreateDuplicateIdentifiersEnabled(
-					appProperties.getPartitioning().getConditional_create_duplicate_identifiers_enabled());
-
-			ourLog.info(
-					"""
-					Partitioning is enabled on this server. Settings:
-					 * Database Partition Mode Enabled: {}
-					 * Default Partition ID           : {}
-					 * Cross-Partition References     : {}""",
-					databasePartitionModeEnabled,
-					defaultPartitionId,
-					retVal.getAllowReferencesAcrossPartitions());
-
-		} else {
-			ourLog.info("Partitioning is not enabled on this server");
-		}
-
-		return retVal;
+	public PartitionSettings partitionSettings() {
+		return new PartitionSettings();
 	}
 
 	@Primary
@@ -361,33 +255,6 @@ public class FhirServerConfigCommon {
 	}
 
 	@Bean
-	@ConditionalOnProperty(prefix = "hapi.fhir", name = "binary_storage_mode", havingValue = "FILESYSTEM")
-	public FilesystemBinaryStorageSvcImpl filesystemBinaryStorageSvc(AppProperties appProperties) {
-		String baseDirectory = appProperties.getBinary_storage_filesystem_base_directory();
-		Assert.hasText(
-				baseDirectory,
-				"binary_storage_filesystem_base_directory must be provided when binary_storage_mode=FILESYSTEM");
-
-		FilesystemBinaryStorageSvcImpl filesystemSvc = new FilesystemBinaryStorageSvcImpl(baseDirectory);
-		Integer inlineResourceThreshold = resolveInlineResourceThreshold(appProperties);
-		int minimumBinarySize =
-				inlineResourceThreshold == null ? DEFAULT_FILESYSTEM_INLINE_THRESHOLD : inlineResourceThreshold;
-		filesystemSvc.setMinimumBinarySize(minimumBinarySize);
-
-		Integer maxBinarySize = appProperties.getMax_binary_size();
-		if (maxBinarySize != null) {
-			filesystemSvc.setMaximumBinarySize(maxBinarySize.longValue());
-		}
-
-		return filesystemSvc;
-	}
-
-	@Bean
-	@ConditionalOnProperty(
-			prefix = "hapi.fhir",
-			name = "binary_storage_mode",
-			havingValue = "DATABASE",
-			matchIfMissing = true)
 	public DatabaseBinaryContentStorageSvcImpl databaseBinaryStorageSvc(AppProperties appProperties) {
 		DatabaseBinaryContentStorageSvcImpl databaseSvc = new DatabaseBinaryContentStorageSvcImpl();
 		Integer maxBinarySize = appProperties.getMax_binary_size();
@@ -397,37 +264,8 @@ public class FhirServerConfigCommon {
 		return databaseSvc;
 	}
 
-	private Integer resolveInlineResourceThreshold(AppProperties appProperties) {
-		Integer inlineResourceThreshold = appProperties.getInline_resource_storage_below_size();
-		if (inlineResourceThreshold == null
-				&& appProperties.getBinary_storage_mode() == AppProperties.BinaryStorageMode.FILESYSTEM) {
-			return DEFAULT_FILESYSTEM_INLINE_THRESHOLD;
-		}
-		return inlineResourceThreshold;
-	}
-
 	@Bean
-	public IEmailSender emailSender(AppProperties appProperties) {
-		if (appProperties.getSubscription() != null
-				&& appProperties.getSubscription().getEmail() != null) {
-
-			return buildEmailSender(appProperties.getSubscription().getEmail());
-		}
-
-		// Return a dummy anonymous function instead of null. Spring does not like null beans.
-		// TODO Get the signature of
-		// ca.uhn.fhir.jpa.subscription.channel.subscription.SubscriptionDeliveryHandlerFactory
-		//  changed so it does not require an instance of an IEmailSender
+	public IEmailSender emailSender() {
 		return theDetails -> {};
-	}
-
-	private static IEmailSender buildEmailSender(AppProperties.Subscription.Email email) {
-
-		return new EmailSenderImpl(new MailSvc(new MailConfig()
-				.setSmtpHostname(email.getHost())
-				.setSmtpPort(email.getPort())
-				.setSmtpUsername(email.getUsername())
-				.setSmtpPassword(email.getPassword())
-				.setSmtpUseStartTLS(email.getStartTlsEnable())));
 	}
 }
