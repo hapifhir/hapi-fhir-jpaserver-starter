@@ -475,6 +475,20 @@ jpa:
     # Then comment all hibernate.search.backend.*
 ```
 
+## Docker Health Check
+
+The distroless Docker image includes a built-in health check that verifies the FHIR server is operational by calling the `/fhir/metadata` endpoint and confirming a valid `CapabilityStatement` is returned. It uses a standalone Java class with no external dependencies, making it compatible with the distroless base image which has no shell or utilities like `curl`.
+
+To run the health check inside a running container:
+
+```
+docker exec hapi-fhir-jpaserver-start java -cp /app HealthCheck
+```
+
+An exit code of `0` indicates the server is healthy. An exit code of `1` indicates a failure, with diagnostic details written to stderr.
+
+To enable periodic health checks, uncomment the `healthcheck` block in `docker-compose.yml`.
+
 ## Running hapi-fhir-jpaserver directly from IntelliJ as Spring Boot
 Make sure you run with the maven profile called ```boot``` and NOT also ```jetty```. Then you are ready to press debug the project directly without any extra Application Servers.
 
