@@ -35,7 +35,7 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <version>8.7.13-SNAPSHOT</version>
+        <version>8.8.0</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
