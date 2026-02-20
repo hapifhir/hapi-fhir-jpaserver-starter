@@ -13,7 +13,7 @@
         <maven.fire.version>${maven.failsafe.version}</maven.fire.version>
         <maven.dependency.version>3.9.0</maven.dependency.version>
         <maven.compiler.version>3.15.0</maven.compiler.version>
-        <maven-resources-plugin.version>3.4.0</maven-resources-plugin.version>
+        <maven.resources.version>3.4.0</maven.resources.version>
 
         <!-- Dependencies Versions -->
         <spring.ai.version>1.1.2</spring.ai.version>
@@ -525,7 +525,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>${maven-resources-plugin.version}</version>
+                <version>${maven.resources.version}</version>
                 <configuration>
                     <delimiters>
                         <delimiter>@</delimiter>
