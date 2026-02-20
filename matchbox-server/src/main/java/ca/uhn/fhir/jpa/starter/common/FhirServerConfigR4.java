@@ -1,68 +1,30 @@
 package ca.uhn.fhir.jpa.starter.common;
 
-import ch.ahdis.matchbox.mappinglanguage.StructureMapListProvider;
-import ch.ahdis.matchbox.providers.ValueSetResourceProvider;
-import ch.ahdis.matchbox.providers.ConceptMapResourceProvider;
-import ch.ahdis.matchbox.packages.ImplementationGuideProviderR4;
-import ch.ahdis.matchbox.util.MatchboxEngineSupport;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
-
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import ca.uhn.fhir.jpa.config.r4.JpaR4Config;
-import ca.uhn.fhir.jpa.starter.AppProperties;
+import ca.uhn.fhir.jpa.dao.JpaResourceDao;
 import ca.uhn.fhir.jpa.starter.annotations.OnMatchboxOnlyOneEnginePresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4Condition;
-import ca.uhn.fhir.jpa.validation.ValidatorPolicyAdvisor;
-import ca.uhn.fhir.jpa.validation.ValidatorResourceFetcher;
-import ch.ahdis.matchbox.validation.ValidationProvider;
-import ch.ahdis.matchbox.providers.CodeSystemResourceProvider;
 import ch.ahdis.matchbox.config.MatchboxJpaConfig;
-import ch.ahdis.matchbox.questionnaire.QuestionnaireResourceProvider;
-import ch.ahdis.matchbox.providers.StructureDefinitionResourceProvider;
-import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
+import ch.ahdis.matchbox.packages.ImplementationGuideProviderR4;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR4;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR4;
-import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
+import ch.ahdis.matchbox.util.MatchboxEngineSupport;
+import org.hl7.fhir.r4.model.ImplementationGuide;
+import org.hl7.fhir.r4.model.StructureMap;
+import org.springframework.context.annotation.*;
 
 @Configuration
 @Conditional(OnR4Condition.class)
-@Import({ MatchboxJpaConfig.class, JpaR4Config.class})
+@Import({MatchboxJpaConfig.class, JpaR4Config.class})
 public class FhirServerConfigR4 {
 
-  /**
-   * We override the paging provider definition so that we can customize the
-   * default/max page sizes for search results. You can set these however you
-   * want, although very large page sizes will require a lot of RAM.
-   */
-  @Autowired
-  AppProperties appProperties;
+  private final FhirContext fhirContext;
 
-  @Autowired
-  FhirContext fhirContext;
-
-
-  
-//  @Bean
-//  public ITermCodeSystemStorageSvc termCodeSystemStorageSvc() {
-//    return new NullTermCodeSystemStorageSvcImpl();
-//  }
-  
-//  @Bean
-//  public ITermConceptMappingSvc termConceptMappingSvc() {
-//    return new NullTermConceptMappingSvcImpl();
-//  }
-
-  @Bean
-  public ValidationProvider validationProvider() {
-    return new ValidationProvider();
+  public FhirServerConfigR4(final FhirContext fhirContext) {
+    this.fhirContext = fhirContext;
   }
-
 
   @Bean
   public QuestionnaireAssembleProviderR4 assembleProvider() {
@@ -75,11 +37,9 @@ public class FhirServerConfigR4 {
   }
 
   @Bean(name = "myImplementationGuideDaoR4")
-  public IFhirResourceDao<org.hl7.fhir.r4.model.ImplementationGuide> daoImplementationGuideR4() {
-
-    ca.uhn.fhir.jpa.dao.BaseHapiFhirResourceDao<org.hl7.fhir.r4.model.ImplementationGuide> retVal;
-    retVal = new ca.uhn.fhir.jpa.dao.JpaResourceDao<org.hl7.fhir.r4.model.ImplementationGuide>();
-    retVal.setResourceType(org.hl7.fhir.r4.model.ImplementationGuide.class);
+  public IFhirResourceDao<ImplementationGuide> daoImplementationGuideR4() {
+    final var retVal = new JpaResourceDao<ImplementationGuide>();
+    retVal.setResourceType(ImplementationGuide.class);
     retVal.setContext(fhirContext);
     return retVal;
   }
@@ -87,94 +47,19 @@ public class FhirServerConfigR4 {
   @Bean(name = "myImplementationGuideRpR4")
   @Primary
   public ImplementationGuideProviderR4 rpImplementationGuideR4() {
-	  ImplementationGuideProviderR4 retVal = new ImplementationGuideProviderR4();
-	  retVal.setContext(fhirContext);
+    final var retVal = new ImplementationGuideProviderR4();
+    retVal.setContext(fhirContext);
 //     retVal.setDao(daoImplementationGuideR4());
-     return retVal;
-  }
-  
-  @Bean(name = "myQuestionnaireRpR4")
-  @Primary
-	@Conditional(OnMatchboxOnlyOneEnginePresent.class)
-  public QuestionnaireResourceProvider rpQuestionnaireR4() {
-    QuestionnaireResourceProvider retVal;
-    retVal = new QuestionnaireResourceProvider();
-    return retVal;
-  }
-  
-  @Bean(name = "myValueSetRpR4")
-  @Primary
-	@Conditional(OnMatchboxOnlyOneEnginePresent.class)
-  public ValueSetResourceProvider rpValueSetR4() {
-  	ValueSetResourceProvider retVal = new ValueSetResourceProvider();
     return retVal;
   }
 
-  @Bean(name = "myCodeSystemRpR4")
-  @Primary
-	@Conditional(OnMatchboxOnlyOneEnginePresent.class)
-  public CodeSystemResourceProvider rpCodeSystem4() {
-  	CodeSystemResourceProvider retVal = new CodeSystemResourceProvider();
-    return retVal;
-  }
-  
-  @Bean(name = "myConceptMapRpR4")
-  @Primary
-	@Conditional(OnMatchboxOnlyOneEnginePresent.class)
-  public ConceptMapResourceProvider rpConceptMap4() {
-  	ConceptMapResourceProvider retVal = new ConceptMapResourceProvider();
-    return retVal;
-  }
-
-  @Bean(name = "myStructureDefintionRpR4")
-  @Primary
-  public StructureDefinitionResourceProvider rpStructureDefintion4() {
-  	StructureDefinitionResourceProvider retVal = new StructureDefinitionResourceProvider();
-    return retVal;
-  }
 
   @Bean(name = "myStructureMapDaoR4")
-	@Conditional(OnMatchboxOnlyOneEnginePresent.class)
-  public IFhirResourceDao<org.hl7.fhir.r4.model.StructureMap> daoStructureMapR4() {
-
-    ca.uhn.fhir.jpa.dao.BaseHapiFhirResourceDao<org.hl7.fhir.r4.model.StructureMap> retVal;
-    retVal = new ca.uhn.fhir.jpa.dao.JpaResourceDao<org.hl7.fhir.r4.model.StructureMap>();
-    retVal.setResourceType(org.hl7.fhir.r4.model.StructureMap.class);
+  @Conditional(OnMatchboxOnlyOneEnginePresent.class)
+  public IFhirResourceDao<StructureMap> daoStructureMapR4() {
+    final var retVal = new JpaResourceDao<StructureMap>();
+    retVal.setResourceType(StructureMap.class);
     retVal.setContext(fhirContext);
     return retVal;
-  }
-
-  @Bean(name = "myStructureMapRpR4")
-  @Primary
-	@Conditional(OnMatchboxOnlyOneEnginePresent.class)
-  public ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider rpStructureMapR4() {
-  	StructureMapTransformProvider retVal;
-    retVal = new StructureMapTransformProvider();
-//    retVal.setContext(fhirContext);
-//    retVal.setDao(daoStructureMapR4());
-    return retVal;
-  }
-
-  @Bean
-  public StructureMapListProvider structureMapListProvider(final MatchboxEngineSupport matchboxEngineSupport) {
-    return new StructureMapListProvider(matchboxEngineSupport);
-  }
-
-  @Bean
-  public ValidatorResourceFetcher jpaValidatorResourceFetcher() {
-    return new ValidatorResourceFetcher();
-  }
-  
-  @Bean
-  public ValidatorPolicyAdvisor jpaValidatorPolicyAdvisor() {
-    return new ValidatorPolicyAdvisor();
-  }
-
-
-
-  @Bean
-  @Primary
-  public MatchboxPackageInstallerImpl packageInstaller() {
-    return new MatchboxPackageInstallerImpl();
   }
 }
