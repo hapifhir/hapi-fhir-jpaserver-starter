@@ -12,7 +12,8 @@
         <maven.failsafe.version>3.5.4</maven.failsafe.version>
         <maven.fire.version>${maven.failsafe.version}</maven.fire.version>
         <maven.dependency.version>3.9.0</maven.dependency.version>
-        <maven.compiler.version>3.14.1</maven.compiler.version>
+        <maven.compiler.version>3.15.0</maven.compiler.version>
+        <maven-resources-plugin.version>3.4.0</maven-resources-plugin.version>
 
         <!-- Dependencies Versions -->
         <spring.ai.version>1.1.2</spring.ai.version>
@@ -20,7 +21,9 @@
         <micrometer.version>1.16.2</micrometer.version>
         <commons.logging.version>1.3.5</commons.logging.version>
         <spring_boot_version>3.5.9</spring_boot_version>
-        <postgresql.version>42.7.9</postgresql.version>
+        <postgresql.version>42.7.10</postgresql.version>
+        <logback.version>1.5.32</logback.version>
+        <testcontainers_version>2.0.3</testcontainers_version>
     </properties>
 
     <!-- one-liner to take you to the cloud with settings form the application.yaml file: -->
@@ -59,12 +62,33 @@
 
     <dependencyManagement>
        <dependencies>
-
             <dependency>
                <groupId>org.glassfish.jaxb</groupId>
                <artifactId>jaxb-runtime</artifactId>
                <version>2.3.8</version>
            </dependency>
+           <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>${testcontainers_version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
        </dependencies>
     </dependencyManagement>
 
@@ -83,7 +107,6 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
         </dependency>
         <dependency>
           <groupId>com.microsoft.sqlserver</groupId>
@@ -301,27 +324,31 @@
                     <groupId>com.sun.xml.bind</groupId>
                     <artifactId>jaxb-impl</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.testcontainers</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers</artifactId>
+            <artifactId>testcontainers-postgresql</artifactId>
+            <version>${testcontainers_version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers-elasticsearch</artifactId>
-            <version>2.0.2</version>
+            <version>${testcontainers_version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers-junit-jupiter</artifactId>
-            <version>2.0.2</version>
+            <version>${testcontainers_version}</version>
             <scope>test</scope>
         </dependency>
-
 
         <!--
         For some reason JavaDoc crashed during site generation unless we have this dependency
@@ -498,7 +525,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>${maven-resources-plugin.version}</version>
                 <configuration>
                     <delimiters>
                         <delimiter>@</delimiter>
