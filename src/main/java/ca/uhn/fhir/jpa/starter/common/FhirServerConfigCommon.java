@@ -2,32 +2,22 @@ package ca.uhn.fhir.jpa.starter.common;
 
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.binstore.DatabaseBinaryContentStorageSvcImpl;
-import ca.uhn.fhir.jpa.binstore.FilesystemBinaryStorageSvcImpl;
 import ca.uhn.fhir.jpa.config.HibernatePropertiesProvider;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings;
-import ca.uhn.fhir.jpa.model.config.PartitionSettings.CrossPartitionReferenceMode;
 import ca.uhn.fhir.jpa.model.config.SubscriptionSettings;
 import ca.uhn.fhir.jpa.model.entity.StorageSettings;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.elastic.ElasticsearchBootSvcImpl;
 import ca.uhn.fhir.jpa.starter.util.JpaHibernatePropertiesProvider;
-import ca.uhn.fhir.jpa.subscription.match.deliver.email.EmailSenderImpl;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.IEmailSender;
-import ca.uhn.fhir.rest.server.mail.MailConfig;
-import ca.uhn.fhir.rest.server.mail.MailSvc;
-import com.google.common.base.Strings;
-import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.context.annotation.*;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.util.Assert;
 
 import java.util.HashSet;
-import java.util.stream.Collectors;
 
 /**
  * This is the primary configuration file for the example server
@@ -38,7 +28,6 @@ import java.util.stream.Collectors;
 public class FhirServerConfigCommon {
 
 	private static final Logger ourLog = LoggerFactory.getLogger(FhirServerConfigCommon.class);
-	private static final int DEFAULT_FILESYSTEM_INLINE_THRESHOLD = 102_400;
 
 	public FhirServerConfigCommon(AppProperties appProperties) {
 		ourLog.info(
@@ -127,8 +116,6 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setDeleteExpungeEnabled(appProperties.getDelete_expunge_enabled());
 		jpaStorageSettings.setExpungeEnabled(appProperties.getExpunge_enabled());
 		jpaStorageSettings.setLanguageSearchParameterEnabled(appProperties.getLanguage_search_parameter_enabled());
-		jpaStorageSettings.setValidateResourceStatusForPackageUpload(
-				appProperties.getValidate_resource_status_for_package_upload());
 		jpaStorageSettings.setIndexOnUpliftedRefchains(appProperties.getUpliftedRefchains_enabled());
 
 		if (!appProperties.getSearch_prefetch_thresholds().isEmpty()) {
@@ -154,24 +141,9 @@ public class FhirServerConfigCommon {
 		jpaStorageSettings.setTreatBaseUrlsAsLocal(new HashSet<>(appProperties.getLocal_base_urls()));
 		jpaStorageSettings.setTreatReferencesAsLogical(new HashSet<>(appProperties.getLogical_urls()));
 
-		if (appProperties.getLastn_enabled()) {
-			jpaStorageSettings.setLastNEnabled(true);
-		}
-
-		Integer inlineResourceThreshold = appProperties.getInline_resource_storage_below_size();
-		if (inlineResourceThreshold != null && inlineResourceThreshold != 0) {
-			jpaStorageSettings.setInlineResourceTextBelowSize(inlineResourceThreshold);
-		}
-
 		jpaStorageSettings.setStoreResourceInHSearchIndex(appProperties.getStore_resource_in_lucene_index_enabled());
 		jpaStorageSettings.setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
 		jpaStorageSettings.setIndexOnContainedResources(appProperties.getEnable_index_contained_resource());
-
-		if (appProperties.getAllowed_bundle_types() != null) {
-			jpaStorageSettings.setBundleTypesAllowedForStorage(appProperties.getAllowed_bundle_types().stream()
-					.map(BundleType::toCode)
-					.collect(Collectors.toSet()));
-		}
 
 		jpaStorageSettings.setDeferIndexingForCodesystemsOfSize(
 				appProperties.getDefer_indexing_for_codesystems_of_size());

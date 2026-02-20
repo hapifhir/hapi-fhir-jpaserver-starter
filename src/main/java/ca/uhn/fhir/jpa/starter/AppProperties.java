@@ -5,9 +5,7 @@ import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.ClientIdStrategyEnum;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.IdStrategyEnum;
 import ca.uhn.fhir.jpa.model.entity.NormalizedQuantitySearchLevel;
-import ca.uhn.fhir.jpa.starter.ig.ExtendedPackageInstallationSpec;
 import ca.uhn.fhir.rest.api.EncodingEnum;
-import org.hl7.fhir.r4.model.Bundle;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -29,8 +27,6 @@ public class AppProperties {
 	private final Set<String> auto_version_reference_at_paths = new HashSet<>();
 	private final Set<String> local_base_urls = new HashSet<>();
 	private final Set<String> logical_urls = new HashSet<>();
-	private final List<String> custom_interceptor_classes = new ArrayList<>();
-	private final List<String> custom_provider_classes = new ArrayList<>();
 	private Boolean openapi_enabled = false;
 	private boolean advanced_lucene_indexing = false;
 	private boolean search_index_full_text_enabled = false;
@@ -55,8 +51,6 @@ public class AppProperties {
 	private Boolean expunge_enabled = true;
 	private Boolean fhirpath_interceptor_enabled = false;
 	private Boolean filter_search_enabled = true;
-	private Boolean graphql_enabled = false;
-	private Integer inline_resource_storage_below_size;
 	private Boolean default_pretty_print = true;
 	private Integer default_page_size = 20;
 	private Integer max_binary_size = null;
@@ -69,21 +63,14 @@ public class AppProperties {
 	private FhirVersionEnum fhir_version = FhirVersionEnum.R4;
 	private ClientIdStrategyEnum client_id_strategy = ClientIdStrategyEnum.ALPHANUMERIC;
 	private IdStrategyEnum server_id_strategy = null;
-	private List<String> supported_resource_types = new ArrayList<>();
-	private List<Bundle.BundleType> allowed_bundle_types = null;
 	private Boolean narrative_enabled = true;
 	private Boolean ig_runtime_upload_enabled = false;
 	private Validation validation = new Validation();
 	private Logger logger = new Logger();
-	private Cors cors = null;
-	private Boolean validate_resource_status_for_package_upload = true;
-	private Boolean install_transitive_ig_dependencies = true;
 
 	private List<String> install_additional_resources_from_ig_folders = new ArrayList<>();
-	private Map<String, ExtendedPackageInstallationSpec> implementationGuides = null;
 	private String custom_content_path = null;
 	private String app_content_path = null;
-	private Boolean lastn_enabled = false;
 	private boolean store_resource_in_lucene_index_enabled = false;
 	private NormalizedQuantitySearchLevel normalized_quantity_search_level =
 			NormalizedQuantitySearchLevel.NORMALIZED_QUANTITY_SEARCH_NOT_SUPPORTED;
@@ -111,14 +98,6 @@ public class AppProperties {
 	private Boolean mark_resources_for_reindexing_upon_search_parameter_change = true;
 	private Integer reindex_thread_count = null;
 	private Integer expunge_thread_count = null;
-
-	public List<String> getCustomInterceptorClasses() {
-		return custom_interceptor_classes;
-	}
-
-	public List<String> getCustomProviderClasses() {
-		return custom_provider_classes;
-	}
 
 	public Boolean getOpenapi_enabled() {
 		return openapi_enabled;
@@ -152,30 +131,6 @@ public class AppProperties {
 		this.defer_indexing_for_codesystems_of_size = defer_indexing_for_codesystems_of_size;
 	}
 
-	public Map<String, ExtendedPackageInstallationSpec> getImplementationGuides() {
-		return implementationGuides;
-	}
-
-	public void setImplementationGuides(Map<String, ExtendedPackageInstallationSpec> implementationGuides) {
-		this.implementationGuides = implementationGuides;
-	}
-
-	public Cors getCors() {
-		return cors;
-	}
-
-	public void setCors(Cors cors) {
-		this.cors = cors;
-	}
-
-	public List<Bundle.BundleType> getAllowed_bundle_types() {
-		return allowed_bundle_types;
-	}
-
-	public void setAllowed_bundle_types(List<Bundle.BundleType> allowed_bundle_types) {
-		this.allowed_bundle_types = allowed_bundle_types;
-	}
-
 	public String getServer_address() {
 		return server_address;
 	}
@@ -198,14 +153,6 @@ public class AppProperties {
 
 	public void setValidation(Validation validation) {
 		this.validation = validation;
-	}
-
-	public List<String> getSupported_resource_types() {
-		return supported_resource_types;
-	}
-
-	public void setSupported_resource_types(List<String> supported_resource_types) {
-		this.supported_resource_types = supported_resource_types;
 	}
 
 	public Logger getLogger() {
@@ -412,22 +359,6 @@ public class AppProperties {
 		this.filter_search_enabled = filter_search_enabled;
 	}
 
-	public Boolean getGraphql_enabled() {
-		return graphql_enabled;
-	}
-
-	public void setGraphql_enabled(Boolean graphql_enabled) {
-		this.graphql_enabled = graphql_enabled;
-	}
-
-	public Integer getInline_resource_storage_below_size() {
-		return inline_resource_storage_below_size;
-	}
-
-	public void setInline_resource_storage_below_size(Integer inline_resource_storage_below_size) {
-		this.inline_resource_storage_below_size = inline_resource_storage_below_size;
-	}
-
 	public EncodingEnum getDefault_encoding() {
 		return default_encoding;
 	}
@@ -488,14 +419,6 @@ public class AppProperties {
 		this.narrative_enabled = narrative_enabled;
 	}
 
-	public Boolean getLastn_enabled() {
-		return lastn_enabled;
-	}
-
-	public void setLastn_enabled(Boolean lastn_enabled) {
-		this.lastn_enabled = lastn_enabled;
-	}
-
 	public boolean getStore_resource_in_lucene_index_enabled() {
 		return store_resource_in_lucene_index_enabled;
 	}
@@ -510,22 +433,6 @@ public class AppProperties {
 
 	public void setNormalized_quantity_search_level(NormalizedQuantitySearchLevel normalized_quantity_search_level) {
 		this.normalized_quantity_search_level = normalized_quantity_search_level;
-	}
-
-	public boolean getInstall_transitive_ig_dependencies() {
-		return install_transitive_ig_dependencies;
-	}
-
-	public void setInstall_transitive_ig_dependencies(boolean install_transitive_ig_dependencies) {
-		this.install_transitive_ig_dependencies = install_transitive_ig_dependencies;
-	}
-
-	public Boolean getValidate_resource_status_for_package_upload() {
-		return validate_resource_status_for_package_upload;
-	}
-
-	public void setValidate_resource_status_for_package_upload(Boolean validate_resource_status_for_package_upload) {
-		this.validate_resource_status_for_package_upload = validate_resource_status_for_package_upload;
 	}
 
 	public Integer getBundle_batch_pool_size() {
@@ -731,27 +638,6 @@ public class AppProperties {
 	public void setStore_meta_source_information(
 			JpaStorageSettings.StoreMetaSourceInformationEnum store_meta_source_information) {
 		this.store_meta_source_information = store_meta_source_information;
-	}
-
-	public static class Cors {
-		private Boolean allow_Credentials = true;
-		private List<String> allowed_origin = List.of("*");
-
-		public List<String> getAllowed_origin() {
-			return allowed_origin;
-		}
-
-		public void setAllowed_origin(List<String> allowed_origin) {
-			this.allowed_origin = allowed_origin;
-		}
-
-		public Boolean getAllow_Credentials() {
-			return allow_Credentials;
-		}
-
-		public void setAllow_Credentials(Boolean allow_Credentials) {
-			this.allow_Credentials = allow_Credentials;
-		}
 	}
 
 	public static class Logger {

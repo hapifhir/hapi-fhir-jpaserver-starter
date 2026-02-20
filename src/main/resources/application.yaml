@@ -75,35 +75,6 @@ hapi:
     # server_address: http://hapi.fhir.org/baseR4
     # defer_indexing_for_codesystems_of_size: 101
 
-  # B. Implementation Guides (IG) & Package Install
-    ig_runtime_upload_enabled: false
-    # validate_resource_status_for_package_upload: false   # default true
-    # install_transitive_ig_dependencies: true
-    # implementationguides:
-    #   swiss:
-    #     name: swiss.mednet.fhir
-    #     version: 0.8.0
-    #     reloadExisting: false
-    #     installMode: STORE_AND_INSTALL
-    #   ips_1_0_0:
-    #     packageUrl: https://costateixeira.github.io/smart-ips-pilgrimage-fulltest/package.tgz
-    #     name: smart.who.int.ips-pilgrimage-test
-    #     version: 0.1.0
-    #     installMode: STORE_AND_INSTALL
-    # additionalResourceFolders:
-    #   - example
-    #   - example2
-    supported_resource_types:
-      - CodeSystem
-      - ValueSet
-      - ConceptMap
-      # These should not be enabled but are necessary for the server to start due to this bug:
-      # https://github.com/hapifhir/hapi-fhir-jpaserver-starter/issues/830
-      - Patient
-      - Provenance
-      - Task
-    # allowed_bundle_types: COLLECTION,DOCUMENT,MESSAGE,TRANSACTION,TRANSACTIONRESPONSE,BATCH,BATCHRESPONSE,HISTORY,SEARCHSET
-
   # D. Search & Indexing
     advanced_lucene_indexing: true
     search_index_full_text_enabled: true
@@ -158,12 +129,6 @@ hapi:
       - http://loinc.org/*
       - https://loinc.org/*
 
-  # K. CORS
-    cors:
-      allow_Credentials: true
-      allowed_origin:
-        - "*"
-
   # L. Search Orchestration
     # Search Prefetch Thresholds.
     # This setting sets the number of search results to prefetch. For example, if this list
@@ -177,10 +142,6 @@ hapi:
     search_prefetch_thresholds: 13,503,2003,-1
 
   # M. Extensibility (custom beans / interceptors / providers)
-
-    # custom-bean-packages:
-    # custom-interceptor-classes: ca.uhn.fhir.jpa.starter.interceptor.APIKeyInterceptor
-    # custom-provider-classes:
 
     # store_meta_source_information: NONE
     # bundle_batch_pool_size: 10
@@ -200,7 +161,6 @@ hapi:
     #   binary_storage_filesystem_base_directory: /binstore
     # When binary_storage_mode is FILESYSTEM and this value is not set,
     # the starter defaults to 102400 bytes so smaller binaries stay inline.
-    inline_resource_storage_below_size: 4000
 
   # P. Remote Terminology Service (disabled by default)
     # remote_terminology_service:

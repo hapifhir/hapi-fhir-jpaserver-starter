@@ -1,11 +1,8 @@
 package ca.uhn.fhir.jpa.starter.common;
 
-import ca.uhn.fhir.batch2.config.Batch2JobRegisterer;
-import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
-import ca.uhn.fhir.interceptor.model.RequestPartitionId;
 import ca.uhn.fhir.jpa.api.IDaoRegistry;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.config.ThreadPoolFactoryConfig;
@@ -16,16 +13,12 @@ import ca.uhn.fhir.jpa.config.util.HapiEntityManagerFactoryUtil;
 import ca.uhn.fhir.jpa.config.util.ResourceCountCacheUtil;
 import ca.uhn.fhir.jpa.dao.FulltextSearchSvcImpl;
 import ca.uhn.fhir.jpa.dao.IFulltextSearchSvc;
-import ca.uhn.fhir.jpa.dao.TransactionProcessor;
 import ca.uhn.fhir.jpa.dao.search.HSearchSortHelperImpl;
 import ca.uhn.fhir.jpa.dao.search.IHSearchSortHelper;
 import ca.uhn.fhir.jpa.delete.ThreadSafeResourceDeleterSvc;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
 import ca.uhn.fhir.jpa.interceptor.UserRequestRetryVersionConflictsInterceptor;
 import ca.uhn.fhir.jpa.interceptor.validation.RepositoryValidatingInterceptor;
-import ca.uhn.fhir.jpa.packages.AdditionalResourcesParser;
-import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager;
-import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
 import ca.uhn.fhir.jpa.provider.DaoRegistryResourceSupportedSvc;
 import ca.uhn.fhir.jpa.provider.DiffProvider;
 import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
@@ -36,18 +29,13 @@ import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.search.IStaleSearchDeletingSvc;
 import ca.uhn.fhir.jpa.search.StaleSearchDeletingSvcImpl;
 import ca.uhn.fhir.jpa.starter.AppProperties;
-import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
-import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
-import ca.uhn.fhir.jpa.starter.ig.ExtendedPackageInstallationSpec;
-import ca.uhn.fhir.jpa.starter.ig.IImplementationGuideOperationProvider;
 import ca.uhn.fhir.jpa.starter.interceptor.APIKeyInterceptor;
 import ca.uhn.fhir.jpa.starter.terminology.TerminologyCapabilityInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceCountCache;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.narrative2.NullNarrativeGenerator;
 import ca.uhn.fhir.rest.api.IResourceSupportedSvc;
-import ca.uhn.fhir.rest.api.server.SystemRequestDetails;
 import ca.uhn.fhir.rest.openapi.OpenApiInterceptor;
 import ca.uhn.fhir.rest.server.ApacheProxyAddressStrategy;
 import ca.uhn.fhir.rest.server.ETagSupportEnum;
@@ -72,17 +60,11 @@ import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.search.mapper.orm.cfg.HibernateOrmMapperSettings;
 import org.hl7.fhir.common.hapi.validation.support.TxResourceValidationSupport;
 import org.hl7.fhir.common.hapi.validation.support.ValidationSupportChain;
-import org.hl7.fhir.instance.model.api.IBaseBundle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
@@ -99,8 +81,6 @@ import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInt
 @Configuration
 @Import({ThreadPoolFactoryConfig.class, JpaR4Config.class})
 public class StarterJpaConfig {
-
-	private static final Logger ourLog = LoggerFactory.getLogger(StarterJpaConfig.class);
 
 	@Bean
 	public IFulltextSearchSvc fullTextSearchSvc() {
@@ -214,79 +194,20 @@ public class StarterJpaConfig {
 		return loggingInterceptor;
 	}
 
-	@Bean("packageInstaller")
-	@Primary
-	@Conditional(OnImplementationGuidesPresent.class)
-	public IPackageInstallerSvc packageInstaller(
-			AppProperties appProperties,
-			IPackageInstallerSvc packageInstallerSvc,
-			Batch2JobRegisterer batch2JobRegisterer,
-			FhirContext fhirContext,
-			TransactionProcessor transactionProcessor,
-			IHapiPackageCacheManager iHapiPackageCacheManager) {
-
-		batch2JobRegisterer.start();
-
-		if (appProperties.getImplementationGuides() != null) {
-			Map<String, ExtendedPackageInstallationSpec> guides = appProperties.getImplementationGuides();
-			for (Map.Entry<String, ExtendedPackageInstallationSpec> guidesEntry : guides.entrySet()) {
-				ExtendedPackageInstallationSpec packageInstallationSpec = guidesEntry.getValue();
-				if (appProperties.getInstall_transitive_ig_dependencies()) {
-
-					packageInstallationSpec
-							.addDependencyExclude("hl7.fhir.r2.core")
-							.addDependencyExclude("hl7.fhir.r3.core")
-							.addDependencyExclude("hl7.fhir.r4.core")
-							.addDependencyExclude("hl7.fhir.r5.core");
-				}
-
-				packageInstallerSvc.install(packageInstallationSpec);
-
-				Set<String> extraResources = packageInstallationSpec.getAdditionalResourceFolders();
-				packageInstallationSpec.setPackageContents(iHapiPackageCacheManager
-						.loadPackageContents(packageInstallationSpec.getName(), packageInstallationSpec.getVersion())
-						.getBytes());
-
-				if (extraResources != null && !extraResources.isEmpty()) {
-					IBaseBundle transaction = AdditionalResourcesParser.bundleAdditionalResources(
-							extraResources, packageInstallationSpec, fhirContext);
-					transactionProcessor.transaction(
-							new SystemRequestDetails().setRequestPartitionId(RequestPartitionId.defaultPartition()),
-							transaction,
-							false);
-				}
-			}
-		}
-		return packageInstallerSvc;
-	}
-
 	@Bean
-	@Conditional(OnCorsPresent.class)
-	public CorsInterceptor corsInterceptor(AppProperties appProperties) {
-		// Define your CORS configuration. This is an example
-		// showing a typical setup. You should customize this
-		// to your specific needs
-		ourLog.info("CORS is enabled on this server");
+	public CorsInterceptor corsInterceptor() {
 		CorsConfiguration config = new CorsConfiguration();
 		config.addAllowedHeader(HttpHeaders.ORIGIN);
 		config.addAllowedHeader(HttpHeaders.ACCEPT);
 		config.addAllowedHeader(HttpHeaders.CONTENT_TYPE);
-		config.addAllowedHeader(HttpHeaders.AUTHORIZATION);
 		config.addAllowedHeader(HttpHeaders.CACHE_CONTROL);
-		config.addAllowedHeader("x-fhir-starter");
-		config.addAllowedHeader("X-Requested-With");
-		config.addAllowedHeader("Prefer");
 
-		List<String> allAllowedCORSOrigins = appProperties.getCors().getAllowed_origin();
-		allAllowedCORSOrigins.forEach(config::addAllowedOriginPattern);
-		ourLog.info("CORS allows the following origins: {}", String.join(", ", allAllowedCORSOrigins));
-
+		config.addAllowedOriginPattern("*");
 		config.addExposedHeader("Location");
 		config.addExposedHeader("Content-Location");
-		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
-		config.setAllowCredentials(appProperties.getCors().getAllow_Credentials());
+		config.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "HEAD"));
+		config.setAllowCredentials(false);
 
-		// Create the interceptor and register it
 		return new CorsInterceptor(config);
 	}
 
@@ -309,8 +230,6 @@ public class StarterJpaConfig {
 			ValueSetOperationProvider theValueSetOperationProvider,
 			Optional<RepositoryValidatingInterceptor> repositoryValidatingInterceptor,
 			ThreadSafeResourceDeleterSvc theThreadSafeResourceDeleterSvc,
-			ApplicationContext appContext,
-			Optional<IImplementationGuideOperationProvider> implementationGuideOperationProvider,
 			DiffProvider diffProvider,
 			TxResourceValidationSupport txResourceValidationSupport,
 			APIKeyInterceptor theAPIKeyInterceptor) {
@@ -320,14 +239,7 @@ public class StarterJpaConfig {
 			chain.addValidationSupport(txResourceValidationSupport);
 		}
 
-		List<String> supportedResourceTypes = appProperties.getSupported_resource_types();
-
-		if (!supportedResourceTypes.isEmpty()) {
-			if (!supportedResourceTypes.contains("SearchParameter")) {
-				supportedResourceTypes.add("SearchParameter");
-			}
-			daoRegistry.setSupportedResourceTypes(supportedResourceTypes);
-		}
+		daoRegistry.setSupportedResourceTypes(Arrays.asList("CodeSystem", "ValueSet", "ConceptMap", "SearchParameter"));
 
 		if (appProperties.getNarrative_enabled()) {
 			fhirSystemDao.getContext().setNarrativeGenerator(new DefaultThymeleafNarrativeGenerator());
@@ -379,8 +291,6 @@ public class StarterJpaConfig {
 		fhirServer.registerInterceptor(loggingInterceptor);
 		fhirServer.registerInterceptor(new TerminologyCapabilityInterceptor());
   		fhirServer.registerInterceptor(theAPIKeyInterceptor);
-
-		implementationGuideOperationProvider.ifPresent(fhirServer::registerProvider);
 
 		/*
 		 * If you are hosting this server at a specific DNS name, the server will try to
@@ -439,99 +349,11 @@ public class StarterJpaConfig {
 		// Diff Provider
 		fhirServer.registerProvider(diffProvider);
 
-		// register custom interceptors
-		registerCustomInterceptors(fhirServer, appContext, appProperties.getCustomInterceptorClasses());
-
 		if (appProperties.getUserRequestRetryVersionConflictsInterceptorEnabled()) {
 			fhirServer.registerInterceptor(new UserRequestRetryVersionConflictsInterceptor());
 		}
 
-		// register custom providers
-		registerCustomProviders(fhirServer, appContext, appProperties.getCustomProviderClasses());
-
 		return fhirServer;
-	}
-
-	/**
-	 * check the properties for custom interceptor classes and registers them.
-	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	private void registerCustomInterceptors(
-			RestfulServer fhirServer, ApplicationContext theAppContext, List<String> customInterceptorClasses) {
-
-		if (customInterceptorClasses == null) {
-			return;
-		}
-
-		for (String className : customInterceptorClasses) {
-			Class clazz;
-			try {
-				clazz = Class.forName(className);
-			} catch (ClassNotFoundException e) {
-				throw new ConfigurationException("Interceptor class was not found on classpath: " + className, e);
-			}
-
-			// first check if the class is a Bean in the app context
-			Object interceptor = null;
-			try {
-				interceptor = theAppContext.getBean(clazz);
-				ourLog.info("registering custom interceptor as bean: {}", className);
-			} catch (NoSuchBeanDefinitionException ex) {
-				// no op - if it's not a bean we'll try to create it
-			}
-
-			// if not a bean, instantiate the interceptor via reflection
-			if (interceptor == null) {
-				try {
-					interceptor = clazz.getConstructor().newInstance();
-					ourLog.info("registering custom interceptor as pojo: {}", className);
-				} catch (Exception e) {
-					throw new ConfigurationException("Unable to instantiate interceptor class : " + className, e);
-				}
-			}
-			fhirServer.registerInterceptor(interceptor);
-		}
-	}
-
-	/**
-	 * check the properties for custom provider classes and registers them.
-	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	private void registerCustomProviders(
-			RestfulServer fhirServer, ApplicationContext theAppContext, List<String> customProviderClasses) {
-
-		if (customProviderClasses == null) {
-			return;
-		}
-
-		for (String className : customProviderClasses) {
-			Class clazz;
-			try {
-				clazz = Class.forName(className);
-			} catch (ClassNotFoundException e) {
-				throw new ConfigurationException("Provider class was not found on classpath: " + className, e);
-			}
-
-			// first check if the class is a Bean in the app context
-			Object provider = null;
-			try {
-				provider = theAppContext.getBean(clazz);
-				ourLog.info("registering custom provider as bean: {}", className);
-			} catch (NoSuchBeanDefinitionException ex) {
-				// no op - if it's not a bean we'll try to create it
-			}
-
-			// if not a bean, instantiate the interceptor via reflection
-			if (provider == null) {
-				try {
-					provider = clazz.getConstructor().newInstance();
-					ourLog.info("registering custom provider as pojo: {}", className);
-				} catch (Exception e) {
-					throw new ConfigurationException("Unable to instantiate provider class : " + className, e);
-				}
-			}
-			fhirServer.registerProvider(provider);
-		}
 	}
 
 	public static IServerConformanceProvider<?> calculateConformanceProvider(

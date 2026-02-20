@@ -89,12 +89,6 @@ docker run -p 8090:8080 -e "--spring.config.location=classpath:/another.applicat
 ```
 Here, the configuration file (*another.application.yaml*) is part of the compiled set of resources.
 
-### One-liner for quickly getting an Implementation Guide installed into HAPI
-
-```
-docker run -p 8080:8080 -e "hapi.fhir.implementationguides.someIg.name=com.org.something" -e "hapi.fhir.implementationguides.someIg.version=1.2.3" -e "hapi.fhir.implementationguides.someIg.packageUrl=https://build.fhir.org/ig/yourOrg/yourIg/package.tgz" -e "hapi.fhir.implementationguides.someIg.installMode=STORE_AND_INSTALL" hapiproject/hapi:latest
-```
-
 ### Example using ``docker-compose.yml`` for docker-compose
 
 ```yaml
@@ -383,33 +377,6 @@ Because the integration tests within the project rely on the default H2 database
 NOTE: MS SQL Server by default uses a case-insensitive codepage. This will cause errors with some operations - such as when expanding case-sensitive valuesets (UCUM) as there are unique indexes defined on the terminology tables for codes.
 It is recommended to deploy a case-sensitive database prior to running HAPI FHIR when using MS SQL Server to avoid these and potentially other issues.
 
-## Adding custom interceptors
-Custom interceptors can be registered with the server by including the property `hapi.fhir.custom-interceptor-classes`. This will take a comma separated list of fully-qualified class names which will be registered with the server.
-Interceptors will be discovered in one of two ways:
-
-1) From the Spring application context as existing Beans (can be used in conjunction with `hapi.fhir.custom-bean-packages`) or registered with Spring via other methods
-2) Classes will be instantiated via reflection if no matching Bean is found
-
-Interceptors can also be registered manually through `RestfulServer.registerInterceptor`. Take note that any interceptor registered in this way _will not fire_ for non-REST operations, e.g. creation through a DAO. To trigger in this case, you need to register your interceptors on the `IInterceptorService` bean.
-
-## Adding custom operations(providers)
-Custom operations(providers) can be registered with the server by including the property `hapi.fhir.custom-provider-classes`. This will take a comma separated list of fully-qualified class names which will be registered with the server.
-Providers will be discovered in one of two ways:
-
-1) discovered from the Spring application context as existing Beans (can be used in conjunction with `hapi.fhir.custom-bean-packages`) or registered with Spring via other methods
-
-or
-
-2) classes will be instantiated via reflection if no matching Bean is found
-
-## Customizing The Web Testpage UI
-
-The UI that comes with this server is an exact clone of the server available at [http://hapi.fhir.org](http://hapi.fhir.org). You may skin this UI if you'd like. For example, you might change the introductory text or replace the logo with your own.
-
-The UI is customized using [Thymeleaf](https://www.thymeleaf.org/) template files. You might want to learn more about Thymeleaf, but you don't necessarily need to: they are quite easy to figure out.
-
-Several template files that can be customized are found in the following directory: [https://github.com/hapifhir/hapi-fhir-jpaserver-starter/tree/master/src/main/webapp/WEB-INF/templates](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/tree/master/src/main/webapp/WEB-INF/templates)
-
 ## Deploying to an Application Server
 
 Using the Maven-Embedded Jetty method above is convenient, but it is not a good solution if you want to leave the server running in the background.
@@ -517,18 +484,6 @@ The server may be configured with subscription support by enabling properties in
 
 - `hapi.fhir.subscription.websocket_enabled` - Enables websocket subscriptions. With this enabled, your server will accept incoming websocket connections on the following URL (this example uses the default context path and port, you may need to tweak depending on your deployment environment): [ws://localhost:8080/websocket](ws://localhost:8080/websocket)
 
-## Enabling Clinical Reasoning
-
-Set `hapi.fhir.cr.enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable [Clinical Quality Language](https://cql.hl7.org/) on this server.  An alternate settings file, [application-cds.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application-cds.yaml), exists with the Clinical Reasoning module enabled and default settings that have been found to work with most CDS and dQM test cases.
-
-## Enabling CDS Hooks
-
-Set `hapi.fhir.cdshooks.enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable [CDS Hooks](https://cds-hooks.org/) on this server.  The Clinical Reasoning module must also be enabled because this implementation of CDS Hooks includes [CDS on FHIR](https://build.fhir.org/clinicalreasoning-cds-on-fhir.html).  An example CDS Service using CDS on FHIR is available in the CdsHooksServletIT test class.
-
-## Enabling MDM (EMPI)
-
-Set `hapi.fhir.mdm_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable MDM on this server.  The MDM matching rules are configured in [mdm-rules.json](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/mdm-rules.json).  The rules in this example file should be replaced with actual matching rules appropriate to your data. Note that MDM relies on subscriptions, so for MDM to work, subscriptions must be enabled.
-
 ## Using Elasticsearch
 
 By default, the server will use embedded lucene indexes for terminology and fulltext indexing purposes. You can switch this to using lucene by editing the properties in [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml)
@@ -544,10 +499,6 @@ elasticsearch.protocol=http
 elasticsearch.required_index_status=YELLOW
 elasticsearch.schema_management_strategy=CREATE
 ```
-
-## Enabling LastN
-
-Set `hapi.fhir.lastn_enabled=true` in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file to enable the $lastn operation on this server.  Note that the $lastn operation relies on Elasticsearch, so for $lastn to work, indexing must be enabled using Elasticsearch.
 
 ## Enabling Resource to be stored in Lucene Index
 
@@ -570,38 +521,6 @@ docker build --target=release-distroless -t hapi-fhir:distroless .
 Note that distroless images are also automatically built and pushed to the container registry,
 see the `-distroless` suffix in the image tags.
 
-## Adding custom operations
-
-To add a custom operation, refer to the documentation in the core hapi-fhir libraries [here](https://hapifhir.io/hapi-fhir/docs/server_plain/rest_operations_operations.html).
-
-Within `hapi-fhir-jpaserver-starter`, create a generic class (that does not extend or implement any classes or interfaces), add the `@Operation` as a method within the generic class, and then register the class as a provider using `RestfulServer.registerProvider()`.
-
-## Runtime package install
-
-It's possible to install a FHIR Implementation Guide package (`package.tgz`) either from a published package or from a local package with the `$install` operation, without having to restart the server. This is available for R4 and R5.
-
-This feature must be enabled in the application.yaml (or docker command line):
-
-```yaml
-hapi:
-  fhir:
-    ig_runtime_upload_enabled: true
-```
-
-The `$install` operation is triggered with a POST to `[server]/ImplementationGuide/$install`, with the payload below:
-
-```json
-{
-  "resourceType": "Parameters",
-  "parameter": [
-    {
-      "name": "npmContent",
-      "valueBase64Binary": "[BASE64_ENCODED_NPM_PACKAGE_DATA]"
-    }
-  ]
-}
-```
-
 ## Enable OpenTelemetry auto-instrumentation
 
 The container image includes the [OpenTelemetry Java auto-instrumentation](https://github.com/open-telemetry/opentelemetry-java-instrumentation)
@@ -618,7 +537,3 @@ docker run --rm -it -p 8080:8080 \
 ```
 
 You can configure the agent using environment variables or Java system properties, see <https://opentelemetry.io/docs/instrumentation/java/automatic/agent-config/> for details.
-
-## Enable MCP
-
-MCP capabilities can be enabled by setting the `spring.ai.mcp.server.enabled` to `true`. This will enable the MCP server and expose the MCP endpoints. The MCP endpoint is currently hardcoded to `/mcp/message` and can be tried out by running e.g. `npx @modelcontextprotocol/inspector` and connect to http://localhost:8080/mcp/message using Streamable HTTP. Spring AI MCP Server Auto Configuration is currently not supported.

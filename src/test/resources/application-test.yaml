@@ -16,22 +16,6 @@ hapi:
     #    server_address: http://hapi.fhir.org/baseR4
     #    defer_indexing_for_codesystems_of_size: 101
     ### Flag is true by default. This flag filters resources during package installation, allowing only those resources with a valid status (e.g. active) to be installed.
-    #    validate_resource_status_for_package_upload: false 
-    #    install_transitive_ig_dependencies: true
-    #    implementationguides:
-    ###    example from registry (packages.fhir.org)
-    #      swiss:
-    #        name: swiss.mednet.fhir
-    #        version: 0.8.0
-    #        reloadExisting : false
-    #      example not from registry
-    #      ips_1_0_0:
-    #        packageUrl: https://build.fhir.org/ig/HL7/fhir-ips/package.tgz
-    #        name: hl7.fhir.uv.ips
-    #        version: 1.0.0
-    #    supported_resource_types:
-    #      - Patient
-    #      - Observation
     #    allow_cascading_deletes: true
     #    allow_contains_searches: true
     #    allow_external_references: true
