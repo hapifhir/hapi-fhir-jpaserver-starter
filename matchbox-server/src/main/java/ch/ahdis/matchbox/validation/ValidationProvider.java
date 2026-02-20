@@ -27,23 +27,15 @@ import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.util.StopWatch;
 import ch.ahdis.matchbox.CliContext;
+import ch.ahdis.matchbox.config.MatchboxFhirVersion;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import ch.ahdis.matchbox.validation.matchspark.LLMConnector;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
-import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
 import ch.ahdis.matchbox.packages.MatchboxImplementationGuideProvider;
-import ch.ahdis.matchbox.registry.SimplifierPackage;
-import ch.ahdis.matchbox.registry.SimplifierPackageVersionsObject;
-import com.google.gson.Gson;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
-import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r5.model.CodeableConcept;
@@ -60,18 +52,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.support.TransactionTemplate;
 
-import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static ch.ahdis.matchbox.util.MatchboxServerUtils.addExtension;
@@ -91,6 +78,9 @@ public class ValidationProvider {
 
 	@Autowired
 	private FhirContext myContext;
+
+	@Autowired
+	private MatchboxFhirVersion matchboxFhirVersion;
 
 	@Autowired
 	private MatchboxImplementationGuideProvider igProvider;
@@ -265,17 +255,10 @@ public class ValidationProvider {
 			}
 		}
 
-		
-		return switch (this.myContext.getVersion().getVersion()) {
-			case R4 -> VersionConvertorFactory_40_50.convertResource((OperationOutcome) oo);
-			case R4B -> VersionConvertorFactory_43_50.convertResource((OperationOutcome) oo);
-			case R5 -> oo;
-			default -> throw new MatchboxUnsupportedFhirVersionException("ValidationProvider",
-																							 this.myContext.getVersion().getVersion());
-		};
+		return this.matchboxFhirVersion.convertForResponse(oo);
 	}
 
-	private IBaseResource getOperationOutcome(final String id,
+	private OperationOutcome getOperationOutcome(final String id,
 															final List<ValidationMessage> messages,
 															final String profile,
 															final MatchboxEngine engine,
@@ -374,14 +357,14 @@ public class ValidationProvider {
 		return oo;
 	}
 
-	private IBaseResource getOoForError(final @NonNull String message) {
+	private OperationOutcome getOoForError(final @NonNull String message) {
 		final var oo = new OperationOutcome();
 		final var issue = oo.addIssue();
 		issue.setSeverity(OperationOutcome.IssueSeverity.ERROR);
 		issue.setCode(OperationOutcome.IssueType.EXCEPTION);
 		issue.setDiagnostics(message);
 		issue.addExtension().setUrl(ExtensionDefinitions.EXT_ISSUE_SOURCE).setValue(new StringType("ValidationProvider"));
-		return VersionConvertorFactory_40_50.convertResource(oo);
+		return oo;
 	}
 
 	public static List<ValidationMessage> doValidate(final MatchboxEngine engine,
@@ -418,33 +401,27 @@ public class ValidationProvider {
 		return messages;
 	}
 
-	public IBaseResource addAIIssueToOperationOutcome(IBaseResource resource, String aiResponse) {
-		if (resource instanceof final OperationOutcome outcome) {
-			final var details = new CodeableConcept();
-			details.setText("AI Analyze of the Operation Outcome");
+	public OperationOutcome addAIIssueToOperationOutcome(final OperationOutcome outcome, final String aiResponse) {
+		final var details = new CodeableConcept();
+		details.setText("AI Analyze of the Operation Outcome");
 
-			outcome.addIssue()
-				.setSeverity(OperationOutcome.IssueSeverity.INFORMATION)
-				.setCode(OperationOutcome.IssueType.INFORMATIONAL)
-				.setDiagnostics(aiResponse)
-				.setDetails(details)
-				.addExtension()
-					.setUrl("http://hl7.org/fhir/StructureDefinition/rendering-style")
-					.setValue(new StringType("markdown"));
+		outcome.addIssue()
+			.setSeverity(OperationOutcome.IssueSeverity.INFORMATION)
+			.setCode(OperationOutcome.IssueType.INFORMATIONAL)
+			.setDiagnostics(aiResponse)
+			.setDetails(details)
+			.addExtension()
+				.setUrl("http://hl7.org/fhir/StructureDefinition/rendering-style")
+				.setValue(new StringType("markdown"));
 
-			return outcome;
-		}
-		throw new IllegalArgumentException("Provided resource is not an OperationOutcome.");
+		return outcome;
 	}
 
-	public IBaseResource addExceptionToOperationOutcome(IBaseResource resource, Exception e) {
-		if (resource instanceof final OperationOutcome outcome) {
-			outcome.addIssue()
-				.setSeverity(OperationOutcome.IssueSeverity.ERROR)
-				.setCode(OperationOutcome.IssueType.EXCEPTION)
-				.setDiagnostics(e.getLocalizedMessage());
-			return outcome;
-		}
-		throw new IllegalArgumentException("Provided resource is not an OperationOutcome.");
+	public OperationOutcome addExceptionToOperationOutcome(final OperationOutcome outcome, final Exception e) {
+		outcome.addIssue()
+			.setSeverity(OperationOutcome.IssueSeverity.ERROR)
+			.setCode(OperationOutcome.IssueType.EXCEPTION)
+			.setDiagnostics(e.getLocalizedMessage());
+		return outcome;
 	}
 }

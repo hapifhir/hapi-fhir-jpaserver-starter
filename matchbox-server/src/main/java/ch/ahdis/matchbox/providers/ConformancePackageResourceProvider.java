@@ -19,8 +19,8 @@ import ca.uhn.fhir.rest.server.SimpleBundleProvider;
 import ca.uhn.fhir.rest.server.exceptions.MethodNotAllowedException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import ch.ahdis.matchbox.CliContext;
+import ch.ahdis.matchbox.config.MatchboxFhirVersion;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
-import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
 import ch.ahdis.matchbox.util.CrossVersionResourceUtils;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import ch.ahdis.matchbox.util.MatchboxServerUtils;
@@ -72,6 +72,9 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 
 	@Autowired
 	private FhirContext myCtx;
+
+	@Autowired
+	private MatchboxFhirVersion matchboxFhirVersion;
 
 	@Autowired
 	protected CliContext cliContext;
@@ -466,12 +469,10 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 
 	@Override
 	public Class<? extends IBaseResource> getResourceType() {
-		return switch (this.myCtx.getVersion().getVersion()) {
-			case R4 -> this.classR4;
-			case R4B -> this.classR4B;
-			case R5 -> this.classR5;
-			default -> throw new MatchboxUnsupportedFhirVersionException("ConformancePackageResourceProvider",
-																							 this.myCtx.getVersion().getVersion());
-		};
+		return this.matchboxFhirVersion.resourceType(
+				this.classR4,
+				this.classR4B,
+				this.classR5
+		);
 	}
 }

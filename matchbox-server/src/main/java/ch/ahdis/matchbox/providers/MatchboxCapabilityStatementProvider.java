@@ -11,11 +11,10 @@ import ca.uhn.fhir.rest.server.provider.ServerCapabilityStatementProvider;
 import ca.uhn.fhir.util.FhirTerser;
 import ca.uhn.fhir.util.TerserUtil;
 import ch.ahdis.matchbox.CliContext;
+import ch.ahdis.matchbox.config.MatchboxFhirVersion;
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProvider;
-import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
-import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
 import org.hl7.fhir.r5.model.OperationDefinition.OperationDefinitionParameterComponent;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseConformance;
@@ -24,8 +23,6 @@ import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r5.model.*;
 
 import java.lang.reflect.Field;
-import java.util.function.Consumer;
-
 import static ch.ahdis.matchbox.packages.MatchboxJpaPackageCache.structureDefinitionIsValidatable;
 
 /**
@@ -36,11 +33,13 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 	private final StructureDefinitionResourceProvider structureDefinitionProvider;
 	protected final CliContext cliContext;
 	protected final FhirContext myFhirContext;
+	private final MatchboxFhirVersion matchboxFhirVersion;
 
 	public MatchboxCapabilityStatementProvider(final FhirContext fhirContext,
 															 final RestfulServer theServerConfiguration,
 															 final StructureDefinitionResourceProvider structureDefinitionProvider,
-															 final CliContext cliContext) {
+															 final CliContext cliContext,
+															 final MatchboxFhirVersion matchboxFhirVersion) {
 		super(theServerConfiguration, null, null);
 		this.structureDefinitionProvider = structureDefinitionProvider;
 		this.cliContext = cliContext;
@@ -50,6 +49,7 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 			theServerConfiguration.setImplementationDescription("Development mode");
 		}
 		this.myFhirContext = fhirContext;
+		this.matchboxFhirVersion = matchboxFhirVersion;
 	}
 
 	protected void postProcessRestResource(FhirTerser theTerser, IBase theResource, String theResourceName) {
@@ -137,36 +137,22 @@ public class MatchboxCapabilityStatementProvider extends ServerCapabilityStateme
 	@Override
 	public IBaseResource readOperationDefinition(@IdParam final IIdType theId,
 																final RequestDetails theRequestDetails) {
-		final var baseResource = super.readOperationDefinition(theId, theRequestDetails);
+		return this.matchboxFhirVersion.applyOnR5(
+			super.readOperationDefinition(theId, theRequestDetails),
+			this::updateOperationDefinition,
+			OperationDefinition.class
+		);
+	}
 
-		final Consumer<OperationDefinition> updateOperationDefinition = opDefR5 -> {
-			switch (opDefR5.getName()) {
-				case VALIDATE_OPERATION_NAME -> this.updateValidateOperationDefinition(opDefR5);
-				case QuestionnaireResponseExtractProvider.OPERATION_NAME -> QuestionnaireResponseExtractProvider.updateOperationDefinition(opDefR5);
-				default -> {
-					// Do nothing
-				}
+	private OperationDefinition updateOperationDefinition(final OperationDefinition opDefR5) {
+		switch (opDefR5.getName()) {
+			case VALIDATE_OPERATION_NAME -> this.updateValidateOperationDefinition(opDefR5);
+			case QuestionnaireResponseExtractProvider.OPERATION_NAME -> QuestionnaireResponseExtractProvider.updateOperationDefinition(opDefR5);
+			default -> {
+				// Do nothing
 			}
-		};
-
-		if (baseResource instanceof final OperationDefinition opDefR5) {
-			// In R5 mode
-			updateOperationDefinition.accept(opDefR5);
-			return baseResource;
-		} else if (baseResource instanceof final org.hl7.fhir.r4b.model.OperationDefinition opDefR4B) {
-			// In R4B mode: convert to R5, update, and convert back to R4B
-			final var opDefR5 = (OperationDefinition) VersionConvertorFactory_43_50.convertResource(opDefR4B);
-			updateOperationDefinition.accept(opDefR5);
-			return VersionConvertorFactory_43_50.convertResource(opDefR5);
-		} else if (baseResource instanceof final org.hl7.fhir.r4.model.OperationDefinition opDefR4) {
-			// In R4 mode: convert to R5, update, and convert back to R4
-			final var opDefR5 = (OperationDefinition) VersionConvertorFactory_40_50.convertResource(opDefR4);
-			updateOperationDefinition.accept(opDefR5);
-			return VersionConvertorFactory_40_50.convertResource(opDefR5);
 		}
-		// Only fail if the base resource is not R4, R4B or R5
-		throw new MatchboxUnsupportedFhirVersionException("MatchboxCapabilityStatementProvider",
-																		  baseResource.getStructureFhirVersionEnum());
+		return opDefR5;
 	}
 
 	/**

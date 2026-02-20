@@ -5,9 +5,7 @@ import ca.uhn.fhir.interceptor.api.Interceptor;
 import ca.uhn.fhir.interceptor.api.Pointcut;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.api.server.ResponseDetails;
-import ch.ahdis.matchbox.engine.exception.MatchboxUnsupportedFhirVersionException;
-import org.hl7.fhir.convertors.factory.VersionConvertorFactory_40_50;
-import org.hl7.fhir.convertors.factory.VersionConvertorFactory_43_50;
+import ch.ahdis.matchbox.config.MatchboxFhirVersion;
 import org.hl7.fhir.r5.model.CapabilityStatement;
 import org.hl7.fhir.r5.model.TerminologyCapabilities;
 import org.slf4j.Logger;
@@ -27,24 +25,22 @@ import static org.hl7.fhir.r5.terminologies.utilities.TerminologyCache.SystemNam
 public class TerminologyCapabilitiesInterceptor {
 	private static final Logger log = LoggerFactory.getLogger(TerminologyCapabilitiesInterceptor.class);
 
+	private final MatchboxFhirVersion matchboxFhirVersion;
+
+	public TerminologyCapabilitiesInterceptor(final MatchboxFhirVersion matchboxFhirVersion) {
+		this.matchboxFhirVersion = matchboxFhirVersion;
+	}
+
 	@Hook(Pointcut.SERVER_OUTGOING_RESPONSE)
 	public boolean customize(final RequestDetails theRequestDetails,
-								 final ResponseDetails theResponseDetails) {
+					   			 final ResponseDetails theResponseDetails) {
 		if (theRequestDetails.getParameters().containsKey("mode") && "terminology".equals(theRequestDetails.getParameters().get("mode")[0])) {
 			log.debug("Generating a TerminologyCapabilities");
-			final var baseResource = theResponseDetails.getResponseResource();
-			if (baseResource instanceof final CapabilityStatement csR5) {
-				theResponseDetails.setResponseResource(this.getTerminologyCapabilities(csR5));
-			} else if (baseResource instanceof final org.hl7.fhir.r4.model.CapabilityStatement csR4) {
-				final var csR5 = (CapabilityStatement) VersionConvertorFactory_40_50.convertResource(csR4);
-				theResponseDetails.setResponseResource(VersionConvertorFactory_40_50.convertResource(this.getTerminologyCapabilities(csR5)));
-			} else if (baseResource instanceof final org.hl7.fhir.r4b.model.CapabilityStatement csR4B) {
-				final var csR5 = (CapabilityStatement) VersionConvertorFactory_43_50.convertResource(csR4B);
-				theResponseDetails.setResponseResource(VersionConvertorFactory_43_50.convertResource(this.getTerminologyCapabilities(csR5)));
-			} else {
-				throw new MatchboxUnsupportedFhirVersionException("TerminologyCapabilitiesInterceptor",
-																				  theRequestDetails.getFhirContext().getVersion().getVersion());
-			}
+			theResponseDetails.setResponseResource(this.matchboxFhirVersion.applyOnR5(
+				theResponseDetails.getResponseResource(),
+				this::getTerminologyCapabilities,
+				CapabilityStatement.class
+			));
 		}
 		return true;
 	}
