@@ -26,7 +26,6 @@ import org.hl7.fhir.r5.terminologies.client.TerminologyClientContext;
 import org.hl7.fhir.r5.utils.validation.constants.ReferenceValidationPolicy;
 import org.hl7.fhir.utilities.FhirPublication;
 import org.hl7.fhir.utilities.validation.ValidationOptions.R5BundleRelativeReferencePolicy;
-import org.hl7.fhir.validation.instance.advisor.BasePolicyAdvisorForFullValidation;
 import org.hl7.fhir.validation.service.DisabledValidationPolicyAdvisor;
 import org.hl7.fhir.validation.service.StandAloneValidatorFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,6 @@ import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ch.ahdis.matchbox.engine.MatchboxEngine.MatchboxEngineBuilder;
 import ch.ahdis.matchbox.engine.ValidationPolicyAdvisor;
-
 
 public class MatchboxEngineSupport {
 	

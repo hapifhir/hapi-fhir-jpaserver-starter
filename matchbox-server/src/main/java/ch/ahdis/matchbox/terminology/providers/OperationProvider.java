@@ -1,7 +1,7 @@
 package ch.ahdis.matchbox.terminology.providers;
 
 import ca.uhn.fhir.rest.annotation.Operation;
-import org.hl7.fhir.instance.model.api.IAnyResource;
+import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +13,7 @@ public class OperationProvider {
 		canonicalUrl = "http://hl7.org/fhir/OperationDefinition/Resource-validate-code",
 		idempotent = true
 	)
-	public IAnyResource validateCode() {
+	public IBaseResource validateCode() {
 		log.info("OperationProvider::validate-code");
 		return null;
 	}
@@ -23,7 +23,7 @@ public class OperationProvider {
 		canonicalUrl = "http://hl7.org/fhir/OperationDefinition/Resource-batch-validate-code",
 		idempotent = true
 	)
-	public IAnyResource batchValidateCode() {
+	public IBaseResource batchValidateCode() {
 		log.info("OperationProvider::batch-validate-code");
 		return null;
 	}
@@ -33,7 +33,7 @@ public class OperationProvider {
 		canonicalUrl = "http://localhost/r4/OperationDefinition/fso-versions",
 		idempotent = true
 	)
-	public IAnyResource versions() {
+	public IBaseResource versions() {
 		log.info("OperationProvider::versions");
 		return null;
 	}
