@@ -17,18 +17,19 @@ public class MatchboxTxConfig {
 
 	@Bean
 	public MatchboxTxServer matchboxTxServer(final FhirContext fhirContext,
-														  final TxValidationCache txValidationCache) {
+														  final TxValidationCache txValidationCache,
+														  final MatchboxFhirVersion matchboxFhirVersion) {
 		final var server = new MatchboxTxServer(fhirContext);
 
 		server.setServerAddressStrategy(new IncomingRequestAddressStrategy());
-		server.setServerConformanceProvider(new CapabilityStatementProvider(server, fhirContext));
+		server.setServerConformanceProvider(new CapabilityStatementProvider(server, matchboxFhirVersion));
 		server.setDefaultPrettyPrint(true);
 
 		server.registerInterceptor(new ResponseHighlighterInterceptor());
-		server.registerInterceptor(new TerminologyCapabilitiesInterceptor());
+		server.registerInterceptor(new TerminologyCapabilitiesInterceptor(matchboxFhirVersion));
 
-		server.registerProvider(new CodeSystemProvider(fhirContext));
-		server.registerProvider(new ValueSetProvider(fhirContext, txValidationCache));
+		server.registerProvider(new CodeSystemProvider(matchboxFhirVersion));
+		server.registerProvider(new ValueSetProvider(fhirContext, txValidationCache, matchboxFhirVersion));
 
 		return server;
 	}

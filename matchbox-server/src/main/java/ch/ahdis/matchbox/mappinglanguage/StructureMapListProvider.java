@@ -4,17 +4,14 @@ import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
 import ca.uhn.fhir.jpa.model.entity.NpmPackageVersionResourceEntity;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
-import ch.ahdis.matchbox.providers.StructureMapResourceProvider;
+import ch.ahdis.matchbox.config.MatchboxFhirVersion;
+import ch.ahdis.matchbox.providers.AbstractMatchboxResourceProvider;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
-import ch.ahdis.matchbox.util.http.HttpRequestWrapper;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r5.model.Bundle;
 import org.hl7.fhir.r5.model.StructureMap;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
-
-import java.io.IOException;
 
 /**
  * The provider of the StructureMap/$list operation.
@@ -25,25 +22,20 @@ import java.io.IOException;
  *
  * @author Quentin Ligier
  **/
-public class StructureMapListProvider extends StructureMapResourceProvider {
+public class StructureMapListProvider extends AbstractMatchboxResourceProvider {
 
-	private final MatchboxEngineSupport matchboxEngineSupport;
 	private final INpmPackageVersionResourceDao npmPackageVersionResourceDao;
 	private final PlatformTransactionManager myTxManager;
 
-	public StructureMapListProvider(final MatchboxEngineSupport matchboxEngineSupport) {
-		super();
-		this.matchboxEngineSupport = matchboxEngineSupport;
+	public StructureMapListProvider(final MatchboxEngineSupport matchboxEngineSupport,
+											  final MatchboxFhirVersion matchboxFhirVersion) {
+		super(matchboxFhirVersion, org.hl7.fhir.r4.model.StructureMap.class, org.hl7.fhir.r4b.model.StructureMap.class, StructureMap.class);
 		this.npmPackageVersionResourceDao = matchboxEngineSupport.getMyPackageVersionResourceDao();
 		this.myTxManager = matchboxEngineSupport.getMyTxManager();
 	}
 
-	@Operation(name = "$list", idempotent = true, manualResponse = true, manualRequest = true)
-	public void listStructureMaps(final RequestDetails requestDetails,
-											final HttpServletRequest theServletRequest,
-									   	final HttpServletResponse theServletResponse) throws IOException {
-		final var httpWrapper = this.matchboxEngineSupport.createWrapper(theServletRequest, theServletResponse);
-
+	@Operation(name = "$list", idempotent = true, manualRequest = true)
+	public IBaseResource listStructureMaps(final RequestDetails requestDetails) {
 		final var resources = new TransactionTemplate(this.myTxManager)
 			.execute(tx -> this.npmPackageVersionResourceDao.getStructureMapResources())
 			.stream()
@@ -56,7 +48,7 @@ public class StructureMapListProvider extends StructureMapResourceProvider {
 		bundle.addLink().setRelation(Bundle.LinkRelationTypes.SELF).setUrl(requestDetails.getCompleteUrl());
 		resources.forEach(resource -> bundle.addEntry().setResource(resource));
 
-		httpWrapper.writeResponse(bundle);
+		return this.fhirVersion.convertForResponse(bundle);
 	}
 
 	private StructureMap summarizeStructureMap(final NpmPackageVersionResourceEntity entity) {
