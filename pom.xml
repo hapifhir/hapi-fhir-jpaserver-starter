@@ -7,6 +7,7 @@
         <java.version>17</java.version>
         <hapi.fhir.jpa.server.starter.revision>1</hapi.fhir.jpa.server.starter.revision>
         <clinical-reasoning.version>4.2.0</clinical-reasoning.version>
+        <skipTests>false</skipTests>
 
         <!-- Plugins Versions -->
         <maven.failsafe.version>3.5.4</maven.failsafe.version>
@@ -567,6 +568,8 @@
                 <version>${maven.failsafe.version}</version>
                 <configuration>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <!-- Skip ITs when -DskipTests is set (e.g. PostgreSQL build without H2) -->
+                    <skipITs>${skipTests}</skipITs>
                 </configuration>
                 <executions>
                     <execution>

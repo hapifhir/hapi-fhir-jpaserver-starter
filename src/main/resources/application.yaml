@@ -104,13 +104,10 @@ spring:
 
   datasource:
     # url: "jdbc:h2:file:./target/database/h2"
-    url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driver-class-name: org.h2.Driver
-    # max-active: 15     # (ignored with HikariCP; use hikari.maximum-pool-size)
-    hikari:
-      maximum-pool-size: 10
+    url: 'jdbc:postgresql://localhost:5432/hapi'
+    username: admin
+    password: admin
+    driverClassName: org.postgresql.Driver
 
   jpa:
     properties:
@@ -120,18 +117,19 @@ spring:
         # Hibernate dialect is auto-detected except for H2/Postgres.
         # If using H2:     ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
         # If using Postgres: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
-        dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+        dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
+        hibernate.search.enabled: false
 
         # --- Optional Hibernate DDL & tuning (commented out from source) ---
-        hbm2ddl:
-          auto: update
-        jdbc:
-          batch_size: 20
-        cache:
-          use_query_cache: false
-          use_second_level_cache: false
-          use_structured_entries: false
-          use_minimal_puts: false
+        # hbm2ddl:
+        #   auto: update
+        # jdbc:
+        #   batch_size: 20
+        # cache:
+        #   use_query_cache: false
+        #   use_second_level_cache: false
+        #   use_structured_entries: false
+        #   use_minimal_puts: false
 
         # --- Hibernate Search (Lucene/Elasticsearch) ---
         #search:
