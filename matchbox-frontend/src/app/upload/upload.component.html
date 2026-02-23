@@ -30,5 +30,10 @@
       Select a file
     </button>
   </div>
+  @if (selectedFile != null) {
+    <div class="file-name">
+      Selected file: {{ selectedFile.name }}
+    </div>
+  }
 </div>
 <input #fileInput (input)="onDrop($event)" hidden type="file"/>
