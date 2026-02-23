@@ -32,6 +32,7 @@ import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
 import ca.uhn.fhir.jpa.partition.IRequestPartitionHelperSvc;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
 import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
+import ca.uhn.fhir.jpa.rp.r4.OperationOutcomeResourceProvider;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.searchparam.MatchUrlService;
 import ca.uhn.fhir.jpa.starter.AppProperties;
@@ -125,7 +126,8 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 															 final Optional<ImplementationGuideProviderR4> implementationGuideResourceProviderR4,
 															 final Optional<ImplementationGuideProviderR4B> implementationGuideResourceProviderR4B,
 															 final Optional<ImplementationGuideProviderR5> implementationGuideResourceProviderR5,
-															 final ValidationProvider validationProvider,
+															 final Optional<ca.uhn.fhir.jpa.rp.r4.OperationOutcomeResourceProvider> operationOutcomeResourceProviderR4,
+																	 final ValidationProvider validationProvider,
 															 final StatisticsObservationProvider statisticsObservationProvider) {
 
 		final var fhirServer = super.restfulServer(fhirSystemDao,
@@ -189,7 +191,8 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 					fhirServer,
 					implementationGuideResourceProviderR4,
 					assembleProviderR4,
-					questionnaireResponseProviderR4
+					questionnaireResponseProviderR4,
+					operationOutcomeResourceProviderR4
 				);
 
 				if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages()
@@ -433,6 +436,7 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 	public StructureMapTransformProvider structureMapTransformProvider() {
 		return new StructureMapTransformProvider();
 	}
+
 
 	@Bean
 	@Conditional(OnMatchboxOnlyOneEnginePresent.class)

@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter.common;
 
 import ca.uhn.fhir.jpa.dao.data.IStatisticsDao;
+import ca.uhn.fhir.jpa.rp.r4.OperationOutcomeResourceProvider;
 import ch.ahdis.matchbox.packages.ImplementationGuideProviderR4;
 import ch.ahdis.matchbox.statistics.StatisticsObservationProvider;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
@@ -22,6 +23,7 @@ import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR4;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR4;
 import org.hl7.fhir.r4.model.ImplementationGuide;
 import org.hl7.fhir.r4.model.StructureMap;
+import org.hl7.fhir.r4.model.OperationOutcome;
 import org.springframework.context.annotation.*;
 
 @Configuration
@@ -41,8 +43,8 @@ public class FhirServerConfigR4 {
   }
 
   @Bean
-  public StatisticsObservationProvider statisticsObservationProvider(IStatisticsDao statisticsDao) {
-    return new StatisticsObservationProvider(statisticsDao);
+  public StatisticsObservationProvider statisticsObservationProvider() {
+    return new StatisticsObservationProvider(null);
   }
 
   @Bean
@@ -62,6 +64,24 @@ public class FhirServerConfigR4 {
     retVal.setContext(fhirContext);
     return retVal;
   }
+
+  @Bean(name = "myOperationOutcomeDaoR4")
+  public IFhirResourceDao<OperationOutcome> daoOperationOutcomeR4() {
+    final var retVal = new JpaResourceDao<OperationOutcome>();
+    retVal.setResourceType(OperationOutcome.class);
+    retVal.setContext(fhirContext);
+    return retVal;
+  }
+  
+  @Bean(name = "myOperationOutcomeRpR4")
+  @Primary
+  public OperationOutcomeResourceProvider rpOperationOutcomeR4() {
+    final var retVal = new OperationOutcomeResourceProvider();
+    retVal.setContext(fhirContext);
+    retVal.setDao(daoOperationOutcomeR4());
+    return retVal;
+  }
+
 
   @Bean(name = "myImplementationGuideRpR4")
   @Primary

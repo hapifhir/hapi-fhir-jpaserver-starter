@@ -21,6 +21,7 @@ package ch.ahdis.matchbox.validation;
  */
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
 import ca.uhn.fhir.jpa.dao.data.IStatisticsDao;
 import ca.uhn.fhir.jpa.model.entity.StatisticsEntity;
@@ -97,6 +98,10 @@ public class ValidationProvider {
 	@Autowired(required = false)
 	@Nullable
 	private IStatisticsDao statisticsDao;
+
+	@Autowired(required = false)
+	@Nullable
+	private IFhirResourceDao<org.hl7.fhir.r4.model.OperationOutcome> daoOperationOutcomeR4;
 
 //	@Operation(name = "$canonical", manualRequest = true, idempotent = true, returnParameters = {
 //			@OperationParam(name = "return", type = IBase.class, min = 1, max = 1) })
@@ -272,6 +277,10 @@ public class ValidationProvider {
 			} catch (Exception e) {
 				log.error("Error while saving statistics: ", e);
 			}
+		}
+
+		if (this.daoOperationOutcomeR4 != null) {
+			this.daoOperationOutcomeR4.create((org.hl7.fhir.r4.model.OperationOutcome) this.matchboxFhirVersion.convertForResponse(oo));
 		}
 
 		return this.matchboxFhirVersion.convertForResponse(oo);
