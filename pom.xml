@@ -7,6 +7,7 @@
         <java.version>17</java.version>
         <hapi.fhir.jpa.server.starter.revision>1</hapi.fhir.jpa.server.starter.revision>
         <clinical-reasoning.version>4.2.0</clinical-reasoning.version>
+        <!-- Default false; set -DskipTests to skip both Surefire and Failsafe (e.g. PostgreSQL build) -->
         <skipTests>false</skipTests>
 
         <!-- Plugins Versions -->
@@ -84,7 +85,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
+            <version>${postgresql.version}</version> 
         </dependency>
         <dependency>
           <groupId>com.microsoft.sqlserver</groupId>
@@ -258,6 +259,11 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
         </dependency>
 
         <!-- webjars -->

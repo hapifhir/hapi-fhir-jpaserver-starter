@@ -102,12 +102,21 @@ spring:
     baseline-on-migrate: true
     fail-on-missing-locations: false
 
-  datasource:
-    # url: "jdbc:h2:file:./target/database/h2"
-    url: 'jdbc:postgresql://localhost:5432/hapi'
-    username: admin
-    password: admin
-    driverClassName: org.postgresql.Driver
+  spring:
+    datasource:
+      # url: "jdbc:h2:file:./target/database/h2"
+      # url: jdbc:h2:mem:test_mem
+      url: jdbc:postgresql://localhost:5432/hapi
+      username: admin
+      password: admin
+      driver-class-name: org.postgresql.Driver
+
+  custom:
+    datasource:
+      url: jdbc:postgresql://localhost:5432/qtas_extras  
+      username: admin # could create a dedicated user for this datasource
+      password: admin
+      driver-class-name: org.postgresql.Driver
 
   jpa:
     properties:
@@ -119,7 +128,6 @@ spring:
         # If using Postgres: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
         dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
         hibernate.search.enabled: false
-
         # --- Optional Hibernate DDL & tuning (commented out from source) ---
         # hbm2ddl:
         #   auto: update
