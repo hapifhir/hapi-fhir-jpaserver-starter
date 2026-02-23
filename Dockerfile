@@ -15,6 +15,9 @@ FROM build-hapi AS build-distroless
 RUN mvn package -DskipTests spring-boot:repackage -Pboot
 RUN mkdir /app && cp /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /app/main.war
 
+COPY src/main/java/HealthCheck.java /app/HealthCheck.java
+RUN javac /app/HealthCheck.java
+
 
 ########### Use the official Tomcat image as base image for the Tomcat variant
 ########### it can be built using eg. `docker build --target tomcat .`
