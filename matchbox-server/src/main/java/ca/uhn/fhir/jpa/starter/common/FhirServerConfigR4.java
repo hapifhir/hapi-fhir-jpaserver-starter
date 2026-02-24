@@ -35,16 +35,6 @@ public class FhirServerConfigR4 {
   }
 
   @Bean
-  public ValidationProvider validationProvider() {
-    return new ValidationProvider();
-  }
-
-  @Bean
-  public StatisticsObservationProvider statisticsObservationProvider() {
-    return new StatisticsObservationProvider(null);
-  }
-
-  @Bean
   public QuestionnaireAssembleProviderR4 assembleProvider() {
     return new QuestionnaireAssembleProviderR4();
   }
@@ -69,10 +59,9 @@ public class FhirServerConfigR4 {
                                                                  final FhirContext fhirContext) {
     final var retVal = new OperationOutcomeResourceProviderR4();
     retVal.setContext(fhirContext);
-    retVal.setDao(daoOperationOutcomeR4());
+    retVal.setDao(operationOutcomeDao);
     return retVal;
   }
-
 
   @Bean(name = "myImplementationGuideRpR4")
   @Primary

@@ -60,7 +60,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
+import static ch.ahdis.matchbox.config.MatchboxFhirVersion.convertToR4;
+import static ch.ahdis.matchbox.config.MatchboxFhirVersion.convertToR4B;
 import static ch.ahdis.matchbox.util.MatchboxServerUtils.addExtension;
 
 /**
@@ -77,9 +81,6 @@ public class ValidationProvider {
 	protected CliContext cliContext;
 
 	@Autowired
-	private FhirContext myContext;
-
-	@Autowired
 	private MatchboxFhirVersion matchboxFhirVersion;
 
 	@Autowired
@@ -87,12 +88,11 @@ public class ValidationProvider {
 	@Autowired
 	private INpmPackageVersionResourceDao myPackageVersionResourceDao;
 
-	@Autowired
-	private PlatformTransactionManager myTxManager;
+	@Autowired(required = false)
+	private Optional<OperationOutcomeResourceProviderR4> operationOutcomeResourceProviderR4;
 
 	@Autowired(required = false)
-	@Nullable
-	private IStatisticsDao statisticsDao;
+	private Optional<OperationOutcomeResourceProviderR4B> operationOutcomeResourceProviderR4B;
 
 	@Autowired(required = false)
 	private Optional<OperationOutcomeResourceProviderR5> operationOutcomeResourceProviderR5;
