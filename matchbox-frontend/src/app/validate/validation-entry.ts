@@ -45,6 +45,7 @@ export class ValidationEntry {
       this.extractedProfiles.push(...parsed.profiles());
     } catch (e) {
       console.error('Error parsing resource to validate: ', e);
+      return undefined;
     }
   }
 

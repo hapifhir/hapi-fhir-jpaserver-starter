@@ -129,7 +129,7 @@ export class ValidateComponent implements AfterViewInit {
    * Loads a selected/dropped file in the file selector in Matchbox.
    * @param droppedBlob the selected/dropped file.
    */
-  onFileSelected(droppedBlob: UploadedFile): void {
+  async onFileSelected(droppedBlob: UploadedFile): Promise<void> {
     if (droppedBlob.name.endsWith('.tgz')) {
       // Load an IG package
       try {
@@ -145,18 +145,10 @@ export class ValidateComponent implements AfterViewInit {
     // We assume that the file is a FHIR resource
     try {
       this.selectedIg = this.AUTO_IG_SELECTION;
-      const reader = new FileReader();
-      reader.readAsText(droppedBlob.blob);
-      reader.onload = () => {
-        // need to run CD since file load runs outside of zone
-        this.cd.markForCheck();
-        this.validateResource(
-          droppedBlob.blob.name,
-          <string>reader.result,
-          droppedBlob.contentType,
-          !this.profileLocked
-        );
-      };
+
+      const fileContent = await droppedBlob.blob.text();
+      this.cd.markForCheck();
+      this.validateResource(droppedBlob.blob.name, fileContent, droppedBlob.contentType, !this.profileLocked);
     } catch (error) {
       this.showErrorToast('Unexpected error', error.message);
       console.error(error);
@@ -170,9 +162,20 @@ export class ValidateComponent implements AfterViewInit {
     try {
       // Try to parse the resource to extract information
       entry = new ValidationEntry(filename, content, contentType, this.getCurrentValidationSettings());
-      this.currentResource = new UploadedValidationFile(filename, contentType, content, entry.resourceType, entry.resourceId || null);
+      if (!entry?.resourceType) {
+        this.showErrorToast('Error parsing the file', 'The provided file does not seem to be a valid FHIR resource');
+        return;
+      }
+
+      this.currentResource = new UploadedValidationFile(
+        filename,
+        contentType,
+        content,
+        entry.resourceType,
+        entry.resourceId || null
+      );
       if (selectBestProfile) {
-        var profileSet = false;
+        let profileSet = false;
         for (const profile of entry.extractedProfiles) {
           if (this.supportedProfiles.has(profile)) {
             this.selectedProfile = profile;
