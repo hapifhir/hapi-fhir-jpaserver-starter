@@ -21,48 +21,43 @@ package ch.ahdis.matchbox.validation;
  */
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import ca.uhn.fhir.jpa.dao.data.INpmPackageVersionResourceDao;
-import ca.uhn.fhir.jpa.dao.data.IStatisticsDao;
-import ca.uhn.fhir.jpa.model.entity.StatisticsEntity;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
 import ca.uhn.fhir.rest.api.EncodingEnum;
+import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
 import ca.uhn.fhir.util.StopWatch;
 import ch.ahdis.matchbox.CliContext;
 import ch.ahdis.matchbox.config.MatchboxFhirVersion;
+import ch.ahdis.matchbox.statistics.OperationOutcomeResourceProviderR4;
+import ch.ahdis.matchbox.statistics.OperationOutcomeResourceProviderR4B;
+import ch.ahdis.matchbox.statistics.OperationOutcomeResourceProviderR5;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import ch.ahdis.matchbox.validation.matchspark.LLMConnector;
 import ch.ahdis.matchbox.engine.MatchboxEngine;
 import ch.ahdis.matchbox.engine.cli.VersionUtil;
 import ch.ahdis.matchbox.packages.MatchboxImplementationGuideProvider;
-import jakarta.annotation.Nullable;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.hl7.fhir.instance.model.api.IBase;
+import org.hl7.fhir.instance.model.api.IBaseOperationOutcome;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r5.model.CodeableConcept;
+import org.hl7.fhir.r5.model.*;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.extensions.ExtensionDefinitions;
-import org.hl7.fhir.r5.model.Duration;
-import org.hl7.fhir.r5.model.OperationOutcome;
-import org.hl7.fhir.r5.model.StringType;
 import org.hl7.fhir.r5.utils.EOperationOutcome;
-import org.hl7.fhir.r5.model.UriType;
 import org.hl7.fhir.r5.utils.OperationOutcomeUtilities;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.transaction.PlatformTransactionManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,8 +95,7 @@ public class ValidationProvider {
 	private IStatisticsDao statisticsDao;
 
 	@Autowired(required = false)
-	@Nullable
-	private IFhirResourceDao<org.hl7.fhir.r4.model.OperationOutcome> daoOperationOutcomeR4;
+	private Optional<OperationOutcomeResourceProviderR5> operationOutcomeResourceProviderR5;
 
 //	@Operation(name = "$canonical", manualRequest = true, idempotent = true, returnParameters = {
 //			@OperationParam(name = "return", type = IBase.class, min = 1, max = 1) })
@@ -126,6 +120,32 @@ public class ValidationProvider {
 	@Operation(name = "$validate", manualRequest = true, idempotent = true, returnParameters = {
 		@OperationParam(name = "return", type = IBase.class, min = 1, max = 1)})
 	public IBaseResource validate(final HttpServletRequest theRequest) {
+		try {
+			// validate
+			final var response = this.getValidation(theRequest);
+
+			// check if validation response is an OperationOutcome and store it
+			if (response instanceof final OperationOutcome operationOutcome) {
+				this.saveOperationOutcome(operationOutcome);
+			}
+
+			// returns response in correct FHIR version
+			return this.matchboxFhirVersion.convertForResponse(response);
+		} catch (final BaseServerResponseException hapiException) {
+			// check if exception contains a OperationOutcome
+			final IBaseOperationOutcome operationOutcome = hapiException.getOperationOutcome();
+
+			// store OperationOutcome
+			if (operationOutcome != null) {
+				this.saveOperationOutcome(MatchboxFhirVersion.convertToR5(operationOutcome, OperationOutcome.class));
+			}
+
+			// rethrow the exception
+			throw hapiException;
+		}
+	}
+
+	private OperationOutcome getValidation(final HttpServletRequest theRequest) {
 		log.debug("$validate");
 
 		final var sw = new StopWatch();
@@ -144,11 +164,11 @@ public class ValidationProvider {
 				if (theRequest.getParameterValues(cliContextProperty) != null) {
 					try {
 						final String[] value = theRequest.getParameterValues(cliContextProperty);
-  						field.setAccessible(true);
-            			field.set(cliContext, value);
+						field.setAccessible(true);
+						field.set(cliContext, value);
 					} catch (final IllegalAccessException e) {
 						log.error("error setting property %s to %s".formatted(cliContextProperty,
-																								theRequest.getParameter(cliContextProperty)));
+							theRequest.getParameter(cliContextProperty)));
 					}
 				}
 			} else {
@@ -163,7 +183,7 @@ public class ValidationProvider {
 						}
 					} catch (final IllegalAccessException | InvocationTargetException e) {
 						log.error("error setting property %s to %s".formatted(cliContextProperty,
-																								theRequest.getParameter(cliContextProperty)));
+							theRequest.getParameter(cliContextProperty)));
 					}
 				}
 			}
@@ -238,8 +258,6 @@ public class ValidationProvider {
 
 		var oo = this.getOperationOutcome(sha3Hex, messages, profile, engine, millis, cliContext);
 
-		boolean aiUsed = false;
-
 		Boolean aiAnalyze = null;
 		// check if the request ai analyze parameter is set to true or false
 		if (theRequest.getParameter("analyzeOutcomeWithAI") != null) {
@@ -263,7 +281,6 @@ public class ValidationProvider {
 				String json = FhirContext.forR5Cached().newJsonParser().encodeResourceToString(oo);
 				String aiResult = openAIConnector.interpretWithMatchbox(contentString, json);
 				oo = this.addAIIssueToOperationOutcome(oo, aiResult);
-				aiUsed = true;
 			} catch (Exception e) {
 				log.error("Error during AI analysis", e);
 				// add the error to the OperationOutcome, so the client still gets the validation result
@@ -271,27 +288,15 @@ public class ValidationProvider {
 			}
 		}
 
-		if (this.statisticsDao != null) {
-			try {
-				this.saveStatistics(oo, profile, millis, aiUsed, engine);
-			} catch (Exception e) {
-				log.error("Error while saving statistics: ", e);
-			}
-		}
-
-		if (this.daoOperationOutcomeR4 != null) {
-			this.daoOperationOutcomeR4.create((org.hl7.fhir.r4.model.OperationOutcome) this.matchboxFhirVersion.convertForResponse(oo));
-		}
-
-		return this.matchboxFhirVersion.convertForResponse(oo);
+		return oo;
 	}
 
 	private OperationOutcome getOperationOutcome(final String id,
-															final List<ValidationMessage> messages,
-															final String profile,
-															final MatchboxEngine engine,
-															final long ms,
-															final CliContext cliContext) {
+																final List<ValidationMessage> messages,
+																final String profile,
+																final MatchboxEngine engine,
+																final long ms,
+																final CliContext cliContext) {
 		final var oo = new OperationOutcome();
 		oo.setId(id);
 
@@ -313,7 +318,7 @@ public class ValidationProvider {
 					structDefR5.getVersion(),
 					profileDate,
 					String.join(", ", engine.getContext().getLoadedPackages()),
-					ms/1000.0+ "s",
+					ms / 1000.0 + "s",
 					VersionUtil.getPoweredBy(),
 					cliContext.toString()
 				));
@@ -334,10 +339,10 @@ public class ValidationProvider {
 			}
 			for (final String suppressedWarning : engine.getSuppressedWarnInfoPatterns()) {
 				addExtension(ext, "suppressedWarning", new StringType(suppressedWarning));
-			}		
+			}
 			for (final String suppressedError : engine.getSuppressedErrors()) {
 				addExtension(ext, "suppressedError", new StringType(suppressedError));
-			}		
+			}
 		}
 
 		// Map the SingleValidationMessages to OperationOutcomeIssue
@@ -396,9 +401,9 @@ public class ValidationProvider {
 	}
 
 	public static List<ValidationMessage> doValidate(final MatchboxEngine engine,
-									 String content,
-									 final EncodingEnum encoding,
-									 final String profile) throws EOperationOutcome, IOException {
+																	 String content,
+																	 final EncodingEnum encoding,
+																	 final String profile) throws EOperationOutcome {
 		final List<ValidationMessage> messages = new ArrayList<>();
 
 		if (content.startsWith("\uFEFF")) {
@@ -421,7 +426,7 @@ public class ValidationProvider {
 			final var m = new ValidationMessage();
 			m.setLevel(ValidationMessage.IssueSeverity.FATAL);
 			m.setMessage(
-				"Internal validation exception, contact support "+e.getMessage());
+				"Internal validation exception, contact support " + e.getMessage());
 			m.setCol(0);
 			m.setLine(0);
 			messages.add(m);
@@ -439,8 +444,8 @@ public class ValidationProvider {
 			.setDiagnostics(aiResponse)
 			.setDetails(details)
 			.addExtension()
-				.setUrl("http://hl7.org/fhir/StructureDefinition/rendering-style")
-				.setValue(new StringType("markdown"));
+			.setUrl("http://hl7.org/fhir/StructureDefinition/rendering-style")
+			.setValue(new StringType("markdown"));
 
 		return outcome;
 	}
@@ -453,61 +458,30 @@ public class ValidationProvider {
 		return outcome;
 	}
 
-	/**
-	 * This method extracts Statistics (Error count, packages used, ...) from the current OO. These then get stored in
-	 * the database together with the profile, duration and aiUsed attribute.
-	 * @param oo Current OperationOutcome response; used to extract statistics
-	 * @param profile Current FHIR profile selected
-	 * @param duration Amount of milliseconds the validation took
-	 * @param aiUsed States if AI analysis was used
-	 * @param engine Takes the used Matchboxengine to extract the loaded packages.
-	 */
-	public void saveStatistics(OperationOutcome oo, String profile, Long duration,
-										boolean aiUsed, MatchboxEngine engine) {
-		// create new Statistics Entity (new row in table)
-		final var statsEntity = new StatisticsEntity();
+	public void saveOperationOutcome(final OperationOutcome operationOutcome) {
+		// checks if all operationOutcomeResourceProviders are empty (indicating that save-statistics = false
+		// and operationOutcome is valid)
+		boolean hasNoOperationOutcomeResourceProvider = operationOutcomeResourceProviderR4.isEmpty()
+																|| operationOutcomeResourceProviderR4B.isEmpty()
+																|| operationOutcomeResourceProviderR5.isEmpty();
 
-		// initialize all the helper variables
-		int nbFatals = 0;
-		int nbErrors = 0;
-		int nbWarnings = 0;
-		int nbInfos = 0;
-		boolean validationSuccess = false;
-
-		// get the current timestamp to save in the database
-		Instant timestamp = Instant.now();
-
-		// iterate through every issue in the OO and update the severity count
-		for (var issue : oo.getIssue()) {
-			switch (issue.getSeverity()) {
-				case FATAL -> nbFatals++;
-				case ERROR -> nbErrors++;
-				case WARNING -> nbWarnings++;
-				case INFORMATION -> nbInfos++;
-			}
-		}
-		// check if the validation was flagged as successful
-		if (nbFatals == 0 && nbErrors == 0) {
-			validationSuccess = true;
+		if (hasNoOperationOutcomeResourceProvider || operationOutcome == null) {
+			return;
 		}
 
-		// extract all packages from the Matchbox engine and join them in a String
-		final String usedPackagesString = String.join(",", engine.getContext().getLoadedPackages());
+		// todo: set OperationOutcome.id
+		// todo: set OperationOutcome.meta.source = matchbox-validation
+		operationOutcome.setId(UUID.randomUUID().toString());
+		operationOutcome.getMeta().setSource("matchbox-validation");
 
-		// set all the fields with the corresponding parameters
-		statsEntity.setProfile(profile);
-		statsEntity.setPackages(usedPackagesString);
-		statsEntity.setNumberOfInfos(nbInfos);
-		statsEntity.setNumberOfWarnings(nbWarnings);
-		statsEntity.setNumberOfErrors(nbErrors);
-		statsEntity.setNumberOfFatals(nbFatals);
-		statsEntity.setTimestamp(timestamp);
-		statsEntity.setDurationMillis(duration);
-		statsEntity.setAiUsed(aiUsed);
-		statsEntity.setSuccess(validationSuccess);
-
-		// save to the database
-		this.statisticsDao.save(statsEntity);
+		// uses the correct ResourceProvider for the server version. Gets the dao from the rp and stores the
+		// OperationOutcome. Converts to R4 or R4B first if needed.
+		this.matchboxFhirVersion.execute(
+			() -> this.operationOutcomeResourceProviderR4.ifPresent(rp -> rp.getDao().create(convertToR4(operationOutcome, org.hl7.fhir.r4.model.OperationOutcome.class))),
+			() -> this.operationOutcomeResourceProviderR4B.ifPresent(rp -> rp.getDao().create(convertToR4B(operationOutcome, org.hl7.fhir.r4b.model.OperationOutcome.class))),
+			() -> this.operationOutcomeResourceProviderR5.ifPresent(rp -> rp.getDao().create(operationOutcome))
+		);
 
 	}
 }
+
