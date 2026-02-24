@@ -32,7 +32,6 @@ import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
 import ca.uhn.fhir.jpa.partition.IRequestPartitionHelperSvc;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
 import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
-import ca.uhn.fhir.jpa.rp.r4.OperationOutcomeResourceProvider;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.searchparam.MatchUrlService;
 import ca.uhn.fhir.jpa.starter.AppProperties;
@@ -58,7 +57,9 @@ import ch.ahdis.matchbox.mappinglanguage.StructureMapTransformProvider;
 import ch.ahdis.matchbox.packages.*;
 import ch.ahdis.matchbox.providers.*;
 import ch.ahdis.matchbox.questionnaire.*;
-import ch.ahdis.matchbox.statistics.StatisticsObservationProvider;
+import ch.ahdis.matchbox.statistics.OperationOutcomeResourceProviderR4;
+import ch.ahdis.matchbox.statistics.OperationOutcomeResourceProviderR4B;
+import ch.ahdis.matchbox.statistics.OperationOutcomeResourceProviderR5;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 import ch.ahdis.matchbox.validation.ValidationProvider;
@@ -126,9 +127,10 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 															 final Optional<ImplementationGuideProviderR4> implementationGuideResourceProviderR4,
 															 final Optional<ImplementationGuideProviderR4B> implementationGuideResourceProviderR4B,
 															 final Optional<ImplementationGuideProviderR5> implementationGuideResourceProviderR5,
-															 final Optional<ca.uhn.fhir.jpa.rp.r4.OperationOutcomeResourceProvider> operationOutcomeResourceProviderR4,
-																	 final ValidationProvider validationProvider,
-															 final StatisticsObservationProvider statisticsObservationProvider) {
+															 final Optional<OperationOutcomeResourceProviderR4> operationOutcomeResourceProviderR4,
+															 final Optional<OperationOutcomeResourceProviderR4B> operationOutcomeResourceProviderR4B,
+															 final Optional<OperationOutcomeResourceProviderR5> operationOutcomeResourceProviderR5,
+															 final ValidationProvider validationProvider) {
 
 		final var fhirServer = super.restfulServer(fhirSystemDao,
 																 appProperties,
@@ -166,7 +168,6 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 
 		fhirServer.registerProviders(
 			validationProvider,
-			statisticsObservationProvider,
 			structureDefinitionProvider,
 			structureMapListProvider
 		);
@@ -207,7 +208,8 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 					fhirServer,
 					implementationGuideResourceProviderR4B,
 					assembleProviderR4B,
-					questionnaireResponseProviderR4B
+					questionnaireResponseProviderR4B,
+					operationOutcomeResourceProviderR4B
 				);
 
 				if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages()
@@ -222,7 +224,8 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 					fhirServer,
 					implementationGuideResourceProviderR5,
 					assembleProviderR5,
-					questionnaireResponseProviderR5
+					questionnaireResponseProviderR5,
+					operationOutcomeResourceProviderR5
 				);
 
 				if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages()
