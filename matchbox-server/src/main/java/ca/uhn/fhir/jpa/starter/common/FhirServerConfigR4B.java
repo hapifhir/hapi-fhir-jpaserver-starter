@@ -6,11 +6,14 @@ import ca.uhn.fhir.jpa.config.r4b.JpaR4BConfig;
 import ca.uhn.fhir.jpa.dao.JpaResourceDao;
 import ca.uhn.fhir.jpa.starter.annotations.OnMatchboxOnlyOneEnginePresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnR4BCondition;
+import ca.uhn.fhir.jpa.starter.annotations.OnStatisticsEnabled;
 import ch.ahdis.matchbox.config.MatchboxJpaConfig;
 import ch.ahdis.matchbox.packages.ImplementationGuideProviderR4B;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR4B;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR4B;
+import ch.ahdis.matchbox.statistics.OperationOutcomeResourceProviderR4B;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
+import org.hl7.fhir.r4b.model.OperationOutcome;
 import org.hl7.fhir.r4b.model.ImplementationGuide;
 import org.hl7.fhir.r4b.model.StructureMap;
 import org.springframework.context.annotation.*;
@@ -46,7 +49,7 @@ public class FhirServerConfigR4B {
 
   @Bean
   @Primary
-  public ImplementationGuideProviderR4B rpImplementationGuideR4() {
+  public ImplementationGuideProviderR4B rpImplementationGuideR4B() {
     ImplementationGuideProviderR4B retVal = new ImplementationGuideProviderR4B();
     retVal.setContext(fhirContext);
 //     retVal.setDao(daoImplementationGuideR4());
@@ -55,10 +58,21 @@ public class FhirServerConfigR4B {
 
   @Bean
   @Conditional(OnMatchboxOnlyOneEnginePresent.class)
-  public IFhirResourceDao<StructureMap> daoStructureMapR4() {
+  public IFhirResourceDao<StructureMap> daoStructureMapR4B() {
     final var retVal = new JpaResourceDao<StructureMap>();
     retVal.setResourceType(StructureMap.class);
     retVal.setContext(fhirContext);
+    return retVal;
+  }
+
+  @Bean
+  @Primary
+  @Conditional(OnStatisticsEnabled.class)
+  public OperationOutcomeResourceProviderR4B rpOperationOutcomeR4B(final IFhirResourceDao<OperationOutcome> operationOutcomeDao,
+                                                                   final FhirContext fhirContext) {
+    final var retVal = new OperationOutcomeResourceProviderR4B();
+    retVal.setContext(fhirContext);
+    retVal.setDao(operationOutcomeDao);
     return retVal;
   }
 }

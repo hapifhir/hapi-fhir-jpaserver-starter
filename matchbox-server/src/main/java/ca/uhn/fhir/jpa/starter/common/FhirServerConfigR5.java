@@ -6,11 +6,14 @@ import ca.uhn.fhir.jpa.config.r5.JpaR5Config;
 import ca.uhn.fhir.jpa.dao.JpaResourceDao;
 import ca.uhn.fhir.jpa.starter.annotations.OnMatchboxOnlyOneEnginePresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnR5Condition;
+import ca.uhn.fhir.jpa.starter.annotations.OnStatisticsEnabled;
 import ch.ahdis.matchbox.config.MatchboxJpaConfig;
 import ch.ahdis.matchbox.packages.ImplementationGuideProviderR5;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR5;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR5;
+import ch.ahdis.matchbox.statistics.OperationOutcomeResourceProviderR5;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
+import org.hl7.fhir.r5.model.OperationOutcome;
 import org.hl7.fhir.r5.model.ImplementationGuide;
 import org.hl7.fhir.r5.model.StructureMap;
 import org.springframework.context.annotation.*;
@@ -62,6 +65,17 @@ public class FhirServerConfigR5 {
     final var retVal = new JpaResourceDao<StructureMap>();
     retVal.setResourceType(StructureMap.class);
     retVal.setContext(fhirContext);
+    return retVal;
+  }
+  
+  @Bean
+  @Primary
+  @Conditional(OnStatisticsEnabled.class)
+  public OperationOutcomeResourceProviderR5 rpOperationOutcomeR5(final IFhirResourceDao<OperationOutcome> operationOutcomeDao,
+                                                                 final FhirContext fhirContext) {
+    final var retVal = new OperationOutcomeResourceProviderR5();
+    retVal.setContext(fhirContext);
+    retVal.setDao(operationOutcomeDao);
     return retVal;
   }
 }

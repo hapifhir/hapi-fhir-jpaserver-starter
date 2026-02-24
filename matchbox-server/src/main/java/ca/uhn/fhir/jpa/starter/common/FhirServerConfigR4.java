@@ -1,11 +1,9 @@
 package ca.uhn.fhir.jpa.starter.common;
 
-import ca.uhn.fhir.jpa.dao.data.IStatisticsDao;
-import ca.uhn.fhir.jpa.rp.r4.OperationOutcomeResourceProvider;
+import ca.uhn.fhir.jpa.starter.annotations.OnStatisticsEnabled;
 import ch.ahdis.matchbox.packages.ImplementationGuideProviderR4;
-import ch.ahdis.matchbox.statistics.StatisticsObservationProvider;
+import ch.ahdis.matchbox.statistics.OperationOutcomeResourceProviderR4;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
-import ch.ahdis.matchbox.validation.ValidationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +22,6 @@ import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR4;
 import org.hl7.fhir.r4.model.ImplementationGuide;
 import org.hl7.fhir.r4.model.StructureMap;
 import org.hl7.fhir.r4.model.OperationOutcome;
-import org.springframework.context.annotation.*;
 
 @Configuration
 @Conditional(OnR4Condition.class)
@@ -64,19 +61,13 @@ public class FhirServerConfigR4 {
     retVal.setContext(fhirContext);
     return retVal;
   }
-
-  @Bean(name = "myOperationOutcomeDaoR4")
-  public IFhirResourceDao<OperationOutcome> daoOperationOutcomeR4() {
-    final var retVal = new JpaResourceDao<OperationOutcome>();
-    retVal.setResourceType(OperationOutcome.class);
-    retVal.setContext(fhirContext);
-    return retVal;
-  }
-  
-  @Bean(name = "myOperationOutcomeRpR4")
+    
+  @Bean
   @Primary
-  public OperationOutcomeResourceProvider rpOperationOutcomeR4() {
-    final var retVal = new OperationOutcomeResourceProvider();
+  @Conditional(OnStatisticsEnabled.class)
+  public OperationOutcomeResourceProviderR4 rpOperationOutcomeR4(final IFhirResourceDao<OperationOutcome> operationOutcomeDao,
+                                                                 final FhirContext fhirContext) {
+    final var retVal = new OperationOutcomeResourceProviderR4();
     retVal.setContext(fhirContext);
     retVal.setDao(daoOperationOutcomeR4());
     return retVal;
