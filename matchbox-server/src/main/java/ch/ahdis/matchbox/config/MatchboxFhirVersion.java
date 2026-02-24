@@ -106,6 +106,32 @@ public class MatchboxFhirVersion {
 		};
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <T extends org.hl7.fhir.r4.model.Resource> T convertToR4(
+		final IBaseResource resource,
+		final Class<T> convertedResourceClass
+	) {
+		return switch (resource.getStructureFhirVersionEnum()) {
+			case R4 -> (T) resource;
+			case R4B -> (T) VersionConvertorFactory_40_50.convertResource(VersionConvertorFactory_43_50.convertResource((org.hl7.fhir.r4b.model.Resource) resource));
+			case R5 -> (T) VersionConvertorFactory_40_50.convertResource((org.hl7.fhir.r5.model.Resource) resource);
+			default -> throw new MatchboxUnsupportedFhirVersionException("MatchboxFhirVersion.convertToR4", resource.getStructureFhirVersionEnum());
+		};
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends org.hl7.fhir.r4b.model.Resource> T convertToR4B(
+		final IBaseResource resource,
+		final Class<T> convertedResourceClass
+	) {
+		return switch (resource.getStructureFhirVersionEnum()) {
+			case R4 -> (T) VersionConvertorFactory_43_50.convertResource(VersionConvertorFactory_40_50.convertResource((org.hl7.fhir.r4.model.Resource) resource));
+			case R4B -> (T) resource;
+			case R5 -> (T) VersionConvertorFactory_43_50.convertResource((org.hl7.fhir.r5.model.Resource) resource);
+			default -> throw new MatchboxUnsupportedFhirVersionException("MatchboxFhirVersion.convertToR4B", resource.getStructureFhirVersionEnum());
+		};
+	}
+
 	public static org.hl7.fhir.r4.model.Resource convertToR4(final org.hl7.fhir.r5.model.Resource resource) {
 		return VersionConvertorFactory_40_50.convertResource(resource);
 	}
