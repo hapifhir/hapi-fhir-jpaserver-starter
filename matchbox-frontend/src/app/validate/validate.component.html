@@ -6,7 +6,7 @@
     <h2>Validate FHIR Resource</h2>
 
     @if (!showSettings) {
-      <app-upload (addFiles)="onFileSelected($event)"></app-upload>
+      <app-upload (addFiles)="onFileSelected($event)" #resourceDropper></app-upload>
       <p class="current">
         Current resource loaded:
         @if (currentResource) {

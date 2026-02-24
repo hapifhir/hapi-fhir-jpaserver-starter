@@ -5,8 +5,7 @@
     <mat-card-title>The resource</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <app-upload (addFiles)="setResource($event)"></app-upload>
-    <pre><code [highlight]="getResource()" lineNumbers language="json"></code></pre>
+    <app-upload (addFiles)="setResource($event)" #resourceUploader></app-upload>
   </mat-card-content>
 </mat-card>
 
@@ -16,8 +15,8 @@
     <mat-card-subtitle>Choose a StructureMap to use for the transformation</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <mat-tab-group>
-      <mat-tab label="By reference">
+    <mat-tab-group (selectedTabChange)="mapTabChanged()">
+      <mat-tab label="By reference" id="tab-map-reference">
         <div class="tab-content flex">
           <mat-form-field appearance="fill">
             <mat-label>The map to use:</mat-label>
@@ -36,10 +35,10 @@
             </mat-form-field>
           </div>
         </mat-tab>
-        <mat-tab label="By uploading">
+        <mat-tab label="By uploading" id="tab-map-upload">
           <div class="tab-content">
             Provide a StructureMap to use for the transformation (JSON or XML):
-            <app-upload (addFiles)="setMapContent($event)"></app-upload>
+            <app-upload (addFiles)="setMapContent($event)" #mapUploader></app-upload>
           </div>
         </mat-tab>
       </mat-tab-group>
@@ -52,7 +51,7 @@
     </mat-card-header>
     <mat-card-content>
       Provide a StructureDefinition or Bundle of StructureDefinitions resource that are imported by the map (JSON or XML):
-      <app-upload (addFiles)="setModelContent($event)"></app-upload>
+      <app-upload (addFiles)="setModelContent($event)" #modelUploader></app-upload>
     </mat-card-content>
   </mat-card>
 

@@ -3,17 +3,18 @@ import { FhirConfigService } from '../fhirConfig.service';
 import FhirClient from 'fhir-kit-client';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { IDroppedBlob } from '../upload/upload.component';
 import { ReplaySubject } from 'rxjs';
 import StructureMap = fhir.r4.StructureMap;
 import OperationOutcome = fhir.r4.OperationOutcome;
 import Bundle = fhir.r4.Bundle;
+import { MatTabChangeEvent } from '@angular/material/tabs';
+import { UploadComponent } from '../upload/upload.component';
 
 @Component({
-    selector: 'app-transform',
-    templateUrl: './transform.component.html',
-    styleUrls: ['./transform.component.scss'],
-    standalone: false
+  selector: 'app-transform',
+  templateUrl: './transform.component.html',
+  styleUrls: ['./transform.component.scss'],
+  standalone: false,
 })
 export class TransformComponent {
   // The list of all structure maps, as advertised by the server
@@ -28,6 +29,8 @@ export class TransformComponent {
   // The form control for the selected structure map
   public structureMapControl: FormControl<string> = new FormControl<string>(null);
 
+  public mapUploader: UploadComponent;
+
   // The content of the resource to transform
   resource: string;
 
@@ -39,8 +42,6 @@ export class TransformComponent {
 
   // The FHIR API client
   client: FhirClient;
-
-  mimeType: string;
 
   public transformed: any;
   operationOutcome: OperationOutcome;
@@ -59,11 +60,9 @@ export class TransformComponent {
         this.filteredStructureMaps.next(this.allStructureMaps.slice());
       });
 
-    this.structureMapControl.valueChanges
-      .pipe(debounceTime(400), distinctUntilChanged())
-      .subscribe((url) => {
-        this.map = { canonical: url };
-      });
+    this.structureMapControl.valueChanges.pipe(debounceTime(400), distinctUntilChanged()).subscribe((url) => {
+      this.map = { canonical: url };
+    });
 
     // Listen for changes in the filter text
     this.structureMapFilterControl.valueChanges.subscribe(() => this.filterStructureMaps());
@@ -76,25 +75,25 @@ export class TransformComponent {
         parameter: [
           {
             name: 'resource',
-            valueString: this.resource
+            valueString: this.resource,
           },
         ],
       };
       if ('canonical' in this.map) {
         payload.parameter.push({
-          'name': 'source',
-          'valueString': this.map.canonical,
+          name: 'source',
+          valueString: this.map.canonical,
         });
       } else {
         payload.parameter.push({
-          'name': 'map',
-          'valueString': this.map.content,
+          name: 'map',
+          valueString: this.map.content,
         });
       }
       if (this.model != null) {
         payload.parameter.push({
-          'name': 'model',
-          'valueString': this.model,
+          name: 'model',
+          valueString: this.model,
         });
       }
 
@@ -120,11 +119,7 @@ export class TransformComponent {
     }
   }
 
-  getResource(): String {
-    return this.resource;
-  }
-
-  getMapped(): String {
+  getMapped(): string {
     return JSON.stringify(this.transformed, null, 2);
   }
 
@@ -132,35 +127,17 @@ export class TransformComponent {
     this.allStructureMaps = response.entry.map((entry) => <StructureMap>entry.resource);
   }
 
-  setResource(droppedBlob: IDroppedBlob) {
+  async setResource(droppedBlob: UploadedFile) {
+    this.resource = await droppedBlob.blob.text();
     this.transformed = null;
-    if (droppedBlob.contentType === 'application/json' || droppedBlob.name.endsWith('.json')) {
-      this.mimeType = 'application/fhir+json';
-    }
-    if (droppedBlob.contentType === 'application/xml' || droppedBlob.name.endsWith('.xml')) {
-      this.mimeType = 'application/fhir+xml';
-    }
-    const reader = new FileReader();
-    reader.readAsText(droppedBlob.blob);
-    reader.onload = () => {
-      this.resource = <string>reader.result;
-    };
   }
 
-  setMapContent(droppedBlob: IDroppedBlob) {
-    const reader = new FileReader();
-    reader.readAsText(droppedBlob.blob);
-    reader.onload = () => {
-      this.map = {content: <string>reader.result};
-    };
+  async setMapContent(droppedBlob: UploadedFile) {
+    this.map = { content: await droppedBlob.blob.text() };
   }
 
-  setModelContent(droppedBlob: IDroppedBlob) {
-    const reader = new FileReader();
-    reader.readAsText(droppedBlob.blob);
-    reader.onload = () => {
-      this.model = <string>reader.result;
-    };
+  async setModelContent(droppedBlob: UploadedFile) {
+    this.model = await droppedBlob.blob.text();
   }
 
   protected filterStructureMaps() {
@@ -177,6 +154,16 @@ export class TransformComponent {
     this.filteredStructureMaps.next(
       this.allStructureMaps.filter((structureMap) => structureMap.title.toLowerCase().indexOf(search) > -1)
     );
+  }
+
+  /**
+   * Fired when the user changes the map selection tab.
+   * Clears the map selection and content to avoid confusion between the two modes.
+   */
+  mapTabChanged() {
+    this.map = null;
+    this.structureMapControl.setValue(null);
+    this.mapUploader.clear();
   }
 }
 

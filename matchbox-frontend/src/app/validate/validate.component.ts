@@ -3,7 +3,7 @@ import {FhirConfigService} from '../fhirConfig.service';
 import FhirClient from 'fhir-kit-client';
 import pako from 'pako';
 import untar from 'js-untar';
-import {IDroppedBlob} from '../upload/upload.component';
+import { UploadComponent } from '../upload/upload.component';
 import ace from 'ace-builds';
 import {ValidationEntry} from './validation-entry';
 import {ValidationParameter, ValidationParameterDefinition} from './validation-parameter';
@@ -22,13 +22,13 @@ const INDENT_SPACES = 2;
   selector: 'app-validate',
   templateUrl: './validate.component.html',
   styleUrls: ['./validate.component.scss'],
-  standalone: false
+  standalone: false,
 })
 export class ValidateComponent implements AfterViewInit {
   readonly AUTO_IG_SELECTION = 'AUTOMATIC';
   readonly CodeEditorContent = CodeEditorContent;
   readonly Array = Array;
-  private FhirServerDataReady$ = new ReplaySubject<void>(1); 
+  private readonly FhirServerDataReady$ = new ReplaySubject<void>(1);
 
   // Validation history
   validationEntries: ValidationEntry[] = [];
@@ -54,7 +54,8 @@ export class ValidateComponent implements AfterViewInit {
 
   // DOM
   showSettings: boolean = false;
-  currentResource: UploadedFile | null = null;
+  currentResource: UploadedValidationFile | null = null;
+  resourceDropper: UploadComponent;
 
   showAIAnalyzeButton: boolean = false;
 
@@ -63,70 +64,72 @@ export class ValidateComponent implements AfterViewInit {
   constructor(
     data: FhirConfigService,
     private cd: ChangeDetectorRef,
-    private toastr: ToastrService,
+    private toastr: ToastrService
   ) {
     this.client = data.getFhirClient();
 
-     // Creation of Observables for the two requests
-    const validateOperationDefinitionObservable$ = from(this.client.read({
-      resourceType: 'OperationDefinition', 
-      id: '-s-validate'
-    }));
+    // Creation of Observables for the two requests
+    const validateOperationDefinitionObservable$ = from(
+      this.client.read({
+        resourceType: 'OperationDefinition',
+        id: '-s-validate',
+      })
+    );
 
-    const implementationGuidesObservable$ = from(this.client.search({
+    const implementationGuidesObservable$ = from(
+      this.client.search({
         resourceType: 'ImplementationGuide',
         searchParams: {
           _sort: 'title',
-          _count: 1000, 
+          _count: 1000,
         },
-      }));
+      })
+    );
 
     // Code inside is subscribed and wait for the two requests to complete. After it notifies it to the listeners
     forkJoin([validateOperationDefinitionObservable$, implementationGuidesObservable$]).subscribe({
-        next: ([operationDefinition, igBundle]: [fhir.r4.OperationDefinition, fhir.r4.Bundle]) => {
-          
-          // Read the server -s-validate OperationDefinition.
-          // This will allow us to create the list of supported (installed) profiles, and supported validation parameters.
-          this.analyzeValidateOperationDefinition(operationDefinition);
+      next: ([operationDefinition, igBundle]: [fhir.r4.OperationDefinition, fhir.r4.Bundle]) => {
+        // Read the server -s-validate OperationDefinition.
+        // This will allow us to create the list of supported (installed) profiles, and supported validation parameters.
+        this.analyzeValidateOperationDefinition(operationDefinition);
 
-          // Read the list of installed ImplementationGuides
-          igBundle.entry
-            ?.map(entry => entry.resource as fhir.r4.ImplementationGuide)
-            .map(ig => `${ig.packageId}#${ig.version}`)
-            .sort()
-            .forEach(ig => this.installedIgs.add(ig));
+        // Read the list of installed ImplementationGuides
+        igBundle.entry
+          ?.map((entry) => entry.resource as fhir.r4.ImplementationGuide)
+          .map((ig) => `${ig.packageId}#${ig.version}`)
+          .sort()
+          .forEach((ig) => this.installedIgs.add(ig));
 
-          this.FhirServerDataReady$.next();
-        },
-        error: (error) => {
-          this.showErrorToast('Network error', error.message);
-          console.error(error);
-        }
+        this.FhirServerDataReady$.next();
+      },
+      error: (error) => {
+        this.showErrorToast('Network error', error.message);
+        console.error(error);
+      },
     });
   }
 
   ngAfterViewInit() {
     // Initializes the code editor, after the DOM is ready
     this.editor = new ValidationCodeEditor(ace.edit('editor'), INDENT_SPACES);
-    
+
     // Check for query string parameters in the current URL.
     // They may contain a validation request.
     // This call is placed here because it depends on the `editor` instance being initialized above.
     // This call also depends on the FHIR server data requested in the constructor being ready, so we are subscribed to that.
-    this.FhirServerDataReady$
-    .pipe(take(1)) // Take only the first emission and close the subscription
-    .subscribe(() => {
-      this.analyzeUrlForValidation();
-      // This will help to update the view after processing the URL parameters as we so not use async pipes in html.
-      this.cd.detectChanges(); 
-    });
+    this.FhirServerDataReady$.pipe(take(1)) // Take only the first emission and close the subscription
+      .subscribe(() => {
+        this.analyzeUrlForValidation();
+        // This will help to update the view after processing the URL parameters as we so not use async pipes in html.
+        this.cd.detectChanges();
+      });
   }
 
   /**
    * Loads a selected/dropped file in the file selector in Matchbox.
    * @param droppedBlob the selected/dropped file.
    */
-  onFileSelected(droppedBlob: IDroppedBlob): void {
+  onFileSelected(droppedBlob: UploadedFile): void {
     if (droppedBlob.name.endsWith('.tgz')) {
       // Load an IG package
       try {
@@ -135,6 +138,7 @@ export class ValidateComponent implements AfterViewInit {
         this.showErrorToast('Unexpected error', error.message);
         console.error(error);
       }
+      this.resourceDropper.clear();
       return;
     }
 
@@ -146,28 +150,27 @@ export class ValidateComponent implements AfterViewInit {
       reader.onload = () => {
         // need to run CD since file load runs outside of zone
         this.cd.markForCheck();
-        this.validateResource(droppedBlob.blob.name, <string>reader.result, droppedBlob.contentType, !this.profileLocked);
+        this.validateResource(
+          droppedBlob.blob.name,
+          <string>reader.result,
+          droppedBlob.contentType,
+          !this.profileLocked
+        );
       };
     } catch (error) {
       this.showErrorToast('Unexpected error', error.message);
       console.error(error);
+      this.resourceDropper.clear();
+      this.currentResource = null;
     }
   }
 
-  validateResource(filename: string,
-                   content: string,
-                   contentType: string,
-                   selectBestProfile: boolean): void {
+  validateResource(filename: string, content: string, contentType: string, selectBestProfile: boolean): void {
     let entry: ValidationEntry;
     try {
       // Try to parse the resource to extract information
       entry = new ValidationEntry(filename, content, contentType, this.getCurrentValidationSettings());
-      this.currentResource = new UploadedFile(
-        filename,
-        contentType,
-        content,
-        entry.resourceType
-      );
+      this.currentResource = new UploadedValidationFile(filename, contentType, content, entry.resourceType);
       if (selectBestProfile) {
         var profileSet = false;
         for (const profile of entry.extractedProfiles) {
@@ -190,7 +193,6 @@ export class ValidateComponent implements AfterViewInit {
       } else {
         this.showWarnToast('No profile selected', 'Please select a profile for validation');
       }
-
     } catch (error) {
       this.showErrorToast('Error parsing the file', error.message);
       console.error(error);
@@ -247,7 +249,12 @@ export class ValidateComponent implements AfterViewInit {
               }
               let decoder = new TextDecoder('utf-8');
               // maybe better add ig as a parameter, we assume now that ig version is equal to canonical version
-              let entry = new ValidationEntry(name, decoder.decode(extractedFile.buffer), 'application/fhir+json', this.getCurrentValidationSettings());
+              let entry = new ValidationEntry(
+                name,
+                decoder.decode(extractedFile.buffer),
+                'application/fhir+json',
+                this.getCurrentValidationSettings()
+              );
               dataSource.push(entry);
             }
           }
@@ -341,9 +348,7 @@ export class ValidateComponent implements AfterViewInit {
         } else {
           // Got nothing useful, it seems
           this.showErrorToast('Unknown error', 'Unknown error while sending the validation request');
-          entry.result = OperationResult.fromMatchboxError(
-            'Unknown error while sending the validation request'
-          );
+          entry.result = OperationResult.fromMatchboxError('Unknown error while sending the validation request');
           console.error(error);
         }
       });
@@ -359,7 +364,7 @@ export class ValidateComponent implements AfterViewInit {
 
     if (entry != null) {
       // Set the resource as currently selected in the form, to facilitate re-validation with a different profile/IG
-      this.currentResource = new UploadedFile(entry.filename, entry.mimetype, entry.resource, entry.resourceType);
+      this.currentResource = new UploadedValidationFile(entry.filename, entry.mimetype, entry.resource, entry.resourceType);
     }
   }
 
@@ -395,8 +400,8 @@ export class ValidateComponent implements AfterViewInit {
   }
 
   onAiAnalyzeButtonClick() {
-    let aiAnalyzeSetting = {name: "analyzeOutcomeWithAI", value: "true"};
-    let settings = this.getCurrentValidationSettings()
+    let aiAnalyzeSetting = { name: 'analyzeOutcomeWithAI', value: 'true' };
+    let settings = this.getCurrentValidationSettings();
     settings.push(aiAnalyzeSetting);
     let entry = new ValidationEntry(
       this.currentResource.filename,
@@ -475,8 +480,7 @@ export class ValidateComponent implements AfterViewInit {
     if ('clipboard' in navigator) {
       event.preventDefault();
       const url = this.getDirectLink(entry);
-      navigator.clipboard.writeText(url).then(() => {
-      });
+      navigator.clipboard.writeText(url).then(() => {});
     }
   }
 
@@ -511,13 +515,13 @@ export class ValidateComponent implements AfterViewInit {
       if (setting.formControl.value != null && setting.formControl.value.toString().length > 0) {
         const isTextarea = setting.param.type === 'string' && setting.param.max === '*';
         if (isTextarea) {
-           const lines = setting.formControl.value.toString().split('\n');
+          const lines = setting.formControl.value.toString().split('\n');
           // Filter out empty lines
-          const nonEmptyLines = lines.filter(line => line.trim().length > 0);
+          const nonEmptyLines = lines.filter((line) => line.trim().length > 0);
           // Add each non-empty line as a separate parameter with the same name
           for (const line of nonEmptyLines) {
             parameters.push(new ValidationParameter(setting.param.name, line.trim()));
-          }          
+          }
         } else {
           parameters.push(new ValidationParameter(setting.param.name, setting.formControl.value.toString()));
         }
@@ -583,7 +587,9 @@ export class ValidateComponent implements AfterViewInit {
       }
     });
     od.parameter
-      .filter((f) => f.use == 'in' && f.name != 'resource' && f.name != 'profile' && f.name != 'ig' && f.name != 'llmProvider')
+      .filter(
+        (f) => f.use == 'in' && f.name != 'resource' && f.name != 'profile' && f.name != 'ig' && f.name != 'llmProvider'
+      )
       .forEach((parameter: fhir.r4.OperationDefinitionParameter) => {
         this.validatorSettings.set(parameter.name, new ValidationParameterDefinition(parameter));
       });
@@ -619,11 +625,10 @@ export class ValidateComponent implements AfterViewInit {
       } else {
         filename = `provided.${contentType.split('+')[1]}`;
       }
-    
+
       for (const [key, value] of searchParams) {
         if (key === 'resource' || key === 'profile' || key === 'filename') {
           continue;
-      
         }
         if (this.validatorSettings.has(key)) {
           this.validatorSettings.get(key).formControl.setValue(value);
@@ -642,7 +647,7 @@ export class ValidateComponent implements AfterViewInit {
 /**
  * Struct of an uploaded file.
  */
-class UploadedFile {
+class UploadedValidationFile {
   constructor(
     public filename: string,
     public contentType: string,

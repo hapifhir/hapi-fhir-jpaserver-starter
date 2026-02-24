@@ -1,11 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
-export interface IDroppedBlob {
-  blob: File;
-  name: string;
-  contentType: string;
-}
-
 @Component({
   selector: 'app-upload',
   templateUrl: './upload.component.html',
@@ -14,11 +8,11 @@ export interface IDroppedBlob {
   standalone: false,
 })
 export class UploadComponent {
-  @Output() addFiles = new EventEmitter<IDroppedBlob>();
+  @Output() addFiles = new EventEmitter<UploadedFile>();
 
   dragCounter = 0;
 
-  @Output() selectedFile: IDroppedBlob | null = null;
+  @Output() selectedFile: UploadedFile | null = null;
 
   @Input() clear() {
     this.selectedFile = null;
@@ -50,7 +44,7 @@ export class UploadComponent {
     this.setSelectedFile({ name: url, contentType, blob });
   }
 
-  setSelectedFile(file: IDroppedBlob) {
+  setSelectedFile(file: UploadedFile) {
     this.addFiles.emit(file);
     this.selectedFile = file;
   }
