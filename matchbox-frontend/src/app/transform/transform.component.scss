@@ -1,3 +1,5 @@
+@use '../../variables';
+
 .card-maps {
   margin-bottom: 10px;
 }
@@ -20,4 +22,17 @@ mat-select {
   mat-form-field {
     width: 100%;
   }
+}
+.selection-feedback {
+  margin-top: 1em;
+  &.valid {
+    color: #2ea570;
+  }
+  &.invalid {
+    color: variables.$issue-error;
+  }
+}
+.url {
+  font-family: monospace;
+  font-size: smaller;
 }

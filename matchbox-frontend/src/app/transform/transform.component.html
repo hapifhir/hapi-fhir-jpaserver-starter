@@ -6,6 +6,13 @@
   </mat-card-header>
   <mat-card-content>
     <app-upload (addFiles)="setResource($event)" #resourceUploader></app-upload>
+    <p class="selection-feedback" [class.valid]="resource" [class.invalid]="!resource">
+      Resource selected: @if (resource) {
+      <span class="url">{{ resource.resourceType }}</span>
+    } @else {
+      <em>None</em>
+    }
+    </p>
   </mat-card-content>
 </mat-card>
 
@@ -15,7 +22,7 @@
     <mat-card-subtitle>Choose a StructureMap to use for the transformation</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <mat-tab-group (selectedTabChange)="mapTabChanged()">
+    <mat-tab-group (selectedTabChange)="clearMapSelection()">
       <mat-tab label="By reference" id="tab-map-reference">
         <div class="tab-content flex">
           <mat-form-field appearance="fill">
@@ -27,61 +34,68 @@
               @for (structureMap of filteredStructureMaps | async; track structureMap) {
                 <mat-option
                   value="{{ structureMap.url }}"
-                  >{{ structureMap.title ? structureMap.title : structureMap.name }}
-                  </mat-option
-                  >
-                }
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </mat-tab>
-        <mat-tab label="By uploading" id="tab-map-upload">
-          <div class="tab-content">
-            Provide a StructureMap to use for the transformation (JSON or XML):
-            <app-upload (addFiles)="setMapContent($event)" #mapUploader></app-upload>
-          </div>
-        </mat-tab>
-      </mat-tab-group>
-    </mat-card-content>
-  </mat-card>
+                >{{ structureMap.title ? structureMap.title : structureMap.name }}
+                </mat-option
+                >
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </mat-tab>
+      <mat-tab label="By uploading" id="tab-map-upload">
+        <div class="tab-content">
+          Provide a StructureMap to use for the transformation (JSON or XML):
+          <app-upload (addFiles)="setMapContent($event)" #mapUploader></app-upload>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+    <p class="selection-feedback" [class.valid]="this.map" [class.invalid]="!this.map">
+      Map selected: @if (this.map) {
+      <span class="url">{{ this.map.canonical }}</span>
+    } @else {
+      <em>None</em>
+    }
+    </p>
+  </mat-card-content>
+</mat-card>
 
+<mat-card class="card-maps">
+  <mat-card-header>
+    <mat-card-title>The model(s)</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    Provide a StructureDefinition or Bundle of StructureDefinitions resource that are imported by the map (JSON or XML):
+    <app-upload (addFiles)="setModelContent($event)" #modelUploader></app-upload>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="card-maps">
+  <mat-card-content>
+    <button mat-stroked-button (click)="transform()" [disabled]="!this.resource || !this.map">
+      <mat-icon>transform</mat-icon>
+      Transform
+    </button>
+  </mat-card-content>
+</mat-card>
+
+@if (transformed || operationOutcomeTransformed) {
   <mat-card class="card-maps">
     <mat-card-header>
-      <mat-card-title>The model(s)</mat-card-title>
+      <mat-card-title>Transformed</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      Provide a StructureDefinition or Bundle of StructureDefinitions resource that are imported by the map (JSON or XML):
-      <app-upload (addFiles)="setModelContent($event)" #modelUploader></app-upload>
+      @if (operationOutcomeTransformed) {
+        <mat-error>
+          <ul>
+            @for (issue of operationOutcomeTransformed.issue; track issue) {
+              <li>
+                {{ issue.diagnostics }}
+              </li>
+            }
+          </ul>
+        </mat-error>
+      }
+      <pre><code [highlight]="getMapped()" lineNumbers language="json"></code></pre>
     </mat-card-content>
   </mat-card>
-
-  <mat-card class="card-maps">
-    <mat-card-content>
-      <button mat-stroked-button (click)="transform()">
-        <mat-icon>transform</mat-icon>
-        Transform
-      </button>
-    </mat-card-content>
-  </mat-card>
-
-  @if (transformed || operationOutcomeTransformed) {
-    <mat-card class="card-maps">
-      <mat-card-header>
-        <mat-card-title>Transformed</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        @if (operationOutcomeTransformed) {
-          <mat-error>
-            <ul>
-              @for (issue of operationOutcomeTransformed.issue; track issue) {
-                <li>
-                  {{ issue.diagnostics }}
-                </li>
-              }
-            </ul>
-          </mat-error>
-        }
-        <pre><code [highlight]="getMapped()" lineNumbers language="json"></code></pre>
-      </mat-card-content>
-    </mat-card>
-  }
+}

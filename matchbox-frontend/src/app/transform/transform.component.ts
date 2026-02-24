@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FhirConfigService } from '../fhirConfig.service';
 import FhirClient from 'fhir-kit-client';
 import { FormControl } from '@angular/forms';
@@ -7,8 +7,9 @@ import { ReplaySubject } from 'rxjs';
 import StructureMap = fhir.r4.StructureMap;
 import OperationOutcome = fhir.r4.OperationOutcome;
 import Bundle = fhir.r4.Bundle;
-import { MatTabChangeEvent } from '@angular/material/tabs';
 import { UploadComponent } from '../upload/upload.component';
+import { ToastrService } from 'ngx-toastr';
+import { FhirResource } from '../util/fhir-resource';
 
 @Component({
   selector: 'app-transform',
@@ -29,10 +30,12 @@ export class TransformComponent {
   // The form control for the selected structure map
   public structureMapControl: FormControl<string> = new FormControl<string>(null);
 
-  public mapUploader: UploadComponent;
+  @ViewChild('resourceUploader') resourceUploader: UploadComponent;
+  @ViewChild('mapUploader') mapUploader: UploadComponent;
+  @ViewChild('modelUploader') modelUploader: UploadComponent;
 
   // The content of the resource to transform
-  resource: string;
+  resource: ResourceSource | null = null;
 
   // The map to use (either its canonical or content)
   map: MapSource | null = null;
@@ -47,7 +50,11 @@ export class TransformComponent {
   operationOutcome: OperationOutcome;
   operationOutcomeTransformed: OperationOutcome;
 
-  constructor(data: FhirConfigService) {
+  constructor(
+    readonly data: FhirConfigService,
+    private readonly toastr: ToastrService,
+    private readonly changeDetectorRef: ChangeDetectorRef
+  ) {
     this.client = data.getFhirClient();
     this.client
       .operation({
@@ -75,19 +82,19 @@ export class TransformComponent {
         parameter: [
           {
             name: 'resource',
-            valueString: this.resource,
+            valueString: this.resource.content,
           },
         ],
       };
-      if ('canonical' in this.map) {
-        payload.parameter.push({
-          name: 'source',
-          valueString: this.map.canonical,
-        });
-      } else {
+      if ('content' in this.map) {
         payload.parameter.push({
           name: 'map',
           valueString: this.map.content,
+        });
+      } else {
+        payload.parameter.push({
+          name: 'source',
+          valueString: this.map.canonical,
         });
       }
       if (this.model != null) {
@@ -128,16 +135,56 @@ export class TransformComponent {
   }
 
   async setResource(droppedBlob: UploadedFile) {
-    this.resource = await droppedBlob.blob.text();
+    const content = await droppedBlob.blob.text();
+    const parsed = new FhirResource(droppedBlob.name, content);
+    if (parsed?.resourceType() === undefined) {
+      this.showErrorToast('Invalid File', 'The uploaded file does not contain a valid FHIR resource.');
+      this.resourceUploader.clear();
+      this.resource = null;
+      return;
+    }
+    this.resource = {
+      content,
+      resourceType: parsed.resourceType(),
+      resourceId: parsed.id() || null,
+    };
     this.transformed = null;
   }
 
   async setMapContent(droppedBlob: UploadedFile) {
-    this.map = { content: await droppedBlob.blob.text() };
+    const fileContent = await droppedBlob.blob.text();
+    const parsed = new FhirResource(droppedBlob.name, fileContent);
+    if (parsed === undefined) {
+      this.showErrorToast('Invalid File', 'The uploaded file does not contain a valid FHIR resource.');
+      this.clearMapSelection();
+      return;
+    }
+    if (parsed.resourceType() !== 'StructureMap') {
+      this.showErrorToast('Invalid Map', 'The uploaded file does not contain a valid StructureMap resource.');
+      this.clearMapSelection();
+      return;
+    }
+    if (parsed.url() === undefined) {
+      this.showErrorToast('Invalid Map', 'The uploaded StructureMap resource does not have a url/canonical.');
+      this.clearMapSelection();
+      return;
+    }
+    this.map = {
+      content: fileContent,
+      canonical: parsed.url(),
+    };
   }
 
   async setModelContent(droppedBlob: UploadedFile) {
-    this.model = await droppedBlob.blob.text();
+    const fileContent = await droppedBlob.blob.text();
+    const parsed = new FhirResource(droppedBlob.name, fileContent);
+    if (parsed?.resourceType() === undefined) {
+      this.showErrorToast('Invalid Model', 'The uploaded file does not contain a valid FHIR resource.');
+      this.modelUploader.clear();
+      this.model = null;
+      return;
+    }
+    this.model = fileContent;
   }
 
   protected filterStructureMaps() {
@@ -157,24 +204,30 @@ export class TransformComponent {
   }
 
   /**
-   * Fired when the user changes the map selection tab.
-   * Clears the map selection and content to avoid confusion between the two modes.
+   * Clears any map selection.
    */
-  mapTabChanged() {
+  clearMapSelection() {
     this.map = null;
     this.structureMapControl.setValue(null);
     this.mapUploader.clear();
+    this.changeDetectorRef.markForCheck();
+  }
+
+  private showErrorToast(title: string, message: string) {
+    this.toastr.error(message, title, {
+      closeButton: true,
+      timeOut: 5000,
+    });
   }
 }
 
-type MapCanonical = {
+type MapSource = {
   canonical: string;
-  content?: never;
+  content?: string;
 };
 
-type MapContent = {
-  canonical?: never;
+type ResourceSource = {
   content: string;
-};
-
-type MapSource = NonNullable<MapCanonical | MapContent>;
+  resourceType: string;
+  resourceId?: string;
+}

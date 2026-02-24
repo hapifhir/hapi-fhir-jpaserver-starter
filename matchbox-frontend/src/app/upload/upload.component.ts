@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-upload',
@@ -16,7 +16,10 @@ export class UploadComponent {
 
   @Input() clear() {
     this.selectedFile = null;
+    this.changeDetectorRef.markForCheck();
   }
+
+  constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
   onDrop(ev) {
     // Prevent default behavior (Prevent file from being opened)
