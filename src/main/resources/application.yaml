@@ -98,24 +98,29 @@ spring:
     exclude: org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration
 
   flyway:
-    enabled: false
+    enabled: true
+    # Use a dedicated Flyway connection so we do not attempt migrations against the HAPI-managed DB.
+    url: ${SPRING_FLYWAY_URL:jdbc:postgresql://localhost:5432/qtas_extras}
+    user: ${SPRING_FLYWAY_USER:admin}
+    password: ${SPRING_FLYWAY_PASSWORD:admin}
+    driver-class-name: org.postgresql.Driver
+    locations: classpath:db/migrations/qtas_extras
     baseline-on-migrate: true
     fail-on-missing-locations: false
 
-  spring:
-    datasource:
-      # url: "jdbc:h2:file:./target/database/h2"
-      # url: jdbc:h2:mem:test_mem
-      url: jdbc:postgresql://localhost:5432/hapi
-      username: admin
-      password: admin
-      driver-class-name: org.postgresql.Driver
+  datasource:
+    # url: "jdbc:h2:file:./target/database/h2"
+    # url: jdbc:h2:mem:test_mem
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/hapi}
+    username: ${SPRING_DATASOURCE_USERNAME:admin}
+    password: ${SPRING_DATASOURCE_PASSWORD:admin}
+    driver-class-name: org.postgresql.Driver
 
   custom:
     datasource:
-      url: jdbc:postgresql://localhost:5432/qtas_extras  
-      username: admin # could create a dedicated user for this datasource
-      password: admin
+      url: ${SPRING_CUSTOM_DATASOURCE_URL:jdbc:postgresql://localhost:5432/qtas_extras}
+      username: ${SPRING_CUSTOM_DATASOURCE_USERNAME:admin} # could create a dedicated user for this datasource
+      password: ${SPRING_CUSTOM_DATASOURCE_PASSWORD:admin}
       driver-class-name: org.postgresql.Driver
 
   jpa:

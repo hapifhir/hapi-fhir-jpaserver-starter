@@ -8,6 +8,10 @@ services:
       SPRING_DATASOURCE_USERNAME: "admin"
       SPRING_DATASOURCE_PASSWORD: "admin"
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: "org.postgresql.Driver"
+      SPRING_FLYWAY_URL: "jdbc:postgresql://hapi-fhir-postgres:5432/qtas_extras"
+      SPRING_FLYWAY_USER: "admin"
+      SPRING_FLYWAY_PASSWORD: "admin"
+      SPRING_FLYWAY_DRIVER_CLASS_NAME: "org.postgresql.Driver"
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
     ports:
       - "8080:8080"
@@ -29,8 +33,5 @@ services:
       start_period: 5s
       retries: 5
     volumes:
-      - hapi-fhir-postgres:/var/lib/postgresql/data
+      - ./volumes/postgres-data:/var/lib/postgresql/data
       - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
-
-volumes:
-  hapi-fhir-postgres:
