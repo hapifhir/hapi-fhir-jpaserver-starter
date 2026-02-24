@@ -10,9 +10,10 @@
       <p class="current">
         Current resource loaded:
         @if (currentResource) {
-          <span>{{ currentResource.resourceType }}</span> (from <em>{{ currentResource.filename }}</em>)
-        }
-        @if (!currentResource) {
+          <span>{{ currentResource.resourceType }}</span> @if (currentResource.resourceId) {
+            (<em>#{{ currentResource.resourceId }}</em>)
+          }
+        } @else {
           <em>none</em>
         }
       </p>

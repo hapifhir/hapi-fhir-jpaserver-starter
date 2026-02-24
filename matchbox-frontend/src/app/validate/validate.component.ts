@@ -170,7 +170,7 @@ export class ValidateComponent implements AfterViewInit {
     try {
       // Try to parse the resource to extract information
       entry = new ValidationEntry(filename, content, contentType, this.getCurrentValidationSettings());
-      this.currentResource = new UploadedValidationFile(filename, contentType, content, entry.resourceType);
+      this.currentResource = new UploadedValidationFile(filename, contentType, content, entry.resourceType, entry.resourceId || null);
       if (selectBestProfile) {
         var profileSet = false;
         for (const profile of entry.extractedProfiles) {
@@ -364,7 +364,13 @@ export class ValidateComponent implements AfterViewInit {
 
     if (entry != null) {
       // Set the resource as currently selected in the form, to facilitate re-validation with a different profile/IG
-      this.currentResource = new UploadedValidationFile(entry.filename, entry.mimetype, entry.resource, entry.resourceType);
+      this.currentResource = new UploadedValidationFile(
+        entry.filename,
+        entry.mimetype,
+        entry.resource,
+        entry.resourceType,
+        entry.resourceId || null
+      );
     }
   }
 
@@ -652,7 +658,8 @@ class UploadedValidationFile {
     public filename: string,
     public contentType: string,
     public content: string,
-    public resourceType: string
+    public resourceType: string,
+    public readonly resourceId: string | null
   ) {
   }
 }
