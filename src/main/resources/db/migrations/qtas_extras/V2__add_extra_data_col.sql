@@ -1,0 +1,1 @@
+ALTER TABLE extra_data ADD COLUMN description TEXT;
