@@ -1,0 +1,9 @@
+<settings>
+  <servers>
+    <server>
+      <id>github</id>
+      <username>x-access-token</username>
+      <password>${env.GH_PAT}</password>
+    </server>
+  </servers>
+</settings>
