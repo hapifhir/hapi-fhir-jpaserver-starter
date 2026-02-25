@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { UploadedFile } from './uploaded-file';
 
 @Component({
   selector: 'app-upload',
@@ -12,14 +13,14 @@ export class UploadComponent {
 
   dragCounter = 0;
 
-  @Output() selectedFile: UploadedFile | null = null;
+  public selectedFile: UploadedFile | null = null;
 
-  @Input() clear() {
+  constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
+
+  public clear() {
     this.selectedFile = null;
     this.changeDetectorRef.markForCheck();
   }
-
-  constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
   onDrop(ev) {
     // Prevent default behavior (Prevent file from being opened)
@@ -50,6 +51,7 @@ export class UploadComponent {
   setSelectedFile(file: UploadedFile) {
     this.addFiles.emit(file);
     this.selectedFile = file;
+    this.changeDetectorRef.markForCheck();
   }
 
   onDragOver(ev: DragEvent) {

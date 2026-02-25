@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import {FhirConfigService} from '../fhirConfig.service';
 import FhirClient from 'fhir-kit-client';
 import pako from 'pako';
@@ -15,6 +15,7 @@ import {ToastrService} from 'ngx-toastr';
 import {ValidationCodeEditor} from "./validation-code-editor";
 import {Base64} from 'js-base64';
 import {from, forkJoin, ReplaySubject, take } from 'rxjs';
+import { UploadedFile } from '../upload/uploaded-file';
 
 const INDENT_SPACES = 2;
 
@@ -55,7 +56,7 @@ export class ValidateComponent implements AfterViewInit {
   // DOM
   showSettings: boolean = false;
   currentResource: UploadedValidationFile | null = null;
-  resourceDropper: UploadComponent;
+  @ViewChild('resourceDropper') resourceDropper: UploadComponent;
 
   showAIAnalyzeButton: boolean = false;
 
@@ -148,7 +149,7 @@ export class ValidateComponent implements AfterViewInit {
 
       const fileContent = await droppedBlob.blob.text();
       this.cd.markForCheck();
-      this.validateResource(droppedBlob.blob.name, fileContent, droppedBlob.contentType, !this.profileLocked);
+      this.validateResource(droppedBlob.name, fileContent, droppedBlob.contentType, !this.profileLocked);
     } catch (error) {
       this.showErrorToast('Unexpected error', error.message);
       console.error(error);

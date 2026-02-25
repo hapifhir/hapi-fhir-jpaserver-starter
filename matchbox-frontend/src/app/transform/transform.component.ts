@@ -9,7 +9,8 @@ import OperationOutcome = fhir.r4.OperationOutcome;
 import Bundle = fhir.r4.Bundle;
 import { UploadComponent } from '../upload/upload.component';
 import { ToastrService } from 'ngx-toastr';
-import { FhirResource } from '../util/fhir-resource';
+import { parseFhirResource } from '../util/fhir-resource-parser';
+import { UploadedFile } from '../upload/uploaded-file';
 
 @Component({
   selector: 'app-transform',
@@ -136,8 +137,8 @@ export class TransformComponent {
 
   async setResource(droppedBlob: UploadedFile) {
     const content = await droppedBlob.blob.text();
-    const parsed = new FhirResource(droppedBlob.name, content);
-    if (parsed?.resourceType() === undefined) {
+    const parsed = parseFhirResource(droppedBlob.name, content);
+    if (!parsed) {
       this.showErrorToast('Invalid File', 'The uploaded file does not contain a valid FHIR resource.');
       this.resourceUploader.clear();
       this.resource = null;
@@ -145,40 +146,39 @@ export class TransformComponent {
     }
     this.resource = {
       content,
-      resourceType: parsed.resourceType(),
-      resourceId: parsed.id() || null,
+      resourceType: parsed.resourceType,
+      resourceId: parsed.id,
     };
     this.transformed = null;
   }
 
   async setMapContent(droppedBlob: UploadedFile) {
     const fileContent = await droppedBlob.blob.text();
-    const parsed = new FhirResource(droppedBlob.name, fileContent);
-    if (parsed === undefined) {
+    const parsed = parseFhirResource(droppedBlob.name, fileContent);
+    if (!parsed) {
       this.showErrorToast('Invalid File', 'The uploaded file does not contain a valid FHIR resource.');
       this.clearMapSelection();
       return;
     }
-    if (parsed.resourceType() !== 'StructureMap') {
+    if (parsed.resourceType !== 'StructureMap') {
       this.showErrorToast('Invalid Map', 'The uploaded file does not contain a valid StructureMap resource.');
       this.clearMapSelection();
       return;
     }
-    if (parsed.url() === undefined) {
+    if (!parsed.url) {
       this.showErrorToast('Invalid Map', 'The uploaded StructureMap resource does not have a url/canonical.');
       this.clearMapSelection();
       return;
     }
     this.map = {
       content: fileContent,
-      canonical: parsed.url(),
+      canonical: parsed.url,
     };
   }
 
   async setModelContent(droppedBlob: UploadedFile) {
     const fileContent = await droppedBlob.blob.text();
-    const parsed = new FhirResource(droppedBlob.name, fileContent);
-    if (parsed?.resourceType() === undefined) {
+    if (!parseFhirResource(droppedBlob.name, fileContent)) {
       this.showErrorToast('Invalid Model', 'The uploaded file does not contain a valid FHIR resource.');
       this.modelUploader.clear();
       this.model = null;

@@ -1,6 +1,6 @@
 import {IssueSeverity, OperationResult} from '../util/operation-result';
 import {ValidationParameter} from "./validation-parameter";
-import { FhirResource } from '../util/fhir-resource';
+import { parseFhirResource } from '../util/fhir-resource-parser';
 
 export class ValidationEntry {
   readonly filename: string; // "package/package.json",
@@ -38,15 +38,10 @@ export class ValidationEntry {
     this.date = new Date();
     this.validationProfile = validationProfile;
 
-    try {
-      const parsed = new FhirResource(filename, resource);
-      this.resourceType = parsed.resourceType();
-      this.resourceId = parsed.id();
-      this.extractedProfiles.push(...parsed.profiles());
-    } catch (e) {
-      console.error('Error parsing resource to validate: ', e);
-      return undefined;
-    }
+    const parsed = parseFhirResource(filename, resource);
+    this.resourceType = parsed.resourceType;
+    this.resourceId = parsed.id;
+    this.extractedProfiles.push(...parsed.profiles);
   }
 
   getErrors(): number | undefined {
