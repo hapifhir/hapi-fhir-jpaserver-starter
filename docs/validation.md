@@ -234,3 +234,31 @@ E.g.
 ```http
 GET https://test.ahdis.ch/matchboxv3/validate#profile=http%3A%2F%2Fhl7.org%2Ffhir%2FStructureDefinition%2FBundle&txServer=http://tx.fhir.org/r4&resource=PFBhdGllbnQgeG1sbnM9Imh0dHA6Ly9obDcub3JnL2ZoaXIiPgogIDxuYW1lPgogICAgPGZhbWlseSB2YWx1ZT0iVGVzdCIvPgogIDwvbmFtZT4KPC9QYXRpZW50Pg HTTP/1.1
 ```
+
+## Comparison with HAPI FHIR validation
+
+Matchbox builds on the [HL7 FHIR Core](https://github.com/hapifhir/org.hl7.fhir.core) validation library and the [HAPI FHIR](https://hapifhir.io/) framework, but extends them with additional capabilities. This section clarifies how the different HAPI FHIR validation approaches relate to matchbox.
+
+### HAPI FHIR validation approaches
+
+HAPI FHIR provides  different ways to validate FHIR resources:
+
+1. **HL7 FHIR Validator CLI** — The official [HL7 Java reference validator](https://github.com/hapifhir/org.hl7.fhir.core/tree/master/org.hl7.fhir.validation), available as a command-line tool. It validates resources against profiles and implementation guides.
+2. **Web-based FHIR Validator** — A web front-end hosted at [validator.fhir.org](https://validator.fhir.org), built on the [HL7 FHIR Validator](https://github.com/hapifhir/org.hl7.fhir.validator-wrapper) [wrapper](https://github.com/hapifhir/org.hl7.fhir.validator-wrapper) project.
+3. **HAPI FHIR JPA Server with validation** — The [HAPI FHIR JPA server](https://hapifhir.io/hapi-fhir/docs/validation/instance_validator.html#packages) can be configured with validation capabilities.
+
+### Where matchbox differs
+
+| Area | Matchbox | HAPI FHIR |
+|------|----------|-----------|
+| **FHIR API for validation** | Supports the `$validate` operation on the system FHIR server endpoint, which external tooling can use directly. | The web-based validator (2) and the JPA server (3) handle the the validation API differently  |
+| **Pre-configured Implementation Guides** | Implementation Guides can be pre-configured for validation without requiring access to the internet or external package servers at runtime. This is a unique feature of matchbox useful for offline and production deployments. | The JPA server (3) can store IGs. The CLI (1) and web validator (2) typically resolve packages from online registries. |
+| **External terminology server configuration** | Fully configurable, including an internal minimal terminology server for production use (see [Terminology server](#terminology-server) below). | Not available in the standard HAPI FHIR JPA server setup (3). The web-based validator and JAVA validator (1,2) do support configuring a terminology server. |
+| **Enhanced validation report** | The OperationOutcome returned by matchbox includes detailed information about all parameters used for the validation (profiles, packages, engine versions, validation settings), making results reproducible and traceable. | Not available in any of the HAPI FHIR validation approaches. |
+| **AI validation report analysis** | Validation results can be analyzed by an LLM to provide human-readable summaries and recommendations. | Not available. |
+| **MCP FHIR validation support** | Matchbox provides a [Model Context Protocol](https://modelcontextprotocol.io/) (MCP) server, enabling AI assistants and tools to perform FHIR validation programmatically. | Not available. |
+| **Gazelle EVS Client integration** | Matchbox implements the [IHE Gazelle EVS API](#gazelle-evs-api), allowing integration with the IHE Gazelle testing platform. | Not available. |
+
+### Summary
+
+Matchbox uses the same HL7 FHIR Core validation library as all HAPI FHIR validation tools, ensuring consistent validation logic. On top of this foundation, matchbox adds features aimed at production deployments, integration with external tooling, and enhanced traceability of validation results.
