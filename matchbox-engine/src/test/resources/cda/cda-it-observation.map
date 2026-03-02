@@ -1,5 +1,12 @@
 map "http://salute.gov.it/ig/cda-fhir-maps/StructureMap/TestObservation" = "TestObservation"
 
+conceptmap "sample-concept-map" {
+  prefix a = "http://loinc.org"
+  prefix t = "http://snomed.info/sct"
+
+  a: "36554-4" == t: "112283007"
+}
+
 uses "http://hl7.org/cda/stds/core/StructureDefinition/Observation" alias CdaObservation as source
 uses "http://hl7.org/fhir/StructureDefinition/Observation" alias FhirObservation as target
 
@@ -13,6 +20,12 @@ imports "http://salute.gov.it/ig/cda-fhir-maps/StructureMap/FULLHEADER"
 
 group CdaToFHIR(source cda : CdaObservation, target obs : Observation) {
     cda -> obs.status ='final' "final";
+
+    cda.value : CD as cda_observation_value then {
+        cda_observation_value.code as cda_observation_value_code -> 
+            obs.value = create('CodeableConcept') as fhir_observation_value,
+            fhir_observation_value.coding = translate(cda_observation_value_code, '#sample-concept-map', 'Coding');
+    } "CdaObservationValueToFhirObservationValue";
     cda.value : IVL_TS as value -> obs.value = create('Period') as period then {
         value.high as high then {
             high.value as value -> period.end = truncate(value, 10) "highvalue";
