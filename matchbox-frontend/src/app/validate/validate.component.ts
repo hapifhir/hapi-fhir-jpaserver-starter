@@ -165,6 +165,8 @@ export class ValidateComponent implements AfterViewInit {
       entry = new ValidationEntry(filename, content, contentType, this.getCurrentValidationSettings());
       if (!entry?.resourceType) {
         this.showErrorToast('Error parsing the file', 'The provided file does not seem to be a valid FHIR resource');
+        this.resourceDropper.clear();
+        this.currentResource = null;
         return;
       }
 

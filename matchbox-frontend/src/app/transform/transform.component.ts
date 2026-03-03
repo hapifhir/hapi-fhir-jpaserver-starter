@@ -69,7 +69,7 @@ export class TransformComponent {
       });
 
     this.structureMapControl.valueChanges.pipe(debounceTime(400), distinctUntilChanged()).subscribe((url) => {
-      this.map = { canonical: url };
+      this.map = { canonical: url, content: null };
     });
 
     // Listen for changes in the filter text
@@ -87,7 +87,7 @@ export class TransformComponent {
           },
         ],
       };
-      if ('content' in this.map) {
+      if (this.map.content != null) {
         payload.parameter.push({
           name: 'map',
           valueString: this.map.content,
@@ -209,7 +209,7 @@ export class TransformComponent {
   clearMapSelection() {
     this.map = null;
     this.structureMapControl.setValue(null);
-    this.mapUploader.clear();
+    this.mapUploader?.clear();
     this.changeDetectorRef.markForCheck();
   }
 
@@ -223,11 +223,11 @@ export class TransformComponent {
 
 type MapSource = {
   canonical: string;
-  content?: string;
+  content: string | null;
 };
 
 type ResourceSource = {
   content: string;
   resourceType: string;
-  resourceId?: string;
+  resourceId: string | null;
 }

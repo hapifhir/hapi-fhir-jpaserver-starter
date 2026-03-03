@@ -45,6 +45,7 @@ export function parseFhirResource(filename: string, content: string): FhirResour
       console.log(ret);
       return ret;
     }
+    return null;
   } catch (e) {
     console.error('Error parsing content: ', e);
     return null;
