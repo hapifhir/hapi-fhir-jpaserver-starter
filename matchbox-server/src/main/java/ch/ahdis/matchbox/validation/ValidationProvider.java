@@ -462,8 +462,8 @@ public class ValidationProvider {
 		// checks if all operationOutcomeResourceProviders are empty (indicating that save-statistics = false
 		// and operationOutcome is valid)
 		boolean hasNoOperationOutcomeResourceProvider = operationOutcomeResourceProviderR4.isEmpty()
-																|| operationOutcomeResourceProviderR4B.isEmpty()
-																|| operationOutcomeResourceProviderR5.isEmpty();
+																&& operationOutcomeResourceProviderR4B.isEmpty()
+																&& operationOutcomeResourceProviderR5.isEmpty();
 
 		if (hasNoOperationOutcomeResourceProvider || operationOutcome == null) {
 			return;
