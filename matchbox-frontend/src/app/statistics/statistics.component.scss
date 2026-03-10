@@ -1,0 +1,32 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+        border-bottom: 1px solid rgb(209, 213, 219);
+        padding-bottom: 1rem;
+    }
+
+    tbody {
+        td {
+            border-bottom: 1px solid rgb(229, 231, 235);
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            padding-left: 1rem;
+
+            &:hover {
+                background: #eee
+            }
+        }
+    }
+}
+
+/* Playing around with style attributes, probably not final */
+.severity-error {
+    color: #ffffff;
+    background-color: rgba(255, 0, 0, 0.75);    
+}
+
+.severity-warning {
+    background-color: #ffff00;
+}

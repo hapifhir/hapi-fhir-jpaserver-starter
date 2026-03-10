@@ -18,8 +18,14 @@ export class StatisticsComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     const url = '/OperationOutcome';
-    this.client.request(url)
-      .then()
+    this.client.request(url).then((bundle: fhir.r4.Bundle) => {
+      if (bundle.entry?.length) {
+        this.operationOutcomes = bundle.entry.map(entry => entry.resource);
+        console.log('OperationOutcomes:', this.operationOutcomes);
+      }
+        
+    })
+    
   }
 
 }

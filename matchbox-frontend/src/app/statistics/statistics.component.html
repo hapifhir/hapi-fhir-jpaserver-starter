@@ -6,11 +6,20 @@
             <tr>
                 <th>Date</th>
                 <th>Result</th>
-                <th>OperationOutcome</th>
+                <th>Severity</th>
             </tr>
         </thead>
         <tbody>
-            
+            @for (outcome of operationOutcomes; track outcome.id) {
+                <!--Playing around with style attributes, probably not final-->
+                @let lastIssue = outcome.issue[outcome.issue.length - 1];
+                <tr [class]="'severity-' + lastIssue.severity">
+                    <td>{{ outcome.meta.lastUpdated }}</td>
+                    <td>{{ lastIssue.diagnostics }}</td>
+                    <td>{{ lastIssue.severity }}</td>
+                </tr>
+            }
+
         </tbody>
     </table>
 </div>
