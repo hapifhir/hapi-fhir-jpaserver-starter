@@ -24,6 +24,7 @@ import { HashUrlRedirectionService } from './util/hash-url-redirection-service';
 import { APP_BASE_HREF } from '@angular/common';
 import { MarkdownModule } from 'ngx-markdown';
 import {SortSettingsPipe} from "./validate/order-settings.pipe";
+import {StatisticsComponent} from './statistics/statistics.component';
 
 // The Angular routes
 // All paths defined here must be supported in matchbox-server's MatchboxStaticResourceConfig, otherwise a direct access
@@ -57,6 +58,10 @@ const routes: Routes = [
     path: 'validate',
     component: ValidateComponent,
   },
+  {
+    path: 'statistics',
+    component: StatisticsComponent,
+  }
 ];
 
 @NgModule({
