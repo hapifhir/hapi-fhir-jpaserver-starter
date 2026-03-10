@@ -9,6 +9,13 @@ import io.modelcontextprotocol.spec.McpSchema.Tool;
 
 public class ToolFactory {
 
+	public static final ObjectMapper mapper = new ObjectMapper()
+			.enable(JsonParser.Feature.ALLOW_COMMENTS)
+			.enable(JsonParser.Feature.ALLOW_SINGLE_QUOTES)
+			.enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
+			.enable(JsonParser.Feature.INCLUDE_SOURCE_IN_LOCATION)
+			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
 	private static final String READ_FHIR_RESOURCE_SCHEMA =
 			"""
 		{
@@ -160,7 +167,7 @@ public class ToolFactory {
 			}
 		},
 		"required": ["resourceType", "id"]
-		}
+	}
 		""";
 
 	private static final String SEARCH_FHIR_RESOURCES_SCHEMA =
@@ -178,7 +185,7 @@ public class ToolFactory {
 			}
 		},
 		"required": ["resourceType", "query"]
-		}
+	}
 		""";
 
 	private static final String CREATE_FHIR_TRANSACTION_SCHEMA =
@@ -198,6 +205,132 @@ public class ToolFactory {
 		"required": ["resourceType", "resource"]
 		}
 		""";
+
+	private static final String STORE_NAME_PROPERTY =
+			"""
+			"store": {
+				"type": "string",
+				"description": "Name of the store or tenant to service this request"
+			}
+			""";
+
+	private static final String RESOURCE_NAME_PROPERTY =
+			"""
+			"resourceType": {
+				"type": "string",
+				"description": "Name of the FHIR resource type for this request"
+			}
+			""";
+
+	private static final String GET_RESOURCE_LIST_SCHEMA =
+			"""
+		{
+		"type": "object",
+		"properties": {
+			%s
+		},
+		"required": ["store"]
+		}
+		"""
+					.formatted(STORE_NAME_PROPERTY);
+
+	private static final String GET_DATA_TYPE_LIST_SCHEMA =
+			"""
+		{
+		"type": "object",
+		"properties": {
+			%s
+		},
+		"required": ["store"]
+		}
+		"""
+					.formatted(STORE_NAME_PROPERTY);
+
+	private static final String GET_SEARCH_PARAMETERS_SCHEMA =
+			"""
+		{
+		"type": "object",
+		"properties": {
+			%s,
+			%s
+		},
+		"required": ["store", "resourceType"]
+		}
+		"""
+					.formatted(STORE_NAME_PROPERTY, RESOURCE_NAME_PROPERTY);
+
+	private static final String GET_RESOURCE_DEFINITION_SCHEMA =
+			"""
+		{
+		"type": "object",
+		"properties": {
+			%s
+		},
+		"required": ["resourceType"]
+		}
+		"""
+					.formatted(RESOURCE_NAME_PROPERTY);
+
+	private static final String GET_DATA_TYPE_DEFINITION_SCHEMA =
+			"""
+		{
+		"type": "object",
+		"properties": {
+			"datatypeName": {
+				"type": "string",
+				"description": "Name of the FHIR data type for this request"
+			}
+		},
+		"required": ["datatypeName"]
+		}
+		""";
+
+	private static final String GET_SEARCH_TYPE_DEFINITION_SCHEMA =
+			"""
+		{
+		"type": "object",
+		"properties": {
+			"searchType": {
+				"type": "string",
+				"description": "FHIR search type to describe"
+			}
+		},
+		"required": ["searchType"]
+		}
+		""";
+
+	private static final String VALIDATE_TYPE_SEARCH_SCHEMA =
+			"""
+		{
+		"type": "object",
+		"properties": {
+			%s,
+			%s,
+			"searchString": {
+				"type": "string",
+				"description": "FHIR type search request to validate"
+			}
+		},
+		"required": ["store", "resourceType", "searchString"]
+		}
+		"""
+					.formatted(STORE_NAME_PROPERTY, RESOURCE_NAME_PROPERTY);
+
+	private static final McpSchema.JsonSchema EMPTY_OBJECT_SCHEMA = createEmptyObjectSchema();
+
+	private static McpSchema.JsonSchema createEmptyObjectSchema() {
+		try {
+			return mapper.readValue(
+					"""
+				{
+				"type": "object",
+				"properties": {}
+				}
+				""", McpSchema.JsonSchema.class);
+		} catch (JsonProcessingException e) {
+			throw new IllegalStateException("Unable to construct empty object schema", e);
+		}
+	}
 
 	// TODO Add a tool for the CDS Hooks discovery endpoint
 	// Alternatively, should each service be a separate tool?
@@ -328,10 +461,76 @@ public class ToolFactory {
 				.build();
 	}
 
-	public static final ObjectMapper mapper = new ObjectMapper()
-			.enable(JsonParser.Feature.ALLOW_COMMENTS)
-			.enable(JsonParser.Feature.ALLOW_SINGLE_QUOTES)
-			.enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
-			.enable(JsonParser.Feature.INCLUDE_SOURCE_IN_LOCATION)
-			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	public static Tool getStoreList() {
+		return new Tool.Builder()
+				.name("get-store-list")
+				.description(
+						"Gets the list of FHIR stores, the base URL of the FHIR store, and their FHIR Versions that are configured on this server.")
+				.inputSchema(EMPTY_OBJECT_SCHEMA)
+				.build();
+	}
+
+	public static Tool getResourceList() throws JsonProcessingException {
+		return new Tool.Builder()
+				.name("get-resource-list")
+				.description("Gets the list of FHIR resources supported by the specified resource store.")
+				.inputSchema(mapper.readValue(GET_RESOURCE_LIST_SCHEMA, McpSchema.JsonSchema.class))
+				.build();
+	}
+
+	public static Tool getResourceDefinition() throws JsonProcessingException {
+		return new Tool.Builder()
+				.name("get-resource-definition")
+				.description("Gets the definition of a FHIR resource.")
+				.inputSchema(mapper.readValue(GET_RESOURCE_DEFINITION_SCHEMA, McpSchema.JsonSchema.class))
+				.build();
+	}
+
+	public static Tool getDataTypeList() throws JsonProcessingException {
+		return new Tool.Builder()
+				.name("get-data-type-list")
+				.description("Gets the list of FHIR data types known in the specified resource store.")
+				.inputSchema(mapper.readValue(GET_DATA_TYPE_LIST_SCHEMA, McpSchema.JsonSchema.class))
+				.build();
+	}
+
+	public static Tool getDataTypeDefinition() throws JsonProcessingException {
+		return new Tool.Builder()
+				.name("get-data-type-definition")
+				.description("Gets the definition of a FHIR data type.")
+				.inputSchema(mapper.readValue(GET_DATA_TYPE_DEFINITION_SCHEMA, McpSchema.JsonSchema.class))
+				.build();
+	}
+
+	public static Tool getSearchTypeList() {
+		return new Tool.Builder()
+				.name("get-search-type-list")
+				.description("Gets the list of FHIR search types (not FHIR Data Types).")
+				.inputSchema(EMPTY_OBJECT_SCHEMA)
+				.build();
+	}
+
+	public static Tool getSearchTypeDefinition() throws JsonProcessingException {
+		return new Tool.Builder()
+				.name("get-search-type-definition")
+				.description("Gets the definition of a FHIR search type.")
+				.inputSchema(mapper.readValue(GET_SEARCH_TYPE_DEFINITION_SCHEMA, McpSchema.JsonSchema.class))
+				.build();
+	}
+
+	public static Tool getSearchParameters() throws JsonProcessingException {
+		return new Tool.Builder()
+				.name("get-search-parameters")
+				.description("Get the FHIR Search Parameters for a resource in a specified store.")
+				.inputSchema(mapper.readValue(GET_SEARCH_PARAMETERS_SCHEMA, McpSchema.JsonSchema.class))
+				.build();
+	}
+
+	public static Tool validateTypeSearch() throws JsonProcessingException {
+		return new Tool.Builder()
+				.name("validate-type-search")
+				.description("Validate a FHIR search request against a resource type in the store.")
+				.inputSchema(mapper.readValue(VALIDATE_TYPE_SEARCH_SCHEMA, McpSchema.JsonSchema.class))
+				.build();
+	}
 }
