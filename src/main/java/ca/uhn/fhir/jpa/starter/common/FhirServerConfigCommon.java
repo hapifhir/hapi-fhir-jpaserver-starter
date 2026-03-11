@@ -369,7 +369,7 @@ public class FhirServerConfigCommon {
 				"binary_storage_filesystem_base_directory must be provided when binary_storage_mode=FILESYSTEM");
 
 		FilesystemBinaryStorageSvcImpl filesystemSvc = new FilesystemBinaryStorageSvcImpl(baseDirectory);
-		Integer inlineResourceThreshold = resolveInlineResourceThreshold(appProperties);
+		Integer inlineResourceThreshold = appProperties.getBinary_storage_minimum_binary_size();
 		int minimumBinarySize =
 				inlineResourceThreshold == null ? DEFAULT_FILESYSTEM_INLINE_THRESHOLD : inlineResourceThreshold;
 		filesystemSvc.setMinimumBinarySize(minimumBinarySize);
@@ -395,15 +395,6 @@ public class FhirServerConfigCommon {
 			databaseSvc.setMaximumBinarySize(maxBinarySize.longValue());
 		}
 		return databaseSvc;
-	}
-
-	private Integer resolveInlineResourceThreshold(AppProperties appProperties) {
-		Integer inlineResourceThreshold = appProperties.getBinary_storage_minimum_binary_size();
-		if (inlineResourceThreshold == null
-				&& appProperties.getBinary_storage_mode() == AppProperties.BinaryStorageMode.FILESYSTEM) {
-			return DEFAULT_FILESYSTEM_INLINE_THRESHOLD;
-		}
-		return inlineResourceThreshold;
 	}
 
 	@Bean
