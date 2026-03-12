@@ -867,11 +867,37 @@ public class AppProperties {
 	}
 
 	public static class Cors {
-		private Boolean allow_Credentials = true;
+		private static final List<String> DEFAULT_ALLOWED_HEADERS = List.of(
+				"Origin",
+				"Accept",
+				"Content-Type",
+				"Authorization",
+				"Cache-Control",
+				"If-Match",
+				"If-None-Match",
+				"x-fhir-starter",
+				"X-Requested-With",
+				"Prefer");
+		private static final List<String> DEFAULT_EXPOSED_HEADERS = List.of(
+				"Location",
+				"Content-Location",
+				"ETag",
+				"Date",
+				"Retry-After",
+				"X-Correlation-Id",
+				"X-Progress",
+				"X-Request-Id");
+		private static final List<String> DEFAULT_ALLOWED_METHODS =
+				List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD");
+
+		private Boolean allow_Credentials = false;
 		private List<String> allowed_origin = List.of("*");
+		private List<String> allowed_headers = DEFAULT_ALLOWED_HEADERS;
+		private List<String> exposed_headers = DEFAULT_EXPOSED_HEADERS;
+		private List<String> allowed_methods = DEFAULT_ALLOWED_METHODS;
 
 		public List<String> getAllowed_origin() {
-			return allowed_origin;
+			return defaultIfNull(allowed_origin, List.of("*"));
 		}
 
 		public void setAllowed_origin(List<String> allowed_origin) {
@@ -884,6 +910,30 @@ public class AppProperties {
 
 		public void setAllow_Credentials(Boolean allow_Credentials) {
 			this.allow_Credentials = allow_Credentials;
+		}
+
+		public List<String> getAllowed_headers() {
+			return defaultIfNull(allowed_headers, DEFAULT_ALLOWED_HEADERS);
+		}
+
+		public void setAllowed_headers(List<String> allowed_headers) {
+			this.allowed_headers = allowed_headers;
+		}
+
+		public List<String> getExposed_headers() {
+			return defaultIfNull(exposed_headers, DEFAULT_EXPOSED_HEADERS);
+		}
+
+		public void setExposed_headers(List<String> exposed_headers) {
+			this.exposed_headers = exposed_headers;
+		}
+
+		public List<String> getAllowed_methods() {
+			return defaultIfNull(allowed_methods, DEFAULT_ALLOWED_METHODS);
+		}
+
+		public void setAllowed_methods(List<String> allowed_methods) {
+			this.allowed_methods = allowed_methods;
 		}
 	}
 

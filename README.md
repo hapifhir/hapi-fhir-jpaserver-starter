@@ -49,6 +49,42 @@ docker run -p 8080:8080 -e hapi.fhir.default_encoding=xml hapiproject/hapi:lates
 
 HAPI looks in the environment variables for properties in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file for defaults.
 
+### CORS configuration (including ETag/If-Match)
+
+The starter CORS configuration now supports the following configurable keys:
+
+- `hapi.fhir.cors.allowed_origin`
+- `hapi.fhir.cors.allow_Credentials`
+- `hapi.fhir.cors.allowed_headers`
+- `hapi.fhir.cors.exposed_headers`
+- `hapi.fhir.cors.allowed_methods`
+
+Defaults include `If-Match` in allowed headers and `ETag` in exposed headers to support browser-based optimistic locking workflows.
+The `allowed_headers`, `exposed_headers`, and `allowed_methods` keys are optional; if omitted, built-in defaults are applied.
+The default for `allow_Credentials` is `false`. If you set `allow_Credentials=true`, do not use `"*"` for `allowed_origin`; configure explicit origins.
+
+Example override file:
+
+```yaml
+hapi:
+  fhir:
+    cors:
+      allowed_origin:
+        - "http://localhost:3000"
+      allowed_headers:
+        - Origin
+        - Accept
+        - Content-Type
+        - Authorization
+        - Cache-Control
+        - If-Match
+        - If-None-Match
+      exposed_headers:
+        - Location
+        - Content-Location
+        - ETag
+```
+
 ### Binary storage configuration
 
 To stream large `Binary` payloads to disk instead of the database, configure the starter with filesystem storage properties:
