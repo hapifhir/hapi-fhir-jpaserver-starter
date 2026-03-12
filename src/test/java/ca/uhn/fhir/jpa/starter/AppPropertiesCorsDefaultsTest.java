@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AppPropertiesCorsDefaultsTest {
@@ -10,6 +11,7 @@ class AppPropertiesCorsDefaultsTest {
 	void defaultCorsHeadersIncludeFhirOptimisticLockingHeaders() {
 		AppProperties.Cors cors = new AppProperties.Cors();
 
+		assertFalse(cors.getAllow_Credentials());
 		assertTrue(cors.getAllowed_headers().contains("If-Match"));
 		assertTrue(cors.getExposed_headers().contains("ETag"));
 	}

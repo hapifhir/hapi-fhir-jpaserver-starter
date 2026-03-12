@@ -61,6 +61,7 @@ The starter CORS configuration now supports the following configurable keys:
 
 Defaults include `If-Match` in allowed headers and `ETag` in exposed headers to support browser-based optimistic locking workflows.
 The `allowed_headers`, `exposed_headers`, and `allowed_methods` keys are optional; if omitted, built-in defaults are applied.
+The default for `allow_Credentials` is `false`. If you set `allow_Credentials=true`, do not use `"*"` for `allowed_origin`; configure explicit origins.
 
 Example override file:
 

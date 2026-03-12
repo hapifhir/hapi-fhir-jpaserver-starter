@@ -890,7 +890,7 @@ public class AppProperties {
 		private static final List<String> DEFAULT_ALLOWED_METHODS =
 				List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD");
 
-		private Boolean allow_Credentials = true;
+		private Boolean allow_Credentials = false;
 		private List<String> allowed_origin = List.of("*");
 		private List<String> allowed_headers = DEFAULT_ALLOWED_HEADERS;
 		private List<String> exposed_headers = DEFAULT_EXPOSED_HEADERS;

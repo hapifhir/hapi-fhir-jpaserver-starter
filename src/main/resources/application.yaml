@@ -368,9 +368,10 @@ hapi:
     # K. CORS
     # -------------------------------------------------------------------------------
     cors:
-      allow_Credentials: true
+      # allow_Credentials: false
       allowed_origin:
         - "*"
+      # If you enable allow_Credentials=true, use explicit origins instead of "*".
       # Optional overrides. If omitted, built-in defaults are used.
       # allowed_headers:
       #   - Origin
