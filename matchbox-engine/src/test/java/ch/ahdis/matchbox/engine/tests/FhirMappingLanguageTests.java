@@ -225,6 +225,27 @@ class FhirMappingLanguageTests {
 	}
 
 	@Test
+	void testTranslateCoding() throws FHIRException, IOException {
+		MatchboxEngine engine = new MatchboxEngine(FhirMappingLanguageTests.engine);
+		StructureMap sm = engine.parseMap(getFileAsStringFromResources("/translatecoding.map"));
+		assertTrue(sm != null);
+		engine.addCanonicalResource(sm);
+		Resource res = engine.transformToFhir(getFileAsStringFromResources("/qr.json"), true,
+				"http://ahdis.ch/matchbox/fml/translatecoding");
+		assertTrue(res != null);
+		assertEquals("ExplanationOfBenefit", res.getResourceType().name());
+		ExplanationOfBenefit eob = (ExplanationOfBenefit) res;
+		assertEquals("http://snomed.info/sct",
+				eob.getItemFirstRep().getLocationCodeableConcept().getCodingFirstRep().getSystem());
+		assertEquals("112283007",
+				eob.getItemFirstRep().getLocationCodeableConcept().getCodingFirstRep().getCode());
+		assertEquals("http://snomed.info/sct",
+		 		eob.getType().getCodingFirstRep().getSystem());
+		assertEquals("112283007", eob.getType().getCodingFirstRep().getCode());
+	}
+
+
+	@Test
 	void testCast() throws FHIRException, IOException {
 		MatchboxEngine engine = new MatchboxEngine(FhirMappingLanguageTests.engine);
 		StructureMap sm = engine.parseMap(getFileAsStringFromResources("/cast.map"));

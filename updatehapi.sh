@@ -1,6 +1,8 @@
 cp ../org.hl7.fhir.core/org.hl7.fhir.utilities/src/main/java/org/hl7/fhir/utilities/npm/NpmPackage.java matchbox-engine/src/main/java/org/hl7/fhir/utilities/npm
 cp ../org.hl7.fhir.core/org.hl7.fhir.r5/src/main/java/org/hl7/fhir/r5/elementmodel/XmlParser.java matchbox-engine/src/main/java/org/hl7/fhir/r5/elementmodel
 cp ../org.hl7.fhir.core/org.hl7.fhir.r5/src/main/java/org/hl7/fhir/r5/elementmodel/FmlParser.java matchbox-engine/src/main/java/org/hl7/fhir/r5/elementmodel
+cp ../org.hl7.fhir.core/org.hl7.fhir.r5/src/main/java/org/hl7/fhir/r5/elementmodel/Element.java matchbox-engine/src/main/java/org/hl7/fhir/r5/elementmodel
+cp ../org.hl7.fhir.core/org.hl7.fhir.r5/src/main/java/org/hl7/fhir/r5/elementmodel/Property.java matchbox-engine/src/main/java/org/hl7/fhir/r5/elementmodel
 cp ../org.hl7.fhir.core/org.hl7.fhir.r5/src/main/java/org/hl7/fhir/r5/utils/structuremap/FHIRPathHostServices.java matchbox-engine/src/main/java/org/hl7/fhir/r5/utils/structuremap/
 cp ../org.hl7.fhir.core/org.hl7.fhir.r5/src/main/java/org/hl7/fhir/r5/utils/structuremap/StructureMapUtilities.java matchbox-engine/src/main/java/org/hl7/fhir/r5/utils/structuremap/
 cp ../org.hl7.fhir.core/org.hl7.fhir.r5/src/main/java/org/hl7/fhir/r5/context/BaseWorkerContext.java matchbox-engine/src/main/java/org/hl7/fhir/r5/context/

@@ -18,13 +18,12 @@ uses "http://hl7.org/fhir/StructureDefinition/Period" alias Period as target
 imports "http://salute.gov.it/ig/cda-fhir-maps/StructureMap/CdaToFhirDataTypes"
 imports "http://salute.gov.it/ig/cda-fhir-maps/StructureMap/FULLHEADER"
 
-group CdaToFHIR(source cda : CdaObservation, target obs : Observation) {
+group CdaToFHIR(source cda : CdaObservation, target obs : FhirObservation) {
     cda -> obs.status ='final' "final";
 
     cda.value : CD as cda_observation_value then {
-        cda_observation_value.code as cda_observation_value_code -> 
-            obs.value = create('CodeableConcept') as fhir_observation_value,
-            fhir_observation_value.coding = translate(cda_observation_value_code, '#sample-concept-map', 'Coding');
+        cda_observation_value.code as cda_observation_value_code ->
+             obs.value = translate(cda_observation_value_code, '#sample-concept-map', 'CodeableConcept') "translate";
     } "CdaObservationValueToFhirObservationValue";
     cda.value : IVL_TS as value -> obs.value = create('Period') as period then {
         value.high as high then {

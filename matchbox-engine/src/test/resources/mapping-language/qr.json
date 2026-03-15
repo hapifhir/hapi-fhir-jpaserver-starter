@@ -43,6 +43,18 @@
                 "valueString": "90"
               }
             ]
+          },
+          {
+            "linkId": "coding",
+            "text": " coding",
+            "answer": [
+              {
+                "valueCoding": {
+                  "code": "36554-4",
+                  "system": "http://loinc.org"
+                }
+              }
+            ]
           }
         ]
       }

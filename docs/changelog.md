@@ -1,3 +1,7 @@
+unreleased
+
+- fix FML NPE with translate(), cc(), and c() when assigning to polymorphic elements like value[x] or location[x] (#480)
+
 2026/02/12 Release 4.0.18
 
 - fix forwarding of `anyExtensionsAllowed`/`extensionDomains` in the validator (#464)
