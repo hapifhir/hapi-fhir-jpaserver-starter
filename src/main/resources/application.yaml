@@ -479,3 +479,35 @@ hapi:
         server_address: 'http://localhost:8080/fhir'
         refuse_to_fetch_third_party_urls: false
         fhir_version: R4
+
+  # Policy Enforcement
+  policy:
+    enable: true
+    evaluation_scope: ORGANIZATION # Options: ORGANIZATION, PATIENT, PATIENT-AND-ORGANIZATION
+    administrator:
+      http_header: "X-Administrator-Access"
+      required_name: ADMIN
+    organization:
+      root_manager_id: "9900000000"
+      http_header: "X-Organization-ID"
+      security_system_name: "http://terminology.kemkes.go.id/org-id"
+    consent:
+      registry_url: "http://localhost:7272/api/consent"
+      access:
+        whitelist:
+          - AllergyIntolerance
+          - FamilyMemberHistory
+          - Substance
+    cache:
+      consent:
+        max_size: 800 # jumlah maksimum tersimapn
+        ttl: 60 # time to live dalam menit
+      encounter:
+        max_size: 5000 # jumlah maksimum tersimapn
+        ttl: 5 # time to live dalam menit
+      episode_of_care:
+        max_size: 5000 # jumlah maksimum tersimapn
+        ttl: 5 # time to live dalam menit
+      service_request:
+        max_size: 2000 # jumlah maksimum tersimapn
+        ttl: 10 # time to live dalam menit
