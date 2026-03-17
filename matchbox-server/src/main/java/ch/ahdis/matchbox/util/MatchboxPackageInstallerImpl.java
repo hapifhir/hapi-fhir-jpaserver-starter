@@ -237,6 +237,35 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 				}
 			}
 		}
+		// Also load internal dependencies declared in the ImplementationGuide resource (see #481)
+		try {
+			for (String s : npmPackage.listResources("ImplementationGuide")) {
+				byte[] content = org.hl7.fhir.utilities.FileUtilities.streamToBytes(npmPackage.load("package", s));
+				JsonObject igJson = org.hl7.fhir.utilities.json.parser.JsonParser.parseObject(content);
+				JsonObject definition = igJson.getJsonObject("definition");
+				if (definition != null && definition.has("extension")) {
+					for (JsonObject ext : definition.getJsonObjects("extension")) {
+						String url = ext.asString("url");
+						if ("http://hl7.org/fhir/tools/StructureDefinition/ig-internal-dependency".equals(url)) {
+							String value = ext.asString("valueCode");
+							if (value != null && value.contains("#")) {
+								String depId = value.substring(0, value.indexOf("#"));
+								String depVer = value.substring(value.indexOf("#") + 1);
+								theOutcome.getMessage().add("Package " + npmPackage.id() + "#" + npmPackage.version() + " has internal dependency " + depId + "#" + depVer);
+								try {
+									NpmPackage dependency = myPackageCacheManager.loadPackage(depId, depVer);
+									fetchAndInstallDependencies(dependency, theInstallationSpec, theOutcome);
+								} catch (IOException e) {
+									ourLog.warn("Failed to load internal dependency {}#{} for {}: {}", depId, depVer, npmPackage.id(), e.getMessage());
+								}
+							}
+						}
+					}
+				}
+			}
+		} catch (IOException e) {
+			ourLog.warn("Failed to read ImplementationGuide resources from package {}: {}", npmPackage.id(), e.getMessage());
+		}
 	}
 
 	/**

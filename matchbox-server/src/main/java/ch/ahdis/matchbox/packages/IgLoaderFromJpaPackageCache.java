@@ -10,9 +10,9 @@ import java.io.ByteArrayInputStream;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
  */
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -270,6 +271,16 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 				}
 				log.info("Finished loading depending package " + dependency + " for "+ src);
 			}
+			// Load internal dependencies declared in the ImplementationGuide resource (see #481)
+			for (final String internalDep : getInternalDependencies(npm)) {
+				log.debug("Loading internal dependency " + internalDep + " for " + src);
+				try {
+					loadIg(igs, binaries, internalDep, recursive);
+				} catch (FHIRException | IOException e) {
+					log.warn("Failed to load internal dependency " + internalDep + " for " + src, e);
+				}
+				log.info("Finished loading internal dependency " + internalDep + " for " + src);
+			}
 			// use above version because of potential .x version we resolve in the cache
 			version = npm.version();
 			Optional<NpmPackageVersionEntity> npmPackage = myNpmPackageVersionDao.findByPackageIdAndVersion(id, version);
@@ -334,6 +345,38 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 			}
 			return null;
 		});
+	}
+
+	/**
+	 * Extracts internal dependencies from the ImplementationGuide resource in the package.
+	 * These are declared via the ig-internal-dependency extension in the IG definition,
+	 * and are not listed in package.json dependencies.
+	 * See https://github.com/ahdis/matchbox/issues/481
+	 */
+	private List<String> getInternalDependencies(NpmPackage npm) {
+		List<String> result = new ArrayList<>();
+		try {
+			for (String s : npm.listResources("ImplementationGuide")) {
+				byte[] content = FileUtilities.streamToBytes(npm.load("package", s));
+				org.hl7.fhir.utilities.json.model.JsonObject igJson =
+					org.hl7.fhir.utilities.json.parser.JsonParser.parseObject(content);
+				org.hl7.fhir.utilities.json.model.JsonObject definition = igJson.getJsonObject("definition");
+				if (definition != null && definition.has("extension")) {
+					for (org.hl7.fhir.utilities.json.model.JsonObject ext : definition.getJsonObjects("extension")) {
+						String url = ext.asString("url");
+						if ("http://hl7.org/fhir/tools/StructureDefinition/ig-internal-dependency".equals(url)) {
+							String value = ext.asString("valueCode");
+							if (value != null && value.contains("#")) {
+								result.add(value);
+							}
+						}
+					}
+				}
+			}
+		} catch (IOException e) {
+			log.warn("Failed to read ImplementationGuide resources from package {}: {}", npm.name(), e.getMessage());
+		}
+		return result;
 	}
 
 	private NpmPackage loadPackage(NpmPackageVersionEntity thePackageVersion) {
