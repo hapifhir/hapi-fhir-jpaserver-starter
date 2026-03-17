@@ -96,7 +96,6 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
-import org.springframework.http.HttpHeaders;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.web.cors.CorsConfiguration;
@@ -280,24 +279,17 @@ public class StarterJpaConfig {
 		// showing a typical setup. You should customize this
 		// to your specific needs
 		ourLog.info("CORS is enabled on this server");
+		AppProperties.Cors corsProperties = appProperties.getCors();
 		CorsConfiguration config = new CorsConfiguration();
-		config.addAllowedHeader(HttpHeaders.ORIGIN);
-		config.addAllowedHeader(HttpHeaders.ACCEPT);
-		config.addAllowedHeader(HttpHeaders.CONTENT_TYPE);
-		config.addAllowedHeader(HttpHeaders.AUTHORIZATION);
-		config.addAllowedHeader(HttpHeaders.CACHE_CONTROL);
-		config.addAllowedHeader("x-fhir-starter");
-		config.addAllowedHeader("X-Requested-With");
-		config.addAllowedHeader("Prefer");
+		corsProperties.getAllowed_headers().forEach(config::addAllowedHeader);
 
-		List<String> allAllowedCORSOrigins = appProperties.getCors().getAllowed_origin();
+		List<String> allAllowedCORSOrigins = corsProperties.getAllowed_origin();
 		allAllowedCORSOrigins.forEach(config::addAllowedOriginPattern);
 		ourLog.info("CORS allows the following origins: {}", String.join(", ", allAllowedCORSOrigins));
 
-		config.addExposedHeader("Location");
-		config.addExposedHeader("Content-Location");
-		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
-		config.setAllowCredentials(appProperties.getCors().getAllow_Credentials());
+		corsProperties.getExposed_headers().forEach(config::addExposedHeader);
+		config.setAllowedMethods(corsProperties.getAllowed_methods());
+		config.setAllowCredentials(corsProperties.getAllow_Credentials());
 
 		// Create the interceptor and register it
 		return new CorsInterceptor(config);
