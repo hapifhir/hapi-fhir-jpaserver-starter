@@ -1,6 +1,34 @@
 <div class="white-block">
     <h2>OperationOutcomes stored on the server:</h2>
 
+    <div class="search-params">
+        <h3>Search Parameters</h3>
+        <mat-form-field class="param">
+            <mat-label>From</mat-label>
+            <input matInput [matDatepicker]="startDate" [formControl]="filterStartDate">
+            <mat-datepicker-toggle matIconSuffix [for]="startDate"></mat-datepicker-toggle>
+            <mat-datepicker #startDate></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="param">
+            <mat-label>To</mat-label>
+            <input matInput [matDatepicker]="endDate" [formControl]="filterEndDate">
+            <mat-datepicker-toggle matIconSuffix [for]="endDate"></mat-datepicker-toggle>
+            <mat-datepicker #endDate></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="param">
+            <mat-label>Severity</mat-label>
+            <mat-select [formControl]="filterSelectedSeverity" multiple>
+                <mat-option value="information">Information</mat-option>
+                <mat-option value="warning">Warning</mat-option>
+                <mat-option value="error">Error</mat-option>
+                <mat-option value="fatal">Fatal</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div>
+            <button>Search</button>
+        </div>
+    </div>
+
     <table>
         <thead>
             <tr>
@@ -13,11 +41,22 @@
             @for (outcome of operationOutcomes; track outcome.id) {
                 <!--Playing around with style attributes, probably not final-->
                 @let lastIssue = outcome.issue[outcome.issue.length - 1];
-                <tr [class]="'severity-' + lastIssue.severity">
+                <tr class="pointer" [class]="'severity-' + lastIssue.severity"
+                    (click)="selectRow(outcome.id)"
+                    >
                     <td>{{ outcome.meta.lastUpdated }}</td>
                     <td>{{ lastIssue.diagnostics }}</td>
                     <td>{{ lastIssue.severity }}</td>
                 </tr>
+
+                @if (selectedOutcomeId === outcome.id) {
+                    <tr class="operation-outcome-row">
+                        <td colspan="3">
+                            <h4>Full Operation Outcome</h4>
+                            <pre>{{ outcome | json }}</pre>
+                        </td>
+                    </tr>
+                }
             }
 
         </tbody>

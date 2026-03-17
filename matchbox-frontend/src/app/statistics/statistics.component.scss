@@ -21,6 +21,26 @@ table {
     }
 }
 
+.search-params {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.param {
+    padding-right: 1rem;
+}
+
+.operation-outcome-row pre {
+    max-width: 100%;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    background: #bae792;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
 /* Playing around with style attributes, probably not final */
 .severity-error {
     color: #ffffff;
