@@ -174,7 +174,7 @@ hapi:
     #     system: "http://loinc.org"
     #     url: "https://hapi.fhir.org/baseR4/"
 
-# Values of X-API-KEY header required for write access. The values shall be GitHub secret keys of repositories
+# Values of Authorization header (with Bearer scheme) required for write access. The values shall be GitHub secret keys of repositories
 # used for authoring of value sets, concept maps and code systems. Required when the APIKeyInterceptor is activated
 # (see section M. Extensibility). Use the following keys for tests only, never in production.
 security:

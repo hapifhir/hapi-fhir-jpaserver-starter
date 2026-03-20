@@ -30,6 +30,8 @@ import java.util.Set;
 @Interceptor
 public class APIKeyInterceptor extends AuthorizationInterceptor {
 
+	private static final String BEARER_PREFIX = "Bearer ";
+
 	private final Logger logger = LoggerFactory.getLogger(APIKeyInterceptor.class);
 
 	@Value("${security.api-keys}")
@@ -39,16 +41,13 @@ public class APIKeyInterceptor extends AuthorizationInterceptor {
 	public List<IAuthRule> buildRuleList(RequestDetails theRequestDetails) {
 
 		// In this basic example we have API Keys configured in application.yaml.
-		String apiKey = theRequestDetails.getHeader("X-API-KEY");
+		String apiKey = theRequestDetails.getHeader("Authorization");
 
-		if (apiKey != null && registeredKeys.contains(apiKey)) {
+		if (apiKey != null && apiKey.startsWith(BEARER_PREFIX) && registeredKeys.contains(apiKey.substring(BEARER_PREFIX.length()))) {
 			logger.debug("The api key matches one of the keys registered in application.yaml. Unrestricted access will be granted.");
 			return new RuleBuilder().allowAll().build();
-		}
-
-		if (apiKey == null || !registeredKeys.contains(apiKey)) {
-
-			logger.debug("API key is null or not registered. Only read access will be granted.");
+		} else {
+			logger.debug("API key is null, does not use the Bearer scheme or is not registered. Only read access will be granted.");
 
 			var builder = new RuleBuilder();
 			builder.allow().metadata();
@@ -57,8 +56,6 @@ public class APIKeyInterceptor extends AuthorizationInterceptor {
 			allowReadAndOperationsOnResourceType(builder, ConceptMap.class, List.of("translate"));
 			return builder.build();
 		}
-
-		throw new AuthenticationException(Msg.code(644) + "Missing or invalid X-API-KEY header value");
 	}
 
 	private void allowReadAndOperationsOnResourceType(IAuthRuleBuilder builder, Class<? extends IBaseResource> type, List<String> operations) {
