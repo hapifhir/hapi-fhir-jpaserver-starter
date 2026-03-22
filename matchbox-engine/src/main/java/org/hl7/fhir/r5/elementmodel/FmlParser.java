@@ -87,30 +87,7 @@ public class FmlParser extends ParserBase {
         String fid = lexer.takeDottedToken();
         Element e = result.makeElement(fid).markLocation(lexer.getCurrentLocation());
         lexer.token("=");
-        // matchbox pr https://github.com/hapifhir/org.hl7.fhir.core/issues/1777        
-        String multiline = lexer.getCurrent();
-        if (fid.equals("description")) {
-          String descr = lexer.readConstant("description");
-          if ("\"\"".equals(multiline)) {
-            descr = lexer.readConstant("description multiline");
-            if (descr.startsWith("\r")) {
-              descr = descr.substring(1);
-            }
-            if (descr.startsWith("\n")) {
-                descr = descr.substring(1);
-            }
-            if (descr.endsWith("\n")) {
-                descr = descr.substring(0, descr.length()-1);
-            }
-            if (descr.endsWith("\r")) {
-                descr = descr.substring(0, descr.length()-1);
-            }
-            lexer.skipToken("\"\"");
-          } 
-          e.setValue(descr);
-        } else {
-            e.setValue(lexer.readConstant("meta value"));
-        }
+        e.setValue(lexer.readConstant("meta value"));
       }
       lexer.setMetadataFormat(false);
       if (!result.hasChild("status")) {
@@ -462,17 +439,6 @@ public class FmlParser extends ParserBase {
     }
     lexer.token(")");
   }
-  
-  // matchbox pr https://github.com/hapifhir/org.hl7.fhir.core/issues/1777
-  private String removeQuotedOrBacktick(String token) {
-    if (token.startsWith("`") && token.endsWith("`")) {
-       return token.substring(1,token.length()-1);
-    }
-    if (token.startsWith("\"") && token.endsWith("\"")) {
-        return token.substring(1,token.length()-1);
-     }
-    return token;
-  }
 
   private void parseSource(Element rule, FHIRLexer lexer) throws FHIRException {
     Element source = rule.addElement("source").markLocation(lexer.getCurrentLocation());
@@ -487,8 +453,7 @@ public class FmlParser extends ParserBase {
       lexer.token(")");
     } else if (lexer.hasToken(".")) {
       lexer.token(".");
-      // matchbox pr https://github.com/hapifhir/org.hl7.fhir.core/issues/1777
-      source.makeElement("element").markLocation(lexer.getCurrentLocation()).setValue(removeQuotedOrBacktick(lexer.take()));
+      source.makeElement("element").markLocation(lexer.getCurrentLocation()).setValue(lexer.take());
     }
     if (lexer.hasToken(":")) {
       // type and cardinality
@@ -530,9 +495,8 @@ public class FmlParser extends ParserBase {
       lexer.take();
       SourceLocation loc = lexer.getCurrentLocation();
       ExpressionNode node = fpe.parse(lexer);
-      // matchbox pr https://github.com/hapifhir/org.hl7.fhir.core/issues/1777 
-      source.setUserData(StructureMapUtilities.MAP_WHERE_LOG, node);
-      source.makeElement("logMessage").markLocation(loc).setValue(node.toString());
+      source.setUserData(StructureMapUtilities.MAP_WHERE_CHECK, node);
+      source.makeElement("logMessage").markLocation(loc).setValue(lexer.take());
     }
   }
   
@@ -544,8 +508,7 @@ public class FmlParser extends ParserBase {
       target.makeElement("context").markLocation(loc).setValue(start);
       start = null;
       lexer.token(".");
-      // matchbox pr https://github.com/hapifhir/org.hl7.fhir.core/issues/1777
-      target.makeElement("element").markLocation(lexer.getCurrentLocation()).setValue(removeQuotedOrBacktick(lexer.take()));
+      target.makeElement("element").markLocation(lexer.getCurrentLocation()).setValue(lexer.take());
     }
     String name;
     boolean isConstant = false;

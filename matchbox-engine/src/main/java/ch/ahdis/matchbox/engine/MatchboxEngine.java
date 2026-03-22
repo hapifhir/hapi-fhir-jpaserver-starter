@@ -153,7 +153,8 @@ public class MatchboxEngine extends ValidationEngine {
 	      } catch (Exception e) {
 	        throw new FHIRException("Error loading UCUM from embedded ucum-essence.xml: "+e.getMessage(), e);
 	      }
-  	  context.setExpansionParameters(makeExpProfile());	
+  	  context.setExpansionParameters(makeExpProfile());
+  	  context.setValidatorFactory(new org.hl7.fhir.validation.instance.InstanceValidatorFactory());
       FHIRPathEngine fhirPathEngine = new FHIRPathEngine(context);
       fhirPathEngine.setAllowDoubleQuotes(false);
       this.setFhirPathEngine(fhirPathEngine);

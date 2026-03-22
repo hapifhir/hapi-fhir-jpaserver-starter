@@ -71,11 +71,7 @@ import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.utils.UserDataNames;
 import org.hl7.fhir.r5.utils.formats.XmlLocationAnnotator;
 import org.hl7.fhir.r5.utils.formats.XmlLocationData;
-import org.hl7.fhir.utilities.ElementDecoration;
-import org.hl7.fhir.utilities.StringPair;
-import org.hl7.fhir.utilities.FileUtilities;
-import org.hl7.fhir.utilities.MarkedToMoveToAdjunctPackage;
-import org.hl7.fhir.utilities.Utilities;
+import org.hl7.fhir.utilities.*;
 import org.hl7.fhir.utilities.i18n.I18nConstants;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
 import org.hl7.fhir.utilities.validation.ValidationMessage.IssueSeverity;
@@ -87,7 +83,6 @@ import org.hl7.fhir.utilities.xhtml.XhtmlParser;
 import org.hl7.fhir.utilities.xml.IXMLWriter;
 import org.hl7.fhir.utilities.xml.XMLUtil;
 import org.hl7.fhir.utilities.xml.XMLWriter;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.ErrorHandler;
@@ -231,7 +226,7 @@ public class XmlParser extends ParserBase {
 
     StructureDefinition sd = getDefinition(errors, line(element, false), col(element, false), (ns == null ? "noNamespace" : ns), name);
     if (sd == null && rd != null) {
-      sd = context.fetchResource(StructureDefinition.class, rd);
+      sd = context.fetchResource(StructureDefinition.class, rd, IWorkerContext.VersionResolutionRules.defaultRule());
     }
     if (sd == null) {
       return null;
@@ -263,14 +258,6 @@ public class XmlParser extends ParserBase {
       return "pharm:";
     if (ns.equals("http://ns.electronichealth.net.au/Ci/Cda/Extensions/3.0"))
       return "ext:";
-    if (ns.equals("urn:oid:1.3.6.1.4.1.19376.1.3.2")) {
-        // MATCHBOX
-        return "lab:";
-      }
-   if (ns.equals("urn:hl7-at:v3")) {
-        // MATCHBOX
-        return "hl7at:";
-      }
     return "?:";
   }
 
@@ -331,7 +318,7 @@ public class XmlParser extends ParserBase {
       if (sd == sdA) {
         return sd;
       }
-      sd = context.fetchResource(StructureDefinition.class, sd.getBaseDefinition());
+      sd = context.fetchResource(StructureDefinition.class, sd.getBaseDefinition(), IWorkerContext.VersionResolutionRules.defaultRule());
     }
     return null;
   }
@@ -362,20 +349,14 @@ public class XmlParser extends ParserBase {
     return result;
   }
 
-  // matchbox patch: Datatype ST.r2b #439
-  public static String getXsiType(org.w3c.dom.Element element) {
-    Attr a = element.getAttributeNodeNS("http://www.w3.org/2001/XMLSchema-instance", "type");
-    String xsiType = (a == null ? null : a.getTextContent());
-    if (xsiType != null && xsiType.contains("."))
-      xsiType = xsiType.replace(".", "_dot_");
-    return xsiType;
-  }
-
   private void parseChildren(List<ValidationMessage> errors, String path, org.w3c.dom.Element node, Element element) throws FHIRFormatError, FHIRException, IOException, DefinitionException {
     // this parsing routine retains the original order in a the XML file, to support validation
     reapComments(node, element);
-    // matchbox-patch: Datatype ST.r2b #439
-    List<Property> properties = element.getProperty().getChildProperties(element.getName(), getXsiType(node));
+    // matchbox patch: Datatype ST.r2b #439
+    String nodeXsiType = XMLUtil.getXsiType(node);
+    if (nodeXsiType != null && nodeXsiType.contains("."))
+      nodeXsiType = nodeXsiType.replace(".", "_dot_");
+    List<Property> properties = element.getProperty().getChildProperties(element.getName(), nodeXsiType);
     Property cgProp = getChoiceGroupProp(properties);
     Property mtProp = cgProp == null ? null : getTextProp(cgProp.getChildProperties(null, null));
 
@@ -433,13 +414,6 @@ public class XmlParser extends ParserBase {
         Property property = getAttrProp(properties, attr.getLocalName(), attr.getNamespaceURI());
         if (property != null) {
           String av = attr.getNodeValue();
-
-					// matchbox-engine: if we are parsing from CDA we need to collapse non string types https://www.w3.org/TR/xmlschema-2/#rf-whiteSpace
-					// If the attribute type is not CDATA, then the XML processor must further process the normalized attribute value by discarding any leading and trailing space (#x20) characters
-					if ("urn:hl7-org:v3".equals(node.getNamespaceURI()) || "urn:hl7-org:sdtc".equals(node.getNamespaceURI()) || "urn:ihe:pharm".equals(node.getNamespaceURI()) || "urn:oid:1.3.6.1.4.1.19376.1.3.2".equals(node.getNamespaceURI())|| "urn:hl7-at:v3".equals(node.getNamespaceURI())) {
-						av = av.trim();
-					}
-
           if (ExtensionUtilities.hasExtension(property.getDefinition(), ExtensionDefinitions.EXT_DATE_FORMAT))
             av = convertForDateFormatFromExternal(ExtensionUtilities.readStringExtension(property.getDefinition(), ExtensionDefinitions.EXT_DATE_FORMAT), av);          
           if (property.getName().equals("value") && element.isPrimitive())
@@ -530,7 +504,7 @@ public class XmlParser extends ParserBase {
                 } else {
                   if (xsiType.contains(":"))
                     xsiType = xsiType.substring(xsiType.indexOf(":")+1);
-                   // matchbox patch: Datatype ST.r2b #439
+                  // matchbox patch: Datatype ST.r2b #439
                   if (xsiType.contains("."))
                     xsiType = xsiType.replace(".", "_dot_");
                   n.setType(xsiType);
@@ -711,7 +685,7 @@ public class XmlParser extends ParserBase {
   private void parseResource(List<ValidationMessage> errors, String string, org.w3c.dom.Element container, Element parent, Property elementProperty) throws FHIRFormatError, DefinitionException, FHIRException, IOException {
     org.w3c.dom.Element res = XMLUtil.getFirstChild(container);
     String name = res.getLocalName();
-    StructureDefinition sd = context.fetchResource(StructureDefinition.class, ProfileUtilities.sdNs(name, null));
+    StructureDefinition sd = context.fetchResource(StructureDefinition.class, ProfileUtilities.sdNs(name, null), IWorkerContext.VersionResolutionRules.defaultRule());
     if (sd == null)
       throw new FHIRFormatError(context.formatMessage(I18nConstants.CONTAINED_RESOURCE_DOES_NOT_APPEAR_TO_BE_A_FHIR_RESOURCE_UNKNOWN_NAME_, res.getLocalName()));
     parent.updateProperty(new Property(context, sd.getSnapshot().getElement().get(0), sd, getProfileUtilities(), getContextUtilities()), SpecialElement.fromProperty(parent.getProperty()), elementProperty);
@@ -921,11 +895,6 @@ public class XmlParser extends ParserBase {
       }
     } else if (element.isPrimitive() || (element.hasType() && isPrimitive(element.getType()))) {
       if (element.getType().equals("xhtml")) {
-        // matchbox patch https://github.com/ahdis/matchbox/issues/417
-        if ((element.getXhtml()==null)  && (element.getValue() != null)) {
-          XhtmlParser xhtml = new XhtmlParser();
-          element.setXhtml(xhtml.setXmlMode(true).parse(element.getValue(), null).getDocumentElement());
-        } 
         if (isElideElements() && element.isElided() && xml.canElide())
           xml.elide();
         else {
@@ -1010,8 +979,7 @@ public class XmlParser extends ParserBase {
               xml.link(linkResolver.resolveType(child.getType()));
             if (ExtensionUtilities.hasExtension(child.getProperty().getDefinition(), ExtensionDefinitions.EXT_DATE_FORMAT))
               av = convertForDateFormatToExternal(ExtensionUtilities.readStringExtension(child.getProperty().getDefinition(), ExtensionDefinitions.EXT_DATE_FORMAT), av);
-          // MATCHBOX PATCH: adjusting it for pharm
-					xml.attribute(child.getProperty().getXmlName(), av);
+            xml.attribute(child.getProperty().getXmlNamespace(), child.getProperty().getXmlName(), av);
           }
         }
       }

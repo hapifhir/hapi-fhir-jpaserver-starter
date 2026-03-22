@@ -216,6 +216,23 @@ public class NpmPackage {
     return ver.matches("^[0-9]+\\.[0-9]+\\.[0-9]+$");
   }
 
+  public static boolean isValidNameWithVersion(String name, boolean optionalVersion) {
+    if (name == null || name.isEmpty()) {
+      return false;
+    }
+    if (name.contains("#")) {
+      String n = name.substring(0, name.indexOf("#"));
+      String v = name.substring(name.indexOf("#") + 1);
+      if (v == null || v.isEmpty()) {
+        return isValidName(n) && optionalVersion;
+      } else {
+        return isValidName(n) && (isValidVersion(v) || Utilities.existsInList(v, "current", "dev"));
+      }
+    } else {
+      return isValidName(name) && optionalVersion;
+    }
+  }
+
   public class NpmPackageFolder {
     private final String folderName;
     private Map<String, List<String>> types;
@@ -616,7 +633,7 @@ public class NpmPackage {
       TarArchiveEntry entry;
 
       NpmPackageReadLogger readLogger = new NpmPackageReadLogger(progress);
-      while ((entry = (TarArchiveEntry) tarIn.getNextEntry()) != null) {
+      while ((entry = tarIn.getNextEntry()) != null) {
         String entryName = entry.getName();
         if (entryName.contains("..")) {
           throw new RuntimeException("Entry with an illegal name: " + entryName);
@@ -684,7 +701,6 @@ public class NpmPackage {
 
   public boolean isIndexed() throws IOException {
     for (NpmPackageFolder folder : folders.values()) {
-      JsonObject index = folder.index();
       if (folder.index() == null) {
         return false;
       }
@@ -812,7 +828,7 @@ public class NpmPackage {
     return listResources(Utilities.stringSet(types));
   }
   
-  public List<String> listResourcesinFolder(String folder, String... types) throws IOException {
+  public List<String>listResourcesInFolder(String folder, String... types) throws IOException {
     return listResourcesInFolder(folder, Utilities.stringSet(types));
   }
   
@@ -823,7 +839,7 @@ public class NpmPackage {
   public List<String> listResourcesInFolder(String folderName, Set<String> types) throws IOException {
     List<String> res = new ArrayList<String>();
     NpmPackageFolder folder = folders.get(folderName);
-    if (types.size() == 0) {
+    if (types.isEmpty()) {
       for (String s : folder.types.keySet()) {
         if (folder.types.containsKey(s)) {
           res.addAll(folder.types.get(s));
@@ -867,7 +883,7 @@ public class NpmPackage {
     return res;
   }
 
-  public List<PackagedResourceFile> listAllResources() throws IOException {
+  public List<PackagedResourceFile> listAllResources() {
     List<PackagedResourceFile> res = new ArrayList<PackagedResourceFile>();
     for (NpmPackageFolder folder : folders.values()) {
       if (!folder.getFolderName().startsWith("tests") && !folder.getFolderName().startsWith("data")) {
@@ -1430,13 +1446,6 @@ public class NpmPackage {
     }
   }
 
-  private List<String> sorted(Set<String> keys) {
-    List<String> res = new ArrayList<String>();
-    res.addAll(keys);
-    Collections.sort(res);
-    return res ;
-  }
-
   public void clearFolder(String folderName) {
     NpmPackageFolder folder = folders.get(folderName);
     folder.content.clear();
@@ -1550,8 +1559,7 @@ public class NpmPackage {
 
   public InputStream load(PackageResourceInformation p) throws IOException {
     if (p.filename.startsWith("@")) {
-			// MATCHBOX: fix for windows
-			String[] pl = p.filename.replace("\\", "/").substring(1).split("\\/");
+      String[] pl = p.filename.substring(1).split("\\/");
       return new ByteArrayInputStream(folders.get(pl[0]).content.get(pl[1]));
     } else {
       return ManagedFileAccess.inStream(p.filename);
