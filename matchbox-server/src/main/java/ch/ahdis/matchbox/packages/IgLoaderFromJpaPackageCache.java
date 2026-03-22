@@ -366,7 +366,7 @@ public class IgLoaderFromJpaPackageCache extends IgLoader {
 						String url = ext.asString("url");
 						if ("http://hl7.org/fhir/tools/StructureDefinition/ig-internal-dependency".equals(url)) {
 							String value = ext.asString("valueCode");
-							if (value != null && value.contains("#")) {
+							if (value != null && value.contains("#") && !value.startsWith("hl7.fhir.uv.tools#current")) {
 								result.add(value);
 							}
 						}

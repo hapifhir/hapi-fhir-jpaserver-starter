@@ -248,7 +248,7 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 						String url = ext.asString("url");
 						if ("http://hl7.org/fhir/tools/StructureDefinition/ig-internal-dependency".equals(url)) {
 							String value = ext.asString("valueCode");
-							if (value != null && value.contains("#")) {
+							if (value != null && value.contains("#") && !value.startsWith("hl7.fhir.uv.tools#current")) {
 								String depId = value.substring(0, value.indexOf("#"));
 								String depVer = value.substring(value.indexOf("#") + 1);
 								theOutcome.getMessage().add("Package " + npmPackage.id() + "#" + npmPackage.version() + " has internal dependency " + depId + "#" + depVer);
