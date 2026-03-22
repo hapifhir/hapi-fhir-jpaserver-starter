@@ -64,7 +64,8 @@ The following files have matchbox-specific patches (as of 6.9.1 update):
 | `StructureMapUtilities.java` | CDA type matching: URL suffix comparison in matchesType | CDA support |
 | `StructureMapUtilities.java` | DEF_GROUP_NAME handling in executeRule | 6.9.1 compat |
 | `FHIRPathHostServices.java` | FML resolve() in Bundle | #359 |
-| `Element.java` | Choice type handling in setProperty and convertToElement | FML support |
+| `Element.java` | Choice type handling in setProperty and convertToElement | FML suppor
+t |
 | `Property.java` | getName() path-based name, getChild() choice type matching | FML support |
 | `XmlParser.java` | ST.r2b datatype handling (dot replacement in xsiType) | #439 |
 | `BaseValidator.java` | ruleInv suppression uses invId instead of theMessage | Validation |

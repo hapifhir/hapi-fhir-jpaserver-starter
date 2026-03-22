@@ -1,7 +1,8 @@
-unreleased
+2026/02/12 Release 4.0.19
 
 - fix FML NPE with translate(), cc(), and c() when assigning to polymorphic elements like value[x] or location[x] (#480)
 - load internal dependencies (ig-internal-dependency extension) from ImplementationGuide resources (#481)
+- update org.hl7.fhir.core 6.9.1
 
 2026/02/12 Release 4.0.18
 
