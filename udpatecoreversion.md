@@ -75,6 +75,7 @@ The following files have matchbox-specific patches (as of 6.9.1 update):
 | `ValidatorResourceFetcher.java` | Signature updates for VersionResolutionRules | 6.9.1 compat |
 | `MatchboxEngine.java` | setValidatorFactory for InstanceValidator | 6.9.1 compat |
 | `MatchboxService.java` | InstanceValidatorParameters for validate() | 6.9.1 compat |
+| `HapiWorkerContext.java` | Add missing IWorkerContext 6.9.1 methods (VersionResolutionRules, expandVS, etc.) | 6.9.1 compat |
 
 ### Strategy for re-applying patches
 
