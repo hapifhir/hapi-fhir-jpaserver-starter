@@ -5376,6 +5376,11 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       for (CanonicalType p : type.getProfile()) {
         String id = p.hasExtension(ExtensionDefinitions.EXT_PROFILE_ELEMENT) ? p.getExtensionString(ExtensionDefinitions.EXT_PROFILE_ELEMENT) : null;
         StructureDefinition sd =profileUtilities.findProfile(p, profile);
+        // matchbox PATCH: https://github.com/ahdis/matchbox/issues/138 try to check if it is a cross version extension
+        BooleanHolder errored = new BooleanHolder(false);
+        if (sd == null) {
+          sd = getXverExt(new ArrayList<ValidationMessage>(), path, new Element("profile"), p.getValue(), errored);
+        }
         if (sd == null)
           throw new DefinitionException(context.formatMessage(I18nConstants.SD_ED_TYPE_PROFILE_UNKNOWN, p));
         profile = sd;

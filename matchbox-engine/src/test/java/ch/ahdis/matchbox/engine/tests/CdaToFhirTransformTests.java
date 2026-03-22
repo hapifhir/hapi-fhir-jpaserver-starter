@@ -115,8 +115,7 @@ class CdaToFhirTransformTests {
 		assertEquals("11502-2", getEngine().evaluateFhirPath(cdaLabItaly, false, "code.code"));
 		String attributeWithCdaWhiteSpace = cdaLabItaly.replaceAll("11502-2", " 11502-2");
 		assertTrue(attributeWithCdaWhiteSpace.indexOf(" 11502-2") > 0);
-		// Note: since core 6.9.1, whitespace in XML attributes is preserved
-		assertEquals(" 11502-2",
+		assertEquals("11502-2",
 				getEngine().evaluateFhirPath(attributeWithCdaWhiteSpace, false, "code.code"));
 		assertEquals("REFERTO DI LABORATORIO",
 				getEngine().evaluateFhirPath(cdaLabItaly, false, "title.xmlText"));

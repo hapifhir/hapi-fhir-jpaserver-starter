@@ -120,7 +120,17 @@ public class FHIRPathHostServices implements IHostApplicationServices {
 
   @Override
   public boolean conformsToProfile(FHIRPathEngine engine, Object appContext, Base item, String url) throws FHIRException {
-    IResourceValidator val = structureMapUtilities.getWorker().newValidator();
+    // IResourceValidator val = structureMapUtilities.getWorker().newValidator();
+    // matchbox patch: we need the same conformToProfile context as we have in the matchbox engine
+    // matchbox 3.1.0
+    IResourceValidator val = null;
+    try {
+        val = ((ch.ahdis.matchbox.mappinglanguage.MatchboxStructureMapUtilities) structureMapUtilities).getEngine()
+                .getValidator(FhirFormat.JSON);
+    } catch (IOException e) {
+        throw new NotImplementedException(
+                "Not done yet (FFHIRPathHostServices.conformsToProfile), engine could not be created");
+    }
     List<ValidationMessage> valerrors = new ArrayList<ValidationMessage>();
     if (item instanceof Resource) {
       val.validate(appContext, valerrors, (Resource) item, url);
