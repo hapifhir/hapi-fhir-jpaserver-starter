@@ -176,6 +176,19 @@ public class TestDataFactory {
     public List<Base> execute(FHIRPathEngine engine, Object appContext, List<Base> focus, List<List<Base>> parameters) {
 
       List<Base> res = new ArrayList<Base>();
+      // matchbox patch for https://github.com/hapifhir/org.hl7.fhir.core/issues/1942
+      if (focus.get(0)!=null && focus.get(0) instanceof DataTable && parameters.size() == 3 && parameters.get(0).size() == 1 && parameters.get(1).size() == 1 && parameters.get(2).size() == 1) {
+        String lcol = parameters.get(0).get(0).primitiveValue();
+        String val = parameters.get(1).get(0).primitiveValue();
+        String rcol = parameters.get(2).get(0).primitiveValue();
+        DataTable tbl = (DataTable) focus.get(0);
+        if (lcol != null && val != null && rcol != null && tbl != null) {
+          String s = tbl.lookup(lcol, val, rcol);
+          if (!Utilities.noString(s)) {
+            res.add(new StringType(s));
+          }
+        }
+      }
       if (focus.get(0) instanceof BaseTableWrapper && parameters.size() == 4 && parameters.get(0).size() == 1 && parameters.get(1).size() == 1 && parameters.get(2).size() == 1 && parameters.get(3).size() == 1) {
         BaseTableWrapper dt = (BaseTableWrapper) focus.get(0);
         String table = parameters.get(0).get(0).primitiveValue(); 
@@ -184,21 +197,6 @@ public class TestDataFactory {
         String rcol = parameters.get(3).get(0).primitiveValue();
         if (table != null && lcol != null && val != null && rcol != null) {
           DataTable tbl = dt.getTables().get(table);
-          if (tbl != null) {
-            String s = tbl.lookup(lcol, val, rcol);
-            if (!Utilities.noString(s)) {
-              res.add(new StringType(s));
-            }
-          }
-        }
-      }
-      // matchbox patch for https://github.com/hapifhir/org.hl7.fhir.core/issues/1942
-      if (focus.get(0)!=null && focus.get(0) instanceof DataTable && parameters.size() == 3 && parameters.get(0).size() == 1 && parameters.get(1).size() == 1 && parameters.get(2).size() == 1) {
-        String lcol = parameters.get(0).get(0).primitiveValue();
-        String val = parameters.get(1).get(0).primitiveValue();
-        String rcol = parameters.get(2).get(0).primitiveValue();
-        DataTable tbl = (DataTable) focus.get(0);
-        if (lcol != null && val != null && rcol != null) {
           if (tbl != null) {
             String s = tbl.lookup(lcol, val, rcol);
             if (!Utilities.noString(s)) {
@@ -295,7 +293,7 @@ public class TestDataFactory {
       factory.setTesting(testing);
       factory.setMarkProfile(details.asBoolean("mark-profile"));
       String purl = details.asString( "profile");
-      StructureDefinition profile = context.fetchResource(StructureDefinition.class, purl);
+      StructureDefinition profile = context.fetchResource(StructureDefinition.class, purl, IWorkerContext.VersionResolutionRules.defaultRule());
       if (profile == null) {
         error("Unable to find profile "+purl);
       } else if (!profile.hasSnapshot()) {
@@ -354,7 +352,7 @@ public class TestDataFactory {
     } catch (Exception e) {
       if (!localData.exists()) {
         log("Unable to download copy of FHIR testing data: "+ e.getMessage());
-        throw new FHIRException("Unable to download copy of FHIR testing data", e);
+        throw new FHIRException("Unable to download copy of FHIR testing data: "+e.getMessage(), e);
       }
     }
   }
@@ -514,7 +512,7 @@ public class TestDataFactory {
   public TableDataProvider loadTableProvider(String path, Locale locale) {
     TableDataProvider tbl;
     if (Utilities.isAbsoluteUrl(path)) {
-      ValueSet vs = context.findTxResource(ValueSet.class, path);
+      ValueSet vs = context.findTxResource(ValueSet.class, path, IWorkerContext.VersionResolutionRules.defaultRule());
       if (vs == null) {
         throw new FHIRException("ValueSet "+path+" not found");
       } else {

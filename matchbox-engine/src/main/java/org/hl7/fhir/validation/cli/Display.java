@@ -35,46 +35,6 @@ public class Display {
    logger.info("  Params:" + sb.toString());
   }
 
-  final static String CURLY_START = "\\{\\{";
-  final static String CURLY_END = "\\}\\}";
-
-  final static String getMoustacheString(final String string) {
-    return CURLY_START + string + CURLY_END;
-  }
-
-
-
-  final static String replacePlaceholders(final String input, final String[][] placeholders) {
-    String output = input;
-    for (String[] placeholder : placeholders) {
-      output = output.replaceAll(getMoustacheString(placeholder[0]), placeholder[1]);
-    }
-    return output;
-  }
-
-  public static void displayHelpDetails(Logger logger, String file) {
-    displayHelpDetails(logger, file, new String[][]{});
-  }
-  /**
-   * Loads the help details from a file, and displays them on the out stream.
-   *
-   * @param logger
-   * @param file
-   */
-  public static void displayHelpDetails(Logger logger, String file, final String[][] placeholders) {
-    ClassLoader classLoader = Display.class.getClassLoader();
-    InputStream help = classLoader.getResourceAsStream(file);
-    try {
-      String data = IOUtils.toString(help, "UTF-8");
-
-      logger.info(replacePlaceholders(data, placeholders));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-
-
   /**
    * Prints out system info to the command line.
    */

@@ -46,10 +46,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+
+import org.hl7.fhir.r5.context.IWorkerContext;
 
 /**
  * Please note that this bean is not currently used as part of the $validate operation.
@@ -70,7 +73,7 @@ public class ValidatorResourceFetcher implements IValidatorResourceFetcher {
 
 	@Override
 	public
-	boolean resolveURL(IResourceValidator validator, Object appContext, String path, String url, String type, boolean canonical, List<CanonicalType> targets) throws IOException, FHIRException {
+	boolean resolveURL(IResourceValidator validator, Object appContext, String path, String url, IWorkerContext.VersionResolutionRules rules, String type, boolean canonical, List<CanonicalType> targets) throws IOException, FHIRException {
 		return true;
 	}
 
@@ -86,7 +89,7 @@ public class ValidatorResourceFetcher implements IValidatorResourceFetcher {
 	}
 
 	@Override
-	public CanonicalResource fetchCanonicalResource(IResourceValidator validator, Object appContext, String url) {
+	public CanonicalResource fetchCanonicalResource(IResourceValidator validator, Object appContext, String url) throws URISyntaxException {
 		return null;
 	}
 
@@ -96,7 +99,7 @@ public class ValidatorResourceFetcher implements IValidatorResourceFetcher {
 	}
 
 	@Override
-	public Set fetchCanonicalResourceVersions(IResourceValidator validator, Object appContext, String url) {
+	public Set<IValidatorResourceFetcher.ResourceVersionInformation> fetchCanonicalResourceVersions(IResourceValidator validator, Object appContext, String url) {
 		return Collections.emptySet();
 	}
 }

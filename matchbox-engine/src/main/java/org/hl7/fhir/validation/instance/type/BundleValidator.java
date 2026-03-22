@@ -30,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.xml.security.c14n.CanonicalizationException;
 import org.apache.xml.security.c14n.InvalidCanonicalizerException;
 import org.hl7.fhir.exceptions.FHIRException;
+import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Element;
 import org.hl7.fhir.r5.elementmodel.Manager;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
@@ -167,11 +168,9 @@ public class BundleValidator extends BaseValidator {
                 for (String profile : profiles) {
                   StructureDefinition defn = context.fetchResource(StructureDefinition.class, profile);
                   if (defn != null) {
-//                    if (validator().isCrumbTrails()) {
                       res.addMessage(signpost(errors, NO_RULE_DATE, IssueType.INFORMATIONAL, res.line(), res.col(),
                           stack.getLiteralPath(), I18nConstants.VALIDATION_VAL_PROFILE_SIGNPOST_BUNDLE_PARAM,
                           defn.getUrl()));
-//                    }
                     stack.resetIds();
                     ok = validator().startInner(hostContext, errors, res, res, defn, rstack, false, pct, mode, false)
                         && ok;
@@ -246,7 +245,7 @@ public class BundleValidator extends BaseValidator {
         NodeStack rstack = estack.push(res, -1, null, null);
         for (BundleValidationRule bvr : validator().getBundleValidationRules()) {
           if (meetsRule(bvr, rtype, rcount, count)) {
-            StructureDefinition defn = context.fetchResource(StructureDefinition.class, bvr.getProfile());
+            StructureDefinition defn = context.fetchResource(StructureDefinition.class, bvr.getProfile(), IWorkerContext.VersionResolutionRules.defaultRule());
             if (defn == null) {
               throw new Error(context.formatMessage(I18nConstants.BUNDLE_RULE_PROFILE_UNKNOWN, bvr.getRule(), bvr.getProfile()));
             } else {
@@ -1306,7 +1305,7 @@ public class BundleValidator extends BaseValidator {
                   }
                 } else {
                   String b64 = Base64URL.encode(toSign).toString();
-                  ok = rule(errors, "2025-06-13", IssueType.VALUE, stack, parts[1].equals(b64), I18nConstants.BUNDLE_SIGNATURE_PAYLOAD_BASE64_DIFF) & ok;
+                  ok = rule(errors, "2025-06-13", IssueType.VALUE, stack, parts[1].equals(b64), I18nConstants.BUNDLE_SIGNATURE_PAYLOAD_BASE64_DIFF) && ok;
                 }
               } 
             }

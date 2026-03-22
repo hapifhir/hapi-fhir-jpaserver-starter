@@ -45,12 +45,9 @@ import org.hl7.fhir.r5.extensions.ExtensionDefinitions;
 import org.hl7.fhir.r5.extensions.ExtensionUtilities;
 import org.hl7.fhir.r5.fhirpath.TypeDetails;
 import org.hl7.fhir.r5.formats.FormatUtilities;
-import org.hl7.fhir.r5.model.Constants;
-import org.hl7.fhir.r5.model.ElementDefinition;
+import org.hl7.fhir.r5.model.*;
 import org.hl7.fhir.r5.model.ElementDefinition.PropertyRepresentation;
 import org.hl7.fhir.r5.model.ElementDefinition.TypeRefComponent;
-import org.hl7.fhir.r5.model.Extension;
-import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.model.StructureDefinition.StructureDefinitionKind;
 
 import org.hl7.fhir.r5.utils.TypesUtilities;
@@ -170,7 +167,7 @@ public class Property {
       } else {
         path = path.substring(1);
       }
-      StructureDefinition sd = (url == null || url.equals(structure.getUrl())) ? structure : profileUtilities.findProfile(url, structure);
+      StructureDefinition sd = (url == null || url.equals(structure.getUrl())) ? structure : profileUtilities.findProfileStr(url, structure);
       if (sd == null) {
         throw new Error("Unknown Type in content reference '"+path+"'");        
       }
@@ -355,9 +352,9 @@ public class Property {
   		return false;
   	if (!hasType(name))
   		return false;
-  	StructureDefinition sd = context.fetchResource(StructureDefinition.class, structure.getUrl().substring(0, structure.getUrl().lastIndexOf("/")+1)+getType(name));
+  	StructureDefinition sd = context.fetchResource(StructureDefinition.class, structure.getUrl().substring(0, structure.getUrl().lastIndexOf("/")+1)+getType(name), IWorkerContext.VersionResolutionRules.defaultRule());
   	if (sd == null)
-  	  sd = context.fetchResource(StructureDefinition.class, ProfileUtilities.sdNs(getType(name), null));
+  	  sd = context.fetchResource(StructureDefinition.class, ProfileUtilities.sdNs(getType(name), null), IWorkerContext.VersionResolutionRules.defaultRule());
     if (sd != null && sd.getKind() == StructureDefinitionKind.PRIMITIVETYPE)
       return true;
   	if (sd == null || sd.getKind() != StructureDefinitionKind.LOGICAL)
@@ -395,6 +392,7 @@ public class Property {
     boolean isCDA = isCDAElement(structure);
     SourcedChildDefinitions children = profileUtilities.getChildMap(sd, ed, false);
     String url = null;
+    org.hl7.fhir.r5.model.Element urlSrc = null;
     if (children.getList().isEmpty() || isElementWithOnlyExtension(ed, children.getList())) {
       // ok, find the right definitions
       String t = null;
@@ -422,7 +420,7 @@ public class Property {
               if (tr.getWorkingCode().equals(t)) 
                 ok = true;
               if (Utilities.isAbsoluteUrl(tr.getWorkingCode())) {
-                StructureDefinition sdt = context.fetchResource(StructureDefinition.class, tr.getWorkingCode());
+                StructureDefinition sdt = context.fetchResource(StructureDefinition.class, tr.getWorkingCode(), ExtensionUtilities.getVersionResolutionRules(tr.getCodeElement()));
                 if (sdt != null && sdt.getTypeTail().equals(t)) {
                   url = tr.getWorkingCode();
                   ok = true;
@@ -453,10 +451,13 @@ public class Property {
       if (!"xhtml".equals(t)) {
         for (TypeRefComponent aType: ed.getType()) {
           if (aType.getWorkingCode().equals(t)) {
-            if (aType.hasProfile()) {
-              assert aType.getProfile().size() == 1; 
+            if (aType.hasProfile() && aType.getProfile().size() == 1) {
               url = aType.getProfile().get(0).getValue();
+              urlSrc = aType.getProfile().get(0);
             } else {
+              // if we've got a choice, then we fall back to ignore the profile,
+              // and parsing on the base type. This is less efficient but we don't
+              // know which type applies
               url = ProfileUtilities.sdNs(t, null);
             }
             break;
@@ -465,7 +466,7 @@ public class Property {
         if (url==null) {
           throw new FHIRException("Unable to find type " + t + " for element " + elementName + " with path " + ed.getPath());
         }
-        sd = context.fetchResource(StructureDefinition.class, url);        
+        sd = context.fetchResource(StructureDefinition.class, url, ExtensionUtilities.getVersionResolutionRules(urlSrc));
         if (sd == null)
           throw new DefinitionException("Unable to find definition '"+url+"' for type '"+t+"' for name '"+elementName+"' on property "+definition.getPath());
         children = profileUtilities.getChildMap(sd, sd.getSnapshot().getElement().get(0), false);
@@ -487,7 +488,7 @@ public class Property {
         if (t == sdt) {
           return sd; 
         }
-        t = context.fetchResource(StructureDefinition.class, t.getBaseDefinition());
+        t = context.fetchResource(StructureDefinition.class, t.getBaseDefinition(), ExtensionUtilities.getVersionResolutionRulesBase(t.getBaseDefinitionElement()));
       }
     }
     return null;
@@ -506,12 +507,15 @@ public class Property {
     if (children.getList().isEmpty()) {
       // ok, find the right definitions
       String t = null;
-      if (ed.getType().size() == 1)
+      org.hl7.fhir.r5.model.Element tSrc = null;
+      if (ed.getType().size() == 1) {
         t = ed.getType().get(0).getCode();
-      else if (ed.getType().size() == 0)
+        tSrc = ed.getType().get(0).getCodeElement();
+      } else if (ed.getType().size() == 0) {
         throw new Error("types == 0, and no children found");
-      else {
+      } else {
         t = ed.getType().get(0).getCode();
+        tSrc = ed.getType().get(0).getCodeElement();
         boolean all = true;
         for (TypeRefComponent tr : ed.getType()) {
           if (!tr.getCode().equals(t)) {
@@ -522,10 +526,11 @@ public class Property {
         if (!all) {
           // ok, it's polymorphic
           t = type.getType();
+          tSrc = null;
         }
       }
       if (!"xhtml".equals(t)) {
-        sd = context.fetchResource(StructureDefinition.class, t);
+        sd = context.fetchResource(StructureDefinition.class, t, ExtensionUtilities.getVersionResolutionRulesBase(tSrc) );
         if (sd == null)
           throw new DefinitionException("Unable to find class '"+t+"' for name '"+ed.getPath()+"' on property "+definition.getPath());
         children = profileUtilities.getChildMap(sd, sd.getSnapshot().getElement().get(0), false);

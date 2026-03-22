@@ -44,6 +44,7 @@ import lombok.Setter;
 import org.apache.commons.lang3.Validate;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r5.conformance.profile.ProfileUtilities;
+import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.elementmodel.Manager.FhirFormat;
 import org.hl7.fhir.r5.extensions.ExtensionDefinitions;
 import org.hl7.fhir.r5.extensions.ExtensionUtilities;
@@ -476,9 +477,14 @@ public class Element extends Base implements NamedItem {
     }
     
     if (!value.isPrimitive() && !(value instanceof Element)) {
-      if (isDataType(value)) 
-        value = convertToElement(property.getChild(name), value);
-      else
+      if (isDataType(value)) {
+        // matchbox patch: also check for choice type name[x] when name doesn't match
+        Property childProp = property.getChild(name);
+        if (childProp == null) {
+          childProp = property.getChildSimpleName(name, name);
+        }
+        value = convertToElement(childProp, value);
+      } else
         throw new FHIRException("Cannot set property "+name+" on "+this.name+" - value is not a primitive type ("+value.fhirType()+") or an ElementModel type");
     }
     
@@ -557,6 +563,9 @@ public class Element extends Base implements NamedItem {
 
   // matchbox-patch: set the type on converted elements so choice types (e.g. value[x]) resolve correctly
   private Base convertToElement(Property prop, Base v) throws FHIRException {
+    if (prop == null) {
+      throw new FHIRException("Cannot convert value of type "+v.fhirType()+" to element - property not found");
+    }
     Element result = new ObjectConverter(property.getContext()).convert(prop, (DataType) v);
     if (result != null && result.getProperty() != null && result.getProperty().getName().endsWith("[x]")) {
       result.setType(v.fhirType());
@@ -1058,7 +1067,7 @@ public class Element extends Base implements NamedItem {
     private List<ElementDefinition> children;
     public ElementSortComparator(Element e, Property property) {
       String tn = e.getType();
-      StructureDefinition sd = property.getContext().fetchResource(StructureDefinition.class, ProfileUtilities.sdNs(tn, null));
+      StructureDefinition sd = property.getContext().fetchResource(StructureDefinition.class, ProfileUtilities.sdNs(tn, null), IWorkerContext.VersionResolutionRules.defaultRule());
       if (sd != null && !sd.getAbstract())
         children = sd.getSnapshot().getElement();
       else
@@ -1656,7 +1665,7 @@ public class Element extends Base implements NamedItem {
 
   public String getBasePath() {
     if (property.getStructure().hasExtension(ExtensionDefinitions.EXT_RESOURCE_IMPLEMENTS)) {
-      StructureDefinition sd = property.getContext().fetchResource(StructureDefinition.class, ExtensionUtilities.readStringExtension(property.getStructure(), ExtensionDefinitions.EXT_RESOURCE_IMPLEMENTS));
+      StructureDefinition sd = property.getContext().fetchResource(StructureDefinition.class, ExtensionUtilities.readStringExtension(property.getStructure(), ExtensionDefinitions.EXT_RESOURCE_IMPLEMENTS), IWorkerContext.VersionResolutionRules.defaultRule());
       if (sd != null) {
         ElementDefinition ed = sd.getSnapshot().getElementByPath(property.getDefinition().getPath().replace(property.getStructure().getType(), sd.getType()));
         if (ed != null) {
