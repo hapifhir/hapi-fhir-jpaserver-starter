@@ -12,8 +12,8 @@ hapi:
         url: classpath:/hl7.fhir.r4.core.tgz
       ch_elm:
         name: ch.fhir.ig.ch-elm
-        version: 1.11.0
-#        url: https://fhir.ch/ig/ch-elm/package.tgz
+        version: 1.14.0-cibuild
+        url: https://build.fhir.org/ig/ahdis/ch-elm/package.tgz
     staticLocation: file:/apps/
 matchbox:
   fhir:
@@ -21,7 +21,7 @@ matchbox:
 #      txServer: http://tx.fhir.org
       txServer: http://localhost:${server.port}/matchboxv3/tx
 #      txServer: n/a
-      igsPreloaded: ch.fhir.ig.ch-elm#1.11.0
+      igsPreloaded: ch.fhir.ig.ch-elm#1.14.0-cibuild
       txUseEcosystem: false
 #      txLog: test.html
 #      txServerCache: false

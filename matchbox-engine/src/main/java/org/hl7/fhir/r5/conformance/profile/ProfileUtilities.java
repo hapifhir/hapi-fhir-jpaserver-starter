@@ -4091,7 +4091,8 @@ public class ProfileUtilities {
       source = null;
     }
     // matchbox patch #424 findProfile gets called by FHIRPathEngine
-    StructureDefinition sd = context.fetchResource(StructureDefinition.class, u, ExtensionUtilities.getVersionResolutionRules(ref), v, source);
+// FIXME #487  StructureDefinition sd = context.fetchResource(StructureDefinition.class, u, ExtensionUtilities.getVersionResolutionRules(ref), v, source);
+    StructureDefinition sd = context.fetchResource(StructureDefinition.class, u, null, null, source); 
     if (sd == null) {
       if (makeXVer().matchingUrl(u) && xver.status(u) == XVerExtensionStatus.Valid) {
         sd = xver.getDefinition(u);

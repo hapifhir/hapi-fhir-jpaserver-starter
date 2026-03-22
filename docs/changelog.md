@@ -1,3 +1,8 @@
+2026/03/22 Release 4.0.20
+
+- FHIRPath Slicing cannot be evaluated (#487) temporary workaround
+
+
 2026/02/12 Release 4.0.19
 
 - fix FML NPE with translate(), cc(), and c() when assigning to polymorphic elements like value[x] or location[x] (#480)
