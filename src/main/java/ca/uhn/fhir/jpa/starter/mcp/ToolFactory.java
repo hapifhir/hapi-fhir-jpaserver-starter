@@ -469,7 +469,7 @@ public class ToolFactory {
 	public static Tool getDataTypeList() throws JsonProcessingException {
 		return new Tool.Builder()
 				.name("get-data-type-list")
-				.description("Gets the list of FHIR data types known in the specified resource store.")
+				.description("Gets the list of FHIR data types known to this server.")
 				.inputSchema(mapper.readValue(GET_DATA_TYPE_LIST_SCHEMA, McpSchema.JsonSchema.class))
 				.build();
 	}
