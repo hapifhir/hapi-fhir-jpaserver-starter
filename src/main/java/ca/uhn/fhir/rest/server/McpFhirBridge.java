@@ -14,6 +14,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class McpFhirBridge implements McpBridge {
@@ -22,10 +23,14 @@ public class McpFhirBridge implements McpBridge {
 
 	private final RestfulServer restfulServer;
 	private final FhirContext fhirContext;
+	private final String contextPath;
 
 	public McpFhirBridge(RestfulServer restfulServer) {
 		this.restfulServer = restfulServer;
 		this.fhirContext = restfulServer.getFhirContext();
+		this.contextPath = Optional.ofNullable(restfulServer.getServletContext())
+				.map(ctx -> ctx.getContextPath() != null ? ctx.getContextPath() : "")
+				.orElse("");
 	}
 
 	public List<McpServerFeatures.SyncToolSpecification> generateTools() {
@@ -76,7 +81,7 @@ public class McpFhirBridge implements McpBridge {
 	private McpSchema.CallToolResult getToolResult(McpSchema.CallToolRequest contextMap, Interaction interaction) {
 
 		var response = new MockHttpServletResponse();
-		var request = new RequestBuilder(fhirContext, contextMap.arguments(), interaction).buildRequest();
+		var request = new RequestBuilder(fhirContext, contextMap.arguments(), interaction, contextPath).buildRequest();
 
 		try {
 			restfulServer.handleRequest(interaction.asRequestType(), request, response);
