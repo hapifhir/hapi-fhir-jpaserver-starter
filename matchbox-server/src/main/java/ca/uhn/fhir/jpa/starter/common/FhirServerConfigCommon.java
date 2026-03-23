@@ -9,7 +9,6 @@ import ca.uhn.fhir.jpa.model.config.PartitionSettings.CrossPartitionReferenceMod
 import ca.uhn.fhir.jpa.model.entity.StorageSettings;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.util.JpaHibernatePropertiesProvider;
-import ca.uhn.fhir.jpa.subscription.channel.subscription.SubscriptionDeliveryHandlerFactory;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.EmailSenderImpl;
 import ca.uhn.fhir.jpa.subscription.match.deliver.email.IEmailSender;
 import ca.uhn.fhir.rest.server.mail.IMailSvc;

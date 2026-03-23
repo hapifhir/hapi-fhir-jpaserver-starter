@@ -24,7 +24,7 @@ import ca.uhn.fhir.jpa.bulk.export.model.ExportPIDIteratorParameters;
 import ca.uhn.fhir.jpa.dao.data.IBatch2JobInstanceRepository;
 import ca.uhn.fhir.jpa.dao.data.IBatch2WorkChunkMetadataViewRepository;
 import ca.uhn.fhir.jpa.dao.data.IBatch2WorkChunkRepository;
-import ca.uhn.fhir.jpa.dao.mdm.MdmExpansionCacheSvc;
+import ca.uhn.fhir.mdm.svc.MdmExpansionCacheSvc;
 import ca.uhn.fhir.jpa.dao.tx.IHapiTransactionService;
 import ca.uhn.fhir.jpa.delete.ThreadSafeResourceDeleterSvc;
 import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager;
@@ -364,14 +364,22 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 
 			@Override
 			public void expandMdmResources(List theResources) {
-				// TODO Auto-generated method stub
 				throw new UnsupportedOperationException("Unimplemented method 'expandMdmResources'");
 			}
 
 			@Override
 			public Iterator getResourcePidIterator(ExportPIDIteratorParameters theParams) {
-				// TODO Auto-generated method stub
 				throw new UnsupportedOperationException("Unimplemented method 'getResourcePidIterator'");
+			}
+
+			@Override
+			public Set<String> getPatientSetForGroupExport(ExportPIDIteratorParameters theParams) {
+				throw new UnsupportedOperationException("Unimplemented method 'getPatientSetForGroupExport'");
+			}
+
+			@Override
+			public Set<String> getPatientSetForPatientExport(ExportPIDIteratorParameters theParams) {
+				throw new UnsupportedOperationException("Unimplemented method 'getPatientSetForPatientExport'");
 			}
 		};
 	}

@@ -61,7 +61,21 @@ public class JpaValidationSupportChain extends ValidationSupportChain {
 		super((IValidationSupport) null);
 
 		assert theFhirContext != null;
-//		assert theCacheConfiguration != null;
+
+		myFhirContext = theFhirContext;
+	}
+
+	/**
+	 * Constructor (HAPI 8.8.0 compatible)
+	 */
+	public JpaValidationSupportChain(
+			FhirContext theFhirContext,
+			ValidationSupportChain.CacheConfiguration theCacheConfiguration,
+			org.hl7.fhir.common.hapi.validation.validator.WorkerContextValidationSupportAdapter theWorkerContextValidationSupportAdapter) {
+		super(theCacheConfiguration, (IValidationSupport) null);
+
+		assert theFhirContext != null;
+		assert theCacheConfiguration != null;
 
 		myFhirContext = theFhirContext;
 	}

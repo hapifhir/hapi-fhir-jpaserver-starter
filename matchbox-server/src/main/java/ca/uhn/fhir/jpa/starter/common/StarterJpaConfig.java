@@ -26,7 +26,7 @@ import com.google.common.base.Strings;
 
 import ca.uhn.fhir.batch2.jobs.export.BulkDataExportProvider;
 import ca.uhn.fhir.batch2.jobs.imprt.BulkDataImportProvider;
-import ca.uhn.fhir.batch2.jobs.reindex.ReindexProvider;
+import ca.uhn.fhir.batch2.jobs.bulkmodify.reindex.ReindexProvider;
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;

@@ -261,7 +261,6 @@ public class ImplementationGuideProviderR4 extends ImplementationGuideResourcePr
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 	}
 
-	@Override
 	@Search(allowUnknownParams=true)
 	public ca.uhn.fhir.rest.api.server.IBundleProvider search(
 			jakarta.servlet.http.HttpServletRequest theServletRequest,
