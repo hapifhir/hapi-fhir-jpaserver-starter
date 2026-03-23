@@ -11,26 +11,20 @@ import io.modelcontextprotocol.spec.McpSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
-@Component
 public class McpFhirBridge implements McpBridge {
 
 	private static final Logger logger = LoggerFactory.getLogger(McpFhirBridge.class);
 
 	private final RestfulServer restfulServer;
 	private final FhirContext fhirContext;
-	private final String contextPath;
 
 	public McpFhirBridge(RestfulServer restfulServer) {
 		this.restfulServer = restfulServer;
 		this.fhirContext = restfulServer.getFhirContext();
-		this.contextPath = Optional.ofNullable(restfulServer.getServletContext())
-				.map(ctx -> ctx.getContextPath() != null ? ctx.getContextPath() : "")
-				.orElse("");
 	}
 
 	public List<McpServerFeatures.SyncToolSpecification> generateTools() {
@@ -78,10 +72,21 @@ public class McpFhirBridge implements McpBridge {
 		}
 	}
 
+	private String getContextPath() {
+		try {
+			return Optional.ofNullable(restfulServer.getServletContext())
+					.map(ctx -> ctx.getContextPath() != null ? ctx.getContextPath() : "")
+					.orElse("");
+		} catch (IllegalStateException e) {
+			return "";
+		}
+	}
+
 	private McpSchema.CallToolResult getToolResult(McpSchema.CallToolRequest contextMap, Interaction interaction) {
 
 		var response = new MockHttpServletResponse();
-		var request = new RequestBuilder(fhirContext, contextMap.arguments(), interaction, contextPath).buildRequest();
+		var request =
+				new RequestBuilder(fhirContext, contextMap.arguments(), interaction, getContextPath()).buildRequest();
 
 		try {
 			restfulServer.handleRequest(interaction.asRequestType(), request, response);
