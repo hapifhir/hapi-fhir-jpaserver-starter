@@ -453,7 +453,7 @@ public class ToolFactory {
 	public static Tool getResourceList() throws JsonProcessingException {
 		return new Tool.Builder()
 				.name("get-resource-list")
-				.description("Gets the list of FHIR resources supported by the specified resource store.")
+				.description("Gets the list of FHIR resources supported by the configured/default FHIR store.")
 				.inputSchema(mapper.readValue(GET_RESOURCE_LIST_SCHEMA, McpSchema.JsonSchema.class))
 				.build();
 	}
