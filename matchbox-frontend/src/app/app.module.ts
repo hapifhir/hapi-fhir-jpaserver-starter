@@ -76,6 +76,7 @@ const routes: Routes = [
     ValidateComponent,
     OperationResultComponent,
     UploadComponent,
+    StatisticsComponent
   ],
   bootstrap: [AppComponent],
   imports: [
