@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Arrays;
 
 public class ErrorHandling {
 
@@ -68,30 +67,14 @@ public class ErrorHandling {
 
 	public static void setAccessControlHeaders(HttpServletResponse resp, AppProperties myAppProperties) {
 		if (myAppProperties.getCors() != null) {
-			if (myAppProperties.getCors().getAllow_Credentials()) {
-				resp.setHeader(
-						"Access-Control-Allow-Origin",
-						myAppProperties.getCors().getAllowed_origin().stream()
-								.findFirst()
-								.get());
-				resp.setHeader(
-						"Access-Control-Allow-Methods",
-						String.join(", ", Arrays.asList("GET", "HEAD", "POST", "OPTIONS")));
-				resp.setHeader(
-						"Access-Control-Allow-Headers",
-						String.join(
-								", ",
-								Arrays.asList(
-										"x-fhir-starter",
-										"Origin",
-										"Accept",
-										"X-Requested-With",
-										"Content-Type",
-										"Authorization",
-										"Cache-Control")));
-				resp.setHeader(
-						"Access-Control-Expose-Headers",
-						String.join(", ", Arrays.asList("Location", "Content-Location")));
+			AppProperties.Cors cors = myAppProperties.getCors();
+			if (cors.getAllow_Credentials()) {
+				String allowOrigin =
+						cors.getAllowed_origin().stream().findFirst().orElse("*");
+				resp.setHeader("Access-Control-Allow-Origin", allowOrigin);
+				resp.setHeader("Access-Control-Allow-Methods", String.join(", ", cors.getAllowed_methods()));
+				resp.setHeader("Access-Control-Allow-Headers", String.join(", ", cors.getAllowed_headers()));
+				resp.setHeader("Access-Control-Expose-Headers", String.join(", ", cors.getExposed_headers()));
 				resp.setHeader("Access-Control-Max-Age", "86400");
 			}
 		}

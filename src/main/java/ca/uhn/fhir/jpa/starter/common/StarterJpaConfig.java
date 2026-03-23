@@ -1,9 +1,9 @@
 package ca.uhn.fhir.jpa.starter.common;
 
 import ca.uhn.fhir.batch2.config.Batch2JobRegisterer;
+import ca.uhn.fhir.batch2.jobs.bulkmodify.reindex.ReindexProvider;
 import ca.uhn.fhir.batch2.jobs.export.BulkDataExportProvider;
 import ca.uhn.fhir.batch2.jobs.imprt.BulkDataImportProvider;
-import ca.uhn.fhir.batch2.jobs.reindex.ReindexProvider;
 import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
@@ -15,7 +15,6 @@ import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.config.ThreadPoolFactoryConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
-import ca.uhn.fhir.jpa.binary.interceptor.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
 import ca.uhn.fhir.jpa.config.util.HapiEntityManagerFactoryUtil;
 import ca.uhn.fhir.jpa.config.util.ResourceCountCacheUtil;
@@ -50,6 +49,7 @@ import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
+import ca.uhn.fhir.jpa.starter.elastic.ElasticsearchBootSvcImpl;
 import ca.uhn.fhir.jpa.starter.ig.ExtendedPackageInstallationSpec;
 import ca.uhn.fhir.jpa.starter.ig.IImplementationGuideOperationProvider;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
@@ -96,7 +96,6 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
-import org.springframework.http.HttpHeaders;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.web.cors.CorsConfiguration;
@@ -149,6 +148,7 @@ public class StarterJpaConfig {
 	@Primary
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+			Optional<ElasticsearchBootSvcImpl> elasticsearchSvc,
 			JpaProperties theJpaProperties,
 			DataSource myDataSource,
 			ConfigurableListableBeanFactory myConfigurableListableBeanFactory,
@@ -279,24 +279,17 @@ public class StarterJpaConfig {
 		// showing a typical setup. You should customize this
 		// to your specific needs
 		ourLog.info("CORS is enabled on this server");
+		AppProperties.Cors corsProperties = appProperties.getCors();
 		CorsConfiguration config = new CorsConfiguration();
-		config.addAllowedHeader(HttpHeaders.ORIGIN);
-		config.addAllowedHeader(HttpHeaders.ACCEPT);
-		config.addAllowedHeader(HttpHeaders.CONTENT_TYPE);
-		config.addAllowedHeader(HttpHeaders.AUTHORIZATION);
-		config.addAllowedHeader(HttpHeaders.CACHE_CONTROL);
-		config.addAllowedHeader("x-fhir-starter");
-		config.addAllowedHeader("X-Requested-With");
-		config.addAllowedHeader("Prefer");
+		corsProperties.getAllowed_headers().forEach(config::addAllowedHeader);
 
-		List<String> allAllowedCORSOrigins = appProperties.getCors().getAllowed_origin();
+		List<String> allAllowedCORSOrigins = corsProperties.getAllowed_origin();
 		allAllowedCORSOrigins.forEach(config::addAllowedOriginPattern);
 		ourLog.info("CORS allows the following origins: {}", String.join(", ", allAllowedCORSOrigins));
 
-		config.addExposedHeader("Location");
-		config.addExposedHeader("Content-Location");
-		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
-		config.setAllowCredentials(appProperties.getCors().getAllow_Credentials());
+		corsProperties.getExposed_headers().forEach(config::addExposedHeader);
+		config.setAllowedMethods(corsProperties.getAllowed_methods());
+		config.setAllowCredentials(corsProperties.getAllow_Credentials());
 
 		// Create the interceptor and register it
 		return new CorsInterceptor(config);
@@ -321,7 +314,6 @@ public class StarterJpaConfig {
 			Optional<CorsInterceptor> corsInterceptor,
 			IInterceptorBroadcaster interceptorBroadcaster,
 			Optional<BinaryAccessProvider> binaryAccessProvider,
-			BinaryStorageInterceptor binaryStorageInterceptor,
 			IValidatorModule validatorModule,
 			Optional<GraphQLProvider> graphQLProvider,
 			BulkDataExportProvider bulkDataExportProvider,
@@ -453,7 +445,6 @@ public class StarterJpaConfig {
 		// Binary Storage
 		if (appProperties.getBinary_storage_enabled() && binaryAccessProvider.isPresent()) {
 			fhirServer.registerProvider(binaryAccessProvider.get());
-			fhirServer.registerInterceptor(binaryStorageInterceptor);
 		}
 
 		// Validation

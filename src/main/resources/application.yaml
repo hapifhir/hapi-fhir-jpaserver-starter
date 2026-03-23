@@ -37,6 +37,10 @@ management:
         enabled: true
 
 spring:
+#  elasticsearch:
+#    uris: http://localhost:9200
+#    username: elastic
+#    password: elastic
   # -------------------------------------------------------------------------------
   # Application Name
   # -------------------------------------------------------------------------------
@@ -116,7 +120,7 @@ spring:
         # Hibernate dialect is auto-detected except for H2/Postgres.
         # If using H2:     ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
         # If using Postgres: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
-        dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+        dialect: ${HIBERNATE_DIALECT:ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect}
 
         # --- Optional Hibernate DDL & tuning (commented out from source) ---
         hbm2ddl:
@@ -130,8 +134,10 @@ spring:
           use_minimal_puts: false
 
         # --- Hibernate Search (Lucene/Elasticsearch) ---
-        search:
-          enabled: false
+        #search:
+        #  schema_management:
+        #    strategy: CREATE
+        #  enabled: true
           # Lucene backend (default example)
           # backend:
           #   type: lucene
@@ -142,10 +148,25 @@ spring:
           #     root: target/lucenefiles
           #   lucene_version: lucene_current
           # Elasticsearch backend (alternative) — see also hapi.fhir.elasticsearch section in docs
-          # backend:
-          #   type: elasticsearch
-          #   analysis:
-          #     configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticAnalysisConfigurer
+#          backend:
+#            layout:
+#              strategy: ca.uhn.fhir.jpa.search.elastic.IndexNamePrefixLayoutStrategy
+#            type: elasticsearch
+#            protocol: http
+#            analysis:
+#              configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticsearchAnalysisConfigurer
+#            scroll_timeout: 60
+#            schema_management:
+#              settings_file: ca/uhn/fhir/jpa/elastic/index-settings.json
+#              minimal_required_status_wait_timeout: 10000
+#              minimal_required_status: YELLOW
+#
+#            dynamic_mapping: true
+#          indexing:
+#            plan:
+#              synchronization:
+#                strategy: async
+
 
 # -------------------------------------------------------------------------------------
 # HAPI FHIR — grouped by domain
@@ -249,8 +270,8 @@ hapi:
     # -------------------------------------------------------------------------------
     # NOTE: Extended Lucene/Elasticsearch indexing is experimental.
     # See https://hapifhir.io/hapi-fhir/docs/server_jpa/elastic.html
-    advanced_lucene_indexing: false
-    search_index_full_text_enabled: false
+    # advanced_lucene_indexing: true
+    # search_index_full_text_enabled: true
     # language_search_parameter_enabled: true
     # upliftedRefchains_enabled: true
     # index_storage_optimized: false
@@ -270,6 +291,7 @@ hapi:
     # -------------------------------------------------------------------------------
     bulk_export_enabled: false
     bulk_import_enabled: false
+    bulk_export_file_retention_period_hours: 2
 
     # -------------------------------------------------------------------------------
     # F. Write / Delete / Integrity
@@ -346,9 +368,31 @@ hapi:
     # K. CORS
     # -------------------------------------------------------------------------------
     cors:
-      allow_Credentials: true
+      # allow_Credentials: false
       allowed_origin:
         - "*"
+      # If you enable allow_Credentials=true, use explicit origins instead of "*".
+      # Optional overrides. If omitted, built-in defaults are used.
+      # allowed_headers:
+      #   - Origin
+      #   - Accept
+      #   - Content-Type
+      #   - Authorization
+      #   - Cache-Control
+      #   - If-Match
+      #   - If-None-Match
+      # exposed_headers:
+      #   - Location
+      #   - Content-Location
+      #   - ETag
+      # allowed_methods:
+      #   - GET
+      #   - POST
+      #   - PUT
+      #   - DELETE
+      #   - OPTIONS
+      #   - PATCH
+      #   - HEAD
 
     # -------------------------------------------------------------------------------
     # L. Search Orchestration
@@ -408,7 +452,7 @@ hapi:
     #   binary_storage_filesystem_base_directory: /binstore
     # When binary_storage_mode is FILESYSTEM and this value is not set,
     # the starter defaults to 102400 bytes so smaller binaries stay inline.
-    inline_resource_storage_below_size: 4000
+    binary_storage_minimum_binary_size: 4000
 
     # -------------------------------------------------------------------------------
     # P. Remote Terminology Service (disabled by default)

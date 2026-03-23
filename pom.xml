@@ -6,7 +6,7 @@
     <properties>
         <java.version>17</java.version>
         <hapi.fhir.jpa.server.starter.revision>1</hapi.fhir.jpa.server.starter.revision>
-        <clinical-reasoning.version>4.0.0</clinical-reasoning.version>
+        <clinical-reasoning.version>4.4.0</clinical-reasoning.version>
 
         <!-- Plugins Versions -->
         <maven.failsafe.version>3.5.4</maven.failsafe.version>
@@ -21,6 +21,7 @@
         <commons.logging.version>1.3.5</commons.logging.version>
         <spring_boot_version>3.5.9</spring_boot_version>
         <postgresql.version>42.7.9</postgresql.version>
+        <logback_version>1.5.25</logback_version>
     </properties>
 
     <!-- one-liner to take you to the cloud with settings form the application.yaml file: -->
@@ -34,16 +35,12 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <version>8.6.1</version>
+        <version>8.8.0</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
     <version>${project.parent.version}-${hapi.fhir.jpa.server.starter.revision}</version>
     <packaging>war</packaging>
-
-    <prerequisites>
-        <maven>3.8.3</maven>
-    </prerequisites>
 
     <name>HAPI FHIR JPA Server - Starter Project</name>
 
@@ -208,12 +205,12 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.5.19</version>
+            <version>${logback_version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>1.5.19</version>
+            <version>${logback_version}</version>
         </dependency>
 
         <!-- Needed for JEE/Servlet support -->
@@ -311,25 +308,16 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
-            <version>2.0.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>elasticsearch</artifactId>
-            <version>1.21.4</version>
+            <artifactId>testcontainers-elasticsearch</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>1.21.4</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>1.21.4</version>
+            <artifactId>testcontainers-junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -547,6 +535,28 @@
                     </overlays>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
+            </plugin>
+
+            <!-- Enforce minimum Maven version requirement -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.6.2</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.8.3</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- This is to run the integration tests -->
