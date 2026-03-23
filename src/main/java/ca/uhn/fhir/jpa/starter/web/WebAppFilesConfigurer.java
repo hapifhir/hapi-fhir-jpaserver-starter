@@ -22,7 +22,9 @@ public class WebAppFilesConfigurer implements WebMvcConfigurer {
 
 	public WebAppFilesConfigurer(AppProperties appProperties) {
 		appContentPath = appProperties.getApp_content_path();
-		if (appContentPath.endsWith("/")) appContentPath = appContentPath.substring(0, appContentPath.lastIndexOf('/'));
+		if (!appContentPath.endsWith("/")) {
+			appContentPath = appContentPath + "/";
+		}
 	}
 
 	@Override
@@ -43,6 +45,9 @@ public class WebAppFilesConfigurer implements WebMvcConfigurer {
 	@Override
 	public void addViewControllers(@NotNull ViewControllerRegistry registry) {
 		String path = URI.create(appContentPath).getPath();
+		if (path.endsWith("/")) {
+			path = path.substring(0, path.length() - 1);
+		}
 		String lastSegment = path.substring(path.lastIndexOf('/') + 1);
 
 		registry.addViewController(WEB_CONTENT + "/" + lastSegment)
