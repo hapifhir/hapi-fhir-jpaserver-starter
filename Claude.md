@@ -292,7 +292,6 @@ java -jar target/matchbox.jar
 
 ```bash
 # All tests
-cd matchbox-server
 mvn clean test
 
 # Specific test class
@@ -457,7 +456,7 @@ GitHub Actions workflows (`.github/workflows/`):
 
 1. Update versions in `pom.xml`, `package.json`, and documentation
 2. Create PR and wait for tests to pass
-3. Merge PR to main
+3. Merge PR to main, but on origin (https://github.com/ahdis/matchbox.git) not on upstream
 4. Wait for Angular build workflow to complete
 5. Create GitHub release with tag (e.g., `v4.0.16`)
 6. Automated workflows publish:
