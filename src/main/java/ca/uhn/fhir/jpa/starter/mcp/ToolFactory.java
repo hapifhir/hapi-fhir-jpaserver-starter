@@ -29,8 +29,8 @@ public class ToolFactory {
 			"type": "string",
 			"description": "id of the resource to read"
 			}
-		}
-		
+		},
+		"required": ["resourceType", "id"]
 		}
 		""";
 
@@ -206,14 +206,6 @@ public class ToolFactory {
 		}
 		""";
 
-	private static final String STORE_NAME_PROPERTY =
-			"""
-			"store": {
-				"type": "string",
-				"description": "Name of the store or tenant to service this request"
-			}
-			""";
-
 	private static final String RESOURCE_NAME_PROPERTY =
 			"""
 			"resourceType": {
@@ -226,38 +218,29 @@ public class ToolFactory {
 			"""
 		{
 		"type": "object",
-		"properties": {
-			%s
-		},
-		"required": ["store"]
+		"properties": {}
 		}
-		"""
-					.formatted(STORE_NAME_PROPERTY);
+		""";
 
 	private static final String GET_DATA_TYPE_LIST_SCHEMA =
 			"""
 		{
 		"type": "object",
-		"properties": {
-			%s
-		},
-		"required": ["store"]
+		"properties": {}
 		}
-		"""
-					.formatted(STORE_NAME_PROPERTY);
+		""";
 
 	private static final String GET_SEARCH_PARAMETERS_SCHEMA =
 			"""
 		{
 		"type": "object",
 		"properties": {
-			%s,
 			%s
 		},
-		"required": ["store", "resourceType"]
+		"required": ["resourceType"]
 		}
 		"""
-					.formatted(STORE_NAME_PROPERTY, RESOURCE_NAME_PROPERTY);
+					.formatted(RESOURCE_NAME_PROPERTY);
 
 	private static final String GET_RESOURCE_DEFINITION_SCHEMA =
 			"""
@@ -305,16 +288,15 @@ public class ToolFactory {
 		"type": "object",
 		"properties": {
 			%s,
-			%s,
 			"searchString": {
 				"type": "string",
 				"description": "FHIR type search request to validate"
 			}
 		},
-		"required": ["store", "resourceType", "searchString"]
+		"required": ["resourceType", "searchString"]
 		}
 		"""
-					.formatted(STORE_NAME_PROPERTY, RESOURCE_NAME_PROPERTY);
+					.formatted(RESOURCE_NAME_PROPERTY);
 
 	private static final McpSchema.JsonSchema EMPTY_OBJECT_SCHEMA = createEmptyObjectSchema();
 

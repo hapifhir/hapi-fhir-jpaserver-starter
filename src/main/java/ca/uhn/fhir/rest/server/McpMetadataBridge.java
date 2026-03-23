@@ -368,6 +368,7 @@ public class McpMetadataBridge implements McpBridge {
 
 			String title = defaultString(myTerser.getSinglePrimitiveValueOrNull(structure, "title"), "");
 			String description = defaultString(myTerser.getSinglePrimitiveValueOrNull(structure, "description"), "");
+			String comment = defaultString(myTerser.getSinglePrimitiveValueOrNull(structure, "comment"), "");
 			String purpose = defaultString(myTerser.getSinglePrimitiveValueOrNull(structure, "purpose"), "");
 			String url = defaultString(myTerser.getSinglePrimitiveValueOrNull(structure, "url"), "");
 			String version = defaultString(myTerser.getSinglePrimitiveValueOrNull(structure, "version"), "");
@@ -379,6 +380,9 @@ public class McpMetadataBridge implements McpBridge {
 			}
 			if (!description.isBlank()) {
 				builder.append("\nDescription: ").append(description);
+			}
+			if (!comment.isBlank()) {
+				builder.append("\nComment: ").append(comment);
 			}
 			if (!purpose.isBlank()) {
 				builder.append("\nPurpose: ").append(purpose);
