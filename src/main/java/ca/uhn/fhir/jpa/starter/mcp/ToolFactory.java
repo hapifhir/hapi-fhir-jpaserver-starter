@@ -214,16 +214,14 @@ public class ToolFactory {
 			}
 			""";
 
-	private static final String GET_RESOURCE_LIST_SCHEMA =
-			"""
+	private static final String GET_RESOURCE_LIST_SCHEMA = """
 		{
 		"type": "object",
 		"properties": {}
 		}
 		""";
 
-	private static final String GET_DATA_TYPE_LIST_SCHEMA =
-			"""
+	private static final String GET_DATA_TYPE_LIST_SCHEMA = """
 		{
 		"type": "object",
 		"properties": {}
