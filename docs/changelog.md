@@ -1,6 +1,7 @@
 2026/03/23 Release 4.1.0
 
 - Upgrade HAPI FHIR from 8.0.0 to 8.8.0, Spring Boot from 3.3.13 to 3.5.9
+- Upgrade jackson-core to 2.21.2 to fix async parser DoS vulnerability (GHSA-72hv-8253-57qq)
 
 2026/03/22 Release 4.0.20
 
