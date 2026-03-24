@@ -21,6 +21,7 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.env.Environment;
 
 import java.util.List;
 
@@ -49,8 +50,10 @@ public class McpServerConfig {
 			RestfulServer restfulServer,
 			IValidationSupport validationSupport,
 			IResourceSupportedSvc resourceSupportedSvc,
-			ISearchParamRegistry searchParamRegistry) {
-		return new McpMetadataBridge(restfulServer, validationSupport, resourceSupportedSvc, searchParamRegistry);
+			ISearchParamRegistry searchParamRegistry,
+			Environment environment) {
+		return new McpMetadataBridge(
+				restfulServer, validationSupport, resourceSupportedSvc, searchParamRegistry, environment);
 	}
 
 	@Bean

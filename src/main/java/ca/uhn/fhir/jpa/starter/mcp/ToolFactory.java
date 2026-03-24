@@ -214,8 +214,6 @@ public class ToolFactory {
 			}
 			""";
 
-
-
 	private static final String GET_SEARCH_PARAMETERS_SCHEMA =
 			"""
 		{

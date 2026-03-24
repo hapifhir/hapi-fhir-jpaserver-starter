@@ -20,6 +20,7 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IPrimitiveType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.ArrayList;
@@ -69,18 +70,21 @@ public class McpMetadataBridge implements McpBridge {
 	private final ca.uhn.fhir.context.support.IValidationSupport myValidationSupport;
 	private final IResourceSupportedSvc myResourceSupportedSvc;
 	private final ISearchParamRegistry mySearchParamRegistry;
+	private final Environment myEnvironment;
 
 	public McpMetadataBridge(
 			RestfulServer restfulServer,
 			ca.uhn.fhir.context.support.IValidationSupport validationSupport,
 			IResourceSupportedSvc resourceSupportedSvc,
-			ISearchParamRegistry searchParamRegistry) {
+			ISearchParamRegistry searchParamRegistry,
+			Environment environment) {
 		myRestfulServer = restfulServer;
 		myFhirContext = restfulServer.getFhirContext();
 		myTerser = myFhirContext.newTerser();
 		myValidationSupport = validationSupport;
 		myResourceSupportedSvc = resourceSupportedSvc;
 		mySearchParamRegistry = searchParamRegistry;
+		myEnvironment = environment;
 	}
 
 	@Override
@@ -413,13 +417,24 @@ public class McpMetadataBridge implements McpBridge {
 	}
 
 	private HttpServletRequest buildMockRequest() {
-		MockHttpServletRequest request = new MockHttpServletRequest("GET", "/metadata");
-		request.setScheme("http");
-		request.setServerName("localhost");
-		request.setServerPort(8080);
-		request.setContextPath(Optional.ofNullable(myRestfulServer.getServletContext())
-				.map(ctx -> StringUtils.defaultString(ctx.getContextPath(), ""))
-				.orElse(""));
+		boolean sslEnabled = Boolean.parseBoolean(myEnvironment.getProperty("server.ssl.enabled", "false"));
+		String scheme = sslEnabled ? "https" : "http";
+		String serverName = myEnvironment.getProperty("server.address", "localhost");
+		int serverPort = Integer.parseInt(myEnvironment.getProperty("server.port", "8080"));
+		String contextPath;
+		try {
+			contextPath = Optional.ofNullable(myRestfulServer.getServletContext())
+					.map(ctx -> StringUtils.defaultString(ctx.getContextPath(), ""))
+					.orElse("");
+		} catch (IllegalStateException e) {
+			contextPath = myEnvironment.getProperty("server.servlet.context-path", "");
+		}
+
+		MockHttpServletRequest request = new MockHttpServletRequest("GET", contextPath + "/metadata");
+		request.setScheme(scheme);
+		request.setServerName(serverName);
+		request.setServerPort(serverPort);
+		request.setContextPath(contextPath);
 		return request;
 	}
 
