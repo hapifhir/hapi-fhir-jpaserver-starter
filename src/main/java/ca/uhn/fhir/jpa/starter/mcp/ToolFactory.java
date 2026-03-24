@@ -214,19 +214,7 @@ public class ToolFactory {
 			}
 			""";
 
-	private static final String GET_RESOURCE_LIST_SCHEMA = """
-		{
-		"type": "object",
-		"properties": {}
-		}
-		""";
 
-	private static final String GET_DATA_TYPE_LIST_SCHEMA = """
-		{
-		"type": "object",
-		"properties": {}
-		}
-		""";
 
 	private static final String GET_SEARCH_PARAMETERS_SCHEMA =
 			"""
@@ -454,7 +442,7 @@ public class ToolFactory {
 		return new Tool.Builder()
 				.name("get-resource-list")
 				.description("Gets the list of FHIR resources supported by the configured/default FHIR store.")
-				.inputSchema(mapper.readValue(GET_RESOURCE_LIST_SCHEMA, McpSchema.JsonSchema.class))
+				.inputSchema(EMPTY_OBJECT_SCHEMA)
 				.build();
 	}
 
@@ -470,7 +458,7 @@ public class ToolFactory {
 		return new Tool.Builder()
 				.name("get-data-type-list")
 				.description("Gets the list of FHIR data types known to this server.")
-				.inputSchema(mapper.readValue(GET_DATA_TYPE_LIST_SCHEMA, McpSchema.JsonSchema.class))
+				.inputSchema(EMPTY_OBJECT_SCHEMA)
 				.build();
 	}
 
