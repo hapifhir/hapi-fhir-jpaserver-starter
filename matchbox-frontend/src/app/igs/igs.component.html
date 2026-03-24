@@ -55,13 +55,13 @@
     <input [formControl]="addUrl" matInput/>
   </mat-form-field>
 
-  <button (click)="onSubmit()" type="submit">Upload</button>
+  <button class="btn-main" (click)="onSubmit()" type="submit">Upload</button>
   @if (selection) {
     &nbsp;
-    <button (click)="onUpdate()" type="submit">Update</button>
+    <button class="btn-main" (click)="onUpdate()" type="submit">Update</button>
   } @if (selection) {
   &nbsp;
-  <button (click)="onDelete()" type="submit">Delete</button>
+  <button class="btn-main" (click)="onDelete()" type="submit">Delete</button>
 }
 </div>
 
