@@ -1,3 +1,7 @@
+@use '../../variables';
+
+
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -10,12 +14,30 @@ table {
     tbody {
         td {
             border-bottom: 1px solid rgb(229, 231, 235);
-            padding-top: 1rem;
-            padding-bottom: 1rem;
-            padding-left: 1rem;
 
             &:hover {
                 background: #eee
+            }
+
+            &.text-center {
+                text-align: center;
+            }
+
+            mat-icon {
+                margin-right: 2px;
+                vertical-align: bottom;
+
+                &.error {
+                    color: variables.$issue-error;
+                }
+
+                &.warning {
+                    color: variables.$issue-warning;
+                }
+
+                &.info {
+                    color: variables.$issue-info;
+                }
             }
         }
     }
@@ -24,11 +46,17 @@ table {
 .search-params {
     padding-top: 1rem;
     padding-bottom: 1rem;
+
+    .param {
+        padding-right: 1rem;
+
+        &.ig {
+            width: 100%;
+        }
+    }
+
 }
 
-.param {
-    padding-right: 1rem;
-}
 
 .operation-outcome-row pre {
     max-width: 100%;
@@ -43,10 +71,33 @@ table {
 
 /* Playing around with style attributes, probably not final */
 .severity-error {
-    color: #ffffff;
-    background-color: rgba(255, 0, 0, 0.75);    
+    background-color: #fe2727af;    
 }
 
 .severity-warning {
-    background-color: #ffff00;
+    background-color: #feffe0;
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 0;
+
+    .page-info {
+        flex: 1;
+    }
+
+    .nav-buttons {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .count-info {
+        flex: 1;
+        text-align: right;
+    }
 }
