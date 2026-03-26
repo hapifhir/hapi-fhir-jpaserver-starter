@@ -32,7 +32,7 @@ public class WebAppFilesConfigurer implements WebMvcConfigurer {
 				try {
 					theRegistry
 							.addResourceHandler(WEB_CONTENT + "/**")
-							.addResourceLocations(new FileUrlResource(appContentPath));
+							.addResourceLocations(new FileUrlResource(appContentPath + "/"));
 				} catch (MalformedURLException e) {
 					throw new RuntimeException(e);
 				}
