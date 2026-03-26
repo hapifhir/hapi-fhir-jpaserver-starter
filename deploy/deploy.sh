@@ -5,6 +5,7 @@ set -eux
 # Create the namespace
 kubectl create namespace $NAMESPACE || true
 
+# Upgrade charts
 helm upgrade \
     --install \
     --atomic \
