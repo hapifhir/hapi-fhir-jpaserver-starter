@@ -30,7 +30,7 @@ public class CustomContentFilesConfigurer implements WebMvcConfigurer {
 			try {
 				theRegistry
 						.addResourceHandler(CUSTOM_CONTENT + "/**")
-						.addResourceLocations(new FileUrlResource(customContentPath));
+						.addResourceLocations(new FileUrlResource(customContentPath + "/"));
 			} catch (MalformedURLException e) {
 				throw new RuntimeException(e);
 			}
