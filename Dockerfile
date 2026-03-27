@@ -36,6 +36,9 @@ COPY --chown=65532:65532 catalina.properties /usr/local/tomcat/conf/catalina.pro
 COPY --chown=65532:65532 server.xml /usr/local/tomcat/conf/server.xml
 COPY --from=build-hapi --chown=65532:65532 /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /usr/local/tomcat/webapps/ROOT.war
 COPY --from=build-hapi --chown=65532:65532 /tmp/hapi-fhir-jpaserver-starter/opentelemetry-javaagent.jar /app
+# custom_content_path (hapi.fhir.custom_content_path) and app_content_path (hapi.fhir.app_content_path) dirs
+COPY --chown=65532:65532 custom/ /usr/local/tomcat/custom/
+COPY --chown=65532:65532 configs/ /usr/local/tomcat/configs/
 
 ########### distroless brings focus on security and runs on plain spring boot - this is the default image
 FROM gcr.io/distroless/java21-debian13:nonroot AS default
@@ -47,5 +50,8 @@ WORKDIR /app
 
 COPY --chown=nonroot:nonroot --from=build-distroless /app /app
 COPY --chown=nonroot:nonroot --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/opentelemetry-javaagent.jar /app
+# custom_content_path (hapi.fhir.custom_content_path) and app_content_path (hapi.fhir.app_content_path) dirs
+COPY --chown=nonroot:nonroot custom/ /app/custom/
+COPY --chown=nonroot:nonroot configs/ /app/configs/
 
 ENTRYPOINT ["java", "--class-path", "/app/main.war", "-Dloader.path=main.war!/WEB-INF/classes/,main.war!/WEB-INF/,/app/extra-classes", "org.springframework.boot.loader.PropertiesLauncher"]
