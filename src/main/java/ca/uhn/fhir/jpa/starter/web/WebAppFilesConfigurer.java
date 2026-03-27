@@ -17,7 +17,7 @@ import java.net.URI;
 @ConditionalOnProperty(prefix = "hapi.fhir", name = "app_content_path")
 public class WebAppFilesConfigurer implements WebMvcConfigurer {
 
-	public static final String WEB_CONTENT = "web";
+	public static final String WEB_CONTENT = "/web";
 	private String appContentPath;
 
 	public WebAppFilesConfigurer(AppProperties appProperties) {
