@@ -19,11 +19,15 @@ import org.springframework.test.context.ActiveProfiles;
  * 1. The application starts successfully with custom_content_path configured
  * 2. Static files from the custom content path are served at /content/**
  * 3. Files are accessible and contain expected content
+ * 
+ * The custom content path "./custom" corresponds to the repository's custom/ directory
+ * which contains sample custom content files (about.html, welcome.html, logo.jpg).
+ * See the application.yaml comment: "# custom_content_path: ./custom"
  */
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {
     "hapi.fhir.fhir_version=r4",
-    "hapi.fhir.custom_content_path=./custom"
+    "hapi.fhir.custom_content_path=./custom"  // Uses the repository's custom/ directory
 })
 class CustomContentPathIT {
     @Autowired

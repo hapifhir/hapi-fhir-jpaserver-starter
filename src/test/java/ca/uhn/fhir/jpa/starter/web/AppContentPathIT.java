@@ -19,11 +19,16 @@ import org.springframework.test.context.ActiveProfiles;
  * 1. The application starts successfully with app_content_path configured
  * 2. Static files from the app content path are served at /web/**
  * 3. Redirects work correctly for /web and /web/
+ * 
+ * The app content path "./configs/app" corresponds to the repository's configs/app/ directory
+ * which contains sample app content (index.html). This directory is used as a web application
+ * root and is served under the /web/** URL pattern.
+ * See the application.yaml comment: "# app_content_path: ./configs/app"
  */
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {
     "hapi.fhir.fhir_version=r4",
-    "hapi.fhir.app_content_path=./configs/app"
+    "hapi.fhir.app_content_path=./configs/app"  // Uses the repository's configs/app/ directory
 })
 class AppContentPathIT {
     @Autowired
@@ -50,20 +55,23 @@ class AppContentPathIT {
     
     @Test
     void testWebRootAccessible() {
-        // The /web endpoint should redirect to index.html or serve it directly
+        // The /web endpoint is configured to redirect to /web/index.html via the 
+        // addViewControllers in WebAppFilesConfigurer. TestRestTemplate follows 
+        // redirects automatically, so after the redirect we expect 200 OK.
         ResponseEntity<String> response = restTemplate.getForEntity(
             "http://localhost:" + port + "/web", String.class);
         
-        // TestRestTemplate follows redirects, so we expect 200 OK after redirect
-        assertThat(response.getStatusCode()).isIn(HttpStatus.OK, HttpStatus.FOUND, HttpStatus.SEE_OTHER);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
     
     @Test
     void testWebSlashAccessible() {
+        // The /web/ endpoint is configured to redirect to index.html via the
+        // addViewControllers in WebAppFilesConfigurer. TestRestTemplate follows
+        // redirects automatically, so after the redirect we expect 200 OK.
         ResponseEntity<String> response = restTemplate.getForEntity(
             "http://localhost:" + port + "/web/", String.class);
         
-        // Should redirect to index.html
-        assertThat(response.getStatusCode()).isIn(HttpStatus.OK, HttpStatus.FOUND, HttpStatus.SEE_OTHER);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 }
