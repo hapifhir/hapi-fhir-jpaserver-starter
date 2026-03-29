@@ -14,7 +14,7 @@ import java.net.MalformedURLException;
 @ConditionalOnProperty(prefix = "hapi.fhir", name = "custom_content_path")
 public class CustomContentFilesConfigurer implements WebMvcConfigurer {
 
-	public static final String CUSTOM_CONTENT = "/content";
+	public static final String CUSTOM_CONTENT = "/content/custom";
 	private String customContentPath;
 
 	public CustomContentFilesConfigurer(AppProperties appProperties) {

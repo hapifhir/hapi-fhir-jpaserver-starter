@@ -18,7 +18,7 @@ class WebAppFilesConfigurerTest {
 		// to properly match request paths like "/web/app/index.html"
 		assertTrue(WebAppFilesConfigurer.WEB_CONTENT.startsWith("/"),
 			"WEB_CONTENT must start with '/' for proper resource handler pattern matching");
-		assertEquals("/web", WebAppFilesConfigurer.WEB_CONTENT);
+		assertEquals("/web/apps", WebAppFilesConfigurer.WEB_CONTENT);
 	}
 
 	@Test
@@ -26,6 +26,6 @@ class WebAppFilesConfigurerTest {
 		// Also verify the CUSTOM_CONTENT constant for completeness
 		assertTrue(CustomContentFilesConfigurer.CUSTOM_CONTENT.startsWith("/"),
 			"CUSTOM_CONTENT must start with '/' for proper resource handler pattern matching");
-		assertEquals("/content", CustomContentFilesConfigurer.CUSTOM_CONTENT);
+		assertEquals("/content/custom", CustomContentFilesConfigurer.CUSTOM_CONTENT);
 	}
 }

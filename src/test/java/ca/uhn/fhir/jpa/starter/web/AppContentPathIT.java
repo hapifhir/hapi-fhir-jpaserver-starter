@@ -59,7 +59,7 @@ class AppContentPathIT {
         // addViewControllers in WebAppFilesConfigurer. TestRestTemplate follows 
         // redirects automatically, so after the redirect we expect 200 OK.
         ResponseEntity<String> response = restTemplate.getForEntity(
-            "http://localhost:" + port + "/web", String.class);
+            "http://localhost:" + port + "/web/apps", String.class);
         
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
