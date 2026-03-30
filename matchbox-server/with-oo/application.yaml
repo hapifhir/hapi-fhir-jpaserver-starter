@@ -1,0 +1,34 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /matchboxv3
+hapi:
+  fhir:
+    implementationguides:
+      fhir_r4_core:
+        name: hl7.fhir.r4.core
+        version: 4.0.1
+        url: classpath:/hl7.fhir.r4.core.tgz
+matchbox:
+  fhir:
+    context:
+      httpReadOnly: false
+      txServer: http://localhost:${server.port}/matchboxv3/tx
+      suppressWarnInfo:
+        hl7.fhir.r4.core#4.0.1:
+          - "Constraint failed: dom-6:"
+          - "regex:Entry '(.+)' isn't reachable by traversing forwards from the Composition"
+      suppressError:
+        hl7.fhir.r4.core#4.0.1:
+          - "Extension_EXTP_Context_Wrong@^RelatedPerson"
+        matchbox.health.test.ig.r4#0.2.0:
+          - "Type_Specific_Checks_DT_URL_Resolve@^.*extension.*url"
+          - "Type_Specific_Checks_DT_URL_Resolve@^.*coding.*system"
+          - "Extension_EXT_Unknown"
+          - "Extension_EXT_Unknown_NotHere"
+      xVersion: true
+  validation:
+    save-statistics: true
+spring:
+  datasource:
+    url: "jdbc:h2:mem:test-r4"
