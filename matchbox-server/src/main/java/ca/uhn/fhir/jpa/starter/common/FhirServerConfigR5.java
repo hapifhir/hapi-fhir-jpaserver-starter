@@ -12,8 +12,10 @@ import ch.ahdis.matchbox.packages.ImplementationGuideProviderR5;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireAssembleProviderR5;
 import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR5;
 import ch.ahdis.matchbox.statistics.OperationOutcomeResourceProviderR5;
+import ch.ahdis.matchbox.statistics.SearchParameterResourceProviderR5;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import org.hl7.fhir.r5.model.OperationOutcome;
+import org.hl7.fhir.r5.model.SearchParameter;
 import org.hl7.fhir.r5.model.ImplementationGuide;
 import org.hl7.fhir.r5.model.StructureMap;
 import org.springframework.context.annotation.*;
@@ -76,6 +78,17 @@ public class FhirServerConfigR5 {
     final var retVal = new OperationOutcomeResourceProviderR5();
     retVal.setContext(fhirContext);
     retVal.setDao(operationOutcomeDao);
+    return retVal;
+  }
+
+  @Bean
+  @Primary
+  @Conditional(OnStatisticsEnabled.class)
+  public SearchParameterResourceProviderR5 rpSearchParameterR5(final IFhirResourceDao<SearchParameter> searchParameterDao,
+                                                               final FhirContext fhirContext) {
+    final var retVal = new SearchParameterResourceProviderR5();
+    retVal.setContext(fhirContext);                                                            
+    retVal.setDao(searchParameterDao);
     return retVal;
   }
 }

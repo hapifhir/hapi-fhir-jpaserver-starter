@@ -60,6 +60,9 @@ import ch.ahdis.matchbox.questionnaire.*;
 import ch.ahdis.matchbox.statistics.OperationOutcomeResourceProviderR4;
 import ch.ahdis.matchbox.statistics.OperationOutcomeResourceProviderR4B;
 import ch.ahdis.matchbox.statistics.OperationOutcomeResourceProviderR5;
+import ch.ahdis.matchbox.statistics.SearchParameterResourceProviderR4;
+import ch.ahdis.matchbox.statistics.SearchParameterResourceProviderR4B;
+import ch.ahdis.matchbox.statistics.SearchParameterResourceProviderR5;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import ch.ahdis.matchbox.util.MatchboxPackageInstallerImpl;
 import ch.ahdis.matchbox.validation.ValidationProvider;
@@ -130,7 +133,11 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 															 final Optional<OperationOutcomeResourceProviderR4> operationOutcomeResourceProviderR4,
 															 final Optional<OperationOutcomeResourceProviderR4B> operationOutcomeResourceProviderR4B,
 															 final Optional<OperationOutcomeResourceProviderR5> operationOutcomeResourceProviderR5,
-															 final ValidationProvider validationProvider) {
+															 final ValidationProvider validationProvider,
+															 final Optional<SearchParameterResourceProviderR4> searchParameterResourceProviderR4,
+															 final Optional<SearchParameterResourceProviderR4B> searchParameterResourceProviderR4B,
+															 final Optional<SearchParameterResourceProviderR5> searchParameterResourceProviderR5
+															) {
 
 		final var fhirServer = super.restfulServer(fhirSystemDao,
 																 appProperties,
@@ -193,7 +200,8 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 					implementationGuideResourceProviderR4,
 					assembleProviderR4,
 					questionnaireResponseProviderR4,
-					operationOutcomeResourceProviderR4
+					operationOutcomeResourceProviderR4,
+					searchParameterResourceProviderR4
 				);
 
 				if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages()
@@ -209,7 +217,8 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 					implementationGuideResourceProviderR4B,
 					assembleProviderR4B,
 					questionnaireResponseProviderR4B,
-					operationOutcomeResourceProviderR4B
+					operationOutcomeResourceProviderR4B,
+					searchParameterResourceProviderR4B
 				);
 
 				if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages()
@@ -225,7 +234,8 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 					implementationGuideResourceProviderR5,
 					assembleProviderR5,
 					questionnaireResponseProviderR5,
-					operationOutcomeResourceProviderR5
+					operationOutcomeResourceProviderR5,
+					searchParameterResourceProviderR5
 				);
 
 				if (appProperties.getOnly_install_packages() != null && appProperties.getOnly_install_packages()

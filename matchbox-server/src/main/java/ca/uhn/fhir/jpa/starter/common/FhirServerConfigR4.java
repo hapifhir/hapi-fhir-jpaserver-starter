@@ -3,6 +3,7 @@ package ca.uhn.fhir.jpa.starter.common;
 import ca.uhn.fhir.jpa.starter.annotations.OnStatisticsEnabled;
 import ch.ahdis.matchbox.packages.ImplementationGuideProviderR4;
 import ch.ahdis.matchbox.statistics.OperationOutcomeResourceProviderR4;
+import ch.ahdis.matchbox.statistics.SearchParameterResourceProviderR4;
 import ch.ahdis.matchbox.util.MatchboxEngineSupport;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -22,6 +23,7 @@ import ch.ahdis.matchbox.questionnaire.QuestionnaireResponseExtractProviderR4;
 import org.hl7.fhir.r4.model.ImplementationGuide;
 import org.hl7.fhir.r4.model.StructureMap;
 import org.hl7.fhir.r4.model.OperationOutcome;
+import org.hl7.fhir.r4.model.SearchParameter;
 
 @Configuration
 @Conditional(OnR4Condition.class)
@@ -60,6 +62,17 @@ public class FhirServerConfigR4 {
     final var retVal = new OperationOutcomeResourceProviderR4();
     retVal.setContext(fhirContext);
     retVal.setDao(operationOutcomeDao);
+    return retVal;
+  }
+
+  @Bean
+  @Primary
+  @Conditional(OnStatisticsEnabled.class)
+  public SearchParameterResourceProviderR4 rpSearchParameterR4(final IFhirResourceDao<SearchParameter> searchParameterDao,
+                                                               final FhirContext fhirContext) {
+    final var retVal = new SearchParameterResourceProviderR4();
+    retVal.setContext(fhirContext);
+    retVal.setDao(searchParameterDao);
     return retVal;
   }
 
