@@ -131,6 +131,13 @@ export class StatisticsComponent implements AfterViewInit {
       }
     }
 
+    if (selectedIssues.length > 0) {
+      parameter.searchParams['issue'] = '';
+      for (var issue of selectedIssues) {
+        parameter.searchParams['issue'] += issue + ',';
+      }
+    }
+
     this.loadBundle(parameter);  
   }
 
