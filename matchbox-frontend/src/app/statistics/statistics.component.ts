@@ -19,10 +19,11 @@ export class StatisticsComponent implements AfterViewInit {
   filterStartDate = new FormControl<Date | null>(null);
   filterEndDate = new FormControl<Date | null>(null);
   filterSelectedIssues = new FormControl<string[]>([], { nonNullable: true});
+  filterIGs = new FormControl<string[]>([], {nonNullable: true});
   hasNextBundle: boolean = false;
   hasPreviousBundle: boolean = false;
   currentBundle: fhir.r4.Bundle;
-  currentPage: number;
+  currentPage: number = 1;
   totalEntries: number;
 
   constructor(private data: FhirConfigService) {
@@ -51,7 +52,7 @@ export class StatisticsComponent implements AfterViewInit {
 
   processBundle(bundle: fhir.r4.Bundle) {
     this.currentBundle = bundle;
-    this.operationOutcomes = bundle.entry?.map(entry => entry.resource as fhir.r4.OperationOutcome);
+    this.operationOutcomes = bundle.entry?.map(entry => entry.resource as fhir.r4.OperationOutcome) ?? [];
     this.checkNextAndPreviousBundle(bundle);
   }
 
@@ -83,10 +84,12 @@ export class StatisticsComponent implements AfterViewInit {
     const startDate = this.filterStartDate.value;
     const endDate = this.filterEndDate.value;
     const selectedIssues = this.filterSelectedIssues.value;
+    const selectedIgs = this.filterIGs.value;
     
     console.log('StartDate value: ', startDate);
     console.log('Enddate value: ', endDate);
     console.log('issues: ', selectedIssues);
+    console.log('IGs: ', selectedIgs);
 
     // initialize parameter object
     const parameter = {
@@ -113,6 +116,12 @@ export class StatisticsComponent implements AfterViewInit {
         parameter.searchParams['_lastUpdated'] = [parameter.searchParams['_lastUpdated'], `le${formattedEndDate}`];
       } else {
         parameter.searchParams['_lastUpdated'] = `le${formattedEndDate}`;
+      }
+    }
+
+    if (selectedIgs.length > 0) {
+      for (var ig of selectedIgs) {
+        parameter.searchParams['ig'] = ig;
       }
     }
 
