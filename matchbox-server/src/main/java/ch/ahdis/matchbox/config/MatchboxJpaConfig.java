@@ -164,7 +164,7 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 		}
 		fhirServer.registerInterceptor(new MappingLanguageInterceptor(matchboxEngineSupport));
 		fhirServer.registerInterceptor(new ImplementationGuidePackageInterceptor(myPackageCacheManager, fhirContext));
-		fhirServer.registerInterceptor(new MatchboxValidationInterceptor(fhirContext));
+		fhirServer.registerInterceptor(new MatchboxValidationInterceptor());
 
 		fhirServer.registerProviders(
 			validationProvider,
