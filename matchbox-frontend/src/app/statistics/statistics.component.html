@@ -89,6 +89,10 @@
                 <mat-icon>chevron_right</mat-icon>
             </button>
         </div>
+        @if (totalEntries > 0){
         <span class="count-info">{{ calculateAmountOfEntriesShown() }} of {{ totalEntries }}</span>
+        } @else {
+            <span class="count-info"></span>
+        }
     </div>
 </div>
