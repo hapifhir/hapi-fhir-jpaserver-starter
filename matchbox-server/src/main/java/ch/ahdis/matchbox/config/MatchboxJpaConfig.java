@@ -470,10 +470,10 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 		return new StructureMapListProvider(matchboxEngineSupport, matchboxFhirVersion);
 	}
 
-	@Bean
-	public ValidatorResourceFetcher jpaValidatorResourceFetcher() {
-		return new ValidatorResourceFetcher();
-	}
+	// @Bean
+	// public ValidatorResourceFetcher jpaValidatorResourceFetcher() {
+	// 	return new ValidatorResourceFetcher();
+	// }
 
 	@Bean
 	public ValidatorPolicyAdvisor jpaValidatorPolicyAdvisor() {

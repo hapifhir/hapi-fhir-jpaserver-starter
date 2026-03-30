@@ -131,6 +131,14 @@
       "projectName": "matchbox-server",
       "vmArgs": "-Dspring.config.additional-location=file:with-oneengine/application.yaml",
       "cwd": "${workspaceFolder}/matchbox-server"
+    },    {
+      "type": "java",
+      "name": "Launch Matchbox-Server (with-oo)",
+      "request": "launch",
+      "mainClass": "ca.uhn.fhir.jpa.starter.Application",
+      "projectName": "matchbox-server",
+      "vmArgs": "-Dspring.config.additional-location=file:with-oo/application.yaml",
+      "cwd": "${workspaceFolder}/matchbox-server"
     },
     {
       "type": "java",

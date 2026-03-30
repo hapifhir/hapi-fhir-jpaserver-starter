@@ -1,0 +1,14 @@
+POST http://localhost:8080/matchboxv3/fhir/SearchParameter HTTP/1.1
+Content-Type: application/fhir+json
+
+{
+    "resourceType": "SearchParameter",
+    "title": "Implementation Guide",
+    "base": [
+        "OperationOutcome"
+    ],
+    "status": "active",
+    "code": "ig",
+    "type": "string",
+    "expression": "issue.extension('http://matchbox.health/validation').extension('ig').value"
+}
