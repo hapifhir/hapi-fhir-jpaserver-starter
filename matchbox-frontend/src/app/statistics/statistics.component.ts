@@ -24,7 +24,7 @@ export class StatisticsComponent implements AfterViewInit {
   hasPreviousBundle: boolean = false;
   currentBundle: fhir.r4.Bundle;
   currentPage: number = 1;
-  totalEntries: number;
+  totalEntries: number = 0;
 
   constructor(private data: FhirConfigService) {
     this.client = data.getFhirClient();
@@ -32,7 +32,10 @@ export class StatisticsComponent implements AfterViewInit {
 
   async ngAfterViewInit(): Promise<void> {
     const parameters = {
-      resourceType: 'OperationOutcome'        
+      resourceType: 'OperationOutcome',
+      searchParams: {
+        _total: 'accurate'
+      }
     }
 
     await this.loadBundle(parameters);
@@ -44,7 +47,7 @@ export class StatisticsComponent implements AfterViewInit {
       const bundle = await this.client.search(params) as fhir.r4.Bundle;
       this.processBundle(bundle);
       this.currentPage = 1;
-      this.getTotalEntries();
+      this.totalEntries = await this.getTotalEntries(bundle);
     } catch (error) {
       console.error('Error getting OperationOutcomes: ', error);
     }
@@ -94,7 +97,9 @@ export class StatisticsComponent implements AfterViewInit {
     // initialize parameter object
     const parameter = {
       resourceType: 'OperationOutcome',
-      searchParams: {}
+      searchParams: {
+        _total: 'accurate'
+      }
     }
 
     // check if startDate is present
@@ -120,8 +125,9 @@ export class StatisticsComponent implements AfterViewInit {
     }
 
     if (selectedIgs.length > 0) {
+      parameter.searchParams['ig'] = '';
       for (var ig of selectedIgs) {
-        parameter.searchParams['ig'] = ig;
+        parameter.searchParams['ig'] += ig + ',';
       }
     }
 
@@ -245,15 +251,15 @@ export class StatisticsComponent implements AfterViewInit {
     }
   }
 
-  async getTotalEntries() {
-    if (this.currentBundle.total) {
-      this.totalEntries = this.currentBundle.total;
+  async getTotalEntries(bundle: fhir.r4.Bundle) {
+    if (bundle.total) {
+      return bundle.total;
     } else {
-      const link = this.currentBundle.link?.find(l => l.relation === 'next');
+      const link = bundle.link?.find(l => l.relation === 'next');
       if (link?.url) {
         const urlParameter = new URL(link.url).search;
-        const bundle = await this.client.request(urlParameter) as fhir.r4.Bundle;
-        this.totalEntries = bundle.total;
+        const nextBundle = await this.client.request(urlParameter) as fhir.r4.Bundle;
+        return nextBundle.total;
       }
     }
   }
