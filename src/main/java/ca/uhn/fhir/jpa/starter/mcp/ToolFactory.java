@@ -214,19 +214,7 @@ public class ToolFactory {
 			}
 			""";
 
-	private static final String GET_SEARCH_PARAMETERS_SCHEMA =
-			"""
-		{
-		"type": "object",
-		"properties": {
-			%s
-		},
-		"required": ["resourceType"]
-		}
-		"""
-					.formatted(RESOURCE_NAME_PROPERTY);
-
-	private static final String GET_RESOURCE_DEFINITION_SCHEMA =
+	private static final String RESOURCE_TYPE_ONLY_SCHEMA =
 			"""
 		{
 		"type": "object",
@@ -448,7 +436,7 @@ public class ToolFactory {
 		return new Tool.Builder()
 				.name("get-resource-definition")
 				.description("Gets the definition of a FHIR resource.")
-				.inputSchema(mapper.readValue(GET_RESOURCE_DEFINITION_SCHEMA, McpSchema.JsonSchema.class))
+				.inputSchema(mapper.readValue(RESOURCE_TYPE_ONLY_SCHEMA, McpSchema.JsonSchema.class))
 				.build();
 	}
 
@@ -488,7 +476,7 @@ public class ToolFactory {
 		return new Tool.Builder()
 				.name("get-search-parameters")
 				.description("Get the FHIR Search Parameters for a resource in a specified store.")
-				.inputSchema(mapper.readValue(GET_SEARCH_PARAMETERS_SCHEMA, McpSchema.JsonSchema.class))
+				.inputSchema(mapper.readValue(RESOURCE_TYPE_ONLY_SCHEMA, McpSchema.JsonSchema.class))
 				.build();
 	}
 

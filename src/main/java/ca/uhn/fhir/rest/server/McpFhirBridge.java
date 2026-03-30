@@ -31,45 +31,26 @@ public class McpFhirBridge implements McpBridge {
 
 		try {
 			return List.of(
-					new McpServerFeatures.SyncToolSpecification.Builder()
-							.tool(ToolFactory.createFhirResource())
-							.callHandler((exchange, request) -> getToolResult(request, Interaction.CREATE))
-							.build(),
-					new McpServerFeatures.SyncToolSpecification.Builder()
-							.tool(ToolFactory.readFhirResource())
-							.callHandler((exchange, request) -> getToolResult(request, Interaction.READ))
-							.build(),
-					new McpServerFeatures.SyncToolSpecification.Builder()
-							.tool(ToolFactory.updateFhirResource())
-							.callHandler((exchange, request) -> getToolResult(request, Interaction.UPDATE))
-							.build(),
-					new McpServerFeatures.SyncToolSpecification.Builder()
-							.tool(ToolFactory.deleteFhirResource())
-							.callHandler((exchange, request) -> getToolResult(request, Interaction.DELETE))
-							.build(),
-					new McpServerFeatures.SyncToolSpecification.Builder()
-							.tool(ToolFactory.conditionalPatchFhirResource())
-							.callHandler((exchange, request) -> getToolResult(request, Interaction.PATCH))
-							.build(),
-					new McpServerFeatures.SyncToolSpecification.Builder()
-							.tool(ToolFactory.searchFhirResources())
-							.callHandler((exchange, request) -> getToolResult(request, Interaction.SEARCH))
-							.build(),
-					new McpServerFeatures.SyncToolSpecification.Builder()
-							.tool(ToolFactory.conditionalUpdateFhirResource())
-							.callHandler((exchange, request) -> getToolResult(request, Interaction.UPDATE))
-							.build(),
-					new McpServerFeatures.SyncToolSpecification.Builder()
-							.tool(ToolFactory.patchFhirResource())
-							.callHandler((exchange, request) -> getToolResult(request, Interaction.PATCH))
-							.build(),
-					new McpServerFeatures.SyncToolSpecification.Builder()
-							.tool(ToolFactory.createFhirTransaction())
-							.callHandler((exchange, request) -> getToolResult(request, Interaction.TRANSACTION))
-							.build());
+					buildSpecification(ToolFactory.createFhirResource(), Interaction.CREATE),
+					buildSpecification(ToolFactory.readFhirResource(), Interaction.READ),
+					buildSpecification(ToolFactory.updateFhirResource(), Interaction.UPDATE),
+					buildSpecification(ToolFactory.deleteFhirResource(), Interaction.DELETE),
+					buildSpecification(ToolFactory.conditionalPatchFhirResource(), Interaction.PATCH),
+					buildSpecification(ToolFactory.searchFhirResources(), Interaction.SEARCH),
+					buildSpecification(ToolFactory.conditionalUpdateFhirResource(), Interaction.UPDATE),
+					buildSpecification(ToolFactory.patchFhirResource(), Interaction.PATCH),
+					buildSpecification(ToolFactory.createFhirTransaction(), Interaction.TRANSACTION));
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private McpServerFeatures.SyncToolSpecification buildSpecification(
+			McpSchema.Tool tool, Interaction interaction) {
+		return new McpServerFeatures.SyncToolSpecification.Builder()
+				.tool(tool)
+				.callHandler((exchange, request) -> getToolResult(request, interaction))
+				.build();
 	}
 
 	private String getContextPath() {

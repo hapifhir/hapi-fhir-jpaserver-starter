@@ -327,10 +327,10 @@ public class McpMetadataBridge implements McpBridge {
 				if (!matches) {
 					continue;
 				}
-				String code = defaultString(myTerser.getSinglePrimitiveValueOrNull(searchParameter, "code"), "Unnamed");
-				String type = defaultString(myTerser.getSinglePrimitiveValueOrNull(searchParameter, "type"), "unknown");
+				String code = StringUtils.defaultString(myTerser.getSinglePrimitiveValueOrNull(searchParameter, "code"), "Unnamed");
+				String type = StringUtils.defaultString(myTerser.getSinglePrimitiveValueOrNull(searchParameter, "type"), "unknown");
 				String description =
-						defaultString(myTerser.getSinglePrimitiveValueOrNull(searchParameter, "description"), "");
+						StringUtils.defaultString(myTerser.getSinglePrimitiveValueOrNull(searchParameter, "description"), "");
 				results.add(String.format(Locale.ROOT, "%s (%s): %s", code, type, description));
 			}
 		}
@@ -341,7 +341,7 @@ public class McpMetadataBridge implements McpBridge {
 
 		RuntimeResourceDefinition resourceDefinition = myFhirContext.getResourceDefinition(resourceName);
 		return resourceDefinition.getSearchParams().stream()
-				.sorted((left, right) -> left.getName().compareToIgnoreCase(right.getName()))
+				.sorted(Comparator.comparing(RuntimeSearchParam::getName, String.CASE_INSENSITIVE_ORDER))
 				.map(this::formatRuntimeSearchParam)
 				.collect(Collectors.toList());
 	}
@@ -370,12 +370,12 @@ public class McpMetadataBridge implements McpBridge {
 				continue;
 			}
 
-			String title = defaultString(myTerser.getSinglePrimitiveValueOrNull(structure, "title"), "");
-			String description = defaultString(myTerser.getSinglePrimitiveValueOrNull(structure, "description"), "");
-			String comment = defaultString(myTerser.getSinglePrimitiveValueOrNull(structure, "comment"), "");
-			String purpose = defaultString(myTerser.getSinglePrimitiveValueOrNull(structure, "purpose"), "");
-			String url = defaultString(myTerser.getSinglePrimitiveValueOrNull(structure, "url"), "");
-			String version = defaultString(myTerser.getSinglePrimitiveValueOrNull(structure, "version"), "");
+			String title = StringUtils.defaultString(myTerser.getSinglePrimitiveValueOrNull(structure, "title"), "");
+			String description = StringUtils.defaultString(myTerser.getSinglePrimitiveValueOrNull(structure, "description"), "");
+			String comment = StringUtils.defaultString(myTerser.getSinglePrimitiveValueOrNull(structure, "comment"), "");
+			String purpose = StringUtils.defaultString(myTerser.getSinglePrimitiveValueOrNull(structure, "purpose"), "");
+			String url = StringUtils.defaultString(myTerser.getSinglePrimitiveValueOrNull(structure, "url"), "");
+			String version = StringUtils.defaultString(myTerser.getSinglePrimitiveValueOrNull(structure, "version"), "");
 
 			StringBuilder builder = new StringBuilder();
 			builder.append(typeName);
@@ -464,10 +464,6 @@ public class McpMetadataBridge implements McpBridge {
 		}
 		Object value = request.arguments().get(name);
 		return value instanceof String ? (String) value : null;
-	}
-
-	private static String defaultString(String value, String defaultVal) {
-		return value == null ? defaultVal : value;
 	}
 
 	private static String lowerOrNull(String value) {

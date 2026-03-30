@@ -1,6 +1,5 @@
 package ca.uhn.fhir.jpa.starter.mcp;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -120,10 +119,4 @@ public final class SearchTypeDescriptions {
 		return Optional.ofNullable(entry).map(Entry::formatted);
 	}
 
-	public static List<String> formattedEntries() {
-		return ENTRIES.values().stream()
-				.sorted(Comparator.comparing(Entry::code))
-				.map(Entry::formatted)
-				.collect(Collectors.toUnmodifiableList());
-	}
 }
