@@ -26,6 +26,10 @@ export class StatisticsComponent implements AfterViewInit {
   currentPage: number = 1;
   totalEntries: number = 0;
   isLoading: boolean = false;
+  supportedProfiles: Map <string, any> = new Map();
+  filteredProfilesList: any[] = [];
+  profileFilter: string = '';
+  filterProfile = new FormControl<string | null>(null);
 
   constructor(private data: FhirConfigService) {
     this.client = data.getFhirClient();
@@ -41,6 +45,7 @@ export class StatisticsComponent implements AfterViewInit {
 
     await this.loadBundle(parameters);
     this.getImplementationGuides();
+    await this.getSupportedProfiles();
   }
 
   async loadBundle(params: any) {
@@ -72,10 +77,42 @@ export class StatisticsComponent implements AfterViewInit {
       }
     }).then((bundle: fhir.r4.Bundle) => {
       this.implementationGuides = bundle.entry?.map(entry => entry.resource as fhir.r4.ImplementationGuide);
-      console.log('ImplementationGuides: ', this.implementationGuides);
     }).catch(error => {
       console.error('Error getting ImpementationGuides: ', error);
     })
+  }
+
+  async getSupportedProfiles() {
+    const od = await this.client.read({
+      resourceType: 'OperationDefinition',
+      id: '-s-validate'
+    }) as fhir.r4.OperationDefinition;
+
+    od.parameter?.forEach((parameter: fhir.r4.OperationDefinitionParameter) => {
+      if (parameter.name === 'profile') {
+        parameter._targetProfile?.forEach((item) => {
+
+          const canonical = this.getExtensionStringValue(item, 'sd-canonical');
+          const title = this.getExtensionStringValue(item, 'sd-title');
+
+          this.supportedProfiles.set(canonical, title);
+        });
+      }
+    });
+
+    this.updateProfileFilter();
+  }
+
+  getExtensionStringValue(element: fhir.r4.Element, url: string): string {
+    return element.extension?.find(e => e.url === url)?.valueString ?? '';
+  }
+
+  updateProfileFilter() {
+    const searchTerm = this.profileFilter.toLowerCase();
+    this.filteredProfilesList = Array.from(this.supportedProfiles.entries()).filter(([canonical, title]) => 
+      canonical.toLowerCase().includes(searchTerm) ||
+      title.toLowerCase().includes(searchTerm)
+    );
   }
 
   selectRow(id: number) {
@@ -92,11 +129,13 @@ export class StatisticsComponent implements AfterViewInit {
     const endDate = this.filterEndDate.value;
     const selectedIssues = this.filterSelectedIssues.value;
     const selectedIgs = this.filterIGs.value;
+    const selectedProfile = this.filterProfile.value;
     
     console.log('StartDate value: ', startDate);
     console.log('Enddate value: ', endDate);
     console.log('issues: ', selectedIssues);
     console.log('IGs: ', selectedIgs);
+    console.log('Profile: ', selectedProfile);
 
     // initialize parameter object
     const parameter = {
@@ -142,6 +181,10 @@ export class StatisticsComponent implements AfterViewInit {
       }
     }
 
+    if (selectedProfile) {
+      parameter.searchParams['profile:exact'] = selectedProfile;
+    }
+
     this.loadBundle(parameter);  
   }
 
@@ -173,16 +216,6 @@ export class StatisticsComponent implements AfterViewInit {
       }
     }
     return errors;
-  }
-
-  getHighestSeverity(outcome: fhir.r4.OperationOutcome) {
-    if (this.getErrors(outcome) > 0) {
-      return "error";
-    } else if (this.getWarnings(outcome) > 0) {
-      return "warning";
-    } else {
-      return "information";
-    }
   }
 
   getFormattedDate(outcome: fhir.r4.OperationOutcome) {
@@ -280,5 +313,23 @@ export class StatisticsComponent implements AfterViewInit {
         return nextBundle.total;
       }
     }
+  }
+
+  getSelectedProfileTitle() {
+    const selectedCanonical = this.filterProfile.value;
+
+    if (!selectedCanonical) {
+      return '';
+    } else {
+      return this.supportedProfiles.get(selectedCanonical) || selectedCanonical;
+    }
+  }
+
+  resetSearchParameters() {
+    this.filterStartDate.reset(null);
+    this.filterEndDate.reset(null);
+    this.filterIGs.reset([]);
+    this.filterSelectedIssues.reset([]);
+    this.filterProfile.reset(null);
   }
 }

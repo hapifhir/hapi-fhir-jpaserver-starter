@@ -30,8 +30,31 @@
                 }
             </mat-select>
         </mat-form-field>
+        <div class="form-field-group">
+            <mat-form-field>
+            <mat-label>Profile</mat-label>
+                <mat-select [formControl]="filterProfile">
+                    <mat-select-trigger>{{ getSelectedProfileTitle() }}</mat-select-trigger>
+                    <mat-option>
+                        <ngx-mat-select-search [(ngModel)]="profileFilter" placeholderLabel="Find a profile..."
+                            noEntriesFoundLabel="No matching profile found" (ngModelChange)="updateProfileFilter()">
+                        </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option [value]="null">All profiles</mat-option>
+                    @for (profile of filteredProfilesList; track profile) {
+                        <mat-option [value]="profile[0]" class="multi-line-option">
+                            <div class="option-container">
+                                <p class="title">{{ profile[1] }}</p>
+                                <p class="canonical">{{ profile[0] }}</p>
+                            </div>
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
         <div>
-            <button mat-raised-button (click)="filterOutcomes()">Search</button>
+            <button mat-raised-button class="btn-search" (click)="filterOutcomes()">Search</button>
+            <button mat-raised-button class="btn-search" (click)="resetSearchParameters()">Reset</button>
         </div>
     </div>
 

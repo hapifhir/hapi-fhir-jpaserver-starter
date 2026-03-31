@@ -64,6 +64,9 @@ table {
 
 }
 
+.btn-search {
+    margin-right: 1rem;
+}
 
 .operation-outcome-row pre {
     max-width: 100%;
@@ -107,4 +110,38 @@ table {
         flex: 1;
         text-align: right;
     }
+}
+
+
+.form-field-group {
+  display: flex;
+  flex-direction: row;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.multi-line-option {
+    padding-top: .3rem;
+    padding-bottom: .2rem;
+
+  .option-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  p.title {
+    margin: 0;
+    padding: 0;
+    line-height: 1.4;
+  }
+
+  p.canonical {
+    margin: 0;
+    padding: 0;
+    font-size: 0.8rem;
+    color: rgba(0, 0, 0, 0.54); 
+  }
 }
