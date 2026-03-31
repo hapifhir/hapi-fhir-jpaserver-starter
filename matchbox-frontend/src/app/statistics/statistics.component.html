@@ -25,7 +25,7 @@
         </mat-form-field>
         <mat-form-field class="param ig">
             <mat-label>ImplementationGuide</mat-label>
-            <mat-select multiple>
+            <mat-select [formControl]="filterIGs" multiple>
                 @for (ig of implementationGuides; track ig.id) {
                     <mat-option [value]="ig.packageId + '#' + ig.version">{{ ig.packageId }}#{{ ig.version }}</mat-option>
                 }
@@ -47,7 +47,6 @@
         </thead>
         <tbody>
             @for (outcome of operationOutcomes; track outcome.id) {
-                <!--Playing around with style attributes, probably not final-->
                 <tr class="pointer" [class]="'severity-' + getHighestSeverity(outcome)"
                     (click)="selectRow(outcome.id)"
                     >

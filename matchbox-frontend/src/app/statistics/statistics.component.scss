@@ -12,34 +12,53 @@ table {
     }
 
     tbody {
-        td {
-            border-bottom: 1px solid rgb(229, 231, 235);
-
+        tr {
             &:hover {
                 background: #eee
             }
 
-            &.text-center {
-                text-align: center;
-            }
+            &.severity-error {
+                background-color: #fe2727af;  
 
-            mat-icon {
-                margin-right: 2px;
-                vertical-align: bottom;
-
-                &.error {
-                    color: variables.$issue-error;
-                }
-
-                &.warning {
-                    color: variables.$issue-warning;
-                }
-
-                &.info {
-                    color: variables.$issue-info;
+                &:hover td {
+                    background-color: #e52323af;
                 }
             }
+
+            &.severity-warning {
+                background-color: #feffe0;
+
+                &:hover {
+                    background-color: #f1f2c4;
+                }
+            }
+
+            td {
+            border-bottom: 1px solid rgb(229, 231, 235);
+
+                &.text-center {
+                    text-align: center;
+                }
+
+                mat-icon {
+                    margin-right: 2px;
+                    vertical-align: bottom;
+
+                    &.error {
+                        color: variables.$issue-error;
+                    }
+
+                    &.warning {
+                        color: variables.$issue-warning;
+                    }
+
+                    &.info {
+                        color: variables.$issue-info;
+                    }
+                }
+            }   
         }
+        
     }
 }
 
@@ -67,15 +86,6 @@ table {
 
 .pointer {
     cursor: pointer;
-}
-
-/* Playing around with style attributes, probably not final */
-.severity-error {
-    background-color: #fe2727af;    
-}
-
-.severity-warning {
-    background-color: #feffe0;
 }
 
 .nav-container {
