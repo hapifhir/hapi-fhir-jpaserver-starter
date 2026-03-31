@@ -18,7 +18,6 @@
         <mat-form-field class="param">
             <mat-label>Issues</mat-label>
             <mat-select [formControl]="filterSelectedIssues" multiple>
-                <mat-option value="information">Information</mat-option>
                 <mat-option value="warning">Warning</mat-option>
                 <mat-option value="error">Error</mat-option>
             </mat-select>
@@ -46,37 +45,51 @@
             </tr>
         </thead>
         <tbody>
-            @for (outcome of operationOutcomes; track outcome.id) {
-                <tr class="pointer" [class]="'severity-' + getHighestSeverity(outcome)"
-                    (click)="selectRow(outcome.id)"
-                    >
-                    <td class="text-center">{{ getFormattedDate(outcome) }}</td>
-                    <td>
-                        Profile: {{ getProfile(outcome) }}<br/>
-                        IG: {{ getIg(outcome) }}
-                    </td>
-                    <td class="text-center">{{ getRuntime(outcome) }}ms</td>
-                    <td class="text-center">
-                        <mat-icon inline class="error">error</mat-icon>
-                        {{ getErrors(outcome) }}<br/>
-                        <mat-icon inline class="warning">warning</mat-icon>
-                        {{ getWarnings(outcome) }}<br/>
-                        <mat-icon inline class="info">info</mat-icon>
-                        {{ getInfos(outcome) }}
-                    </td>
+            @if (isLoading) {
+                <tr>
+                    <td colspan="4">
+                        <div class="loading">
+                            <mat-spinner></mat-spinner>
+                        </div>
+                    </td>                
                 </tr>
+            } @else {
+                @for (outcome of operationOutcomes; track outcome.id) {
+                    <tr class="pointer" (click)="selectRow(outcome.id)">
+                        <td class="text-center">{{ getFormattedDate(outcome) }}</td>
+                        <td>
+                            Profile: {{ getProfile(outcome) }}<br/>
+                            IG: {{ getIg(outcome) }}
+                        </td>
+                        <td class="text-center">{{ getRuntime(outcome) }}ms</td>
+                        <td class="text-center">
+                            <mat-icon inline class="error">error</mat-icon>
+                            {{ getErrors(outcome) }}<br/>
+                            <mat-icon inline class="warning">warning</mat-icon>
+                            {{ getWarnings(outcome) }}<br/>
+                            <mat-icon inline class="info">info</mat-icon>
+                            {{ getInfos(outcome) }}
+                        </td>
+                    </tr>
 
-                @if (selectedOutcomeId === outcome.id) {
-                    <tr class="operation-outcome-row">
-                        <td  colspan="4">
-                            <h4>Full Operation Outcome</h4>
-                            <pre>{{ outcome | json }}</pre>
+                    @if (selectedOutcomeId === outcome.id) {
+                        <tr class="operation-outcome-row">
+                            <td  colspan="4">
+                                <h4>Full Operation Outcome</h4>
+                                <pre>{{ outcome | json }}</pre>
+                            </td>
+                        </tr>
+                    }
+                } @empty {
+                    <tr>
+                        <td colspan="4" class="no-entry">
+                            <h4>No entries to display</h4>
                         </td>
                     </tr>
                 }
             }
-
         </tbody>
+        
     </table>
     <div class="nav-container">
         <span class="page-info">Page: {{ currentPage }}</span>

@@ -17,26 +17,14 @@ table {
                 background: #eee
             }
 
-            &.severity-error {
-                background-color: #fe2727af;  
-
-                &:hover td {
-                    background-color: #e52323af;
-                }
-            }
-
-            &.severity-warning {
-                background-color: #feffe0;
-
-                &:hover {
-                    background-color: #f1f2c4;
-                }
-            }
-
             td {
             border-bottom: 1px solid rgb(229, 231, 235);
 
                 &.text-center {
+                    text-align: center;
+                }
+
+                &.no-entry {
                     text-align: center;
                 }
 
@@ -86,6 +74,15 @@ table {
 
 .pointer {
     cursor: pointer;
+}
+
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 .nav-container {

@@ -25,6 +25,7 @@ export class StatisticsComponent implements AfterViewInit {
   currentBundle: fhir.r4.Bundle;
   currentPage: number = 1;
   totalEntries: number = 0;
+  isLoading: boolean = false;
 
   constructor(private data: FhirConfigService) {
     this.client = data.getFhirClient();
@@ -43,6 +44,7 @@ export class StatisticsComponent implements AfterViewInit {
   }
 
   async loadBundle(params: any) {
+    this.isLoading = true;
     try {
       const bundle = await this.client.search(params) as fhir.r4.Bundle;
       this.processBundle(bundle);
@@ -50,6 +52,8 @@ export class StatisticsComponent implements AfterViewInit {
       this.totalEntries = await this.getTotalEntries(bundle);
     } catch (error) {
       console.error('Error getting OperationOutcomes: ', error);
+    } finally {
+      this.isLoading = false;
     }
   }
 
@@ -231,9 +235,16 @@ export class StatisticsComponent implements AfterViewInit {
   async navigateBundle(relation: 'next' | 'previous') {
     const link = this.currentBundle.link?.find(l => l.relation === relation);
     if (link?.url) {
-      const urlParameter = new URL(link.url).search;
-      const bundle = await this.client.request(urlParameter) as fhir.r4.Bundle;
-      this.processBundle(bundle);
+      this.isLoading = true;
+      try {
+        const urlParameter = new URL(link.url).search;
+        const bundle = await this.client.request(urlParameter) as fhir.r4.Bundle;
+        this.processBundle(bundle);
+      } catch (error) {
+        console.error('Error navigating bundle: ', error);
+      } finally {
+        this.isLoading = false;
+      }
     }
   }
 
