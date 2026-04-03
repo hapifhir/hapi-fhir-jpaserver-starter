@@ -208,9 +208,9 @@ hapi:
         socketTimeout: 60
       cql:
         use_embedded_libraries: true
-        # namespaces:                             # namespaces to be registered with the CQL engine
-          # example
-          # hl7.fhir.uv.cql: http://hl7.org/fhir/uv/cql
+        namespaces:                             # namespaces to be registered with the CQL engine
+          hl7.fhir.uv.cql: http://hl7.org/fhir/uv/cql
+          hl7.fhir.us.cql: http://hl7.org/fhir/us/cql
         compiler:
           # low-level compiler options (typically not needed)
           # validate_units: true
