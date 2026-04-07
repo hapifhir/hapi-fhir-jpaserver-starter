@@ -12,6 +12,7 @@ import { environment } from '../environments/environment';
 })
 export class AppComponent {
   public version: string = (window as any).MATCHBOX_VERSION;
+  public saveStatistics: boolean = (window as any).MATCHBOX_SAVE_STATISTICS_ENABLED;
 
   constructor(readonly translateService: TranslateService,
               readonly fhirConfigService: FhirConfigService,

@@ -31,12 +31,17 @@ public class MatchboxStaticResourceConfig implements WebMvcConfigurer {
 	// The base server path. E.g. '/matchboxv3'
 	private final String baseServerPath;
 
+	// Conditional, if statistics should be saved (true | false)
+	private final boolean saveStatisticsEnabled;
+
 	public MatchboxStaticResourceConfig(@Value("${spring.web.resources.static-locations}") final String staticLocation,
-													@Value("${server.servlet.context-path}") final String contextPath) {
+										@Value("${server.servlet.context-path}") final String contextPath,
+										@Value("${matchbox.validation.save-statistics}") final boolean saveStatistics) {
 		this.baseResPath = staticLocation;
 		this.indexHtmlPath = staticLocation.split(":")[1].substring(staticLocation.contains(":/") ? 1 : 0)
 			+ "index.html";
 		this.baseServerPath = contextPath;
+		this.saveStatisticsEnabled = saveStatistics;
 	}
 
 	@Override
@@ -67,7 +72,7 @@ public class MatchboxStaticResourceConfig implements WebMvcConfigurer {
 												  final List<? extends Resource> locations,
 												  final ResourceResolverChain chain) {
 			return switch (requestPath) {
-				case "", "mappinglanguage", "CapabilityStatement", "igs", "settings", "transform", "validate":
+				case "", "mappinglanguage", "CapabilityStatement", "igs", "settings", "transform", "validate", "statistics":
 					// All the Angular routes must be redirected to index.html
 					// This must be kept in sync with the routes defined in app.module.ts
 					yield new ClassPathResource(this.parent.indexHtmlPath);
@@ -101,7 +106,8 @@ public class MatchboxStaticResourceConfig implements WebMvcConfigurer {
 					.replace("MATCHBOX_BASE_PATH = \"/\"",
 								"MATCHBOX_BASE_PATH = \"%s\"".formatted(this.parent.baseServerPath))
 					.replace("MATCHBOX_VERSION = \"served-by-ng\"",
-								"MATCHBOX_VERSION = \"%s\"".formatted(VersionUtil.getVersion()));
+								"MATCHBOX_VERSION = \"%s\"".formatted(VersionUtil.getVersion()))
+					.replace("MATCHBOX_SAVE_STATISTICS_ENABLED = false", "MATCHBOX_SAVE_STATISTICS_ENABLED = %b".formatted(this.parent.saveStatisticsEnabled));
 
 				return new TransformedResource(resource,
 														 content.getBytes(StandardCharsets.UTF_8));
