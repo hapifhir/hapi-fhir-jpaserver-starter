@@ -365,9 +365,9 @@ export class StatisticsComponent implements AfterViewInit {
    * @param bundle FHIR Bundle
    */
   checkNextAndPreviousBundle(bundle: fhir.r4.Bundle) {
-    // check if bundle has a next or previous link relation
+    // check if bundle has a next or previous link relation, with support for FHIR R5 "prev" relation
     const nextLink = bundle.link?.find(l => l.relation === "next");
-    const previousLink = bundle.link?.find(l => l.relation === "previous");
+    const previousLink = bundle.link?.find(l => l.relation === "previous" || l.relation === "prev");
 
     // sets hasNextBundle boolean according to findings
     if (nextLink) {
@@ -389,8 +389,13 @@ export class StatisticsComponent implements AfterViewInit {
    * @param relation string "next" or "previous"
    */
   async navigateBundle(relation: 'next' | 'previous') {
-    // gets relation from currentBundle 
-    const link = this.currentBundle.link?.find(l => l.relation === relation);
+    // gets relation from currentBundle, with support for FHIR R5 "prev" relation
+    let link;
+    if (relation === 'next') {
+      link = this.currentBundle.link?.find(l => l.relation === "next");
+    } else {
+      link = this.currentBundle.link?.find(l => l.relation === "previous" || l.relation === "prev");
+    }
     // check if url is present
     if (link?.url) {
       // enable loading screen
