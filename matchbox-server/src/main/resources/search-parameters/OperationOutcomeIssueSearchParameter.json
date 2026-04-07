@@ -1,0 +1,12 @@
+{
+    "resourceType": "SearchParameter",
+    "url": "http://matchbox.health/validation/SearchParameter/operationoutcome-issue",
+    "name": "OperationOutcomeIssue",
+    "description": "Search for issue extension in matchbox OperationOutcome",
+    "title": "Issue",
+    "base": ["OperationOutcome"],
+    "status": "active",
+    "code": "issue",
+    "type": "string",
+    "expression": "issue.severity"
+}

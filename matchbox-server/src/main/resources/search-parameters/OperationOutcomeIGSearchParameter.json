@@ -1,0 +1,12 @@
+{
+    "resourceType": "SearchParameter",
+    "url": "http://matchbox.health/validation/SearchParameter/operationoutcome-ig",
+    "name": "OperationOutcomeIG",
+    "description": "Search for implementation guide extension in matchbox OperationOutcome",
+    "title": "Implementation Guide",
+    "base": ["OperationOutcome"],
+    "status": "active",
+    "code": "ig",
+    "type": "string",
+    "expression": "issue.extension('http://matchbox.health/validation').extension('ig').value"
+}

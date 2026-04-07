@@ -1,0 +1,12 @@
+{
+    "resourceType": "SearchParameter",
+    "url": "http://matchbox.health/validation/SearchParameter/operationoutcome-profile",
+    "name": "OperationOutcomeProfile",
+    "description": "Search for profile extension in matchbox OperationOutcome",
+    "title": "Profile",
+    "base": ["OperationOutcome"],
+    "status": "active",
+    "code": "profile",
+    "type": "string",
+    "expression": "issue.extension('http://matchbox.health/validation').extension('profile').value"
+}
