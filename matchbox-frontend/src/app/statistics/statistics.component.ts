@@ -51,7 +51,9 @@ export class StatisticsComponent implements AfterViewInit {
     const parameters = {
       resourceType: 'OperationOutcome',
       searchParams: {
-        _total: 'accurate'
+        _total: 'accurate',
+        _count: 20,
+        _sort: '-_lastUpdated'
       }
     }
 
@@ -204,7 +206,9 @@ export class StatisticsComponent implements AfterViewInit {
     const parameter = {
       resourceType: 'OperationOutcome',
       searchParams: {
-        _total: 'accurate'
+        _total: 'accurate',
+        _count: 20,
+        _sort: '-_lastUpdated'
       }
     }
 
@@ -464,18 +468,7 @@ export class StatisticsComponent implements AfterViewInit {
     if (bundle.total) {
       // return total from current bundle
       return bundle.total;
-    } else {
-      // check for link to next bundle
-      const link = bundle.link?.find(l => l.relation === 'next');
-      if (link?.url) {
-        // strip url
-        const urlParameter = new URL(link.url).search;
-        // request next bundle
-        const nextBundle = await this.client.request(urlParameter) as fhir.r4.Bundle;
-        // return total from next bundle
-        return nextBundle.total;
-      }
-    }
+    } 
   }
 
   /**
