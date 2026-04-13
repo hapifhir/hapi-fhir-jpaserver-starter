@@ -35,7 +35,7 @@ Validation for profile http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-pat
 
 ### Configuration parameters
 
-Default validation parameters can be set directly in provided application.yaml, see also the confluecne page of HL7 [Using the FHIR Validator](https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator)
+Default validation parameters can be set directly in provided application.yaml, see also the confluence page of HL7 [Using the FHIR Validator](https://confluence.hl7.org/display/FHIR/Using+the+FHIR+Validator)
 
 ```yaml
 hapi:
@@ -75,6 +75,8 @@ matchbox:
       #  provider: anthropic
       #  modelName: claude-3-5-sonnet-20241022
       #  apiKey: sk-xxx
+  validation: 
+    save-statistics: false
 ```
 
 | Parameter             | Card  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
@@ -92,6 +94,7 @@ matchbox:
 | disableDefaultResourceFetcher  | 0..1  | defaults to true, enables matchbox behaviour that references within bundles are resolved, validated and checked (different to java validator), if false see below                                                                                                                                                                                                                                                                                                                 |
 | check-references  | 0..1  | Provided with this parameter and disableDefaultResourceFetcher set to false, the validator only knows how to follow absolute URLs, and it will attempt to. Invalid absolute URLs and any relative URLs will cause validation failures. Defaults to false                                                                                                                                                                                                                          |
 | resolution-context  | 0..1  | Provided with this parameter and disableDefaultResourceFetcher set to false the validator resolve relative references, needs to be a server address                                                                                                                                                                                                                                                                                                                               |
+| save-statistics | 1..1  | Matchbox can store the results of the validation operation as an Operation Outcome. This setting enables this persistence and enables statistics page on frontend. Accepts boolean values.                                                                                                                                                                                                                                                                                                                                |
 
 See configuration parameters in [Matchbox Server](matchbox-server.md#configuration) for more details.
 
