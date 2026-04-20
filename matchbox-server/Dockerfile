@@ -1,6 +1,11 @@
 FROM bellsoft/liberica-openjdk-debian:26
 EXPOSE 8080
 
+# Apply latest Debian security patches to the base image
+RUN apt-get update \
+ && apt-get upgrade -y \
+ && rm -rf /var/lib/apt/lists/*
+
 COPY ./target/matchbox.jar /matchbox.jar
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'

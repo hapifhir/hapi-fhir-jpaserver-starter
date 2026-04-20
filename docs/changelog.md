@@ -1,3 +1,7 @@
+2026/04/20 Release 4.1.5
+
+- Apply Debian security patches in the server Docker image (`apt-get upgrade` on base image) to fix HIGH CVEs CVE-2026-33416, CVE-2026-33636 (libpng16-16) and CVE-2026-28390 (openssl/libssl3)
+
 2026/04/17 Release 4.1.4
 
 - Upgrade thymeleaf from 3.1.2.RELEASE to 3.1.4.RELEASE to fix CVE-2026-40478
