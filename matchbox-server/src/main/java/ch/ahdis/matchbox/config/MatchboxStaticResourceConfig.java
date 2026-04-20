@@ -36,7 +36,7 @@ public class MatchboxStaticResourceConfig implements WebMvcConfigurer {
 
 	public MatchboxStaticResourceConfig(@Value("${spring.web.resources.static-locations}") final String staticLocation,
 										@Value("${server.servlet.context-path}") final String contextPath,
-										@Value("${matchbox.validation.save-statistics}") final boolean saveStatistics) {
+										@Value("${matchbox.validation.save-statistics:false}") final boolean saveStatistics) {
 		this.baseResPath = staticLocation;
 		this.indexHtmlPath = staticLocation.split(":")[1].substring(staticLocation.contains(":/") ? 1 : 0)
 			+ "index.html";
