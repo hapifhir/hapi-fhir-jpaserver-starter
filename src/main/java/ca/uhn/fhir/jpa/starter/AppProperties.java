@@ -98,7 +98,7 @@ public class AppProperties {
 	private Boolean install_transitive_ig_dependencies = true;
 
 	private List<String> install_additional_resources_from_ig_folders = new ArrayList<>();
-    private Map<String, PackageInstallationSpec> implementationGuides = null;
+	private Map<String, PackageInstallationSpec> implementationGuides = null;
 	private String custom_content_path = null;
 	private String app_content_path = null;
 	private Boolean lastn_enabled = false;
@@ -173,11 +173,11 @@ public class AppProperties {
 		this.defer_indexing_for_codesystems_of_size = defer_indexing_for_codesystems_of_size;
 	}
 
-    public Map<String, PackageInstallationSpec> getImplementationGuides() {
+	public Map<String, PackageInstallationSpec> getImplementationGuides() {
 		return implementationGuides;
 	}
 
-    public void setImplementationGuides(Map<String, PackageInstallationSpec> implementationGuides) {
+	public void setImplementationGuides(Map<String, PackageInstallationSpec> implementationGuides) {
 		this.implementationGuides = implementationGuides;
 	}
 
