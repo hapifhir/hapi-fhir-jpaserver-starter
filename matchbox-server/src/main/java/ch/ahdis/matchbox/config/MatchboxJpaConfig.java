@@ -229,16 +229,16 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 
 						// get Search Parameters from classpath
 						String spIg = getContent("search-parameters/OperationOutcomeIGSearchParameter.json");
-						SearchParameter searchParameterIg = jsonParser.parseResource(SearchParameter.class, spIg);
+						SearchParameter searchParameterIgR4 = jsonParser.parseResource(SearchParameter.class, spIg);
 						String spIssue = getContent("search-parameters/OperationOutcomeIssueSearchParameter.json");
-						SearchParameter searchParameterIssue = jsonParser.parseResource(SearchParameter.class, spIssue);
+						SearchParameter searchParameterIssueR4 = jsonParser.parseResource(SearchParameter.class, spIssue);
 						String spProfile = getContent("search-parameters/OperationOutcomeProfileSearchParameter.json");
-						SearchParameter searchParameterProfile = jsonParser.parseResource(SearchParameter.class, spProfile);
+						SearchParameter searchParameterProfileR4 = jsonParser.parseResource(SearchParameter.class, spProfile);
 
 						// create search parameter if it does not already exist
-						dao.create(searchParameterIg, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-ig");
-						dao.create(searchParameterIssue, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-issue");
-						dao.create(searchParameterProfile, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-profile");
+						dao.create(searchParameterIgR4, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-ig");
+						dao.create(searchParameterIssueR4, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-issue");
+						dao.create(searchParameterProfileR4, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-profile");
 
 					} catch (Exception e) {
 						System.err.println("Error loading custom search parameters");
@@ -267,18 +267,22 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 					try {
 						IFhirResourceDao<org.hl7.fhir.r4b.model.SearchParameter> dao = searchParameterResourceProviderR4B.get().getDao();
 
-						IParser jsonParser = fhirContext.newJsonParser();
+						IParser jsonParser = FhirContext.forR4().newJsonParser();
 
 						String spIg = getContent("search-parameters/OperationOutcomeIGSearchParameter.json");
-						org.hl7.fhir.r4b.model.SearchParameter searchParameterIg = jsonParser.parseResource(org.hl7.fhir.r4b.model.SearchParameter.class, spIg);
+						SearchParameter searchParameterIgR4 = jsonParser.parseResource(SearchParameter.class, spIg);
 						String spIssue = getContent("search-parameters/OperationOutcomeIssueSearchParameter.json");
-						org.hl7.fhir.r4b.model.SearchParameter searchParameterIssue = jsonParser.parseResource(org.hl7.fhir.r4b.model.SearchParameter.class, spIssue);
+						SearchParameter searchParameterIssueR4 = jsonParser.parseResource(SearchParameter.class, spIssue);
 						String spProfile = getContent("search-parameters/OperationOutcomeProfileSearchParameter.json");
-						org.hl7.fhir.r4b.model.SearchParameter searchParameterProfile = jsonParser.parseResource(org.hl7.fhir.r4b.model.SearchParameter.class, spProfile);
+						SearchParameter searchParameterProfileR4 = jsonParser.parseResource(SearchParameter.class, spProfile);
 
-						dao.create(searchParameterIg, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-ig");
-						dao.create(searchParameterIssue, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-issue");
-						dao.create(searchParameterProfile, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-profile");
+						org.hl7.fhir.r4b.model.SearchParameter searchParameterIgR4B = matchboxFhirVersion.convertToR4B(searchParameterIgR4, org.hl7.fhir.r4b.model.SearchParameter.class);
+						org.hl7.fhir.r4b.model.SearchParameter searchParameterIssueR4B = matchboxFhirVersion.convertToR4B(searchParameterIssueR4, org.hl7.fhir.r4b.model.SearchParameter.class);
+						org.hl7.fhir.r4b.model.SearchParameter searchParameterProfileR4B = matchboxFhirVersion.convertToR4B(searchParameterProfileR4, org.hl7.fhir.r4b.model.SearchParameter.class);
+
+						dao.create(searchParameterIgR4B, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-ig");
+						dao.create(searchParameterIssueR4B, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-issue");
+						dao.create(searchParameterProfileR4B, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-profile");
 					} catch (Exception e) {
 						System.err.println("Error loading custom search parameters");
 						e.printStackTrace();
@@ -306,18 +310,22 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 					try {
 						IFhirResourceDao<org.hl7.fhir.r5.model.SearchParameter> dao = searchParameterResourceProviderR5.get().getDao();
 
-						IParser jsonParser = fhirContext.newJsonParser();
+						IParser jsonParser = FhirContext.forR4().newJsonParser();
 
 						String spIg = getContent("search-parameters/OperationOutcomeIGSearchParameter.json");
-						org.hl7.fhir.r5.model.SearchParameter searchParameterIg = jsonParser.parseResource(org.hl7.fhir.r5.model.SearchParameter.class, spIg);
+						SearchParameter searchParameterIgR4 = jsonParser.parseResource(SearchParameter.class, spIg);
 						String spIssue = getContent("search-parameters/OperationOutcomeIssueSearchParameter.json");
-						org.hl7.fhir.r5.model.SearchParameter searchParameterIssue = jsonParser.parseResource(org.hl7.fhir.r5.model.SearchParameter.class, spIssue);
+						SearchParameter searchParameterIssueR4 = jsonParser.parseResource(SearchParameter.class, spIssue);
 						String spProfile = getContent("search-parameters/OperationOutcomeProfileSearchParameter.json");
-						org.hl7.fhir.r5.model.SearchParameter searchParameterProfile = jsonParser.parseResource(org.hl7.fhir.r5.model.SearchParameter.class, spProfile);
+						SearchParameter searchParameterProfileR4 = jsonParser.parseResource(SearchParameter.class, spProfile);
 
-						dao.create(searchParameterIg, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-ig");
-						dao.create(searchParameterIssue, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-issue");
-						dao.create(searchParameterProfile, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-profile");
+						org.hl7.fhir.r5.model.SearchParameter searchParameterIgR5 = matchboxFhirVersion.convertToR5(searchParameterIgR4, org.hl7.fhir.r5.model.SearchParameter.class);
+						org.hl7.fhir.r5.model.SearchParameter searchParameterIssueR5 = matchboxFhirVersion.convertToR5(searchParameterIssueR4, org.hl7.fhir.r5.model.SearchParameter.class);
+						org.hl7.fhir.r5.model.SearchParameter searchParameterProfileR5 = matchboxFhirVersion.convertToR5(searchParameterProfileR4, org.hl7.fhir.r5.model.SearchParameter.class);
+
+						dao.create(searchParameterIgR5, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-ig");
+						dao.create(searchParameterIssueR5, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-issue");
+						dao.create(searchParameterProfileR5, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-profile");
 					} catch (Exception e) {
 						System.err.println("Error loading custom search parameters");
 						e.printStackTrace();
