@@ -107,7 +107,7 @@ public class MatchboxEngine extends ValidationEngine {
 
 	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MatchboxEngine.class);
 
-	protected Set<String> suppressedWarnInfoPatterns = HashSet.newHashSet(8);
+	protected Set<String> suppressedWarnInfoPatterns = new HashSet<>(11, 0.75f); // For 8 elements
 	protected PassiveExpiringSessionCache sessionCache = new PassiveExpiringSessionCache();
 
 	static protected ValidationEngine nullEngine;

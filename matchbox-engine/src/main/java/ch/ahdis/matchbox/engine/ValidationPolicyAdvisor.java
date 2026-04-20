@@ -66,7 +66,7 @@ public class ValidationPolicyAdvisor extends BasePolicyAdvisorForFullValidation 
     public void addSuppressedError(String messageId, String regexPath) {
         Set<String> messagesToCheck = messagesToIgnore.get(messageId);
         if (messagesToCheck == null) {
-            Set<String> newList = HashSet.newHashSet(8);
+            Set<String> newList = new HashSet<>(11, 0.75f); // For 8 elements
             newList.add(regexPath);
             messagesToIgnore.put(messageId, newList);
         } else {

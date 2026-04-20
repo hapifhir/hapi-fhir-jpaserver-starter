@@ -38,7 +38,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.release>21</maven.compiler.release>
 
         <fhir.core.version>6.9.4</fhir.core.version>
         <hapi.fhir.version>8.8.0</hapi.fhir.version>
@@ -579,25 +578,7 @@
     </distributionManagement>
 
     <build>
-        <!-- Tells Maven to name the generated WAR file as ROOT.war -->
-        <finalName>matchbox-engine</finalName>
         <plugins>
-            <!-- Tell Maven which Java source version you want to use -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <release>${maven.compiler.release}</release>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>${lombok_version}</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>

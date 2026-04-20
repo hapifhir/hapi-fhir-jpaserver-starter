@@ -174,7 +174,8 @@ class CdaToFhirTransformTests {
 				.map(e -> e.getResource())
 				.findFirst()
 				.orElse(null);
-		assertEquals("058091", patient.getAddressFirstRep().getLine().getFirst().getExtension().getFirst().getValue().toString());
+		assertEquals("058091",
+			patient.getAddressFirstRep().getLine().get(0).getExtension().get(0).getValue().toString());
 	}
 
 	@Test

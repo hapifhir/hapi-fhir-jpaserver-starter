@@ -15,6 +15,10 @@
     </description>
     <packaging>jar</packaging>
 
+    <properties>
+        <maven.compiler.release>21</maven.compiler.release>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>health.matchbox</groupId>
@@ -313,6 +317,22 @@
         <finalName>matchbox</finalName>
 
         <plugins>
+            <!-- Tell Maven which Java source version you want to use -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <release>${maven.compiler.release}</release>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok_version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
 
             <!-- The configuration here tells the WAR plugin to include the FHIR Tester overlay. You can omit it if you are not using that feature. -->
             <plugin>
