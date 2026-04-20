@@ -212,6 +212,33 @@ class VersionedUrlFallbackValidationSupportTest {
                 URL_PREFIX_STRUCTURE_DEFINITION);
     }
 
+    @Test
+    void testRecursionGuardPreventsStackOverflow() {
+
+        String versionedUrl = ORGANIZATION_URL_VERSIONED;
+        when(myChain.fetchStructureDefinition(versionedUrl)).thenAnswer(invocation -> mySvc.fetchStructureDefinition(versionedUrl));
+
+        assertDoesNotThrow(() -> {
+            var result = mySvc.fetchStructureDefinition(versionedUrl);
+            assertNull(result, "Recursion guard should return null instead of recursing infinitely");
+        });
+    }
+
+    @Test
+    void testRecursionGuardAllowsIndependentCalls() {
+
+        // If two different URLs are fetched, recursion guard should not interfere
+        String url1 = ORGANIZATION_URL_VERSIONED;
+        String url2 = CUSTOM_SD_URL_VERSIONED;
+
+        // Only stub the versioned URL that will actually be called in this test
+        when(myChain.fetchStructureDefinition(url1)).thenReturn(null);
+
+        assertNull(mySvc.fetchStructureDefinition(url1));
+        assertNull(mySvc.fetchStructureDefinition(url2)); // Will return null, no stubbing needed
+    }
+
+
     /**
      * Integration tests using real DefaultProfileValidationSupport instead of mocks.
      * This tests the actual fallback behavior with FHIR's built-in profiles.
