@@ -33,7 +33,7 @@ public class VersionedUrlFallbackValidationSupport implements IValidationSupport
 	private final Set<String> myUrlPrefixes;
 
 	// Recursion guard: Track URLs being fetched in this thread
-    private static final ThreadLocal<Set<String>> FETCHED_URLS = ThreadLocal.withInitial(HashSet::new);
+	private static final ThreadLocal<Set<String>> FETCHED_URLS = ThreadLocal.withInitial(HashSet::new);
 
 	/**
 	 * Creates a fallback validation support that only applies to URLs starting with the default prefix
@@ -70,17 +70,17 @@ public class VersionedUrlFallbackValidationSupport implements IValidationSupport
 
 	@Override
 	public IBaseResource fetchStructureDefinition(String theUrl) {
-        Set<String> fetched = FETCHED_URLS.get();
-        if (!fetched.add(theUrl)) {
-            ourLog.warn("Detected recursion while fetching StructureDefinition for '{}'", theUrl);
-            // Fail gracefully, let other supports handle it
-            return null;
-        }
-        try {
+		Set<String> fetched = FETCHED_URLS.get();
+		if (!fetched.add(theUrl)) {
+			ourLog.warn("Detected recursion while fetching StructureDefinition for '{}'", theUrl);
+			// Fail gracefully, let other supports handle it
+			return null;
+		}
+		try {
 			return doFetchWithFallback(theUrl, myChain::fetchStructureDefinition);
-        } finally {
-            fetched.remove(theUrl);
-        }
+		} finally {
+			fetched.remove(theUrl);
+		}
 	}
 
 	private <T extends IBaseResource> T doFetchWithFallback(String theUrl, Function<String, T> theFetcher) {
