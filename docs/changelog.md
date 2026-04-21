@@ -1,3 +1,7 @@
+2026/04/21 Release 4.1.6
+
+- Add validation statistics feature (#462)
+
 2026/04/20 Release 4.1.5
 
 - Apply Debian security patches in the server Docker image (`apt-get upgrade` on base image) to fix HIGH CVEs CVE-2026-33416, CVE-2026-33636 (libpng16-16) and CVE-2026-28390 (openssl/libssl3)
