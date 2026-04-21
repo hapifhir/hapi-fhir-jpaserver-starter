@@ -267,7 +267,7 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 					try {
 						IFhirResourceDao<org.hl7.fhir.r4b.model.SearchParameter> dao = searchParameterResourceProviderR4B.get().getDao();
 
-						IParser jsonParser = FhirContext.forR4().newJsonParser();
+						IParser jsonParser = FhirContext.forR4Cached().newJsonParser();
 
 						String spIg = getContent("search-parameters/OperationOutcomeIGSearchParameter.json");
 						SearchParameter searchParameterIgR4 = jsonParser.parseResource(SearchParameter.class, spIg);
@@ -310,7 +310,7 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 					try {
 						IFhirResourceDao<org.hl7.fhir.r5.model.SearchParameter> dao = searchParameterResourceProviderR5.get().getDao();
 
-						IParser jsonParser = FhirContext.forR4().newJsonParser();
+						IParser jsonParser = FhirContext.forR4Cached().newJsonParser();
 
 						String spIg = getContent("search-parameters/OperationOutcomeIGSearchParameter.json");
 						SearchParameter searchParameterIgR4 = jsonParser.parseResource(SearchParameter.class, spIg);
