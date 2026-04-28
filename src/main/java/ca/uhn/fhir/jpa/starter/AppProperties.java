@@ -5,7 +5,7 @@ import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.ClientIdStrategyEnum;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.IdStrategyEnum;
 import ca.uhn.fhir.jpa.model.entity.NormalizedQuantitySearchLevel;
-import ca.uhn.fhir.jpa.starter.ig.ExtendedPackageInstallationSpec;
+import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import org.hl7.fhir.r4.model.Bundle;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -98,7 +98,7 @@ public class AppProperties {
 	private Boolean install_transitive_ig_dependencies = true;
 
 	private List<String> install_additional_resources_from_ig_folders = new ArrayList<>();
-	private Map<String, ExtendedPackageInstallationSpec> implementationGuides = null;
+	private Map<String, PackageInstallationSpec> implementationGuides = null;
 	private String custom_content_path = null;
 	private String app_content_path = null;
 	private Boolean lastn_enabled = false;
@@ -173,11 +173,11 @@ public class AppProperties {
 		this.defer_indexing_for_codesystems_of_size = defer_indexing_for_codesystems_of_size;
 	}
 
-	public Map<String, ExtendedPackageInstallationSpec> getImplementationGuides() {
+	public Map<String, PackageInstallationSpec> getImplementationGuides() {
 		return implementationGuides;
 	}
 
-	public void setImplementationGuides(Map<String, ExtendedPackageInstallationSpec> implementationGuides) {
+	public void setImplementationGuides(Map<String, PackageInstallationSpec> implementationGuides) {
 		this.implementationGuides = implementationGuides;
 	}
 

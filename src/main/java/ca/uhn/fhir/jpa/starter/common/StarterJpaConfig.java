@@ -33,6 +33,7 @@ import ca.uhn.fhir.jpa.model.config.SubscriptionSettings;
 import ca.uhn.fhir.jpa.packages.AdditionalResourcesParser;
 import ca.uhn.fhir.jpa.packages.IHapiPackageCacheManager;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
+import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.provider.DaoRegistryResourceSupportedSvc;
 import ca.uhn.fhir.jpa.provider.DiffProvider;
 import ca.uhn.fhir.jpa.provider.IJpaSystemProvider;
@@ -50,7 +51,6 @@ import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
 import ca.uhn.fhir.jpa.starter.elastic.ElasticsearchBootSvcImpl;
-import ca.uhn.fhir.jpa.starter.ig.ExtendedPackageInstallationSpec;
 import ca.uhn.fhir.jpa.starter.ig.IImplementationGuideOperationProvider;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceCountCache;
@@ -240,9 +240,9 @@ public class StarterJpaConfig {
 		batch2JobRegisterer.start();
 
 		if (appProperties.getImplementationGuides() != null) {
-			Map<String, ExtendedPackageInstallationSpec> guides = appProperties.getImplementationGuides();
-			for (Map.Entry<String, ExtendedPackageInstallationSpec> guidesEntry : guides.entrySet()) {
-				ExtendedPackageInstallationSpec packageInstallationSpec = guidesEntry.getValue();
+			Map<String, PackageInstallationSpec> guides = appProperties.getImplementationGuides();
+			for (Map.Entry<String, PackageInstallationSpec> guidesEntry : guides.entrySet()) {
+				PackageInstallationSpec packageInstallationSpec = guidesEntry.getValue();
 				if (appProperties.getInstall_transitive_ig_dependencies()) {
 
 					packageInstallationSpec
