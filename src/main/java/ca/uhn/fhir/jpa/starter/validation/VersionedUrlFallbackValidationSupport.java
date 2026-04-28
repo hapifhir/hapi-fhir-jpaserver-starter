@@ -6,6 +6,7 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -30,6 +31,9 @@ public class VersionedUrlFallbackValidationSupport implements IValidationSupport
 	private final FhirContext myFhirContext;
 	private final IValidationSupport myChain;
 	private final Set<String> myUrlPrefixes;
+
+	// Recursion guard: Track URLs being fetched in this thread
+	private static final ThreadLocal<Set<String>> FETCHED_URLS = ThreadLocal.withInitial(HashSet::new);
 
 	/**
 	 * Creates a fallback validation support that only applies to URLs starting with the default prefix
@@ -66,7 +70,17 @@ public class VersionedUrlFallbackValidationSupport implements IValidationSupport
 
 	@Override
 	public IBaseResource fetchStructureDefinition(String theUrl) {
-		return doFetchWithFallback(theUrl, myChain::fetchStructureDefinition);
+		Set<String> fetched = FETCHED_URLS.get();
+		if (!fetched.add(theUrl)) {
+			ourLog.warn("Detected recursion while fetching StructureDefinition for '{}'", theUrl);
+			// Fail gracefully, let other supports handle it
+			return null;
+		}
+		try {
+			return doFetchWithFallback(theUrl, myChain::fetchStructureDefinition);
+		} finally {
+			fetched.remove(theUrl);
+		}
 	}
 
 	private <T extends IBaseResource> T doFetchWithFallback(String theUrl, Function<String, T> theFetcher) {
