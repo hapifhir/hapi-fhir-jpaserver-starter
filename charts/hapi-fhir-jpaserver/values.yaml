@@ -76,7 +76,6 @@ ingress:
 
 # -- set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge).
 # This is ignored if `resources` is set (`resources` is recommended for production).
-# More information: <https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15>
 resourcesPreset: "medium"
 
 # -- configure the FHIR server's resource requests and limits
@@ -103,7 +102,7 @@ tolerations: []
 affinity: {}
 
 # -- pod topology spread configuration
-# see: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#api
+# see: <https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#api>
 topologySpreadConstraints:
   []
   # - maxSkew: 1
@@ -116,7 +115,7 @@ topologySpreadConstraints:
 
 postgres:
   # -- enable an included PostgreSQL DB.
-  # see <https://github.com/bitnami/charts/tree/master/bitnami/postgresql> for details
+  # see <https://github.com/CloudPirates-io/helm-charts/tree/main/charts/postgres> for details
   # if set to `false`, the values under `externalDatabase` are used
   enabled: true
   auth:
@@ -248,7 +247,6 @@ tests:
   automountServiceAccountToken: false
   # -- set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge).
   # This is ignored if `resources` is set (`resources` is recommended for production).
-  # More information: <https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15>
   resourcesPreset: "nano"
   # -- configure the test pods resource requests and limits
   resources: {}
@@ -271,7 +269,6 @@ tests:
 initContainers:
   # -- set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge).
   # This is ignored if `resources` is set (`resources` is recommended for production).
-  # More information: <https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15>
   resourcesPreset: "nano"
   # -- configure the init containers pods resource requests and limits
   resources: {}
