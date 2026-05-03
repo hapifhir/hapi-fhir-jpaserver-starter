@@ -1,6 +1,6 @@
 # HAPI FHIR JPA Server Starter Helm Chart
 
-![Version: 0.22.0](https://img.shields.io/badge/Version-0.22.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.6.0](https://img.shields.io/badge/AppVersion-8.6.0-informational?style=flat-square)
+![Version: 0.23.0](https://img.shields.io/badge/Version-0.23.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.8.0](https://img.shields.io/badge/AppVersion-8.8.0-informational?style=flat-square)
 
 This helm chart will help you install the HAPI FHIR JPA Server in a Kubernetes environment.
 
@@ -15,8 +15,7 @@ helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://registry-1.docker.io/bitnamicharts | common | 2.31.3 |
-| oci://registry-1.docker.io/bitnamicharts | postgresql | 16.7.27 |
+| oci://registry-1.docker.io/cloudpirates | postgres | 0.19.3 |
 
 ## Values
 
@@ -39,7 +38,7 @@ helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 | image.pullPolicy | string | `"IfNotPresent"` | image pullPolicy to use |
 | image.registry | string | `"docker.io"` | registry where the HAPI FHIR server image is hosted |
 | image.repository | string | `"hapiproject/hapi"` | the path inside the repository |
-| image.tag | string | `"v8.6.0-1@sha256:7611e4d6601f35dd8c223ed2ed47a2807be06976f71b2e5990e6541bbc90c16f"` | the image tag. As of v5.7.0, this is the `distroless` flavor by default, add `-tomcat` to use the Tomcat-based image. |
+| image.tag | string | `"v8.8.0-1@sha256:34c86fd5805df77c2b9d9c10538050b16ac3dc244352da0ebe4717f931330775"` | the image tag. As of v5.7.0, this is the `distroless` flavor by default, add `-tomcat` to use the Tomcat-based image. |
 | imagePullSecrets | list | `[]` | image pull secrets to use when pulling the image |
 | ingress.annotations | object | `{}` | provide any additional annotations which may be required. Evaluated as a template. |
 | ingress.enabled | bool | `false` | whether to create an Ingress to expose the FHIR server HTTP endpoint |
@@ -48,7 +47,7 @@ helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 | ingress.hosts[0].paths[0] | string | `"/"` |  |
 | ingress.tls | list | `[]` | ingress TLS config |
 | initContainers.resources | object | `{}` | configure the init containers pods resource requests and limits |
-| initContainers.resourcesPreset | string | `"nano"` | set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if `resources` is set (`resources` is recommended for production). More information: <https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15> |
+| initContainers.resourcesPreset | string | `"nano"` | set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if `resources` is set (`resources` is recommended for production). |
 | metrics.service.port | int | `8081` |  |
 | metrics.serviceMonitor.additionalLabels | object | `{}` | additional labels to apply to the ServiceMonitor object, e.g. `release: prometheus` |
 | metrics.serviceMonitor.enabled | bool | `false` | if enabled, creates a ServiceMonitor instance for Prometheus Operator-based monitoring |
@@ -59,13 +58,12 @@ helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 | podDisruptionBudget.maxUnavailable | string | `""` | maximum unavailable instances |
 | podDisruptionBudget.minAvailable | int | `1` | minimum available instances |
 | podSecurityContext | object | `{"fsGroup":65532,"fsGroupChangePolicy":"OnRootMismatch","runAsGroup":65532,"runAsNonRoot":true,"runAsUser":65532,"seccompProfile":{"type":"RuntimeDefault"}}` | pod security context |
-| postgresql.auth.database | string | `"fhir"` | name for a custom database to create |
-| postgresql.auth.existingSecret | string | `""` | Name of existing secret to use for PostgreSQL credentials `auth.postgresPassword`, `auth.password`, and `auth.replicationPassword` will be ignored and picked up from this secret The secret must contain the keys `postgres-password` (which is the password for "postgres" admin user), `password` (which is the password for the custom user to create when `auth.username` is set), and `replication-password` (which is the password for replication user). The secret might also contains the key `ldap-password` if LDAP is enabled. `ldap.bind_password` will be ignored and picked from this secret in this case. The value is evaluated as a template. |
-| postgresql.enabled | bool | `true` | enable an included PostgreSQL DB. see <https://github.com/bitnami/charts/tree/master/bitnami/postgresql> for details if set to `false`, the values under `externalDatabase` are used |
-| postgresql.image.repository | string | `"bitnamilegacy/postgresql"` |  |
+| postgres.auth.database | string | `"fhir"` | name for a custom database to create |
+| postgres.auth.existingSecret | string | `""` | Name of existing secret to use for PostgreSQL credentials `auth.postgresPassword`, `auth.password`, and `auth.replicationPassword` will be ignored and picked up from this secret The secret must contain the keys `postgres-password` (which is the password for "postgres" admin user), `password` (which is the password for the custom user to create when `auth.username` is set), and `replication-password` (which is the password for replication user). The secret might also contains the key `ldap-password` if LDAP is enabled. `ldap.bind_password` will be ignored and picked from this secret in this case. The value is evaluated as a template. |
+| postgres.enabled | bool | `true` | enable an included PostgreSQL DB. see <https://github.com/CloudPirates-io/helm-charts/tree/main/charts/postgres> for details if set to `false`, the values under `externalDatabase` are used |
 | replicaCount | int | `1` | number of replicas to deploy |
 | resources | object | `{}` | configure the FHIR server's resource requests and limits |
-| resourcesPreset | string | `"medium"` | set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if `resources` is set (`resources` is recommended for production). More information: <https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15> |
+| resourcesPreset | string | `"medium"` | set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if `resources` is set (`resources` is recommended for production). |
 | securityContext.allowPrivilegeEscalation | bool | `false` |  |
 | securityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | securityContext.privileged | bool | `false` |  |
@@ -82,10 +80,10 @@ helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
 | tests.automountServiceAccountToken | bool | `false` | whether the service account token should be auto-mounted for the test pods |
 | tests.resources | object | `{}` | configure the test pods resource requests and limits |
-| tests.resourcesPreset | string | `"nano"` | set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if `resources` is set (`resources` is recommended for production). More information: <https://github.com/bitnami/charts/blob/main/bitnami/common/templates/_resources.tpl#L15> |
+| tests.resourcesPreset | string | `"nano"` | set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if `resources` is set (`resources` is recommended for production). |
 | tolerations | list | `[]` | pod tolerations |
-| topologySpreadConstraints | list | `[]` | pod topology spread configuration see: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#api |
-| waitForDatabaseInitContainer.image | object | `{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"bitnamilegacy/postgresql","tag":"17.6.0-debian-12-r4@sha256:926356130b77d5742d8ce605b258d35db9b62f2f8fd1601f9dbaef0c8a710a8d"}` | image to use for the init container which waits until the database is ready to accept connections |
+| topologySpreadConstraints | list | `[]` | pod topology spread configuration see: <https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#api> |
+| waitForDatabaseInitContainer.image | object | `{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"library/postgres","tag":"18.3@sha256:78481659c47e862334611ccdaf7c369c986b3046da9857112f3b309114a65fb4"}` | image to use for the init container which waits until the database is ready to accept connections |
 
 ## Development
 
