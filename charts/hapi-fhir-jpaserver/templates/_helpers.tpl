@@ -94,11 +94,7 @@ Get the Postgresql credentials secret key.
 */}}
 {{- define "hapi-fhir-jpaserver.postgresql.secretKey" -}}
 {{- if .Values.postgres.enabled -}}
-    {{- if .Values.postgres.auth.username -}}
-        {{- printf "%s" .Values.postgres.auth.secretKeys.userPasswordKey -}}
-    {{- else -}}
-        {{- printf "%s" .Values.postgres.auth.secretKeys.adminPasswordKey -}}
-    {{- end -}}
+    {{- printf "%s" (.Values.postgres.auth.secretKeys.adminPasswordKey | default "postgres-password") -}}
 {{- else }}
     {{- if .Values.externalDatabase.existingSecret -}}
         {{- printf "%s" .Values.externalDatabase.existingSecretKey -}}
