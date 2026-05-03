@@ -7,7 +7,7 @@ image:
   # -- the path inside the repository
   repository: hapiproject/hapi
   # -- the image tag. As of v5.7.0, this is the `distroless` flavor by default, add `-tomcat` to use the Tomcat-based image.
-  tag: "v8.6.0-1@sha256:7611e4d6601f35dd8c223ed2ed47a2807be06976f71b2e5990e6541bbc90c16f"
+  tag: "v8.8.0-1@sha256:34c86fd5805df77c2b9d9c10538050b16ac3dc244352da0ebe4717f931330775"
   # -- image pullPolicy to use
   pullPolicy: IfNotPresent
 
@@ -114,19 +114,11 @@ topologySpreadConstraints:
   #       app.kubernetes.io/instance: hapi-fhir-jpaserver
   #       app.kubernetes.io/name: hapi-fhir-jpaserver
 
-# @ignored
-# used by the bitnami sub-chart. Allowing it allows for overrding the image repository.
-global:
-  security:
-    allowInsecureImages: true
-
-postgresql:
+postgres:
   # -- enable an included PostgreSQL DB.
   # see <https://github.com/bitnami/charts/tree/master/bitnami/postgresql> for details
   # if set to `false`, the values under `externalDatabase` are used
   enabled: true
-  image:
-    repository: bitnamilegacy/postgresql
   auth:
     # -- name for a custom database to create
     database: "fhir"
@@ -314,6 +306,6 @@ waitForDatabaseInitContainer:
   # is ready to accept connections
   image:
     registry: docker.io
-    repository: bitnamilegacy/postgresql
-    tag: 17.6.0-debian-12-r4@sha256:926356130b77d5742d8ce605b258d35db9b62f2f8fd1601f9dbaef0c8a710a8d
+    repository: library/postgres
+    tag: 18.3@sha256:78481659c47e862334611ccdaf7c369c986b3046da9857112f3b309114a65fb4
     pullPolicy: IfNotPresent
