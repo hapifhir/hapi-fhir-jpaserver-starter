@@ -3,4 +3,4 @@ ingress:
 
 postgres:
   auth:
-    password : secretpassword
+    password: secretpassword
