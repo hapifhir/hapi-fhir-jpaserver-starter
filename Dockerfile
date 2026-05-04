@@ -8,12 +8,12 @@ COPY pom.xml .
 COPY server.xml .
 RUN mvn -ntp dependency:go-offline
 
-# Copy local 4.5.0-SNAPSHOT dependencies from the host .m2 repository
-COPY --from=local-m2 cqf-fhir/4.5.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir/4.5.0-SNAPSHOT/
-COPY --from=local-m2 cqf-fhir-cql/4.5.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-cql/4.5.0-SNAPSHOT/
-COPY --from=local-m2 cqf-fhir-cr/4.5.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-cr/4.5.0-SNAPSHOT/
-COPY --from=local-m2 cqf-fhir-cr-hapi/4.5.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-cr-hapi/4.5.0-SNAPSHOT/
-COPY --from=local-m2 cqf-fhir-utility/4.5.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-utility/4.5.0-SNAPSHOT
+# Copy local 4.7.0-SNAPSHOT dependencies from the host .m2 repository
+COPY --from=local-m2 cqf-fhir/4.7.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir/4.7.0-SNAPSHOT/
+COPY --from=local-m2 cqf-fhir-cql/4.7.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-cql/4.7.0-SNAPSHOT/
+COPY --from=local-m2 cqf-fhir-cr/4.7.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-cr/4.7.0-SNAPSHOT/
+COPY --from=local-m2 cqf-fhir-cr-hapi/4.7.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-cr-hapi/4.7.0-SNAPSHOT/
+COPY --from=local-m2 cqf-fhir-utility/4.7.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-utility/4.7.0-SNAPSHOT
 
 COPY src/ /tmp/hapi-fhir-jpaserver-starter/src/
 RUN mvn clean install -DskipTests -Djdk.lang.Process.launchMechanism=vfork
