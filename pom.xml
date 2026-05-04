@@ -6,7 +6,7 @@
     <properties>
         <java.version>17</java.version>
         <hapi.fhir.jpa.server.starter.revision>1</hapi.fhir.jpa.server.starter.revision>
-        <clinical-reasoning.version>4.5.1</clinical-reasoning.version>
+        <clinical-reasoning.version>4.7.0-SNAPSHOT</clinical-reasoning.version>
 
         <!-- Plugins Versions -->
         <maven.failsafe.version>3.5.4</maven.failsafe.version>
@@ -153,6 +153,13 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
+        </dependency>
+        <!-- CR 4.5.0-SNAPSHOT brings spring-security-core in at runtime scope only;
+             CrCommonConfig needs DelegatingSecurityContextExecutorService at compile time -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>6.4.13</version>
         </dependency>
         <!-- This dependency includes the CDS Hooks Server -->
         <dependency>
