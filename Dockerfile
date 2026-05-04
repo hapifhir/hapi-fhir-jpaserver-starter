@@ -6,17 +6,17 @@ RUN curl -LSsO https://github.com/open-telemetry/opentelemetry-java-instrumentat
 
 COPY pom.xml .
 COPY server.xml .
-RUN mvn -ntp dependency:go-offline
+RUN mvn -ntp -nsu dependency:go-offline
 
 # Copy local 4.7.0-SNAPSHOT dependencies from the host .m2 repository
 COPY --from=local-m2 cqf-fhir/4.7.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir/4.7.0-SNAPSHOT/
 COPY --from=local-m2 cqf-fhir-cql/4.7.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-cql/4.7.0-SNAPSHOT/
 COPY --from=local-m2 cqf-fhir-cr/4.7.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-cr/4.7.0-SNAPSHOT/
 COPY --from=local-m2 cqf-fhir-cr-hapi/4.7.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-cr-hapi/4.7.0-SNAPSHOT/
-COPY --from=local-m2 cqf-fhir-utility/4.7.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-utility/4.7.0-SNAPSHOT
+COPY --from=local-m2 cqf-fhir-utility/4.7.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-utility/4.7.0-SNAPSHOT/
 
 COPY src/ /tmp/hapi-fhir-jpaserver-starter/src/
-RUN mvn clean install -DskipTests -Djdk.lang.Process.launchMechanism=vfork
+RUN mvn clean install -nsu -DskipTests -Djdk.lang.Process.launchMechanism=vfork
 
 FROM build-hapi AS build-distroless
 RUN mvn package -DskipTests spring-boot:repackage -Pboot
