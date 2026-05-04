@@ -9,7 +9,7 @@ COPY server.xml .
 RUN mvn -ntp -nsu dependency:go-offline
 
 # Copy local 4.7.0-SNAPSHOT dependencies from the host .m2 repository
-COPY --from=local-m2 cqf-fhir/4.7.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir/4.7.0-SNAPSHOT/
+# (cqf-fhir bare parent was removed upstream after 4.4.0 — only submodules below)
 COPY --from=local-m2 cqf-fhir-cql/4.7.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-cql/4.7.0-SNAPSHOT/
 COPY --from=local-m2 cqf-fhir-cr/4.7.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-cr/4.7.0-SNAPSHOT/
 COPY --from=local-m2 cqf-fhir-cr-hapi/4.7.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-cr-hapi/4.7.0-SNAPSHOT/
