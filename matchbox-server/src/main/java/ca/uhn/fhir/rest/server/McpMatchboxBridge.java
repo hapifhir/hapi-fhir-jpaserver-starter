@@ -201,6 +201,8 @@ public class McpMatchboxBridge implements McpBridge {
 					map.put(keyValue[0].trim(), keyValue[1].trim());
 				}
 			}
+			map.put("analyzeOutcomeWithAI", "false");
+			map.put("analyzeOutcomeWithAIOnError", "false");
 			contextMap.arguments().put("query", map);
 		} else {
 			Map<String, Object> map = new java.util.HashMap<>();
