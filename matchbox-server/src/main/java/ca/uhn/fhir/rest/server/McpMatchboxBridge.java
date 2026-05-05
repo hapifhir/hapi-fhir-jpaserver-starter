@@ -206,6 +206,8 @@ public class McpMatchboxBridge implements McpBridge {
 					map.put(keyValue[0].trim(), keyValue[1].trim());
 				}
 			}
+
+			// overwrites validation parameters for AI analysis, since LLM can analyze the outcome itself
 			map.put("analyzeOutcomeWithAI", "false");
 			map.put("analyzeOutcomeWithAIOnError", "false");
 			contextMap.arguments().put("query", map);
@@ -221,13 +223,13 @@ public class McpMatchboxBridge implements McpBridge {
 			restfulServer.handleRequest(interaction.asRequestType(), request, response);
 			var status = response.getStatus();
 
+			// add a prompt to the operation outcome 
 			String contentHeader = "Here is the validation result: ";
 			var content = response.getContentAsString();
-
 			var body = PROMPT + "\n" + contentHeader + content;
 
 			if (status >= 200 && status < 300) {
-				if (body.isBlank()) {
+				if (content.isBlank()) {
 					return CallToolResultFactory.failure("Empty successful response for " + interaction);
 				}
 				return CallToolResultFactory.successFhirBody(body);
