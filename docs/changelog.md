@@ -1,6 +1,9 @@
-2026/05/xx Release 4.1.6
+2026/05/07 Release 4.1.6
 
 - Add validation statistics feature (#462)
+- Upgrade Spring Boot from 3.5.12 to 3.5.14 to fix predictable temp directory vulnerability (CVE-2026-40973)
+- Upgrade Thymeleaf from 3.1.4.RELEASE to 3.1.5.RELEASE to fix improper recognition of unauthorized syntax patterns (CVE-2026-40478)
+- Upgrade PostgreSQL JDBC driver from 42.7.10 to 42.7.11 to fix SCRAM-SHA-256 authentication DoS vulnerability (CVE-2026-42198)
 
 2026/04/20 Release 4.1.5
 
