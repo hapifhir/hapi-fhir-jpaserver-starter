@@ -208,8 +208,8 @@ public class McpMatchboxBridge implements McpBridge {
 			}
 
 			// overwrites validation parameters for AI analysis, since LLM can analyze the outcome itself
+			// "analyzeOutcomeWithAIOnError" is not considered, if "analyzeOutcomeWithAI" is set to false
 			map.put("analyzeOutcomeWithAI", "false");
-			map.put("analyzeOutcomeWithAIOnError", "false");
 			contextMap.arguments().put("query", map);
 		} else {
 			Map<String, Object> map = new java.util.HashMap<>();
