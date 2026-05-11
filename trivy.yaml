@@ -12,7 +12,9 @@ scan:
     - rekor
   rekor-url: https://rekor.sigstore.dev
 vulnerability:
-  type:
+  ignore-unfixed: false
+pkg:
+  types:
     - os
     - library
   ignore-unfixed: false
