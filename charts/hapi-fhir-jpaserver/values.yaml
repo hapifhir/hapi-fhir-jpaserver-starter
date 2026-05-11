@@ -316,6 +316,8 @@ extraConfig: |
       delete_expunge_enabled: true
       search_index_full_text_enabled: true
       validate_resource_status_for_package_upload: false
+      retain_cached_searches_mins: 0
+      reuse_cached_search_results_millis: 0
 
 autoscaling:
   enabled: false
