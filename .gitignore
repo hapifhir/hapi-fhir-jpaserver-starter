@@ -237,3 +237,5 @@ matchbox-server/src/main/resources/static/prerendered-routes.json
 *.repomixignore
 repomix-output.xml
 repomix.config.json
+
+.claude/
