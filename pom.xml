@@ -9,7 +9,7 @@
 
     <groupId>health.matchbox</groupId>
     <artifactId>matchbox</artifactId>
-    <version>4.1.6</version>
+    <version>4.1.7</version>
     <packaging>pom</packaging>
     <name>matchbox</name>
     <description>An open-source implementation to support testing and implementation of FHIR based solutions and map or
@@ -133,6 +133,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- Force opennlp-tools >= 2.5.9 to fix CVE-2026-40682, CVE-2026-42027, CVE-2026-42440 (transitive via langchain4j) -->
+            <dependency>
+                <groupId>org.apache.opennlp</groupId>
+                <artifactId>opennlp-tools</artifactId>
+                <version>2.5.9</version>
+            </dependency>
             <dependency>
                 <groupId>org.thymeleaf</groupId>
                 <artifactId>thymeleaf</artifactId>

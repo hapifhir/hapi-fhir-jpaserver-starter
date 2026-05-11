@@ -128,9 +128,10 @@ jobs:
         env:
           TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db:2
           TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db:1,public.ecr.aws/aquasecurity/trivy-db:1
-          # Skip Rekor SBOM attestation lookup — rekor.sigstore.dev is flaky and
-          # causes the scan to fail with "failed to search rekor records".
-          TRIVY_OFFLINE_SCAN: 'true'
+          # Skip Rekor SBOM attestation lookup — rekor.sigstore.dev times out in CI
+          # and causes the scan to fail before the SARIF output is written.
+          # TRIVY_OFFLINE_SCAN only stops DB update fetches, not SBOM source lookups.
+          TRIVY_SBOM_SOURCES: ''
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ACTIONS_RUNTIME_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

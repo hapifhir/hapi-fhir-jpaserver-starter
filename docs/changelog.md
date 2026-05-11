@@ -1,3 +1,10 @@
+2026/05/11 Release 4.1.7
+
+- Force opennlp-tools >= 2.5.9 to fix CVE-2026-40682, CVE-2026-42027, CVE-2026-42440 (transitive via langchain4j)
+- Fix Trivy Docker image scan failing due to rekor.sigstore.dev timeout: replace TRIVY_OFFLINE_SCAN with TRIVY_SBOM_SOURCES='' to skip SBOM attestation lookups
+- Pin @babel/plugin-transform-modules-systemjs >= 7.29.4 to fix CVE-2026-44728 (arbitrary code generation via malicious input)
+- Pin fast-uri >= 3.1.1 to fix CVE-2026-6321 (path traversal via percent-encoded dot segments)
+
 2026/05/07 Release 4.1.6
 
 - Re-add support for the JRE 17 in matchbox-engine (#510)
