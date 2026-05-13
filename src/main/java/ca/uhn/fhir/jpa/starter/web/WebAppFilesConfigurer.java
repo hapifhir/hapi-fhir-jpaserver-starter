@@ -11,13 +11,12 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.net.MalformedURLException;
-import java.net.URI;
 
 @Configuration
 @ConditionalOnProperty(prefix = "hapi.fhir", name = "app_content_path")
 public class WebAppFilesConfigurer implements WebMvcConfigurer {
 
-	public static final String WEB_CONTENT = "web";
+	public static final String WEB_CONTENT = "/web/apps";
 	private String appContentPath;
 
 	public WebAppFilesConfigurer(AppProperties appProperties) {
@@ -32,7 +31,7 @@ public class WebAppFilesConfigurer implements WebMvcConfigurer {
 				try {
 					theRegistry
 							.addResourceHandler(WEB_CONTENT + "/**")
-							.addResourceLocations(new FileUrlResource(appContentPath));
+							.addResourceLocations(new FileUrlResource(appContentPath + "/"));
 				} catch (MalformedURLException e) {
 					throw new RuntimeException(e);
 				}
@@ -42,12 +41,12 @@ public class WebAppFilesConfigurer implements WebMvcConfigurer {
 
 	@Override
 	public void addViewControllers(@NotNull ViewControllerRegistry registry) {
-		String path = URI.create(appContentPath).getPath();
-		String lastSegment = path.substring(path.lastIndexOf('/') + 1);
-
-		registry.addViewController(WEB_CONTENT + "/" + lastSegment)
-				.setViewName("redirect:" + lastSegment + "/index.html");
-		registry.addViewController(WEB_CONTENT + "/" + lastSegment + "/").setViewName("redirect:index.html");
+		// Set up redirects for the root web content path to serve index.html
+		// /web -> redirect to /web/index.html
+		// /web/ -> redirect to index.html
+		registry.addViewController(WEB_CONTENT)
+				.setViewName("redirect:" + WEB_CONTENT + "/index.html");
+		registry.addViewController(WEB_CONTENT + "/").setViewName("redirect:index.html");
 
 		registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
 	}
