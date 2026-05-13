@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter.common;
 
+import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.interceptor.PatientIdPartitionInterceptor;
 import ca.uhn.fhir.jpa.model.config.PartitionSettings;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
@@ -23,13 +24,14 @@ public class PartitionModeConfigurer {
 			ISearchParamExtractor mySearchParamExtractor,
 			PartitionSettings myPartitionSettings,
 			RestfulServer myRestfulServer,
-			PartitionManagementProvider myPartitionManagementProvider) {
+			PartitionManagementProvider myPartitionManagementProvider,
+			DaoRegistry myDaoRegistry) {
 
 		var partitioning = myAppProperties.getPartitioning();
 		if (partitioning.getPatient_id_partitioning_mode()) {
 			ourLog.info("Partitioning mode enabled in: Patient ID partitioning mode");
 			var patientIdInterceptor = new PatientIdPartitionInterceptor(
-					myRestfulServer.getFhirContext(), mySearchParamExtractor, myPartitionSettings);
+					myRestfulServer.getFhirContext(), mySearchParamExtractor, myPartitionSettings, myDaoRegistry);
 			myRestfulServer.registerInterceptor(patientIdInterceptor);
 			myPartitionSettings.setUnnamedPartitionMode(true);
 		} else if (partitioning.getRequest_tenant_partitioning_mode()) {
