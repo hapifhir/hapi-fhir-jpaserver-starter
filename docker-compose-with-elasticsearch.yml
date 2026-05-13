@@ -1,0 +1,40 @@
+services:
+
+  hapi-fhir-postgres:
+    image: postgres:16-alpine
+    container_name: hapi-fhir-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: "hapi"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U admin -d hapi' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      start_period: 5s
+      retries: 5
+    volumes:
+      - hapi-fhir-postgres:/var/lib/postgresql/data
+  hapi-fhir-elasticsearch:
+    image: elasticsearch:8.19.10
+    container_name: hapi-fhir-elasticsearch
+    restart: always
+    environment:
+      xpack.security.enabled: "false"
+      discovery.type: "single-node"
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+    ports:
+      - "9200:9200"
+    volumes:
+      - hapi-fhir-elasticsearch:/usr/share/elasticsearch/data
+
+volumes:
+  hapi-fhir-postgres:
+  hapi-fhir-elasticsearch:

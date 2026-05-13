@@ -14,14 +14,17 @@ public class RequestBuilder {
 	private final String resourceType;
 	private final Interaction interaction;
 	private final Map<String, Object> config;
+	private final String contextPath;
 	/**
 	 * Constructs a RequestBuilder for a specific FHIR interaction.
 	 *
 	 * @param fhirContext the FHIR context
 	 * @param contextMap  a map containing configuration parameters, including 'resourceType'
 	 * @param interaction the type of interaction (e.g., SEARCH, READ, CREATE, etc.)
+	 * @param contextPath the servlet context path (e.g., "/testhapi"), may be empty
 	 */
-	public RequestBuilder(FhirContext fhirContext, Map<String, Object> contextMap, Interaction interaction) {
+	public RequestBuilder(
+			FhirContext fhirContext, Map<String, Object> contextMap, Interaction interaction, String contextPath) {
 		this.config = contextMap;
 		if (interaction == Interaction.TRANSACTION) this.resourceType = "";
 		else if (contextMap.get("resourceType") instanceof String rt && !rt.isBlank()) this.resourceType = rt;
@@ -29,17 +32,18 @@ public class RequestBuilder {
 
 		this.interaction = interaction;
 		this.fhirContext = fhirContext;
+		this.contextPath = contextPath != null ? contextPath : "";
 	}
 
 	public MockHttpServletRequest buildRequest() {
-		String basePath = "/" + resourceType;
+		String fhirPath = "/" + resourceType;
 		String method;
 		MockHttpServletRequest req;
 
 		switch (interaction) {
 			case SEARCH -> {
 				method = "GET";
-				req = new MockHttpServletRequest(method, basePath);
+				req = new MockHttpServletRequest(method, contextPath + fhirPath);
 				Map<?, ?> sp = null;
 				if (config.get("query") instanceof Map<?, ?> q) {
 					sp = q;
@@ -53,33 +57,34 @@ public class RequestBuilder {
 			case READ -> {
 				method = "GET";
 				String id = requireString();
-				req = new MockHttpServletRequest(method, basePath + "/" + id);
+				req = new MockHttpServletRequest(method, contextPath + fhirPath + "/" + id);
 			}
 			case CREATE, TRANSACTION -> {
 				method = "POST";
-				req = new MockHttpServletRequest(method, basePath);
+				req = new MockHttpServletRequest(method, contextPath + fhirPath);
 				applyResourceBody(req);
 			}
 			case UPDATE -> {
 				method = "PUT";
 				String id = requireString();
-				req = new MockHttpServletRequest(method, basePath + "/" + id);
+				req = new MockHttpServletRequest(method, contextPath + fhirPath + "/" + id);
 				applyResourceBody(req);
 			}
 			case DELETE -> {
 				method = "DELETE";
 				String id = requireString();
-				req = new MockHttpServletRequest(method, basePath + "/" + id);
+				req = new MockHttpServletRequest(method, contextPath + fhirPath + "/" + id);
 			}
 			case PATCH -> {
 				method = "PATCH";
 				String id = requireString();
-				req = new MockHttpServletRequest(method, basePath + "/" + id);
+				req = new MockHttpServletRequest(method, contextPath + fhirPath + "/" + id);
 				applyPatchBody(req);
 			}
 			default -> throw new IllegalArgumentException("Unsupported interaction: " + interaction);
 		}
 
+		req.setContextPath(contextPath);
 		req.setContentType("application/fhir+json");
 		req.addHeader("Accept", "application/fhir+json");
 		return req;
