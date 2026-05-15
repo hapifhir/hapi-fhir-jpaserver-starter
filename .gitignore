@@ -2,6 +2,11 @@
 target/
 *.iml
 
+# H2 file-mode database (configured via spring.datasource.url=jdbc:h2:file:./database/h2)
+database/
+*.mv.db
+*.trace.db
+
 # Compiled class file
 *.class
 
