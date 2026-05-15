@@ -7,13 +7,13 @@ RUN curl -LSsO https://github.com/open-telemetry/opentelemetry-java-instrumentat
 COPY pom.xml .
 COPY server.xml .
 
-# Copy local 4.7.0-SNAPSHOT dependencies from the host .m2 repository BEFORE
+# Copy local 4.8.0-SNAPSHOT dependencies from the host .m2 repository BEFORE
 # any mvn command, otherwise dependency resolution tries the remote first.
 # (cqf-fhir bare parent was removed upstream after 4.4.0 — only submodules below)
-COPY --from=local-m2 cqf-fhir-cql/4.7.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-cql/4.7.0-SNAPSHOT/
-COPY --from=local-m2 cqf-fhir-cr/4.7.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-cr/4.7.0-SNAPSHOT/
-COPY --from=local-m2 cqf-fhir-cr-hapi/4.7.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-cr-hapi/4.7.0-SNAPSHOT/
-COPY --from=local-m2 cqf-fhir-utility/4.7.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-utility/4.7.0-SNAPSHOT/
+COPY --from=local-m2 cqf-fhir-cql/4.8.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-cql/4.8.0-SNAPSHOT/
+COPY --from=local-m2 cqf-fhir-cr/4.8.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-cr/4.8.0-SNAPSHOT/
+COPY --from=local-m2 cqf-fhir-cr-hapi/4.8.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-cr-hapi/4.8.0-SNAPSHOT/
+COPY --from=local-m2 cqf-fhir-utility/4.8.0-SNAPSHOT /root/.m2/repository/org/opencds/cqf/fhir/cqf-fhir-utility/4.8.0-SNAPSHOT/
 
 RUN mvn -ntp -nsu dependency:go-offline
 
