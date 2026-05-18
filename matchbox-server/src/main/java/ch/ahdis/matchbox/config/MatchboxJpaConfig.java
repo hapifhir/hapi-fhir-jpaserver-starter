@@ -619,8 +619,6 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 
 	private String getContent(String resourceName) throws IOException {
 		Resource resource = new ClassPathResource(resourceName);
-		// File file = resource.getFile();
-		// return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 		try (InputStream inputStream = resource.getInputStream()) {
 			return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
 		}
