@@ -1,3 +1,7 @@
+2026/05/XX Release 4.1.8
+
+- Fix for loading custom SearchParameter -Exception during startup (#520) when matchbox.validation.save-statistics is enabled
+
 2026/05/11 Release 4.1.7
 
 - Force opennlp-tools >= 2.5.9 to fix CVE-2026-40682, CVE-2026-42027, CVE-2026-42440 (transitive via langchain4j)
