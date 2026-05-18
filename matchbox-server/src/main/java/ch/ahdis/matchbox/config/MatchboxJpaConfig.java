@@ -89,6 +89,7 @@ import javax.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.List;
@@ -618,7 +619,10 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 
 	private String getContent(String resourceName) throws IOException {
 		Resource resource = new ClassPathResource(resourceName);
-		File file = resource.getFile();
-		return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+		// File file = resource.getFile();
+		// return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+		try (InputStream inputStream = resource.getInputStream()) {
+			return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+		}
 	}
 }
