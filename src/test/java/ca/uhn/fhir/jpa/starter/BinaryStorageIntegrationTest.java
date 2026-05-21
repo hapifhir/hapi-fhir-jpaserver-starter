@@ -294,7 +294,7 @@ class BinaryStorageFilesystemDefaultIT extends BaseBinaryStorageIntegrationTest 
 		"hapi.fhir.binary_storage_enabled=true",
 		"hapi.fhir.binary_storage_mode=FILESYSTEM",
 		"hapi.fhir.binary_storage_filesystem_base_directory=target/test-binary-storage/filesystem-custom",
-		"hapi.fhir.inline_resource_storage_below_size=32768"
+		"hapi.fhir.binary_storage_minimum_binary_size=32768"
 	}
 )
 class BinaryStorageFilesystemCustomThresholdIT extends BaseBinaryStorageIntegrationTest {

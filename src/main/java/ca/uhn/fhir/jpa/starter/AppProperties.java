@@ -5,7 +5,7 @@ import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.ClientIdStrategyEnum;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.IdStrategyEnum;
 import ca.uhn.fhir.jpa.model.entity.NormalizedQuantitySearchLevel;
-import ca.uhn.fhir.jpa.starter.ig.ExtendedPackageInstallationSpec;
+import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.rest.api.EncodingEnum;
 import org.hl7.fhir.r4.model.Bundle;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -69,7 +69,7 @@ public class AppProperties {
 
 	private BinaryStorageMode binary_storage_mode = BinaryStorageMode.DATABASE;
 	private String binary_storage_filesystem_base_directory;
-	private Integer inline_resource_storage_below_size;
+	private Integer binary_storage_minimum_binary_size;
 	private Boolean bulk_export_enabled = false;
 	private Boolean bulk_import_enabled = false;
 	private Boolean default_pretty_print = true;
@@ -98,7 +98,7 @@ public class AppProperties {
 	private Boolean install_transitive_ig_dependencies = true;
 
 	private List<String> install_additional_resources_from_ig_folders = new ArrayList<>();
-	private Map<String, ExtendedPackageInstallationSpec> implementationGuides = null;
+	private Map<String, PackageInstallationSpec> implementationGuides = null;
 	private String custom_content_path = null;
 	private String app_content_path = null;
 	private Boolean lastn_enabled = false;
@@ -130,6 +130,8 @@ public class AppProperties {
 	private Integer reindex_thread_count = null;
 	private Integer expunge_thread_count = null;
 	private Elasticsearch elasticsearch = null;
+
+	private Integer bulk_export_file_retention_period_hours = 2;
 
 	public List<String> getCustomInterceptorClasses() {
 		return custom_interceptor_classes;
@@ -171,11 +173,11 @@ public class AppProperties {
 		this.defer_indexing_for_codesystems_of_size = defer_indexing_for_codesystems_of_size;
 	}
 
-	public Map<String, ExtendedPackageInstallationSpec> getImplementationGuides() {
+	public Map<String, PackageInstallationSpec> getImplementationGuides() {
 		return implementationGuides;
 	}
 
-	public void setImplementationGuides(Map<String, ExtendedPackageInstallationSpec> implementationGuides) {
+	public void setImplementationGuides(Map<String, PackageInstallationSpec> implementationGuides) {
 		this.implementationGuides = implementationGuides;
 	}
 
@@ -511,12 +513,12 @@ public class AppProperties {
 		this.binary_storage_filesystem_base_directory = binary_storage_filesystem_base_directory;
 	}
 
-	public Integer getInline_resource_storage_below_size() {
-		return inline_resource_storage_below_size;
+	public Integer getBinary_storage_minimum_binary_size() {
+		return binary_storage_minimum_binary_size;
 	}
 
-	public void setInline_resource_storage_below_size(Integer inline_resource_storage_below_size) {
-		this.inline_resource_storage_below_size = inline_resource_storage_below_size;
+	public void setBinary_storage_minimum_binary_size(Integer binary_storage_minimum_binary_size) {
+		this.binary_storage_minimum_binary_size = binary_storage_minimum_binary_size;
 	}
 
 	public Boolean getBulk_export_enabled() {
@@ -856,12 +858,46 @@ public class AppProperties {
 		this.elasticsearch = elasticsearch;
 	}
 
+	public Integer getBulk_export_file_retention_period_hours() {
+		return bulk_export_file_retention_period_hours;
+	}
+
+	public void setBulk_export_file_retention_period_hours(Integer bulk_export_file_retention_period_hours) {
+		this.bulk_export_file_retention_period_hours = bulk_export_file_retention_period_hours;
+	}
+
 	public static class Cors {
-		private Boolean allow_Credentials = true;
+		private static final List<String> DEFAULT_ALLOWED_HEADERS = List.of(
+				"Origin",
+				"Accept",
+				"Content-Type",
+				"Authorization",
+				"Cache-Control",
+				"If-Match",
+				"If-None-Match",
+				"x-fhir-starter",
+				"X-Requested-With",
+				"Prefer");
+		private static final List<String> DEFAULT_EXPOSED_HEADERS = List.of(
+				"Location",
+				"Content-Location",
+				"ETag",
+				"Date",
+				"Retry-After",
+				"X-Correlation-Id",
+				"X-Progress",
+				"X-Request-Id");
+		private static final List<String> DEFAULT_ALLOWED_METHODS =
+				List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD");
+
+		private Boolean allow_Credentials = false;
 		private List<String> allowed_origin = List.of("*");
+		private List<String> allowed_headers = DEFAULT_ALLOWED_HEADERS;
+		private List<String> exposed_headers = DEFAULT_EXPOSED_HEADERS;
+		private List<String> allowed_methods = DEFAULT_ALLOWED_METHODS;
 
 		public List<String> getAllowed_origin() {
-			return allowed_origin;
+			return defaultIfNull(allowed_origin, List.of("*"));
 		}
 
 		public void setAllowed_origin(List<String> allowed_origin) {
@@ -874,6 +910,30 @@ public class AppProperties {
 
 		public void setAllow_Credentials(Boolean allow_Credentials) {
 			this.allow_Credentials = allow_Credentials;
+		}
+
+		public List<String> getAllowed_headers() {
+			return defaultIfNull(allowed_headers, DEFAULT_ALLOWED_HEADERS);
+		}
+
+		public void setAllowed_headers(List<String> allowed_headers) {
+			this.allowed_headers = allowed_headers;
+		}
+
+		public List<String> getExposed_headers() {
+			return defaultIfNull(exposed_headers, DEFAULT_EXPOSED_HEADERS);
+		}
+
+		public void setExposed_headers(List<String> exposed_headers) {
+			this.exposed_headers = exposed_headers;
+		}
+
+		public List<String> getAllowed_methods() {
+			return defaultIfNull(allowed_methods, DEFAULT_ALLOWED_METHODS);
+		}
+
+		public void setAllowed_methods(List<String> allowed_methods) {
+			this.allowed_methods = allowed_methods;
 		}
 	}
 

@@ -5,11 +5,15 @@ import org.opencds.cqf.fhir.cql.engine.terminology.TerminologySettings;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Configuration
 @ConfigurationProperties(prefix = "hapi.fhir.cr.cql")
 public class CqlProperties {
 
 	private Boolean use_embedded_libraries = true;
+	private Map<String, String> namespaces = new ConcurrentHashMap<>();
 	private CqlCompilerProperties compiler = new CqlCompilerProperties();
 	private CqlRuntimeProperties runtime = new CqlRuntimeProperties();
 	private TerminologySettings terminology = new TerminologySettings();
@@ -21,6 +25,14 @@ public class CqlProperties {
 
 	public void setUse_embedded_libraries(Boolean use_embedded_libraries) {
 		this.use_embedded_libraries = use_embedded_libraries;
+	}
+
+	public Map<String, String> getNamespaces() {
+		return namespaces;
+	}
+
+	public void setNamespaces(Map<String, String> namespaces) {
+		this.namespaces = namespaces;
 	}
 
 	public CqlCompilerProperties getCompiler() {

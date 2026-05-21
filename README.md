@@ -49,6 +49,42 @@ docker run -p 8080:8080 -e hapi.fhir.default_encoding=xml hapiproject/hapi:lates
 
 HAPI looks in the environment variables for properties in the [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml) file for defaults.
 
+### CORS configuration (including ETag/If-Match)
+
+The starter CORS configuration now supports the following configurable keys:
+
+- `hapi.fhir.cors.allowed_origin`
+- `hapi.fhir.cors.allow_Credentials`
+- `hapi.fhir.cors.allowed_headers`
+- `hapi.fhir.cors.exposed_headers`
+- `hapi.fhir.cors.allowed_methods`
+
+Defaults include `If-Match` in allowed headers and `ETag` in exposed headers to support browser-based optimistic locking workflows.
+The `allowed_headers`, `exposed_headers`, and `allowed_methods` keys are optional; if omitted, built-in defaults are applied.
+The default for `allow_Credentials` is `false`. If you set `allow_Credentials=true`, do not use `"*"` for `allowed_origin`; configure explicit origins.
+
+Example override file:
+
+```yaml
+hapi:
+  fhir:
+    cors:
+      allowed_origin:
+        - "http://localhost:3000"
+      allowed_headers:
+        - Origin
+        - Accept
+        - Content-Type
+        - Authorization
+        - Cache-Control
+        - If-Match
+        - If-None-Match
+      exposed_headers:
+        - Location
+        - Content-Location
+        - ETag
+```
+
 ### Binary storage configuration
 
 To stream large `Binary` payloads to disk instead of the database, configure the starter with filesystem storage properties:
@@ -73,12 +109,24 @@ docker run -p 8090:8080 -v $(pwd)/yourLocalFolder:/configs -e "--spring.config.l
 ```
 Here, the configuration file (*another.application.yaml*) is placed locally in the folder *yourLocalFolder*.
 
-
-
 ```
 docker run -p 8090:8080 -e "--spring.config.location=classpath:/another.application.yaml" hapiproject/hapi:latest
 ```
 Here, the configuration file (*another.application.yaml*) is part of the compiled set of resources.
+
+### Configuration with additional override files
+
+You can layer additional configuration files on top of the default application.yaml while preserving all the base settings. This approach allows you to create specific override files for different environments without duplicating the entire configuration.
+
+```bash
+# Using Maven
+mvn spring-boot:run -Dspring-boot.run.arguments="--spring.config.additional-location=classpath:your-overrides.yaml"
+
+# Using Docker
+docker run -p 8080:8080 -e "--spring.config.additional-location=classpath:your-overrides.yaml" hapiproject/hapi:latest
+```
+
+Here, the additional configuration file (*your-overrides.yaml*) contains only the specific properties you want to override or add, while all default values from application.yaml remain unchanged.
 
 ### One-liner for quickly getting an Implementation Guide installed into HAPI
 
@@ -462,6 +510,20 @@ jpa:
 
     # Then comment all hibernate.search.backend.*
 ```
+
+## Docker Health Check
+
+The distroless Docker image includes a built-in health check that verifies the FHIR server is operational by calling the `/fhir/metadata` endpoint and confirming a valid `CapabilityStatement` is returned. It uses a standalone Java class with no external dependencies, making it compatible with the distroless base image which has no shell or utilities like `curl`.
+
+To run the health check inside a running container:
+
+```
+docker exec hapi-fhir-jpaserver-start java -cp /app HealthCheck
+```
+
+An exit code of `0` indicates the server is healthy. An exit code of `1` indicates a failure, with diagnostic details written to stderr.
+
+To enable periodic health checks, uncomment the `healthcheck` block in `docker-compose.yml`.
 
 ## Running hapi-fhir-jpaserver directly from IntelliJ as Spring Boot
 Make sure you run with the maven profile called ```boot``` and NOT also ```jetty```. Then you are ready to press debug the project directly without any extra Application Servers.

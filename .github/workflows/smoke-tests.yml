@@ -30,6 +30,8 @@ jobs:
           distribution: zulu
 
       - name: Build with Maven
+        env:
+          MAVEN_OPTS: -Xms256m -Xmx3g -XX:+UseG1GC
         run: mvn -B package --file pom.xml -Dmaven.test.skip=true
 
       - name: Docker Pull HTTP client
