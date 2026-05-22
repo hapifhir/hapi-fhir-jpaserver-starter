@@ -29,7 +29,9 @@ management:
         enabled: true
       group:
         liveness:
-          include: [ "livenessState", "readinessState" ]
+          include: [ "livenessState" ]
+        readiness:
+          include: [ "readinessState" ]
     prometheus:
       access: read_only
   prometheus:
@@ -390,7 +392,7 @@ hapi:
     # -------------------------------------------------------------------------------
     # comma-separated package names, will be @ComponentScan'ed by Spring to allow for creating custom Spring beans
 
-    # custom-provider-classes:
+    # custom-bean-packages:
     # custom-interceptor-classes:
     # custom-provider-classes:
 
@@ -418,7 +420,7 @@ hapi:
     # max_page_size: 200
     # retain_cached_searches_mins: 60
     # reuse_cached_search_results_millis: 60000
-    inline_resource_storage_below_size: 4000
+    binary_storage_minimum_binary_size: 4000
 
     # -------------------------------------------------------------------------------
     # P. Remote Terminology Service (disabled by default)
