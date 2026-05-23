@@ -40,6 +40,9 @@ management:
         enabled: true
 
 
+spring:
+  main:
+    allow-circular-references: true
 
 # -------------------------------------------------------------------------------------
 # HAPI FHIR — grouped by domain
