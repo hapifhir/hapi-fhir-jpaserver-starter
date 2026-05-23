@@ -41,8 +41,136 @@ management:
 
 
 spring:
+#  elasticsearch:
+#    uris: http://localhost:9200
+#    username: elastic
+#    password: elastic
+  # -------------------------------------------------------------------------------
+  # Application Name
+  # -------------------------------------------------------------------------------
+  application:
+    name: "@project.artifactId@"
+
+  # -------------------------------------------------------------------------------
+  # A. Spring AI — Model Context Protocol (MCP)
+  # -------------------------------------------------------------------------------
+  ai:
+    # Run e.g. `npx @modelcontextprotocol/inspector` and connect to http://localhost:8080/mcp/messages using Streamable HTTP
+
+    # Add the following to the MCP server settings file in e.g. cursor or claude (Desktop applications) for local debugging:
+    #    cursor:
+    #    {
+    #      "mcpServers": {
+    #        "hapi": {
+    #          "url": "http://localhost:8080/mcp/messages"
+    #        }
+    #      }
+    #    }
+    #    or claude:
+    #    {
+    #      "mcpServers": {
+    #        "hapi": {
+    #          "command": "npx",
+    #          "args": [
+    #            "mcp-remote@latest",
+    #            "http://localhost:8080/mcp/messages"
+    #          ]
+    #        }
+    #      }
+    #    }
+
+    mcp:
+      server:
+        name: FHIR MCP Server
+        version: 1.0.0
+        instructions: "This server provides access to a FHIR RESTful API. You can use it to query FHIR resources, perform operations, and retrieve data in a structured format."
+        enabled: true
+        streamable-http:
+          mcp-endpoint: /mcp/messages
+
+
+  # -------------------------------------------------------------------------------
+  # B. Core Spring
+  # -------------------------------------------------------------------------------
   main:
+    allow-bean-definition-overriding: false
     allow-circular-references: true
+    banner-mode: off
+
+  autoconfigure:
+    # This exclude is only needed for setups not using Elasticsearch where the elasticsearch sniff is not needed.
+    exclude: org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration
+
+  flyway:
+    enabled: false
+    baseline-on-migrate: true
+    fail-on-missing-locations: false
+
+  datasource:
+    # url: "jdbc:h2:file:./target/database/h2"
+    url: jdbc:h2:mem:test_mem
+    username: sa
+    password: null
+    driver-class-name: org.h2.Driver
+    # max-active: 15     # (ignored with HikariCP; use hikari.maximum-pool-size)
+    hikari:
+      maximum-pool-size: 10
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: false
+        show_sql: false
+        # Hibernate dialect is auto-detected except for H2/Postgres.
+        # If using H2:     ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+        # If using Postgres: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
+        dialect: ${HIBERNATE_DIALECT:ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect}
+
+        # --- Optional Hibernate DDL & tuning (commented out from source) ---
+        hbm2ddl:
+          auto: update
+        jdbc:
+          batch_size: 20
+        cache:
+          use_query_cache: false
+          use_second_level_cache: false
+          use_structured_entries: false
+          use_minimal_puts: false
+
+        # --- Hibernate Search (Lucene/Elasticsearch) ---
+        #search:
+        #  schema_management:
+        #    strategy: CREATE
+        #  enabled: true
+          # Lucene backend (default example)
+          # backend:
+          #   type: lucene
+          #   analysis:
+          #     configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiLuceneAnalysisConfigurer
+          #   directory:
+          #     type: local-filesystem
+          #     root: target/lucenefiles
+          #   lucene_version: lucene_current
+          # Elasticsearch backend (alternative) — see also hapi.fhir.elasticsearch section in docs
+#          backend:
+#            layout:
+#              strategy: ca.uhn.fhir.jpa.search.elastic.IndexNamePrefixLayoutStrategy
+#            type: elasticsearch
+#            protocol: http
+#            analysis:
+#              configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticsearchAnalysisConfigurer
+#            scroll_timeout: 60
+#            schema_management:
+#              settings_file: ca/uhn/fhir/jpa/elastic/index-settings.json
+#              minimal_required_status_wait_timeout: 10000
+#              minimal_required_status: YELLOW
+#
+#            dynamic_mapping: true
+#          indexing:
+#            plan:
+#              synchronization:
+#                strategy: async
+
 
 # -------------------------------------------------------------------------------------
 # HAPI FHIR — grouped by domain
