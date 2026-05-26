@@ -96,7 +96,11 @@ public class Property {
 	}
 
 	public String getName() {
-		return definition.getPath().substring(definition.getPath().lastIndexOf(".")+1);
+    if (definition.hasExtension(ExtensionDefinitions.EXT_JSON_NAME, ExtensionDefinitions.EXT_JSON_NAME_DEPRECATED)) {
+      return ExtensionUtilities.readStringExtension(definition, ExtensionDefinitions.EXT_JSON_NAME, ExtensionDefinitions.EXT_JSON_NAME_DEPRECATED);
+    } else {
+      return definition.getPath().substring(definition.getPath().lastIndexOf(".")+1);
+    }
 	}
 
   public String getJsonName() {

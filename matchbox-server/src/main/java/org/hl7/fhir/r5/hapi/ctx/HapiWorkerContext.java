@@ -33,6 +33,7 @@ import org.hl7.fhir.r5.model.StructureDefinition;
 import org.hl7.fhir.r5.model.ValueSet;
 import org.hl7.fhir.r5.model.ValueSet.ConceptSetComponent;
 import org.hl7.fhir.r5.profilemodel.PEBuilder;
+import org.hl7.fhir.r5.terminologies.client.TerminologyClientManager;
 import org.hl7.fhir.r5.terminologies.expansion.ValueSetExpansionOutcome;
 import org.hl7.fhir.r5.terminologies.utilities.CodingValidationRequest;
 import org.hl7.fhir.r5.terminologies.utilities.ValidationResult;
@@ -57,6 +58,7 @@ import java.util.Set;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+// replaced because of matchbox patch: methods added for org.hl7.fhir.core 6.9.1 VersionResolutionRules API
 public final class HapiWorkerContext extends I18nBase implements IWorkerContext {
 	private final FhirContext myCtx;
 	private final Cache<String, Resource> myFetchedResourceCache;
@@ -741,5 +743,9 @@ public final class HapiWorkerContext extends I18nBase implements IWorkerContext 
 		return analyses.get(className.getName());
 	}
 
+	@Override
+	public TerminologyClientManager getTerminologyClientManager() {
+		throw new UnsupportedOperationException("Unimplemented method 'getTerminologyClientManager'");
+	}
 
 }

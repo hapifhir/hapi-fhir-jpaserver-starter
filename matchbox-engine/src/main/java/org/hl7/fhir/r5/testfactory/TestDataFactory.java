@@ -329,7 +329,7 @@ public class TestDataFactory {
     File localInfo = ManagedFileAccess.file(Utilities.path("[tmp]", "fhir-test-data.json"));  
     try {
       JsonObject local = localInfo.exists() ? JsonParser.parseObject(localInfo) : null; 
-      JsonObject json = JsonParser.parseObjectFromUrl("http://fhir.org/downloads/test-data-versions.json");
+      JsonObject json = JsonParser.parseObjectFromUrl("https://www.fhir.org/downloads/test-data-versions.json");
       JsonObject current = json.forceArray("versions").get(0).asJsonObject();
       if (current == null) {
         throw new FHIRException("No current information about FHIR downloads");
@@ -343,7 +343,7 @@ public class TestDataFactory {
         throw new FHIRException("No filename on current information about FHIR downloads");
       }
       if (local == null || !date.equals(local.asString("date"))) {
-        HTTPResult data = ManagedWebAccess.get(Utilities.strings("general"), "http://fhir.org/downloads/"+filename);
+        HTTPResult data = ManagedWebAccess.get(Utilities.strings("general"), "https://www.fhir.org/downloads/"+filename);
         FileUtilities.bytesToFile(data.getContent(), localData);
         local = new JsonObject();
         local.set("date", date);

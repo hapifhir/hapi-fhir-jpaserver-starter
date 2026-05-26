@@ -42,6 +42,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.fhir.ucum.Term;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.r5.context.ExpansionOptions;
 import org.hl7.fhir.r5.formats.IParser.OutputStyle;
@@ -158,6 +159,14 @@ public class TerminologyCache {
   private static final String CAPABILITY_STATEMENT_TITLE = ".capabilityStatement";
   private static final String TERMINOLOGY_CAPABILITIES_TITLE = ".terminologyCapabilities";
   private static final String FIXED_CACHE_VERSION = "4"; // last change: change the way tx.fhir.org handles expansions
+
+  /**
+   * Minimum interval between persistent saves of a single NamedCache. Writes within this
+   * window are coalesced: the in-memory cache is updated immediately, and the entry is
+   * flushed to disk on the first subsequent write past the window, or by an explicit
+   * {@link #save()} call (which is what shutdown handling should use).
+   */
+  private static final long SAVE_DELAY_MS = 5000;
 
 
   private SystemNameKeyGenerator systemNameKeyGenerator = new SystemNameKeyGenerator();
@@ -276,9 +285,13 @@ public class TerminologyCache {
   }
 
   private class NamedCache {
-    private String name; 
+    private String name;
     private List<CacheEntry> list = new ArrayList<CacheEntry>(); // persistent entries
     private Map<String, CacheEntry> map = new HashMap<String, CacheEntry>();
+    /** True when {@link #list} has persistent entries that haven't yet been flushed to disk. */
+    private boolean dirty = false;
+    /** Wall-clock time of the last on-disk save for this cache (0 = never saved this session). */
+    private long lastSaveAt = 0;
   }
 
 
@@ -370,7 +383,9 @@ public class TerminologyCache {
   }
   
   public void unload() {
-    // not useable after this is called
+    // not useable after this is called — flush any pending writes first so we don't lose
+    // entries that were waiting out the SAVE_DELAY_MS coalescing window.
+    save();
     caches.clear();
     vsCache.clear();
     csCache.clear();
@@ -636,7 +651,16 @@ public class TerminologyCache {
         }
       }
       nc.list.add(e);
-      save(nc);  
+      nc.dirty = true;
+      long now = System.currentTimeMillis();
+      // Coalesce frequent writes: only flush if it's been at least SAVE_DELAY_MS since
+      // the last save for this NamedCache. Entries that miss the window stay in memory
+      // until the next write past the deadline, or until save() is called explicitly.
+      if (now - nc.lastSaveAt >= SAVE_DELAY_MS) {
+        save(nc);
+        nc.dirty = false;
+        nc.lastSaveAt = now;
+      }
     }
   }
 
@@ -674,8 +698,25 @@ public class TerminologyCache {
 
   // persistence
 
+  /**
+   * Flush any NamedCaches that have unsaved persistent entries.
+   *
+   * <p>{@link #store} coalesces writes into ~{@value #SAVE_DELAY_MS}ms windows, so a
+   * NamedCache that has just been written to may still be holding entries in memory.
+   * Call this on shutdown (or any other moment you need on-disk consistency) to make
+   * sure nothing in flight is lost.
+   */
   public void save() {
-
+    synchronized (lock) {
+      long now = System.currentTimeMillis();
+      for (NamedCache nc : caches.values()) {
+        if (nc.dirty) {
+          save(nc);
+          nc.dirty = false;
+          nc.lastSaveAt = now;
+        }
+      }
+    }
   }
 
   private <K extends Resource> void save(K resource, String title) {
@@ -709,8 +750,12 @@ public class TerminologyCache {
         sw.write(BREAK+"\r\n");
         if (ce.e != null) {
           sw.write("e: {\r\n");
-          if (ce.e.isFromServer())
+          if (ce.e.isFromServer()) {
             sw.write("  \"from-server\" : true,\r\n");
+          }
+          if (ce.e.getErrorClass() != null) {
+            sw.write("  \"class\" : \""+ce.e.getErrorClass().toString()+"\",\r\n");
+          }
           if (ce.e.getValueset() != null) {
             if (ce.e.getValueset().hasUserData(UserDataNames.VS_EXPANSION_SOURCE)) {
               sw.write("  \"source\" : "+Utilities.escapeJson(ce.e.getValueset().getUserString(UserDataNames.VS_EXPANSION_SOURCE)).trim()+",\r\n");              
@@ -847,13 +892,14 @@ public class TerminologyCache {
     JsonObject o = (JsonObject) new com.google.gson.JsonParser().parse(resultString);
     String error = loadJS(o.get("error"));
     if (e == 'e') {
+      TerminologyServiceErrorClass errorClass = o.has("class") ? TerminologyServiceErrorClass.valueOf(o.get("class").getAsString()) : TerminologyServiceErrorClass.UNKNOWN;
       if (o.has("valueSet")) {
-        ce.e = new ValueSetExpansionOutcome((ValueSet) new JsonParser().parse(o.getAsJsonObject("valueSet")), error, TerminologyServiceErrorClass.UNKNOWN, o.has("from-server"));
+        ce.e = new ValueSetExpansionOutcome((ValueSet) new JsonParser().parse(o.getAsJsonObject("valueSet")), error, errorClass, o.has("from-server"));
         if (o.has("source")) {
           ce.e.getValueset().setUserData(UserDataNames.VS_EXPANSION_SOURCE, o.get("source").getAsString());
         }
       } else {
-        ce.e = new ValueSetExpansionOutcome(error, TerminologyServiceErrorClass.UNKNOWN, o.has("from-server"));
+        ce.e = new ValueSetExpansionOutcome(error, errorClass, o.has("from-server"));
       }
     } else if (e == 's') {
       ce.s = new SubsumesResult(o.get("result").getAsBoolean());

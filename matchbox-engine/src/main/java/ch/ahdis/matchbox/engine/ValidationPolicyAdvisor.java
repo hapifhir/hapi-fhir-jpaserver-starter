@@ -44,7 +44,7 @@ public class ValidationPolicyAdvisor extends BasePolicyAdvisorForFullValidation 
     }
 
     @Override
-    public boolean isSuppressMessageId(String path, String messageId) {
+    public boolean isSuppressMessageId(String path, String messageId, Object... theMessageArguments) {
         log.debug("Checking suppression for path: {} messageId: {}", path, messageId);
         Set<String> pathsToCheck = messagesToIgnore.get(messageId);
         if (pathsToCheck != null && !pathsToCheck.isEmpty()) {
