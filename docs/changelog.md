@@ -2,7 +2,7 @@
 
 - Fix for loading custom SearchParameter -Exception during startup (#520) when matchbox.validation.save-statistics is enabled
 - Update frontend dependencies
-- Update org.hl7.fhir.core to 6.9.8 
+- Update org.hl7.fhir.core to 6.9.8
 
 2026/05/11 Release 4.1.7
 
