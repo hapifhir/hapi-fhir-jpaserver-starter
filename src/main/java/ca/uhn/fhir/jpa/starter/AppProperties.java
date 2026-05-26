@@ -133,6 +133,16 @@ public class AppProperties {
 
 	private Integer bulk_export_file_retention_period_hours = 2;
 
+	private boolean allow_database_validation_override = false;
+
+	public boolean getAllow_database_validation_override() {
+		return allow_database_validation_override;
+	}
+
+	public void setAllow_database_validation_override(boolean allow_database_validation_override) {
+		this.allow_database_validation_override = allow_database_validation_override;
+	}
+
 	public List<String> getCustomInterceptorClasses() {
 		return custom_interceptor_classes;
 	}
