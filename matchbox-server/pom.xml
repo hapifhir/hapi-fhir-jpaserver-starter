@@ -467,6 +467,27 @@
                 <dependency>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-undertow</artifactId>
+                    <exclusions>
+                        <!-- Since Undertow 2.4.0 the servlet/websocket modules moved to
+                             io.undertow.ee (UNDERTOW-2646). Drop the old transitives that
+                             Spring Boot still pulls in and bring in the new artifacts below. -->
+                        <exclusion>
+                            <groupId>io.undertow</groupId>
+                            <artifactId>undertow-servlet</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>io.undertow</groupId>
+                            <artifactId>undertow-websockets-jsr</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <dependency>
+                    <groupId>io.undertow.ee</groupId>
+                    <artifactId>undertow-servlet</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>io.undertow.ee</groupId>
+                    <artifactId>undertow-websockets</artifactId>
                 </dependency>
             </dependencies>
             <build>

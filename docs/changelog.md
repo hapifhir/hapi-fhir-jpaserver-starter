@@ -1,6 +1,6 @@
 2026/05/27 Release 4.1.9
 
-- Upgrade Undertow from 2.3.24.Final to 2.4.1.Final to fix DoS via multipart/form-data parsing on HTTP GET requests (CVE-2026-3260)
+- Upgrade Undertow from 2.3.24.Final to 2.4.1.Final to fix DoS via multipart/form-data parsing on HTTP GET requests (CVE-2026-3260). Since Undertow 2.4.0 the servlet and websocket modules were extracted to `io.undertow.ee` (UNDERTOW-2646); we now use `io.undertow.ee:undertow-servlet:1.0.0.Final` and `io.undertow.ee:undertow-websockets:1.0.0.Final` for Jakarta EE 10 compatibility (Spring Framework 6.2).
 - Upgrade Spring Framework from 6.2.17 to 6.2.18 to fix DoS via static resource resolution on Windows (CVE-2026-22745)
 - Update spring ai to 1.0.7 for CVE-2026-41712 
 

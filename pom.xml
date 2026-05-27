@@ -79,6 +79,7 @@
         <!-- Other dependencies we need -->
         <lombok_version>1.18.44</lombok_version>
         <undertow_version>2.4.1.Final</undertow_version>
+        <undertow_ee_version>1.0.0.Final</undertow_ee_version>
         <postgresql_version>42.7.11</postgresql_version>
         <h2_version>2.4.240</h2_version>
         <jakarta_servlet_version>6.1.0</jakarta_servlet_version>
@@ -528,21 +529,24 @@
                 <version>${jaxb_api_version}</version>
             </dependency>
 
-            <!-- Upgrading Undertow, the version we get from Spring Boot is older -->
+            <!-- Upgrading Undertow, the version we get from Spring Boot is older.
+                 Since Undertow 2.4.0, the servlet and websocket modules were extracted to
+                 io.undertow.ee (see UNDERTOW-2646). We use the 1.0.x line for Jakarta EE 10
+                 compatibility (Spring Framework 6.2 baseline). -->
             <dependency>
                 <groupId>io.undertow</groupId>
                 <artifactId>undertow-core</artifactId>
                 <version>${undertow_version}</version>
             </dependency>
             <dependency>
-                <groupId>io.undertow</groupId>
+                <groupId>io.undertow.ee</groupId>
                 <artifactId>undertow-servlet</artifactId>
-                <version>${undertow_version}</version>
+                <version>${undertow_ee_version}</version>
             </dependency>
             <dependency>
-                <groupId>io.undertow</groupId>
-                <artifactId>undertow-websockets-jsr</artifactId>
-                <version>${undertow_version}</version>
+                <groupId>io.undertow.ee</groupId>
+                <artifactId>undertow-websockets</artifactId>
+                <version>${undertow_ee_version}</version>
             </dependency>
 
             <dependency>
