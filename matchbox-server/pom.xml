@@ -5,7 +5,7 @@
     <parent>
         <artifactId>matchbox</artifactId>
         <groupId>health.matchbox</groupId>
-        <version>4.1.8</version>
+        <version>4.1.9</version>
     </parent>
 
     <artifactId>matchbox-server</artifactId>
@@ -286,7 +286,7 @@
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-mcp</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.7</version>
         </dependency>
         <!--
         This will be included as well as using Spring Automatic Configuration

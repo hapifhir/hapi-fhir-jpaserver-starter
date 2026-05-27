@@ -1,3 +1,9 @@
+2026/05/27 Release 4.1.9
+
+- Upgrade Undertow from 2.3.24.Final to 2.4.1.Final to fix DoS via multipart/form-data parsing on HTTP GET requests (CVE-2026-3260)
+- Upgrade Spring Framework from 6.2.17 to 6.2.18 to fix DoS via static resource resolution on Windows (CVE-2026-22745)
+- Update spring ai to 1.0.7 for CVE-2026-41712 
+
 2026/05/26 Release 4.1.8
 
 - Fix for loading custom SearchParameter -Exception during startup (#520) when matchbox.validation.save-statistics is enabled

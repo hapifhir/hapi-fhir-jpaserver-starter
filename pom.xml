@@ -9,7 +9,7 @@
 
     <groupId>health.matchbox</groupId>
     <artifactId>matchbox</artifactId>
-    <version>4.1.8</version>
+    <version>4.1.9</version>
     <packaging>pom</packaging>
     <name>matchbox</name>
     <description>An open-source implementation to support testing and implementation of FHIR based solutions and map or
@@ -56,8 +56,8 @@
         <jackson_version>2.19.4</jackson_version>
         <okhttp_version>4.12.0</okhttp_version>
         <log4j_to_slf4j_version>2.19.0</log4j_to_slf4j_version>
-        <spring_version>6.2.17</spring_version>
-        <spring_context_version>6.2.17</spring_context_version>
+        <spring_version>6.2.18</spring_version>
+        <spring_context_version>6.2.18</spring_context_version>
         <spring_boot_version>3.5.14</spring_boot_version>
         <thymeleaf.version>3.1.5.RELEASE</thymeleaf.version>
         <testcontainers_version>1.21.4</testcontainers_version>
@@ -78,7 +78,7 @@
 
         <!-- Other dependencies we need -->
         <lombok_version>1.18.44</lombok_version>
-        <undertow_version>2.3.24.Final</undertow_version>
+        <undertow_version>2.4.1.Final</undertow_version>
         <postgresql_version>42.7.11</postgresql_version>
         <h2_version>2.4.240</h2_version>
         <jakarta_servlet_version>6.1.0</jakarta_servlet_version>
