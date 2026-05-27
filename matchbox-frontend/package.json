@@ -58,8 +58,8 @@
     "@types/jasmine": "6.0.x",
     "@types/node": "^25.9.1",
     "@types/pako": "^2.0.3",
-    "@typescript-eslint/eslint-plugin": "8.59.x",
-    "@typescript-eslint/parser": "8.59.x",
+    "@typescript-eslint/eslint-plugin": "8.60.x",
+    "@typescript-eslint/parser": "8.60.x",
     "eslint": "9.39.x",
     "json-patch": "^0.7.0",
     "karma": "^6.4.4",
@@ -88,6 +88,7 @@
   "overrides": {
     "undici": ">=7.24.8",
     "@hono/node-server": ">=1.19.14",
-    "webpack-dev-server": ">=5.2.4"
+    "webpack-dev-server": ">=5.2.4",
+    "uuid": ">=11.1.1"
   }
 }
