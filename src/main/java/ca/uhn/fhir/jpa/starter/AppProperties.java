@@ -135,12 +135,28 @@ public class AppProperties {
 
 	private boolean allow_database_validation_override = false;
 
+	/**
+	 * Outbound HTTP client settings applied to the HAPI {@code FhirContext} RestfulClientFactory.
+	 * These govern every outbound FHIR call the server makes on its own behalf: remote terminology
+	 * validation, IG fetches, subscription delivery checks, and the web tester UI.
+	 * All timeout values are in milliseconds; pool values are connection counts.
+	 */
+	private Client client = new Client();
+
 	public boolean getAllow_database_validation_override() {
 		return allow_database_validation_override;
 	}
 
 	public void setAllow_database_validation_override(boolean allow_database_validation_override) {
 		this.allow_database_validation_override = allow_database_validation_override;
+	}
+
+	public Client getClient() {
+		return client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
 	}
 
 	public List<String> getCustomInterceptorClasses() {
@@ -1286,6 +1302,103 @@ public class AppProperties {
 
 		public void setIndex_prefix(String index_prefix) {
 			this.index_prefix = index_prefix;
+		}
+	}
+
+	/**
+	 * Outbound HTTP client settings applied to {@code FhirContext.getRestfulClientFactory()}.
+	 *
+	 * <p>Default values mirror the upstream HAPI constants in
+	 * {@code IRestfulClientFactory}: 10 000 ms for all timeouts, 20 for pool sizes.
+	 * Override these via {@code hapi.fhir.client.*} in {@code application.yaml} (or
+	 * the equivalent environment-variable form) whenever the server makes outbound
+	 * FHIR calls to slow or remote services — e.g. remote terminology servers,
+	 * IG package registries, or CDS Hooks upstream providers.</p>
+	 */
+	public static class Client {
+
+		/**
+		 * Maximum time (ms) to wait for data on an established socket before
+		 * giving up. Corresponds to {@code IRestfulClientFactory.setSocketTimeout}.
+		 */
+		private Integer socket_timeout = 10000;
+
+		/**
+		 * Maximum time (ms) to wait while establishing a TCP connection.
+		 * Corresponds to {@code IRestfulClientFactory.setConnectTimeout}.
+		 */
+		private Integer connect_timeout = 10000;
+
+		/**
+		 * Maximum time (ms) to wait for a connection to be leased from the pool.
+		 * Corresponds to {@code IRestfulClientFactory.setConnectionRequestTimeout}.
+		 */
+		private Integer connection_request_timeout = 10000;
+
+		/**
+		 * Time-to-live (ms) for persistent connections in the pool.
+		 * Corresponds to {@code IRestfulClientFactory.setConnectionTimeToLive}.
+		 */
+		private Integer connection_ttl = 5000;
+
+		/**
+		 * Maximum total number of connections in the HTTP connection pool.
+		 * Corresponds to {@code IRestfulClientFactory.setPoolMaxTotal}.
+		 */
+		private Integer pool_max_total = 20;
+
+		/**
+		 * Maximum connections per route (target host) in the HTTP connection pool.
+		 * Corresponds to {@code IRestfulClientFactory.setPoolMaxPerRoute}.
+		 */
+		private Integer pool_max_per_route = 20;
+
+		public Integer getSocket_timeout() {
+			return socket_timeout;
+		}
+
+		public void setSocket_timeout(Integer socket_timeout) {
+			this.socket_timeout = socket_timeout;
+		}
+
+		public Integer getConnect_timeout() {
+			return connect_timeout;
+		}
+
+		public void setConnect_timeout(Integer connect_timeout) {
+			this.connect_timeout = connect_timeout;
+		}
+
+		public Integer getConnection_request_timeout() {
+			return connection_request_timeout;
+		}
+
+		public void setConnection_request_timeout(Integer connection_request_timeout) {
+			this.connection_request_timeout = connection_request_timeout;
+		}
+
+		public Integer getConnection_ttl() {
+			return connection_ttl;
+		}
+
+		public void setConnection_ttl(Integer connection_ttl) {
+			this.connection_ttl = connection_ttl;
+		}
+
+		public Integer getPool_max_total() {
+			return pool_max_total;
+		}
+
+		public void setPool_max_total(Integer pool_max_total) {
+			this.pool_max_total = pool_max_total;
+		}
+
+		public Integer getPool_max_per_route() {
+			return pool_max_per_route;
+		}
+
+		public void setPool_max_per_route(Integer pool_max_per_route) {
+			this.pool_max_per_route = pool_max_per_route;
 		}
 	}
 }

@@ -505,3 +505,24 @@ hapi:
         server_address: 'http://localhost:8080/fhir'
         refuse_to_fetch_third_party_urls: false
         fhir_version: R4
+
+    # -------------------------------------------------------------------------------
+    # T. Outbound HTTP client (RestfulClientFactory)
+    # -------------------------------------------------------------------------------
+    # These settings are applied once at startup to FhirContext.getRestfulClientFactory()
+    # and govern every outbound FHIR HTTP call the server makes on its own behalf:
+    #   - Remote terminology validation  (hapi.fhir.remote_terminology_service_*)
+    #   - IG / package registry fetches  (hapi.fhir.implementationGuides)
+    #   - Web tester UI (HomeRequest)
+    #   - Any custom interceptor/provider calling fhirContext.newRestfulGenericClient()
+    #
+    # All values below show the defaults (matching IRestfulClientFactory constants).
+    # Uncomment and adjust for slow or remote upstream services.
+    #
+    # client:
+    #   socket_timeout: 10000             # ms — max idle time waiting for data on an open socket
+    #   connect_timeout: 10000            # ms — max time to establish a TCP connection
+    #   connection_request_timeout: 10000 # ms — max time waiting for a connection from the pool
+    #   connection_ttl: 5000              # ms — time-to-live for pooled persistent connections
+    #   pool_max_total: 20                # total connections across all routes
+    #   pool_max_per_route: 20            # connections per target host
