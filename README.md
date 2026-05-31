@@ -531,7 +531,7 @@ The probe URL is built from the following environment variables (matching Spring
 | `MANAGEMENT_SERVER_BASE_PATH` | _(empty)_ | Applied only when management uses its own port. |
 | `MANAGEMENT_ENDPOINTS_WEB_BASE_PATH` | `/actuator` | Path of the actuator endpoints. |
 
-Make sure the actuator health endpoint is exposed (e.g. `management.endpoints.web.exposure.include=health`). 
+Make sure the actuator health endpoint is exposed (e.g. `management.endpoints.web.exposure.include=health`).
 To enable periodic health checks, uncomment the `healthcheck` block in `docker-compose.yml`.
 
 ## Running hapi-fhir-jpaserver directly from IntelliJ as Spring Boot

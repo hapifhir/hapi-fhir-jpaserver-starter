@@ -22,8 +22,7 @@ import java.util.function.Function;
  */
 public final class HealthCheck {
 
-	private HealthCheck() {
-	}
+	private HealthCheck() {}
 
 	public static void main(String[] args) {
 		String url = buildHealthUrl(System::getenv);
@@ -36,7 +35,8 @@ public final class HealthCheck {
 					.timeout(Duration.ofSeconds(3))
 					.GET()
 					.build();
-			int code = client.send(request, HttpResponse.BodyHandlers.discarding()).statusCode();
+			int code =
+					client.send(request, HttpResponse.BodyHandlers.discarding()).statusCode();
 			if (code == 200) {
 				System.exit(0);
 			}
@@ -53,8 +53,8 @@ public final class HealthCheck {
 		String managementPort = firstNonBlank(env.apply("MANAGEMENT_SERVER_PORT"), serverPort);
 		String contextPath = normalize(firstNonBlank(env.apply("SERVER_SERVLET_CONTEXT_PATH"), ""));
 		String managementBasePath = normalize(firstNonBlank(env.apply("MANAGEMENT_SERVER_BASE_PATH"), ""));
-		String actuatorBasePath = normalize(
-				firstNonBlank(env.apply("MANAGEMENT_ENDPOINTS_WEB_BASE_PATH"), "/actuator"));
+		String actuatorBasePath =
+				normalize(firstNonBlank(env.apply("MANAGEMENT_ENDPOINTS_WEB_BASE_PATH"), "/actuator"));
 
 		// Spring Boot: context-path only applies when management shares the main port;
 		// otherwise management.server.base-path is used on the management port.
