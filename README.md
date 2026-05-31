@@ -513,7 +513,7 @@ jpa:
 
 ## Docker Health Check
 
-The distroless Docker image includes a built-in health check that probes the Spring Boot Actuator `/actuator/health` endpoint and exits `0` on HTTP 2xx, `1` otherwise. It is a standalone Java class with no external dependencies, so it works on the distroless base image which has no shell or `curl`.
+The distroless Docker image includes a built-in health check that probes the Spring Boot Actuator `/actuator/health` endpoint and exits `0` on HTTP 200, `1` otherwise. It is a standalone Java class with no external dependencies, so it works on the distroless base image which has no shell or `curl`.
 
 To run the health check inside a running container:
 
