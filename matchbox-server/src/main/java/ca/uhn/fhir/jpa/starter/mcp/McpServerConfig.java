@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 
+import java.time.Duration;
 import java.util.List;
 
 // https://mcp-cn.ssshooter.com/sdk/java/mcp-server#sse-servlet
@@ -39,6 +40,7 @@ public class McpServerConfig {
 	public McpSyncServer syncServer(
 			List<McpBridge> mcpBridges, McpStreamableServerTransportProvider transportProvider) {
 		return McpServer.sync(transportProvider)
+				.requestTimeout(Duration.ofSeconds(60))
 				.tools(mcpBridges.stream()
 						.flatMap(bridge -> bridge.generateTools().stream())
 						.toList())
