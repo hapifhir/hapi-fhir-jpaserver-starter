@@ -272,7 +272,7 @@ public class McpMatchboxBridge implements McpBridge {
 		if (exchange.getClientCapabilities() != null && exchange.getClientCapabilities().sampling() != null) {
 				try {
 					// create a new Prompt for Sampling
-					McpSchema.TextContent promptContent = new McpSchema.TextContent(PROMPT + "This is the Operation Outcome: " + fhirOperationOutcome);
+					McpSchema.TextContent promptContent = new McpSchema.TextContent(PROMPT + "Here is the validation result: " + fhirOperationOutcome);
 
 					// create a new Sampling Message with the USER Role
 					McpSchema.SamplingMessage samplingMessage = new McpSchema.SamplingMessage(McpSchema.Role.USER, promptContent);
