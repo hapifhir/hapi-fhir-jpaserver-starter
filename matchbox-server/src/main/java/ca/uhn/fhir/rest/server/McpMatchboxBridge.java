@@ -37,7 +37,7 @@ public class McpMatchboxBridge implements McpBridge {
 	private final RestfulServer restfulServer;
 
 	@Value("${matchbox.fhir.context.analyzeOutcomeWithAI:false}")
-	private boolean analyzeWithAIPropertyEnabled;
+	private boolean analyzeOutcomeWithAIPropertyEnabled;
 
 
 	public static final String PROMPT = "You are an AI that helps analyze and interpret FHIR resources and their validation results. " +
@@ -202,7 +202,7 @@ public class McpMatchboxBridge implements McpBridge {
 	private McpSchema.CallToolResult getValidationResult(McpSyncServerExchange exchange, McpSchema.CallToolRequest contextMap, Interaction interaction) {
 
 		// initialize Boolean for AI analysis parameter. null = parameter is missing
-		Boolean analyzeWithAIParameterEnabled = null;
+		Boolean analyzeOutcomeWithAIParameterEnabled = null;
 
 		var response = new MockHttpServletResponse();
 		if (contextMap.arguments().containsKey("validationparams")) {
@@ -220,7 +220,7 @@ public class McpMatchboxBridge implements McpBridge {
 
 			// check if map contains parameter "analyzeOutcomeWithAI" (i.e. parameter is not missing) and set Boolean accordingly
 			if (map.containsKey("analyzeOutcomeWithAI")) {
-				analyzeWithAIParameterEnabled = Boolean.parseBoolean(String.valueOf(map.get("analyzeOutcomeWithAI")));
+				analyzeOutcomeWithAIParameterEnabled = Boolean.parseBoolean(String.valueOf(map.get("analyzeOutcomeWithAI")));
 			}
 
 			// overwrites validation parameters for AI analysis, since LLM can analyze the outcome itself
@@ -247,10 +247,10 @@ public class McpMatchboxBridge implements McpBridge {
 				
 				// check if AI Analysis should be added. Validation parameter has priority over application.yaml property
 				boolean doAIAnalysis = false;
-				if (analyzeWithAIParameterEnabled != null) {
-					doAIAnalysis = analyzeWithAIParameterEnabled;
+				if (analyzeOutcomeWithAIParameterEnabled != null) {
+					doAIAnalysis = analyzeOutcomeWithAIParameterEnabled;
 				} else {
-					doAIAnalysis = analyzeWithAIPropertyEnabled;
+					doAIAnalysis = analyzeOutcomeWithAIPropertyEnabled;
 				}
 
 				if (doAIAnalysis) {
