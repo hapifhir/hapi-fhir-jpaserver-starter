@@ -74,6 +74,23 @@ Example:
 
 Matchbox provides an MCP-Server, that can be interpreted by MCP-Client Applications, such as Claude Desktop or VS Codes Github Copilot integration. This allows these applications to use the validation tool from matchbox and provide the user with clear information about the resource and interactive troubleshooting.
 
+### AI Analysis via MCP
+
+When validating resources via MCP, the analysis of the validation is **not** performed by the LLM configured in matchbox. Instead, matchbox delegates the analysis back to the LLM of the initiating MCP client.
+
+Depending if the MCP client supports [Sampling](https://modelcontextprotocol.io/specification/2025-11-25/client/sampling), matchbox uses two methods:
+- With Sampling: Matchbox requests the AI analysis from the client LLM via an MCP sampling request during the tool call.
+- Without Sampling: Matchbox returns the analysis prompt together with the validations Operation Outcome as part of the tool response. 
+
+#### Activation
+
+The AI analysis for MCP validation requests is only executed if:
+- The validation parameter `analyzeOutcomeWithAI=true` is provided
+OR
+- The property `matchbox.fhir.context.analyzeOutcomeWithAI` is set to `true` in the `application.yaml` (and not overwritten by the validation parameter).
+
+In any case, the validation parameter `analyzeOutcomeWithAI` will get set to `false` before the validation in order to skip the analysis by the LLM configured in matchbox. The Sampling or Prompt Injection analysis will still be performed.
+
 ### Getting Started
 
 To enable MCP capabilities for matchbox add the following configuration to the application.yaml:
@@ -90,9 +107,9 @@ The MCP-Server can be reached at the endpoint `http://<<your-url>>/matchbox(v3)/
 
 ### Setting up matchbox for Claude Desktop
 
-For Claude Pro/Max users, follow the instructions for setting up remote MCP-Servers by [Anthropic](https://support.anthropic.com/en/articles/11175166-about-custom-integrations-using-remote-mcp).
+For Claude Desktop users, follow the instructions for setting up remote MCP-Servers by [Anthropic](https://claude.com/docs/connectors/custom/remote-mcp#adding-custom-connectors).
 
-For Free users connecting to remote servers is currently not officially supported by Anthropic. However, there are possible workarounds, such as using the [MCPHub Gateway project](https://github.com/lightconetech/mcp-gateway).
+Free users can still use the above guide, but are limited to one MCP server at this time. 
 
 Example Claude Desktop:
 ![Claude Desktop MCP example](assets/claude_desktop_mcp_example.png)
