@@ -206,7 +206,7 @@ public class McpMatchboxBridge implements McpBridge {
 
 		var response = new MockHttpServletResponse();
 		if (contextMap.arguments().containsKey("validationparams")) {
-			Map<String, Object> map = new java.util.HashMap<>();
+			Map<String, String> map = new java.util.HashMap<>();
 			String validationParams = (String) contextMap.arguments().get("validationparams");
 			// Parse the validationParams string into a Map
 			String[] params = validationParams.split(",");
@@ -228,7 +228,7 @@ public class McpMatchboxBridge implements McpBridge {
 			map.put("analyzeOutcomeWithAI", "false");
 			contextMap.arguments().put("query", map);
 		} else {
-			Map<String, Object> map = new java.util.HashMap<>();
+			Map<String, String> map = new java.util.HashMap<>();
 			map.put("analyzeOutcomeWithAI", "false");
 			contextMap.arguments().put("query", map);
 		}
