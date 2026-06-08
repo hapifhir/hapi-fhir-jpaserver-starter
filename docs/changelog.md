@@ -1,4 +1,4 @@
-2026/xx/xx Release 4.1.10
+2026/06/08 Release 4.1.10
 
 - Validation requests through MCP will no longer invoke a separate LLM for AI analysis. Instead matchbox will give the Operation Outcome together with a prompt back to the MCP client.
 - MCP sampling enabled. If client supports sampling, the AI analysis will get performed by the clients LLM.
