@@ -52,6 +52,7 @@ import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
 import ca.uhn.fhir.jpa.starter.elastic.ElasticsearchBootSvcImpl;
 import ca.uhn.fhir.jpa.starter.ig.IImplementationGuideOperationProvider;
+import ca.uhn.fhir.jpa.starter.javascript.JavaScriptExecutionR4OperationProvider;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceCountCache;
 import ca.uhn.fhir.mdm.provider.MdmProviderLoader;
@@ -358,6 +359,7 @@ public class StarterJpaConfig {
 			ApplicationContext appContext,
 			Optional<IpsOperationProvider> theIpsOperationProvider,
 			Optional<IImplementationGuideOperationProvider> implementationGuideOperationProvider,
+			Optional<JavaScriptExecutionR4OperationProvider> javaScriptExecutionOperationProvider,
 			DiffProvider diffProvider) {
 		RestfulServer fhirServer = new RestfulServer(fhirSystemDao.getContext());
 
@@ -422,6 +424,8 @@ public class StarterJpaConfig {
 		fhirServer.registerInterceptor(loggingInterceptor);
 
 		implementationGuideOperationProvider.ifPresent(fhirServer::registerProvider);
+
+		javaScriptExecutionOperationProvider.ifPresent(fhirServer::registerProvider);
 
 		/*
 		 * If you are hosting this server at a specific DNS name, the server will try to

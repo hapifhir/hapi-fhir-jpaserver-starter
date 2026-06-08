@@ -439,6 +439,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Standalone Nashorn JavaScript engine (removed from the JDK in Java 15) -->
+        <dependency>
+            <groupId>org.openjdk.nashorn</groupId>
+            <artifactId>nashorn-core</artifactId>
+            <version>15.7</version>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -664,6 +664,75 @@ The `$install` operation is triggered with a POST to `[server]/ImplementationGui
 }
 ```
 
+## Server-side JavaScript execution ($execute-javascript)
+
+The R4 system-level operation `$execute-javascript` runs a **server-side** JavaScript file (via the standalone Nashorn engine) to transform FHIR resources. Callers do **not** send code — they reference a script by name that an administrator has placed in a configured directory. The script receives the input resources as a JavaScript array called `input` and returns a single resource object or an array of resource objects, which are returned as `return` parameters.
+
+Security model:
+
+- Disabled by default; enable with `hapi.fhir.javascript_execution_enabled=true`.
+- The `script` parameter is resolved to a file inside `hapi.fhir.javascript_execution_scripts_dir` only (bare file name, no path traversal).
+- Each script runs in a Nashorn sandbox that blocks access to all Java classes (no JVM/filesystem/network reach).
+- Each invocation is bounded by `hapi.fhir.javascript_execution_timeout_seconds` (default `30`); a script that overruns is stopped and the call fails.
+
+Configuration:
+
+```yaml
+hapi:
+  fhir:
+    javascript_execution_enabled: true
+    javascript_execution_scripts_dir: /scripts
+    javascript_execution_timeout_seconds: 30
+```
+
+Inputs may be supplied two ways (combined into `input` in order — inline resources first, then resolved references):
+
+- `resource` (0..*) — an inline FHIR resource.
+- `reference` (0..*) — a literal reference (e.g. `Patient/123`) that the server reads before the script runs.
+
+Example request body to `POST [base]/$execute-javascript`:
+
+```json
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    { "name": "script", "valueString": "add-active" },
+    { "name": "resource", "resource": { "resourceType": "Patient", "active": false, "name": [{ "family": "Doe" }] } },
+    { "name": "reference", "valueReference": { "reference": "Patient/123" } }
+  ]
+}
+```
+
+### One-liner for quickly testing $execute-javascript with Docker
+
+This feature lives in this source tree, so build the local image (it is not part of the published Docker Hub image). First create a sample script:
+
+```bash
+mkdir -p scripts && cat > scripts/add-active.js <<'EOF'
+// Sets active=true on every input resource and returns them.
+input.map(function (resource) {
+  resource.active = true;
+  return resource;
+});
+EOF
+```
+
+Then build and run, mounting the scripts directory and enabling the feature:
+
+```bash
+docker run -p 8080:8080 -v "$(pwd)/scripts:/scripts" -e "hapi.fhir.javascript_execution_enabled=true" -e "hapi.fhir.javascript_execution_scripts_dir=/scripts" hapiproject/hapi:latest
+```
+
+Once it is up, invoke the operation:
+
+```bash
+curl -s -X POST 'http://localhost:8080/fhir/$execute-javascript' \
+  -H 'Content-Type: application/fhir+json' \
+  -d '{"resourceType":"Parameters","parameter":[{"name":"script","valueString":"add-active"},{"name":"resource","resource":{"resourceType":"Patient","active":false,"name":[{"family":"Doe"}]}}]}'
+```
+
+The response is a `Parameters` resource whose `return` parameter holds the transformed `Patient` with `active` set to `true`.
+
 ## Enable OpenTelemetry auto-instrumentation
 
 The container image includes the [OpenTelemetry Java auto-instrumentation](https://github.com/open-telemetry/opentelemetry-java-instrumentation)
