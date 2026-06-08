@@ -27,10 +27,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Service;
 
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
-import javax.script.SimpleScriptContext;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -41,6 +37,10 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptException;
+import javax.script.SimpleScriptContext;
 
 /**
  * Custom R4 system-level operation that runs a server-side JavaScript file (via the standalone
@@ -253,8 +253,7 @@ public class JavaScriptExecutionR4OperationProvider {
 
 		if (worker.isAlive()) {
 			stopWorker(worker);
-			throw new InvalidRequestException(
-					"JavaScript execution timed out after " + myTimeoutSeconds + " seconds.");
+			throw new InvalidRequestException("JavaScript execution timed out after " + myTimeoutSeconds + " seconds.");
 		}
 
 		Exception error = errorRef.get();
