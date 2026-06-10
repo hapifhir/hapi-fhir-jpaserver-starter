@@ -666,13 +666,13 @@ The `$install` operation is triggered with a POST to `[server]/ImplementationGui
 
 ## Server-side JavaScript execution ($execute-javascript)
 
-The R4 system-level operation `$execute-javascript` runs a **server-side** JavaScript file (via the standalone Nashorn engine) to transform FHIR resources. Callers do **not** send code — they reference a script by name that an administrator has placed in a configured directory. The script receives the input resources as a JavaScript array called `input` and returns a single resource object or an array of resource objects, which are returned as `return` parameters.
+The R4 system-level operation `$execute-javascript` runs a **server-side** JavaScript file (via the embedded GraalJS engine) to transform FHIR resources. Callers do **not** send code — they reference a script by name that an administrator has placed in a configured directory. The script receives the input resources as a JavaScript array called `input` and returns a single resource object or an array of resource objects, which are returned as `return` parameters.
 
 Security model:
 
 - Disabled by default; enable with `hapi.fhir.javascript_execution_enabled=true`.
 - The `script` parameter is resolved to a file inside `hapi.fhir.javascript_execution_scripts_dir` only (bare file name, no path traversal).
-- Each script runs in a Nashorn sandbox that blocks access to all Java classes (no JVM/filesystem/network reach).
+- Each script runs in a GraalJS sandbox created with no host access — Java classes, the filesystem, the network and thread creation are all denied (no JVM/filesystem/network reach).
 - Each invocation is bounded by `hapi.fhir.javascript_execution_timeout_seconds` (default `30`); a script that overruns is stopped and the call fails.
 
 Configuration:

@@ -194,7 +194,7 @@ hapi:
     # -------------------------------------------------------------------------------
     ig_runtime_upload_enabled: false
     # Enables the R4 system-level $execute-javascript operation, which runs a server-side
-    # JavaScript file (sandboxed Nashorn) to transform FHIR resources. Callers reference a script
+    # JavaScript file (sandboxed GraalJS) to transform FHIR resources. Callers reference a script
     # by name; they cannot supply code. Disabled by default.
     javascript_execution_enabled: false
     # Directory holding the vetted *.js scripts the operation is allowed to run. The 'script'

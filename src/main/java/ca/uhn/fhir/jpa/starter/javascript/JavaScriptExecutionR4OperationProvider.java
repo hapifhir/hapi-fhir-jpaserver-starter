@@ -18,8 +18,7 @@ import org.hl7.fhir.r4.model.Parameters;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.StringType;
-import org.openjdk.nashorn.api.scripting.ClassFilter;
-import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
+import org.graalvm.polyglot.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,14 +36,10 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
-import javax.script.SimpleScriptContext;
 
 /**
- * Custom R4 system-level operation that runs a server-side JavaScript file (via the standalone
- * Nashorn engine) to transform FHIR resources.
+ * Custom R4 system-level operation that runs a server-side JavaScript file (via the embedded
+ * GraalJS engine) to transform FHIR resources.
  *
  * <p>Callers do <b>not</b> supply the JavaScript itself — they reference one of the scripts the
  * server administrator has placed in the configured scripts directory
@@ -82,11 +77,12 @@ import javax.script.SimpleScriptContext;
  * resolved to a file inside the configured scripts directory — the name is validated to a bare
  * file name and the resolved path is verified to stay within that directory, so callers cannot
  * traverse the filesystem or execute code that the administrator has not installed. As
- * defense-in-depth, the Nashorn engine is sandboxed with a {@link ClassFilter} that blocks access
- * to all Java classes, so scripts are limited to pure JavaScript and cannot reach the host JVM,
- * filesystem or network. Each invocation is also bounded by an execution timeout
- * ({@code hapi.fhir.javascript_execution_timeout_seconds}, default 30s); a script that overruns is
- * stopped and the call fails.
+ * defense-in-depth, each script runs in a fresh GraalJS {@link Context} created with no host access
+ * — Java class lookup, filesystem, network and thread creation are all denied by default — so
+ * scripts are limited to pure JavaScript and cannot reach the host JVM, filesystem or network. Each
+ * invocation is also bounded by an execution timeout
+ * ({@code hapi.fhir.javascript_execution_timeout_seconds}, default 30s); a script that overruns has
+ * its context cancelled and the call fails.
  */
 @Conditional({OnR4Condition.class})
 @ConditionalOnProperty(name = "hapi.fhir.javascript_execution_enabled", havingValue = "true")
@@ -95,16 +91,12 @@ public class JavaScriptExecutionR4OperationProvider {
 
 	private static final Logger ourLog = LoggerFactory.getLogger(JavaScriptExecutionR4OperationProvider.class);
 
-	/** Denies the script access to every Java class, keeping execution to pure JavaScript. */
-	private static final ClassFilter DENY_ALL_JAVA_CLASSES = className -> false;
-
 	/** A script name is a bare file name (optionally ending in {@code .js}) — never a path. */
 	private static final Pattern SCRIPT_NAME_PATTERN = Pattern.compile("[A-Za-z0-9_-]+(\\.js)?");
 
 	private final FhirContext myFhirContext;
 	private final DaoRegistry myDaoRegistry;
 	private final ObjectMapper myObjectMapper = new ObjectMapper();
-	private final NashornScriptEngineFactory myEngineFactory = new NashornScriptEngineFactory();
 	private final Path myScriptsDir;
 	private final long myTimeoutSeconds;
 
@@ -224,17 +216,23 @@ public class JavaScriptExecutionR4OperationProvider {
 
 	/**
 	 * Runs the script on a dedicated daemon thread and enforces {@link #myTimeoutSeconds}. If the
-	 * script overruns it is forcibly stopped — safe here because each engine is fresh and isolated
-	 * and the sandbox denies all Java access, so a stuck script holds no shared locks or state.
+	 * script overruns, the GraalJS context is cancelled from this thread — even a tight CPU-bound
+	 * loop is unwound cleanly, with no need to forcibly stop the thread. Each context is fresh and
+	 * isolated and the sandbox denies all host access, so a cancelled script holds no shared state.
 	 */
 	private String runScript(String theScript, String theInputJson) {
 		AtomicReference<String> resultRef = new AtomicReference<>();
 		AtomicReference<Exception> errorRef = new AtomicReference<>();
 
+		// No host access: scripts cannot reach Java classes, the filesystem, the network or threads.
+		Context context = Context.newBuilder("js")
+				.option("engine.WarnInterpreterOnly", "false")
+				.build();
+
 		Thread worker = new Thread(
 				() -> {
 					try {
-						resultRef.set(evaluate(theScript, theInputJson));
+						resultRef.set(evaluate(context, theScript, theInputJson));
 					} catch (Exception e) {
 						errorRef.set(e);
 					}
@@ -247,55 +245,37 @@ public class JavaScriptExecutionR4OperationProvider {
 			worker.join(TimeUnit.SECONDS.toMillis(myTimeoutSeconds));
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
-			stopWorker(worker);
+			context.close(true);
 			throw new InternalErrorException("Interrupted while waiting for script to complete.", e);
 		}
 
 		if (worker.isAlive()) {
-			stopWorker(worker);
+			// Cancel the in-flight evaluation; this unblocks the worker by throwing inside the script.
+			context.close(true);
 			throw new InvalidRequestException("JavaScript execution timed out after " + myTimeoutSeconds + " seconds.");
 		}
 
+		context.close();
+
 		Exception error = errorRef.get();
 		if (error != null) {
-			// A ScriptException covers syntax/runtime JS errors; a RuntimeException covers e.g. the
-			// ClassFilter blocking a Java class access. Either way it is caller error -> 400, not 500.
+			// A PolyglotException covers syntax/runtime JS errors as well as the sandbox blocking host
+			// access (e.g. an undefined 'Java'). Either way it is caller error -> 400, not 500.
 			ourLog.debug("JavaScript execution failed", error);
 			throw new InvalidRequestException("JavaScript execution failed: " + error.getMessage(), error);
 		}
 		return resultRef.get();
 	}
 
-	/** Evaluates the script in a fresh, sandboxed Nashorn engine and returns the JSON result. */
-	private String evaluate(String theScript, String theInputJson) throws ScriptException {
-		ScriptEngine engine = myEngineFactory.getScriptEngine(DENY_ALL_JAVA_CLASSES);
-		ScriptContext context = new SimpleScriptContext();
-		engine.setContext(context);
-		engine.put("__inputJson", theInputJson);
+	/** Evaluates the script in the given fresh, sandboxed GraalJS context and returns the JSON result. */
+	private String evaluate(Context theContext, String theScript, String theInputJson) {
+		org.graalvm.polyglot.Value bindings = theContext.getBindings("js");
+		bindings.putMember("__inputJson", theInputJson);
 
-		engine.eval("var input = JSON.parse(__inputJson);");
-		Object result = engine.eval(theScript);
-		engine.put("__result", result);
-		return (String) engine.eval("JSON.stringify(__result === undefined ? null : __result)");
-	}
-
-	/** Interrupts the worker, and forcibly stops it if it ignores interruption (e.g. a tight loop). */
-	@SuppressWarnings({"deprecation", "removal"})
-	private void stopWorker(Thread theWorker) {
-		theWorker.interrupt();
-		try {
-			theWorker.join(1000);
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
-		if (theWorker.isAlive()) {
-			try {
-				// Nashorn does not interrupt CPU-bound loops; ThreadDeath is the only reliable stop.
-				theWorker.stop();
-			} catch (Throwable t) {
-				ourLog.warn("Unable to forcibly stop timed-out script thread", t);
-			}
-		}
+		theContext.eval("js", "var input = JSON.parse(__inputJson);");
+		org.graalvm.polyglot.Value result = theContext.eval("js", theScript);
+		bindings.putMember("__result", result);
+		return theContext.eval("js", "JSON.stringify(__result === undefined ? null : __result)").asString();
 	}
 
 	/** Parses the script's JSON result (single object or array) back into FHIR resources. */
