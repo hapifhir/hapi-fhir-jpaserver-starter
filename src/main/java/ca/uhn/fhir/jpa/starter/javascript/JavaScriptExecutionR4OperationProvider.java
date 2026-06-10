@@ -12,13 +12,13 @@ import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.graalvm.polyglot.Context;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Parameters;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.StringType;
-import org.graalvm.polyglot.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -275,7 +275,9 @@ public class JavaScriptExecutionR4OperationProvider {
 		theContext.eval("js", "var input = JSON.parse(__inputJson);");
 		org.graalvm.polyglot.Value result = theContext.eval("js", theScript);
 		bindings.putMember("__result", result);
-		return theContext.eval("js", "JSON.stringify(__result === undefined ? null : __result)").asString();
+		return theContext
+				.eval("js", "JSON.stringify(__result === undefined ? null : __result)")
+				.asString();
 	}
 
 	/** Parses the script's JSON result (single object or array) back into FHIR resources. */
