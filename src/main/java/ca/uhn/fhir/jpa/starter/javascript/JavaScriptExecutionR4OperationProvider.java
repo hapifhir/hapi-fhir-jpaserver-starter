@@ -78,11 +78,11 @@ import java.util.regex.Pattern;
  * file name and the resolved path is verified to stay within that directory, so callers cannot
  * traverse the filesystem or execute code that the administrator has not installed. As
  * defense-in-depth, each script runs in a fresh GraalJS {@link Context} created with no host access
- * — Java class lookup, filesystem, network and thread creation are all denied by default — so
+ * — Java class lookup, filesystem, network, and thread creation are all denied by default — so
  * scripts are limited to pure JavaScript and cannot reach the host JVM, filesystem or network. Each
  * invocation is also bounded by an execution timeout
  * ({@code hapi.fhir.javascript_execution_timeout_seconds}, default 30s); a script that overruns has
- * its context cancelled and the call fails.
+ * its context canceled and the call fails.
  */
 @Conditional({OnR4Condition.class})
 @ConditionalOnProperty(name = "hapi.fhir.javascript_execution_enabled", havingValue = "true")
@@ -113,7 +113,7 @@ public class JavaScriptExecutionR4OperationProvider {
 		this.myTimeoutSeconds = theTimeoutSeconds;
 	}
 
-	@Operation(name = "$execute-javascript", idempotent = false)
+	@Operation(name = "$execute-javascript", idempotent = true)
 	public Parameters executeJavascript(
 			@OperationParam(name = "script", min = 1, max = 1) StringType theScriptName,
 			@OperationParam(name = "resource", min = 0, max = OperationParam.MAX_UNLIMITED)
