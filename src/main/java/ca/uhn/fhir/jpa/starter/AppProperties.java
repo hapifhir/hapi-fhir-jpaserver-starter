@@ -1166,6 +1166,7 @@ public class AppProperties {
 		private Email email = null;
 		private Integer polling_interval_ms = null;
 		private Boolean immediately_queued = false;
+		private Boolean cross_partition_enabled = false;
 
 		public Boolean getResthook_enabled() {
 			return resthook_enabled;
@@ -1205,6 +1206,14 @@ public class AppProperties {
 
 		public void setImmediately_queued(Boolean immediately_queued) {
 			this.immediately_queued = immediately_queued;
+		}
+
+		public Boolean getCross_partition_enabled() {
+			return cross_partition_enabled;
+		}
+
+		public void setCross_partition_enabled(Boolean cross_partition_enabled) {
+			this.cross_partition_enabled = cross_partition_enabled;
 		}
 
 		public static class Email {
