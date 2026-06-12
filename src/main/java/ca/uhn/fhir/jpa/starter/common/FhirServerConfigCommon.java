@@ -150,11 +150,11 @@ public class FhirServerConfigCommon {
 				subscriptionSettings.setSubscriptionChangeQueuedImmediately(
 						appProperties.getSubscription().getImmediately_queued());
 			}
-			if (appProperties.getSubscription().getCross_partition_enabled()) {
+			boolean crossPartitionEnabled = Boolean.TRUE.equals(appProperties.getSubscription().getCross_partition_enabled());
+			if (crossPartitionEnabled) {
 				ourLog.info("Enabling cross-partition subscriptions");
 			}
-			subscriptionSettings.setCrossPartitionSubscriptionEnabled(
-					appProperties.getSubscription().getCross_partition_enabled());
+			subscriptionSettings.setCrossPartitionSubscriptionEnabled(crossPartitionEnabled);
 		}
 		if (appProperties.getMdm_enabled()) {
 			// MDM requires the subscription of type message
