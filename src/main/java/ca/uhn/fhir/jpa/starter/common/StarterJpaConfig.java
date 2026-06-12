@@ -263,7 +263,7 @@ public class StarterJpaConfig {
 					IBaseBundle transaction = AdditionalResourcesParser.bundleAdditionalResources(
 							extraResources, packageInstallationSpec, fhirContext);
 					transactionProcessor.transaction(
-							new SystemRequestDetails().setRequestPartitionId(RequestPartitionId.defaultPartition()),
+							new SystemRequestDetails().setRequestPartitionId(RequestPartitionId.fromPartitionIds(Collections.singletonList(null))),
 							transaction,
 							false);
 				}
