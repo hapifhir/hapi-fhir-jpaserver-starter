@@ -1213,7 +1213,7 @@ public class AppProperties {
 		}
 
 		public void setCross_partition_enabled(Boolean cross_partition_enabled) {
-			this.cross_partition_enabled = cross_partition_enabled;
+			this.cross_partition_enabled = Boolean.TRUE.equals(cross_partition_enabled);
 		}
 
 		public static class Email {
