@@ -403,11 +403,13 @@ To configure the starter app to use MS SQL Server, instead of the default H2, up
 ```yaml
 spring:
   datasource:
-    url: 'jdbc:sqlserver://<server>:<port>;databaseName=<databasename>'
+    url: 'jdbc:sqlserver://<server>:<port>;databaseName=<databasename>;sendStringParametersAsUnicode=false'
     username: admin
     password: admin
     driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
 ```
+
+Always include `sendStringParametersAsUnicode=false` in the connection URL. The HAPI FHIR schema uses plain `VARCHAR` columns, but the Microsoft SQL Server JDBC driver sends string parameters as Unicode (`NVARCHAR`) by default. The resulting implicit `NVARCHAR`-to-`VARCHAR` conversions prevent SQL Server from using indexes on those columns and can severely degrade query performance (see [Microsoft JDBC driver documentation](https://learn.microsoft.com/en-us/sql/connect/jdbc/setting-the-connection-properties) for details).
 
 Also, make sure you are not setting the Hibernate dialect explicitly, in other words, remove any lines similar to:
 
