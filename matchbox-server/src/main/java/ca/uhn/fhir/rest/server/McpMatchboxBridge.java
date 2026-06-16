@@ -289,7 +289,7 @@ public class McpMatchboxBridge implements McpBridge {
 					if (samplingResult != null && samplingResult.content() instanceof McpSchema.TextContent textResponse) {
 						String aiResponse = textResponse.text();
 
-						return fhirOperationOutcome + "\nAI Analysis:\n" + aiResponse;
+						return aiResponse;
 					} else {
 						return fhirOperationOutcome;
 					}
