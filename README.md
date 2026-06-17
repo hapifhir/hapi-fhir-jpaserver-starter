@@ -403,11 +403,13 @@ To configure the starter app to use MS SQL Server, instead of the default H2, up
 ```yaml
 spring:
   datasource:
-    url: 'jdbc:sqlserver://<server>:<port>;databaseName=<databasename>'
+    url: 'jdbc:sqlserver://<server>:<port>;databaseName=<databasename>;sendStringParametersAsUnicode=false'
     username: admin
     password: admin
     driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
 ```
+
+Always include `sendStringParametersAsUnicode=false` in the connection URL. The HAPI FHIR schema uses plain `VARCHAR` columns, but the Microsoft SQL Server JDBC driver sends string parameters as Unicode (`NVARCHAR`) by default. The resulting implicit `NVARCHAR`-to-`VARCHAR` conversions prevent SQL Server from using indexes on those columns and can severely degrade query performance (see [Microsoft JDBC driver documentation](https://learn.microsoft.com/en-us/sql/connect/jdbc/setting-the-connection-properties) for details).
 
 Also, make sure you are not setting the Hibernate dialect explicitly, in other words, remove any lines similar to:
 
@@ -513,7 +515,7 @@ jpa:
 
 ## Docker Health Check
 
-The distroless Docker image includes a built-in health check that verifies the FHIR server is operational by calling the `/fhir/metadata` endpoint and confirming a valid `CapabilityStatement` is returned. It uses a standalone Java class with no external dependencies, making it compatible with the distroless base image which has no shell or utilities like `curl`.
+The distroless Docker image includes a built-in health check that probes the Spring Boot Actuator `/actuator/health` endpoint and exits `0` on HTTP 200, `1` otherwise. It is a standalone Java class with no external dependencies, so it works on the distroless base image which has no shell or `curl`.
 
 To run the health check inside a running container:
 
@@ -521,8 +523,17 @@ To run the health check inside a running container:
 docker exec hapi-fhir-jpaserver-start java -cp /app HealthCheck
 ```
 
-An exit code of `0` indicates the server is healthy. An exit code of `1` indicates a failure, with diagnostic details written to stderr.
+The probe URL is built from the following environment variables (matching Spring Boot defaults), so the same check works for custom ports and context paths without code changes:
 
+| Variable | Default | Notes |
+| --- | --- | --- |
+| `SERVER_PORT` | `8080` | Main server port. |
+| `SERVER_SERVLET_CONTEXT_PATH` | _(empty)_ | Applied only when management shares the server port. |
+| `MANAGEMENT_SERVER_PORT` | `SERVER_PORT` | Set to expose actuator on its own port. |
+| `MANAGEMENT_SERVER_BASE_PATH` | _(empty)_ | Applied only when management uses its own port. |
+| `MANAGEMENT_ENDPOINTS_WEB_BASE_PATH` | `/actuator` | Path of the actuator endpoints. |
+
+Make sure the actuator health endpoint is exposed (e.g. `management.endpoints.web.exposure.include=health`).
 To enable periodic health checks, uncomment the `healthcheck` block in `docker-compose.yml`.
 
 ## Running hapi-fhir-jpaserver directly from IntelliJ as Spring Boot
