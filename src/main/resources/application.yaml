@@ -480,6 +480,11 @@ hapi:
     #   websocket_enabled: false
     #   polling_interval_ms: 5000
     #   immediately_queued: false
+    #   # Enables subscriptions created in the DEFAULT partition and marked with the
+    #   # cross-partition extension to match resources from all partitions.
+    #   # Requires the Subscription resource to include:
+    #   # https://smilecdr.com/fhir/ns/StructureDefinition/subscription-cross-partition
+    #   cross_partition_enabled: false
     #   email:
     #     from: some@test.com
     #     host: google.com
