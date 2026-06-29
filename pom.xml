@@ -39,7 +39,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <fhir.core.version>6.9.8</fhir.core.version>
+        <fhir.core.version>6.9.11</fhir.core.version>
         <hapi.fhir.version>8.8.0</hapi.fhir.version>
 
 

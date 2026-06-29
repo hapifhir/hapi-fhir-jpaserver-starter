@@ -12,7 +12,7 @@ cp ../org.hl7.fhir.core/org.hl7.fhir.validation/src/main/java/org/hl7/fhir/valid
 cp ../org.hl7.fhir.core/org.hl7.fhir.validation/src/main/java/org/hl7/fhir/validation/instance/type/BundleValidator.java matchbox-engine/src/main/java/org/hl7/fhir/validation/instance/type
 cp ../org.hl7.fhir.core/org.hl7.fhir.validation/src/main/java/org/hl7/fhir/validation/BaseValidator.java matchbox-engine/src/main/java/org/hl7/fhir/validation/
 cp ../org.hl7.fhir.core/org.hl7.fhir.r5/src/main/java/org/hl7/fhir/r5/testfactory/TestDataFactory.java matchbox-engine/src/main/java/org/hl7/fhir/r5/testfactory/
-cp ../org.hl7.fhir.core/org.hl7.fhir.validation.cli/src/main/java/org/hl7/fhir/validation/cli/param/Params.java matchbox-engine/src/main/java/org/hl7/fhir/validation/cli/param
+# cp ../org.hl7.fhir.core/org.hl7.fhir.validation.cli/src/main/java/org/hl7/fhir/validation/cli/param/Params.java matchbox-engine/src/main/java/org/hl7/fhir/validation/cli/param
 cp ../org.hl7.fhir.core/org.hl7.fhir.validation.cli/src/main/java/org/hl7/fhir/validation/cli/Display.java matchbox-engine/src/main/java/org/hl7/fhir/validation/cli
 cp ../org.hl7.fhir.core/org.hl7.fhir.r5/src/main/java/org/hl7/fhir/r5/conformance/profile/ProfileUtilities.java matchbox-engine/src/main/java/org/hl7/fhir/r5/conformance/profile
 cp ../hapi-fhir/hapi-fhir-structures-r5/src/main/java/org/hl7/fhir/r5/hapi/ctx/HapiWorkerContext.java matchbox-server/src/main/java/org/hl7/fhir/r5/hapi/ctx/

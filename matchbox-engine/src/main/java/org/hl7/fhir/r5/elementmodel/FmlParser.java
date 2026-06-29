@@ -207,7 +207,10 @@ public class FmlParser extends ParserBase {
       Element g = getGroupE(map, srcs, tgts);
       Element e = g.addElement("element");
       if (comments != null) {
-        for (String s : comments.split("\\r\\n")) {
+        @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+        //simple character class split; safe
+        String[] commentLines = comments.split("\\r\\n");
+        for (String s : commentLines) {
           e.getComments().add(s);
         }
       }

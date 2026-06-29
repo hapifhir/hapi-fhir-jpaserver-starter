@@ -213,10 +213,14 @@ public class NpmPackage {
     }
   }
   
+  @SuppressWarnings("checkstyle:regexUtilsUsage")
+  //anchored start char, character class suffix, safe
   public static boolean isValidName(String pid) {
     return RegexUtils.splitRegexMatch(pid, "\\.", "[a-z][a-zA-Z0-9\\-]*", 2, -1);
   }
 
+  @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+  //anchored segments, safe
   public static boolean isValidVersion(String ver) {
     return ver.matches("^[0-9]+\\.[0-9]+\\.[0-9]+$");
   }
@@ -1602,6 +1606,8 @@ public class NpmPackage {
 
   public InputStream load(PackageResourceInformation p) throws IOException {
     if (p.filename.startsWith("@")) {
+      @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+      //single literal character split
       String[] pl = p.filename.substring(1).split("\\/");
       return new ByteArrayInputStream(folders.get(pl[0]).content.get(pl[1]));
     } else {

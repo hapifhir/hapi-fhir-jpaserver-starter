@@ -142,6 +142,7 @@ import org.hl7.fhir.r5.utils.validation.constants.CheckDisplayOption;
 import org.hl7.fhir.r5.utils.validation.constants.ContainedReferenceValidationPolicy;
 import org.hl7.fhir.r5.utils.validation.constants.IdStatus;
 import org.hl7.fhir.r5.utils.validation.constants.ReferenceValidationPolicy;
+import org.hl7.fhir.utilities.regex.RegexTimeout;
 import org.hl7.fhir.utilities.*;
 import org.hl7.fhir.utilities.HL7WorkGroups.HL7WorkGroup;
 import org.hl7.fhir.utilities.Utilities.DecimalStatus;
@@ -1005,7 +1006,7 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
 
   @Override
   public void validate(Object appContext, List<ValidationMessage> errors, String path, Element element, List<StructureDefinition> profiles) throws FHIRException {
-    // this is the main entry point; all the other public entry points end up here coming here...
+    // this is the main entry point; all the other public entry points end up coming here...
     // so the first thing to do is to clear the internal state
     clearInternalState(element, profiles);
 
@@ -1441,12 +1442,12 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
 //            TYPE_CHECKS_FIXED_CC_US = The pattern [system {0}, code {1}, display "{2}" and userSelected {5}] defined in the profile {3} not found. Issues: {4} 
 
             if (fixedCoding.hasUserSelected()) {
-              ok = rule(errors, NO_RULE_DATE, IssueType.VALUE, focus.line(), focus.col(), path, false, pattern ? I18nConstants.TYPE_CHECKS_PATTERN_CC_US : I18nConstants.TYPE_CHECKS_FIXED_CC_US, 
+              ok = rule(errors, NO_RULE_DATE, IssueType.VALUE, focus.line(), focus.col(), path, false, I18nConstants.TYPE_CHECKS_PATTERN_CC_US,
                   fixedCoding.getSystemElement().asStringValue(), fixedCoding.getCodeElement().asStringValue(), fixedCoding.getDisplayElement().asStringValue(),
                   fixedSource, allErrorsFixed, fixedCoding.getUserSelected()) && ok;
               
             } else {
-              ok = rule(errors, NO_RULE_DATE, IssueType.VALUE, focus.line(), focus.col(), path, false, pattern ? I18nConstants.TYPE_CHECKS_PATTERN_CC : I18nConstants.TYPE_CHECKS_FIXED_CC, 
+              ok = rule(errors, NO_RULE_DATE, IssueType.VALUE, focus.line(), focus.col(), path, false, I18nConstants.TYPE_CHECKS_PATTERN_CC,
                   fixedCoding.getSystemElement().asStringValue(), fixedCoding.getCodeElement().asStringValue(), fixedCoding.getDisplayElement().asStringValue(),
                   fixedSource, allErrorsFixed) && ok;
             }
@@ -1691,7 +1692,11 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
   }
 
   private boolean pathMatches(String actualPath, String pathSpec) {
+    @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+    //single literal character split
     String[] ap = actualPath.split("\\.");
+    @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+    //single literal character split
     String[] ps = pathSpec.split("\\.");
     if (ap.length != ps.length) {
       return false;
@@ -2905,11 +2910,15 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
   }
 
   private boolean hasElementName(List<String> plist, String en) {
+    @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+    //single literal character split
     String[] ep = en.split("\\.");
     for (String s : plist) {
       if (s.equals(en)) {
         return true;
       }
+      @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+      //single literal character split
       String[] sp = s.split("\\.");
       int si = 0;
       int ei = 0;
@@ -3307,7 +3316,14 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         }      
       }
       if (regex != null) {
-        ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, e.primitiveValue().matches(regex), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_PRIMITIVE_REGEX, e.primitiveValue(), regex) && ok;
+        try {
+          @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+          //False positive: RegexTimeout.matches is the approved timeout wrapper
+          boolean matches = RegexTimeout.matches(e.primitiveValue(), regex);
+          ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, matches, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_PRIMITIVE_REGEX, e.primitiveValue(), regex) && ok;
+        } catch (java.util.concurrent.TimeoutException te) {
+          ok = rule(errors, "2026-04-30", IssueType.EXCEPTION, e.line(), e.col(), path, false, I18nConstants.REGEX_MATCH_TIMED_OUT, regex) && ok;
+        }
       }
 
       if (!"xhtml".equals(type)) {
@@ -3395,6 +3411,8 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         }
       }
       if (type.equals("dateTime")) {
+        @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+        //anchored, non-overlapping alternation; FHIR dateTime format, safe
         boolean dok = ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path,
             e.primitiveValue()
             .matches("([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\.[0-9]+)?(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?)?)?)?"), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_DATETIME_VALID, e.primitiveValue()) && ok;
@@ -3419,9 +3437,10 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         ok = ok && dok;
       }
       if (type.equals("time")) {
-        ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path,
-            e.primitiveValue()
-            .matches("([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)"), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_TIME_VALID) && ok;
+        @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+        //fixed-width, non-overlapping; FHIR time format, safe
+        boolean timeValid = e.primitiveValue().matches("([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)");
+        ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, timeValid, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_TIME_VALID) && ok;
         if (ok) {
           try {
             TimeType v = new ObjectConverter(getContext()).readAsTime(e);
@@ -3440,6 +3459,8 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         }
       }
       if (type.equals("date")) {
+        @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+        //anchored, non-overlapping alternation; FHIR date format, safe
         boolean dok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, e.primitiveValue().matches("([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1]))?)?"),
           I18nConstants.TYPE_SPECIFIC_CHECKS_DT_DATE_VALID, e.primitiveValue());
         if (dok) {
@@ -3541,6 +3562,8 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         }
       }
       if (type.equals("instant")) {
+        @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+        //anchored, non-overlapping alternation; FHIR instant format, safe
         boolean dok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path,
             e.primitiveValue().matches("-?[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(\\.[0-9]+)?(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))"), I18nConstants.TYPE_SPECIFIC_CHECKS_DT_DATETIME_REGEX,  e.primitiveValue());
         if (dok) {
@@ -3623,13 +3646,19 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
             if (e.getProperty().getDefinition().hasExtension(ExtensionDefinitions.EXT_DATE_FORMAT)) {
               ptFmt = convertForDateFormatToExternal(ExtensionUtilities.readStringExtension(e.getProperty().getDefinition(), ExtensionDefinitions.EXT_DATE_FORMAT), pt);
             }
-            boolean matches = pt.matches(regext) || (ptFmt != null && ptFmt.matches(regext));
-            if (!matches) {
-              if (ptFmt == null) {
-                ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, matches, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_PRIMITIVE_REGEX_TYPE, pt, e.fhirType(), regext) && ok;
-              } else {
-                ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, matches, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_PRIMITIVE_REGEX_TYPE_ALT, pt, ptFmt, e.fhirType(), regext) && ok;
+            try {
+              @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+              //False positive: RegexTimeout.matches is the approved timeout wrapper
+              boolean matches = RegexTimeout.matches(pt, regext) || (ptFmt != null && RegexTimeout.matches(ptFmt,regext));
+              if (!matches) {
+                if (ptFmt == null) {
+                  ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, matches, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_PRIMITIVE_REGEX_TYPE, pt, e.fhirType(), regext) && ok;
+                } else {
+                  ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, matches, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_PRIMITIVE_REGEX_TYPE_ALT, pt, ptFmt, e.fhirType(), regext) && ok;
+                }
               }
+            } catch (TimeoutException te) {
+              ok = rule(errors, "2026-04-30", IssueType.EXCEPTION, e.line(), e.col(), path, false, I18nConstants.REGEX_MATCH_TIMED_OUT, regex) && ok;
             }
           } catch (Throwable ex) {
             ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, e.line(), e.col(), path, false, I18nConstants.TYPE_SPECIFIC_CHECKS_DT_PRIMITIVE_REGEX_EXCEPTION, regext, e.fhirType(), ex.getMessage()) && ok;          
@@ -4183,7 +4212,9 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     if (path == null) {
       return false;
     }
-    String[] p = path.split("\\."); 
+    @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+    //single literal character split
+    String[] p = path.split("\\.");
     if (p.length != 2) {
       return false;
     }
@@ -4898,6 +4929,8 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     if (clss == null) {
       return false;
     }
+    @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+    //single literal character split
     String[] s = clss.split("\\ ");
     return Utilities.existsInList(clss, s);
   }
@@ -4937,10 +4970,16 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
       // special known URLs that can't be validated but are known to be valid
       return true;
     } else {
-      ok = rule(errors, "2025-05-07", IssueType.INVALID, element.line(), element.col(), path, ref.matches(NON_WHITESPACE_REGEX), I18nConstants.REFERENCE_REF_INVALID_REF, ref) && ok;
+      @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+      //simple character class, safe
+      boolean refIsNonWhitespace = ref.matches(NON_WHITESPACE_REGEX);
+      ok = rule(errors, "2025-05-07", IssueType.INVALID, element.line(), element.col(), path, refIsNonWhitespace, I18nConstants.REFERENCE_REF_INVALID_REF, ref) && ok;
     }
 
-    if (ref.matches(NON_WHITESPACE_REGEX)) {
+    @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+    //simple character class, safe
+    boolean refHasNoWhitespace = ref.matches(NON_WHITESPACE_REGEX);
+    if (refHasNoWhitespace) {
       warning(errors, NO_RULE_DATE, IssueType.STRUCTURE, element.line(), element.col(), path, !isSuspiciousReference(ref), I18nConstants.REFERENCE_REF_SUSPICIOUS, ref);
     }
 
@@ -5216,6 +5255,8 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     if (!settings.isAssumeValidRestReferences() || url == null || Utilities.isAbsoluteUrl(url) || url.startsWith("#")) {
       return false;
     }
+    @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+    //single literal character split
     String[] parts = url.split("\\/");
     if (parts.length == 2 && context.getResourceNames().contains(parts[0]) && Utilities.isValidId(parts[1])) {
       return false;
@@ -5566,6 +5607,8 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
   private Element getValueForDiscriminator(Object appContext, List<ValidationMessage> errors, Element element, String discriminator, ElementDefinition criteria, NodeStack stack, BooleanHolder bh) throws FHIRException, IOException {
     String p = stack.getLiteralPath() + "." + element.getName();
     Element focus = element;
+    @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+    //single literal character split
     String[] dlist = discriminator.split("\\.");
     for (String d : dlist) {
       if (focus.fhirType().equals("Reference") && d.equals("reference")) {
@@ -5652,16 +5695,22 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
   }
 
   private boolean isParametersEntry(String path) {
+    @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+    //single literal character split
     String[] parts = path.split("\\.");
     return parts.length > 2 && parts[parts.length - 1].equals(RESOURCE) && (pathEntryHasName(parts[parts.length - 2], "parameter") || pathEntryHasName(parts[parts.length - 2], "part"));
   }
 
   private boolean isBundleEntry(String path) {
+    @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+    //single literal character split
     String[] parts = path.split("\\.");
     return parts.length > 2 && parts[parts.length - 1].equals(RESOURCE) && pathEntryHasName(parts[parts.length - 2], ENTRY);
   }
 
   private boolean isBundleOutcome(String path) {
+    @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+    //single literal character split
     String[] parts = path.split("\\.");
     return parts.length > 2 && parts[parts.length - 1].equals("outcome") && pathEntryHasName(parts[parts.length - 2], "response");
   }
@@ -5777,8 +5826,13 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
           if (fullUrl == null) {
             bh.see(rule(errors, NO_RULE_DATE, IssueType.REQUIRED, focus.getParentForValidator().line(), focus.getParentForValidator().col(), focus.getParentForValidator().getPath(),
               Utilities.existsInList(type, "batch-response", "transaction-response") || fullUrl != null, I18nConstants.BUNDLE_BUNDLE_ENTRY_NOFULLURL));
-          } else if (!fullUrl.matches(Constants.URI_REGEX) && !Utilities.existsInList(type, "transaction", "batch") && !Utilities.isAbsoluteUrl(ref) && applyR5BundleRelativePolicy()) {
-            stop.set(true);
+          } else {
+            @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+            //Regex sourced from Constants.URI_REGEX; known constant for FHIR REST URL format
+            boolean fullUrlMatchesUri = fullUrl.matches(Constants.URI_REGEX);
+            if (!fullUrlMatchesUri && !Utilities.existsInList(type, "transaction", "batch") && !Utilities.isAbsoluteUrl(ref) && applyR5BundleRelativePolicy()) {
+              stop.set(true);
+            }
           }
         }
         if (BUNDLE.equals(focus.getType())) {
@@ -5818,7 +5872,10 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         String type = groupingResource.getChildValue(TYPE);
         Element entry = getEntryForSource(groupingResource, source);
         fullUrl = entry.getChildValue(FULL_URL);
-        if (!fullUrl.matches(org.hl7.fhir.r5.tools.Constants.URI_REGEX) && !Utilities.existsInList(type, "transaction", "batch") && !Utilities.isAbsoluteUrl(ref) && applyR5BundleRelativePolicy()) {
+        @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+        //Regex sourced from Constants.URI_REGEX; known constant for FHIR REST URL format
+        boolean fullUrlMatchesUri = fullUrl.matches(org.hl7.fhir.r5.tools.Constants.URI_REGEX);
+        if (!fullUrlMatchesUri && !Utilities.existsInList(type, "transaction", "batch") && !Utilities.isAbsoluteUrl(ref) && applyR5BundleRelativePolicy()) {
           stop.set(true);
         } else {
           IndexedElement res = getFromBundle(groupingResource, ref, fullUrl, errors, path, type, Utilities.existsInList(type, "transaction", "batch"), bh);
@@ -7727,7 +7784,6 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
         ok = validateContains(valContext, errors, ei.getPath(), checkDefn, definition, resource, ei.getElement(),
           localStack, idStatusForEntry(element, ei), profile, pct, mode) && ok; // if
         elementValidated = true;
-        // (str.matches(".*([.,/])work\\1$"))
       } else if (Utilities.isAbsoluteUrl(type)) {
         StructureDefinition defn = context.fetchTypeDefinition(type);
         if (defn != null && defn.hasExtension(ExtensionDefinitions.EXT_BINDING_STYLE)) {
@@ -8778,7 +8834,10 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     if (defn.getKind() == StructureDefinitionKind.LOGICAL) {
       return name.equals(defn.getType()) || name.equals(defn.getName()) || name.equals(defn.getId());
     } else {
-      return name.matches(defn.getType());
+      @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+      //Regex sourced from StructureDefinition type; FHIR type names are safe identifiers
+      boolean nameMatchesType = name.matches(defn.getType());
+      return nameMatchesType;
     }
   }
 
@@ -8889,6 +8948,8 @@ public class InstanceValidator extends BaseValidator implements IResourceValidat
     return path.substring(path.lastIndexOf(".") + 1);
   }
   private String tryParse(String ref) {
+    @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+    //single literal character split
     String[] parts = ref.split("\\/");
     switch (parts.length) {
       case 1:

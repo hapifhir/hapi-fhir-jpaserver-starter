@@ -216,7 +216,10 @@ public class BundleValidator extends BaseValidator {
 
       if (!Utilities.noString(fullUrl)) {
         if (Utilities.isAbsoluteUrl(fullUrl)) {
-          if (rtype != null &&  fullUrl.matches(urlRegex)) {
+          @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+          //Regex sourced from URI_REGEX_XVER template; constructed at initialization from known resource names
+          boolean fullUrlMatchesRegex = fullUrl.matches(urlRegex);
+          if (rtype != null && fullUrlMatchesRegex) {
             if (rule(errors, "2023-11-13", IssueType.INVALID, entry.line(), entry.col(), stack.addToLiteralPath(ENTRY, PATH_ARG), id != null, I18nConstants.BUNDLE_ENTRY_URL_MATCHES_NO_ID, fullUrl)) {
               ok = rule(errors, "2023-11-13", IssueType.INVALID, entry.line(), entry.col(), stack.addToLiteralPath(ENTRY, PATH_ARG), fullUrl.endsWith("/"+rtype+"/"+id), I18nConstants.BUNDLE_ENTRY_URL_MATCHES_TYPE_ID, fullUrl, rtype, id) && ok;
             } else {
@@ -229,7 +232,10 @@ public class BundleValidator extends BaseValidator {
         }
       }
       if (url != null) {
-        if (!(!url.equals(fullUrl) || (url.matches(urlRegex) && url.endsWith("/" + id))) && !isV3orV2Url(url))
+        @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+        //Regex sourced from URI_REGEX_XVER template; constructed at initialization from known resource names
+        boolean urlMatchesRegex = url.matches(urlRegex);
+        if (!(!url.equals(fullUrl) || (urlMatchesRegex && url.endsWith("/" + id))) && !isV3orV2Url(url))
           ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, entry.line(), entry.col(), stack.addToLiteralPath(ENTRY, PATH_ARG), false, I18nConstants.BUNDLE_BUNDLE_ENTRY_MISMATCHIDURL, url, fullUrl, id) && ok;
         ok = rule(errors, NO_RULE_DATE, IssueType.INVALID, entry.line(), entry.col(), stack.addToLiteralPath(ENTRY, PATH_ARG), !url.equals(fullUrl) || serverBase == null || (url.equals(Utilities.pathURL(serverBase, entry.getNamedChild(RESOURCE, false).fhirType(), id))), I18nConstants.BUNDLE_BUNDLE_ENTRY_CANONICAL, url, fullUrl) && ok;
       }
@@ -547,10 +553,19 @@ public class BundleValidator extends BaseValidator {
     String[] head = null;
     String[] tail = null;
     if (ref.contains("?")) {
-      head = ref.substring(0, ref.indexOf("?")).split("\\/");
-      tail = ref.substring(ref.indexOf("?")+1).split("\\&");
+      @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+      //single literal character split
+      String[] headSplit = ref.substring(0, ref.indexOf("?")).split("\\/");
+      head = headSplit;
+      @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+      //single literal character split
+      String[] tailSplit = ref.substring(ref.indexOf("?")+1).split("\\&");
+      tail = tailSplit;
     } else {
-      head = ref.split("\\/");
+      @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+      //single literal character split
+      String[] headSplit = ref.split("\\/");
+      head = headSplit;
     }
     if (head == null || head.length == 0) {
       return;
@@ -559,7 +574,10 @@ public class BundleValidator extends BaseValidator {
     } else if (tail != null) {
       for (String s : tail) {
         if (s.startsWith("_type=")) {
-          for (String t : s.substring(6).split("\\,")) {
+          @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+          //single literal character split
+          String[] typeTokens = s.substring(6).split("\\,");
+          for (String t : typeTokens) {
             types.add(t);
           }
         }
@@ -1018,7 +1036,10 @@ public class BundleValidator extends BaseValidator {
           byte[] data = Base64.decodeBase64(signature.getNamedChildValue("data"));
           String d = new String(data);
           if (Utilities.charCount(d,'.') == 2) {
-            data = Base64.decodeBase64(d.split("\\.")[0]);
+            @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+            //single literal character split
+            String[] dParts = d.split("\\.");
+            data = Base64.decodeBase64(dParts[0]);
             d = new String(data);
           }
           JsonObject j = JsonParser.parseObject(d);
@@ -1059,7 +1080,10 @@ public class BundleValidator extends BaseValidator {
         } else {
           String d = null;
           if (!org.hl7.fhir.utilities.Base64.isBase64(data)) {
-            if (data.split("\\.").length == 3) {
+            @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+            //single literal character split
+            String[] dataParts = data.split("\\.");
+            if (dataParts.length == 3) {
               d = data;
               ok = rule(errors, "2025-06-13", IssueType.INVALID, stack, false, I18nConstants.BUNDLE_SIGNATURE_CHECKED_DATA_B64) && ok;
             } else {
@@ -1082,6 +1106,8 @@ public class BundleValidator extends BaseValidator {
 
   private boolean validateSignatureJose(List<ValidationMessage> errors, Element bundle, NodeStack stack, Element signature, String d) {
     boolean ok = true;
+    @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+    //single literal character split
     String[] parts = d.split("\\.");
     JsonObject header = parseJsonOrError(errors, stack, Base64.decodeBase64(parts[0]), I18nConstants.BUNDLE_SIGNATURE_HEADER_PARSE);
     String canon = null;

@@ -106,8 +106,12 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
    * etc...
    */
   // First char: underscore or letter. Subsequent chars: underscore, letter, digit, ., :, or -.
+  @SuppressWarnings("checkstyle:patternUsage")
+  //simple character class, possessive quantifier, safe
   private static final Pattern SEARCH_URL_PARAM_NAME = Pattern.compile("[_a-zA-Z][_a-zA-Z0-9.:-]*+");
   // Any character except = and &, zero or more times.
+  @SuppressWarnings("checkstyle:patternUsage")
+  //negated character class, possessive quantifier, safe
   private static final Pattern SEARCH_URL_PARAM_VALUE = Pattern.compile("[^=&]*+");
 
 
@@ -1037,7 +1041,11 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
     if (isBlank(uri)) {
       return ref;
     }
+    @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+    //single literal character split
     String[] up = uri.split("\\/");
+    @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+    //single literal character split
     String[] rp = ref.split("\\/");
     if (context.getResourceNames().contains(up[up.length - 2]) && context.getResourceNames().contains(rp[0])) {
       StringBuilder b = new StringBuilder();
@@ -1153,7 +1161,10 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
         // if this something we complain about?
         // not if it's in a package, or it looks like a restful URL and it's one of the canonical resource types
         boolean ok = context.hasResource(Resource.class, ref);
-        if (!ok && ref.matches(urlRegex)) {
+        @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+        //Regex sourced from URI_REGEX_XVER configured at initialization; known FHIR resource name alternation
+        boolean refMatchesUrl = ref.matches(urlRegex);
+        if (!ok && refMatchesUrl) {
           String tt = extractResourceType(ref);
           ok = VersionUtilities.getCanonicalResourceNames(context.getVersion()).contains(tt);
         }
@@ -1184,7 +1195,10 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
     } else {
       // split into base, type, and id
       String u = null;
-      if (fullUrl != null && fullUrl.matches(urlRegex) && fullUrl.endsWith(type + "/" + id)) {
+      @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+      //Regex sourced from URI_REGEX_XVER configured at initialization; known FHIR resource name alternation
+      boolean fullUrlMatchesUrl = fullUrl != null && fullUrl.matches(urlRegex);
+      if (fullUrlMatchesUrl && fullUrl.endsWith(type + "/" + id)) {
         u = fullUrl.substring(0, fullUrl.length() - (type + "/" + id).length()) + ref;
       }
       List<Element> el = map.get(u);
@@ -1199,6 +1213,8 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
           return null;
         }
       } else {
+        @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+        //single literal character split
         String[] parts = ref.split("\\/");
         if (parts.length >= 2) {
           String t = parts[0];
@@ -1366,6 +1382,8 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
   }
 
   protected String extractResourceType(String ref) {
+    @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+    //single literal character split
     String[] p = ref.split("\\/");
     return p[p.length -2];
   }
@@ -1399,13 +1417,16 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
     } else {
       String base = "";
       if (fullUrl.startsWith("urn")) {
+        @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+        //single literal character split
         String[] parts = fullUrl.split("\\:");
         for (int i = 0; i < parts.length - 1; i++) {
           base = base + parts[i] + ":";
         }
       } else {
-        String[] parts;
-        parts = fullUrl.split("/");
+        @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+        //single literal character split
+        String[] parts = fullUrl.split("/");
         for (int i = 0; i < parts.length - 2; i++) {
           base = base + parts[i] + "/";
         }
@@ -1414,13 +1435,18 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
       String id = null;
       if (ref.contains("/_history/")) {
         version = ref.substring(ref.indexOf("/_history/") + 10);
+        @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+        //single literal character split
         String[] refBaseParts = ref.substring(0, ref.indexOf("/_history/")).split("/");
         resourceType = refBaseParts[0];
         id = refBaseParts[1];
         targetUrl = base + resourceType+"/"+ id;
       } else if (base.startsWith("urn")) {
-        resourceType = ref.split("/")[0];
-        id = ref.split("/")[1];
+        @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+        //single literal character split
+        String[] refParts = ref.split("/");
+        resourceType = refParts[0];
+        id = refParts[1];
         targetUrl = base + id;
       } else {
         id = ref;
@@ -1460,6 +1486,8 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
     if (match == null) {
       warning(errors, NO_RULE_DATE, IssueType.REQUIRED, -1, -1, path, !ref.startsWith("urn"), I18nConstants.BUNDLE_BUNDLE_NOT_LOCAL, ref);
       if (!Utilities.isAbsoluteUrl(ref)) {
+        @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+        //single literal character split
         String[] p = ref.split("\\/");
         List<Element> ml = new ArrayList<>();
         if (p.length >= 2 && context.getResourceNamesAsSet().contains(p[0]) && Utilities.isValidId(p[1])) {
@@ -1513,10 +1541,22 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
     }
 
     for (NameValuePair nameValuePair : nameValuePairs) {
-      if (nameValuePair.getName() == null || !SEARCH_URL_PARAM_NAME.matcher(nameValuePair.getName()).matches()) {
+      if (nameValuePair.getName() == null) {
         return false;
       }
-      if (nameValuePair.getValue() == null || !SEARCH_URL_PARAM_VALUE.matcher(nameValuePair.getValue()).matches()) {
+      @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+      //False positive: Matcher.matches() on SEARCH_URL_PARAM_NAME which has been independently reviewed
+      boolean nameIsValid = SEARCH_URL_PARAM_NAME.matcher(nameValuePair.getName()).matches();
+      if (!nameIsValid) {
+        return false;
+      }
+      if (nameValuePair.getValue() == null) {
+        return false;
+      }
+      @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+      //False positive: Matcher.matches() on SEARCH_URL_PARAM_VALUE which has been independently reviewed
+      boolean valueIsValid = SEARCH_URL_PARAM_VALUE.matcher(nameValuePair.getValue()).matches();
+      if (!valueIsValid) {
         return false;
       }
     }
@@ -1782,17 +1822,23 @@ public class BaseValidator implements IValidationContextResourceLoader, IMessagi
 
   private boolean usagesMatch(UsageContext usage, UsageContext t) {
     if (usage.hasCode() && t.hasCode() && usage.hasValue() && t.hasValue()) {
-      if (usage.getCode().matches(t.getCode())) {
+      @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+      //False positive: not using String.matches
+      boolean codeMatches = usage.getCode().matches(t.getCode());
+      if (codeMatches) {
         if (usage.getValue().fhirType().equals(t.getValue().fhirType())) {
           switch (usage.getValue().fhirType()) {
-            case "CodeableConcept":
-              for (Coding uc : usage.getValueCodeableConcept().getCoding()) {
-                for (Coding tc : t.getValueCodeableConcept().getCoding()) {
-                  if (uc.matches(tc)) {
-                    return true;
-                  }
+          case "CodeableConcept": 
+            for (Coding uc : usage.getValueCodeableConcept().getCoding()) {
+              for (Coding tc : t.getValueCodeableConcept().getCoding()) {
+                @SuppressWarnings("checkstyle:stringImplicitPatternUsage")
+                //False positive: not using String.matches
+                boolean codingMatches = uc.matches(tc);
+                if (codingMatches) {
+                  return true;
                 }
               }
+            }
             case "Quantity":
               return false; // for now
             case "Range":

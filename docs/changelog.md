@@ -1,7 +1,7 @@
 2026/xx/xx Release 4.1.11
 
 - Fix for issue #528: Validation through MCP with AI analysis via Sampling will only get the result of the AI analysis back, not the full OperationOutcome
-
+- Update org.hl7.fhir.core to 6.9.11
 
 2026/06/08 Release 4.1.10
 
