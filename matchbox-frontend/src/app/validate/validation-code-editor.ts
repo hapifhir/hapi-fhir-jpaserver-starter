@@ -50,12 +50,12 @@ export class ValidationCodeEditor {
             break;
         }
         return {
-          row: issue.line - 1,
+          row: issue.line ? issue.line - 1 : 0,
           column: issue.col,
           text: issue.text,
           type,
         };
-      });
+      }) as Ace.Annotation[];
     this.editor.session.setAnnotations(annotations);
   }
 

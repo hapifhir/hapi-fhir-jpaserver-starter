@@ -6,11 +6,11 @@ export class ValidationEntry {
   readonly filename: string; // "package/package.json",
   readonly resource: string;
   resourceType: string;
-  resourceId: string;
+  resourceId: string | null;
   readonly mimetype: string;
   result: OperationResult | undefined;
   readonly extractedProfiles: string[] = [];
-  validationProfile: string;
+  validationProfile: string | null;
   ig?: string;
   readonly date: Date;
   readonly validationParameters: ValidationParameter[] = [];
@@ -39,6 +39,9 @@ export class ValidationEntry {
     this.validationProfile = validationProfile;
 
     const parsed = parseFhirResource(filename, resource);
+    if (!parsed) {
+      throw new Error(`Failed to parse resource from file ${filename}`);
+    }
     this.resourceType = parsed.resourceType;
     this.resourceId = parsed.id;
     this.extractedProfiles.push(...parsed.profiles);

@@ -22,7 +22,7 @@
           <mat-label>Validation profile (required)</mat-label>
           <mat-select [(ngModel)]="selectedProfile" id="select-profile"
             name="selectProfile" placeholder="Validate against specific Profile">
-            @if (supportedProfiles.get(selectedProfile); as profile) {
+            @if (supportedProfiles.get(selectedProfile ?? ''); as profile) {
               <mat-select-trigger>
                 <span class="profile-select-option-line1">
                   <span class="ig">{{ profile.igId }}#{{ profile.igVersion }}</span>
@@ -150,11 +150,11 @@
               <mat-spinner diameter="30"></mat-spinner>
             }
             @if (!entry.loading) {
-              <mat-icon inline class="error">error</mat-icon>
+              <mat-icon inline="" class="error">error</mat-icon>
               {{ entry.result ? entry.getErrors() : '-' }}<br/>
-              <mat-icon inline class="warning">warning</mat-icon>
+              <mat-icon inline="" class="warning">warning</mat-icon>
               {{ entry.result ? entry.getWarnings() : '-' }}<br/>
-              <mat-icon inline class="info">info</mat-icon>
+              <mat-icon inline="" class="info">info</mat-icon>
               {{ entry.result ? entry.getInfos() : '-' }}
             }
           </td>

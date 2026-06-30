@@ -2,12 +2,12 @@
 
 - Fix for issue #528: Validation through MCP with AI analysis via Sampling will only get the result of the AI analysis back, not the full OperationOutcome
 - Update org.hl7.fhir.core to 6.9.11
+- Frontend maintenance: upgrade to Angular 22, replace unmaintained dependencies
 
 2026/06/08 Release 4.1.10
 
 - Validation requests through MCP will no longer invoke a separate LLM for AI analysis. Instead matchbox will give the Operation Outcome together with a prompt back to the MCP client.
 - MCP sampling enabled. If client supports sampling, the AI analysis will get performed by the clients LLM.
-
 
 2026/05/27 Release 4.1.9
 

@@ -1,17 +1,18 @@
 export class StructureDefinition {
+  constructor(
+    // The canonical
+    public canonical: string,
 
-  // The canonical
-  canonical: string;
+    // The title
+    public title: string,
 
-  // The title
-  title: string;
+    // The ImplementationGuide identifier
+    public igId: string,
 
-  // The ImplementationGuide identifier
-  igId: string;
+    // The ImplementationGuide version
+    public igVersion: string,
 
-  // The ImplementationGuide version
-  igVersion: string;
-
-  // Whether the ImplementationGuide version is the current one (the higher version)
-  isCurrent: boolean;
+    // Whether the ImplementationGuide version is the current one (the higher version)
+    public isCurrent: boolean
+  ) {}
 }

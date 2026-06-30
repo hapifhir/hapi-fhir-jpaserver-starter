@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import FhirClient from 'fhir-kit-client';
+import { environment } from '../environments/environment';
+import { FhirClientWrapper } from './util/fhir-client-wrapper';
 
 @Injectable({
   providedIn: 'root',
@@ -12,10 +13,10 @@ export class FhirConfigService {
   }
 
   getFhirMicroService(): string {
-    return localStorage.getItem('fhirMicroServer');
+    return localStorage.getItem('fhirMicroServer') ?? environment.fhirServerUrl();
   }
 
-  getFhirClient() {
-    return new FhirClient({ baseUrl: this.getFhirMicroService() });
+  getFhirClient(): FhirClientWrapper {
+    return new FhirClientWrapper(this.getFhirMicroService());
   }
 }

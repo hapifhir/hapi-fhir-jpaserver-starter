@@ -3,7 +3,7 @@
 // Definitions by FHIR STU Release 3: Artifact Health <https://www.artifacthealth.com>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 // Definitions adapted for R4 by Oliver/Ahdis
-declare module fhir.r4 {
+declare namespace fhir.r4 {
   /**
    * Any combination of letters, numerals, "-" and ".", with a length limit of 64 characters.  (This might be an integer, an unprefixed OID, UUID or any other identifier pattern that meets these constraints.)  Ids are case-insensitive.
    */

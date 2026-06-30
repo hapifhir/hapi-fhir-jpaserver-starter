@@ -1,21 +1,20 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import {FhirConfigService} from '../fhirConfig.service';
-import FhirClient from 'fhir-kit-client';
-import pako from 'pako';
-import untar from 'js-untar';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { FhirConfigService } from '../fhirConfig.service';
+import { inflate } from 'pako';
+import untar, { TarFile } from 'js-untar';
 import { UploadComponent } from '../upload/upload.component';
 import ace from 'ace-builds';
-import {ValidationEntry} from './validation-entry';
-import {ValidationParameter, ValidationParameterDefinition} from './validation-parameter';
-import {ITarEntry} from './tar-entry';
-import {Issue, OperationResult} from '../util/operation-result';
-import {FormControl, Validators} from '@angular/forms';
-import {StructureDefinition} from './structure-definition';
-import {ToastrService} from 'ngx-toastr';
-import {ValidationCodeEditor} from "./validation-code-editor";
-import {Base64} from 'js-base64';
-import {from, forkJoin, ReplaySubject, take } from 'rxjs';
+import { ValidationEntry } from './validation-entry';
+import { ValidationParameter, ValidationParameterDefinition } from './validation-parameter';
+import { Issue, OperationResult } from '../util/operation-result';
+import { FormControl, Validators } from '@angular/forms';
+import { StructureDefinition } from './structure-definition';
+import { ValidationCodeEditor } from './validation-code-editor';
+import { Base64 } from 'js-base64';
+import { from, forkJoin, ReplaySubject, take } from 'rxjs';
 import { UploadedFile } from '../upload/uploaded-file';
+import { HotToastService } from '@ngxpert/hot-toast';
+import { FhirClientWrapper } from '../util/fhir-client-wrapper';
 
 const INDENT_SPACES = 2;
 
@@ -23,6 +22,7 @@ const INDENT_SPACES = 2;
   selector: 'app-validate',
   templateUrl: './validate.component.html',
   styleUrls: ['./validate.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ValidateComponent implements AfterViewInit {
@@ -36,7 +36,7 @@ export class ValidateComponent implements AfterViewInit {
   selectedEntry: ValidationEntry | null = null;
 
   // About the server
-  client: FhirClient;
+  client: FhirClientWrapper;
   installedIgs: Set<string> = new Set();
   supportedProfiles: Map<string, StructureDefinition> = new Map();
   validatorSettings: Map<string, ValidationParameterDefinition> = new Map();
@@ -45,46 +45,45 @@ export class ValidateComponent implements AfterViewInit {
   filteredProfiles: Set<StructureDefinition> = new Set();
   profileFilter: string = '';
   selectedIg: string = this.AUTO_IG_SELECTION;
-  selectedProfile: string;
-  profileControl: FormControl = new FormControl<string>(null, Validators.required);
+  selectedProfile: string | null = null;
+  profileControl: FormControl = new FormControl<string>('', Validators.required);
   profileLocked: boolean = false;
 
   // Code editor
-  editor: ValidationCodeEditor;
+  editor: ValidationCodeEditor | null = null;
   editorContent: CodeEditorContent = CodeEditorContent.RESOURCE_CONTENT;
 
   // DOM
   showSettings: boolean = false;
   currentResource: UploadedValidationFile | null = null;
-  @ViewChild('resourceDropper') resourceDropper: UploadComponent;
+  @ViewChild('resourceDropper') resourceDropper: UploadComponent | null = null;
 
   showAIAnalyzeButton: boolean = false;
 
-  package: ArrayBuffer;
+  package: ArrayBuffer | null = null;
 
   constructor(
     data: FhirConfigService,
     private cd: ChangeDetectorRef,
-    private toastr: ToastrService
+    private toast: HotToastService
   ) {
     this.client = data.getFhirClient();
 
     // Creation of Observables for the two requests
     const validateOperationDefinitionObservable$ = from(
-      this.client.read({
-        resourceType: 'OperationDefinition',
-        id: '-s-validate',
-      })
+      this.client.readOperationDefinition('-s-validate')
     );
 
     const implementationGuidesObservable$ = from(
-      this.client.search({
-        resourceType: 'ImplementationGuide',
-        searchParams: {
-          _sort: 'title',
-          _count: 1000,
-        },
-      })
+      this.client
+        .search({
+          resourceType: 'ImplementationGuide',
+          searchParams: {
+            _sort: 'title',
+            _count: 1000,
+          },
+        })
+        .then((response) => response as fhir.r4.Bundle)
     );
 
     // Code inside is subscribed and wait for the two requests to complete. After it notifies it to the listeners
@@ -120,7 +119,7 @@ export class ValidateComponent implements AfterViewInit {
     // This call also depends on the FHIR server data requested in the constructor being ready, so we are subscribed to that.
     this.FhirServerDataReady$.pipe(take(1)) // Take only the first emission and close the subscription
       .subscribe(() => {
-        this.analyzeUrlForValidation();
+        this.analyzeUrlForValidation().then();
         // This will help to update the view after processing the URL parameters as we so not use async pipes in html.
         this.cd.detectChanges();
       });
@@ -135,11 +134,11 @@ export class ValidateComponent implements AfterViewInit {
       // Load an IG package
       try {
         this.validateExamplesInPackage(droppedBlob.blob);
-      } catch (error) {
+      } catch (error: any) {
         this.showErrorToast('Unexpected error', error.message);
         console.error(error);
       }
-      this.resourceDropper.clear();
+      this.resourceDropper!!.clear();
       return;
     }
 
@@ -150,22 +149,22 @@ export class ValidateComponent implements AfterViewInit {
       const fileContent = await droppedBlob.blob.text();
       this.cd.markForCheck();
       this.validateResource(droppedBlob.name, fileContent, droppedBlob.contentType, !this.profileLocked);
-    } catch (error) {
+    } catch (error: any) {
       this.showErrorToast('Unexpected error', error.message);
       console.error(error);
-      this.resourceDropper.clear();
+      this.resourceDropper!!.clear();
       this.currentResource = null;
     }
   }
 
   validateResource(filename: string, content: string, contentType: string, selectBestProfile: boolean): void {
-    let entry: ValidationEntry;
+    let entry: ValidationEntry | null = null;
     try {
       // Try to parse the resource to extract information
       entry = new ValidationEntry(filename, content, contentType, this.getCurrentValidationSettings());
       if (!entry?.resourceType) {
         this.showErrorToast('Error parsing the file', 'The provided file does not seem to be a valid FHIR resource');
-        this.resourceDropper.clear();
+        this.resourceDropper!!.clear();
         this.currentResource = null;
         return;
       }
@@ -199,9 +198,8 @@ export class ValidateComponent implements AfterViewInit {
       } else {
         this.showWarnToast('No profile selected', 'Please select a profile for validation');
       }
-    } catch (error) {
+    } catch (error: any) {
       this.showErrorToast('Error parsing the file', error.message);
-      console.error(error);
       if (entry) {
         entry.result = OperationResult.fromMatchboxError(
           'Error while processing the resource for' + ' validation: ' + error.message
@@ -225,26 +223,11 @@ export class ValidateComponent implements AfterViewInit {
       // need to run CD since file load runs outside of zone
       this.cd.markForCheck();
       if (this.package != null) {
-        const result = pako.inflate(new Uint8Array(this.package));
+        const result: Uint8Array<ArrayBufferLike> = inflate(new Uint8Array(this.package));
         const dataSource = new Array<ValidationEntry>();
         const pointer = this;
-        untar(result.buffer).then(
-          (_) => {
-            // onSuccess
-            dataSource.forEach((entry) => {
-              pointer.validationEntries.unshift(entry);
-              pointer.runValidation(entry);
-            });
-          },
-          (err) => {
-            // onError
-            this.showErrorToast('Unexpected error', err);
-            console.error(err);
-          },
-          (extractedFile: ITarEntry) => {
-            // onProgress
-            if (extractedFile.name?.indexOf('package.json') >= 0) {
-            }
+        untar(result.buffer as ArrayBuffer)
+          .progress((extractedFile: TarFile) => {
             if (extractedFile.name?.indexOf('example') >= 0 && extractedFile.name?.indexOf('.index.json') == -1) {
               let name = extractedFile.name;
               if (name.startsWith('package/example/')) {
@@ -253,9 +236,9 @@ export class ValidateComponent implements AfterViewInit {
               if (name.startsWith('example/')) {
                 name = name.substring('example/'.length);
               }
-              let decoder = new TextDecoder('utf-8');
+              const decoder = new TextDecoder('utf-8');
               // maybe better add ig as a parameter, we assume now that ig version is equal to canonical version
-              let entry = new ValidationEntry(
+              const entry = new ValidationEntry(
                 name,
                 decoder.decode(extractedFile.buffer),
                 'application/fhir+json',
@@ -263,8 +246,21 @@ export class ValidateComponent implements AfterViewInit {
               );
               dataSource.push(entry);
             }
-          }
-        );
+          })
+          .then(
+            (_: TarFile[]) => {
+              // onSuccess
+              dataSource.forEach((entry: ValidationEntry) => {
+                pointer.validationEntries.unshift(entry);
+                pointer.runValidation(entry);
+              });
+            },
+            (err: any) => {
+              // onError
+              this.showErrorToast('Unexpected error', err);
+              console.error(err);
+            }
+          );
       }
     };
   }
@@ -275,7 +271,7 @@ export class ValidateComponent implements AfterViewInit {
   clearAllEntries() {
     this.selectedProfile = null;
     this.selectedIg = this.AUTO_IG_SELECTION;
-    this.show(undefined);
+    this.show(null);
     this.validationEntries.splice(0, this.validationEntries.length);
   }
 
@@ -289,6 +285,9 @@ export class ValidateComponent implements AfterViewInit {
         entry.extractedProfiles.push(this.selectedProfile);
       }
       entry.validationProfile = this.selectedProfile;
+    } else if (entry.validationProfile == null && entry.extractedProfiles.length > 0) {
+      // No profile is selected in the GUI, let's select the first profile set in the resource
+      entry.validationProfile = entry.extractedProfiles[0];
     }
 
     if (this.selectedIg != this.AUTO_IG_SELECTION) {
@@ -300,39 +299,18 @@ export class ValidateComponent implements AfterViewInit {
     }
 
     if (!entry.validationProfile) {
-      this.showErrorToast('Validation failed', 'No profile was selected');
-      console.error("No profile selected, won't run validation");
+      this.showErrorToast('Validation failed', 'no profile was selected');
       return;
     }
 
-    const searchParams = new URLSearchParams();
-    searchParams.set('profile', entry.validationProfile);
-    if (entry.ig) {
-      searchParams.set('ig', entry.ig);
-    }
-    // Validation options
-    for (const param of entry.validationParameters) {
-      searchParams.append(param.name, param.value);
-    }
     entry.loading = true;
-    this.client
-      .operation({
-        name: 'validate?' + searchParams.toString(),
-        resourceType: undefined,
-        input: entry.resource,
-        options: {
-          headers: {
-            accept: 'application/fhir+json',
-            'content-type': entry.mimetype,
-          },
-        },
-      })
+    this.client.validate(entry)
       .then((response) => {
         // Got a response that should be an OperationOutcome
         entry.loading = false;
         entry.setOperationOutcome(response);
         if (entry === this.selectedEntry) {
-          this.editor.updateCodeEditorContent(this.selectedEntry, this.editorContent);
+          this.editor!!.updateCodeEditorContent(this.selectedEntry, this.editorContent);
         }
       })
       .catch((error) => {
@@ -342,7 +320,7 @@ export class ValidateComponent implements AfterViewInit {
           // Got an OperationOutcome, probably with a 500-error code
           entry.setOperationOutcome(error?.response?.data);
           if (entry === this.selectedEntry) {
-            this.editor.updateCodeEditorContent(this.selectedEntry, this.editorContent);
+            this.editor!!.updateCodeEditorContent(this.selectedEntry, this.editorContent);
           }
         } else if ('message' in error) {
           // Got an error message
@@ -366,7 +344,7 @@ export class ValidateComponent implements AfterViewInit {
    */
   show(entry: ValidationEntry | null) {
     this.selectedEntry = entry;
-    this.editor.updateCodeEditorContent(this.selectedEntry, this.editorContent);
+    this.editor!!.updateCodeEditorContent(this.selectedEntry, this.editorContent);
 
     if (entry != null) {
       // Set the resource as currently selected in the form, to facilitate re-validation with a different profile/IG
@@ -396,7 +374,11 @@ export class ValidateComponent implements AfterViewInit {
    * Event handler for the click on the "validation" button
    */
   onValidationButtonClick() {
-    let entry = new ValidationEntry(
+    if (!this.currentResource) {
+      this.showErrorToast('No resource selected', 'Please select a resource to validate');
+      return;
+    }
+    const entry = new ValidationEntry(
       this.currentResource.filename,
       this.currentResource.content,
       this.currentResource.contentType,
@@ -412,10 +394,14 @@ export class ValidateComponent implements AfterViewInit {
   }
 
   onAiAnalyzeButtonClick() {
-    let aiAnalyzeSetting = { name: 'analyzeOutcomeWithAI', value: 'true' };
-    let settings = this.getCurrentValidationSettings();
+    if (!this.currentResource) {
+      this.showErrorToast('No resource selected', 'Please select a resource to validate');
+      return;
+    }
+    const aiAnalyzeSetting = { name: 'analyzeOutcomeWithAI', value: 'true' };
+    const settings = this.getCurrentValidationSettings();
     settings.push(aiAnalyzeSetting);
-    let entry = new ValidationEntry(
+    const entry = new ValidationEntry(
       this.currentResource.filename,
       this.currentResource.content,
       this.currentResource.contentType,
@@ -445,7 +431,7 @@ export class ValidateComponent implements AfterViewInit {
     if (issue.line && this.editorContent == CodeEditorContent.RESOURCE_CONTENT) {
       // Scroll to the clicked issue, but only if the issue has a location and the resource is shown in the code editor
       // (scrolling in the OperationOutcome would be nonsense).
-      this.editor.scrollToIssueLocation(issue);
+      this.editor!!.scrollToIssueLocation(issue);
     }
   }
 
@@ -475,7 +461,7 @@ export class ValidateComponent implements AfterViewInit {
 
     const hashParams = new URLSearchParams();
     hashParams.set('resource', Base64.encodeURI(entry.resource));
-    hashParams.set('profile', entry.validationProfile);
+    hashParams.set('profile', entry.validationProfile ?? '');
     if (entry.ig) {
       hashParams.set('ig', entry.ig);
     }
@@ -504,10 +490,11 @@ export class ValidateComponent implements AfterViewInit {
     return this.getExtension(element, url)?.valueBoolean ?? false;
   }
 
-  getExtension(element: fhir.r4.Element, url: string): fhir.r4.Extension {
-    for (let i = 0; i < element.extension.length; i++) {
-      if (element.extension[i].url === url) {
-        return element.extension[i];
+  getExtension(element: fhir.r4.Element, url: string): fhir.r4.Extension | null {
+    const extensions = element.extension ?? [];
+    for (let i = 0; i < extensions.length; i++) {
+      if (extensions[i].url === url) {
+        return extensions[i];
       }
     }
     return null;
@@ -518,7 +505,7 @@ export class ValidateComponent implements AfterViewInit {
       return;
     }
     this.editorContent = newContent;
-    this.editor.updateCodeEditorContent(this.selectedEntry, this.editorContent);
+    this.editor!!.updateCodeEditorContent(this.selectedEntry, this.editorContent);
   }
 
   private getCurrentValidationSettings(): ValidationParameter[] {
@@ -549,9 +536,9 @@ export class ValidateComponent implements AfterViewInit {
    * @private
    */
   private showErrorToast(title: string, message: string) {
-    this.toastr.error(message, title, {
-      closeButton: true,
-      timeOut: 5000,
+    this.toast.error(`<b>${title}</b>: ${message}`, {
+      dismissible: true,
+      duration: 5000,
     });
   }
 
@@ -562,9 +549,9 @@ export class ValidateComponent implements AfterViewInit {
    * @private
    */
   private showWarnToast(title: string, message: string) {
-    this.toastr.warning(message, title, {
-      closeButton: true,
-      timeOut: 5000,
+    this.toast.warning(`<b>${title}</b>: ${message}`, {
+      dismissible: true,
+      duration: 5000,
     });
   }
 
@@ -577,12 +564,13 @@ export class ValidateComponent implements AfterViewInit {
     od.parameter?.forEach((parameter: fhir.r4.OperationDefinitionParameter) => {
       if (parameter.name == 'profile') {
         parameter._targetProfile?.forEach((item) => {
-          const sd = new StructureDefinition();
-          sd.canonical = this.getExtensionStringValue(item, 'sd-canonical');
-          sd.title = this.getExtensionStringValue(item, 'sd-title');
-          sd.igId = this.getExtensionStringValue(item, 'ig-id');
-          sd.igVersion = this.getExtensionStringValue(item, 'ig-version');
-          sd.isCurrent = false;
+          const sd = new StructureDefinition(
+            this.getExtensionStringValue(item, 'sd-canonical'),
+            this.getExtensionStringValue(item, 'sd-title'),
+            this.getExtensionStringValue(item, 'ig-id'),
+            this.getExtensionStringValue(item, 'ig-version'),
+            false
+          );
 
           if (this.getExtensionBoolValue(item, 'ig-current')) {
             sd.isCurrent = true;
@@ -599,7 +587,7 @@ export class ValidateComponent implements AfterViewInit {
       }
     });
     od.parameter
-      .filter(
+      ?.filter(
         (f) => f.use == 'in' && f.name != 'resource' && f.name != 'profile' && f.name != 'ig' && f.name != 'llmProvider'
       )
       .forEach((parameter: fhir.r4.OperationDefinitionParameter) => {
@@ -625,7 +613,7 @@ export class ValidateComponent implements AfterViewInit {
         hasSetProfile = true;
       }
 
-      const resource = Base64.decode(searchParams.get('resource'));
+      const resource = Base64.decode(searchParams.get('resource') ?? '');
       let contentType = 'application/fhir+json';
       if (resource.startsWith('<')) {
         contentType = 'application/fhir+xml';
@@ -633,7 +621,7 @@ export class ValidateComponent implements AfterViewInit {
 
       let filename: string;
       if (searchParams.has('filename')) {
-        filename = searchParams.get('filename');
+        filename = searchParams.get('filename')!!;
       } else {
         filename = `provided.${contentType.split('+')[1]}`;
       }
@@ -643,14 +631,14 @@ export class ValidateComponent implements AfterViewInit {
           continue;
         }
         if (this.validatorSettings.has(key)) {
-          this.validatorSettings.get(key).formControl.setValue(value);
+          this.validatorSettings.get(key)!!.formControl.setValue(value);
         }
       }
 
       this.validateResource(filename, resource, contentType, !hasSetProfile && !this.profileLocked);
-      this.toastr.info('Validation', 'The validation of your resource has started', {
-        closeButton: true,
-        timeOut: 3000,
+      this.toast.info('<b>Validation</b>: the validation of your resource has started', {
+        dismissible: true,
+        duration: 3000,
       });
     }
   }
@@ -666,8 +654,7 @@ class UploadedValidationFile {
     public content: string,
     public resourceType: string,
     public readonly resourceId: string | null
-  ) {
-  }
+  ) {}
 }
 
 /**

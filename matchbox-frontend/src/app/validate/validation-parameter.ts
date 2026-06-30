@@ -9,17 +9,17 @@ export class ValidationParameterDefinition {
     this.formControl = new UntypedFormControl();
     if (this.param.extension) {
       if (this.param.type == "boolean") {
-        this.formControl.setValue(param.extension[0].valueBoolean);
+        this.formControl.setValue(param.extension!![0].valueBoolean);
       } else {
         // Concatenate all extension values if it's a string parameter
         if (this.param.max === '*') {
           // For multi-line parameters (textarea), join with newlines
           const values = param.extension
-            .filter(ext => ext.valueString !== undefined)
+            ?.filter(ext => ext.valueString !== undefined)
             .map(ext => ext.valueString);
-          this.formControl.setValue(values.join('\n'));
+          this.formControl.setValue(values?.join('\n'));
         } else {
-          this.formControl.setValue(param.extension[0].valueString);
+          this.formControl.setValue(param.extension!![0].valueString);
         }
       }
     }

@@ -1,6 +1,5 @@
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FhirConfigService } from '../fhirConfig.service';
-import FhirClient from 'fhir-kit-client';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ReplaySubject } from 'rxjs';
@@ -8,14 +7,16 @@ import StructureMap = fhir.r4.StructureMap;
 import OperationOutcome = fhir.r4.OperationOutcome;
 import Bundle = fhir.r4.Bundle;
 import { UploadComponent } from '../upload/upload.component';
-import { ToastrService } from 'ngx-toastr';
 import { parseFhirResource } from '../util/fhir-resource-parser';
 import { UploadedFile } from '../upload/uploaded-file';
+import { HotToastService } from '@ngxpert/hot-toast';
+import { FhirClientWrapper } from '../util/fhir-client-wrapper';
 
 @Component({
   selector: 'app-transform',
   templateUrl: './transform.component.html',
   styleUrls: ['./transform.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class TransformComponent {
@@ -26,14 +27,16 @@ export class TransformComponent {
   public filteredStructureMaps: ReplaySubject<StructureMap[]> = new ReplaySubject<StructureMap[]>(1);
 
   // The form control for the structure map filter
-  public structureMapFilterControl: FormControl<string> = new FormControl<string>('');
+  public structureMapFilterControl: FormControl<string> = new FormControl<string>('', {
+    nonNullable: true,
+  });
 
   // The form control for the selected structure map
-  public structureMapControl: FormControl<string> = new FormControl<string>(null);
+  public structureMapControl: FormControl<string | null> = new FormControl<string | null>(null);
 
-  @ViewChild('resourceUploader') resourceUploader: UploadComponent;
-  @ViewChild('mapUploader') mapUploader: UploadComponent;
-  @ViewChild('modelUploader') modelUploader: UploadComponent;
+  @ViewChild('resourceUploader') resourceUploader: UploadComponent | undefined;
+  @ViewChild('mapUploader') mapUploader: UploadComponent | undefined;
+  @ViewChild('modelUploader') modelUploader: UploadComponent | undefined;
 
   // The content of the resource to transform
   resource: ResourceSource | null = null;
@@ -45,31 +48,25 @@ export class TransformComponent {
   model: string | null = null;
 
   // The FHIR API client
-  client: FhirClient;
+  client: FhirClientWrapper;
 
   public transformed: any;
-  operationOutcome: OperationOutcome;
-  operationOutcomeTransformed: OperationOutcome;
+  operationOutcome: OperationOutcome | null = null;
+  operationOutcomeTransformed: OperationOutcome | null = null;
 
   constructor(
     readonly data: FhirConfigService,
-    private readonly toastr: ToastrService,
+    private readonly toast: HotToastService,
     private readonly changeDetectorRef: ChangeDetectorRef
   ) {
     this.client = data.getFhirClient();
-    this.client
-      .operation({
-        name: 'list',
-        resourceType: 'StructureMap',
-        method: 'GET',
-      })
-      .then((response: Bundle) => {
-        this.setMaps(response);
-        this.filteredStructureMaps.next(this.allStructureMaps.slice());
-      });
+    this.client.listStructureMaps().then((response: Bundle) => {
+      this.setMaps(response);
+      this.filteredStructureMaps.next(this.allStructureMaps.slice());
+    });
 
     this.structureMapControl.valueChanges.pipe(debounceTime(400), distinctUntilChanged()).subscribe((url) => {
-      this.map = { canonical: url, content: null };
+      this.map = { canonical: url ?? '', content: null };
     });
 
     // Listen for changes in the filter text
@@ -86,36 +83,27 @@ export class TransformComponent {
             valueString: this.resource.content,
           },
         ],
-      };
+      } as fhir.r4.Parameters;
       if (this.map.content != null) {
-        payload.parameter.push({
+        payload.parameter!!.push({
           name: 'map',
           valueString: this.map.content,
         });
       } else {
-        payload.parameter.push({
+        payload.parameter!!.push({
           name: 'source',
           valueString: this.map.canonical,
         });
       }
       if (this.model != null) {
-        payload.parameter.push({
+        payload.parameter!!.push({
           name: 'model',
           valueString: this.model,
         });
       }
 
       this.client
-        .operation({
-          name: 'transform',
-          resourceType: 'StructureMap',
-          input: payload,
-          options: {
-            headers: {
-              'content-type': 'application/fhir+json',
-            },
-          },
-        })
+        .transformFromParameters(payload)
         .then((response) => {
           this.operationOutcomeTransformed = null;
           this.transformed = response;
@@ -132,7 +120,7 @@ export class TransformComponent {
   }
 
   setMaps(response: Bundle) {
-    this.allStructureMaps = response.entry.map((entry) => <StructureMap>entry.resource);
+    this.allStructureMaps = response.entry?.map((entry) => <StructureMap>entry.resource) ?? [];
   }
 
   async setResource(droppedBlob: UploadedFile) {
@@ -140,7 +128,7 @@ export class TransformComponent {
     const parsed = parseFhirResource(droppedBlob.name, content);
     if (!parsed) {
       this.showErrorToast('Invalid File', 'The uploaded file does not contain a valid FHIR resource.');
-      this.resourceUploader.clear();
+      this.resourceUploader!!.clear();
       this.resource = null;
       return;
     }
@@ -180,7 +168,7 @@ export class TransformComponent {
     const fileContent = await droppedBlob.blob.text();
     if (!parseFhirResource(droppedBlob.name, fileContent)) {
       this.showErrorToast('Invalid Model', 'The uploaded file does not contain a valid FHIR resource.');
-      this.modelUploader.clear();
+      this.modelUploader!!.clear();
       this.model = null;
       return;
     }
@@ -199,7 +187,9 @@ export class TransformComponent {
     }
     search = search.toLowerCase();
     this.filteredStructureMaps.next(
-      this.allStructureMaps.filter((structureMap) => structureMap.title.toLowerCase().indexOf(search) > -1)
+      this.allStructureMaps.filter(
+        (structureMap) => structureMap.title && structureMap.title?.toLowerCase().indexOf(search) > -1
+      )
     );
   }
 
@@ -214,9 +204,9 @@ export class TransformComponent {
   }
 
   private showErrorToast(title: string, message: string) {
-    this.toastr.error(message, title, {
-      closeButton: true,
-      timeOut: 5000,
+    this.toast.error(`<b>${title}</b>: ${message}`, {
+      dismissible: true,
+      duration: 5000,
     });
   }
 }
@@ -230,4 +220,4 @@ type ResourceSource = {
   content: string;
   resourceType: string;
   resourceId: string | null;
-}
+};

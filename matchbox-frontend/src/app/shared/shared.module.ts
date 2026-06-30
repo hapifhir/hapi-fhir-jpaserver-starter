@@ -21,15 +21,13 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { TranslateModule } from '@ngx-translate/core';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressSpinner, MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 const modulesToExport = [
   CommonModule,
   BrowserModule,
   FormsModule,
   ReactiveFormsModule,
-  TranslateModule,
   MatAutocompleteModule,
   MatButtonModule,
   MatCardModule,
@@ -49,10 +47,11 @@ const modulesToExport = [
   MatDatepickerModule,
   MatNativeDateModule,
   MatRadioModule,
+  MatProgressSpinner,
   MatProgressSpinnerModule,
 ];
 
-const components = [];
+const components: any[] = [];
 
 @NgModule({
   imports: modulesToExport,

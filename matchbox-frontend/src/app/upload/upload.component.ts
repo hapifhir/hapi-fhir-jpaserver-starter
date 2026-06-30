@@ -43,7 +43,7 @@ export class UploadComponent {
 
   async fetchData(url: string) {
     const res = await fetch(url, { cache: 'no-store' });
-    const contentType = res.headers.get('Content-Type');
+    const contentType = res.headers.get('Content-Type') ?? '';
     const blob = (await res.blob()) as File;
     this.setSelectedFile({ name: url, contentType, blob });
   }

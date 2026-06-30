@@ -67,3 +67,18 @@ enter in chrome console for debugging the following:
 localStorage.debug = 'fhir-kit-client:\*';
 
 localStorage.debug = 'fhir-kit-client:_,app:_';
+
+## Dependency upgrade
+
+### Angular
+
+- Check if all our dependencies are compatible with the new Angular version
+  - `angular-eslint`: https://github.com/angular-eslint/angular-eslint/releases
+  - `ngx-translate`: https://ngx-translate.org/getting-started/angular-compatibility/
+  - `ngx-highlightjs`: https://github.com/MurhafSousli/ngx-highlightjs/releases
+  - `ngx-markdown`: https://github.com/jfcere/ngx-markdown/releases
+  - `ngx-mat-select-search`: https://github.com/bithost-gmbh/ngx-mat-select-search/releases
+  - `@ngxpert/hot-toast`: https://github.com/ngxpert/hot-toast#compatibility-with-angular-versions
+- Run the Angular Update Guide to update Angular itself: https://angular.dev/update-guide
+- We need to use the `--force` flag for the update command, because some dependencies won't be immediately updated.
+- Update the other dependencies manually.

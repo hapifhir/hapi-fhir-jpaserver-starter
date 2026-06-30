@@ -1,15 +1,17 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FhirConfigService } from '../fhirConfig.service';
 import { UntypedFormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import FhirClient from 'fhir-kit-client';
 import debug from 'debug';
+import { FhirClientWrapper } from '../util/fhir-client-wrapper';
+import Resource = fhir.r4.Resource;
 
 @Component({
-    selector: 'app-mapping-language',
-    templateUrl: './mapping-language.component.html',
-    styleUrls: ['./mapping-language.component.scss'],
-    standalone: false
+  selector: 'app-mapping-language',
+  templateUrl: './mapping-language.component.html',
+  styleUrls: ['./mapping-language.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class MappingLanguageComponent implements OnInit {
   static log = debug('app:');
@@ -17,15 +19,14 @@ export class MappingLanguageComponent implements OnInit {
   public map: UntypedFormControl;
   public structureMap: any;
   public transformed: any;
-  client: FhirClient;
-  errMsg: string;
+  client: FhirClientWrapper;
 
-  operationOutcome: fhir.r4.OperationOutcome;
-  operationOutcomeTransformed: fhir.r4.OperationOutcome;
+  operationOutcome: fhir.r4.OperationOutcome | null = null;
+  operationOutcomeTransformed: fhir.r4.OperationOutcome | null = null;
 
   constructor(
     private cd: ChangeDetectorRef,
-    private data: FhirConfigService
+    data: FhirConfigService
   ) {
     this.client = data.getFhirClient();
     this.source = new UntypedFormControl();
@@ -64,12 +65,8 @@ export class MappingLanguageComponent implements OnInit {
     let res: fhir.r4.Resource = JSON.parse(this.source.value);
     if (this.structureMap != null) {
       this.client
-        .operation({
-          name: 'transform?source=' + encodeURIComponent(this.structureMap.url),
-          resourceType: 'StructureMap',
-          input: res,
-        })
-        .then((response) => {
+        .transformFromUrl(this.structureMap.url, res)
+        .then((response: Resource) => {
           this.operationOutcomeTransformed = null;
           this.transformed = response;
         })

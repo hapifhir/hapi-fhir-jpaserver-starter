@@ -1,4 +1,4 @@
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
@@ -15,16 +15,13 @@ import { TransformComponent } from './transform/transform.component';
 import { ValidateComponent } from './validate/validate.component';
 import { OperationResultComponent } from './operation-result/operation-result.component';
 import { UploadComponent } from './upload/upload.component';
-import { OAuthModule } from 'angular-oauth2-oidc';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { HighlightLineNumbers } from 'ngx-highlightjs/line-numbers';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToastrModule } from 'ngx-toastr';
 import { HashUrlRedirectionService } from './util/hash-url-redirection-service';
 import { APP_BASE_HREF } from '@angular/common';
-import { MarkdownModule } from 'ngx-markdown';
-import {SortSettingsPipe} from "./validate/order-settings.pipe";
-import {StatisticsComponent} from './statistics/statistics.component';
+import { SortSettingsPipe } from './validate/order-settings.pipe';
+import { StatisticsComponent } from './statistics/statistics.component';
+import { provideHotToastConfig } from '@ngxpert/hot-toast';
 
 // The Angular routes
 // All paths defined here must be supported in matchbox-server's MatchboxStaticResourceConfig, otherwise a direct access
@@ -61,7 +58,7 @@ const routes: Routes = [
   {
     path: 'statistics',
     component: StatisticsComponent,
-  }
+  },
 ];
 
 @NgModule({
@@ -76,7 +73,7 @@ const routes: Routes = [
     ValidateComponent,
     OperationResultComponent,
     UploadComponent,
-    StatisticsComponent
+    StatisticsComponent,
   ],
   bootstrap: [AppComponent],
   imports: [
@@ -85,13 +82,9 @@ const routes: Routes = [
     RouterModule.forRoot(routes, {
       useHash: false, // Move from HashLocationStrategy to PathLocationStrategy
     }),
-    OAuthModule.forRoot(),
     NgxMatSelectSearchModule,
     HighlightLineNumbers,
-    BrowserAnimationsModule, // Required for toastr
-    ToastrModule.forRoot(),
-    MarkdownModule.forRoot(),
-    SortSettingsPipe
+    SortSettingsPipe,
   ],
   providers: [
     provideTranslateService({
@@ -111,9 +104,10 @@ const routes: Routes = [
         },
       },
     },
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withXhr(), withInterceptorsFromDi()),
     HashUrlRedirectionService,
     { provide: APP_BASE_HREF, useValue: (window as any).MATCHBOX_BASE_PATH },
+    provideHotToastConfig(),
   ],
 })
 export class AppModule {}
