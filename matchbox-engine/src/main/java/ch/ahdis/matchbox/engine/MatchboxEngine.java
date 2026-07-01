@@ -40,6 +40,7 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r5.context.ContextUtilities;
+import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.context.SimpleWorkerContext;
 import org.hl7.fhir.r5.context.SimpleWorkerContext.SimpleWorkerContextBuilder;
 import org.hl7.fhir.r5.elementmodel.Element;
@@ -290,7 +291,7 @@ public class MatchboxEngine extends ValidationEngine {
 			engine.getContext().setPackageTracker(engine);
 			engine.setPcm(this.getFilesystemPackageCacheManager());
 			engine.setPolicyAdvisor(new ValidationPolicyAdvisor(ReferenceValidationPolicy.CHECK_VALID, null));
-			engine.setAllowExampleUrls(true);
+			engine.getDefaultInstanceValidatorParameters().setAllowExampleUrls(true);
 			log.info("engine R4 initialized");
 			return engine;
 		}
@@ -332,7 +333,7 @@ public class MatchboxEngine extends ValidationEngine {
 			engine.getContext().setPackageTracker(engine);
 			engine.setPcm(this.getFilesystemPackageCacheManager());
 			engine.setPolicyAdvisor(new ValidationPolicyAdvisor(ReferenceValidationPolicy.CHECK_VALID, null));
-			engine.setAllowExampleUrls(true);
+			engine.getDefaultInstanceValidatorParameters().setAllowExampleUrls(true);
 			log.info("engine R4B initialized");
 			return engine;
 		}
@@ -372,7 +373,7 @@ public class MatchboxEngine extends ValidationEngine {
 				}
 			}
 			engine.setPolicyAdvisor(new ValidationPolicyAdvisor(ReferenceValidationPolicy.CHECK_VALID, null));
-			engine.setAllowExampleUrls(true);
+			engine.getDefaultInstanceValidatorParameters().setAllowExampleUrls(true);
 
 			engine.getContext().setPackageTracker(engine);
 			engine.setPcm(this.getFilesystemPackageCacheManager());
@@ -409,7 +410,7 @@ public class MatchboxEngine extends ValidationEngine {
 			engine.getContext().setPackageTracker(engine);
 			engine.setPcm(this.getFilesystemPackageCacheManager());
 			engine.setPolicyAdvisor(new ValidationPolicyAdvisor(ReferenceValidationPolicy.CHECK_VALID, null));
-			engine.setAllowExampleUrls(true);
+			engine.getDefaultInstanceValidatorParameters().setAllowExampleUrls(true);
 			return engine;
 		}
 
@@ -559,7 +560,7 @@ public class MatchboxEngine extends ValidationEngine {
 		log.info("Start transform: " + mapUri);
 
 		SimpleWorkerContext context = this.getContext();
-		StructureMap map = context.fetchResource(StructureMap.class, mapUri);
+		StructureMap map = context.fetchResource(StructureMap.class, mapUri, IWorkerContext.VersionResolutionRules.defaultRule());
 		if (map==null) {
 			log.error("map not found" + map);
 			return null;
@@ -603,7 +604,7 @@ public class MatchboxEngine extends ValidationEngine {
 		// usual case is that source and target are in the same FHIR version as in the context, however it could be that either source or target are in a different FHIR version
 		// if this is the case we do lazy loading of the additional FHIR version into the context
 
-		StructureMap map = context.fetchResource(StructureMap.class, mapUri);
+		StructureMap map = context.fetchResource(StructureMap.class, mapUri, IWorkerContext.VersionResolutionRules.defaultRule());
 		String canonicalSource = getCanonicalFromStructureMap(map, StructureMap.StructureMapModelMode.SOURCE);
 
 		String fhirVersionSource = getFhirVersion(canonicalSource);
@@ -613,7 +614,7 @@ public class MatchboxEngine extends ValidationEngine {
 		}
 
 		org.hl7.fhir.r5.elementmodel.ParserBase parser = Manager.makeParser(context, cntType);
-		StructureDefinition sd = context.fetchResource(StructureDefinition.class, canonicalSource);
+		StructureDefinition sd = context.fetchResource(StructureDefinition.class, canonicalSource, IWorkerContext.VersionResolutionRules.defaultRule());
 		if (sd.getKind() == StructureDefinitionKind.LOGICAL) {
 			parser.setLogical(sd);
 		}
@@ -655,7 +656,9 @@ public class MatchboxEngine extends ValidationEngine {
 		if (contextForFhirVersion != null) {
 			// we need to copy now all StructureDefinitions from this Version to the new context
 			// check first if they are not already defined
-			if (this.getContext().fetchResource(StructureDefinition.class, "http://hl7.org/fhir/"+fhirVersion.substring(0,3)+"/StructureDefinition/StructureDefinition") == null) {
+			if (this.getContext().fetchResource(StructureDefinition.class,
+															"http://hl7.org/fhir/"+fhirVersion.substring(0,3)+"/StructureDefinition" +
+																"/StructureDefinition", IWorkerContext.VersionResolutionRules.defaultRule()) == null) {
 				int len = "http://hl7.org/fhir/".length();
 				for (StructureDefinition sd : contextForFhirVersion.listStructures()) {
 					if (sd.getUrl().startsWith("http://hl7.org/fhir/") && sd.getKind()!=null  && sd.getKind() != StructureDefinition.StructureDefinitionKind.LOGICAL && !"Extensions".equals(sd.getType())) {
@@ -689,7 +692,7 @@ public class MatchboxEngine extends ValidationEngine {
 		TransformSupportServices tss = new TransformSupportServices(targetContext!=null ? targetContext : context, outputs);
 		tss.setTraceToParameter(traceToParameter);
 		StructureMapUtilities scu = new MatchboxStructureMapUtilities(context, tss, this);
-		StructureMap map = context.fetchResource(StructureMap.class, mapUri);
+		StructureMap map = context.fetchResource(StructureMap.class, mapUri, IWorkerContext.VersionResolutionRules.defaultRule());
 		if (map == null) {
 			log.error("Unable to find map " + mapUri + " (Known Maps = " + context.listMapUrls() + ")");
 			throw new Error("Unable to find map " + mapUri + " (Known Maps = " + context.listMapUrls() + ")");
@@ -879,7 +882,7 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @return
 	 */
 	public StructureDefinition getStructureDefinitionR5(final String profile) {
-		return this.getContext().fetchResource(StructureDefinition.class, profile);
+		return this.getContext().fetchResource(StructureDefinition.class, profile, IWorkerContext.VersionResolutionRules.defaultRule());
 	}
 
     /**
@@ -890,10 +893,10 @@ public class MatchboxEngine extends ValidationEngine {
 	 * @return
 	 */
 	public IBaseResource getCanonicalResource(String canonical, String fhirVersion) {
-		org.hl7.fhir.r5.model.Resource fetched = this.getContext().fetchResource(null, canonical);
+		org.hl7.fhir.r5.model.Resource fetched = this.getContext().fetchResource(null, canonical, IWorkerContext.VersionResolutionRules.defaultRule());
 		// allResourcesById is not package aware (???) so we need to fetch it again
 		if (fetched!=null) {
-			org.hl7.fhir.r5.model.Resource fetched2  = this.getContext().fetchResource(fetched.getClass(), canonical);
+			org.hl7.fhir.r5.model.Resource fetched2  = this.getContext().fetchResource(fetched.getClass(), canonical, IWorkerContext.VersionResolutionRules.defaultRule());
 			if (fetched2 != null) {
 				switch(fhirVersion) {
 					case "4.0.1":

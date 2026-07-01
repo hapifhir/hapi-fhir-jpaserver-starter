@@ -22,7 +22,7 @@ public class RequestBuilder {
 	/**
 	 * Constructs a RequestBuilder for a specific FHIR interaction.
 	 *
-	 * @param fhirContext the FHIR context
+	 * @param restfulServer the RestfulServer instance
 	 * @param contextMap  a map containing configuration parameters, including 'resourceType'
 	 * @param interaction the type of interaction (e.g., SEARCH, READ, CREATE, etc.)
 	 */

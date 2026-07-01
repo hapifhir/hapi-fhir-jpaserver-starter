@@ -32,6 +32,7 @@ import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IDomainResource;
 import org.hl7.fhir.instance.model.api.IIdType;
+import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.utils.structuremap.StructureMapUtilities;
 import org.hl7.fhir.utilities.xhtml.NodeType;
 import org.hl7.fhir.utilities.xhtml.XhtmlNode;
@@ -195,7 +196,7 @@ public class StructureMapTransformProvider extends StructureMapResourceProvider 
 		}
 
 		if (source != null) {
-			map = matchboxEngine.getContext().fetchResource(StructureMap.class, source);
+			map = matchboxEngine.getContext().fetchResource(StructureMap.class, source, IWorkerContext.VersionResolutionRules.defaultRule());
 			if (map == null) {
 				throw new UnprocessableEntityException("Map not available with canonical url " + source);
 			}

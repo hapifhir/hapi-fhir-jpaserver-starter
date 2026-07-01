@@ -277,9 +277,9 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 						String spProfile = getContent("search-parameters/OperationOutcomeProfileSearchParameter.json");
 						SearchParameter searchParameterProfileR4 = jsonParser.parseResource(SearchParameter.class, spProfile);
 
-						org.hl7.fhir.r4b.model.SearchParameter searchParameterIgR4B = matchboxFhirVersion.convertToR4B(searchParameterIgR4, org.hl7.fhir.r4b.model.SearchParameter.class);
-						org.hl7.fhir.r4b.model.SearchParameter searchParameterIssueR4B = matchboxFhirVersion.convertToR4B(searchParameterIssueR4, org.hl7.fhir.r4b.model.SearchParameter.class);
-						org.hl7.fhir.r4b.model.SearchParameter searchParameterProfileR4B = matchboxFhirVersion.convertToR4B(searchParameterProfileR4, org.hl7.fhir.r4b.model.SearchParameter.class);
+						org.hl7.fhir.r4b.model.SearchParameter searchParameterIgR4B = MatchboxFhirVersion.convertToR4B(searchParameterIgR4, org.hl7.fhir.r4b.model.SearchParameter.class);
+						org.hl7.fhir.r4b.model.SearchParameter searchParameterIssueR4B = MatchboxFhirVersion.convertToR4B(searchParameterIssueR4, org.hl7.fhir.r4b.model.SearchParameter.class);
+						org.hl7.fhir.r4b.model.SearchParameter searchParameterProfileR4B = MatchboxFhirVersion.convertToR4B(searchParameterProfileR4, org.hl7.fhir.r4b.model.SearchParameter.class);
 
 						dao.create(searchParameterIgR4B, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-ig");
 						dao.create(searchParameterIssueR4B, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-issue");
@@ -320,9 +320,9 @@ public class MatchboxJpaConfig extends StarterJpaConfig {
 						String spProfile = getContent("search-parameters/OperationOutcomeProfileSearchParameter.json");
 						SearchParameter searchParameterProfileR4 = jsonParser.parseResource(SearchParameter.class, spProfile);
 
-						org.hl7.fhir.r5.model.SearchParameter searchParameterIgR5 = matchboxFhirVersion.convertToR5(searchParameterIgR4, org.hl7.fhir.r5.model.SearchParameter.class);
-						org.hl7.fhir.r5.model.SearchParameter searchParameterIssueR5 = matchboxFhirVersion.convertToR5(searchParameterIssueR4, org.hl7.fhir.r5.model.SearchParameter.class);
-						org.hl7.fhir.r5.model.SearchParameter searchParameterProfileR5 = matchboxFhirVersion.convertToR5(searchParameterProfileR4, org.hl7.fhir.r5.model.SearchParameter.class);
+						org.hl7.fhir.r5.model.SearchParameter searchParameterIgR5 = MatchboxFhirVersion.convertToR5(searchParameterIgR4, org.hl7.fhir.r5.model.SearchParameter.class);
+						org.hl7.fhir.r5.model.SearchParameter searchParameterIssueR5 = MatchboxFhirVersion.convertToR5(searchParameterIssueR4, org.hl7.fhir.r5.model.SearchParameter.class);
+						org.hl7.fhir.r5.model.SearchParameter searchParameterProfileR5 = MatchboxFhirVersion.convertToR5(searchParameterProfileR4, org.hl7.fhir.r5.model.SearchParameter.class);
 
 						dao.create(searchParameterIgR5, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-ig");
 						dao.create(searchParameterIssueR5, "url=http://matchbox.health/validation/SearchParameter/operationoutcome-issue");

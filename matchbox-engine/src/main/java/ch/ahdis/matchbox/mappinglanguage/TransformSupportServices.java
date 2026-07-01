@@ -51,7 +51,7 @@ public class TransformSupportServices implements ITransformerServices {
   // matchbox patch https://github.com/ahdis/matchbox/issues/264
   @Override
   public Base createType(Object appInfo, String name, ProfileUtilities profileUtilities) throws FHIRException {
-    StructureDefinition sd = context.fetchResource(StructureDefinition.class, name);
+    StructureDefinition sd = context.fetchResource(StructureDefinition.class, name, IWorkerContext.VersionResolutionRules.defaultRule());
     if (sd == null) {
       if (Utilities.existsInList(name, "http://hl7.org/fhirpath/System.String")) {
         sd = context.fetchTypeDefinition("string"); 
@@ -82,7 +82,7 @@ public class TransformSupportServices implements ITransformerServices {
 
   @Override
   public Base resolveReference(Object appContext, String url) throws FHIRException {	
-   	org.hl7.fhir.r5.model.Resource resource = context.fetchResource(org.hl7.fhir.r5.model.Resource.class, url);
+   	org.hl7.fhir.r5.model.Resource resource = context.fetchResource(org.hl7.fhir.r5.model.Resource.class, url, IWorkerContext.VersionResolutionRules.defaultRule());
    	return resource;
 //    if (resource != null) {
 //      String inStr = FhirContext.forR4Cached().newJsonParser().encodeResourceToString(resource);

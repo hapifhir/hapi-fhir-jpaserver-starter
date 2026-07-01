@@ -3,6 +3,7 @@ package ch.ahdis.matchbox.util;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class PackageCacheInitializer {
 
   private InputStream fetchFromUrlSpecific(String source) throws FHIRException {
     try {
-      URL url = new URL(source);
+      URL url = new URI(source).toURL();
       URLConnection c = url.openConnection();
       return c.getInputStream();
     } catch (Exception e) {

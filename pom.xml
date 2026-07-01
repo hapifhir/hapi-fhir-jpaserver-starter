@@ -52,9 +52,10 @@
         <commons_lang3_version>3.20.0</commons_lang3_version>
         <junit_version>5.14.3</junit_version>
         <logback_version>1.5.29</logback_version>
-        <jackson_version>2.19.4</jackson_version>
-        <okhttp_version>4.12.0</okhttp_version>
-        <log4j_to_slf4j_version>2.19.0</log4j_to_slf4j_version>
+        <jackson_version>2.22.0</jackson_version>
+        <jackson_annotations_version>2.22</jackson_annotations_version>
+        <okhttp_version>5.3.2</okhttp_version>
+        <log4j_to_slf4j_version>2.26.0</log4j_to_slf4j_version>
         <spring_version>6.2.18</spring_version>
         <spring_context_version>6.2.18</spring_context_version>
         <spring_boot_version>3.5.14</spring_boot_version>
@@ -85,6 +86,8 @@
         <snakeyaml_version>2.6</snakeyaml_version>
         <org_commonmark_version>0.29.0</org_commonmark_version>
         <apache_poi_version>5.5.1</apache_poi_version>
+        <langchain4j_version>1.17.0</langchain4j_version>
+        <spring_ai_mcp_version>2.0.0</spring_ai_mcp_version>
 
         <excludePackageNames>org.hl7.*:ca.uhn.*</excludePackageNames>
     </properties>
@@ -331,7 +334,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
-                <version>2.21.2</version>
+                <version>${jackson_version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -341,7 +344,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>${jackson_version}</version>
+                <version>${jackson_annotations_version}</version>
             </dependency>
             <!-- This dependency is used for the "FHIR Tester" web app overlay <dependency><groupId>ca.uhn.hapi.fhir</groupId><artifactId>hapi-fhir-testpage-overlay</artifactId><version>${hapi.fhir.version}</version><type>war</type><scope>provided</scope></dependency><dependency><groupId>ca.uhn.hapi.fhir</groupId><artifactId>hapi-fhir-testpage-overlay</artifactId><version>${hapi.fhir.version}</version><classifier>classes</classifier></dependency> -->
             <dependency>
@@ -497,6 +500,11 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring_version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
                 <version>${spring_boot_version}</version>
@@ -558,6 +566,33 @@
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
                 <version>${beanutils_version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>dev.langchain4j</groupId>
+                <artifactId>langchain4j</artifactId>
+                <version>${langchain4j_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.langchain4j</groupId>
+                <artifactId>langchain4j-open-ai</artifactId>
+                <version>${langchain4j_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.langchain4j</groupId>
+                <artifactId>langchain4j-anthropic</artifactId>
+                <version>${langchain4j_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.langchain4j</groupId>
+                <artifactId>langchain4j-google-ai-gemini</artifactId>
+                <version>${langchain4j_version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-starter-mcp-server</artifactId>
+                <version>${spring_ai_mcp_version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

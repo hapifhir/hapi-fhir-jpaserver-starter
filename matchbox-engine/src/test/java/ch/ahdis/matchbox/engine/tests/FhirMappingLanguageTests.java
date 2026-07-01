@@ -40,6 +40,7 @@ import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Questionnaire;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.StructureMap;
+import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.formats.JsonParser;
 import org.hl7.fhir.r5.model.Composition;
 import org.junit.jupiter.api.AfterAll;
@@ -143,7 +144,7 @@ class FhirMappingLanguageTests {
 		assertTrue(sm != null);
 		engine.addCanonicalResource(sm);
 		assertTrue(engine.getCanonicalResource(sm.getUrl(), "4.0.1") != null);
-		assertTrue(engine.getContext().fetchResource(org.hl7.fhir.r5.model.StructureMap.class, sm.getUrl()) != null);
+		assertTrue(engine.getContext().fetchResource(org.hl7.fhir.r5.model.StructureMap.class, sm.getUrl(), IWorkerContext.VersionResolutionRules.defaultRule()) != null);
 
 		String qr = getFileAsStringFromResources("/questionnairepatient.xml");
 
@@ -153,7 +154,7 @@ class FhirMappingLanguageTests {
 		engine.addCanonicalResource(questionnaire);
 		assertTrue(engine.getCanonicalResource(questionnaire.getUrl(), "4.0.1") != null);
 		assertTrue(engine.getContext().fetchResource(org.hl7.fhir.r5.model.Questionnaire.class,
-				questionnaire.getUrl()) != null);
+				questionnaire.getUrl(), IWorkerContext.VersionResolutionRules.defaultRule()) != null);
 		assertTrue(engine.getCanonicalResourceById("Questionnaire", questionnaire.getId()) != null);
 	}
 

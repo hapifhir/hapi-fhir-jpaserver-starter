@@ -35,6 +35,7 @@ spring:
         enabled: false
         name: matchbox-mcp
         version: ${project.version}
+        protocol: STREAMABLE
         # These 3 paths have been carefully crafted, change them at your own risk!
         base-url: ../
         sse-endpoint: mcp/sse

@@ -33,6 +33,7 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IDomainResource;
 import org.hl7.fhir.instance.model.api.IIdType;
 import org.hl7.fhir.r4.model.MetadataResource;
+import org.hl7.fhir.r5.context.IWorkerContext;
 import org.hl7.fhir.r5.model.BooleanType;
 import org.hl7.fhir.r5.model.CanonicalType;
 import org.hl7.fhir.r5.model.StringType;
@@ -155,7 +156,7 @@ public class ConformancePackageResourceProvider<R4 extends MetadataResource, R4B
 
 				if (theUrl != null) {
 					String url = theUrl.getValuesAsQueryTokens().get(0).getValuesAsQueryTokens().get(0).getValue();
-					R5 r = matchboxEngine.getContext().fetchResource(classR5, url);
+					R5 r = matchboxEngine.getContext().fetchResource(classR5, url, IWorkerContext.VersionResolutionRules.defaultRule());
 					if (r != null)
 						resources.add(r);
 				} else {

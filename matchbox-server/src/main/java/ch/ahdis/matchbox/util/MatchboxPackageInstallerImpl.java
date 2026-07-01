@@ -358,7 +358,7 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 		if (validForUpload(theResource)) {
 			if (searchResult.isEmpty()) {
 
-				ourLog.debug("Creating new resource matching {}", map.toNormalizedQueryString(myFhirContext));
+				ourLog.debug("Creating new resource matching {}", map.toNormalizedQueryString());
 				theOutcome.incrementResourcesInstalled(myFhirContext.getResourceType(theResource));
 
 				IIdType id = theResource.getIdElement();
@@ -372,10 +372,10 @@ public class MatchboxPackageInstallerImpl implements IPackageInstallerSvc {
 						id.setParts(id.getBaseUrl(), id.getResourceType(), newIdPart, id.getVersionIdPart());
 					}
 					updateResource(dao, theResource);
-					ourLog.info("Created resource with existing id " + id.toString());
+					ourLog.info("Created resource with existing id " + id);
 				}
 			} else {
-				ourLog.debug("Updating existing resource matching {}", map.toNormalizedQueryString(myFhirContext));
+				ourLog.debug("Updating existing resource matching {}", map.toNormalizedQueryString());
 				theResource.setId(searchResult.getResources(0, 1).get(0).getIdElement().toUnqualifiedVersionless());
 				DaoMethodOutcome outcome = updateResource(dao, theResource);
 				if (!outcome.isNop()) {

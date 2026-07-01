@@ -549,10 +549,10 @@ public class MatchboxEngineSupport {
 		validator.setDebug(cli.isDoDebug());
 		validator.getContext().setLogger(new EngineLoggingService());
 
-		validator.setQuestionnaireMode(cli.getQuestionnaireMode());
-		validator.setLevel(cli.getLevel());
+		validator.getDefaultInstanceValidatorParameters().setQuestionnaireMode(cli.getQuestionnaireMode());
+		validator.getDefaultInstanceValidatorParameters().setLevel(cli.getLevel());
 		validator.setDoNative(cli.isDoNative());
-		validator.setHintAboutNonMustSupport(cli.isHintAboutNonMustSupport());
+		validator.getDefaultInstanceValidatorParameters().setHintAboutNonMustSupport(cli.isHintAboutNonMustSupport());
 		validator.setAnyExtensionsAllowed(false);
 		if (cli.getExtensions() != null) {
 			for (final String s : cli.getExtensions()) {
@@ -569,33 +569,33 @@ public class MatchboxEngineSupport {
 			validator.setSnomedExtension(cli.getSnomedCT());
 		}
 		validator.setDisplayWarnings(cli.isDisplayIssuesAreWarnings());
-		validator.setAssumeValidRestReferences(cli.isAssumeValidRestReferences());
-		validator.setShowMessagesFromReferences(cli.isShowMessagesFromReferences());
-		validator.setDoImplicitFHIRPathStringConversion(cli.isDoImplicitFHIRPathStringConversion());
-		validator.setHtmlInMarkdownCheck(cli.getHtmlInMarkdownCheck());
+		validator.getDefaultInstanceValidatorParameters().setAssumeValidRestReferences(cli.isAssumeValidRestReferences());
+		validator.getDefaultInstanceValidatorParameters().setShowMessagesFromReferences(cli.isShowMessagesFromReferences());
+		validator.getDefaultInstanceValidatorParameters().setDoImplicitFHIRPathStringConversion(cli.isDoImplicitFHIRPathStringConversion());
+		validator.getDefaultInstanceValidatorParameters().setHtmlInMarkdownCheck(cli.getHtmlInMarkdownCheck());
 		validator.setNoExtensibleBindingMessages(cli.isNoExtensibleBindingMessages());
-		validator.setNoUnicodeBiDiControlChars(cli.isNoUnicodeBiDiControlChars());
-		validator.setNoInvariantChecks(cli.isNoInvariants());
-		validator.setWantInvariantInMessage(cli.isWantInvariantsInMessages());
-		validator.setSecurityChecks(cli.isSecurityChecks());
-		validator.setCrumbTrails(cli.isCrumbTrails());
-		validator.setShowMessageIds(cliContext.isShowMessageIds());
-		validator.setForPublication(cli.isForPublication());
+		validator.getDefaultInstanceValidatorParameters().setNoUnicodeBiDiControlChars(cli.isNoUnicodeBiDiControlChars());
+		validator.getDefaultInstanceValidatorParameters().setNoInvariants(cli.isNoInvariants());
+		validator.getDefaultInstanceValidatorParameters().setWantInvariantsInMessages(cli.isWantInvariantsInMessages());
+		validator.getDefaultInstanceValidatorParameters().setSecurityChecks(cli.isSecurityChecks());
+		validator.getDefaultInstanceValidatorParameters().setCrumbTrails(cli.isCrumbTrails());
+		validator.getDefaultInstanceValidatorParameters().setShowMessageIds(cliContext.isShowMessageIds());
+		validator.getDefaultInstanceValidatorParameters().setForPublication(cli.isForPublication());
 		validator.setShowTimes(true);
-		validator.setAllowExampleUrls(cli.isAllowExampleUrls());
-		validator.setCheckIPSCodes(cli.isCheckIpsCodes());
+		validator.getDefaultInstanceValidatorParameters().setAllowExampleUrls(cli.isAllowExampleUrls());
+		validator.getDefaultInstanceValidatorParameters().setCheckIPSCodes(cli.isCheckIpsCodes());
 		if (cli.getBundle() != null) {
-			validator.setQuestionnaireMode(cli.getQuestionnaireMode());
+			validator.getDefaultInstanceValidatorParameters().setQuestionnaireMode(cli.getQuestionnaireMode());
 			String[] bundle = cli.getBundle().split(" ");
 			if (bundle.length != 2) {
 				log.error("Bundle parameter must have two values, the rule and the profile, ignoring the bundle parameter");
 			} else {
 				String rule = bundle[0];
 				String profile = bundle[1];
-				validator.getBundleValidationRules().add(new org.hl7.fhir.r5.utils.validation.BundleValidationRule().setRule(rule).setProfile(profile));
+				validator.getDefaultInstanceValidatorParameters().getBundleValidationRules().add(new org.hl7.fhir.r5.utils.validation.BundleValidationRule().setRule(rule).setProfile(profile));
 			}
 		}
-		validator.setR5BundleRelativeReferencePolicy(R5BundleRelativeReferencePolicy.fromCode(cli.getR5BundleRelativeReferencePolicy()));
+		validator.getDefaultInstanceValidatorParameters().setR5BundleRelativeReferencePolicy(R5BundleRelativeReferencePolicy.fromCode(cli.getR5BundleRelativeReferencePolicy()));
 	    ReferenceValidationPolicy refpol = ReferenceValidationPolicy.CHECK_VALID;
 		if (!cli.isDisableDefaultResourceFetcher()) {
 			StandAloneValidatorFetcher fetcher = new StandAloneValidatorFetcher(validator.getPcm(), validator.getContext(),
@@ -618,7 +618,7 @@ public class MatchboxEngineSupport {
 		validator.getPolicyAdvisor().setPolicyAdvisor(new ValidationPolicyAdvisor(validator.getPolicyAdvisor() == null ? refpol : validator.getPolicyAdvisor().getReferencePolicy(), cli.getCheckReferencesTo() != null ? new HashSet<>(Arrays.asList(cli.getCheckReferencesTo())) : Collections.emptySet()));
 
 		if (cli.getJurisdiction() != null) {
-			validator.setJurisdiction(CodeSystemUtilities.readCoding(cli.getJurisdiction()));
+			validator.getDefaultInstanceValidatorParameters().setJurisdiction(cli.getJurisdiction());
 		}
 		// TerminologyCache.setNoCaching(cliContext.isNoInternalCaching());
 
