@@ -52,7 +52,8 @@
         <commons_lang3_version>3.20.0</commons_lang3_version>
         <junit_version>5.14.3</junit_version>
         <logback_version>1.5.29</logback_version>
-        <jackson_version>2.22.0</jackson_version>
+        <jackson2_version>2.22.0</jackson2_version>
+        <jackson3_version>3.2.0</jackson3_version>
         <jackson_annotations_version>2.22</jackson_annotations_version>
         <okhttp_version>5.3.2</okhttp_version>
         <log4j_to_slf4j_version>2.26.0</log4j_to_slf4j_version>
@@ -329,22 +330,38 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.datatype</groupId>
                 <artifactId>jackson-datatype-jsr310</artifactId>
-                <version>${jackson_version}</version>
+                <version>${jackson2_version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
-                <version>${jackson_version}</version>
+                <version>${jackson2_version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>${jackson_version}</version>
+                <version>${jackson2_version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
                 <version>${jackson_annotations_version}</version>
+            </dependency>
+            <dependency>
+                <!-- Added to solve CVE-2026-29062 and GHSA-2m67-wjpj-xhg9
+                     Introduced by org.springframework.ai:spring-ai-starter-mcp-server:2.0.0
+                     We need Jackson >= 3.1.1 -->
+                <groupId>tools.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${jackson3_version}</version>
+            </dependency>
+            <dependency>
+                <!-- Added to solve CVE-2026-29062 and GHSA-2m67-wjpj-xhg9
+                     Introduced by org.springframework.ai:spring-ai-starter-mcp-server:2.0.0
+                     We need Jackson >= 3.1.1 -->
+                <groupId>tools.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson3_version}</version>
             </dependency>
             <!-- This dependency is used for the "FHIR Tester" web app overlay <dependency><groupId>ca.uhn.hapi.fhir</groupId><artifactId>hapi-fhir-testpage-overlay</artifactId><version>${hapi.fhir.version}</version><type>war</type><scope>provided</scope></dependency><dependency><groupId>ca.uhn.hapi.fhir</groupId><artifactId>hapi-fhir-testpage-overlay</artifactId><version>${hapi.fhir.version}</version><classifier>classes</classifier></dependency> -->
             <dependency>
@@ -593,6 +610,19 @@
                 <groupId>org.springframework.ai</groupId>
                 <artifactId>spring-ai-starter-mcp-server</artifactId>
                 <version>${spring_ai_mcp_version}</version>
+            </dependency>
+
+            <dependency>
+                <!-- Added to fix CVE-2026-45292, need >= 1.62.0 -->
+                <groupId>io.opentelemetry</groupId>
+                <artifactId>opentelemetry-api</artifactId>
+                <version>1.62.0</version>
+            </dependency>
+            <dependency>
+                <!-- Added to fix CVE-2026-43869, need >= 0.23.0 -->
+                <groupId>org.apache.thrift</groupId>
+                <artifactId>libthrift</artifactId>
+                <version>0.23.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
