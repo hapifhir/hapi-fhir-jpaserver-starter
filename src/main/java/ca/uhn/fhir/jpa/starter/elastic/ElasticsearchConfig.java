@@ -10,6 +10,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -20,10 +21,22 @@ import java.util.List;
 /**
  * Custom Elasticsearch configuration that creates the ElasticsearchClient bean
  * without the sniffer. This is used when the default Spring Boot autoconfiguration
- * is excluded.
+ * ({@code ElasticsearchRestClientAutoConfiguration}) is excluded.
+ *
+ * <p>That autoconfiguration is what enables Elasticsearch node sniffing: in Spring Boot 3
+ * its {@code RestClientSnifferConfiguration} unconditionally registers a {@code Sniffer}
+ * bean whenever the {@code elasticsearch-rest-client-sniffer} JAR is on the classpath (it
+ * arrives transitively via hapi-fhir-jpaserver-base). The sniffer periodically queries
+ * {@code _nodes/http} and then tries to talk to the node publish addresses directly, which
+ * fails (repeated {@code ConnectException}) whenever ES sits behind a proxy/LB/k8s.
+ *
+ * <p>Because that autoconfiguration also provides the {@link ElasticsearchProperties} bean
+ * via {@code @EnableConfigurationProperties}, we re-declare it here so this config keeps
+ * working while the autoconfiguration stays excluded (see application-elastic.yaml).
  */
 @Configuration
 @Conditional(ElasticConfigCondition.class)
+@EnableConfigurationProperties(ElasticsearchProperties.class)
 public class ElasticsearchConfig {
 
 	@Bean
