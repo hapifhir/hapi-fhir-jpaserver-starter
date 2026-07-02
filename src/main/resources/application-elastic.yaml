@@ -4,9 +4,13 @@ spring:
     username: elastic
     password: elastic
 
-  autoconfigure:
-    # This empty exclude is needed to override the default exclusion of the Elasticsearch configuration.
-    exclude:
+  # NOTE: We intentionally do NOT override spring.autoconfigure.exclude here, so the base
+  # application.yaml exclusion of ElasticsearchRestClientAutoConfiguration stays in effect.
+  # That autoconfiguration would otherwise register a node-sniffing Sniffer bean (Spring Boot 3
+  # does so whenever elasticsearch-rest-client-sniffer is on the classpath), causing repeated
+  # "error while sniffing nodes" ConnectExceptions when ES is behind a proxy/LB. The custom
+  # ca.uhn.fhir.jpa.starter.elastic.ElasticsearchConfig provides the RestClient/ElasticsearchClient
+  # (without a sniffer) and the ElasticsearchProperties bean instead.
 
   jpa:
     properties:
@@ -29,6 +33,17 @@ spring:
               settings_file: ca/uhn/fhir/jpa/elastic/index-settings.json
               minimal_required_status_wait_timeout: 10000
               minimal_required_status: YELLOW
+
+            # Node discovery / sniffing for Hibernate Search's OWN Elasticsearch client.
+            # Default false. Only enable if HS should sniff cluster nodes; avoid behind a
+            # proxy/LB/k8s, where the sniffed node addresses are not reachable and you get
+            # repeated "error while sniffing nodes" ConnectExceptions.
+            # This is independent of the Spring-side sniffer used by the direct client in
+            # ca.uhn.fhir.jpa.starter.elastic.ElasticsearchConfig (enable that one via
+            # spring.elasticsearch.restclient.sniffer.enabled=true).
+            discovery:
+              enabled: false
+              # refresh_interval: 10  # seconds between sniffs when enabled
 
             dynamic_mapping: true
           indexing:
