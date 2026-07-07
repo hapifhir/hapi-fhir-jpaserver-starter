@@ -201,11 +201,13 @@ hapi:
     #     version: 0.8.0
     #     reloadExisting: false
     #     installMode: STORE_AND_INSTALL
+    #     fetchDependencies: true # Install package dependencies. Requires install_transitive_ig_dependencies=true to recursively install all dependency levels. If false, only direct dependencies declared in package.json are installed
+    #     dependencyExcludes: [] # ignore certain packages
     #   ips_1_0_0:
     #     packageUrl: https://costateixeira.github.io/smart-ips-pilgrimage-fulltest/package.tgz
     #     name: smart.who.int.ips-pilgrimage-test
     #     version: 0.1.0
-    #     installMode: STORE_AND_INSTALL
+    #     installMode: STORE_AND_INSTALL 
     # additionalResourceFolders:
     #   - example
     #   - example2
