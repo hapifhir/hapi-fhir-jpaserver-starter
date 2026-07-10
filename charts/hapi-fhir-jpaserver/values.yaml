@@ -1,6 +1,3 @@
-# -- number of replicas to deploy
-replicaCount: 1
-
 image:
   # -- registry where the HAPI FHIR server image is hosted
   registry: docker.io
@@ -197,6 +194,24 @@ podDisruptionBudget:
   minAvailable: 1
   # -- maximum unavailable instances
   maxUnavailable: ""
+
+# -- Controls the number of pods to deploy
+# Either user the simple replicaCount, or a more complex horizontalPodAutoscaler config
+# -- Simple number of replicas
+replicaCount: 1
+# -- Autoscaling, dynamic number of instances based on metrics
+# horizontalPodAutoscaler:
+#   # -- minimum number of instances (optional, defaults to one)
+#   minReplicas: 1
+#   # -- maximum number of instances (even is metrics are high, no scaling is done after this point)
+#   maxReplicas: 10
+#   metrics:
+#     - type: Resource
+#       resource:
+#         name: cpu
+#         target:
+#           type: Utilization
+#           averageUtilization: 50
 
 serviceAccount:
   # -- Specifies whether a service account should be created.

@@ -9,7 +9,9 @@ metadata:
     {{- toYaml . | nindent 8 }}
   {{- end }}
 spec:
+  {{- if .Values.replicaCount }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "hapi-fhir-jpaserver.selectorLabels" . | nindent 6 }}
