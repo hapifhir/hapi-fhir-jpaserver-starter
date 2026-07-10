@@ -266,6 +266,7 @@ tests:
     seccompProfile:
       type: RuntimeDefault
 
+# -- Configures the default init container (which waits for the database to be ready)
 initContainers:
   # -- set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge).
   # This is ignored if `resources` is set (`resources` is recommended for production).
@@ -278,6 +279,9 @@ initContainers:
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
+
+# -- Optionally specify extra init containers
+extraInitContainers: []
 
 # -- additional Spring Boot application config. Mounted as a file and automatically loaded by the application.
 extraConfig:

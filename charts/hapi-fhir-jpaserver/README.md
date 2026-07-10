@@ -1,6 +1,6 @@
 # HAPI FHIR JPA Server Starter Helm Chart
 
-![Version: 0.23.0](https://img.shields.io/badge/Version-0.23.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.8.0](https://img.shields.io/badge/AppVersion-8.8.0-informational?style=flat-square)
+![Version: 0.24.0](https://img.shields.io/badge/Version-0.24.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.8.0](https://img.shields.io/badge/AppVersion-8.8.0-informational?style=flat-square)
 
 This helm chart will help you install the HAPI FHIR JPA Server in a Kubernetes environment.
 
@@ -32,6 +32,7 @@ helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 | externalDatabase.user | string | `"fhir"` | username for the external database |
 | extraConfig | string | `""` | additional Spring Boot application config. Mounted as a file and automatically loaded by the application. |
 | extraEnv | list | `[]` | extra environment variables to set on the server container |
+| extraInitContainers | list | `[]` | Optionally specify extra init containers |
 | extraVolumeMounts | list | `[]` | Optionally specify extra list of additional volumeMounts |
 | extraVolumes | list | `[]` | Optionally specify extra list of additional volumes |
 | fullnameOverride | string | `""` | override the chart fullname |
@@ -46,6 +47,7 @@ helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 | ingress.hosts[0].pathType | string | `"ImplementationSpecific"` |  |
 | ingress.hosts[0].paths[0] | string | `"/"` |  |
 | ingress.tls | list | `[]` | ingress TLS config |
+| initContainers | object | `{"resources":{},"resourcesPreset":"nano"}` | Configures the default init container (which waits for the database to be ready) |
 | initContainers.resources | object | `{}` | configure the init containers pods resource requests and limits |
 | initContainers.resourcesPreset | string | `"nano"` | set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if `resources` is set (`resources` is recommended for production). |
 | metrics.service.port | int | `8081` |  |
