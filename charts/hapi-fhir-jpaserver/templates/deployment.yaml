@@ -56,6 +56,9 @@ spec:
                 echo "Waiting for DB ${PGUSER}@${PGHOST}:${PGPORT} to be up";
                 sleep 15;
               done;
+        {{- if .Values.extraInitContainers }}
+        {{- toYaml .Values.extraInitContainers | nindent 8 }}
+        {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
