@@ -1,0 +1,34 @@
+# Headless Service - khusus untuk peer-discovery antar-pod, BUKAN untuk
+# traffic FHIR normal (traffic normal tetap lewat Service "hapi" ClusterIP
+# biasa yang sudah ada di manifest utama kamu).
+#
+# Kenapa ini dibutuhkan: endpoint /internal/consent-cache/invalidate di HAPI
+# menyimpan cache consent list in-memory PER-POD (per-JVM). Kalau
+# `replicas` di Deployment "hapi" nanti di-set > 1, Service ClusterIP biasa
+# cuma meneruskan request ke 1 pod (dipilih kube-proxy secara acak/round-robin)
+# - jadi pod lain tetap pakai cache basi walau sudah ada notifikasi invalidasi.
+#
+# Dengan Service headless (clusterIP: None), DNS lookup ke nama service ini
+# akan mengembalikan SEMUA IP pod yang match selector `app: hapi` - caller
+# (consent registry / webhook Go) bisa resolve semua IP lalu memanggil
+# endpoint invalidasi ke TIAP pod satu-satu, bukan cuma 1.
+#
+# Selama replicas: 1 (kondisi sekarang), Service ini tidak berpengaruh apa-apa
+# - baru relevan kalau nanti di-scale ke lebih dari 1 replica.
+apiVersion: v1
+kind: Service
+metadata:
+  name: hapi-headless
+  namespace: hapi-sandbox
+  labels:
+    app: hapi
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  selector:
+    app: hapi
+  ports:
+    - protocol: TCP
+      name: http
+      port: 8080
+      targetPort: 8080

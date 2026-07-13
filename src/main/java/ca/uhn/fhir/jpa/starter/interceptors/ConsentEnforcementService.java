@@ -7,7 +7,6 @@ import ca.uhn.fhir.rest.api.server.RequestDetails;
 import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException;
 import ca.uhn.fhir.rest.server.interceptor.consent.ConsentOutcome;
 import ca.uhn.fhir.rest.server.interceptor.consent.IConsentContextServices;
-import ca.uhn.fhir.rest.server.interceptor.consent.IConsentService;
 
 import java.util.ArrayList;
 
@@ -17,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ConsentEnforcementService implements IConsentService {
+public class ConsentEnforcementService implements IConsentEnforcementService {
     private LoaderWithCache loader;
     private String orgId;
     private PolicyEvaluator policyEvaluator;

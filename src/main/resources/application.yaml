@@ -395,7 +395,7 @@ hapi:
     # comma-separated package names, will be @ComponentScan'ed by Spring to allow for creating custom Spring beans
 
     # custom-bean-packages:
-    # custom-interceptor-classes:
+    custom-interceptor-classes: ca.uhn.fhir.jpa.starter.interceptors.ConsentEnforcementInterceptor,ca.uhn.fhir.jpa.starter.interceptors.ResourceManipulationInterceptor
     # custom-provider-classes:
     
     # store_meta_source_information: NONE

@@ -57,7 +57,16 @@ public class ConsentProperties {
     /**
      * URL for consent registry service
      */
+    // TODO: ganti ini dengan ENV VARIABLE AGAR DINAMIS TIDAK HARDCODE
     private String urlConsentRegistry = "http://localhost:7272/api/consent";
+
+    /**
+     * Shared secret untuk otentikasi endpoint invalidasi cache consent
+     * (dipanggil oleh consent registry setiap ada perubahan Consent/Provision).
+     * Kosong secara default - endpoint invalidasi akan menolak semua request
+     * kalau secret ini belum di-set (fail-closed).
+     */
+    private String cacheInvalidationSecret = "";
 
     public String getEnvironment() {
         return environment;
@@ -105,6 +114,14 @@ public class ConsentProperties {
 
     public void setUrlConsentRegistry(String urlConsentRegistry) {
         this.urlConsentRegistry = urlConsentRegistry;
+    }
+
+    public String getCacheInvalidationSecret() {
+        return cacheInvalidationSecret;
+    }
+
+    public void setCacheInvalidationSecret(String cacheInvalidationSecret) {
+        this.cacheInvalidationSecret = cacheInvalidationSecret;
     }
 
     /**

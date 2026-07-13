@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Consent;
-import org.hl7.fhir.r4.model.Encounter;
 import org.hl7.fhir.r4.model.IdType;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -42,11 +41,20 @@ public class LoaderWithCache {
         this.fhirContext = fhirContext;
     }
 
+    /**
+     * Invalidate cache consent list utk satu organisasi. Dipanggil dari luar
+     * (lewat endpoint invalidasi) setiap ada perubahan Consent/Provision di
+     * registry, supaya request berikutnya fetch data fresh, bukan cache lama.
+     */
+    public void invalidateConsentList(String orgId) {
+        cache.invalidate(CacheEnum.CONSENT_LIST, orgId);
+    }
+
     public <T extends IBaseResource> T getResource(String resourceId, Class<? extends T> clz, RequestDetails theRequestDetails) {
         if (resourceId == null)
             return null;
 
-        CacheEnum cacheEnum = CacheEnum.fromResourceType(clz.getName());
+        CacheEnum cacheEnum = CacheEnum.fromResourceType(clz.getSimpleName());
         if (cacheEnum == null)
             return null;
 
@@ -54,7 +62,7 @@ public class LoaderWithCache {
         T resource = cache.getIfPresent(cacheEnum, resourceId);
         if (resource == null) {
             // Ambil dari DaoRegistry
-            resource = loadResourceFromDaoRegistry(resourceId, theRequestDetails);
+            resource = loadResourceFromDaoRegistry(resourceId, clz, theRequestDetails);
         }
 
         if (resource != null) {
@@ -65,11 +73,14 @@ public class LoaderWithCache {
         return resource;
     }
 
-    private <T extends IBaseResource> T loadResourceFromDaoRegistry(String resourceId, RequestDetails theRequestDetails) {
+    private <T extends IBaseResource> T loadResourceFromDaoRegistry(String resourceId, Class<? extends T> clz, RequestDetails theRequestDetails) {
         try {
-            IFhirResourceDao<T> resourceDao = (IFhirResourceDao<T>) resourceDaoRegistry.getResourceDao(Encounter.class);
+            IFhirResourceDao<T> resourceDao = (IFhirResourceDao<T>) resourceDaoRegistry.getResourceDao(clz);
             return resourceDao.read(new IdType(resourceId), theRequestDetails);
         } catch (Exception e) {
+            // Jangan ditelan diam-diam - kalau tidak, resource yang gagal di-fetch
+            // akan selalu terlihat seperti "tidak ditemukan" tanpa penjelasan.
+            e.printStackTrace();
             return null;
         }
     }
@@ -121,18 +132,34 @@ public class LoaderWithCache {
                 String responseBody = response.getBody();
 
                 if (responseBody.startsWith("{")) {
-                    ErrorResponse errorResponse = objectMapper.readValue(responseBody, ErrorResponse.class);
-                    if (errorResponse.message != null) {
-                        throw new Exception("[Err: " + errorResponse.errorCode + " : HTTP:" + errorResponse.httpCode + "]" + errorResponse.message);
+                    com.fasterxml.jackson.databind.JsonNode rootNode = objectMapper.readTree(responseBody);
+                    String resourceType = rootNode.has("resourceType") ? rootNode.get("resourceType").asText() : null;
+
+                    if ("Bundle".equals(resourceType)) {
+                        // Support format Bundle (mis. hasil endpoint lain / versi registry lain)
+                        Bundle bundle = fhirContext.newJsonParser().parseResource(Bundle.class, responseBody);
+                        for (Bundle.BundleEntryComponent entry : bundle.getEntry()) {
+                            if (entry.getResource() instanceof Consent) {
+                                consents.add((Consent) entry.getResource());
+                            }
+                        }
+                    } else if ("Consent".equals(resourceType)) {
+                        // Support format single resource Consent (bukan array/bundle)
+                        Consent consent = fhirContext.newJsonParser().parseResource(Consent.class, responseBody);
+                        consents.add(consent);
+                    } else {
+                        ErrorResponse errorResponse = objectMapper.treeToValue(rootNode, ErrorResponse.class);
+                        if (errorResponse.message != null) {
+                            throw new Exception("[Err: " + errorResponse.errorCode + " : HTTP:" + errorResponse.httpCode + "]" + errorResponse.message);
+                        }
                     }
                 } else if (responseBody.startsWith("[")) {
-                    Bundle bundle = fhirContext.newJsonParser().parseResource(
-                        Bundle.class, responseBody);
-
-                    for (Bundle.BundleEntryComponent entry : bundle.getEntry()) {
-                        if (entry.getResource() instanceof Consent) {
-                            consents.add((Consent) entry.getResource());
-                        }
+                    // Consent registry mengembalikan array JSON polos berisi resource Consent
+                    // (bukan FHIR Bundle), jadi setiap elemen di-parse satu per satu.
+                    com.fasterxml.jackson.databind.JsonNode arrayNode = objectMapper.readTree(responseBody);
+                    for (com.fasterxml.jackson.databind.JsonNode node : arrayNode) {
+                        Consent consent = fhirContext.newJsonParser().parseResource(Consent.class, node.toString());
+                        consents.add(consent);
                     }
                 }
             }

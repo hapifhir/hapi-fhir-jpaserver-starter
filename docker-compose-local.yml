@@ -1,0 +1,77 @@
+services:
+  hapi-fhir-jpaserver-start:
+    build: .
+    container_name: hapi-fhir-jpaserver-start
+    restart: on-failure
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://hapi-fhir-postgres:5432/hapi"
+      SPRING_DATASOURCE_USERNAME: "admin"
+      SPRING_DATASOURCE_PASSWORD: "admin"
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: "org.postgresql.Driver"
+      HIBERNATE_DIALECT: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
+      # URL registry Consent eksternal. Ini binding ke field ConsentProperties.urlConsentRegistry
+      # (prefix hapi.policy, flat field -> env var HAPI_POLICY_URL_CONSENT_REGISTRY).
+      # PENTING: kalau consent registry jalan di HOST machine (bukan container lain di
+      # compose ini), JANGAN pakai "localhost" - dari dalam container, localhost merujuk
+      # ke container itu sendiri, bukan ke host. Pakai host.docker.internal (lihat
+      # extra_hosts di bawah, wajib di Linux).
+      HAPI_POLICY_URL_CONSENT_REGISTRY: "http://host.docker.internal:4023/api/consent"
+      # Shared secret untuk endpoint invalidasi cache consent (/internal/consent-cache/invalidate).
+      # Consent registry (Go) harus kirim header X-Cache-Invalidation-Secret dengan value yang
+      # SAMA PERSIS ini setiap memanggil endpoint tsb. Ganti dengan value acak yang kuat sebelum
+      # dipakai di luar testing lokal.
+      HAPI_POLICY_CACHE_INVALIDATION_SECRET: "J9gTq8fNnr63gBoxtABTFjqZ"
+      # Default HAPI (ALPHANUMERIC) menolak client-assigned ID yang cuma angka murni
+      # (mis. PUT Organization/9900000000 -> HAPI-0960). Perlu ANY supaya seed data
+      # dengan ID numerik tetap (KEMENKES = 9900000000) bisa dibuat pakai PUT.
+      HAPI_FHIR_CLIENT_ID_STRATEGY: "ANY"
+    ports:
+      - "8080:8080"
+    # Uncomment untuk health check periodik.
+    # healthcheck:
+    #   test: ["CMD", "java", "-cp", "/app", "HealthCheck"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   start_period: 60s
+    #   retries: 3
+    depends_on:
+      hapi-fhir-postgres:
+        condition: service_healthy
+      # Uncomment kalau service consent-registry sudah kamu tambahkan di file ini
+      # consent-registry:
+      #   condition: service_started
+    networks:
+      - satusehat-net
+    extra_hosts:
+      # Wajib di Linux supaya host.docker.internal bisa resolve ke host machine
+      # (di Docker Desktop Mac/Windows biasanya sudah otomatis tanpa ini).
+      - "host.docker.internal:host-gateway"
+
+  hapi-fhir-postgres:
+    image: postgres:16-alpine
+    container_name: hapi-fhir-postgres
+    environment:
+      POSTGRES_DB: "hapi"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U admin -d hapi' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      start_period: 5s
+      retries: 5
+    volumes:
+      - ~/project/kamscode/docker-data/fhir-postgres/data:/var/lib/postgresql/data
+    networks:
+      - satusehat-net
+
+  adminer:
+      image: adminer
+      ports:
+        - "8081:8080"
+      networks:
+        - satusehat-net
+
+networks:
+  satusehat-net:
+    driver: bridge

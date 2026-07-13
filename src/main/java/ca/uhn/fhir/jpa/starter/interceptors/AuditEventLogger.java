@@ -6,6 +6,7 @@ import org.hl7.fhir.r4.model.AuditEvent.AuditEventAgentComponent;
 import org.hl7.fhir.r4.model.AuditEvent.AuditEventOutcome;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
+import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Reference;
 
 import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
@@ -74,7 +75,17 @@ public class AuditEventLogger {
             }
 
             AuditEventAgentComponent serverParticipant = new AuditEventAgentComponent();
-            serverParticipant.setWho(new Reference("Device/hapi-fhir-server"));
+            // Pakai logical reference (identifier), bukan literal reference ("Device/<id>"),
+            // karena ID resource Device sekarang server-assigned (dibuat via POST, bukan PUT
+            // dengan id tetap) - jadi tidak ada ID literal yang bisa di-hardcode di sini.
+            // Logical reference juga tidak kena referential integrity check HAPI, jadi tetap
+            // jalan walau resource Device belum/tidak pernah dibuat sama sekali.
+            Reference serverDeviceRef = new Reference();
+            serverDeviceRef.setIdentifier(new Identifier()
+                    .setSystem("urn:ietf:rfc:3986")
+                    .setValue("hapi-fhir-server"));
+            serverDeviceRef.setDisplay("HAPI FHIR Server");
+            serverParticipant.setWho(serverDeviceRef);
             serverParticipant.setRequestor(false);
             CodeableConcept serverRole = new CodeableConcept();
             Coding serverRoleCoding = new Coding();

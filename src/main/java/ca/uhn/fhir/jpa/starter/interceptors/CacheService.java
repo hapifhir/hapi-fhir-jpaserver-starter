@@ -19,15 +19,23 @@ public class CacheService {
     }
 
     private void populateCaches() {
-		for (CacheEnum next : CacheEnum.values()) {
-			Cache<Object, Object> nextCache;
-			switch (next) {
-                case CONSENT_LIST:
-					nextCache = CacheFactory.buildEternal(60, 250);
+    for (CacheEnum next : CacheEnum.values()) {
+    Cache<Object, Object> nextCache;
+    switch (next) {
+    case CONSENT_LIST:
+    // TTL diperpendek dari 60 -> 10 menit. Ini sekarang cuma jadi
+    // fallback safety-net, karena invalidasi normalnya sudah lewat
+     // endpoint /internal/consent-cache/invalidate (webhook dari
+     // consent registry setiap ada perubahan Consent/Provision).
+     // TTL ini menjaga batas atas staleness kalau webhook gagal
+     // terkirim (network blip, pod baru saja restart, dst) - terutama
+    // penting di deployment multi-replica di mana webhook cuma
+    // menjangkau satu pod per panggilan (lihat service-headless.yaml).
+    nextCache = CacheFactory.buildEternal(10, 250);
 					break;
-				case ENCOUNTER:
-				case SERVICE_REQUEST:
-				case EPISODE_OF_CARE:
+     case ENCOUNTER:
+    case SERVICE_REQUEST:
+    case EPISODE_OF_CARE:
 				default:
 					nextCache = CacheFactory.buildEternal(5, 5000);
 					break;
@@ -155,6 +163,17 @@ public class CacheService {
 		for (CacheEnum next : theCaches) {
 			getCache(next).invalidateAll();
 		}
+	}
+
+	/**
+	 * Invalidate satu entry spesifik di dalam sebuah cache, berdasarkan key-nya.
+	 * Dipakai untuk invalidasi selektif (mis. consent list utk satu organisasi
+	 * saja), tanpa perlu membuang seluruh isi cache lewat {@link #invalidateCaches}.
+	 */
+	public <K> void invalidate(CacheEnum theCache, K theKey) {
+		assert theCache.getKeyType().isAssignableFrom(theKey.getClass());
+		Cache<K, Object> cache = getCache(theCache);
+		cache.invalidate(theKey);
 	}
 
     public enum CacheEnum {

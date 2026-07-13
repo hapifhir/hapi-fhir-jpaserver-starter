@@ -581,11 +581,11 @@ public class ConsentEnforcementInterceptor {
 	}
 
 	private boolean isSkipServiceForRequest(RequestDetails theRequestDetails) {
-		return isMetadataPath(theRequestDetails) || isMetaOperation(theRequestDetails);
+		return isMetadataPath(theRequestDetails) || isMetaOperation(theRequestDetails) || isDocsPath(theRequestDetails);
 	}
 
 	private boolean isAllowListedRequest(RequestDetails theRequestDetails) {
-		return isMetadataPath(theRequestDetails) || isMetaOperation(theRequestDetails);
+		return isMetadataPath(theRequestDetails) || isMetaOperation(theRequestDetails) || isDocsPath(theRequestDetails);
 	}
 
 	private boolean isMetaOperation(RequestDetails theRequestDetails) {
@@ -594,6 +594,22 @@ public class ConsentEnforcementInterceptor {
 
 	private boolean isMetadataPath(RequestDetails theRequestDetails) {
 		return theRequestDetails != null && URL_TOKEN_METADATA.equals(theRequestDetails.getRequestPath());
+	}
+
+	/**
+	 * Kecualikan endpoint dokumentasi API (Swagger UI / OpenAPI docs) dari consent check,
+	 * supaya bisa dibuka di browser tanpa perlu header X-Organization-ID. Ini bukan resource
+	 * FHIR/PHI, jadi aman dikecualikan.
+	 */
+	private boolean isDocsPath(RequestDetails theRequestDetails) {
+		if (theRequestDetails == null || theRequestDetails.getRequestPath() == null) {
+			return false;
+		}
+		String path = theRequestDetails.getRequestPath();
+		return path.equals("api-docs")
+				|| path.startsWith("api-docs")
+				|| path.startsWith("swagger-ui")
+				|| path.startsWith("swagger");
 	}
 
 	private void validateParameter(Map<String, String[]> theParameterMap) {

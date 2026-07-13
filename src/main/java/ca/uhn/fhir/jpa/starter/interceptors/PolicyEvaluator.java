@@ -49,8 +49,16 @@ public class PolicyEvaluator {
 
                 Consent.ConsentProvisionType decision = checkProvision(consent.getProvision(), theResource, action, 0, tmpIssues);
 
-                // AND-kan decision result antar Consent
-                result = provisionOperationAnd(result, decision);
+                // Consent yang tidak punya opini (NULL) diabaikan, bukan dipakai sebagai
+                // operand AND (kalau tidak, NULL akan selalu "membatalkan" DENY/PERMIT
+                // dari consent lain karena provisionOperationAnd() memperlakukan NULL
+                // sebagai annihilator, bukan identity).
+                if (decision == Consent.ConsentProvisionType.NULL)
+                    continue;
+
+                result = (result == Consent.ConsentProvisionType.NULL)
+                        ? decision
+                        : provisionOperationAnd(result, decision);
 
                 // karena menggunakan operation AND maka, 
                 // jika sudah jelas DENY maka tidak perlu lanjut cek Consent berikutnya

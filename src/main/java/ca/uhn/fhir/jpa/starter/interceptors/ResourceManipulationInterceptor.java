@@ -27,9 +27,10 @@ import org.hl7.fhir.r4.model.ServiceRequest;
 import org.hl7.fhir.r4.model.Specimen;
 import org.hl7.fhir.r4.model.Substance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import ca.uhn.fhir.interceptor.api.Interceptor;
 import ca.uhn.fhir.interceptor.api.Hook;
+import ca.uhn.fhir.interceptor.api.Interceptor;
 import ca.uhn.fhir.interceptor.api.Pointcut;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
@@ -38,7 +39,9 @@ import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
 import ca.uhn.fhir.rest.server.interceptor.auth.AuthorizationConstants;
 import ca.uhn.fhir.rest.server.interceptor.consent.ConsentOperationStatusEnum;
 import ca.uhn.fhir.rest.server.interceptor.consent.ConsentOutcome;
+import jakarta.annotation.PostConstruct;
 
+@Component
 @Interceptor(order = AuthorizationConstants.ORDER_AUTH_INTERCEPTOR + 50)
 public class ResourceManipulationInterceptor {
     @Autowired
@@ -47,13 +50,28 @@ public class ResourceManipulationInterceptor {
     @Autowired
     private ConsentProperties consentProperties;
 
+    @Autowired
+    private ca.uhn.fhir.context.FhirContext fhirContext;
+
     private LoaderWithCache loader;
 
     private boolean isAdminAccess = false;
 
-    public ResourceManipulationInterceptor() {
+    @PostConstruct
+    public void init() {
         loader = new LoaderWithCache(consentProperties);
         loader.setResourceDaoRegistry(resourceDaoRegistry);
+        loader.setFhirContext(fhirContext);
+    }
+
+    /**
+     * Invalidate cache consent list utk satu organisasi. Dipanggil dari
+     * ConsentCacheInvalidationController setiap ada notifikasi perubahan
+     * Consent/Provision dari registry, supaya request berikutnya tidak pakai
+     * cache basi (TTL normalnya 60 menit).
+     */
+    public void invalidateConsentCache(String orgId) {
+        loader.invalidateConsentList(orgId);
     }
 
     @Hook(Pointcut.STORAGE_PRESTORAGE_RESOURCE_CREATED)
