@@ -485,6 +485,34 @@ If you would like it to be hosted at e.g. hapi-fhir-jpaserver, e.g. http://local
           fhir_version: R4
 ```
 
+## Running behind a reverse proxy
+
+When the starter is exposed through a reverse proxy or load balancer, configure the public FHIR base URL that clients
+should see in generated links, Bundle entries, and the web tester.
+
+For a stable public URL, set `hapi.fhir.server_address` to the externally reachable FHIR endpoint:
+
+```yaml
+hapi:
+  fhir:
+    server_address: https://fhir.example.com/fhir
+    tester:
+      home:
+        server_address: https://fhir.example.com/fhir
+```
+
+If your proxy forwards the original request host and scheme, enable the Apache proxy address strategy instead:
+
+```yaml
+hapi:
+  fhir:
+    use_apache_address_strategy: true
+    use_apache_address_strategy_https: true
+```
+
+Ensure the proxy sends the usual forwarded headers, such as `X-Forwarded-Host`, `X-Forwarded-Proto`, and
+`X-Forwarded-Prefix` when the server is mounted below a path prefix.
+
 
 ## Deploy with docker compose
 
