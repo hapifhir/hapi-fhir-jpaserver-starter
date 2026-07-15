@@ -595,18 +595,28 @@ Set `hapi.fhir.mdm_enabled=true` in the [application.yaml](https://github.com/ha
 
 ## Using Elasticsearch
 
-By default, the server will use embedded lucene indexes for terminology and fulltext indexing purposes. You can switch this to using lucene by editing the properties in [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml)
+By default, the server will use embedded Lucene indexes for terminology and fulltext indexing purposes. You can switch this to Elasticsearch by editing the properties in [application.yaml](https://github.com/hapifhir/hapi-fhir-jpaserver-starter/blob/master/src/main/resources/application.yaml)
 
 For example:
 
-```properties
-elasticsearch.enabled=true
-elasticsearch.rest_url=localhost:9200
-elasticsearch.username=SomeUsername
-elasticsearch.password=SomePassword
-elasticsearch.protocol=http
-elasticsearch.required_index_status=YELLOW
-elasticsearch.schema_management_strategy=CREATE
+```yaml
+spring:
+  elasticsearch:
+    uris: http://localhost:9200
+    username: SomeUsername
+    password: SomePassword
+  jpa:
+    properties:
+      hibernate:
+        search:
+          enabled: true
+          backend:
+            type: elasticsearch
+            protocol: http
+            schema_management:
+              minimal_required_status: YELLOW
+          schema_management:
+            strategy: CREATE
 ```
 
 ## Enabling LastN
