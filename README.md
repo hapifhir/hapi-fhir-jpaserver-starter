@@ -492,8 +492,9 @@ Docker compose is a simple option to build and deploy containers. To deploy with
 with `mvn clean install` and then bring up the containers with `docker-compose up -d --build`. The server can be
 reached at http://localhost:8080/.
 
-In order to use another port, change the `ports` parameter
-inside `docker-compose.yml` to `8888:8080`, where 8888 is a port of your choice.
+To customize the published port or PostgreSQL settings without editing `docker-compose.yml`, copy `.env.example` to
+`.env` and update the values before starting the containers. For example, set `HAPI_FHIR_PORT=8888` to reach the
+server at http://localhost:8888/.
 
 The docker compose set also includes PostgreSQL database, if you choose to use PostgreSQL instead of H2, change the following
 properties in `src/main/resources/application.yaml`:
