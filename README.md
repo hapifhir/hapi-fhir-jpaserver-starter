@@ -302,6 +302,26 @@ The Server will then be accessible at http://localhost:8888/fhir and the Capabil
           fhir_version: R4
 ```
 
+### Load a sample Patient
+
+After the server is running locally, you can create and query a sample `Patient` resource using the fixture from the
+smoke tests:
+
+```bash
+curl -i -X POST \
+  -H "Content-Type: application/fhir+json" \
+  --data @src/test/smoketest/smoketestfiles/patient_create.json \
+  http://localhost:8080/fhir/Patient
+
+curl "http://localhost:8080/fhir/Patient?family=Chalmers"
+```
+
+To remove the created sample resource, use the id returned by the POST response:
+
+```bash
+curl -i -X DELETE http://localhost:8080/fhir/Patient/<patient-id>
+```
+
 ### Using Spring Boot with :run
 ```bash
 mvn clean spring-boot:run -Pboot
