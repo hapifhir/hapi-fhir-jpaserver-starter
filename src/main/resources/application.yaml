@@ -193,6 +193,16 @@ hapi:
     # B. Implementation Guides (IG) & Package Install
     # -------------------------------------------------------------------------------
     ig_runtime_upload_enabled: false
+    # Enables the R4 system-level $execute-javascript operation, which runs a server-side
+    # JavaScript file (sandboxed GraalJS) to transform FHIR resources. Callers reference a script
+    # by name; they cannot supply code. Disabled by default.
+    javascript_execution_enabled: false
+    # Directory holding the vetted *.js scripts the operation is allowed to run. The 'script'
+    # parameter is resolved to a file in this directory (name only, no paths). Required when
+    # javascript_execution_enabled is true.
+    # javascript_execution_scripts_dir: /etc/hapi/scripts
+    # Maximum wall-clock seconds a single script may run before it is stopped and the call fails.
+    # javascript_execution_timeout_seconds: 30
     # validate_resource_status_for_package_upload: false   # default true
     # install_transitive_ig_dependencies: true
     # implementationguides:
