@@ -13,9 +13,12 @@ import ca.uhn.fhir.interceptor.model.RequestPartitionId;
 import ca.uhn.fhir.jpa.api.IDaoRegistry;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.config.ThreadPoolFactoryConfig;
+import ca.uhn.fhir.jpa.api.dao.DaoRegistrationService;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
+import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
+import ca.uhn.fhir.jpa.config.SearchConfig;
 import ca.uhn.fhir.jpa.config.util.HapiEntityManagerFactoryUtil;
 import ca.uhn.fhir.jpa.config.util.ResourceCountCacheUtil;
 import ca.uhn.fhir.jpa.dao.FulltextSearchSvcImpl;
@@ -110,7 +113,7 @@ import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInt
 @Configuration
 // allow users to configure custom packages to scan for additional beans
 @ComponentScan(basePackages = {"${hapi.fhir.custom-bean-packages:}"})
-@Import(ThreadPoolFactoryConfig.class)
+@Import({ThreadPoolFactoryConfig.class, SearchConfig.class})
 public class StarterJpaConfig {
 
 	private static final Logger ourLog = LoggerFactory.getLogger(StarterJpaConfig.class);
@@ -168,13 +171,23 @@ public class StarterJpaConfig {
 	}
 
 	@Bean
+	public DaoRegistry daoRegistry(FhirContext theFhirContext) {
+		return new DaoRegistry(theFhirContext);
+	}
+
+	@Bean
+	public DaoRegistrationService daoRegistrationService(DaoRegistry theDaoRegistry) {
+		return new DaoRegistrationService(theDaoRegistry);
+	}
+
+	@Bean
 	public IResourceSupportedSvc resourceSupportedSvc(IDaoRegistry theDaoRegistry) {
 		return new DaoRegistryResourceSupportedSvc(theDaoRegistry);
 	}
 
 	@Bean(name = "myResourceCountsCache")
-	public ResourceCountCache resourceCountsCache(IFhirSystemDao<?, ?> theSystemDao) {
-		return ResourceCountCacheUtil.newResourceCountCache(theSystemDao);
+	public ResourceCountCache resourceCountsCache(DaoRegistry theDaoRegistry) {
+		return ResourceCountCacheUtil.newResourceCountCache(theDaoRegistry);
 	}
 
 	@Primary
@@ -334,6 +347,7 @@ public class StarterJpaConfig {
 			IFhirSystemDao<?, ?> fhirSystemDao,
 			AppProperties appProperties,
 			DaoRegistry daoRegistry,
+			List<IFhirResourceDao<?>> resourceDaos,
 			Optional<MdmProviderLoader> mdmProviderProvider,
 			IJpaSystemProvider jpaSystemProvider,
 			ResourceProviderFactory resourceProviderFactory,
@@ -362,6 +376,13 @@ public class StarterJpaConfig {
 			Optional<IImplementationGuideOperationProvider> implementationGuideOperationProvider,
 			DiffProvider diffProvider) {
 		RestfulServer fhirServer = new RestfulServer(fhirSystemDao.getContext());
+
+		/*
+		 * Resource providers are selected from the DaoRegistry below.
+		 * Force the generated resource DAOs to initialize and self-register
+		 * before the provider suppliers are evaluated.
+		 */
+		ourLog.info("Initialized {} JPA resource DAO(s)", resourceDaos.size());
 
 		List<String> supportedResourceTypes = appProperties.getSupported_resource_types();
 
