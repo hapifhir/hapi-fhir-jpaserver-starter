@@ -17,6 +17,7 @@ import ca.uhn.fhir.jpa.api.dao.DaoRegistrationService;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
+import ca.uhn.fhir.jpa.config.SearchConfig;
 import ca.uhn.fhir.jpa.config.util.HapiEntityManagerFactoryUtil;
 import ca.uhn.fhir.jpa.config.util.ResourceCountCacheUtil;
 import ca.uhn.fhir.jpa.dao.FulltextSearchSvcImpl;
@@ -111,7 +112,7 @@ import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInt
 @Configuration
 // allow users to configure custom packages to scan for additional beans
 @ComponentScan(basePackages = {"${hapi.fhir.custom-bean-packages:}"})
-@Import(ThreadPoolFactoryConfig.class)
+@Import({ThreadPoolFactoryConfig.class, SearchConfig.class})
 public class StarterJpaConfig {
 
 	private static final Logger ourLog = LoggerFactory.getLogger(StarterJpaConfig.class);
