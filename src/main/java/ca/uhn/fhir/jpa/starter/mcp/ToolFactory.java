@@ -174,7 +174,7 @@ public class ToolFactory {
 			},
 			"query": {
 			"type": "string",
-			"description": "Query string with search params separate by \\",\\". For example: \\"_id=pt-1,name=ivan\\""
+			"description": "Query string with search params separate by \\"&\\". For example: \\"_id=pt-1&name=ivan\\""
 			}
 		},
 		"required": ["resourceType", "query"]
