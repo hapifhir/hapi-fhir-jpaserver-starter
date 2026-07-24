@@ -39,16 +39,10 @@ public class RequestBuilder {
 		switch (interaction) {
 			case SEARCH -> {
 				method = "GET";
+				Object queryObj = config.get("query");
+				String queryString = (queryObj instanceof String s) ? s : "";
 				req = new MockHttpServletRequest(method, basePath);
-				Map<?, ?> sp = null;
-				if (config.get("query") instanceof Map<?, ?> q) {
-					sp = q;
-				} else if (config.get("searchParams") instanceof Map<?, ?> s) {
-					sp = s;
-				}
-				if (sp != null) {
-					sp.forEach((k, v) -> req.addParameter(k.toString(), v.toString()));
-				}
+				req.setQueryString(queryString);
 			}
 			case READ -> {
 				method = "GET";
