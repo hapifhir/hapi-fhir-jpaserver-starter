@@ -173,8 +173,8 @@ public class StarterJpaConfig {
 	}
 
 	@Bean(name = "myResourceCountsCache")
-	public ResourceCountCache resourceCountsCache(IFhirSystemDao<?, ?> theSystemDao) {
-		return ResourceCountCacheUtil.newResourceCountCache(theSystemDao);
+	public ResourceCountCache resourceCountsCache(DaoRegistry theDaoRegistry) {
+		return ResourceCountCacheUtil.newResourceCountCache(theDaoRegistry);
 	}
 
 	@Primary
