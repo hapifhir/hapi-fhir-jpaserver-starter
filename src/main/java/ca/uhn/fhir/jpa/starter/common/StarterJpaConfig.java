@@ -15,6 +15,7 @@ import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.config.ThreadPoolFactoryConfig;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistrationService;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
+import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
 import ca.uhn.fhir.jpa.config.SearchConfig;
@@ -346,6 +347,7 @@ public class StarterJpaConfig {
 			IFhirSystemDao<?, ?> fhirSystemDao,
 			AppProperties appProperties,
 			DaoRegistry daoRegistry,
+			List<IFhirResourceDao<?>> resourceDaos,
 			Optional<MdmProviderLoader> mdmProviderProvider,
 			IJpaSystemProvider jpaSystemProvider,
 			ResourceProviderFactory resourceProviderFactory,
@@ -374,6 +376,13 @@ public class StarterJpaConfig {
 			Optional<IImplementationGuideOperationProvider> implementationGuideOperationProvider,
 			DiffProvider diffProvider) {
 		RestfulServer fhirServer = new RestfulServer(fhirSystemDao.getContext());
+
+		/*
+		 * Resource providers are selected from the DaoRegistry below.
+		 * Force the generated resource DAOs to initialize and self-register
+		 * before the provider suppliers are evaluated.
+		 */
+		ourLog.info("Initialized {} JPA resource DAO(s)", resourceDaos.size());
 
 		List<String> supportedResourceTypes = appProperties.getSupported_resource_types();
 
