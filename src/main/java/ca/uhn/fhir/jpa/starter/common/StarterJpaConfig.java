@@ -13,6 +13,7 @@ import ca.uhn.fhir.interceptor.model.RequestPartitionId;
 import ca.uhn.fhir.jpa.api.IDaoRegistry;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.config.ThreadPoolFactoryConfig;
+import ca.uhn.fhir.jpa.api.dao.DaoRegistrationService;
 import ca.uhn.fhir.jpa.api.dao.DaoRegistry;
 import ca.uhn.fhir.jpa.api.dao.IFhirSystemDao;
 import ca.uhn.fhir.jpa.binary.provider.BinaryAccessProvider;
@@ -165,6 +166,16 @@ public class StarterJpaConfig {
 			factory.setPoolMaxTotal(cfg.getPool_max_total());
 			factory.setPoolMaxPerRoute(cfg.getPool_max_per_route());
 		};
+	}
+
+	@Bean
+	public DaoRegistry daoRegistry(FhirContext theFhirContext) {
+		return new DaoRegistry(theFhirContext);
+	}
+
+	@Bean
+	public DaoRegistrationService daoRegistrationService(DaoRegistry theDaoRegistry) {
+		return new DaoRegistrationService(theDaoRegistry);
 	}
 
 	@Bean
