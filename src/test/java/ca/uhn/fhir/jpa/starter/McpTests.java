@@ -50,18 +50,33 @@ public class McpTests {
 		assertThat(tools.stream().filter(tool -> tool.name().equals(createToolName)).findFirst().get()).isNotNull();
 
 
-		var createMcpRequest = new McpSchema.CallToolRequest.Builder().arguments(Map.of("operation", "create", "resourceType", "Patient", "resource", """
-			{
-			  "resourceType": "Patient",
-			  "id": "example",
-			  "identifier": [
-			    {
-			      "system": "urn:something",
-			      "value": "uncleScrooge"
-			    }
-			  ]
-			}""")).name(createToolName).build();
-		assertThat(client.callTool(createMcpRequest).isError()).isFalse();
+		var createMcpRequest1 = new McpSchema.CallToolRequest.Builder().arguments(Map.of("operation", "create", "resourceType", "Patient", "resource", """
+       {
+         "resourceType": "Patient",
+         "id": "example",
+         "identifier": [
+           {
+             "system": "urn:something",
+             "value": "uncleScrooge"
+           }
+         ]
+       }""")).name(createToolName).build();
+		assertThat(client.callTool(createMcpRequest1).isError()).isFalse();
+
+
+		var createMcpRequest2 = new McpSchema.CallToolRequest.Builder().arguments(Map.of("operation", "create", "resourceType", "Patient", "resource", """
+       {
+         "resourceType": "Patient",
+         "id": "example2",
+         "identifier": [
+           {
+             "system": "urn:something",
+             "value": "donaldDuck"
+           }
+         ]
+       }""")).name(createToolName).build();
+		assertThat(client.callTool(createMcpRequest2).isError()).isFalse();
+
 
 		var searchMcpRequest = new McpSchema.CallToolRequest.Builder().arguments(Map.of("operation", "search", "resourceType", "Patient", "query", "identifier=urn:something|uncleScrooge")).name(searchToolName).build();
 
@@ -73,7 +88,11 @@ public class McpTests {
 		var embeddedResponseBundle = new Gson().fromJson(content.text(), LinkedHashMap.class).get("response");
 		var responseBundle = fhirContext.newJsonParser().parseResource(Bundle.class, embeddedResponseBundle.toString());
 		var entries = BundleUtil.toListOfEntries(fhirContext, responseBundle);
+
+
 		assertThat(entries.size()).isEqualTo(1);
+		var matchedPatient = (org.hl7.fhir.r4.model.Patient) entries.get(0).getResource();
+		assertThat(matchedPatient.getIdentifierFirstRep().getValue()).isEqualTo("uncleScrooge");
 
 		client.closeGracefully();
 	}
