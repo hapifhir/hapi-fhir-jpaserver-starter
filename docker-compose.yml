@@ -4,13 +4,13 @@ services:
     container_name: hapi-fhir-jpaserver-start
     restart: on-failure
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://hapi-fhir-postgres:5432/hapi"
-      SPRING_DATASOURCE_USERNAME: "admin"
-      SPRING_DATASOURCE_PASSWORD: "admin"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://${POSTGRES_HOST:-hapi-fhir-postgres}:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-hapi}"
+      SPRING_DATASOURCE_USERNAME: "${POSTGRES_USER:-admin}"
+      SPRING_DATASOURCE_PASSWORD: "${POSTGRES_PASSWORD:-admin}"
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: "org.postgresql.Driver"
-      HIBERNATE_DIALECT: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
+      HIBERNATE_DIALECT: "${HIBERNATE_DIALECT:-ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect}"
     ports:
-      - "8080:8080"
+      - "${HAPI_FHIR_PORT:-8080}:8080"
     # Uncomment to enable periodic health checks.
     # Can also be run manually: docker exec hapi-fhir-jpaserver-start java -cp /app HealthCheck
     # healthcheck:
@@ -27,11 +27,11 @@ services:
     container_name: hapi-fhir-postgres
     restart: always
     environment:
-      POSTGRES_DB: "hapi"
-      POSTGRES_USER: "admin"
-      POSTGRES_PASSWORD: "admin"
+      POSTGRES_DB: "${POSTGRES_DB:-hapi}"
+      POSTGRES_USER: "${POSTGRES_USER:-admin}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-admin}"
     healthcheck:
-      test: ["CMD-SHELL", "sh -c 'pg_isready -U admin -d hapi' || exit 1"]
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER:-admin} -d ${POSTGRES_DB:-hapi}' || exit 1"]
       interval: 10s
       timeout: 5s
       start_period: 5s
