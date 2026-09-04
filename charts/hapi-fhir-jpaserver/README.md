@@ -1,6 +1,6 @@
 # HAPI FHIR JPA Server Starter Helm Chart
 
-![Version: 0.24.0](https://img.shields.io/badge/Version-0.24.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.8.0](https://img.shields.io/badge/AppVersion-8.8.0-informational?style=flat-square)
+![Version: 0.25.0](https://img.shields.io/badge/Version-0.25.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.8.0](https://img.shields.io/badge/AppVersion-8.8.0-informational?style=flat-square)
 
 This helm chart will help you install the HAPI FHIR JPA Server in a Kubernetes environment.
 
@@ -22,6 +22,12 @@ helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | pod affinity |
+| autoscaling | object | `{"enabled":false,"maxReplicas":10,"minReplicas":1,"targetCPU":60,"targetMemory":60}` | Autoscaling, dynamic number of instances based on metrics |
+| autoscaling.enabled | bool | `false` | enables the use of the autoscaling policy |
+| autoscaling.maxReplicas | int | `10` | maximum number of instances (even is metrics are high, no scaling is done after this point) |
+| autoscaling.minReplicas | int | `1` | minimum number of instances |
+| autoscaling.targetCPU | int | `60` | Average CPU utilisation targetted by autoscaling |
+| autoscaling.targetMemory | int | `60` | Average memory utilisation targetted by autoscaling |
 | deploymentAnnotations | object | `{}` | annotations applied to the server deployment |
 | externalDatabase.database | string | `"fhir"` | database name |
 | externalDatabase.existingSecret | string | `""` | name of an existing secret resource containing the DB password in the `existingSecretKey` key |
@@ -63,7 +69,7 @@ helm install hapi-fhir-jpaserver hapifhir/hapi-fhir-jpaserver
 | postgres.auth.database | string | `"fhir"` | name for a custom database to create |
 | postgres.auth.existingSecret | string | `""` | Name of existing secret to use for PostgreSQL credentials `auth.postgresPassword`, `auth.password`, and `auth.replicationPassword` will be ignored and picked up from this secret The secret must contain the keys `postgres-password` (which is the password for "postgres" admin user), `password` (which is the password for the custom user to create when `auth.username` is set), and `replication-password` (which is the password for replication user). The secret might also contains the key `ldap-password` if LDAP is enabled. `ldap.bind_password` will be ignored and picked from this secret in this case. The value is evaluated as a template. |
 | postgres.enabled | bool | `true` | enable an included PostgreSQL DB. see <https://github.com/CloudPirates-io/helm-charts/tree/main/charts/postgres> for details if set to `false`, the values under `externalDatabase` are used |
-| replicaCount | int | `1` | number of replicas to deploy |
+| replicaCount | int | `1` | Simple number of replicas, ignored if autoscaling is enabled |
 | resources | object | `{}` | configure the FHIR server's resource requests and limits |
 | resourcesPreset | string | `"medium"` | set container resources according to one common preset (allowed values: none, nano, micro, small, medium, large, xlarge, 2xlarge). This is ignored if `resources` is set (`resources` is recommended for production). |
 | securityContext.allowPrivilegeEscalation | bool | `false` |  |
