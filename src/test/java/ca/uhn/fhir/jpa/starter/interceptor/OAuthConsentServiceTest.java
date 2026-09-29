@@ -3,9 +3,14 @@ package ca.uhn.fhir.jpa.starter.interceptor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.HashMap;
 
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.IdType;
@@ -20,7 +25,9 @@ import ca.uhn.fhir.jpa.api.dao.IFhirResourceDao;
 import ca.uhn.fhir.jpa.starter.AppProperties;
 import ca.uhn.fhir.jpa.starter.util.OAuth2Helper;
 import ca.uhn.fhir.rest.api.RequestTypeEnum;
+import ca.uhn.fhir.rest.api.server.IPreResourceAccessDetails;
 import ca.uhn.fhir.rest.api.server.RequestDetails;
+import ca.uhn.fhir.rest.server.interceptor.consent.ConsentInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.consent.ConsentOutcome;
 import ca.uhn.fhir.rest.server.interceptor.consent.IConsentContextServices;
 
@@ -405,6 +412,60 @@ class OAuthConsentServiceTest {
 			ConsentOutcome outcome = myConsentService.startOperation(myRequestDetails, myConsentContextServices);
 			assertEquals(ConsentOutcome.REJECT, outcome);
 		}
+	}
+
+	/**
+	 * The failure on deployed servers is an IndexOutOfBoundsException inside
+	 * JpaPreResourceAccessDetails.getResource, reached from ConsentInterceptor.interceptPreAccess:
+	 * the search result page reports a resource that it cannot produce. Without
+	 * shouldProcessCanSeeResource, the interface default of true makes the interceptor walk that
+	 * page on every search, including resource types this service never filters.
+	 */
+	@Test
+	void interceptPreAccess_nonTaskRequest_leavesTheResultPageAlone() {
+		when(myRequestDetails.getResourceName()).thenReturn("Patient");
+		when(myRequestDetails.getUserData()).thenReturn(new HashMap<>());
+
+		IPreResourceAccessDetails accessDetails = mock(IPreResourceAccessDetails.class);
+		when(accessDetails.size()).thenReturn(1);
+		when(accessDetails.getResource(0))
+			.thenThrow(new IndexOutOfBoundsException("Index 0 out of bounds for length 0"));
+
+		ConsentInterceptor interceptor = new ConsentInterceptor(myConsentService);
+
+		try (MockedStatic<OAuth2Helper> helperMock = mockStatic(OAuth2Helper.class)) {
+			helperMock.when(() -> OAuth2Helper.hasToken(myRequestDetails)).thenReturn(true);
+			helperMock.when(() -> OAuth2Helper.getClaimAsString(myRequestDetails, "patient")).thenReturn("123");
+
+			interceptor.interceptPreAccess(myRequestDetails, accessDetails);
+		}
+
+		verify(accessDetails, never()).getResource(anyInt());
+	}
+
+	/**
+	 * The counterpart to the above: a Task request carrying a patient claim is the case this
+	 * service exists for, so the interceptor must still load the page and filter it.
+	 */
+	@Test
+	void interceptPreAccess_taskRequestWithPatientClaim_stillFiltersTheResultPage() {
+		when(myRequestDetails.getUserData()).thenReturn(new HashMap<>());
+
+		IPreResourceAccessDetails accessDetails = mock(IPreResourceAccessDetails.class);
+		when(accessDetails.size()).thenReturn(1);
+		when(accessDetails.getResource(0)).thenReturn(createTaskForPatient("999"));
+
+		ConsentInterceptor interceptor = new ConsentInterceptor(myConsentService);
+
+		try (MockedStatic<OAuth2Helper> helperMock = mockStatic(OAuth2Helper.class)) {
+			helperMock.when(() -> OAuth2Helper.hasToken(myRequestDetails)).thenReturn(true);
+			helperMock.when(() -> OAuth2Helper.getClaimAsString(myRequestDetails, "patient")).thenReturn("123");
+
+			interceptor.interceptPreAccess(myRequestDetails, accessDetails);
+		}
+
+		verify(accessDetails).getResource(0);
+		verify(accessDetails).setDontReturnResourceAtIndex(0);
 	}
 
 	private Task createTaskForPatient(String patientId) {

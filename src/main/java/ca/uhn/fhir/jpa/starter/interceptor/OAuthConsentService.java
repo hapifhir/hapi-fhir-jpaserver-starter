@@ -43,6 +43,21 @@ public class OAuthConsentService implements IConsentService {
     this.config = config;
   }
 
+  /**
+   * HAPI calls this before it loads the resources in a search result page for canSeeResource. The
+   * interface default returns true, which makes it load every resource of every search even though
+   * canSeeResource only filters Task. Returning false for everything else also lets HAPI reuse
+   * cached search results, which it cannot do while canSeeResource may be consulted.
+   */
+  @Override
+  public boolean shouldProcessCanSeeResource(RequestDetails theRequestDetails,
+      IConsentContextServices theContextServices) {
+
+    return isUsingOAuth(theRequestDetails)
+        && isTaskRequest(theRequestDetails)
+        && !Strings.isNullOrEmpty(getPatientClaim(theRequestDetails));
+  }
+
   @Override
   public ConsentOutcome canSeeResource(RequestDetails theRequestDetails, IBaseResource theResource,
       IConsentContextServices theContextServices) {
