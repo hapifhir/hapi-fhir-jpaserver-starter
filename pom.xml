@@ -15,7 +15,7 @@
         <maven.compiler.version>3.14.1</maven.compiler.version>
 
         <!-- Dependencies Versions -->
-        <spring.ai.version>1.1.2</spring.ai.version>
+        <spring.ai.version>1.1.8</spring.ai.version>
         <awaitility.version>4.3.0</awaitility.version>
         <micrometer.version>1.16.7</micrometer.version>
         <commons.logging.version>1.3.5</commons.logging.version>
