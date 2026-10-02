@@ -13,6 +13,7 @@
         <maven.fire.version>${maven.failsafe.version}</maven.fire.version>
         <maven.dependency.version>3.9.0</maven.dependency.version>
         <maven.compiler.version>3.14.1</maven.compiler.version>
+        <maven.jacoco.version>0.8.15</maven.jacoco.version>
 
         <!-- Dependencies Versions -->
         <spring.ai.version>1.1.8</spring.ai.version>
@@ -686,6 +687,29 @@
                     </ignoredResourcePatterns>
                 </configuration>
             </plugin>
+
+            <!-- JaCoCo code coverage plugin so SonarQube can analyze test coverage -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${maven.jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
         </plugins>
     </build>
 
