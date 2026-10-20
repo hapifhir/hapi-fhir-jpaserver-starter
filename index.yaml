@@ -16,6 +16,37 @@ entries:
         - url: https://artifacthub.io/packages/helm/cloudpirates-postgres/postgres
     apiVersion: v2
     appVersion: 8.8.0
+    created: "2026-10-20T16:03:29.79441286Z"
+    dependencies:
+    - condition: postgres.enabled
+      name: postgres
+      repository: oci://registry-1.docker.io/cloudpirates
+      version: 0.19.3
+    description: A Helm chart for deploying the HAPI FHIR JPA server starter on Kubernetes.
+    digest: 225bc45b06b0a6fd816c0b5c7c480c323a953dec2a9a487a9fadc6b7f26d38e1
+    home: https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    name: hapi-fhir-jpaserver
+    sources:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+    type: application
+    urls:
+    - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.25.0/hapi-fhir-jpaserver-0.25.0.tgz
+    version: 0.25.0
+  - annotations:
+      artifacthub.io/changes: |
+        # When using the list of objects option the valid supported kinds are
+        # added, changed, deprecated, removed, fixed, and security.
+        - kind: changed
+          description: "BREAKING CHANGE: Migrated from the Bitnami sub-chart to Cloudpirates Postgres chart. This may require changes to your values.yaml under the new `postgres`-key."
+      artifacthub.io/containsSecurityUpdates: "false"
+      artifacthub.io/license: Apache-2.0
+      artifacthub.io/operator: "false"
+      artifacthub.io/prerelease: "false"
+      artifacthub.io/recommendations: |
+        - url: https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack
+        - url: https://artifacthub.io/packages/helm/cloudpirates-postgres/postgres
+    apiVersion: v2
+    appVersion: 8.8.0
     created: "2026-08-04T11:14:23.050519891Z"
     dependencies:
     - condition: postgres.enabled
@@ -787,4 +818,4 @@ entries:
     urls:
     - https://github.com/hapifhir/hapi-fhir-jpaserver-starter/releases/download/helm-v0.6.0/hapi-fhir-jpaserver-0.6.0.tgz
     version: 0.6.0
-generated: "2026-08-04T11:14:23.050668017Z"
+generated: "2026-10-20T16:03:29.794564112Z"
