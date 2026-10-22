@@ -2,6 +2,9 @@ package ca.uhn.fhir.jpa.starter.mcp;
 
 import ca.uhn.fhir.context.FhirContext;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.HashMap;
@@ -25,42 +28,58 @@ class RequestBuilderTest {
 		assertThat(req.getContextPath()).isEmpty();
 	}
 
-	@Test
-	void searchIncludesServletContextPath() {
-		var req = build(Map.of("resourceType", "Patient"), Interaction.SEARCH, "/eps");
+	@ParameterizedTest
+	@ValueSource(strings = {"", "/r5", "/fhir", "/apps/fhir-server"})
+	void searchIncludesServletContextPath(String contextPath) {
+		var req = build(Map.of("resourceType", "Patient"), Interaction.SEARCH, contextPath);
 
-		assertThat(req.getRequestURI()).isEqualTo("/eps/Patient");
-		assertThat(req.getContextPath()).isEqualTo("/eps");
+		assertThat(req.getRequestURI()).isEqualTo(contextPath + "/Patient");
+		assertThat(req.getContextPath()).isEqualTo(contextPath);
 	}
 
-	@Test
-	void instanceLevelInteractionsIncludeServletContextPath() {
+	@ParameterizedTest
+	@ValueSource(strings = {"", "/r5", "/fhir", "/apps/fhir-server"})
+	void instanceLevelInteractionsIncludeServletContextPath(String contextPath) {
 		var args = new HashMap<String, Object>();
 		args.put("resourceType", "Patient");
 		args.put("id", "123");
 		args.put("resource", "{\"resourceType\":\"Patient\",\"id\":\"123\"}");
 
-		assertThat(build(args, Interaction.READ, "/eps").getRequestURI()).isEqualTo("/eps/Patient/123");
-		assertThat(build(args, Interaction.UPDATE, "/eps").getRequestURI()).isEqualTo("/eps/Patient/123");
-		assertThat(build(args, Interaction.DELETE, "/eps").getRequestURI()).isEqualTo("/eps/Patient/123");
-		assertThat(build(args, Interaction.PATCH, "/eps").getRequestURI()).isEqualTo("/eps/Patient/123");
+		var expected = contextPath + "/Patient/123";
+		assertThat(build(args, Interaction.READ, contextPath).getRequestURI()).isEqualTo(expected);
+		assertThat(build(args, Interaction.UPDATE, contextPath).getRequestURI()).isEqualTo(expected);
+		assertThat(build(args, Interaction.DELETE, contextPath).getRequestURI()).isEqualTo(expected);
+		assertThat(build(args, Interaction.PATCH, contextPath).getRequestURI()).isEqualTo(expected);
 	}
 
-	@Test
-	void transactionPostsToContextRoot() {
-		var req = build(Map.of("resource", "{\"resourceType\":\"Bundle\",\"type\":\"transaction\"}"), Interaction.TRANSACTION, "/eps");
+	@ParameterizedTest
+	@ValueSource(strings = {"", "/r5", "/apps/fhir-server"})
+	void transactionPostsToContextRoot(String contextPath) {
+		var req = build(
+				Map.of("resource", "{\"resourceType\":\"Bundle\",\"type\":\"transaction\"}"),
+				Interaction.TRANSACTION,
+				contextPath);
 
 		assertThat(req.getMethod()).isEqualTo("POST");
-		assertThat(req.getRequestURI()).isEqualTo("/eps/");
-		assertThat(req.getContextPath()).isEqualTo("/eps");
+		assertThat(req.getRequestURI()).isEqualTo(contextPath + "/");
+		assertThat(req.getContextPath()).isEqualTo(contextPath);
+	}
+
+	@ParameterizedTest
+	@CsvSource(
+			value = {"/r5/, /r5/Patient", "' /fhir ', /fhir/Patient", "/apps/fhir-server/, /apps/fhir-server/Patient"},
+			ignoreLeadingAndTrailingWhitespace = false)
+	void contextPathIsNormalised(String contextPath, String expectedUri) {
+		assertThat(build(Map.of("resourceType", "Patient"), Interaction.SEARCH, contextPath).getRequestURI())
+				.isEqualTo(expectedUri.trim());
 	}
 
 	@Test
-	void trailingSlashAndNullContextPathAreNormalised() {
-		assertThat(build(Map.of("resourceType", "Patient"), Interaction.SEARCH, "/eps/").getRequestURI())
-				.isEqualTo("/eps/Patient");
-		assertThat(build(Map.of("resourceType", "Patient"), Interaction.SEARCH, null).getRequestURI())
-				.isEqualTo("/Patient");
+	void nullContextPathMeansRoot() {
+		var req = build(Map.of("resourceType", "Patient"), Interaction.SEARCH, null);
+
+		assertThat(req.getRequestURI()).isEqualTo("/Patient");
+		assertThat(req.getContextPath()).isEmpty();
 	}
 
 	@Test
