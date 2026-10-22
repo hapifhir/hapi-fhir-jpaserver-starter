@@ -76,7 +76,10 @@ public class McpFhirBridge implements McpBridge {
 	private McpSchema.CallToolResult getToolResult(McpSchema.CallToolRequest contextMap, Interaction interaction) {
 
 		var response = new MockHttpServletResponse();
-		var request = new RequestBuilder(fhirContext, contextMap.arguments(), interaction).buildRequest();
+		String contextPath = restfulServer.getServletContext() != null
+				? restfulServer.getServletContext().getContextPath()
+				: "";
+		var request = new RequestBuilder(fhirContext, contextMap.arguments(), interaction, contextPath).buildRequest();
 
 		try {
 			restfulServer.handleRequest(interaction.asRequestType(), request, response);

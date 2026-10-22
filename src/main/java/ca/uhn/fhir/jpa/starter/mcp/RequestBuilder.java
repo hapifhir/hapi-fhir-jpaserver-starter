@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -14,6 +15,12 @@ public class RequestBuilder {
 	private final String resourceType;
 	private final Interaction interaction;
 	private final Map<String, Object> config;
+	private final String contextPath;
+
+	public RequestBuilder(FhirContext fhirContext, Map<String, Object> contextMap, Interaction interaction) {
+		this(fhirContext, contextMap, interaction, "");
+	}
+
 	/**
 	 * Constructs a RequestBuilder for a specific FHIR interaction.
 	 *
@@ -21,8 +28,14 @@ public class RequestBuilder {
 	 * @param contextMap  a map containing configuration parameters, including 'resourceType'
 	 * @param interaction the type of interaction (e.g., SEARCH, READ, CREATE, etc.)
 	 */
-	public RequestBuilder(FhirContext fhirContext, Map<String, Object> contextMap, Interaction interaction) {
+	public RequestBuilder(
+			FhirContext fhirContext, Map<String, Object> contextMap, Interaction interaction, String contextPath) {
 		this.config = contextMap;
+		// RestfulServer strips the servlet context path (e.g. "/eps") from the request URI,
+		// so the mock request must carry it too, otherwise "/Patient" becomes "ient".
+		String cp = contextPath == null ? "" : contextPath.trim();
+		if (cp.endsWith("/")) cp = cp.substring(0, cp.length() - 1);
+		this.contextPath = cp;
 		if (interaction == Interaction.TRANSACTION) this.resourceType = "";
 		else if (contextMap.get("resourceType") instanceof String rt && !rt.isBlank()) this.resourceType = rt;
 		else throw new IllegalArgumentException("Missing or invalid 'resourceType' in contextMap");
@@ -32,7 +45,7 @@ public class RequestBuilder {
 	}
 
 	public MockHttpServletRequest buildRequest() {
-		String basePath = "/" + resourceType;
+		String basePath = contextPath + "/" + resourceType;
 		String method;
 		MockHttpServletRequest req;
 
@@ -48,6 +61,19 @@ public class RequestBuilder {
 				}
 				if (sp != null) {
 					sp.forEach((k, v) -> req.addParameter(k.toString(), v.toString()));
+				} else {
+					// Also accept a query string, e.g. "name=Silva&_count=5" (previously silently ignored)
+					Object qs = config.get("query") != null ? config.get("query") : config.get("searchParams");
+					if (qs instanceof String str && !str.isBlank()) {
+						String q = str.startsWith("?") ? str.substring(1) : str;
+						for (String pair : q.split("&")) {
+							if (pair.isBlank()) continue;
+							int i = pair.indexOf('=');
+							String k = URLDecoder.decode(i < 0 ? pair : pair.substring(0, i), StandardCharsets.UTF_8);
+							String v = i < 0 ? "" : URLDecoder.decode(pair.substring(i + 1), StandardCharsets.UTF_8);
+							req.addParameter(k, v);
+						}
+					}
 				}
 			}
 			case READ -> {
@@ -80,6 +106,7 @@ public class RequestBuilder {
 			default -> throw new IllegalArgumentException("Unsupported interaction: " + interaction);
 		}
 
+		req.setContextPath(contextPath);
 		req.setContentType("application/fhir+json");
 		req.addHeader("Accept", "application/fhir+json");
 		return req;

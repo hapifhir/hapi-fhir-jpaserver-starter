@@ -174,7 +174,7 @@ public class ToolFactory {
 			},
 			"query": {
 			"type": "string",
-			"description": "Query string with search params separate by \\",\\". For example: \\"_id=pt-1,name=ivan\\""
+			"description": "Query string with search params separated by \\"&\\", as in a FHIR search URL. For example: \\"_id=pt-1&name=ivan\\". A comma inside a value means OR, e.g. \\"name=ivan,peter\\"."
 			}
 		},
 		"required": ["resourceType", "query"]
