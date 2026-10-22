@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.context.support.IValidationSupport;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.ClientIdStrategyEnum;
 import ca.uhn.fhir.jpa.api.config.JpaStorageSettings.IdStrategyEnum;
@@ -1048,6 +1049,7 @@ public class AppProperties {
 
 		private Boolean requests_enabled = false;
 		private Boolean responses_enabled = false;
+		private IValidationSupport.IssueSeverity unknown_code_system_severity;
 
 		public Boolean getRequests_enabled() {
 			return requests_enabled;
@@ -1063,6 +1065,14 @@ public class AppProperties {
 
 		public void setResponses_enabled(Boolean responses_enabled) {
 			this.responses_enabled = responses_enabled;
+		}
+
+		public IValidationSupport.IssueSeverity getUnknown_code_system_severity() {
+			return unknown_code_system_severity;
+		}
+
+		public void setUnknown_code_system_severity(IValidationSupport.IssueSeverity unknown_code_system_severity) {
+			this.unknown_code_system_severity = unknown_code_system_severity;
 		}
 	}
 

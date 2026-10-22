@@ -334,6 +334,11 @@ hapi:
     # validation:
     #   requests_enabled: true
     #   responses_enabled: true
+    #   unknown_code_system_severity: WARNING
+    # Set to a FHIR issue severity (FATAL, ERROR, WARNING, INFORMATION) to change only
+    # unknown-CodeSystem validation issues. This does not validate the code or prove it
+    # satisfies a required binding. Unset preserves the default behavior.
+    # Environment variable: HAPI_FHIR_VALIDATION_UNKNOWN_CODE_SYSTEM_SEVERITY=WARNING
 
     # -------------------------------------------------------------------------------
     # H. MDM (Master Data Management)

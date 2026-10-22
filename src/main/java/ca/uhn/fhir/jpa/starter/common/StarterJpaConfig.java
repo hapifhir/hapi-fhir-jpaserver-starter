@@ -69,9 +69,11 @@ import ca.uhn.fhir.rest.server.interceptor.LoggingInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.RequestValidatingInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseValidatingInterceptor;
+import ca.uhn.fhir.rest.server.interceptor.validation.ValidationMessageUnknownCodeSystemPostProcessingInterceptor;
 import ca.uhn.fhir.rest.server.provider.ResourceProviderFactory;
 import ca.uhn.fhir.rest.server.util.ISearchParamRegistry;
 import ca.uhn.fhir.rest.server.*;
+import ca.uhn.fhir.validation.FhirValidator;
 import ca.uhn.fhir.validation.IValidatorModule;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
@@ -498,15 +500,26 @@ public class StarterJpaConfig {
 			if (appProperties.getValidation().getRequests_enabled()) {
 				RequestValidatingInterceptor interceptor = new RequestValidatingInterceptor();
 				interceptor.setFailOnSeverity(ResultSeverityEnum.ERROR);
-				interceptor.setValidatorModules(Collections.singletonList(validatorModule));
+				FhirValidator fhirValidator = fhirServer.getFhirContext().newValidator();
+				fhirValidator.registerValidatorModule(validatorModule);
+				fhirValidator.setInterceptorBroadcaster(fhirServer.getInterceptorService());
+				interceptor.setValidator(fhirValidator);
 				fhirServer.registerInterceptor(interceptor);
 			}
 			if (appProperties.getValidation().getResponses_enabled()) {
 				ResponseValidatingInterceptor interceptor = new ResponseValidatingInterceptor();
 				interceptor.setFailOnSeverity(ResultSeverityEnum.ERROR);
-				interceptor.setValidatorModules(Collections.singletonList(validatorModule));
+				FhirValidator fhirValidator = fhirServer.getFhirContext().newValidator();
+				fhirValidator.registerValidatorModule(validatorModule);
+				fhirValidator.setInterceptorBroadcaster(fhirServer.getInterceptorService());
+				interceptor.setValidator(fhirValidator);
 				fhirServer.registerInterceptor(interceptor);
 			}
+		}
+
+		if (appProperties.getValidation().getUnknown_code_system_severity() != null) {
+			fhirServer.registerInterceptor(new ValidationMessageUnknownCodeSystemPostProcessingInterceptor(
+					appProperties.getValidation().getUnknown_code_system_severity()));
 		}
 
 		// GraphQL
