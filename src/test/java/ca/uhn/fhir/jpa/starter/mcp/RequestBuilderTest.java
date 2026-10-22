@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter.mcp;
 
 import ca.uhn.fhir.context.FhirContext;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -9,6 +10,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -107,5 +109,31 @@ class RequestBuilderTest {
 
 		assertThat(req.getParameter("family")).isEqualTo("Silva");
 		assertThat(req.getParameter("_summary")).isEmpty();
+	}
+
+	@Test
+	void publishedSearchSchemaExampleAppliesEveryParameter() throws JsonProcessingException {
+		var query = (Map<?, ?>) ToolFactory.searchFhirResources().inputSchema().properties().get("query");
+		var description = query.get("description").toString();
+		var matcher = Pattern.compile("For example: \"([^\"]+)\"").matcher(description);
+		assertThat(matcher.find()).as(description).isTrue();
+		var example = matcher.group(1);
+		assertThat(example).isEqualTo("_id=pt-1&name=ivan");
+
+		var req = build(Map.of("resourceType", "Patient", "query", example), Interaction.SEARCH, "");
+
+		assertThat(req.getParameterMap()).containsOnlyKeys("_id", "name");
+		assertThat(req.getParameter("_id")).isEqualTo("pt-1");
+		assertThat(req.getParameter("name")).isEqualTo("ivan");
+	}
+
+	@Test
+	void commasInsideValuesAreKeptForOrSearches() {
+		var req = build(
+				Map.of("resourceType", "Patient", "query", "name=ivan,peter&_id=pt-1,pt-2"), Interaction.SEARCH, "");
+
+		assertThat(req.getParameterMap()).containsOnlyKeys("name", "_id");
+		assertThat(req.getParameter("name")).isEqualTo("ivan,peter");
+		assertThat(req.getParameter("_id")).isEqualTo("pt-1,pt-2");
 	}
 }
