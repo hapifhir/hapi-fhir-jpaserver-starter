@@ -98,7 +98,7 @@ spring:
 
   autoconfigure:
     # This exclude is only needed for setups not using Elasticsearch where the elasticsearch sniff is not needed.
-    exclude: org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration
+    exclude: org.springframework.boot.elasticsearch.autoconfigure.ElasticsearchRestClientAutoConfiguration
 
   flyway:
     enabled: false

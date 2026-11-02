@@ -1,7 +1,7 @@
 package ca.uhn.fhir.jpa.starter.elastic;
 
 import ca.uhn.fhir.jpa.starter.util.EnvironmentHelper;
-import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchProperties;
+import org.springframework.boot.elasticsearch.autoconfigure.ElasticsearchProperties;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
