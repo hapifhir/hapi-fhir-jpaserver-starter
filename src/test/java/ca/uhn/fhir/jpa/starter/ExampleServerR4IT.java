@@ -361,7 +361,7 @@ class ExampleServerR4IT implements IServerSupport {
 		ourClient.create().resource(new CodeSystem().setUrl(testCodeSystem).addConcept(new CodeSystem.ConceptDefinitionComponent().setCode("yes")).addConcept(new CodeSystem.ConceptDefinitionComponent().setCode("no"))).execute();
 		ourClient.create().resource(new ValueSet().setUrl(testValueSet).setCompose(new ValueSet.ValueSetComposeComponent().addInclude(new ValueSet.ConceptSetComponent().setSystem(testValueSet)))).execute();
 
-		Parameters remoteResult = ourClient.operation().onType(ValueSet.class).named("$validate-code").withParameter(Parameters.class, "code", new StringType("22298006")).andParameter("system", new UriType("http://snomed.info/sct")).execute();
+		Parameters remoteResult = ourClient.operation().onType(CodeSystem.class).named("$validate-code").withParameter(Parameters.class, "url", new UriType("http://snomed.info/sct")).andParameter("code", new StringType("22298006")).execute();
 		assertEquals(true, ((BooleanType) remoteResult.getParameterValue("result")).getValue());
 		assertEquals("Myocardial infarction", ((StringType) remoteResult.getParameterValue("display")).getValue());
 

@@ -16,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration;
-import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
-import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.boot.web.server.servlet.context.ServletComponentScan;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +24,13 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
 
 @ServletComponentScan(basePackageClasses = {RestfulServer.class})
-@SpringBootApplication(exclude = {ThymeleafAutoConfiguration.class, QuartzAutoConfiguration.class})
+@SpringBootApplication(
+		excludeName = {
+			"org.springframework.boot.thymeleaf.autoconfigure.ThymeleafAutoConfiguration",
+			"org.springframework.boot.quartz.autoconfigure.QuartzAutoConfiguration",
+			// Requires elasticsearch-java 9.x (Rest5ClientTransport); HAPI uses 8.x and ElasticsearchConfig builds the client
+			"org.springframework.boot.elasticsearch.autoconfigure.ElasticsearchClientAutoConfiguration"
+		})
 @Import({
 	StarterCrR4Config.class,
 	StarterCrDstu3Config.class,
