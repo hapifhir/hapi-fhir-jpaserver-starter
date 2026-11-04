@@ -84,9 +84,10 @@ public class RequestBuilder {
 		req.setContentType("application/fhir+json");
 		req.addHeader("Accept", "application/fhir+json");
 
-		// HAPI FHIR 9 reads GET search parameters only from the query string (hapi-fhir#8769), not from the
-		// request parameter map, so mirror the parameters added above into the query string. This is done here
-		// rather than inside the SEARCH branch so it applies however the parameters were added.
+		// Mirror the parameters added above into the query string: HAPI derives conditional URLs from it, and
+		// HAPI FHIR 9 reads GET search parameters only from the query string, not from the request parameter map
+		// (hapi-fhir#8769). This is done here rather than inside the switch so it applies however the parameters
+		// were added.
 		if (req.getQueryString() == null && !req.getParameterMap().isEmpty()) {
 			req.setQueryString(toQueryString(req.getParameterMap()));
 		}
