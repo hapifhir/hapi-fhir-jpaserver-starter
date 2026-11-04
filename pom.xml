@@ -60,6 +60,17 @@
     <dependencyManagement>
        <dependencies>
 
+            <!--
+            HAPI does not manage Micrometer. The BOM keeps all Micrometer modules on one version, including the
+            ones Spring Boot brings in transitively (micrometer-observation, micrometer-jakarta9, ...).
+            -->
+            <dependency>
+               <groupId>io.micrometer</groupId>
+               <artifactId>micrometer-bom</artifactId>
+               <version>${micrometer.version}</version>
+               <type>pom</type>
+               <scope>import</scope>
+           </dependency>
             <dependency>
                <groupId>org.glassfish.jaxb</groupId>
                <artifactId>jaxb-runtime</artifactId>
@@ -413,14 +424,12 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-core</artifactId>
-            <version>${micrometer.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-prometheus -->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
-            <version>${micrometer.version}</version>
         </dependency>
 
 
