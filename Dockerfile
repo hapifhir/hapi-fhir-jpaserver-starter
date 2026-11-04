@@ -21,7 +21,7 @@ RUN javac /app/HealthCheck.java
 
 ########### Use the official Tomcat image as base image for the Tomcat variant
 ########### it can be built using eg. `docker build --target tomcat .`
-FROM docker.io/library/tomcat:10-jre21-temurin-noble AS tomcat
+FROM docker.io/library/tomcat:11-jre21-temurin-noble AS tomcat
 
 USER root
 RUN rm -rf /usr/local/tomcat/webapps/ROOT && \
