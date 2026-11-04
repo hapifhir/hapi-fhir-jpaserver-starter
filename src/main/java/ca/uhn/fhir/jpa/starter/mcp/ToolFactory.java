@@ -37,7 +37,7 @@ public class ToolFactory {
 			"description": "Type of the resource to create"
 			},
 			"resource": {
-			"type": "object",
+			"type": ["object", "string"],
 			"description": "Resource content in JSON format"
 			},
 			"headers": {
@@ -63,7 +63,7 @@ public class ToolFactory {
 			"description": "ID of the resource to update"
 			},
 			"resource": {
-			"type": "object",
+			"type": ["object", "string"],
 			"description": "Updated resource content in JSON format"
 			}
 		},
@@ -81,7 +81,7 @@ public class ToolFactory {
 			"description": "Type of the resource to update"
 			},
 			"resource": {
-			"type": "object",
+			"type": ["object", "string"],
 			"description": "Updated resource content in JSON format"
 			},
 			"query": {
@@ -107,7 +107,7 @@ public class ToolFactory {
 			"description": "Type of the resource to patch"
 			},
 			"resource": {
-			"type": "object",
+			"type": ["object", "string"],
 			"description": "Resource content to patch in JSON format"
 			},
 			"query": {
@@ -137,7 +137,7 @@ public class ToolFactory {
 			"description": "ID of the resource to patch"
 			},
 			"resource": {
-			"type": "object",
+			"type": ["object", "string"],
 			"description": "Resource content to patch in JSON format"
 			}
 		},
@@ -191,7 +191,7 @@ public class ToolFactory {
 			"description": "A Bundle resource type with type 'transaction' containing multiple FHIR resources"
 			},
 			"resource": {
-			"type": "object",
+			"type": ["object", "string"],
 			"description": "A FHIR Bundle Resource content in JSON format"
 			}
 		},
