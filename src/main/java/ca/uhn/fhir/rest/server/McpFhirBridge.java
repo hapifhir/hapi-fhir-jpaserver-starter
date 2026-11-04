@@ -10,10 +10,13 @@ import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.spec.McpSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Component
 public class McpFhirBridge implements McpBridge {
@@ -79,7 +82,16 @@ public class McpFhirBridge implements McpBridge {
 		String contextPath = restfulServer.getServletContext() != null
 				? restfulServer.getServletContext().getContextPath()
 				: "";
-		var request = new RequestBuilder(fhirContext, contextMap.arguments(), interaction, contextPath).buildRequest();
+		Map<String, Object> arguments = contextMap.arguments() != null ? contextMap.arguments() : Map.of();
+
+		// Invalid arguments (e.g. a missing resourceType or id) are reported as a tool error, not as a JSON-RPC error
+		MockHttpServletRequest request;
+		try {
+			request = new RequestBuilder(fhirContext, arguments, interaction, contextPath).buildRequest();
+		} catch (IllegalArgumentException e) {
+			logger.warn("Invalid arguments for {}: {}", interaction, e.getMessage());
+			return CallToolResultFactory.failure("Invalid arguments: " + e.getMessage());
+		}
 
 		try {
 			restfulServer.handleRequest(interaction.asRequestType(), request, response);
@@ -92,7 +104,7 @@ public class McpFhirBridge implements McpBridge {
 				}
 
 				return CallToolResultFactory.success(
-						contextMap.arguments().get("resourceType").toString(), interaction, body, status);
+						Objects.toString(arguments.get("resourceType"), ""), interaction, body, status);
 			} else {
 				return CallToolResultFactory.failure(String.format("FHIR server error %d: %s", status, body));
 			}

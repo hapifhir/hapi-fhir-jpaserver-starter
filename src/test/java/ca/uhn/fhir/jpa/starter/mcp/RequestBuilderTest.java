@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter.mcp;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.util.UrlUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -8,11 +9,13 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class RequestBuilderTest {
 
@@ -135,5 +138,90 @@ class RequestBuilderTest {
 		assertThat(req.getParameterMap()).containsOnlyKeys("name", "_id");
 		assertThat(req.getParameter("name")).isEqualTo("ivan,peter");
 		assertThat(req.getParameter("_id")).isEqualTo("pt-1,pt-2");
+	}
+
+	@Test
+	void searchParametersAreAlsoSetAsQueryString() {
+		var req = build(
+				Map.of("resourceType", "Patient", "query", "identifier=urn:something|abc&name=Ana Silva"),
+				Interaction.SEARCH,
+				"");
+
+		var parsed = UrlUtil.parseQueryString(req.getQueryString());
+		assertThat(parsed).containsOnlyKeys("identifier", "name");
+		assertThat(parsed.get("identifier")).containsExactly("urn:something|abc");
+		assertThat(parsed.get("name")).containsExactly("Ana Silva");
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {"", "/fhir"})
+	void conditionalUpdateTargetsTheResourceTypeWithTheQuery(String contextPath) {
+		var args = new HashMap<String, Object>();
+		args.put("resourceType", "Patient");
+		args.put("query", "identifier=http://example.org/mrn|12345");
+		args.put("resource", "{\"resourceType\":\"Patient\"}");
+
+		var req = build(args, Interaction.UPDATE, contextPath);
+
+		assertThat(req.getMethod()).isEqualTo("PUT");
+		assertThat(req.getRequestURI()).isEqualTo(contextPath + "/Patient");
+		assertThat(UrlUtil.parseQueryString(req.getQueryString()).get("identifier"))
+				.containsExactly("http://example.org/mrn|12345");
+	}
+
+	@Test
+	void conditionalQueryTakesPrecedenceOverId() {
+		var args = new HashMap<String, Object>();
+		args.put("resourceType", "Patient");
+		args.put("id", "123");
+		args.put("query", Map.of("identifier", "http://example.org/mrn|12345"));
+		args.put("resource", "{\"resourceType\":\"Patient\"}");
+
+		for (var interaction : new Interaction[] {Interaction.UPDATE, Interaction.PATCH}) {
+			var req = build(args, interaction, "");
+			assertThat(req.getRequestURI()).as(interaction.name()).isEqualTo("/Patient");
+			assertThat(req.getParameter("identifier")).as(interaction.name()).isEqualTo("http://example.org/mrn|12345");
+		}
+	}
+
+	@Test
+	void updateAndPatchWithoutQueryOrIdAreRejected() {
+		var args = Map.<String, Object>of("resourceType", "Patient", "resource", "{\"resourceType\":\"Patient\"}");
+
+		for (var interaction : new Interaction[] {Interaction.UPDATE, Interaction.PATCH}) {
+			assertThatThrownBy(() -> build(args, interaction, ""))
+					.as(interaction.name())
+					.isInstanceOf(IllegalArgumentException.class)
+					.hasMessageContaining("'id'")
+					.hasMessageContaining("'query'");
+		}
+	}
+
+	@Test
+	void patchAcceptsAJsonObjectBody() {
+		var args = Map.<String, Object>of(
+				"resourceType", "Patient", "id", "123", "resource", Map.of("resourceType", "Parameters"));
+
+		var req = build(args, Interaction.PATCH, "");
+
+		assertThat(new String(req.getContentAsByteArray(), StandardCharsets.UTF_8))
+				.isEqualTo("{\"resourceType\":\"Parameters\"}");
+	}
+
+	@Test
+	void queryParameterWithoutValueIsRejected() {
+		var query = new HashMap<String, Object>();
+		query.put("name", null);
+
+		assertThatThrownBy(() -> build(Map.of("resourceType", "Patient", "query", query), Interaction.SEARCH, ""))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("'name'");
+	}
+
+	@Test
+	void missingResourceIsRejected() {
+		assertThatThrownBy(() -> build(Map.of("resourceType", "Patient", "id", "123"), Interaction.UPDATE, ""))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("'resource'");
 	}
 }

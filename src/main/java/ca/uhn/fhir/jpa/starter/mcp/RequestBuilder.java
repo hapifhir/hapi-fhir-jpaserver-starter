@@ -1,12 +1,15 @@
 package ca.uhn.fhir.jpa.starter.mcp;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.util.UrlUtil;
 import com.google.gson.Gson;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class RequestBuilder {
@@ -53,28 +56,7 @@ public class RequestBuilder {
 			case SEARCH -> {
 				method = "GET";
 				req = new MockHttpServletRequest(method, basePath);
-				Map<?, ?> sp = null;
-				if (config.get("query") instanceof Map<?, ?> q) {
-					sp = q;
-				} else if (config.get("searchParams") instanceof Map<?, ?> s) {
-					sp = s;
-				}
-				if (sp != null) {
-					sp.forEach((k, v) -> req.addParameter(k.toString(), v.toString()));
-				} else {
-					// Also accept a query string, e.g. "name=Silva&_count=5" (previously silently ignored)
-					Object qs = config.get("query") != null ? config.get("query") : config.get("searchParams");
-					if (qs instanceof String str && !str.isBlank()) {
-						String q = str.startsWith("?") ? str.substring(1) : str;
-						for (String pair : q.split("&")) {
-							if (pair.isBlank()) continue;
-							int i = pair.indexOf('=');
-							String k = URLDecoder.decode(i < 0 ? pair : pair.substring(0, i), StandardCharsets.UTF_8);
-							String v = i < 0 ? "" : URLDecoder.decode(pair.substring(i + 1), StandardCharsets.UTF_8);
-							req.addParameter(k, v);
-						}
-					}
-				}
+				queryParameters().forEach(p -> req.addParameter(p[0], p[1]));
 			}
 			case READ -> {
 				method = "GET";
@@ -88,8 +70,9 @@ public class RequestBuilder {
 			}
 			case UPDATE -> {
 				method = "PUT";
-				String id = requireString();
-				req = new MockHttpServletRequest(method, basePath + "/" + id);
+				List<String[]> conditionalParameters = queryParameters();
+				req = new MockHttpServletRequest(method, targetPath(basePath, conditionalParameters, "update"));
+				conditionalParameters.forEach(p -> req.addParameter(p[0], p[1]));
 				applyResourceBody(req);
 			}
 			case DELETE -> {
@@ -99,8 +82,9 @@ public class RequestBuilder {
 			}
 			case PATCH -> {
 				method = "PATCH";
-				String id = requireString();
-				req = new MockHttpServletRequest(method, basePath + "/" + id);
+				List<String[]> conditionalParameters = queryParameters();
+				req = new MockHttpServletRequest(method, targetPath(basePath, conditionalParameters, "patch"));
+				conditionalParameters.forEach(p -> req.addParameter(p[0], p[1]));
 				applyPatchBody(req);
 			}
 			default -> throw new IllegalArgumentException("Unsupported interaction: " + interaction);
@@ -109,11 +93,35 @@ public class RequestBuilder {
 		req.setContextPath(contextPath);
 		req.setContentType("application/fhir+json");
 		req.addHeader("Accept", "application/fhir+json");
+
+		// Mirror the parameters added above into the query string: HAPI derives conditional URLs from it, and
+		// HAPI FHIR 9 reads GET search parameters only from the query string, not from the request parameter map
+		// (hapi-fhir#8769). This is done here rather than inside the switch so it applies however the parameters
+		// were added.
+		if (req.getQueryString() == null && !req.getParameterMap().isEmpty()) {
+			req.setQueryString(toQueryString(req.getParameterMap()));
+		}
 		return req;
+	}
+
+	private static String toQueryString(Map<String, String[]> theParameters) {
+		StringBuilder query = new StringBuilder();
+		theParameters.forEach((name, values) -> {
+			for (String value : values) {
+				if (!query.isEmpty()) {
+					query.append('&');
+				}
+				query.append(UrlUtil.escapeUrlParam(name)).append('=').append(UrlUtil.escapeUrlParam(value));
+			}
+		});
+		return query.toString();
 	}
 
 	private void applyResourceBody(MockHttpServletRequest req) {
 		Object resourceObj = config.get("resource");
+		if (resourceObj == null) {
+			throw new IllegalArgumentException("Missing 'resource'");
+		}
 		String json;
 		if (resourceObj instanceof Map<?, ?>) json = new Gson().toJson(resourceObj, Map.class);
 		else if (resourceObj instanceof String) json = resourceObj.toString();
@@ -129,6 +137,9 @@ public class RequestBuilder {
 		String content;
 		if (patchBody instanceof String s) {
 			content = s;
+		} else if (patchBody instanceof Map<?, ?>) {
+			// The tool schemas declare 'resource' as a JSON object, e.g. a FHIRPath Patch Parameters resource
+			content = new Gson().toJson(patchBody, Map.class);
 		} else if (patchBody instanceof IBaseResource r) {
 			content = fhirContext.newJsonParser().encodeResourceToString(r);
 		} else {
@@ -143,5 +154,54 @@ public class RequestBuilder {
 			throw new IllegalArgumentException("Missing or invalid '" + "id" + "'");
 		}
 		return s;
+	}
+
+	/**
+	 * Search parameters from 'query' (or 'searchParams'), given either as a map or as a query string such as
+	 * "name=Silva&_count=5". For update and patch they make the request conditional.
+	 */
+	private List<String[]> queryParameters() {
+		List<String[]> parameters = new ArrayList<>();
+		Map<?, ?> map = null;
+		if (config.get("query") instanceof Map<?, ?> q) {
+			map = q;
+		} else if (config.get("searchParams") instanceof Map<?, ?> s) {
+			map = s;
+		}
+		if (map != null) {
+			map.forEach((name, value) -> {
+				if (value == null) {
+					throw new IllegalArgumentException("Missing value for query parameter '" + name + "'");
+				}
+				parameters.add(new String[] {name.toString(), value.toString()});
+			});
+		} else {
+			Object qs = config.get("query") != null ? config.get("query") : config.get("searchParams");
+			if (qs instanceof String str && !str.isBlank()) {
+				String q = str.startsWith("?") ? str.substring(1) : str;
+				for (String pair : q.split("&")) {
+					if (pair.isBlank()) continue;
+					int i = pair.indexOf('=');
+					String name = URLDecoder.decode(i < 0 ? pair : pair.substring(0, i), StandardCharsets.UTF_8);
+					String value = i < 0 ? "" : URLDecoder.decode(pair.substring(i + 1), StandardCharsets.UTF_8);
+					parameters.add(new String[] {name, value});
+				}
+			}
+		}
+		return parameters;
+	}
+
+	/**
+	 * With query parameters, update and patch become conditional and target the resource type
+	 * ({@code PUT [type]?[query]}); otherwise they target the instance given by 'id'.
+	 */
+	private String targetPath(String basePath, List<String[]> conditionalParameters, String operation) {
+		if (!conditionalParameters.isEmpty()) {
+			return basePath;
+		}
+		if (config.get("id") instanceof String id && !id.isBlank()) {
+			return basePath + "/" + id;
+		}
+		throw new IllegalArgumentException("Missing 'id', or 'query' for a conditional " + operation);
 	}
 }
