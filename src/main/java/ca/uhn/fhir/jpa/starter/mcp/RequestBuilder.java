@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter.mcp;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.util.UrlUtil;
 import com.google.gson.Gson;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -82,7 +83,26 @@ public class RequestBuilder {
 
 		req.setContentType("application/fhir+json");
 		req.addHeader("Accept", "application/fhir+json");
+
+		// HAPI FHIR 9 reads GET search parameters only from the query string (hapi-fhir#8769), not from the
+		// request parameter map, so mirror the parameters added above into the query string.
+		if (req.getQueryString() == null && !req.getParameterMap().isEmpty()) {
+			req.setQueryString(toQueryString(req.getParameterMap()));
+		}
 		return req;
+	}
+
+	private static String toQueryString(Map<String, String[]> theParameters) {
+		StringBuilder query = new StringBuilder();
+		theParameters.forEach((name, values) -> {
+			for (String value : values) {
+				if (!query.isEmpty()) {
+					query.append('&');
+				}
+				query.append(UrlUtil.escapeUrlParam(name)).append('=').append(UrlUtil.escapeUrlParam(value));
+			}
+		});
+		return query.toString();
 	}
 
 	private void applyResourceBody(MockHttpServletRequest req) {
