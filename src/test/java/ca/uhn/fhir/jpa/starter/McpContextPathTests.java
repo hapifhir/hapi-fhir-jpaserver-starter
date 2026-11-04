@@ -26,6 +26,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.time.Duration;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -123,6 +124,99 @@ class McpContextPathTests {
 					BundleUtil.toListOfResourcesOfType(FHIR_CONTEXT, responseAs(search, Bundle.class), Patient.class);
 			assertThat(patients).hasSize(1);
 			assertThat(patients.get(0).getNameFirstRep().getFamily()).isEqualTo("Pereira");
+		}
+
+		@Test
+		void conditionalUpdateUpdatesTheMatchingResource() throws JsonProcessingException {
+			createPatient("Oliveira");
+			var id = searchPatients("family=Oliveira").get(0).getIdElement().getIdPart();
+
+			var update = callTool(
+					ToolFactory.conditionalUpdateFhirResource().name(),
+					Map.of(
+							"resourceType",
+							"Patient",
+							"query",
+							"family=Oliveira",
+							"resource",
+							"{\"resourceType\":\"Patient\",\"name\":[{\"family\":\"Oliveira\",\"given\":[\"Ana\"]}]}"));
+			assertThat(update.isError()).as(text(update)).isFalse();
+
+			var read = callTool(ToolFactory.readFhirResource().name(), Map.of("resourceType", "Patient", "id", id));
+			var patient = responseAs(read, Patient.class);
+			assertThat(patient.getNameFirstRep().getGivenAsSingleString()).isEqualTo("Ana");
+			assertThat(patient.getMeta().getVersionId()).isEqualTo("2");
+		}
+
+		@Test
+		void conditionalPatchPatchesTheMatchingResource() throws JsonProcessingException {
+			createPatient("Ferreira");
+			// FHIRPath Patch, passed as a JSON object as the tool schema declares it
+			var fhirPathPatch = new Gson()
+					.fromJson(
+							"""
+							{"resourceType": "Parameters", "parameter": [{"name": "operation", "part": [
+							  {"name": "type", "valueCode": "add"},
+							  {"name": "path", "valueString": "Patient"},
+							  {"name": "name", "valueString": "birthDate"},
+							  {"name": "value", "valueDate": "1970-01-01"}]}]}
+							""",
+							Map.class);
+
+			var patch = callTool(
+					ToolFactory.conditionalPatchFhirResource().name(),
+					Map.of("resourceType", "Patient", "query", "family=Ferreira", "resource", fhirPathPatch));
+			assertThat(patch.isError()).as(text(patch)).isFalse();
+
+			var patients = searchPatients("family=Ferreira");
+			assertThat(patients).hasSize(1);
+			assertThat(patients.get(0).getBirthDateElement().getValueAsString()).isEqualTo("1970-01-01");
+		}
+
+		@Test
+		void plainUpdateUsesTheIdAndIgnoresAQuery() throws JsonProcessingException {
+			createPatient("Lima");
+			createPatient("Rocha");
+			var lima = searchPatients("family=Lima").get(0).getIdElement().getIdPart();
+			var rocha = searchPatients("family=Rocha").get(0).getIdElement().getIdPart();
+
+			var update = callTool(
+					ToolFactory.updateFhirResource().name(),
+					Map.of(
+							"resourceType",
+							"Patient",
+							"id",
+							lima,
+							"query",
+							"family=Rocha",
+							"resource",
+							"{\"resourceType\":\"Patient\",\"id\":\"" + lima
+									+ "\",\"name\":[{\"family\":\"Lima\",\"given\":[\"Rui\"]}]}"));
+			assertThat(update.isError()).as(text(update)).isFalse();
+
+			assertThat(readPatient(lima).getNameFirstRep().getGivenAsSingleString()).isEqualTo("Rui");
+			assertThat(readPatient(rocha).getMeta().getVersionId()).isEqualTo("1");
+		}
+
+		@Test
+		void invalidArgumentsAreReportedAsToolErrors() throws JsonProcessingException {
+			var read = callTool(ToolFactory.readFhirResource().name(), Map.of("resourceType", "Patient"));
+
+			assertThat(read.isError()).isTrue();
+			assertThat(text(read)).contains("Invalid arguments").contains("'id'");
+		}
+
+		private Patient readPatient(String id) throws JsonProcessingException {
+			var read = callTool(ToolFactory.readFhirResource().name(), Map.of("resourceType", "Patient", "id", id));
+			assertThat(read.isError()).as(text(read)).isFalse();
+			return responseAs(read, Patient.class);
+		}
+
+		private List<Patient> searchPatients(String query) throws JsonProcessingException {
+			var search = callTool(
+					ToolFactory.searchFhirResources().name(), Map.of("resourceType", "Patient", "query", query));
+			assertThat(search.isError()).as(text(search)).isFalse();
+			return BundleUtil.toListOfResourcesOfType(FHIR_CONTEXT, responseAs(search, Bundle.class), Patient.class);
 		}
 
 		private McpSchema.CallToolResult createPatient(String family) throws JsonProcessingException {
