@@ -9,8 +9,6 @@ import java.util.Map;
 @Component
 public class CallToolResultFactory {
 
-	private static final JsonMapper JSON_MAPPER = JsonMapper.builder().build();
-
 	public static McpSchema.CallToolResult success(
 			String resourceType, Interaction interaction, String response, int status) {
 		Map<String, Object> payload = Map.of(
@@ -19,7 +17,7 @@ public class CallToolResultFactory {
 				"response", response,
 				"status", status);
 
-		String jacksonData = JSON_MAPPER.writeValueAsString(payload);
+		String jacksonData = JsonMapper.shared().writeValueAsString(payload);
 
 		return McpSchema.CallToolResult.builder()
 				.addContent(new McpSchema.TextContent(jacksonData))

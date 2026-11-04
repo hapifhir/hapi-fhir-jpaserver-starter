@@ -67,7 +67,7 @@ public class McpServerConfig {
 		return HttpServletStreamableServerTransportProvider.builder()
 				.disallowDelete(false)
 				.mcpEndpoint(properties.getMcpEndpoint())
-				.jsonMapper(new JacksonMcpJsonMapper(JsonMapper.builder().build()))
+				.jsonMapper(new JacksonMcpJsonMapper(JsonMapper.shared()))
 				// .contextExtractor((serverRequest, context) -> context)
 				.build();
 	}
