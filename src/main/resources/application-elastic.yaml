@@ -5,7 +5,10 @@ spring:
     password: elastic
 
   autoconfigure:
-    # This empty exclude is needed to override the default exclusion of the Elasticsearch configuration.
+    # This empty exclude re-enables Spring Boot's Elasticsearch REST client auto-configuration (excluded in
+    # application.yaml) so that /actuator/health reports Elasticsearch. The liveness/readiness probe groups are not
+    # affected. ElasticsearchConfig does not need it, and the sniffer stays off unless
+    # spring.elasticsearch.restclient.sniffer.enabled=true.
     exclude:
 
   jpa:
