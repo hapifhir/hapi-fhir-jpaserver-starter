@@ -11,6 +11,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -161,7 +162,7 @@ class RequestBuilderTest {
 		args.put("query", "identifier=http://example.org/mrn|12345");
 		args.put("resource", "{\"resourceType\":\"Patient\"}");
 
-		var req = build(args, Interaction.UPDATE, contextPath);
+		var req = build(args, Interaction.CONDITIONAL_UPDATE, contextPath);
 
 		assertThat(req.getMethod()).isEqualTo("PUT");
 		assertThat(req.getRequestURI()).isEqualTo(contextPath + "/Patient");
@@ -170,31 +171,79 @@ class RequestBuilderTest {
 	}
 
 	@Test
-	void conditionalQueryTakesPrecedenceOverId() {
+	void conditionalPatchTargetsTheResourceTypeWithTheQuery() {
+		var args = Map.<String, Object>of(
+				"resourceType", "Patient", "query", Map.of("family", "Silva"), "resource", "{\"resourceType\":\"Parameters\"}");
+
+		var req = build(args, Interaction.CONDITIONAL_PATCH, "");
+
+		assertThat(req.getMethod()).isEqualTo("PATCH");
+		assertThat(req.getRequestURI()).isEqualTo("/Patient");
+		assertThat(req.getParameter("family")).isEqualTo("Silva");
+	}
+
+	@Test
+	void plainUpdateAndPatchUseTheIdAndIgnoreAQuery() {
 		var args = new HashMap<String, Object>();
 		args.put("resourceType", "Patient");
 		args.put("id", "123");
-		args.put("query", Map.of("identifier", "http://example.org/mrn|12345"));
-		args.put("resource", "{\"resourceType\":\"Patient\"}");
+		args.put("query", Map.of("family", "Silva"));
+		args.put("resource", "{\"resourceType\":\"Patient\",\"id\":\"123\"}");
 
 		for (var interaction : new Interaction[] {Interaction.UPDATE, Interaction.PATCH}) {
 			var req = build(args, interaction, "");
-			assertThat(req.getRequestURI()).as(interaction.name()).isEqualTo("/Patient");
-			assertThat(req.getParameter("identifier")).as(interaction.name()).isEqualTo("http://example.org/mrn|12345");
+			assertThat(req.getRequestURI()).as(interaction.name()).isEqualTo("/Patient/123");
+			assertThat(req.getParameterMap()).as(interaction.name()).isEmpty();
+			assertThat(req.getQueryString()).as(interaction.name()).isNull();
 		}
 	}
 
 	@Test
-	void updateAndPatchWithoutQueryOrIdAreRejected() {
-		var args = Map.<String, Object>of("resourceType", "Patient", "resource", "{\"resourceType\":\"Patient\"}");
+	void conditionalUpdateAndPatchRequireAQuery() {
+		var args = Map.<String, Object>of(
+				"resourceType", "Patient", "id", "123", "resource", "{\"resourceType\":\"Patient\"}");
+
+		for (var interaction : new Interaction[] {Interaction.CONDITIONAL_UPDATE, Interaction.CONDITIONAL_PATCH}) {
+			assertThatThrownBy(() -> build(args, interaction, ""))
+					.as(interaction.name())
+					.isInstanceOf(IllegalArgumentException.class)
+					.hasMessageContaining("'query'");
+		}
+	}
+
+	@Test
+	void plainUpdateAndPatchRequireAnId() {
+		var args = Map.<String, Object>of(
+				"resourceType", "Patient", "query", "family=Silva", "resource", "{\"resourceType\":\"Patient\"}");
 
 		for (var interaction : new Interaction[] {Interaction.UPDATE, Interaction.PATCH}) {
 			assertThatThrownBy(() -> build(args, interaction, ""))
 					.as(interaction.name())
 					.isInstanceOf(IllegalArgumentException.class)
-					.hasMessageContaining("'id'")
-					.hasMessageContaining("'query'");
+					.hasMessageContaining("'id'");
 		}
+	}
+
+	@Test
+	void queryTakesPrecedenceOverSearchParamsInAnyForm() {
+		var args = Map.<String, Object>of(
+				"resourceType", "Patient", "query", "family=Silva", "searchParams", Map.of("name", "Ana"));
+
+		var req = build(args, Interaction.SEARCH, "");
+
+		assertThat(req.getParameterMap()).containsOnlyKeys("family");
+	}
+
+	@Test
+	void listValuesInAQueryMapBecomeRepeatedParameters() {
+		var args = Map.<String, Object>of(
+				"resourceType", "Observation", "query", Map.of("date", List.of("ge2020-01-01", "le2020-12-31")));
+
+		var req = build(args, Interaction.SEARCH, "");
+
+		assertThat(req.getParameterValues("date")).containsExactly("ge2020-01-01", "le2020-12-31");
+		assertThat(UrlUtil.parseQueryString(req.getQueryString()).get("date"))
+				.containsExactly("ge2020-01-01", "le2020-12-31");
 	}
 
 	@Test

@@ -6,9 +6,10 @@ import com.google.gson.Gson;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -70,9 +71,8 @@ public class RequestBuilder {
 			}
 			case UPDATE -> {
 				method = "PUT";
-				List<String[]> conditionalParameters = queryParameters();
-				req = new MockHttpServletRequest(method, targetPath(basePath, conditionalParameters, "update"));
-				conditionalParameters.forEach(p -> req.addParameter(p[0], p[1]));
+				String id = requireString();
+				req = new MockHttpServletRequest(method, basePath + "/" + id);
 				applyResourceBody(req);
 			}
 			case DELETE -> {
@@ -82,9 +82,20 @@ public class RequestBuilder {
 			}
 			case PATCH -> {
 				method = "PATCH";
-				List<String[]> conditionalParameters = queryParameters();
-				req = new MockHttpServletRequest(method, targetPath(basePath, conditionalParameters, "patch"));
-				conditionalParameters.forEach(p -> req.addParameter(p[0], p[1]));
+				String id = requireString();
+				req = new MockHttpServletRequest(method, basePath + "/" + id);
+				applyPatchBody(req);
+			}
+			case CONDITIONAL_UPDATE -> {
+				method = "PUT";
+				req = new MockHttpServletRequest(method, basePath);
+				requireQueryParameters("conditional update").forEach(p -> req.addParameter(p[0], p[1]));
+				applyResourceBody(req);
+			}
+			case CONDITIONAL_PATCH -> {
+				method = "PATCH";
+				req = new MockHttpServletRequest(method, basePath);
+				requireQueryParameters("conditional patch").forEach(p -> req.addParameter(p[0], p[1]));
 				applyPatchBody(req);
 			}
 			default -> throw new IllegalArgumentException("Unsupported interaction: " + interaction);
@@ -157,51 +168,41 @@ public class RequestBuilder {
 	}
 
 	/**
-	 * Search parameters from 'query' (or 'searchParams'), given either as a map or as a query string such as
-	 * "name=Silva&_count=5". For update and patch they make the request conditional.
+	 * Search parameters from 'query', or from 'searchParams' if there is no 'query'. They can be given as a map, where
+	 * a list value becomes a repeated parameter, or as a query string such as "name=Silva&_count=5", which is decoded
+	 * the same way HAPI decodes the query string of a request.
 	 */
 	private List<String[]> queryParameters() {
+		Object query = config.get("query") != null ? config.get("query") : config.get("searchParams");
 		List<String[]> parameters = new ArrayList<>();
-		Map<?, ?> map = null;
-		if (config.get("query") instanceof Map<?, ?> q) {
-			map = q;
-		} else if (config.get("searchParams") instanceof Map<?, ?> s) {
-			map = s;
-		}
-		if (map != null) {
+		if (query instanceof Map<?, ?> map) {
 			map.forEach((name, value) -> {
-				if (value == null) {
-					throw new IllegalArgumentException("Missing value for query parameter '" + name + "'");
+				Collection<?> values = value instanceof Collection<?> c ? c : Collections.singletonList(value);
+				for (Object v : values) {
+					if (v == null) {
+						throw new IllegalArgumentException("Missing value for query parameter '" + name + "'");
+					}
+					parameters.add(new String[] {name.toString(), v.toString()});
 				}
-				parameters.add(new String[] {name.toString(), value.toString()});
 			});
-		} else {
-			Object qs = config.get("query") != null ? config.get("query") : config.get("searchParams");
-			if (qs instanceof String str && !str.isBlank()) {
-				String q = str.startsWith("?") ? str.substring(1) : str;
-				for (String pair : q.split("&")) {
-					if (pair.isBlank()) continue;
-					int i = pair.indexOf('=');
-					String name = URLDecoder.decode(i < 0 ? pair : pair.substring(0, i), StandardCharsets.UTF_8);
-					String value = i < 0 ? "" : URLDecoder.decode(pair.substring(i + 1), StandardCharsets.UTF_8);
-					parameters.add(new String[] {name, value});
+		} else if (query instanceof String str && !str.isBlank()) {
+			UrlUtil.parseQueryString(str).forEach((name, values) -> {
+				for (String v : values) {
+					parameters.add(new String[] {name, v});
 				}
-			}
+			});
 		}
 		return parameters;
 	}
 
 	/**
-	 * With query parameters, update and patch become conditional and target the resource type
-	 * ({@code PUT [type]?[query]}); otherwise they target the instance given by 'id'.
+	 * Conditional update and patch identify the target resource only by the query ({@code PUT [type]?[query]}).
 	 */
-	private String targetPath(String basePath, List<String[]> conditionalParameters, String operation) {
-		if (!conditionalParameters.isEmpty()) {
-			return basePath;
+	private List<String[]> requireQueryParameters(String operation) {
+		List<String[]> parameters = queryParameters();
+		if (parameters.isEmpty()) {
+			throw new IllegalArgumentException("Missing 'query' for " + operation);
 		}
-		if (config.get("id") instanceof String id && !id.isBlank()) {
-			return basePath + "/" + id;
-		}
-		throw new IllegalArgumentException("Missing 'id', or 'query' for a conditional " + operation);
+		return parameters;
 	}
 }

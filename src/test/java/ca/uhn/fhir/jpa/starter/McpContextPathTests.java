@@ -174,11 +174,42 @@ class McpContextPathTests {
 		}
 
 		@Test
+		void plainUpdateUsesTheIdAndIgnoresAQuery() throws JsonProcessingException {
+			createPatient("Lima");
+			createPatient("Rocha");
+			var lima = searchPatients("family=Lima").get(0).getIdElement().getIdPart();
+			var rocha = searchPatients("family=Rocha").get(0).getIdElement().getIdPart();
+
+			var update = callTool(
+					ToolFactory.updateFhirResource().name(),
+					Map.of(
+							"resourceType",
+							"Patient",
+							"id",
+							lima,
+							"query",
+							"family=Rocha",
+							"resource",
+							"{\"resourceType\":\"Patient\",\"id\":\"" + lima
+									+ "\",\"name\":[{\"family\":\"Lima\",\"given\":[\"Rui\"]}]}"));
+			assertThat(update.isError()).as(text(update)).isFalse();
+
+			assertThat(readPatient(lima).getNameFirstRep().getGivenAsSingleString()).isEqualTo("Rui");
+			assertThat(readPatient(rocha).getMeta().getVersionId()).isEqualTo("1");
+		}
+
+		@Test
 		void invalidArgumentsAreReportedAsToolErrors() throws JsonProcessingException {
 			var read = callTool(ToolFactory.readFhirResource().name(), Map.of("resourceType", "Patient"));
 
 			assertThat(read.isError()).isTrue();
 			assertThat(text(read)).contains("Invalid arguments").contains("'id'");
+		}
+
+		private Patient readPatient(String id) throws JsonProcessingException {
+			var read = callTool(ToolFactory.readFhirResource().name(), Map.of("resourceType", "Patient", "id", id));
+			assertThat(read.isError()).as(text(read)).isFalse();
+			return responseAs(read, Patient.class);
 		}
 
 		private List<Patient> searchPatients(String query) throws JsonProcessingException {

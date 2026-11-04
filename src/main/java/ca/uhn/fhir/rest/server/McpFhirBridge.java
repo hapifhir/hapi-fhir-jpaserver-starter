@@ -53,7 +53,7 @@ public class McpFhirBridge implements McpBridge {
 							.build(),
 					new McpServerFeatures.SyncToolSpecification.Builder()
 							.tool(ToolFactory.conditionalPatchFhirResource())
-							.callHandler((exchange, request) -> getToolResult(request, Interaction.PATCH))
+							.callHandler((exchange, request) -> getToolResult(request, Interaction.CONDITIONAL_PATCH))
 							.build(),
 					new McpServerFeatures.SyncToolSpecification.Builder()
 							.tool(ToolFactory.searchFhirResources())
@@ -61,7 +61,7 @@ public class McpFhirBridge implements McpBridge {
 							.build(),
 					new McpServerFeatures.SyncToolSpecification.Builder()
 							.tool(ToolFactory.conditionalUpdateFhirResource())
-							.callHandler((exchange, request) -> getToolResult(request, Interaction.UPDATE))
+							.callHandler((exchange, request) -> getToolResult(request, Interaction.CONDITIONAL_UPDATE))
 							.build(),
 					new McpServerFeatures.SyncToolSpecification.Builder()
 							.tool(ToolFactory.patchFhirResource())

@@ -10,6 +10,8 @@ public enum Interaction {
 	UPDATE("update"),
 	DELETE("delete"),
 	PATCH("patch"),
+	CONDITIONAL_UPDATE("conditional-update"),
+	CONDITIONAL_PATCH("conditional-patch"),
 	TRANSACTION("transaction");
 
 	private final String name;
@@ -26,9 +28,9 @@ public enum Interaction {
 		return switch (this) {
 			case SEARCH, READ -> RequestTypeEnum.GET;
 			case CREATE, TRANSACTION, CALL_CDS_HOOK -> RequestTypeEnum.POST;
-			case UPDATE -> RequestTypeEnum.PUT;
+			case UPDATE, CONDITIONAL_UPDATE -> RequestTypeEnum.PUT;
 			case DELETE -> RequestTypeEnum.DELETE;
-			case PATCH -> RequestTypeEnum.PATCH;
+			case PATCH, CONDITIONAL_PATCH -> RequestTypeEnum.PATCH;
 		};
 	}
 }

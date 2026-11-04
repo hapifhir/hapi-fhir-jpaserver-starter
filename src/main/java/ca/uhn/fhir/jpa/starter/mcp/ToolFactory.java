@@ -86,7 +86,7 @@ public class ToolFactory {
 			},
 			"query": {
 			"type": "string",
-			"description": "Search params that identify the resource for a conditional update, separated by \\"&\\" as in a FHIR search URL. For example: \\"identifier=http://example.org/mrn|12345\\"."
+			"description": "Search params that identify the resource for a conditional update, separated by \\"&\\" as in a FHIR search URL. For example: \\"identifier=http://example.org/mrn|12345\\". Values are URL-decoded, so write a literal \\"+\\" as \\"%2B\\"."
 			},
 			"headers": {
 			"type": "object",
@@ -112,7 +112,7 @@ public class ToolFactory {
 			},
 			"query": {
 			"type": "string",
-			"description": "Search params that identify the resource for a conditional patch, separated by \\"&\\" as in a FHIR search URL. For example: \\"identifier=http://example.org/mrn|12345\\"."
+			"description": "Search params that identify the resource for a conditional patch, separated by \\"&\\" as in a FHIR search URL. For example: \\"identifier=http://example.org/mrn|12345\\". Values are URL-decoded, so write a literal \\"+\\" as \\"%2B\\"."
 			},
 			"headers": {
 			"type": "object",
