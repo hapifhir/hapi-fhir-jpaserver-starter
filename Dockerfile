@@ -27,7 +27,9 @@ USER root
 RUN rm -rf /usr/local/tomcat/webapps/ROOT && \
     mkdir -p /usr/local/tomcat/data/hapi/lucenefiles && \
     chown -R 65532:65532 /usr/local/tomcat/data/hapi/lucenefiles && \
-    chmod 775 /usr/local/tomcat/data/hapi/lucenefiles
+    chmod 775 /usr/local/tomcat/data/hapi/lucenefiles && \
+    mkdir -p /usr/local/tomcat/conf/Catalina/localhost && \
+    chown -R 65532:65532 /usr/local/tomcat/webapps /usr/local/tomcat/conf/Catalina
 
 RUN mkdir -p /target && chown -R 65532:65532 /target
 USER 65532
