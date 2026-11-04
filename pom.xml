@@ -19,7 +19,7 @@
         <!-- Must match the MCP SDK version used by spring-ai-mcp -->
         <mcp.sdk.version>0.18.3</mcp.sdk.version>
         <awaitility.version>4.3.0</awaitility.version>
-        <micrometer.version>1.16.7</micrometer.version>
+        <micrometer.version>1.16.8</micrometer.version>
         <commons.logging.version>1.3.5</commons.logging.version>
     </properties>
 
@@ -420,13 +420,6 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
-            <version>${micrometer.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-prometheus-simpleclient -->
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus-simpleclient</artifactId>
             <version>${micrometer.version}</version>
         </dependency>
 
