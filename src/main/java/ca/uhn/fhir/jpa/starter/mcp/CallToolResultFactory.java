@@ -1,14 +1,15 @@
 package ca.uhn.fhir.jpa.starter.mcp;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.spec.McpSchema;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.Map;
 
 @Component
 public class CallToolResultFactory {
+
+	private static final JsonMapper JSON_MAPPER = JsonMapper.builder().build();
 
 	public static McpSchema.CallToolResult success(
 			String resourceType, Interaction interaction, String response, int status) {
@@ -18,13 +19,7 @@ public class CallToolResultFactory {
 				"response", response,
 				"status", status);
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		String jacksonData;
-		try {
-			jacksonData = objectMapper.writeValueAsString(payload);
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
-		}
+		String jacksonData = JSON_MAPPER.writeValueAsString(payload);
 
 		return McpSchema.CallToolResult.builder()
 				.addContent(new McpSchema.TextContent(jacksonData))

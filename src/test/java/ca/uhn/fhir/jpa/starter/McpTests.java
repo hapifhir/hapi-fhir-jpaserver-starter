@@ -4,7 +4,6 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.searchparam.config.NicknameServiceConfig;
 import ca.uhn.fhir.jpa.starter.mcp.ToolFactory;
 import ca.uhn.fhir.util.BundleUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTransport;
@@ -31,7 +30,7 @@ public class McpTests {
 	private int port;
 
 	@Test
-	public void mcpTests() throws JsonProcessingException {
+	public void mcpTests() {
 
 		var fhirContext = FhirContext.forR4();
 
