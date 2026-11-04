@@ -21,13 +21,15 @@ RUN javac /app/HealthCheck.java
 
 ########### Use the official Tomcat image as base image for the Tomcat variant
 ########### it can be built using eg. `docker build --target tomcat .`
-FROM docker.io/library/tomcat:10-jre21-temurin-noble AS tomcat
+FROM docker.io/library/tomcat:11-jre21-temurin-noble AS tomcat
 
 USER root
 RUN rm -rf /usr/local/tomcat/webapps/ROOT && \
     mkdir -p /usr/local/tomcat/data/hapi/lucenefiles && \
     chown -R 65532:65532 /usr/local/tomcat/data/hapi/lucenefiles && \
-    chmod 775 /usr/local/tomcat/data/hapi/lucenefiles
+    chmod 775 /usr/local/tomcat/data/hapi/lucenefiles && \
+    mkdir -p /usr/local/tomcat/conf/Catalina/localhost && \
+    chown -R 65532:65532 /usr/local/tomcat/webapps /usr/local/tomcat/conf/Catalina
 
 RUN mkdir -p /target && chown -R 65532:65532 /target
 USER 65532

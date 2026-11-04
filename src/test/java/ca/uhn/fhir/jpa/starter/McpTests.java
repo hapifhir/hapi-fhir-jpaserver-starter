@@ -4,7 +4,6 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.searchparam.config.NicknameServiceConfig;
 import ca.uhn.fhir.jpa.starter.mcp.ToolFactory;
 import ca.uhn.fhir.util.BundleUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTransport;
@@ -24,14 +23,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, NicknameServiceConfig.class, RepositoryConfig.class}, properties = {"spring.datasource.url=jdbc:h2:mem:dbr4", "hapi.fhir.fhir_version=r4", "hibernate.search.enabled=true", "spring.ai.mcp.server.enabled=true",})
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class, NicknameServiceConfig.class, RepositoryConfig.class}, properties = {"spring.datasource.url=jdbc:h2:mem:dbr4", "hapi.fhir.fhir_version=r4", "hibernate.search.enabled=true", "spring.ai.mcp.server.enabled=true",
+	// Searches must not be answered from the search cache, otherwise an unfiltered search can reuse an earlier result
+	"hapi.fhir.reuse_cached_search_results_millis=0",})
 public class McpTests {
 
 	@LocalServerPort
 	private int port;
 
 	@Test
-	public void mcpTests() throws JsonProcessingException {
+	public void mcpTests() {
 
 		var fhirContext = FhirContext.forR4();
 
@@ -74,6 +75,26 @@ public class McpTests {
 		var responseBundle = fhirContext.newJsonParser().parseResource(Bundle.class, embeddedResponseBundle.toString());
 		var entries = BundleUtil.toListOfEntries(fhirContext, responseBundle);
 		assertThat(entries.size()).isEqualTo(1);
+
+		// With a second, non-matching Patient, an unfiltered search would return both
+		var createOtherMcpRequest = new McpSchema.CallToolRequest.Builder().arguments(Map.of("resourceType", "Patient", "resource", """
+			{
+			  "resourceType": "Patient",
+			  "identifier": [
+			    {
+			      "system": "urn:something",
+			      "value": "uncleDonald"
+			    }
+			  ]
+			}""")).name(createToolName).build();
+		assertThat(client.callTool(createOtherMcpRequest).isError()).isFalse();
+
+		var filteredSearchMcpRequest = new McpSchema.CallToolRequest.Builder().arguments(Map.of("resourceType", "Patient", "query", Map.of("identifier", "urn:something|uncleScrooge"))).name(searchToolName).build();
+		var filteredSearchResult = client.callTool(filteredSearchMcpRequest);
+		assertThat(filteredSearchResult.isError()).isFalse();
+		var filteredContent = ((McpSchema.TextContent) filteredSearchResult.content().get(0));
+		var filteredBundle = fhirContext.newJsonParser().parseResource(Bundle.class, new Gson().fromJson(filteredContent.text(), LinkedHashMap.class).get("response").toString());
+		assertThat(BundleUtil.toListOfEntries(fhirContext, filteredBundle)).hasSize(1);
 
 		client.closeGracefully();
 	}

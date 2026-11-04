@@ -1,11 +1,11 @@
 package ca.uhn.fhir.jpa.starter.mcp;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.spec.McpSchema;
 import io.modelcontextprotocol.spec.McpSchema.Tool;
+import tools.jackson.core.StreamReadFeature;
+import tools.jackson.core.json.JsonReadFeature;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 public class ToolFactory {
 
@@ -248,7 +248,7 @@ public class ToolFactory {
 		}
 		""";
 
-	public static Tool readFhirResource() throws JsonProcessingException {
+	public static Tool readFhirResource() {
 		return new Tool.Builder()
 				.name("read-fhir-resource")
 				.description("Read an individual FHIR resource")
@@ -256,7 +256,7 @@ public class ToolFactory {
 				.build();
 	}
 
-	public static Tool createFhirResource() throws JsonProcessingException {
+	public static Tool createFhirResource() {
 		return new Tool.Builder()
 				.name("create-fhir-resource")
 				.description("Create a new FHIR resource")
@@ -264,7 +264,7 @@ public class ToolFactory {
 				.build();
 	}
 
-	public static Tool updateFhirResource() throws JsonProcessingException {
+	public static Tool updateFhirResource() {
 		return new Tool.Builder()
 				.name("update-fhir-resource")
 				.description("Update an existing FHIR resource")
@@ -272,7 +272,7 @@ public class ToolFactory {
 				.build();
 	}
 
-	public static Tool conditionalUpdateFhirResource() throws JsonProcessingException {
+	public static Tool conditionalUpdateFhirResource() {
 		return new Tool.Builder()
 				.name("conditional-update-fhir-resource")
 				.description("Conditional update an existing FHIR resource")
@@ -280,7 +280,7 @@ public class ToolFactory {
 				.build();
 	}
 
-	public static Tool conditionalPatchFhirResource() throws JsonProcessingException {
+	public static Tool conditionalPatchFhirResource() {
 		return new Tool.Builder()
 				.name("conditional-patch-fhir-resource")
 				.description("Conditional patch an existing FHIR resource")
@@ -288,7 +288,7 @@ public class ToolFactory {
 				.build();
 	}
 
-	public static Tool patchFhirResource() throws JsonProcessingException {
+	public static Tool patchFhirResource() {
 		return new Tool.Builder()
 				.name("patch-fhir-resource")
 				.description("Patch an existing FHIR resource")
@@ -296,7 +296,7 @@ public class ToolFactory {
 				.build();
 	}
 
-	public static Tool deleteFhirResource() throws JsonProcessingException {
+	public static Tool deleteFhirResource() {
 		return new Tool.Builder()
 				.name("delete-fhir-resource")
 				.description("Delete an existing FHIR resource")
@@ -304,7 +304,7 @@ public class ToolFactory {
 				.build();
 	}
 
-	public static Tool searchFhirResources() throws JsonProcessingException {
+	public static Tool searchFhirResources() {
 		return new Tool.Builder()
 				.name("search-fhir-resources")
 				.description("Search an existing FHIR resources")
@@ -312,7 +312,7 @@ public class ToolFactory {
 				.build();
 	}
 
-	public static Tool createFhirTransaction() throws JsonProcessingException {
+	public static Tool createFhirTransaction() {
 		return new Tool.Builder()
 				.name("create-fhir-transaction")
 				.description("Create a FHIR transaction")
@@ -320,7 +320,7 @@ public class ToolFactory {
 				.build();
 	}
 
-	public static Tool callCdsHook() throws JsonProcessingException {
+	public static Tool callCdsHook() {
 		return new Tool.Builder()
 				.name("call-cds-hook")
 				.description("Call a CDS Hook")
@@ -328,10 +328,11 @@ public class ToolFactory {
 				.build();
 	}
 
-	public static final ObjectMapper mapper = new ObjectMapper()
-			.enable(JsonParser.Feature.ALLOW_COMMENTS)
-			.enable(JsonParser.Feature.ALLOW_SINGLE_QUOTES)
-			.enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
-			.enable(JsonParser.Feature.INCLUDE_SOURCE_IN_LOCATION)
-			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	public static final JsonMapper mapper = JsonMapper.builder()
+			.enable(JsonReadFeature.ALLOW_JAVA_COMMENTS)
+			.enable(JsonReadFeature.ALLOW_SINGLE_QUOTES)
+			.enable(JsonReadFeature.ALLOW_UNQUOTED_PROPERTY_NAMES)
+			.enable(StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION)
+			.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+			.build();
 }

@@ -2,7 +2,8 @@ package ca.uhn.fhir.jpa.starter.cr;
 
 import org.opencds.cqf.fhir.utility.client.TerminologyServerClientSettings;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = "hapi.fhir.cr")
