@@ -173,7 +173,7 @@ public class ToolFactory {
 			"description": "Type of the resource to search"
 			},
 			"query": {
-			"type": "string",
+			"type": ["string", "object"],
 			"description": "Query string with search params separate by \\",\\". For example: \\"_id=pt-1,name=ivan\\""
 			}
 		},
