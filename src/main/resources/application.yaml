@@ -97,7 +97,11 @@ spring:
     banner-mode: off
 
   autoconfigure:
-    # This exclude is only needed for setups not using Elasticsearch where the elasticsearch sniff is not needed.
+    # Stops Spring Boot from creating its own Elasticsearch client (Rest5Client) and a health indicator for it.
+    # Without Elasticsearch, that indicator reports /actuator/health as DOWN (it connects to http://localhost:9200).
+    # When spring.elasticsearch is configured (e.g. the elastic profile), ElasticsearchConfig builds the client
+    # instead; Boot's client bean would clash with it by name (elasticsearchRestClient) and startup would fail.
+    # Keep this exclude in every profile.
     exclude: org.springframework.boot.elasticsearch.autoconfigure.ElasticsearchRestClientAutoConfiguration
 
   flyway:

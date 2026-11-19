@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Qualifier;
-import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.Serial;
@@ -44,7 +44,7 @@ public class CdsHooksServlet extends HttpServlet {
 
 	@Autowired
 	@Qualifier(CDS_HOOKS_OBJECT_MAPPER_FACTORY)
-	JsonMapper objectMapper;
+	ObjectMapper objectMapper;
 
 	protected ProviderConfiguration getProviderConfiguration() {
 		return this.providerConfiguration;

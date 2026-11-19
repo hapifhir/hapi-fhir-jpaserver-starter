@@ -28,7 +28,8 @@ import org.springframework.context.annotation.Import;
 		excludeName = {
 			"org.springframework.boot.thymeleaf.autoconfigure.ThymeleafAutoConfiguration",
 			"org.springframework.boot.quartz.autoconfigure.QuartzAutoConfiguration",
-			// Requires elasticsearch-java 9.x (Rest5ClientTransport); HAPI uses 8.x and ElasticsearchConfig builds the client
+			// Requires elasticsearch-java 9.x (Rest5ClientTransport), but HAPI uses 8.x.
+			// ElasticsearchConfig builds the client instead.
 			"org.springframework.boot.elasticsearch.autoconfigure.ElasticsearchClientAutoConfiguration"
 		})
 @Import({

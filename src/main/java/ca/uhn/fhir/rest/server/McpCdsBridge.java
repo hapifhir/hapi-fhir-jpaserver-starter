@@ -6,7 +6,6 @@ import ca.uhn.fhir.jpa.starter.mcp.Interaction;
 import ca.uhn.fhir.jpa.starter.mcp.ToolFactory;
 import ca.uhn.fhir.rest.api.server.cdshooks.CdsServiceRequestContextJson;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsServiceRegistry;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.spec.McpSchema;
@@ -36,14 +35,10 @@ public class McpCdsBridge implements McpBridge {
 
 	public List<McpServerFeatures.SyncToolSpecification> generateTools() {
 
-		try {
-			return List.of(new McpServerFeatures.SyncToolSpecification.Builder()
-					.tool(ToolFactory.callCdsHook())
-					.callHandler((exchange, request) -> getToolResult(request, Interaction.CALL_CDS_HOOK))
-					.build());
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
-		}
+		return List.of(new McpServerFeatures.SyncToolSpecification.Builder()
+				.tool(ToolFactory.callCdsHook())
+				.callHandler((exchange, request) -> getToolResult(request, Interaction.CALL_CDS_HOOK))
+				.build());
 	}
 
 	private McpSchema.CallToolResult getToolResult(McpSchema.CallToolRequest contextMap, Interaction interaction) {

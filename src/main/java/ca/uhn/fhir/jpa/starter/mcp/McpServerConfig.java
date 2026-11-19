@@ -7,8 +7,7 @@ import ca.uhn.fhir.rest.server.McpFhirBridge;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsServiceRegistry;
 import ca.uhn.hapi.fhir.cdshooks.module.CdsHooksObjectMapperFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.modelcontextprotocol.json.jackson.JacksonMcpJsonMapper;
+import io.modelcontextprotocol.json.jackson3.JacksonMcpJsonMapper;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.transport.HttpServletStreamableServerTransportProvider;
 import org.springframework.ai.mcp.server.common.autoconfigure.properties.McpServerStreamableHttpProperties;
@@ -17,6 +16,7 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 
@@ -67,7 +67,7 @@ public class McpServerConfig {
 		return HttpServletStreamableServerTransportProvider.builder()
 				.disallowDelete(false)
 				.mcpEndpoint(properties.getMcpEndpoint())
-				.jsonMapper(new JacksonMcpJsonMapper(new ObjectMapper()))
+				.jsonMapper(new JacksonMcpJsonMapper(JsonMapper.shared()))
 				// .contextExtractor((serverRequest, context) -> context)
 				.build();
 	}
