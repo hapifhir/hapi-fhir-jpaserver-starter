@@ -2,13 +2,16 @@ package ca.uhn.fhir.jpa.starter.mcp;
 
 import ca.uhn.fhir.context.FhirContext;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.hl7.fhir.r4.model.Parameters;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -52,6 +55,31 @@ class RequestBuilderTest {
 		assertThat(build(args, Interaction.UPDATE, contextPath).getRequestURI()).isEqualTo(expected);
 		assertThat(build(args, Interaction.DELETE, contextPath).getRequestURI()).isEqualTo(expected);
 		assertThat(build(args, Interaction.PATCH, contextPath).getRequestURI()).isEqualTo(expected);
+	}
+
+	@Test
+	void patchAcceptsTheBodyAsAnObject() {
+		var part = List.of(
+				Map.of("name", "type", "valueCode", "replace"),
+				Map.of("name", "path", "valueString", "Patient.name[0].family"),
+				Map.of("name", "value", "valueString", "Patched"));
+		var args = new HashMap<String, Object>();
+		args.put("resourceType", "Patient");
+		args.put("id", "123");
+		args.put(
+				"resource",
+				Map.of("resourceType", "Parameters", "parameter", List.of(Map.of("name", "operation", "part", part))));
+
+		var req = build(args, Interaction.PATCH, "");
+
+		assertThat(req.getMethod()).isEqualTo("PATCH");
+		var body = new String(req.getContentAsByteArray(), StandardCharsets.UTF_8);
+		var parameters = FHIR_CONTEXT.newJsonParser().parseResource(Parameters.class, body);
+		var operation = parameters.getParameterFirstRep();
+		assertThat(operation.getName()).isEqualTo("operation");
+		assertThat(operation.getPart())
+				.extracting(p -> p.getName() + "=" + p.getValue().primitiveValue())
+				.containsExactly("type=replace", "path=Patient.name[0].family", "value=Patched");
 	}
 
 	@ParameterizedTest

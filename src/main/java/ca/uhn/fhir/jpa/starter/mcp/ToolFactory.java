@@ -108,7 +108,7 @@ public class ToolFactory {
 			},
 			"resource": {
 			"type": ["object", "string"],
-			"description": "Resource content to patch in JSON format"
+			"description": "FHIR Patch document in JSON format: a Parameters resource with one \\"operation\\" parameter per change, see https://hl7.org/fhir/fhirpatch.html. Not the modified resource."
 			},
 			"query": {
 			"type": "string",
@@ -138,7 +138,7 @@ public class ToolFactory {
 			},
 			"resource": {
 			"type": ["object", "string"],
-			"description": "Resource content to patch in JSON format"
+			"description": "FHIR Patch document in JSON format: a Parameters resource with one \\"operation\\" parameter per change, see https://hl7.org/fhir/fhirpatch.html. Not the modified resource."
 			}
 		},
 		"required": ["resourceType", "id", "resource"]

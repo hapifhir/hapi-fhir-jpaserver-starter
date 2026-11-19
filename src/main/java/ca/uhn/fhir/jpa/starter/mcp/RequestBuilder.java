@@ -151,6 +151,9 @@ public class RequestBuilder {
 		String content;
 		if (patchBody instanceof String s) {
 			content = s;
+		} else if (patchBody instanceof Map<?, ?>) {
+			// The tool schema allows the patch body as a JSON object, as for create and update
+			content = new Gson().toJson(patchBody, Map.class);
 		} else if (patchBody instanceof IBaseResource r) {
 			content = fhirContext.newJsonParser().encodeResourceToString(r);
 		} else {
