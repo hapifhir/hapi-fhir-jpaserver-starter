@@ -725,4 +725,4 @@ You can configure the agent using environment variables or Java system propertie
 
 MCP capabilities can be enabled by setting the `spring.ai.mcp.server.enabled` to `true`. This will enable the MCP server and expose the MCP endpoints. The default MCP endpoint is `/mcp/messages` and can be tried out by running e.g. `npx @modelcontextprotocol/inspector` and connecting to http://localhost:8080/mcp/messages using Streamable HTTP. Spring AI MCP Server Auto Configuration is currently not supported.
 
-Always set `spring.ai.mcp.server.enabled` explicitly, to `true` or `false`, including in a configuration file that replaces `application.yaml` via `spring.config.location`. If the property is missing, Spring AI's own MCP auto-configuration still runs, and with Spring AI 1.1.x the server fails at startup with a `NoClassDefFoundError`.
+Always set `spring.ai.mcp.server.enabled` explicitly, to `true` or `false`, including in a configuration file that replaces `application.yaml` via `spring.config.location`. If the property is missing, Spring AI's own MCP auto-configuration still runs, while the starter's MCP endpoint stays off.
