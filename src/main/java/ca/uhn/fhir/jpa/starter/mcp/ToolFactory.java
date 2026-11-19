@@ -42,7 +42,7 @@ public class ToolFactory {
 			},
 			"headers": {
 			"type": "object",
-			"description": "Headers for create request.\\nAvailable headers: If-None-Exist header for conditional create where the value is search param string.\\nFor example: {\\"If-None-Exist\\": \\"active=false\\"}"
+			"description": "Headers for create request.\\nAvailable headers: If-None-Exist header for conditional create where the value is search param string.\\nFor example: {\\"If-None-Exist\\": \\"active=false\\"}\\nValues are URL-decoded, so write a literal \\"+\\" as \\"%2B\\"."
 			}
 		},
 		"required": ["resourceType", "resource"]
@@ -275,7 +275,8 @@ public class ToolFactory {
 	public static Tool conditionalUpdateFhirResource() {
 		return new Tool.Builder()
 				.name("conditional-update-fhir-resource")
-				.description("Conditional update an existing FHIR resource")
+				.description(
+						"Conditional update of the FHIR resource that matches a search query. If no resource matches, the resource is created.")
 				.inputSchema(mapper.readValue(CONDITIONAL_UPDATE_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class))
 				.build();
 	}

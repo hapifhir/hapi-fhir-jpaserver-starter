@@ -10,6 +10,11 @@ import java.util.Map;
 @Component
 public class CallToolResultFactory {
 
+	public static McpSchema.CallToolResult success(
+			String resourceType, Interaction interaction, String response, int status) {
+		return success(resourceType, interaction, response, status, null);
+	}
+
 	/**
 	 * @param location the Location header of the response, if any. When the response has no body, e.g. for a
 	 *                 conditional create that matched an existing resource, it identifies the resource.

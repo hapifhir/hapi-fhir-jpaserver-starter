@@ -13,8 +13,18 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class RequestBuilder {
+
+	/**
+	 * The headers that the tool schemas offer, per interaction. Other headers are rejected, so that a tool call cannot
+	 * set e.g. Host, Authorization or X-Forwarded-* on the request that HAPI handles in-process.
+	 */
+	private static final Map<Interaction, Set<String>> ALLOWED_HEADERS = Map.of(
+			Interaction.CREATE, Set.of(Constants.HEADER_IF_NONE_EXIST),
+			Interaction.UPDATE, Set.of(Constants.HEADER_IF_MATCH),
+			Interaction.PATCH, Set.of(Constants.HEADER_IF_MATCH));
 
 	private final FhirContext fhirContext;
 	private final String resourceType;
@@ -107,15 +117,7 @@ public class RequestBuilder {
 		req.setContentType(contentType);
 		req.addHeader("Accept", Constants.CT_FHIR_JSON_NEW);
 
-		// Headers from the tool arguments, e.g. If-None-Exist for a conditional create or If-Match for a
-		// version-aware update
-		if (config.get("headers") instanceof Map<?, ?> headers) {
-			headers.forEach((name, value) -> {
-				if (name != null && value != null) {
-					req.addHeader(name.toString(), value.toString());
-				}
-			});
-		}
+		applyHeaders(req);
 
 		// Mirror the parameters added above into the query string: HAPI derives conditional URLs from it, and
 		// HAPI FHIR 9 reads GET search parameters only from the query string, not from the request parameter map
@@ -125,6 +127,32 @@ public class RequestBuilder {
 			req.setQueryString(toQueryString(req.getParameterMap()));
 		}
 		return req;
+	}
+
+	/**
+	 * Adds the headers from the tool arguments, e.g. If-None-Exist for a conditional create or If-Match for a
+	 * version-aware update. Only the headers in {@link #ALLOWED_HEADERS} are accepted.
+	 */
+	private void applyHeaders(MockHttpServletRequest req) {
+		Object headers = config.get("headers");
+		if (headers == null) {
+			return;
+		}
+		if (!(headers instanceof Map<?, ?> map)) {
+			throw new IllegalArgumentException("'headers' must be a JSON object");
+		}
+		Set<String> allowed = ALLOWED_HEADERS.getOrDefault(interaction, Set.of());
+		map.forEach((name, value) -> {
+			String headerName = String.valueOf(name);
+			if (allowed.stream().noneMatch(headerName::equalsIgnoreCase)) {
+				throw new IllegalArgumentException("Unsupported header '" + headerName + "' for "
+						+ interaction.getName() + ", allowed: " + allowed);
+			}
+			if (!(value instanceof String || value instanceof Number || value instanceof Boolean)) {
+				throw new IllegalArgumentException("Header '" + headerName + "' must have a string value");
+			}
+			req.addHeader(headerName, value.toString());
+		});
 	}
 
 	private static String toQueryString(Map<String, String[]> theParameters) {
@@ -192,7 +220,10 @@ public class RequestBuilder {
 	 * the same way HAPI decodes the query string of a request.
 	 */
 	private List<String[]> queryParameters() {
-		Object query = config.get("query") != null ? config.get("query") : config.get("searchParams");
+		Object query = config.get("query");
+		if (query == null || (query instanceof String s && s.isBlank())) {
+			query = config.get("searchParams");
+		}
 		List<String[]> parameters = new ArrayList<>();
 		if (query instanceof Map<?, ?> map) {
 			map.forEach((name, value) -> {
@@ -201,15 +232,23 @@ public class RequestBuilder {
 					if (v == null) {
 						throw new IllegalArgumentException("Missing value for query parameter '" + name + "'");
 					}
+					if (!(v instanceof String || v instanceof Number || v instanceof Boolean)) {
+						throw new IllegalArgumentException(
+								"Query parameter '" + name + "' must have a string, number or boolean value");
+					}
 					parameters.add(new String[] {name.toString(), v.toString()});
 				}
 			});
-		} else if (query instanceof String str && !str.isBlank()) {
-			UrlUtil.parseQueryString(str).forEach((name, values) -> {
-				for (String v : values) {
-					parameters.add(new String[] {name, v});
-				}
-			});
+		} else if (query instanceof String str) {
+			if (!str.isBlank()) {
+				UrlUtil.parseQueryString(str).forEach((name, values) -> {
+					for (String v : values) {
+						parameters.add(new String[] {name, v});
+					}
+				});
+			}
+		} else if (query != null) {
+			throw new IllegalArgumentException("'query' must be a query string or a JSON object");
 		}
 		return parameters;
 	}

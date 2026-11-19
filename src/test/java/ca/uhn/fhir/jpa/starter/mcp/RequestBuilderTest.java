@@ -125,6 +125,83 @@ class RequestBuilderTest {
 		assertThat(req.getHeader("Accept")).isEqualTo("application/fhir+json");
 	}
 
+	@Test
+	void ifMatchIsPassedForUpdateAndPatch() {
+		var args = new HashMap<String, Object>();
+		args.put("resourceType", "Patient");
+		args.put("id", "123");
+		args.put("resource", "{\"resourceType\":\"Patient\",\"id\":\"123\"}");
+		args.put("headers", Map.of("if-match", "2"));
+
+		assertThat(build(args, Interaction.UPDATE, "").getHeader("If-Match")).isEqualTo("2");
+		assertThat(build(args, Interaction.PATCH, "").getHeader("If-Match")).isEqualTo("2");
+	}
+
+	@Test
+	void headersOutsideTheAllowListAreRejected() {
+		var create = new HashMap<String, Object>();
+		create.put("resourceType", "Patient");
+		create.put("resource", "{\"resourceType\":\"Patient\"}");
+		create.put("headers", Map.of("X-Forwarded-User", "admin"));
+		assertThatThrownBy(() -> build(create, Interaction.CREATE, ""))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("Unsupported header 'X-Forwarded-User'");
+
+		var read = new HashMap<String, Object>();
+		read.put("resourceType", "Patient");
+		read.put("id", "123");
+		read.put("headers", Map.of("If-None-Match", "W/\"1\""));
+		assertThatThrownBy(() -> build(read, Interaction.READ, ""))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("Unsupported header 'If-None-Match'");
+	}
+
+	@Test
+	void headersMustBeAnObjectWithStringValues() {
+		var args = new HashMap<String, Object>();
+		args.put("resourceType", "Patient");
+		args.put("id", "123");
+		args.put("resource", "{\"resourceType\":\"Patient\",\"id\":\"123\"}");
+
+		args.put("headers", "{\"If-Match\":\"2\"}");
+		assertThatThrownBy(() -> build(args, Interaction.UPDATE, ""))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("'headers' must be a JSON object");
+
+		args.put("headers", Map.of("If-Match", List.of("2")));
+		assertThatThrownBy(() -> build(args, Interaction.UPDATE, ""))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("must have a string value");
+	}
+
+	@Test
+	void queryValuesMustBeScalars() {
+		var args = Map.<String, Object>of(
+				"resourceType", "Patient", "query", Map.of("identifier", Map.of("system", "http://x", "value", "1")));
+
+		assertThatThrownBy(() -> build(args, Interaction.CONDITIONAL_UPDATE, ""))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("Query parameter 'identifier' must have a string, number or boolean value");
+	}
+
+	@Test
+	void blankQueryFallsBackToSearchParams() {
+		var req = build(
+				Map.of("resourceType", "Patient", "query", " ", "searchParams", Map.of("identifier", "urn:x|1")),
+				Interaction.SEARCH,
+				"");
+
+		assertThat(req.getParameter("identifier")).isEqualTo("urn:x|1");
+	}
+
+	@Test
+	void unsupportedQueryTypeIsRejected() {
+		assertThatThrownBy(() -> build(
+						Map.of("resourceType", "Patient", "query", List.of("name=Silva")), Interaction.SEARCH, ""))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("'query' must be a query string or a JSON object");
+	}
+
 	@ParameterizedTest
 	@ValueSource(strings = {"", "/r5", "/apps/fhir-server"})
 	void transactionPostsToContextRoot(String contextPath) {
