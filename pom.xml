@@ -457,6 +457,12 @@
             <artifactId>spring-ai-starter-mcp-server</artifactId>
             <version>${spring.ai.version}</version>
             <exclusions>
+                <!--
+                In Spring AI 1.1.8, McpServerAutoConfiguration.stdioServerTransport() would create the Jackson 2
+                mapper from this jar. That bean is skipped because McpServerConfig provides the transport, which
+                requires spring.ai.mcp.server.enabled=true. If the property is not set at all, Spring AI's
+                auto-configuration still runs and startup fails with NoClassDefFoundError.
+                -->
                 <exclusion>
                     <groupId>io.modelcontextprotocol.sdk</groupId>
                     <artifactId>mcp-json-jackson2</artifactId>
