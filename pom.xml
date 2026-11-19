@@ -5,25 +5,22 @@
 
     <properties>
         <java.version>17</java.version>
-        <hapi.fhir.jpa.server.starter.revision>2</hapi.fhir.jpa.server.starter.revision>
-        <clinical-reasoning.version>4.13.0</clinical-reasoning.version>
+        <hapi.fhir.jpa.server.starter.revision>1</hapi.fhir.jpa.server.starter.revision>
+        <clinical-reasoning.version>4.16.0-update-hapi-9-0-0-fd05f713f-SNAPSHOT</clinical-reasoning.version>
 
         <!-- Plugins Versions -->
         <maven.failsafe.version>3.5.4</maven.failsafe.version>
         <maven.fire.version>${maven.failsafe.version}</maven.fire.version>
         <maven.dependency.version>3.9.0</maven.dependency.version>
         <maven.compiler.version>3.14.1</maven.compiler.version>
-        <maven.jacoco.version>0.8.15</maven.jacoco.version>
 
         <!-- Dependencies Versions -->
         <spring.ai.version>1.1.8</spring.ai.version>
+        <!-- Must match the MCP SDK version used by spring-ai-mcp -->
+        <mcp.sdk.version>0.18.3</mcp.sdk.version>
         <awaitility.version>4.3.0</awaitility.version>
-        <micrometer.version>1.16.7</micrometer.version>
+        <micrometer.version>1.16.8</micrometer.version>
         <commons.logging.version>1.3.5</commons.logging.version>
-        <spring_boot_version>3.5.14</spring_boot_version>
-        <postgresql.version>42.7.12</postgresql.version>
-        <tomcat_embed_version>10.1.59</tomcat_embed_version>
-        <logback_version>1.5.25</logback_version>
     </properties>
 
     <!-- one-liner to take you to the cloud with settings form the application.yaml file: -->
@@ -37,7 +34,7 @@
     <parent>
         <groupId>ca.uhn.hapi.fhir</groupId>
         <artifactId>hapi-fhir</artifactId>
-        <version>8.12.0</version>
+        <version>8.13.16-SNAPSHOT</version>
     </parent>
 
     <artifactId>hapi-fhir-jpaserver-starter</artifactId>
@@ -63,6 +60,17 @@
     <dependencyManagement>
        <dependencies>
 
+            <!--
+            HAPI does not manage Micrometer. The BOM keeps all Micrometer modules on one version, including the
+            ones Spring Boot brings in transitively (micrometer-observation, micrometer-jakarta9, ...).
+            -->
+            <dependency>
+               <groupId>io.micrometer</groupId>
+               <artifactId>micrometer-bom</artifactId>
+               <version>${micrometer.version}</version>
+               <type>pom</type>
+               <scope>import</scope>
+           </dependency>
             <dependency>
                <groupId>org.glassfish.jaxb</groupId>
                <artifactId>jaxb-runtime</artifactId>
@@ -93,6 +101,12 @@
             <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
             <version>${spring_boot_version}</version>
         </dependency>
+        <!-- Spring Boot 4 moved JpaProperties / HibernateJpaAutoConfiguration out of spring-boot-autoconfigure -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-hibernate</artifactId>
+            <version>${spring_boot_version}</version>
+        </dependency>
         <dependency>
             <groupId>co.elastic.clients</groupId>
             <artifactId>elasticsearch-java</artifactId>
@@ -101,7 +115,6 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
         </dependency>
         <dependency>
           <groupId>com.microsoft.sqlserver</groupId>
@@ -222,12 +235,10 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>${logback_version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>${logback_version}</version>
         </dependency>
 
         <!-- Needed for JEE/Servlet support -->
@@ -303,7 +314,7 @@
             <artifactId>jquery</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.webjars.bower</groupId>
+            <groupId>org.webjars.npm</groupId>
             <artifactId>moment</artifactId>
         </dependency>
 
@@ -318,6 +329,11 @@
                 <exclusion>
                     <groupId>com.sun.xml.bind</groupId>
                     <artifactId>jaxb-impl</artifactId>
+                </exclusion>
+                <!-- WebSocket 2.1 API shadows the 2.2 API bundled in Tomcat 11's tomcat-embed-websocket -->
+                <exclusion>
+                    <groupId>jakarta.websocket</groupId>
+                    <artifactId>jakarta.websocket-client-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -363,6 +379,18 @@
                     <artifactId>*</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>org.eclipse.jetty.ee11</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jetty.ee11.websocket</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jetty.ee</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>org.eclipse.jetty</groupId>
                     <artifactId>*</artifactId>
                 </exclusion>
@@ -396,34 +424,31 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-core</artifactId>
-            <version>${micrometer.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-prometheus -->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
-            <version>${micrometer.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-prometheus-simpleclient -->
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus-simpleclient</artifactId>
-            <version>${micrometer.version}</version>
         </dependency>
 
 
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>5.1.0</version>
+            <version>7.0.2</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-mcp</artifactId>
             <version>${spring.ai.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.modelcontextprotocol.sdk</groupId>
+                    <artifactId>mcp-json-jackson2</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!--implementation("org.springframework.ai:spring-ai-starter-mcp-server-webmvc:1.1.0-M1")-->
@@ -431,6 +456,28 @@
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-starter-mcp-server</artifactId>
             <version>${spring.ai.version}</version>
+            <exclusions>
+                <!--
+                In Spring AI 1.1.8, McpServerAutoConfiguration.stdioServerTransport() would create the Jackson 2
+                mapper from this jar. That bean is skipped because McpServerConfig provides the transport, which
+                requires spring.ai.mcp.server.enabled=true. If the property is not set at all, Spring AI's
+                auto-configuration still runs and startup fails with NoClassDefFoundError.
+                -->
+                <exclusion>
+                    <groupId>io.modelcontextprotocol.sdk</groupId>
+                    <artifactId>mcp-json-jackson2</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--
+        Jackson 3 JSON binding for the MCP SDK instead of mcp-json-jackson2. Only one of the two may be on the
+        classpath: the SDK picks the first McpJsonMapperSupplier found by ServiceLoader.
+        -->
+        <dependency>
+            <groupId>io.modelcontextprotocol.sdk</groupId>
+            <artifactId>mcp-json-jackson3</artifactId>
+            <version>${mcp.sdk.version}</version>
         </dependency>
 
         <dependency>
@@ -687,29 +734,6 @@
                     </ignoredResourcePatterns>
                 </configuration>
             </plugin>
-
-            <!-- JaCoCo code coverage plugin so SonarQube can analyze test coverage -->
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${maven.jacoco.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-
         </plugins>
     </build>
 
