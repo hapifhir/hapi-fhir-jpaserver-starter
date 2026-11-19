@@ -48,7 +48,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 			"hibernate.search.enabled=true",
 			"spring.ai.mcp.server.enabled=true",
 		})
-class McpContextPathTests {
+class McpContextPathIT {
 
 	private static final FhirContext FHIR_CONTEXT = FhirContext.forR4Cached();
 
