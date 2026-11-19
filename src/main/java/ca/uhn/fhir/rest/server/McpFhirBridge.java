@@ -5,6 +5,7 @@ import ca.uhn.fhir.jpa.starter.mcp.CallToolResultFactory;
 import ca.uhn.fhir.jpa.starter.mcp.Interaction;
 import ca.uhn.fhir.jpa.starter.mcp.RequestBuilder;
 import ca.uhn.fhir.jpa.starter.mcp.ToolFactory;
+import ca.uhn.fhir.rest.api.Constants;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.spec.McpSchema;
 import org.slf4j.Logger;
@@ -94,12 +95,14 @@ public class McpFhirBridge implements McpBridge {
 			var body = response.getContentAsString();
 
 			if (status >= 200 && status < 300) {
-				if (body.isBlank()) {
-					return CallToolResultFactory.failure("Empty successful response for " + interaction);
-				}
-
+				// A successful response can have no body, e.g. a conditional create that matched an existing
+				// resource. The Location header then identifies the resource.
 				return CallToolResultFactory.success(
-						Objects.toString(arguments.get("resourceType"), ""), interaction, body, status);
+						Objects.toString(arguments.get("resourceType"), ""),
+						interaction,
+						body,
+						status,
+						response.getHeader(Constants.HEADER_LOCATION));
 			} else {
 				return CallToolResultFactory.failure(String.format("FHIR server error %d: %s", status, body));
 			}
