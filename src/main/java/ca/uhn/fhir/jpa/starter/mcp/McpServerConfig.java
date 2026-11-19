@@ -16,6 +16,7 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
@@ -67,7 +68,11 @@ public class McpServerConfig {
 		return HttpServletStreamableServerTransportProvider.builder()
 				.disallowDelete(false)
 				.mcpEndpoint(properties.getMcpEndpoint())
-				.jsonMapper(new JacksonMcpJsonMapper(JsonMapper.shared()))
+				// Read JSON floats as BigDecimal, so that FHIR decimals in a resource passed as a JSON object
+				// keep their precision on the way to HAPI (e.g. 1.50 stays 1.50)
+				.jsonMapper(new JacksonMcpJsonMapper(JsonMapper.builder()
+						.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
+						.build()))
 				// .contextExtractor((serverRequest, context) -> context)
 				.build();
 	}
