@@ -32,6 +32,11 @@ RUN rm -rf /usr/local/tomcat/webapps/ROOT && \
     chown -R 65532:65532 /usr/local/tomcat/webapps /usr/local/tomcat/conf/Catalina
 
 RUN mkdir -p /target && chown -R 65532:65532 /target
+
+# Mitigation for CVE-2026-114938 (#1014): disable the JIT's Base64 intrinsics until this base image ships Temurin
+# 21.0.13.1 or later. setenv.sh appends the option to CATALINA_OPTS, so it also applies when JAVA_TOOL_OPTIONS or
+# CATALINA_OPTS are set. Remove this once `java -version` in the base image reports 21.0.13.1 or later.
+RUN printf '%s\n' 'CATALINA_OPTS="$CATALINA_OPTS -XX:-UseBASE64Intrinsics"' > /usr/local/tomcat/bin/setenv.sh
 USER 65532
 
 COPY --chown=65532:65532 catalina.properties /usr/local/tomcat/conf/catalina.properties
