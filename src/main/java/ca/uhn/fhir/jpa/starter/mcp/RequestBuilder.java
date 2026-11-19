@@ -1,6 +1,7 @@
 package ca.uhn.fhir.jpa.starter.mcp;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.api.Constants;
 import ca.uhn.fhir.util.UrlUtil;
 import com.google.gson.Gson;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -52,6 +53,7 @@ public class RequestBuilder {
 		String basePath = contextPath + "/" + resourceType;
 		String method;
 		MockHttpServletRequest req;
+		String contentType = Constants.CT_FHIR_JSON_NEW;
 
 		switch (interaction) {
 			case SEARCH -> {
@@ -84,7 +86,7 @@ public class RequestBuilder {
 				method = "PATCH";
 				String id = requireString();
 				req = new MockHttpServletRequest(method, basePath + "/" + id);
-				applyPatchBody(req);
+				contentType = applyPatchBody(req);
 			}
 			case CONDITIONAL_UPDATE -> {
 				method = "PUT";
@@ -96,14 +98,24 @@ public class RequestBuilder {
 				method = "PATCH";
 				req = new MockHttpServletRequest(method, basePath);
 				requireQueryParameters("conditional patch").forEach(p -> req.addParameter(p[0], p[1]));
-				applyPatchBody(req);
+				contentType = applyPatchBody(req);
 			}
 			default -> throw new IllegalArgumentException("Unsupported interaction: " + interaction);
 		}
 
 		req.setContextPath(contextPath);
-		req.setContentType("application/fhir+json");
-		req.addHeader("Accept", "application/fhir+json");
+		req.setContentType(contentType);
+		req.addHeader("Accept", Constants.CT_FHIR_JSON_NEW);
+
+		// Headers from the tool arguments, e.g. If-None-Exist for a conditional create or If-Match for a
+		// version-aware update
+		if (config.get("headers") instanceof Map<?, ?> headers) {
+			headers.forEach((name, value) -> {
+				if (name != null && value != null) {
+					req.addHeader(name.toString(), value.toString());
+				}
+			});
+		}
 
 		// Mirror the parameters added above into the query string: HAPI derives conditional URLs from it, and
 		// HAPI FHIR 9 reads GET search parameters only from the query string, not from the request parameter map
@@ -140,7 +152,10 @@ public class RequestBuilder {
 		req.setContent(json.getBytes(StandardCharsets.UTF_8));
 	}
 
-	private void applyPatchBody(MockHttpServletRequest req) {
+	/**
+	 * @return the content type of the patch body: JSON Patch (RFC 6902) for a JSON array, otherwise FHIR Patch
+	 */
+	private String applyPatchBody(MockHttpServletRequest req) {
 		Object patchBody = config.get("resource");
 		if (patchBody == null) {
 			throw new IllegalArgumentException("Missing 'resource' for patch interaction");
@@ -151,12 +166,16 @@ public class RequestBuilder {
 		} else if (patchBody instanceof Map<?, ?>) {
 			// The tool schema allows the patch body as a JSON object, as for create and update
 			content = new Gson().toJson(patchBody, Map.class);
+		} else if (patchBody instanceof List<?>) {
+			// A JSON Patch document is a JSON array of operations
+			content = new Gson().toJson(patchBody, List.class);
 		} else if (patchBody instanceof IBaseResource r) {
 			content = fhirContext.newJsonParser().encodeResourceToString(r);
 		} else {
 			throw new IllegalArgumentException("Unsupported patch body type: " + patchBody.getClass());
 		}
 		req.setContent(content.getBytes(StandardCharsets.UTF_8));
+		return content.stripLeading().startsWith("[") ? Constants.CT_JSON_PATCH : Constants.CT_FHIR_JSON_NEW;
 	}
 
 	private String requireString() {

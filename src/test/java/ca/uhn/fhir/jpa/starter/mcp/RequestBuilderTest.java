@@ -3,6 +3,7 @@ package ca.uhn.fhir.jpa.starter.mcp;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.util.UrlUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.Gson;
 import org.hl7.fhir.r4.model.Parameters;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -75,6 +76,7 @@ class RequestBuilderTest {
 		var req = build(args, Interaction.PATCH, "");
 
 		assertThat(req.getMethod()).isEqualTo("PATCH");
+		assertThat(req.getContentType()).isEqualTo("application/fhir+json");
 		var body = new String(req.getContentAsByteArray(), StandardCharsets.UTF_8);
 		var parameters = FHIR_CONTEXT.newJsonParser().parseResource(Parameters.class, body);
 		var operation = parameters.getParameterFirstRep();
@@ -82,6 +84,45 @@ class RequestBuilderTest {
 		assertThat(operation.getPart())
 				.extracting(p -> p.getName() + "=" + p.getValue().primitiveValue())
 				.containsExactly("type=replace", "path=Patient.name[0].family", "value=Patched");
+	}
+
+	@Test
+	void jsonPatchArrayIsSentAsJsonPatch() {
+		var args = new HashMap<String, Object>();
+		args.put("resourceType", "Patient");
+		args.put("id", "123");
+		args.put("resource", List.of(Map.of("op", "add", "path", "/active", "value", true)));
+
+		var req = build(args, Interaction.PATCH, "");
+
+		assertThat(req.getContentType()).isEqualTo("application/json-patch+json");
+		var body = new Gson().fromJson(new String(req.getContentAsByteArray(), StandardCharsets.UTF_8), List.class);
+		assertThat(body).isEqualTo(List.of(Map.of("op", "add", "path", "/active", "value", true)));
+	}
+
+	@Test
+	void jsonPatchStringIsSentAsJsonPatch() {
+		var args = new HashMap<String, Object>();
+		args.put("resourceType", "Patient");
+		args.put("query", "identifier=urn:x|1");
+		args.put("resource", " [{\"op\":\"add\",\"path\":\"/active\",\"value\":true}]");
+
+		var req = build(args, Interaction.CONDITIONAL_PATCH, "");
+
+		assertThat(req.getContentType()).isEqualTo("application/json-patch+json");
+	}
+
+	@Test
+	void headersArePassedToTheRequest() {
+		var args = new HashMap<String, Object>();
+		args.put("resourceType", "Patient");
+		args.put("resource", "{\"resourceType\":\"Patient\"}");
+		args.put("headers", Map.of("If-None-Exist", "identifier=urn:x|1"));
+
+		var req = build(args, Interaction.CREATE, "");
+
+		assertThat(req.getHeader("If-None-Exist")).isEqualTo("identifier=urn:x|1");
+		assertThat(req.getHeader("Accept")).isEqualTo("application/fhir+json");
 	}
 
 	@ParameterizedTest

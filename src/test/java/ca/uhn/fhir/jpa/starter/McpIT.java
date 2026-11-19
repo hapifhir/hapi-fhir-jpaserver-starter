@@ -119,6 +119,27 @@ public class McpIT {
 				Map.of("resourceType", "Parameters", "parameter", List.of(Map.of("name", "operation", "part", operation)))));
 			assertThat(((Patient) response(fhirContext, client.callTool(patch))).getNameFirstRep().getFamily()).isEqualTo("McDuck");
 
+			// Patch with a JSON Patch array
+			var jsonPatch = call(ToolFactory.patchFhirResource().name(), Map.of("resourceType", "Patient", "id", patientId, "resource",
+				List.of(Map.of("op", "add", "path", "/active", "value", true))));
+			assertThat(((Patient) response(fhirContext, client.callTool(jsonPatch))).getActive()).isTrue();
+
+			// A version-aware update fails if the resource has another version
+			var staleUpdate = call(ToolFactory.updateFhirResource().name(), Map.of("resourceType", "Patient", "id", patientId,
+				"resource", Map.of("resourceType", "Patient", "id", patientId), "headers", Map.of("If-Match", "1")));
+			var staleUpdateResult = client.callTool(staleUpdate);
+			assertThat(staleUpdateResult.isError()).as(staleUpdateResult.toString()).isTrue();
+
+			// A conditional create finds the existing Patient instead of creating another one
+			var conditionalCreate = call(createToolName, Map.of("resourceType", "Patient",
+				"resource", Map.of("resourceType", "Patient", "name", List.of(Map.of("family", "McDuck"))),
+				"headers", Map.of("If-None-Exist", "family=McDuck")));
+			var conditionalCreateResult = client.callTool(conditionalCreate);
+			assertThat(conditionalCreateResult.isError()).as(conditionalCreateResult.toString()).isFalse();
+			var conditionalCreatePayload = new Gson().fromJson(((McpSchema.TextContent) conditionalCreateResult.content().get(0)).text(), LinkedHashMap.class);
+			assertThat(conditionalCreatePayload.get("status")).isEqualTo(200.0);
+			assertThat(conditionalCreatePayload.get("location").toString()).contains("Patient/" + patientId + "/");
+
 			var transaction = call(ToolFactory.createFhirTransaction().name(), Map.of("resourceType", "Bundle", "resource",
 				Map.of("resourceType", "Bundle", "type", "transaction", "entry", List.of(Map.of(
 					"resource", Map.of("resourceType", "Patient"),

@@ -65,6 +65,10 @@ public class ToolFactory {
 			"resource": {
 			"type": ["object", "string"],
 			"description": "Updated resource content in JSON format"
+			},
+			"headers": {
+			"type": "object",
+			"description": "Headers for the request.\\nAvailable headers: If-Match for a version-aware update, where the value is the version the update is based on. It fails if the resource has another version.\\nFor example: {\\"If-Match\\": \\"2\\"}"
 			}
 		},
 		"required": ["resourceType", "id", "resource"]
@@ -87,13 +91,9 @@ public class ToolFactory {
 			"query": {
 			"type": "string",
 			"description": "Search params that identify the resource for a conditional update, separated by \\"&\\" as in a FHIR search URL. For example: \\"identifier=http://example.org/mrn|12345\\". Values are URL-decoded, so write a literal \\"+\\" as \\"%2B\\"."
-			},
-			"headers": {
-			"type": "object",
-			"description": "Headers for create request.\\nAvailable headers: If-None-Match header for conditional update where the value is ETag.\\nFor example: {\\"If-None-Match\\": \\"12345\\"}"
 			}
 		},
-		"required": ["resourceType", "resource"]
+		"required": ["resourceType", "resource", "query"]
 		}
 		""";
 
@@ -107,19 +107,15 @@ public class ToolFactory {
 			"description": "Type of the resource to patch"
 			},
 			"resource": {
-			"type": ["object", "string"],
-			"description": "FHIR Patch document in JSON format: a Parameters resource with one \\"operation\\" parameter per change, see https://hl7.org/fhir/fhirpatch.html. Not the modified resource."
+			"type": ["object", "array", "string"],
+			"description": "Patch document in JSON format: a FHIR Patch Parameters resource with one \\"operation\\" parameter per change (https://hl7.org/fhir/fhirpatch.html), or a JSON Patch array (RFC 6902). Not the modified resource."
 			},
 			"query": {
 			"type": "string",
 			"description": "Search params that identify the resource for a conditional patch, separated by \\"&\\" as in a FHIR search URL. For example: \\"identifier=http://example.org/mrn|12345\\". Values are URL-decoded, so write a literal \\"+\\" as \\"%2B\\"."
-			},
-			"headers": {
-			"type": "object",
-			"description": "Headers for create request.\\nAvailable headers: If-None-Match header for conditional patch where the value is ETag.\\nFor example: {\\"If-None-Match\\": \\"12345\\"}"
 			}
 		},
-		"required": ["resourceType", "resource"]
+		"required": ["resourceType", "resource", "query"]
 		}
 		""";
 
@@ -137,8 +133,12 @@ public class ToolFactory {
 			"description": "ID of the resource to patch"
 			},
 			"resource": {
-			"type": ["object", "string"],
-			"description": "FHIR Patch document in JSON format: a Parameters resource with one \\"operation\\" parameter per change, see https://hl7.org/fhir/fhirpatch.html. Not the modified resource."
+			"type": ["object", "array", "string"],
+			"description": "Patch document in JSON format: a FHIR Patch Parameters resource with one \\"operation\\" parameter per change (https://hl7.org/fhir/fhirpatch.html), or a JSON Patch array (RFC 6902). Not the modified resource."
+			},
+			"headers": {
+			"type": "object",
+			"description": "Headers for the request.\\nAvailable headers: If-Match for a version-aware patch, where the value is the version the patch is based on. It fails if the resource has another version.\\nFor example: {\\"If-Match\\": \\"2\\"}"
 			}
 		},
 		"required": ["resourceType", "id", "resource"]
