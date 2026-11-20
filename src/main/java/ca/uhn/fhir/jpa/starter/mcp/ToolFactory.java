@@ -37,7 +37,7 @@ public class ToolFactory {
 			"description": "Type of the resource to create"
 			},
 			"resource": {
-			"type": ["object", "string"],
+			"anyOf": [{"type": "object"}, {"type": "string"}],
 			"description": "Resource content in JSON format"
 			},
 			"headers": {
@@ -63,7 +63,7 @@ public class ToolFactory {
 			"description": "ID of the resource to update"
 			},
 			"resource": {
-			"type": ["object", "string"],
+			"anyOf": [{"type": "object"}, {"type": "string"}],
 			"description": "Updated resource content in JSON format"
 			},
 			"headers": {
@@ -85,7 +85,7 @@ public class ToolFactory {
 			"description": "Type of the resource to update"
 			},
 			"resource": {
-			"type": ["object", "string"],
+			"anyOf": [{"type": "object"}, {"type": "string"}],
 			"description": "Updated resource content in JSON format"
 			},
 			"query": {
@@ -107,7 +107,7 @@ public class ToolFactory {
 			"description": "Type of the resource to patch"
 			},
 			"resource": {
-			"type": ["object", "array", "string"],
+			"anyOf": [{"type": "object"}, {"type": "array"}, {"type": "string"}],
 			"description": "Patch document in JSON format: a FHIR Patch Parameters resource with one \\"operation\\" parameter per change (https://hl7.org/fhir/fhirpatch.html), or a JSON Patch array (RFC 6902). Not the modified resource."
 			},
 			"query": {
@@ -133,7 +133,7 @@ public class ToolFactory {
 			"description": "ID of the resource to patch"
 			},
 			"resource": {
-			"type": ["object", "array", "string"],
+			"anyOf": [{"type": "object"}, {"type": "array"}, {"type": "string"}],
 			"description": "Patch document in JSON format: a FHIR Patch Parameters resource with one \\"operation\\" parameter per change (https://hl7.org/fhir/fhirpatch.html), or a JSON Patch array (RFC 6902). Not the modified resource."
 			},
 			"headers": {
@@ -173,7 +173,7 @@ public class ToolFactory {
 			"description": "Type of the resource to search"
 			},
 			"query": {
-			"type": ["string", "object"],
+			"anyOf": [{"type": "string"}, {"type": "object"}],
 			"description": "Query string with search params separated by \\"&\\", as in a FHIR search URL. For example: \\"_id=pt-1&name=ivan\\". A comma inside a value means OR, e.g. \\"name=ivan,peter\\"."
 			}
 		},
@@ -191,7 +191,7 @@ public class ToolFactory {
 			"description": "A Bundle resource type with type 'transaction' containing multiple FHIR resources"
 			},
 			"resource": {
-			"type": ["object", "string"],
+			"anyOf": [{"type": "object"}, {"type": "string"}],
 			"description": "A FHIR Bundle Resource content in JSON format"
 			}
 		},
