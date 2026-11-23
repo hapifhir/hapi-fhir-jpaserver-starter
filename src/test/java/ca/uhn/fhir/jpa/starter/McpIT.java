@@ -167,6 +167,11 @@ public class McpIT {
 				"valueQuantity", Map.of("value", new BigDecimal("1.50"), "unit", "kg"))));
 			var createdObservation = (Observation) response(fhirContext, client.callTool(observation));
 			assertThat(createdObservation.getValueQuantity().getValueElement().getValueAsString()).isEqualTo("1.50");
+			// Passed as a JSON string, the resource reaches HAPI exactly as written, whatever the client does with numbers
+			var observationAsString = call(createToolName, Map.of("resourceType", "Observation", "resource",
+				"{\"resourceType\":\"Observation\",\"status\":\"final\",\"code\":{\"text\":\"weight\"},\"valueQuantity\":{\"value\":1.50,\"unit\":\"kg\"}}"));
+			var createdFromString = (Observation) response(fhirContext, client.callTool(observationAsString));
+			assertThat(createdFromString.getValueQuantity().getValueElement().getValueAsString()).isEqualTo("1.50");
 
 			var delete = call(ToolFactory.deleteFhirResource().name(), Map.of("resourceType", "Patient", "id", patientId));
 			var deleteResult = client.callTool(delete);

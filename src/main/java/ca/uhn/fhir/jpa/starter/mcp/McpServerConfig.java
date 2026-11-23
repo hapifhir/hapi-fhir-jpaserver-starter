@@ -70,8 +70,9 @@ public class McpServerConfig {
 		return HttpServletStreamableServerTransportProvider.builder()
 				.disallowDelete(false)
 				.mcpEndpoint(properties.getMcpEndpoint())
-				// Read JSON floats as BigDecimal, so that FHIR decimals in a resource passed as a JSON object
-				// keep their precision on the way to HAPI (e.g. 1.50 stays 1.50)
+				// Read JSON floats as BigDecimal, so that FHIR decimals in a resource passed as a JSON object keep
+				// the precision the client sent (e.g. 1.50 stays 1.50). Clients that parse the JSON into floating
+				// point numbers, like JavaScript clients, may already have dropped it before sending.
 				.jsonMapper(new JacksonMcpJsonMapper(JsonMapper.builder()
 						.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
 						.build()))
