@@ -157,7 +157,7 @@ class RequestBuilderTest {
 	}
 
 	@Test
-	void headersMustBeAnObjectWithStringValues() {
+	void headersMustBeAnObjectWithStringOrNumberValues() {
 		var args = new HashMap<String, Object>();
 		args.put("resourceType", "Patient");
 		args.put("id", "123");
@@ -171,7 +171,7 @@ class RequestBuilderTest {
 		args.put("headers", Map.of("If-Match", List.of("2")));
 		assertThatThrownBy(() -> build(args, Interaction.UPDATE, ""))
 				.isInstanceOf(IllegalArgumentException.class)
-				.hasMessageContaining("must have a string value");
+				.hasMessageContaining("must be a string or a number");
 	}
 
 	@Test

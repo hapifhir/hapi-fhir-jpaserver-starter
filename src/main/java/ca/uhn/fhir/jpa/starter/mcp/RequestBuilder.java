@@ -148,8 +148,8 @@ public class RequestBuilder {
 				throw new IllegalArgumentException("Unsupported header '" + headerName + "' for "
 						+ interaction.getName() + ", allowed: " + allowed);
 			}
-			if (!(value instanceof String || value instanceof Number || value instanceof Boolean)) {
-				throw new IllegalArgumentException("Header '" + headerName + "' must have a string value");
+			if (!(value instanceof String || value instanceof Number)) {
+				throw new IllegalArgumentException("Header '" + headerName + "' must be a string or a number");
 			}
 			req.addHeader(headerName, value.toString());
 		});
