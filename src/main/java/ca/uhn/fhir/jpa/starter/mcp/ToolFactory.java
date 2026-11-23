@@ -108,7 +108,7 @@ public class ToolFactory {
 			},
 			"resource": {
 			"anyOf": [{"type": "object"}, {"type": "array"}, {"type": "string"}],
-			"description": "Patch document in JSON format: a FHIR Patch Parameters resource with one \\"operation\\" parameter per change (https://hl7.org/fhir/fhirpatch.html), or a JSON Patch array (RFC 6902). Not the modified resource. To keep decimal values exactly as written (e.g. 1.50), pass it as a JSON string: some clients round numbers in JSON objects."
+			"description": "Patch document in JSON format: a FHIR Patch Parameters resource with one \\"operation\\" parameter per change (https://hl7.org/fhir/fhirpatch.html), or a JSON Patch array (RFC 6902). Not the modified resource. To keep decimal values exactly as written (e.g. 1.50), use FHIR Patch and pass it as a JSON string: some clients round numbers in JSON objects, and JSON Patch values are applied as floating point numbers."
 			},
 			"query": {
 			"type": "string",
@@ -134,7 +134,7 @@ public class ToolFactory {
 			},
 			"resource": {
 			"anyOf": [{"type": "object"}, {"type": "array"}, {"type": "string"}],
-			"description": "Patch document in JSON format: a FHIR Patch Parameters resource with one \\"operation\\" parameter per change (https://hl7.org/fhir/fhirpatch.html), or a JSON Patch array (RFC 6902). Not the modified resource. To keep decimal values exactly as written (e.g. 1.50), pass it as a JSON string: some clients round numbers in JSON objects."
+			"description": "Patch document in JSON format: a FHIR Patch Parameters resource with one \\"operation\\" parameter per change (https://hl7.org/fhir/fhirpatch.html), or a JSON Patch array (RFC 6902). Not the modified resource. To keep decimal values exactly as written (e.g. 1.50), use FHIR Patch and pass it as a JSON string: some clients round numbers in JSON objects, and JSON Patch values are applied as floating point numbers."
 			},
 			"headers": {
 			"type": "object",

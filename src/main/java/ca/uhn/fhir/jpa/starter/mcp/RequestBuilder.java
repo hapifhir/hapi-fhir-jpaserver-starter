@@ -64,7 +64,7 @@ public class RequestBuilder {
 			String servletPath,
 			McpRequestOrigin origin) {
 		this.config = contextMap;
-		this.servletPath = servletPath == null ? "" : servletPath;
+		this.servletPath = normalizePath(servletPath);
 		this.origin = origin;
 		// RestfulServer strips the servlet context path (e.g. "/eps") from the request URI,
 		// so the mock request must carry it too, otherwise "/Patient" becomes "ient".
@@ -181,6 +181,17 @@ public class RequestBuilder {
 			}
 			req.addHeader(headerName, value.toString());
 		});
+	}
+
+	/**
+	 * @return the path with a leading and without a trailing slash, e.g. "/fhir" for "fhir/", or "" for none
+	 */
+	private static String normalizePath(String thePath) {
+		String path = thePath == null ? "" : thePath.trim();
+		while (path.endsWith("/")) {
+			path = path.substring(0, path.length() - 1);
+		}
+		return path.isEmpty() || path.startsWith("/") ? path : "/" + path;
 	}
 
 	private static String toQueryString(Map<String, String[]> theParameters) {

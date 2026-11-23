@@ -172,11 +172,19 @@ class RequestBuilderTest {
 		assertThatThrownBy(() -> build(args, Interaction.UPDATE, ""))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessageContaining("must be a string or a number");
+
+		args.put("headers", Map.of("If-Match", true));
+		assertThatThrownBy(() -> build(args, Interaction.UPDATE, ""))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("must be a string or a number");
+
+		args.put("headers", Map.of("If-Match", 2));
+		assertThat(build(args, Interaction.UPDATE, "").getHeader("If-Match")).isEqualTo("2");
 	}
 
 	@Test
 	void requestCarriesTheServletPathAndTheOriginOfTheMcpRequest() {
-		var origin = new McpRequestOrigin("https", "fhir.example.org", 8443, Map.of("X-Forwarded-Prefix", "/proxy"));
+		var origin = new McpRequestOrigin("https", "fhir.example.org", 8443, Map.of("X-Forwarded-Host", "proxy.example.org"));
 		var args = Map.<String, Object>of("resourceType", "Patient", "id", "123");
 
 		var req = new RequestBuilder(FHIR_CONTEXT, args, Interaction.READ, "/ctx", "/fhir", origin).buildRequest();
@@ -186,7 +194,18 @@ class RequestBuilderTest {
 		assertThat(req.getServletPath()).isEqualTo("/fhir");
 		assertThat(req.getRequestURL()).hasToString("https://fhir.example.org:8443/ctx/fhir/Patient/123");
 		assertThat(req.isSecure()).isTrue();
-		assertThat(req.getHeader("X-Forwarded-Prefix")).isEqualTo("/proxy");
+		assertThat(req.getHeader("X-Forwarded-Host")).isEqualTo("proxy.example.org");
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {"/fhir", "fhir", "/fhir/", " /fhir "})
+	void servletPathIsNormalised(String servletPath) {
+		var args = Map.<String, Object>of("resourceType", "Patient", "id", "123");
+
+		var req = new RequestBuilder(FHIR_CONTEXT, args, Interaction.READ, "/ctx", servletPath, null).buildRequest();
+
+		assertThat(req.getRequestURI()).isEqualTo("/ctx/fhir/Patient/123");
+		assertThat(req.getServletPath()).isEqualTo("/fhir");
 	}
 
 	@Test

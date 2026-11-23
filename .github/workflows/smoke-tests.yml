@@ -71,13 +71,14 @@ jobs:
           # REST client gets, with port and FHIR servlet path.
           npx -y @modelcontextprotocol/inspector@2.16.0 --cli http://localhost:8080/mcp/messages --transport http \
             --method tools/call --tool-name create-fhir-resource --tool-arg resourceType=Patient \
-            --tool-arg 'resource={"resourceType":"Patient"}' > logs/mcp-create.json
-          location=$(jq -r '.content[0].text | fromjson | .location' logs/mcp-create.json)
+            --tool-arg 'resource={"resourceType":"Patient"}' > logs/mcp-create.json && status=0 || status=$?
+          cat logs/mcp-create.json
+          location=$(jq -r '.content[0].text | fromjson | .location' logs/mcp-create.json 2>/dev/null || true)
           echo "Location: $location"
-          case "$location" in
-            http://localhost:8080/fhir/Patient/*/_history/1) ;;
+          case "$status:$location" in
+            0:http://localhost:8080/fhir/Patient/*/_history/1) ;;
             *)
-              echo "::error::Unexpected Location in the MCP tool result: $location"
+              echo "::error::Unexpected MCP tool result (exit code $status, Location '$location')"
               exit 1
               ;;
           esac
@@ -105,4 +106,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: server-logs
-          path: logs/server.log
+          path: |
+            logs/server.log
+            logs/mcp-*

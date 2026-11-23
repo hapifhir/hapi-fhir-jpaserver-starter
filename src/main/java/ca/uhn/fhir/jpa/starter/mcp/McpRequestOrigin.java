@@ -17,12 +17,17 @@ public record McpRequestOrigin(String scheme, String serverName, int serverPort,
 	/** Key of the origin in the MCP transport context */
 	public static final String TRANSPORT_CONTEXT_KEY = McpRequestOrigin.class.getName();
 
-	/** The proxy headers that HAPI's {@code ApacheProxyAddressStrategy} evaluates */
+	/**
+	 * The proxy headers for scheme, host and port that HAPI's {@code ApacheProxyAddressStrategy} evaluates.
+	 * {@code X-Forwarded-Prefix} is left out on purpose: on the MCP request it describes the path of the MCP route at
+	 * the proxy, not the FHIR base path, and HAPI would use it as the FHIR base path. Behind a proxy that rewrites
+	 * paths, {@code hapi.fhir.server_address} sets the FHIR base explicitly.
+	 */
 	static final List<String> FORWARDED_HEADERS =
-			List.of("Forwarded", "X-Forwarded-Host", "X-Forwarded-Proto", "X-Forwarded-Port", "X-Forwarded-Prefix");
+			List.of("Forwarded", "X-Forwarded-Host", "X-Forwarded-Proto", "X-Forwarded-Port", "X-Forwarded-Ssl");
 
 	public McpRequestOrigin {
-		forwardedHeaders = Map.copyOf(forwardedHeaders);
+		forwardedHeaders = forwardedHeaders == null ? Map.of() : Map.copyOf(forwardedHeaders);
 	}
 
 	public static McpRequestOrigin from(HttpServletRequest theRequest) {
