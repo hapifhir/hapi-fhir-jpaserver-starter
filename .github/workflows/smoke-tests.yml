@@ -65,6 +65,23 @@ jobs:
           fi
           echo "No findings in the MCP tool schemas."
 
+      - name: Call an MCP tool with the MCP Inspector
+        run: |
+          # The Inspector is a JavaScript client, like most MCP clients. The tool result must carry the URLs that a
+          # REST client gets, with port and FHIR servlet path.
+          npx -y @modelcontextprotocol/inspector@2.16.0 --cli http://localhost:8080/mcp/messages --transport http \
+            --method tools/call --tool-name create-fhir-resource --tool-arg resourceType=Patient \
+            --tool-arg 'resource={"resourceType":"Patient"}' > logs/mcp-create.json
+          location=$(jq -r '.content[0].text | fromjson | .location' logs/mcp-create.json)
+          echo "Location: $location"
+          case "$location" in
+            http://localhost:8080/fhir/Patient/*/_history/1) ;;
+            *)
+              echo "::error::Unexpected Location in the MCP tool result: $location"
+              exit 1
+              ;;
+          esac
+
       - name: Show last server logs
         if: always()
         run: |

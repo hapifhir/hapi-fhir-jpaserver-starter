@@ -46,6 +46,9 @@ import org.springframework.context.annotation.Import;
 })
 public class Application extends SpringBootServletInitializer {
 
+	/** Path of the HAPI FHIR servlet, below the servlet context path */
+	public static final String FHIR_SERVLET_PATH = "/fhir";
+
 	public static void main(String[] args) {
 
 		SpringApplication.run(Application.class, args);
@@ -63,7 +66,7 @@ public class Application extends SpringBootServletInitializer {
 		ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean();
 		beanFactory.autowireBean(restfulServer);
 		servletRegistrationBean.setServlet(restfulServer);
-		servletRegistrationBean.addUrlMappings("/fhir/*");
+		servletRegistrationBean.addUrlMappings(FHIR_SERVLET_PATH + "/*");
 		servletRegistrationBean.setLoadOnStartup(1);
 
 		return servletRegistrationBean;

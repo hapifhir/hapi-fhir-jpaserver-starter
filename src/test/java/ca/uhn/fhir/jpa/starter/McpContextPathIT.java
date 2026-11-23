@@ -100,11 +100,15 @@ class McpContextPathIT {
 					ToolFactory.searchFhirResources().name(),
 					Map.of("resourceType", "Patient", "query", Map.of("family", "Silva")));
 			assertThat(search.isError()).as(text(search)).isFalse();
-			var patients =
-					BundleUtil.toListOfResourcesOfType(FHIR_CONTEXT, responseAs(search, Bundle.class), Patient.class);
+			var bundle = responseAs(search, Bundle.class);
+			var patients = BundleUtil.toListOfResourcesOfType(FHIR_CONTEXT, bundle, Patient.class);
 			assertThat(patients).hasSize(1);
 
+			// The URLs contain the context path and the FHIR servlet path, as for a direct REST request
 			var id = patients.get(0).getIdElement().getIdPart();
+			var fhirBase = "http://localhost:" + port + contextPath + Application.FHIR_SERVLET_PATH;
+			assertThat(bundle.getEntryFirstRep().getFullUrl()).isEqualTo(fhirBase + "/Patient/" + id);
+			assertThat(bundle.getLink(Bundle.LINK_SELF).getUrl()).startsWith(fhirBase + "/Patient?");
 			var read = callTool(ToolFactory.readFhirResource().name(), Map.of("resourceType", "Patient", "id", id));
 			assertThat(read.isError()).as(text(read)).isFalse();
 			assertThat(responseAs(read, Patient.class).getNameFirstRep().getFamily())

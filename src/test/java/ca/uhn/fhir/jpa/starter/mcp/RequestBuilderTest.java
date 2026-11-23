@@ -175,6 +175,21 @@ class RequestBuilderTest {
 	}
 
 	@Test
+	void requestCarriesTheServletPathAndTheOriginOfTheMcpRequest() {
+		var origin = new McpRequestOrigin("https", "fhir.example.org", 8443, Map.of("X-Forwarded-Prefix", "/proxy"));
+		var args = Map.<String, Object>of("resourceType", "Patient", "id", "123");
+
+		var req = new RequestBuilder(FHIR_CONTEXT, args, Interaction.READ, "/ctx", "/fhir", origin).buildRequest();
+
+		assertThat(req.getRequestURI()).isEqualTo("/ctx/fhir/Patient/123");
+		assertThat(req.getContextPath()).isEqualTo("/ctx");
+		assertThat(req.getServletPath()).isEqualTo("/fhir");
+		assertThat(req.getRequestURL()).hasToString("https://fhir.example.org:8443/ctx/fhir/Patient/123");
+		assertThat(req.isSecure()).isTrue();
+		assertThat(req.getHeader("X-Forwarded-Prefix")).isEqualTo("/proxy");
+	}
+
+	@Test
 	void queryValuesMustBeScalars() {
 		var args = Map.<String, Object>of(
 				"resourceType", "Patient", "query", Map.of("identifier", Map.of("system", "http://x", "value", "1")));

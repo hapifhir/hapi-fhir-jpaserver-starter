@@ -68,7 +68,12 @@ public class McpIT {
 				    }
 				  ]
 				}""")).name(createToolName).build();
-			var patientId = response(fhirContext, client.callTool(createMcpRequest)).getIdElement().getIdPart();
+			var createResult = client.callTool(createMcpRequest);
+			var patientId = response(fhirContext, createResult).getIdElement().getIdPart();
+
+			// The URLs in MCP responses must be the ones a REST client gets: same port and servlet path
+			var fhirBase = "http://localhost:" + port + Application.FHIR_SERVLET_PATH;
+			assertThat(payload(createResult).get("location")).isEqualTo(fhirBase + "/Patient/" + patientId + "/_history/1");
 
 			var searchMcpRequest = new McpSchema.CallToolRequest.Builder().arguments(Map.of("operation", "search", "resourceType", "Patient", "query", "identifier=urn:something|uncleScrooge")).name(searchToolName).build();
 
@@ -101,6 +106,15 @@ public class McpIT {
 			var filteredContent = ((McpSchema.TextContent) filteredSearchResult.content().get(0));
 			var filteredBundle = fhirContext.newJsonParser().parseResource(Bundle.class, new Gson().fromJson(filteredContent.text(), LinkedHashMap.class).get("response").toString());
 			assertThat(BundleUtil.toListOfEntries(fhirContext, filteredBundle)).hasSize(1);
+
+			// The same search through the REST API returns the same entry URLs
+			var restBundle = fhirContext.newRestfulGenericClient(fhirBase).search().forResource(Patient.class)
+				.where(Patient.IDENTIFIER.exactly().systemAndCode("urn:something", "uncleScrooge"))
+				.returnBundle(Bundle.class).execute();
+			assertThat(filteredBundle.getEntry()).extracting(Bundle.BundleEntryComponent::getFullUrl)
+				.containsExactlyElementsOf(restBundle.getEntry().stream().map(Bundle.BundleEntryComponent::getFullUrl).toList())
+				.containsExactly(fhirBase + "/Patient/" + patientId);
+			assertThat(filteredBundle.getLink(Bundle.LINK_SELF).getUrl()).startsWith(fhirBase + "/Patient?");
 
 			var read = call(ToolFactory.readFhirResource().name(), Map.of("resourceType", "Patient", "id", patientId));
 			assertThat(response(fhirContext, client.callTool(read)).getIdElement().getIdPart()).isEqualTo(patientId);
@@ -138,7 +152,7 @@ public class McpIT {
 			assertThat(conditionalCreateResult.isError()).as(conditionalCreateResult.toString()).isFalse();
 			var conditionalCreatePayload = new Gson().fromJson(((McpSchema.TextContent) conditionalCreateResult.content().get(0)).text(), LinkedHashMap.class);
 			assertThat(conditionalCreatePayload.get("status")).isEqualTo(200.0);
-			assertThat(conditionalCreatePayload.get("location").toString()).contains("Patient/" + patientId + "/");
+			assertThat(conditionalCreatePayload.get("location").toString()).startsWith(fhirBase + "/Patient/" + patientId + "/_history/");
 
 			var transaction = call(ToolFactory.createFhirTransaction().name(), Map.of("resourceType", "Bundle", "resource",
 				Map.of("resourceType", "Bundle", "type", "transaction", "entry", List.of(Map.of(
@@ -168,6 +182,14 @@ public class McpIT {
 
 	private static McpSchema.CallToolRequest call(String theToolName, Map<String, Object> theArguments) {
 		return new McpSchema.CallToolRequest.Builder().name(theToolName).arguments(theArguments).build();
+	}
+
+	/**
+	 * @return the JSON payload of a successful tool result: resourceType, interaction, response, status and location
+	 */
+	private static Map<?, ?> payload(McpSchema.CallToolResult theResult) {
+		assertThat(theResult.isError()).as(theResult.toString()).isFalse();
+		return new Gson().fromJson(((McpSchema.TextContent) theResult.content().get(0)).text(), LinkedHashMap.class);
 	}
 
 	/**

@@ -31,6 +31,8 @@ public class RequestBuilder {
 	private final Interaction interaction;
 	private final Map<String, Object> config;
 	private final String contextPath;
+	private final String servletPath;
+	private final McpRequestOrigin origin;
 
 	public RequestBuilder(FhirContext fhirContext, Map<String, Object> contextMap, Interaction interaction) {
 		this(fhirContext, contextMap, interaction, "");
@@ -45,7 +47,25 @@ public class RequestBuilder {
 	 */
 	public RequestBuilder(
 			FhirContext fhirContext, Map<String, Object> contextMap, Interaction interaction, String contextPath) {
+		this(fhirContext, contextMap, interaction, contextPath, "", null);
+	}
+
+	/**
+	 * @param servletPath the path of the HAPI FHIR servlet (e.g. "/fhir"), so that HAPI derives the same server base
+	 *                    URL as for a direct REST request
+	 * @param origin      scheme, host, port and proxy headers of the MCP request, or {@code null} for HAPI's defaults
+	 *                    (http://localhost)
+	 */
+	public RequestBuilder(
+			FhirContext fhirContext,
+			Map<String, Object> contextMap,
+			Interaction interaction,
+			String contextPath,
+			String servletPath,
+			McpRequestOrigin origin) {
 		this.config = contextMap;
+		this.servletPath = servletPath == null ? "" : servletPath;
+		this.origin = origin;
 		// RestfulServer strips the servlet context path (e.g. "/eps") from the request URI,
 		// so the mock request must carry it too, otherwise "/Patient" becomes "ient".
 		String cp = contextPath == null ? "" : contextPath.trim();
@@ -60,7 +80,7 @@ public class RequestBuilder {
 	}
 
 	public MockHttpServletRequest buildRequest() {
-		String basePath = contextPath + "/" + resourceType;
+		String basePath = contextPath + servletPath + "/" + resourceType;
 		String method;
 		MockHttpServletRequest req;
 		String contentType = Constants.CT_FHIR_JSON_NEW;
@@ -114,6 +134,14 @@ public class RequestBuilder {
 		}
 
 		req.setContextPath(contextPath);
+		req.setServletPath(servletPath);
+		if (origin != null) {
+			req.setScheme(origin.scheme());
+			req.setSecure("https".equalsIgnoreCase(origin.scheme()));
+			req.setServerName(origin.serverName());
+			req.setServerPort(origin.serverPort());
+			origin.forwardedHeaders().forEach(req::addHeader);
+		}
 		req.setContentType(contentType);
 		req.addHeader("Accept", Constants.CT_FHIR_JSON_NEW);
 
