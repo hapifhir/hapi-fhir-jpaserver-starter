@@ -37,12 +37,12 @@ public class ToolFactory {
 			"description": "Type of the resource to create"
 			},
 			"resource": {
-			"type": "object",
-			"description": "Resource content in JSON format"
+			"anyOf": [{"type": "object"}, {"type": "string"}],
+			"description": "Resource content in JSON format. To keep decimal values exactly as written (e.g. 1.50), pass it as a JSON string: some clients round numbers in JSON objects."
 			},
 			"headers": {
 			"type": "object",
-			"description": "Headers for create request.\\nAvailable headers: If-None-Exist header for conditional create where the value is search param string.\\nFor example: {\\"If-None-Exist\\": \\"active=false\\"}"
+			"description": "Headers for create request.\\nAvailable headers: If-None-Exist header for conditional create where the value is search param string.\\nFor example: {\\"If-None-Exist\\": \\"active=false\\"}\\nValues are URL-decoded, so write a literal \\"+\\" as \\"%2B\\"."
 			}
 		},
 		"required": ["resourceType", "resource"]
@@ -63,8 +63,12 @@ public class ToolFactory {
 			"description": "ID of the resource to update"
 			},
 			"resource": {
+			"anyOf": [{"type": "object"}, {"type": "string"}],
+			"description": "Updated resource content in JSON format. To keep decimal values exactly as written (e.g. 1.50), pass it as a JSON string: some clients round numbers in JSON objects."
+			},
+			"headers": {
 			"type": "object",
-			"description": "Updated resource content in JSON format"
+			"description": "Headers for the request.\\nAvailable headers: If-Match for a version-aware update, where the value is the version the update is based on. It fails if the resource has another version.\\nFor example: {\\"If-Match\\": \\"2\\"}"
 			}
 		},
 		"required": ["resourceType", "id", "resource"]
@@ -81,19 +85,15 @@ public class ToolFactory {
 			"description": "Type of the resource to update"
 			},
 			"resource": {
-			"type": "object",
-			"description": "Updated resource content in JSON format"
+			"anyOf": [{"type": "object"}, {"type": "string"}],
+			"description": "Updated resource content in JSON format. To keep decimal values exactly as written (e.g. 1.50), pass it as a JSON string: some clients round numbers in JSON objects."
 			},
 			"query": {
 			"type": "string",
-			"description": "Query string with search params separate by \\",\\". For example: \\"_id=pt-1,name=ivan\\". Uses for conditional update."
-			},
-			"headers": {
-			"type": "object",
-			"description": "Headers for create request.\\nAvailable headers: If-None-Match header for conditional update where the value is ETag.\\nFor example: {\\"If-None-Match\\": \\"12345\\"}"
+			"description": "Search params that identify the resource for a conditional update, separated by \\"&\\" as in a FHIR search URL. For example: \\"identifier=http://example.org/mrn|12345\\". Values are URL-decoded, so write a literal \\"+\\" as \\"%2B\\"."
 			}
 		},
-		"required": ["resourceType", "resource"]
+		"required": ["resourceType", "resource", "query"]
 		}
 		""";
 
@@ -107,19 +107,15 @@ public class ToolFactory {
 			"description": "Type of the resource to patch"
 			},
 			"resource": {
-			"type": "object",
-			"description": "Resource content to patch in JSON format"
+			"anyOf": [{"type": "object"}, {"type": "array"}, {"type": "string"}],
+			"description": "Patch document in JSON format: a FHIR Patch Parameters resource with one \\"operation\\" parameter per change (https://hl7.org/fhir/fhirpatch.html), or a JSON Patch array (RFC 6902). Not the modified resource. To keep decimal values exactly as written (e.g. 1.50), use FHIR Patch and pass it as a JSON string: some clients round numbers in JSON objects, and JSON Patch values are applied as floating point numbers."
 			},
 			"query": {
 			"type": "string",
-			"description": "Query string with search params separate by \\",\\". For example: \\"_id=pt-1,name=ivan\\". Uses for conditional patch."
-			},
-			"headers": {
-			"type": "object",
-			"description": "Headers for create request.\\nAvailable headers: If-None-Match header for conditional patch where the value is ETag.\\nFor example: {\\"If-None-Match\\": \\"12345\\"}"
+			"description": "Search params that identify the resource for a conditional patch, separated by \\"&\\" as in a FHIR search URL. For example: \\"identifier=http://example.org/mrn|12345\\". Values are URL-decoded, so write a literal \\"+\\" as \\"%2B\\"."
 			}
 		},
-		"required": ["resourceType", "resource"]
+		"required": ["resourceType", "resource", "query"]
 		}
 		""";
 
@@ -137,8 +133,12 @@ public class ToolFactory {
 			"description": "ID of the resource to patch"
 			},
 			"resource": {
+			"anyOf": [{"type": "object"}, {"type": "array"}, {"type": "string"}],
+			"description": "Patch document in JSON format: a FHIR Patch Parameters resource with one \\"operation\\" parameter per change (https://hl7.org/fhir/fhirpatch.html), or a JSON Patch array (RFC 6902). Not the modified resource. To keep decimal values exactly as written (e.g. 1.50), use FHIR Patch and pass it as a JSON string: some clients round numbers in JSON objects, and JSON Patch values are applied as floating point numbers."
+			},
+			"headers": {
 			"type": "object",
-			"description": "Resource content to patch in JSON format"
+			"description": "Headers for the request.\\nAvailable headers: If-Match for a version-aware patch, where the value is the version the patch is based on. It fails if the resource has another version.\\nFor example: {\\"If-Match\\": \\"2\\"}"
 			}
 		},
 		"required": ["resourceType", "id", "resource"]
@@ -173,7 +173,7 @@ public class ToolFactory {
 			"description": "Type of the resource to search"
 			},
 			"query": {
-			"type": "string",
+			"anyOf": [{"type": "string"}, {"type": "object"}],
 			"description": "Query string with search params separated by \\"&\\", as in a FHIR search URL. For example: \\"_id=pt-1&name=ivan\\". A comma inside a value means OR, e.g. \\"name=ivan,peter\\"."
 			}
 		},
@@ -191,8 +191,8 @@ public class ToolFactory {
 			"description": "A Bundle resource type with type 'transaction' containing multiple FHIR resources"
 			},
 			"resource": {
-			"type": "object",
-			"description": "A FHIR Bundle Resource content in JSON format"
+			"anyOf": [{"type": "object"}, {"type": "string"}],
+			"description": "A FHIR Bundle Resource content in JSON format. To keep decimal values exactly as written (e.g. 1.50), pass it as a JSON string: some clients round numbers in JSON objects."
 			}
 		},
 		"required": ["resourceType", "resource"]
@@ -275,7 +275,8 @@ public class ToolFactory {
 	public static Tool conditionalUpdateFhirResource() {
 		return new Tool.Builder()
 				.name("conditional-update-fhir-resource")
-				.description("Conditional update an existing FHIR resource")
+				.description(
+						"Conditional update of the FHIR resource that matches a search query. If no resource matches, the resource is created.")
 				.inputSchema(mapper.readValue(CONDITIONAL_UPDATE_FHIR_RESOURCE_SCHEMA, McpSchema.JsonSchema.class))
 				.build();
 	}

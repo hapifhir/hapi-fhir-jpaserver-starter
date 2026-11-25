@@ -7,6 +7,7 @@ import ca.uhn.fhir.rest.server.McpFhirBridge;
 import ca.uhn.fhir.rest.server.RestfulServer;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsServiceRegistry;
 import ca.uhn.hapi.fhir.cdshooks.module.CdsHooksObjectMapperFactory;
+import io.modelcontextprotocol.common.McpTransportContext;
 import io.modelcontextprotocol.json.jackson3.JacksonMcpJsonMapper;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.transport.HttpServletStreamableServerTransportProvider;
@@ -16,9 +17,11 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
+import java.util.Map;
 
 // https://mcp-cn.ssshooter.com/sdk/java/mcp-server#sse-servlet
 // https://www.baeldung.com/spring-ai-model-context-protocol-mcp
@@ -67,8 +70,16 @@ public class McpServerConfig {
 		return HttpServletStreamableServerTransportProvider.builder()
 				.disallowDelete(false)
 				.mcpEndpoint(properties.getMcpEndpoint())
-				.jsonMapper(new JacksonMcpJsonMapper(JsonMapper.shared()))
-				// .contextExtractor((serverRequest, context) -> context)
+				// Read JSON floats as BigDecimal, so that FHIR decimals in a resource passed as a JSON object keep
+				// the precision the client sent (e.g. 1.50 stays 1.50). Clients that parse the JSON into floating
+				// point numbers, like JavaScript clients, may already have dropped it before sending.
+				.jsonMapper(new JacksonMcpJsonMapper(JsonMapper.builder()
+						.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
+						.build()))
+				// Lets the MCP bridge build the in-process HAPI request with the host, port and proxy headers of the
+				// actual MCP request, so that HAPI returns the same URLs as for a direct REST request
+				.contextExtractor(request -> McpTransportContext.create(
+						Map.of(McpRequestOrigin.TRANSPORT_CONTEXT_KEY, McpRequestOrigin.from(request))))
 				.build();
 	}
 
