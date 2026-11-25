@@ -9,10 +9,10 @@
         <clinical-reasoning.version>4.16.0</clinical-reasoning.version>
 
         <!-- Plugins Versions -->
-        <maven.failsafe.version>3.5.4</maven.failsafe.version>
+        <maven.failsafe.version>3.6.1</maven.failsafe.version>
         <maven.fire.version>${maven.failsafe.version}</maven.fire.version>
         <maven.dependency.version>3.9.0</maven.dependency.version>
-        <maven.compiler.version>3.14.1</maven.compiler.version>
+        <maven.compiler.version>3.16.0</maven.compiler.version>
 
         <!-- Dependencies Versions -->
         <spring.ai.version>2.0.2</spring.ai.version>
