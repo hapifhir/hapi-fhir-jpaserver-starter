@@ -1,18 +1,24 @@
 package ca.uhn.fhir.jpa.starter.mcp;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.util.UrlUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.Gson;
+import org.hl7.fhir.r4.model.Parameters;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class RequestBuilderTest {
 
@@ -52,6 +58,182 @@ class RequestBuilderTest {
 		assertThat(build(args, Interaction.UPDATE, contextPath).getRequestURI()).isEqualTo(expected);
 		assertThat(build(args, Interaction.DELETE, contextPath).getRequestURI()).isEqualTo(expected);
 		assertThat(build(args, Interaction.PATCH, contextPath).getRequestURI()).isEqualTo(expected);
+	}
+
+	@Test
+	void patchAcceptsTheBodyAsAnObject() {
+		var part = List.of(
+				Map.of("name", "type", "valueCode", "replace"),
+				Map.of("name", "path", "valueString", "Patient.name[0].family"),
+				Map.of("name", "value", "valueString", "Patched"));
+		var args = new HashMap<String, Object>();
+		args.put("resourceType", "Patient");
+		args.put("id", "123");
+		args.put(
+				"resource",
+				Map.of("resourceType", "Parameters", "parameter", List.of(Map.of("name", "operation", "part", part))));
+
+		var req = build(args, Interaction.PATCH, "");
+
+		assertThat(req.getMethod()).isEqualTo("PATCH");
+		assertThat(req.getContentType()).isEqualTo("application/fhir+json");
+		var body = new String(req.getContentAsByteArray(), StandardCharsets.UTF_8);
+		var parameters = FHIR_CONTEXT.newJsonParser().parseResource(Parameters.class, body);
+		var operation = parameters.getParameterFirstRep();
+		assertThat(operation.getName()).isEqualTo("operation");
+		assertThat(operation.getPart())
+				.extracting(p -> p.getName() + "=" + p.getValue().primitiveValue())
+				.containsExactly("type=replace", "path=Patient.name[0].family", "value=Patched");
+	}
+
+	@Test
+	void jsonPatchArrayIsSentAsJsonPatch() {
+		var args = new HashMap<String, Object>();
+		args.put("resourceType", "Patient");
+		args.put("id", "123");
+		args.put("resource", List.of(Map.of("op", "add", "path", "/active", "value", true)));
+
+		var req = build(args, Interaction.PATCH, "");
+
+		assertThat(req.getContentType()).isEqualTo("application/json-patch+json");
+		var body = new Gson().fromJson(new String(req.getContentAsByteArray(), StandardCharsets.UTF_8), List.class);
+		assertThat(body).isEqualTo(List.of(Map.of("op", "add", "path", "/active", "value", true)));
+	}
+
+	@Test
+	void jsonPatchStringIsSentAsJsonPatch() {
+		var args = new HashMap<String, Object>();
+		args.put("resourceType", "Patient");
+		args.put("query", "identifier=urn:x|1");
+		args.put("resource", " [{\"op\":\"add\",\"path\":\"/active\",\"value\":true}]");
+
+		var req = build(args, Interaction.CONDITIONAL_PATCH, "");
+
+		assertThat(req.getContentType()).isEqualTo("application/json-patch+json");
+	}
+
+	@Test
+	void headersArePassedToTheRequest() {
+		var args = new HashMap<String, Object>();
+		args.put("resourceType", "Patient");
+		args.put("resource", "{\"resourceType\":\"Patient\"}");
+		args.put("headers", Map.of("If-None-Exist", "identifier=urn:x|1"));
+
+		var req = build(args, Interaction.CREATE, "");
+
+		assertThat(req.getHeader("If-None-Exist")).isEqualTo("identifier=urn:x|1");
+		assertThat(req.getHeader("Accept")).isEqualTo("application/fhir+json");
+	}
+
+	@Test
+	void ifMatchIsPassedForUpdateAndPatch() {
+		var args = new HashMap<String, Object>();
+		args.put("resourceType", "Patient");
+		args.put("id", "123");
+		args.put("resource", "{\"resourceType\":\"Patient\",\"id\":\"123\"}");
+		args.put("headers", Map.of("if-match", "2"));
+
+		assertThat(build(args, Interaction.UPDATE, "").getHeader("If-Match")).isEqualTo("2");
+		assertThat(build(args, Interaction.PATCH, "").getHeader("If-Match")).isEqualTo("2");
+	}
+
+	@Test
+	void headersOutsideTheAllowListAreRejected() {
+		var create = new HashMap<String, Object>();
+		create.put("resourceType", "Patient");
+		create.put("resource", "{\"resourceType\":\"Patient\"}");
+		create.put("headers", Map.of("X-Forwarded-User", "admin"));
+		assertThatThrownBy(() -> build(create, Interaction.CREATE, ""))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("Unsupported header 'X-Forwarded-User'");
+
+		var read = new HashMap<String, Object>();
+		read.put("resourceType", "Patient");
+		read.put("id", "123");
+		read.put("headers", Map.of("If-None-Match", "W/\"1\""));
+		assertThatThrownBy(() -> build(read, Interaction.READ, ""))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("Unsupported header 'If-None-Match'");
+	}
+
+	@Test
+	void headersMustBeAnObjectWithStringOrNumberValues() {
+		var args = new HashMap<String, Object>();
+		args.put("resourceType", "Patient");
+		args.put("id", "123");
+		args.put("resource", "{\"resourceType\":\"Patient\",\"id\":\"123\"}");
+
+		args.put("headers", "{\"If-Match\":\"2\"}");
+		assertThatThrownBy(() -> build(args, Interaction.UPDATE, ""))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("'headers' must be a JSON object");
+
+		args.put("headers", Map.of("If-Match", List.of("2")));
+		assertThatThrownBy(() -> build(args, Interaction.UPDATE, ""))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("must be a string or a number");
+
+		args.put("headers", Map.of("If-Match", true));
+		assertThatThrownBy(() -> build(args, Interaction.UPDATE, ""))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("must be a string or a number");
+
+		args.put("headers", Map.of("If-Match", 2));
+		assertThat(build(args, Interaction.UPDATE, "").getHeader("If-Match")).isEqualTo("2");
+	}
+
+	@Test
+	void requestCarriesTheServletPathAndTheOriginOfTheMcpRequest() {
+		var origin = new McpRequestOrigin("https", "fhir.example.org", 8443, Map.of("X-Forwarded-Host", "proxy.example.org"));
+		var args = Map.<String, Object>of("resourceType", "Patient", "id", "123");
+
+		var req = new RequestBuilder(FHIR_CONTEXT, args, Interaction.READ, "/ctx", "/fhir", origin).buildRequest();
+
+		assertThat(req.getRequestURI()).isEqualTo("/ctx/fhir/Patient/123");
+		assertThat(req.getContextPath()).isEqualTo("/ctx");
+		assertThat(req.getServletPath()).isEqualTo("/fhir");
+		assertThat(req.getRequestURL()).hasToString("https://fhir.example.org:8443/ctx/fhir/Patient/123");
+		assertThat(req.isSecure()).isTrue();
+		assertThat(req.getHeader("X-Forwarded-Host")).isEqualTo("proxy.example.org");
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {"/fhir", "fhir", "/fhir/", " /fhir "})
+	void servletPathIsNormalised(String servletPath) {
+		var args = Map.<String, Object>of("resourceType", "Patient", "id", "123");
+
+		var req = new RequestBuilder(FHIR_CONTEXT, args, Interaction.READ, "/ctx", servletPath, null).buildRequest();
+
+		assertThat(req.getRequestURI()).isEqualTo("/ctx/fhir/Patient/123");
+		assertThat(req.getServletPath()).isEqualTo("/fhir");
+	}
+
+	@Test
+	void queryValuesMustBeScalars() {
+		var args = Map.<String, Object>of(
+				"resourceType", "Patient", "query", Map.of("identifier", Map.of("system", "http://x", "value", "1")));
+
+		assertThatThrownBy(() -> build(args, Interaction.CONDITIONAL_UPDATE, ""))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("Query parameter 'identifier' must have a string, number or boolean value");
+	}
+
+	@Test
+	void blankQueryFallsBackToSearchParams() {
+		var req = build(
+				Map.of("resourceType", "Patient", "query", " ", "searchParams", Map.of("identifier", "urn:x|1")),
+				Interaction.SEARCH,
+				"");
+
+		assertThat(req.getParameter("identifier")).isEqualTo("urn:x|1");
+	}
+
+	@Test
+	void unsupportedQueryTypeIsRejected() {
+		assertThatThrownBy(() -> build(
+						Map.of("resourceType", "Patient", "query", List.of("name=Silva")), Interaction.SEARCH, ""))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("'query' must be a query string or a JSON object");
 	}
 
 	@ParameterizedTest
@@ -113,7 +295,8 @@ class RequestBuilderTest {
 
 	@Test
 	void publishedSearchSchemaExampleAppliesEveryParameter() throws JsonProcessingException {
-		var query = (Map<?, ?>) ToolFactory.searchFhirResources().inputSchema().properties().get("query");
+		var properties = (Map<?, ?>) ToolFactory.searchFhirResources().inputSchema().get("properties");
+		var query = (Map<?, ?>) properties.get("query");
 		var description = query.get("description").toString();
 		var matcher = Pattern.compile("For example: \"([^\"]+)\"").matcher(description);
 		assertThat(matcher.find()).as(description).isTrue();
@@ -135,5 +318,138 @@ class RequestBuilderTest {
 		assertThat(req.getParameterMap()).containsOnlyKeys("name", "_id");
 		assertThat(req.getParameter("name")).isEqualTo("ivan,peter");
 		assertThat(req.getParameter("_id")).isEqualTo("pt-1,pt-2");
+	}
+
+	@Test
+	void searchParametersAreAlsoSetAsQueryString() {
+		var req = build(
+				Map.of("resourceType", "Patient", "query", "identifier=urn:something|abc&name=Ana Silva"),
+				Interaction.SEARCH,
+				"");
+
+		var parsed = UrlUtil.parseQueryString(req.getQueryString());
+		assertThat(parsed).containsOnlyKeys("identifier", "name");
+		assertThat(parsed.get("identifier")).containsExactly("urn:something|abc");
+		assertThat(parsed.get("name")).containsExactly("Ana Silva");
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {"", "/fhir"})
+	void conditionalUpdateTargetsTheResourceTypeWithTheQuery(String contextPath) {
+		var args = new HashMap<String, Object>();
+		args.put("resourceType", "Patient");
+		args.put("query", "identifier=http://example.org/mrn|12345");
+		args.put("resource", "{\"resourceType\":\"Patient\"}");
+
+		var req = build(args, Interaction.CONDITIONAL_UPDATE, contextPath);
+
+		assertThat(req.getMethod()).isEqualTo("PUT");
+		assertThat(req.getRequestURI()).isEqualTo(contextPath + "/Patient");
+		assertThat(UrlUtil.parseQueryString(req.getQueryString()).get("identifier"))
+				.containsExactly("http://example.org/mrn|12345");
+	}
+
+	@Test
+	void conditionalPatchTargetsTheResourceTypeWithTheQuery() {
+		var args = Map.<String, Object>of(
+				"resourceType", "Patient", "query", Map.of("family", "Silva"), "resource", "{\"resourceType\":\"Parameters\"}");
+
+		var req = build(args, Interaction.CONDITIONAL_PATCH, "");
+
+		assertThat(req.getMethod()).isEqualTo("PATCH");
+		assertThat(req.getRequestURI()).isEqualTo("/Patient");
+		assertThat(req.getParameter("family")).isEqualTo("Silva");
+	}
+
+	@Test
+	void plainUpdateAndPatchUseTheIdAndIgnoreAQuery() {
+		var args = new HashMap<String, Object>();
+		args.put("resourceType", "Patient");
+		args.put("id", "123");
+		args.put("query", Map.of("family", "Silva"));
+		args.put("resource", "{\"resourceType\":\"Patient\",\"id\":\"123\"}");
+
+		for (var interaction : new Interaction[] {Interaction.UPDATE, Interaction.PATCH}) {
+			var req = build(args, interaction, "");
+			assertThat(req.getRequestURI()).as(interaction.name()).isEqualTo("/Patient/123");
+			assertThat(req.getParameterMap()).as(interaction.name()).isEmpty();
+			assertThat(req.getQueryString()).as(interaction.name()).isNull();
+		}
+	}
+
+	@Test
+	void conditionalUpdateAndPatchRequireAQuery() {
+		var args = Map.<String, Object>of(
+				"resourceType", "Patient", "id", "123", "resource", "{\"resourceType\":\"Patient\"}");
+
+		for (var interaction : new Interaction[] {Interaction.CONDITIONAL_UPDATE, Interaction.CONDITIONAL_PATCH}) {
+			assertThatThrownBy(() -> build(args, interaction, ""))
+					.as(interaction.name())
+					.isInstanceOf(IllegalArgumentException.class)
+					.hasMessageContaining("'query'");
+		}
+	}
+
+	@Test
+	void plainUpdateAndPatchRequireAnId() {
+		var args = Map.<String, Object>of(
+				"resourceType", "Patient", "query", "family=Silva", "resource", "{\"resourceType\":\"Patient\"}");
+
+		for (var interaction : new Interaction[] {Interaction.UPDATE, Interaction.PATCH}) {
+			assertThatThrownBy(() -> build(args, interaction, ""))
+					.as(interaction.name())
+					.isInstanceOf(IllegalArgumentException.class)
+					.hasMessageContaining("'id'");
+		}
+	}
+
+	@Test
+	void queryTakesPrecedenceOverSearchParamsInAnyForm() {
+		var args = Map.<String, Object>of(
+				"resourceType", "Patient", "query", "family=Silva", "searchParams", Map.of("name", "Ana"));
+
+		var req = build(args, Interaction.SEARCH, "");
+
+		assertThat(req.getParameterMap()).containsOnlyKeys("family");
+	}
+
+	@Test
+	void listValuesInAQueryMapBecomeRepeatedParameters() {
+		var args = Map.<String, Object>of(
+				"resourceType", "Observation", "query", Map.of("date", List.of("ge2020-01-01", "le2020-12-31")));
+
+		var req = build(args, Interaction.SEARCH, "");
+
+		assertThat(req.getParameterValues("date")).containsExactly("ge2020-01-01", "le2020-12-31");
+		assertThat(UrlUtil.parseQueryString(req.getQueryString()).get("date"))
+				.containsExactly("ge2020-01-01", "le2020-12-31");
+	}
+
+	@Test
+	void patchAcceptsAJsonObjectBody() {
+		var args = Map.<String, Object>of(
+				"resourceType", "Patient", "id", "123", "resource", Map.of("resourceType", "Parameters"));
+
+		var req = build(args, Interaction.PATCH, "");
+
+		assertThat(new String(req.getContentAsByteArray(), StandardCharsets.UTF_8))
+				.isEqualTo("{\"resourceType\":\"Parameters\"}");
+	}
+
+	@Test
+	void queryParameterWithoutValueIsRejected() {
+		var query = new HashMap<String, Object>();
+		query.put("name", null);
+
+		assertThatThrownBy(() -> build(Map.of("resourceType", "Patient", "query", query), Interaction.SEARCH, ""))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("'name'");
+	}
+
+	@Test
+	void missingResourceIsRejected() {
+		assertThatThrownBy(() -> build(Map.of("resourceType", "Patient", "id", "123"), Interaction.UPDATE, ""))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessageContaining("'resource'");
 	}
 }

@@ -46,6 +46,43 @@ jobs:
       - name: Execute smoke tests
         run: docker run --rm -v $PWD:/workdir --add-host host.docker.internal:host-gateway jetbrains/intellij-http-client -D src/test/smoketest/plain_server.http --env-file src/test/smoketest/http-client.env.json --env default
 
+      - name: Set up Node.js for the MCP Inspector
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Check the MCP tool schemas with the MCP Inspector
+        run: |
+          # Fails on any finding of the Inspector's schema portability check, warnings included (with --strict, only
+          # errors change the exit code). The version is pinned, so that a rule added in a later Inspector release
+          # does not fail the build without a change here.
+          npx -y @modelcontextprotocol/inspector@2.16.0 --cli http://localhost:8080/mcp/messages --transport http \
+            --method tools/list --strict > logs/mcp-tools.json 2> logs/mcp-schema-lint.txt && status=0 || status=$?
+          cat logs/mcp-schema-lint.txt
+          if [ "$status" -ne 0 ] || grep -qE '^(Warning|Error): tool' logs/mcp-schema-lint.txt; then
+            echo "::error::The MCP Inspector reports problems in the MCP tool schemas (exit code $status)"
+            exit 1
+          fi
+          echo "No findings in the MCP tool schemas."
+
+      - name: Call an MCP tool with the MCP Inspector
+        run: |
+          # The Inspector is a JavaScript client, like most MCP clients. The tool result must carry the URLs that a
+          # REST client gets, with port and FHIR servlet path.
+          npx -y @modelcontextprotocol/inspector@2.16.0 --cli http://localhost:8080/mcp/messages --transport http \
+            --method tools/call --tool-name create-fhir-resource --tool-arg resourceType=Patient \
+            --tool-arg 'resource={"resourceType":"Patient"}' > logs/mcp-create.json && status=0 || status=$?
+          cat logs/mcp-create.json
+          location=$(jq -r '.content[0].text | fromjson | .location' logs/mcp-create.json 2>/dev/null || true)
+          echo "Location: $location"
+          case "$status:$location" in
+            0:http://localhost:8080/fhir/Patient/*/_history/1) ;;
+            *)
+              echo "::error::Unexpected MCP tool result (exit code $status, Location '$location')"
+              exit 1
+              ;;
+          esac
+
       - name: Show last server logs
         if: always()
         run: |
@@ -69,4 +106,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: server-logs
-          path: logs/server.log
+          path: |
+            logs/server.log
+            logs/mcp-*
