@@ -28,9 +28,12 @@ import org.springframework.context.annotation.Import;
 		excludeName = {
 			"org.springframework.boot.thymeleaf.autoconfigure.ThymeleafAutoConfiguration",
 			"org.springframework.boot.quartz.autoconfigure.QuartzAutoConfiguration",
-			// Requires elasticsearch-java 9.x (Rest5ClientTransport), but HAPI uses 8.x.
-			// ElasticsearchConfig builds the client instead.
-			"org.springframework.boot.elasticsearch.autoconfigure.ElasticsearchClientAutoConfiguration"
+			// HAPI uses elasticsearch-java 8.x; Boot's Elasticsearch clients are 9.x (Rest5Client).
+			// ElasticsearchConfig builds the RestClient, the ElasticsearchClient and the health indicator instead,
+			// and Boot's elasticsearchRestClient bean would clash with its RestClient by name. Excluded here rather
+			// than in spring.autoconfigure.exclude, so that a config replacing that list cannot turn them back on.
+			"org.springframework.boot.elasticsearch.autoconfigure.ElasticsearchClientAutoConfiguration",
+			"org.springframework.boot.elasticsearch.autoconfigure.ElasticsearchRestClientAutoConfiguration"
 		})
 @Import({
 	StarterCrR4Config.class,
