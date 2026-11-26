@@ -61,8 +61,8 @@ class ElasticsearchLastNR4IT {
 		registry.add("spring.jpa.properties.hibernate.search.backend.username", () -> "");
 		registry.add("spring.jpa.properties.hibernate.search.backend.password", () -> "");
 
-		// Replaces the exclude list like a custom application.yaml would. Boot's Elasticsearch REST client
-		// auto-configuration has to stay off anyway (see Application).
+		// Replaces the exclude list like a custom application.yaml would, so this test fails if the exclude
+		// moves from Application back into spring.autoconfigure.exclude.
 		registry.add("spring.autoconfigure.exclude", () -> "");
 	}
 
