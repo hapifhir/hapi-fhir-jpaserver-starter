@@ -86,6 +86,10 @@ spring:
         enabled: true
         streamable-http:
           mcp-endpoint: /mcp/messages
+        # The starter registers its MCP tools itself. Spring AI's scan for annotated tool methods (@McpTool) finds
+        # nothing and only logs warnings at startup. Enable it if you add your own annotated beans.
+        annotation-scanner:
+          enabled: false
 
 
   # -------------------------------------------------------------------------------
@@ -97,8 +101,12 @@ spring:
     banner-mode: off
 
   autoconfigure:
-    # This exclude is only needed for setups not using Elasticsearch where the elasticsearch sniff is not needed.
-    exclude: org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration
+    # Stops Spring Boot from creating its own Elasticsearch client (Rest5Client) and a health indicator for it.
+    # Without Elasticsearch, that indicator reports /actuator/health as DOWN (it connects to http://localhost:9200).
+    # When spring.elasticsearch is configured (e.g. the elastic profile), ElasticsearchConfig builds the client
+    # instead; Boot's client bean would clash with it by name (elasticsearchRestClient) and startup would fail.
+    # Keep this exclude in every profile.
+    exclude: org.springframework.boot.elasticsearch.autoconfigure.ElasticsearchRestClientAutoConfiguration
 
   flyway:
     enabled: false

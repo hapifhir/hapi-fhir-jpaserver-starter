@@ -9,7 +9,7 @@ COPY server.xml .
 RUN mvn -ntp dependency:go-offline
 
 COPY src/ /tmp/hapi-fhir-jpaserver-starter/src/
-RUN mvn clean install -DskipTests -Djdk.lang.Process.launchMechanism=vfork
+RUN mvn clean install -DskipTests -DskipITs -Djdk.lang.Process.launchMechanism=vfork
 
 FROM build-hapi AS build-distroless
 RUN mvn package -DskipTests spring-boot:repackage -Pboot
@@ -21,20 +21,25 @@ RUN javac /app/HealthCheck.java
 
 ########### Use the official Tomcat image as base image for the Tomcat variant
 ########### it can be built using eg. `docker build --target tomcat .`
-FROM docker.io/library/tomcat:10-jre21-temurin-noble AS tomcat
+FROM docker.io/library/tomcat:11-jre21-temurin-noble AS tomcat
 
 USER root
 RUN rm -rf /usr/local/tomcat/webapps/ROOT && \
     mkdir -p /usr/local/tomcat/data/hapi/lucenefiles && \
     chown -R 65532:65532 /usr/local/tomcat/data/hapi/lucenefiles && \
-    chmod 775 /usr/local/tomcat/data/hapi/lucenefiles
+    chmod 775 /usr/local/tomcat/data/hapi/lucenefiles && \
+    mkdir -p /usr/local/tomcat/conf/Catalina/localhost
 
 RUN mkdir -p /target && chown -R 65532:65532 /target
-USER 65532
+
+# The web application is unpacked at build time and stays owned by root, so Tomcat (uid 65532) cannot change
+# what it deploys and does not need to unpack a WAR at startup.
+COPY --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/target/ROOT /usr/local/tomcat/webapps/ROOT
+# With a group, so that Tomcat does not run with root (gid 0) as its primary group.
+USER 65532:65532
 
 COPY --chown=65532:65532 catalina.properties /usr/local/tomcat/conf/catalina.properties
 COPY --chown=65532:65532 server.xml /usr/local/tomcat/conf/server.xml
-COPY --from=build-hapi --chown=65532:65532 /tmp/hapi-fhir-jpaserver-starter/target/ROOT.war /usr/local/tomcat/webapps/ROOT.war
 COPY --from=build-hapi --chown=65532:65532 /tmp/hapi-fhir-jpaserver-starter/opentelemetry-javaagent.jar /app
 
 ########### distroless brings focus on security and runs on plain spring boot - this is the default image
@@ -48,4 +53,4 @@ WORKDIR /app
 COPY --chown=nonroot:nonroot --from=build-distroless /app /app
 COPY --chown=nonroot:nonroot --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/opentelemetry-javaagent.jar /app
 
-ENTRYPOINT ["java", "--class-path", "/app/main.war", "-Dloader.path=main.war!/WEB-INF/classes/,main.war!/WEB-INF/,/app/extra-classes", "org.springframework.boot.loader.PropertiesLauncher"]
+ENTRYPOINT ["java", "--class-path", "/app/main.war", "-Dloader.path=main.war!/WEB-INF/classes/,main.war!/WEB-INF/,/app/extra-classes", "org.springframework.boot.loader.launch.PropertiesLauncher"]

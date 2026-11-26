@@ -9,7 +9,9 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
-import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.elasticsearch.autoconfigure.ElasticsearchProperties;
+import org.springframework.boot.health.autoconfigure.contributor.ConditionalOnEnabledHealthIndicator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +26,7 @@ import java.util.List;
  */
 @Configuration
 @Conditional(ElasticConfigCondition.class)
+@EnableConfigurationProperties(ElasticsearchProperties.class)
 public class ElasticsearchConfig {
 
 	@Bean
@@ -65,5 +68,15 @@ public class ElasticsearchConfig {
 	public ElasticsearchClient elasticsearchClient(RestClient restClient) {
 		RestClientTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
 		return new ElasticsearchClient(transport);
+	}
+
+	/**
+	 * Shows up as "elasticsearch" in /actuator/health, like Spring Boot's own indicator, and can be turned off the same
+	 * way with management.health.elasticsearch.enabled=false.
+	 */
+	@Bean
+	@ConditionalOnEnabledHealthIndicator("elasticsearch")
+	public ElasticsearchHealthIndicator elasticsearchHealthIndicator(RestClient restClient) {
+		return new ElasticsearchHealthIndicator(restClient);
 	}
 }

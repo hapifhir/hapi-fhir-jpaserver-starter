@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter.cr;
 
 import org.opencds.cqf.fhir.utility.client.TerminologyServerClientSettings;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
@@ -11,6 +12,8 @@ public class CrProperties {
 
 	private CareGapsProperties careGaps = new CareGapsProperties();
 	private CqlProperties cql = new CqlProperties();
+
+	@NestedConfigurationProperty
 	private TerminologyServerClientSettings terminologyServerClientSettings =
 			TerminologyServerClientSettings.getDefault();
 

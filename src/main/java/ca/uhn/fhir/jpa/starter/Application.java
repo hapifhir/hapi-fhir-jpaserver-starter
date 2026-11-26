@@ -16,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration;
-import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
-import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.boot.web.server.servlet.context.ServletComponentScan;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +24,14 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
 
 @ServletComponentScan(basePackageClasses = {RestfulServer.class})
-@SpringBootApplication(exclude = {ThymeleafAutoConfiguration.class, QuartzAutoConfiguration.class})
+@SpringBootApplication(
+		excludeName = {
+			"org.springframework.boot.thymeleaf.autoconfigure.ThymeleafAutoConfiguration",
+			"org.springframework.boot.quartz.autoconfigure.QuartzAutoConfiguration",
+			// Requires elasticsearch-java 9.x (Rest5ClientTransport), but HAPI uses 8.x.
+			// ElasticsearchConfig builds the client instead.
+			"org.springframework.boot.elasticsearch.autoconfigure.ElasticsearchClientAutoConfiguration"
+		})
 @Import({
 	StarterCrR4Config.class,
 	StarterCrDstu3Config.class,
@@ -40,6 +45,12 @@ import org.springframework.context.annotation.Import;
 	Batch2JobsConfig.class
 })
 public class Application extends SpringBootServletInitializer {
+
+	/**
+	 * Path of the HAPI FHIR servlet, below the servlet context path. The MCP bridge uses it for the URLs in tool results,
+	 * so mapping the FHIR servlet to another path means changing this constant.
+	 */
+	public static final String FHIR_SERVLET_PATH = "/fhir";
 
 	public static void main(String[] args) {
 
@@ -58,7 +69,7 @@ public class Application extends SpringBootServletInitializer {
 		ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean();
 		beanFactory.autowireBean(restfulServer);
 		servletRegistrationBean.setServlet(restfulServer);
-		servletRegistrationBean.addUrlMappings("/fhir/*");
+		servletRegistrationBean.addUrlMappings(FHIR_SERVLET_PATH + "/*");
 		servletRegistrationBean.setLoadOnStartup(1);
 
 		return servletRegistrationBean;

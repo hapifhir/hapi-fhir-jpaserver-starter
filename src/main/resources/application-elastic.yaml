@@ -4,10 +4,6 @@ spring:
     username: elastic
     password: elastic
 
-  autoconfigure:
-    # This empty exclude is needed to override the default exclusion of the Elasticsearch configuration.
-    exclude:
-
   jpa:
     properties:
       hibernate:
@@ -22,6 +18,12 @@ spring:
               strategy: ca.uhn.fhir.jpa.search.elastic.IndexNamePrefixLayoutStrategy
             type: elasticsearch
             protocol: http
+            # Hibernate Search uses its own Elasticsearch client and does not read spring.elasticsearch.*; it defaults
+            # to localhost:9200 without credentials. For another host or a cluster with security enabled, set the
+            # connection here as well:
+            # hosts: localhost:9200
+            # username: elastic
+            # password: elastic
             analysis:
               configurer: ca.uhn.fhir.jpa.search.HapiHSearchAnalysisConfigurers$HapiElasticsearchAnalysisConfigurer
             scroll_timeout: 60

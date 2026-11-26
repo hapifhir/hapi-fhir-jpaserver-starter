@@ -6,8 +6,6 @@ import ca.uhn.fhir.jpa.starter.mcp.Interaction;
 import ca.uhn.fhir.jpa.starter.mcp.ToolFactory;
 import ca.uhn.fhir.rest.api.server.cdshooks.CdsServiceRequestContextJson;
 import ca.uhn.hapi.fhir.cdshooks.api.ICdsServiceRegistry;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.spec.McpSchema;
@@ -15,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 import java.util.Map;
@@ -36,14 +35,10 @@ public class McpCdsBridge implements McpBridge {
 
 	public List<McpServerFeatures.SyncToolSpecification> generateTools() {
 
-		try {
-			return List.of(new McpServerFeatures.SyncToolSpecification.Builder()
-					.tool(ToolFactory.callCdsHook())
-					.callHandler((exchange, request) -> getToolResult(request, Interaction.CALL_CDS_HOOK))
-					.build());
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
-		}
+		return List.of(new McpServerFeatures.SyncToolSpecification.Builder()
+				.tool(ToolFactory.callCdsHook())
+				.callHandler((exchange, request) -> getToolResult(request, Interaction.CALL_CDS_HOOK))
+				.build());
 	}
 
 	private McpSchema.CallToolResult getToolResult(McpSchema.CallToolRequest contextMap, Interaction interaction) {
@@ -55,12 +50,7 @@ public class McpCdsBridge implements McpBridge {
 		var serviceResponseJson = cdsServiceRegistry.callService(
 				contextMap.arguments().get("service").toString(), cdsInvocation);
 
-		final String content;
-		try {
-			content = objectMapper.writeValueAsString(serviceResponseJson);
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
-		}
+		final String content = objectMapper.writeValueAsString(serviceResponseJson);
 		return McpSchema.CallToolResult.builder()
 				.addContent(new McpSchema.TextContent(content))
 				.build();

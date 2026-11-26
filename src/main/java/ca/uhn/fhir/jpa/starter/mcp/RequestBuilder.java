@@ -1,21 +1,38 @@
 package ca.uhn.fhir.jpa.starter.mcp;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.api.Constants;
+import ca.uhn.fhir.util.UrlUtil;
 import com.google.gson.Gson;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class RequestBuilder {
+
+	/**
+	 * The headers that the tool schemas offer, per interaction. Other headers are rejected, so that a tool call cannot
+	 * set e.g. Host, Authorization or X-Forwarded-* on the request that HAPI handles in-process.
+	 */
+	private static final Map<Interaction, Set<String>> ALLOWED_HEADERS = Map.of(
+			Interaction.CREATE, Set.of(Constants.HEADER_IF_NONE_EXIST),
+			Interaction.UPDATE, Set.of(Constants.HEADER_IF_MATCH),
+			Interaction.PATCH, Set.of(Constants.HEADER_IF_MATCH));
 
 	private final FhirContext fhirContext;
 	private final String resourceType;
 	private final Interaction interaction;
 	private final Map<String, Object> config;
 	private final String contextPath;
+	private final String servletPath;
+	private final McpRequestOrigin origin;
 
 	public RequestBuilder(FhirContext fhirContext, Map<String, Object> contextMap, Interaction interaction) {
 		this(fhirContext, contextMap, interaction, "");
@@ -30,7 +47,25 @@ public class RequestBuilder {
 	 */
 	public RequestBuilder(
 			FhirContext fhirContext, Map<String, Object> contextMap, Interaction interaction, String contextPath) {
+		this(fhirContext, contextMap, interaction, contextPath, "", null);
+	}
+
+	/**
+	 * @param servletPath the path of the HAPI FHIR servlet (e.g. "/fhir"), so that HAPI derives the same server base
+	 *                    URL as for a direct REST request
+	 * @param origin      scheme, host, port and proxy headers of the MCP request, or {@code null} for HAPI's defaults
+	 *                    (http://localhost)
+	 */
+	public RequestBuilder(
+			FhirContext fhirContext,
+			Map<String, Object> contextMap,
+			Interaction interaction,
+			String contextPath,
+			String servletPath,
+			McpRequestOrigin origin) {
 		this.config = contextMap;
+		this.servletPath = normalizePath(servletPath);
+		this.origin = origin;
 		// RestfulServer strips the servlet context path (e.g. "/eps") from the request URI,
 		// so the mock request must carry it too, otherwise "/Patient" becomes "ient".
 		String cp = contextPath == null ? "" : contextPath.trim();
@@ -45,36 +80,16 @@ public class RequestBuilder {
 	}
 
 	public MockHttpServletRequest buildRequest() {
-		String basePath = contextPath + "/" + resourceType;
+		String basePath = contextPath + servletPath + "/" + resourceType;
 		String method;
 		MockHttpServletRequest req;
+		String contentType = Constants.CT_FHIR_JSON_NEW;
 
 		switch (interaction) {
 			case SEARCH -> {
 				method = "GET";
 				req = new MockHttpServletRequest(method, basePath);
-				Map<?, ?> sp = null;
-				if (config.get("query") instanceof Map<?, ?> q) {
-					sp = q;
-				} else if (config.get("searchParams") instanceof Map<?, ?> s) {
-					sp = s;
-				}
-				if (sp != null) {
-					sp.forEach((k, v) -> req.addParameter(k.toString(), v.toString()));
-				} else {
-					// Also accept a query string, e.g. "name=Silva&_count=5" (previously silently ignored)
-					Object qs = config.get("query") != null ? config.get("query") : config.get("searchParams");
-					if (qs instanceof String str && !str.isBlank()) {
-						String q = str.startsWith("?") ? str.substring(1) : str;
-						for (String pair : q.split("&")) {
-							if (pair.isBlank()) continue;
-							int i = pair.indexOf('=');
-							String k = URLDecoder.decode(i < 0 ? pair : pair.substring(0, i), StandardCharsets.UTF_8);
-							String v = i < 0 ? "" : URLDecoder.decode(pair.substring(i + 1), StandardCharsets.UTF_8);
-							req.addParameter(k, v);
-						}
-					}
-				}
+				queryParameters().forEach(p -> req.addParameter(p[0], p[1]));
 			}
 			case READ -> {
 				method = "GET";
@@ -101,19 +116,102 @@ public class RequestBuilder {
 				method = "PATCH";
 				String id = requireString();
 				req = new MockHttpServletRequest(method, basePath + "/" + id);
-				applyPatchBody(req);
+				contentType = applyPatchBody(req);
+			}
+			case CONDITIONAL_UPDATE -> {
+				method = "PUT";
+				req = new MockHttpServletRequest(method, basePath);
+				requireQueryParameters("conditional update").forEach(p -> req.addParameter(p[0], p[1]));
+				applyResourceBody(req);
+			}
+			case CONDITIONAL_PATCH -> {
+				method = "PATCH";
+				req = new MockHttpServletRequest(method, basePath);
+				requireQueryParameters("conditional patch").forEach(p -> req.addParameter(p[0], p[1]));
+				contentType = applyPatchBody(req);
 			}
 			default -> throw new IllegalArgumentException("Unsupported interaction: " + interaction);
 		}
 
 		req.setContextPath(contextPath);
-		req.setContentType("application/fhir+json");
-		req.addHeader("Accept", "application/fhir+json");
+		req.setServletPath(servletPath);
+		if (origin != null) {
+			req.setScheme(origin.scheme());
+			req.setSecure("https".equalsIgnoreCase(origin.scheme()));
+			req.setServerName(origin.serverName());
+			req.setServerPort(origin.serverPort());
+			origin.forwardedHeaders().forEach(req::addHeader);
+		}
+		req.setContentType(contentType);
+		req.addHeader("Accept", Constants.CT_FHIR_JSON_NEW);
+
+		applyHeaders(req);
+
+		// Mirror the parameters added above into the query string: HAPI derives conditional URLs from it, and
+		// HAPI FHIR 9 reads GET search parameters only from the query string, not from the request parameter map
+		// (hapi-fhir#8769). This is done here rather than inside the switch so it applies however the parameters
+		// were added.
+		if (req.getQueryString() == null && !req.getParameterMap().isEmpty()) {
+			req.setQueryString(toQueryString(req.getParameterMap()));
+		}
 		return req;
+	}
+
+	/**
+	 * Adds the headers from the tool arguments, e.g. If-None-Exist for a conditional create or If-Match for a
+	 * version-aware update. Only the headers in {@link #ALLOWED_HEADERS} are accepted.
+	 */
+	private void applyHeaders(MockHttpServletRequest req) {
+		Object headers = config.get("headers");
+		if (headers == null) {
+			return;
+		}
+		if (!(headers instanceof Map<?, ?> map)) {
+			throw new IllegalArgumentException("'headers' must be a JSON object");
+		}
+		Set<String> allowed = ALLOWED_HEADERS.getOrDefault(interaction, Set.of());
+		map.forEach((name, value) -> {
+			String headerName = String.valueOf(name);
+			if (allowed.stream().noneMatch(headerName::equalsIgnoreCase)) {
+				throw new IllegalArgumentException("Unsupported header '" + headerName + "' for "
+						+ interaction.getName() + ", allowed: " + allowed);
+			}
+			if (!(value instanceof String || value instanceof Number)) {
+				throw new IllegalArgumentException("Header '" + headerName + "' must be a string or a number");
+			}
+			req.addHeader(headerName, value.toString());
+		});
+	}
+
+	/**
+	 * @return the path with a leading and without a trailing slash, e.g. "/fhir" for "fhir/", or "" for none
+	 */
+	private static String normalizePath(String thePath) {
+		String path = thePath == null ? "" : thePath.trim();
+		while (path.endsWith("/")) {
+			path = path.substring(0, path.length() - 1);
+		}
+		return path.isEmpty() || path.startsWith("/") ? path : "/" + path;
+	}
+
+	private static String toQueryString(Map<String, String[]> theParameters) {
+		StringBuilder query = new StringBuilder();
+		theParameters.forEach((name, values) -> {
+			for (String value : values) {
+				if (!query.isEmpty()) {
+					query.append('&');
+				}
+				query.append(UrlUtil.escapeUrlParam(name)).append('=').append(UrlUtil.escapeUrlParam(value));
+			}
+		});
+		return query.toString();
 	}
 
 	private void applyResourceBody(MockHttpServletRequest req) {
 		Object resourceObj = config.get("resource");
+		if (resourceObj == null) {
+			throw new IllegalArgumentException("Missing 'resource'");
+		}
 		String json;
 		if (resourceObj instanceof Map<?, ?>) json = new Gson().toJson(resourceObj, Map.class);
 		else if (resourceObj instanceof String) json = resourceObj.toString();
@@ -121,7 +219,10 @@ public class RequestBuilder {
 		req.setContent(json.getBytes(StandardCharsets.UTF_8));
 	}
 
-	private void applyPatchBody(MockHttpServletRequest req) {
+	/**
+	 * @return the content type of the patch body: JSON Patch (RFC 6902) for a JSON array, otherwise FHIR Patch
+	 */
+	private String applyPatchBody(MockHttpServletRequest req) {
 		Object patchBody = config.get("resource");
 		if (patchBody == null) {
 			throw new IllegalArgumentException("Missing 'resource' for patch interaction");
@@ -129,12 +230,19 @@ public class RequestBuilder {
 		String content;
 		if (patchBody instanceof String s) {
 			content = s;
+		} else if (patchBody instanceof Map<?, ?>) {
+			// The tool schema allows the patch body as a JSON object, as for create and update
+			content = new Gson().toJson(patchBody, Map.class);
+		} else if (patchBody instanceof List<?>) {
+			// A JSON Patch document is a JSON array of operations
+			content = new Gson().toJson(patchBody, List.class);
 		} else if (patchBody instanceof IBaseResource r) {
 			content = fhirContext.newJsonParser().encodeResourceToString(r);
 		} else {
 			throw new IllegalArgumentException("Unsupported patch body type: " + patchBody.getClass());
 		}
 		req.setContent(content.getBytes(StandardCharsets.UTF_8));
+		return content.stripLeading().startsWith("[") ? Constants.CT_JSON_PATCH : Constants.CT_FHIR_JSON_NEW;
 	}
 
 	private String requireString() {
@@ -143,5 +251,55 @@ public class RequestBuilder {
 			throw new IllegalArgumentException("Missing or invalid '" + "id" + "'");
 		}
 		return s;
+	}
+
+	/**
+	 * Search parameters from 'query', or from 'searchParams' if there is no 'query'. They can be given as a map, where
+	 * a list value becomes a repeated parameter, or as a query string such as "name=Silva&_count=5", which is decoded
+	 * the same way HAPI decodes the query string of a request.
+	 */
+	private List<String[]> queryParameters() {
+		Object query = config.get("query");
+		if (query == null || (query instanceof String s && s.isBlank())) {
+			query = config.get("searchParams");
+		}
+		List<String[]> parameters = new ArrayList<>();
+		if (query instanceof Map<?, ?> map) {
+			map.forEach((name, value) -> {
+				Collection<?> values = value instanceof Collection<?> c ? c : Collections.singletonList(value);
+				for (Object v : values) {
+					if (v == null) {
+						throw new IllegalArgumentException("Missing value for query parameter '" + name + "'");
+					}
+					if (!(v instanceof String || v instanceof Number || v instanceof Boolean)) {
+						throw new IllegalArgumentException(
+								"Query parameter '" + name + "' must have a string, number or boolean value");
+					}
+					parameters.add(new String[] {name.toString(), v.toString()});
+				}
+			});
+		} else if (query instanceof String str) {
+			if (!str.isBlank()) {
+				UrlUtil.parseQueryString(str).forEach((name, values) -> {
+					for (String v : values) {
+						parameters.add(new String[] {name, v});
+					}
+				});
+			}
+		} else if (query != null) {
+			throw new IllegalArgumentException("'query' must be a query string or a JSON object");
+		}
+		return parameters;
+	}
+
+	/**
+	 * Conditional update and patch identify the target resource only by the query ({@code PUT [type]?[query]}).
+	 */
+	private List<String[]> requireQueryParameters(String operation) {
+		List<String[]> parameters = queryParameters();
+		if (parameters.isEmpty()) {
+			throw new IllegalArgumentException("Missing 'query' for " + operation);
+		}
+		return parameters;
 	}
 }
