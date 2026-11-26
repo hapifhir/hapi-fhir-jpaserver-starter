@@ -30,3 +30,14 @@ jobs:
       env:
         MAVEN_OPTS: "-Xmx4g"
       run: mvn -B package --file pom.xml verify
+    # Failsafe writes the test output to files only (redirectTestOutputToFile), so the job log of a failing IT
+    # shows the exception but not the server log.
+    - name: Upload test reports
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-reports
+        path: |
+          target/surefire-reports/
+          target/failsafe-reports/
+        retention-days: 14
