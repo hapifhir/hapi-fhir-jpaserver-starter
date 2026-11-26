@@ -15,8 +15,57 @@ env:
   PLATFORMS: linux/amd64,linux/arm64/v8
 
 jobs:
+  # Starts each image once before anything is pushed: a successful build does not mean the container starts.
+  smoke-test:
+    name: Smoke test (${{ matrix.target }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [default, tomcat]
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build ${{ matrix.target }} image for linux/amd64
+        uses: docker/build-push-action@v5
+        with:
+          load: true
+          tags: hapi-smoke-test:${{ matrix.target }}
+          platforms: linux/amd64
+          target: ${{ matrix.target }}
+
+      - name: Start the container and wait until it is healthy
+        env:
+          IMAGE: hapi-smoke-test:${{ matrix.target }}
+        run: |
+          docker run -d --name hapi-smoke-test -p 8080:8080 "$IMAGE"
+          for _ in $(seq 1 60); do
+            if [ "$(docker inspect -f '{{.State.Running}}' hapi-smoke-test)" != "true" ]; then
+              echo "The container stopped before it became healthy."
+              docker logs hapi-smoke-test
+              exit 1
+            fi
+            if curl -fs http://localhost:8080/actuator/health > /dev/null; then
+              break
+            fi
+            sleep 5
+          done
+          if ! curl -fsS http://localhost:8080/actuator/health; then
+            echo "The container did not become healthy within 5 minutes."
+            docker logs hapi-smoke-test
+            exit 1
+          fi
+          echo
+          curl -fsS -o /dev/null -w 'GET /fhir/metadata: %{http_code}\n' http://localhost:8080/fhir/metadata
+
+      - name: Run the image's HealthCheck
+        if: matrix.target == 'default'
+        run: docker exec hapi-smoke-test java -cp /app HealthCheck
+
   build:
     name: Build
+    needs: smoke-test
     runs-on: ubuntu-24.04
     steps:
       - name: Container meta for default (distroless) image
