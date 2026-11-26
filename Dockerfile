@@ -35,7 +35,8 @@ RUN mkdir -p /target && chown -R 65532:65532 /target
 # The web application is unpacked at build time and stays owned by root, so Tomcat (uid 65532) cannot change
 # what it deploys and does not need to unpack a WAR at startup.
 COPY --from=build-hapi /tmp/hapi-fhir-jpaserver-starter/target/ROOT /usr/local/tomcat/webapps/ROOT
-USER 65532
+# With a group, so that Tomcat does not run with root (gid 0) as its primary group.
+USER 65532:65532
 
 COPY --chown=65532:65532 catalina.properties /usr/local/tomcat/conf/catalina.properties
 COPY --chown=65532:65532 server.xml /usr/local/tomcat/conf/server.xml
