@@ -7,6 +7,7 @@ import ca.uhn.fhir.jpa.starter.elastic.ElasticsearchBootSvcImpl;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
+import co.elastic.clients.transport.rest5_client.low_level.Rest5Client;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -58,13 +60,25 @@ class ElasticsearchLastNR4IT {
 		registry.add("spring.jpa.properties.hibernate.search.backend.protocol", () -> "http");
 		registry.add("spring.jpa.properties.hibernate.search.backend.username", () -> "");
 		registry.add("spring.jpa.properties.hibernate.search.backend.password", () -> "");
+
+		// Replaces the exclude list like a custom application.yaml would. Boot's Elasticsearch REST client
+		// auto-configuration has to stay off anyway (see Application).
+		registry.add("spring.autoconfigure.exclude", () -> "");
 	}
 
 	@Autowired
 	private ElasticsearchBootSvcImpl myElasticsearchSvc;
 
+	@Autowired
+	private ApplicationContext myApplicationContext;
+
 	@LocalServerPort
 	private int port;
+
+	@Test
+	void testBootDoesNotCreateItsOwnElasticsearchClient() {
+		assertEquals(0, myApplicationContext.getBeanNamesForType(Rest5Client.class).length);
+	}
 
 	@Test
 	void testLastN() throws IOException, InterruptedException {
