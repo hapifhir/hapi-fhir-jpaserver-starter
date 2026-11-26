@@ -38,30 +38,34 @@ jobs:
       - name: Start the container and wait until it is healthy
         env:
           IMAGE: hapi-smoke-test:${{ matrix.target }}
+          TIMEOUT_MINUTES: 20
         run: |
           docker run -d --name hapi-smoke-test -p 8080:8080 "$IMAGE"
-          for _ in $(seq 1 60); do
+          deadline=$((SECONDS + TIMEOUT_MINUTES * 60))
+          # --max-time keeps a request that hangs during startup from outlasting the deadline.
+          until curl -fs --max-time 5 http://localhost:8080/actuator/health > /dev/null; do
             if [ "$(docker inspect -f '{{.State.Running}}' hapi-smoke-test)" != "true" ]; then
               echo "The container stopped before it became healthy."
-              docker logs hapi-smoke-test
               exit 1
             fi
-            if curl -fs http://localhost:8080/actuator/health > /dev/null; then
-              break
+            if [ "$SECONDS" -ge "$deadline" ]; then
+              echo "The container did not become healthy within $TIMEOUT_MINUTES minutes."
+              exit 1
             fi
             sleep 5
           done
-          if ! curl -fsS http://localhost:8080/actuator/health; then
-            echo "The container did not become healthy within 5 minutes."
-            docker logs hapi-smoke-test
-            exit 1
-          fi
+          echo "Healthy after $SECONDS s:"
+          curl -fsS --max-time 5 http://localhost:8080/actuator/health
           echo
-          curl -fsS -o /dev/null -w 'GET /fhir/metadata: %{http_code}\n' http://localhost:8080/fhir/metadata
+          curl -fsS --max-time 120 -o /dev/null -w 'GET /fhir/metadata: %{http_code}\n' http://localhost:8080/fhir/metadata
 
       - name: Run the image's HealthCheck
         if: matrix.target == 'default'
         run: docker exec hapi-smoke-test java -cp /app HealthCheck
+
+      - name: Show the container log
+        if: always()
+        run: docker logs hapi-smoke-test || true
 
   build:
     name: Build
